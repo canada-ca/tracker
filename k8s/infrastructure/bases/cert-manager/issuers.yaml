@@ -1,0 +1,51 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  creationTimestamp: null
+  name: letsencrypt
+  namespace: istio-system
+spec:
+  acme:
+    email: mike@korora.ca
+    preferredChain: ""
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - dns01:
+        cloudDNS:
+          # The ID of the GCP project
+          project: track-compliance
+      selector: {}
+status: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  creationTimestamp: null
+  name: letsencrypt-staging
+  namespace: istio-system
+spec:
+  acme:
+    email: mike@korora.ca
+    preferredChain: ""
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    solvers:
+    - dns01:
+        cloudDNS:
+          # The ID of the GCP project
+          project: track-compliance
+      selector: {}
+status: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  creationTimestamp: null
+  name: selfsigned
+  namespace: istio-system
+spec:
+  selfSigned: {}
+status: {}

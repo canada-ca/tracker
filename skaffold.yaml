@@ -1,0 +1,198 @@
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: apps
+requires:
+  - configs: ["infrastructure"]
+build:
+  artifacts:
+#  - image: gcr.io/track-compliance/api-js
+#    context: api
+#    docker: {}
+#  - image: gcr.io/track-compliance/counter
+#    context: scanners/counter
+#    docker: {}
+#  - image: gcr.io/track-compliance/database-migration
+#    context: database-migration
+#    docker: {}
+#  - image: gcr.io/track-compliance/dmarc-report
+#    context: services/dmarc-report
+#    docker: {}
+#  - image: gcr.io/track-compliance/dns-processor
+#    context: scanners/dns-processor
+#    docker: {}
+#  - image: gcr.io/track-compliance/dns-scanner
+#    context: scanners/dns-scanner
+#    docker: {}
+#  - image: gcr.io/track-compliance/domain-dispatcher
+#    context: scanners/domain-dispatcher
+#    docker: {}
+#  - image: gcr.io/track-compliance/frontend
+#    context: frontend
+#    docker: {}
+#  - image: gcr.io/track-compliance/https-processor
+#    context: scanners/https-processor
+#    docker: {}
+#  - image: gcr.io/track-compliance/https-scanner
+#    context: scanners/https-scanner
+#    docker: {}
+#  - image: gcr.io/track-compliance/log4shell-processor
+#    context: scanners/log4shell-processor
+#    docker: {}
+#  - image: gcr.io/track-compliance/log4shell-scanner
+#    context: scanners/log4shell-scanner
+#    docker: {}
+#  - image: gcr.io/track-compliance/services/guidance
+#    context: services/guidance
+#    docker: {}
+#  - image: gcr.io/track-compliance/services/scanners/dns
+#    context: scanners/dns-scanner
+#    docker: {}
+#  - image: gcr.io/track-compliance/services/summaries
+#    context: services/summaries
+#    docker: {}
+#  - image: gcr.io/track-compliance/spring4shell-scanner
+#    context: scanners/spring4shell
+#    docker: {}
+#  - image: gcr.io/track-compliance/super-admin
+#    context: services/super-admin
+#    docker: {}
+#  - image: gcr.io/track-compliance/tls-processor
+#    context: scanners/tls-processor
+#    docker: {}
+#  - image: gcr.io/track-compliance/tls-scanner
+#    context: scanners/tls-scanner
+#    docker: {}
+deploy:
+  kubeContext: minikube
+  kustomize:
+    paths:
+      - k8s/apps/overlays/minikube
+profiles:
+  - name: gke
+    deploy:
+      kustomize:
+        paths:
+          - k8s/apps/overlays/gke
+  - name: minikube
+    deploy:
+      kubeContext: minikube
+      kustomize:
+        paths:
+          - k8s/apps/overlays/minikube
+  - name: production
+    deploy:
+      kustomize:
+        paths:
+          - k8s/apps/overlays/production
+  - name: staging
+    deploy:
+      kustomize:
+        paths:
+          - k8s/apps/overlays/staging
+  - name: test
+    deploy:
+      kustomize:
+        paths:
+          - k8s/apps/overlays/test
+
+portForward:
+  - resourceType: service
+    resourceName: istio-ingressgateway
+    namespace: istio-system
+    port: 80
+    localPort: 30080
+  - resourceType: service
+    resourceName: istio-ingressgateway
+    namespace: istio-system
+    port: 443
+    localPort: 30443
+
+---
+
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: infrastructure-platform
+deploy:
+  kubectl:
+    flags:
+      delete: [ "-l app!=arangodb" ]
+    hooks:
+      before:
+        - host:
+            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/arangodb/platform" ]
+        - host:
+            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/cert-manager/platform" ]
+        - host:
+            command: [ "kubectl", "apply", "-k", "./k8s/infrastructure/bases/istio/platform" ]
+    manifests: [ "k8s/*.yaml" ]
+
+---
+
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: infrastructure
+requires:
+  - configs: ["infrastructure-platform"]
+deploy:
+  kubeContext: minikube
+  kustomize:
+    flags:
+      delete: [ "-l app!=arangodb" ]
+    paths:
+      - k8s/infrastructure/overlays/minikube
+profiles:
+  - name: gke
+    deploy:
+      kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
+        paths:
+          - k8s/infrastructure/overlays/gke
+  - name: minikube
+    deploy:
+      kubeContext: minikube
+      kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
+        paths:
+          - k8s/infrastructure/overlays/minikube
+  - name: production
+    deploy:
+      kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
+        paths:
+          - k8s/infrastructure/overlays/production
+  - name: staging
+    deploy:
+      kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
+        paths:
+          - k8s/infrastructure/overlays/staging
+  - name: test
+    deploy:
+      kustomize:
+        flags:
+          delete: [ "-l app!=arangodb" ]
+        paths:
+          - k8s/infrastructure/overlays/test
+portForward:
+  - resourceType: service
+    resourceName: arangodb
+    namespace: db
+    port: 8529
+    localPort: 8529
+  - resourceType: service
+    resourceName: nats
+    namespace: pubsub
+    port: 4222
+    localPort: 4222
+  - resourceType: service
+    resourceName: kiali
+    namespace: istio-system
+    port: 20001
+    localPort: 20001

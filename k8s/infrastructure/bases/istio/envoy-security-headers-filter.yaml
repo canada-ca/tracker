@@ -1,0 +1,36 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: security-headers
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: "envoy.filters.network.http_connection_manager"
+            subFilter:
+              name: "envoy.filters.http.router"
+    patch: # Patch outgoing requests for ITPIN 6.1.2: has HSTS enabled
+      operation: INSERT_BEFORE
+      value:
+       name: envoy.lua
+       typed_config:
+         "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+         inlineCode: |
+            function envoy_on_response(response_handle)
+              if not response_handle:headers():get("X-Frame-Options") then
+                response_handle:headers():add("X-Frame-Options", "deny");
+              end
+              if response_handle:headers():get(":status") ~= "301" then
+                if not response_handle:headers():get("Strict-Transport-Security") then
+                  response_handle:headers():add("Strict-Transport-Security", "max-age=31536000; includeSubDomains;");
+                end
+              end
+            end

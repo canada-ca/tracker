@@ -31,6 +31,11 @@ dbdump:
 restore:
 		arangorestore --server.database track_dmarc --create-collection false --include-system-collections true --input-directory $(from)
 
+.PHONY: install-arango-operator
+install-arango-operator:
+		kubectl apply -f $(arango_operator_manifest_url_prefix)/arango-crd.yaml
+		kubectl apply -f $(arango_operator_manifest_url_prefix)/arango-deployment.yaml
+
 .PHONY: update-flux
 update-flux:
 		flux install --components=source-controller,kustomize-controller,notification-controller,image-reflector-controller,image-automation-controller --export > deploy/bases/flux.yaml
@@ -71,11 +76,12 @@ endif
 
 .PHONY: app
 app:
-		kustomize build app/$(env) | kubectl apply -f -
+		kubectl apply -k k8s/overlays/$(env)
 
 .PHONY: scan
 scan:
-		kustomize build scanners/domain-dispatcher | kubectl apply -f -
+		kubectl delete job domain-dispatcher-manual -n scanners --ignore-not-found &&
+		kubectl create job domain-dispatcher-manual --from=cronjob/domain-dispatcher -n scanners
 
 .PHONY: scanners
 scanners:
@@ -83,11 +89,11 @@ scanners:
 
 .PHONY: backup
 backup:
-		kustomize build app/jobs/backup/$(env) | kubectl apply -f -
+		kubectl apply -k k8s/jobs/backup/$(env)
 
 .PHONY: superadmin
 superadmin:
-		kubectl apply -f app/jobs/super-admin.yaml
+		kubectl apply -k k8s/jobs/super-admin
 
 .PHONY: guidance
 guidance:
@@ -95,30 +101,28 @@ guidance:
 
 .PHONY: summaries
 summaries:
-		kubectl apply -f services/summaries/summaries-job.yaml
+		kubectl delete job summaries-manual -n scanners --ignore-not-found &&
+		kubectl create job summaries-manual --from=cronjob/summaries -n scanners
 
 .PHONY: reports
 reports:
-		kubectl create job dmarc-summaries-manual --from=cronjob/dmarc-report -n scanners
+		kubectl delete job dmarc-report-manual -n scanners --ignore-not-found &&
+		kubectl create job dmarc-report-manual --from=cronjob/dmarc-report -n scanners
 
 .ONESHELL:
 .PHONY: credentials
 credentials:
-		@cat <<-'EOF' > app/creds/$(mode)/scanners.env
+		@cat <<-'EOF' > k8s/apps/bases/scanners/scanner-platform/scanners.env
 		DB_PASS=test
 		DB_HOST=arangodb.db
 		DB_USER=root
 		DB_NAME=track_dmarc
 		EOF
-		cat <<-'EOF' > platform/creds/$(mode)/kiali.env
-		username=admin
-		passphrase=admin
-		EOF
-		cat <<-'EOF' > app/creds/$(mode)/arangodb.env
+		cat <<-'EOF' > k8s/infrastructure/bases/arangodb/arangodb.env
 		username=root
 		password=test
 		EOF
-		cat <<-'EOF' > app/creds/$(mode)/dmarc.env
+		cat <<-'EOF' > k8s/apps/bases/scanners/dmarc-report-cronjob/dmarc.env
 		DB_PASS=dbpass
 		DB_URL=http://arangodb.db:8529/
 		DB_NAME=track_dmarc
@@ -132,7 +136,7 @@ credentials:
 		DATABASE=tbs-tracker
 		SUMMARIES_CONTAINER=tbs-tracker-summaries
 		EOF
-		cat <<-'EOF' > app/creds/$(mode)/api.env
+		cat <<-'EOF' > k8s/apps/bases/api/api.env
 		DB_PASS=test
 		DB_URL=http://arangodb.db:8529
 		DB_NAME=track_dmarc
@@ -179,7 +183,7 @@ credentials:
 		TRACING_ENABLED=false
 		HASHING_SALT=somerandomvalue
 		EOF
-		cat <<-'EOF' > app/creds/$(mode)/superadmin.env
+		cat <<-'EOF' > k8s/jobs/super-admin/super-admin.env
 		DB_PASS=test
 		DB_URL=arangodb.db:8529
 		DB_NAME=track_dmarc
@@ -204,4 +208,4 @@ credentials:
 		SA_ORG_FR_PROVINCE=Ontario
 		SA_ORG_FR_CITY=Ottawa
 		EOF
-		echo "Credentials written to app/creds/$(mode)"
+		echo "Credentials written"
