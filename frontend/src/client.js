@@ -23,6 +23,7 @@ export function createCache() {
           findMyDomains: relayStylePagination(),
           findMyDmarcSummaries: relayStylePagination(),
           findMyOrganizations: relayStylePagination(['isAdmin']),
+          findMyUsers: relayStylePagination(),
           getOneTimeScans: {
             merge(existing = [], incoming) {
               return [...existing, incoming]
@@ -65,6 +66,11 @@ export function createCache() {
       },
       PersonalUser: {
         keyFields: [],
+      },
+      SharedUser: {
+        fields: {
+          affiliations: relayStylePagination(),
+        },
       },
     },
   })

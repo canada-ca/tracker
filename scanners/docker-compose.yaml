@@ -16,20 +16,6 @@ services:
     expose:
       - "4222"
     network_mode: host
-  counter:
-    image: gcr.io/track-compliance/counter
-    working_dir: /counter
-    build:
-      context: ./counter
-    restart: always
-    depends_on:
-    - nats
-    environment:
-      - SUBSCRIBE_TO=domains.>
-      - SERVERS=nats://localhost:4222
-    volumes:
-      - ./counter/:/counter
-    network_mode: host
   tls-processor:
     image: gcr.io/track-compliance/tls-processor
     build:

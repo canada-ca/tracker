@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
@@ -14,7 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
-import { Link as RouteLink, useParams } from 'react-router-dom'
+import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from './OrganizationDomains'
@@ -28,13 +28,23 @@ import { ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 
 export default function OrganizationDetails() {
-  const { orgSlug } = useParams()
+  const { orgSlug, activeTab } = useParams()
+  const history = useHistory()
+  const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
+  const defaultActiveTab = tabNames[0]
+
   useDocumentTitle(`${orgSlug}`)
 
-  const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
+  const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },
-    errorPolicy: 'ignore', // allow partial success
+    // errorPolicy: 'ignore', // allow partial success
   })
+
+  useEffect(() => {
+    if (!activeTab) {
+      history.replace(`/organizations/${orgSlug}/${defaultActiveTab}`)
+    }
+  }, [activeTab, history, orgSlug, defaultActiveTab])
 
   if (loading) {
     return (
@@ -44,7 +54,17 @@ export default function OrganizationDetails() {
     )
   }
 
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
+  }
+
   const orgName = data?.organization?.name ?? ''
+  const changeActiveTab = (index) => {
+    const tab = tabNames[index]
+    if (activeTab !== tab) {
+      history.replace(`/organizations/${orgSlug}/${tab}`)
+    }
+  }
 
   return (
     <Box w="100%">
@@ -80,7 +100,12 @@ export default function OrganizationDetails() {
           )}
         </Heading>
       </Flex>
-      <Tabs isFitted variant="enclosed-colored">
+      <Tabs
+        isFitted
+        variant="enclosed-colored"
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        onChange={(i) => changeActiveTab(i)}
+      >
         <TabList mb="4">
           <Tab borderTopWidth="4px">
             <Trans>Summary</Trans>

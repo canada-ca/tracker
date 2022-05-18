@@ -10,7 +10,11 @@ import { en } from 'make-plural/plurals'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
-import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG } from '../../graphql/mutations'
+import {
+  UPDATE_USER_ROLE,
+  INVITE_USER_TO_ORG,
+  REMOVE_USER_FROM_ORG,
+} from '../../graphql/mutations'
 import { UserListModal } from '../UserListModal'
 import userEvent from '@testing-library/user-event'
 import canada from '../../theme/canada'
@@ -302,7 +306,7 @@ describe('<UserListModal />', () => {
             },
           ]
 
-          const { getAllByText, queryByRole, getByRole, queryByText } = render(
+          const { getAllByText, getByRole, queryByText } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
               <UserVarProvider
                 userVar={makeVar({
@@ -358,13 +362,6 @@ describe('<UserListModal />', () => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
             ).toBeVisible()
-          })
-
-          // wait for modal to close
-          await waitFor(() => {
-            expect(
-              queryByRole('combobox', { name: /Role:/ }),
-            ).not.toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {

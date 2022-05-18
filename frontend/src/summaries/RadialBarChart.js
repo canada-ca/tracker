@@ -14,7 +14,7 @@ export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
       const arcMinRadius = chartRadius / 3
       const arcPadding = 20
       const maxPercentage = 0.75
-      const labelPadding = -width / 2 + 40
+      const labelPadding = -width / 2 + 20
 
       const { colors } = theme
       const color = d3
@@ -74,7 +74,7 @@ export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
       radialAxis
         .append('text')
         .attr('x', labelPadding)
-        .attr('y', (_d, i) => -getOuterRadius(i) + arcPadding / 1.5)
+        .attr('y', (_d, i) => -getOuterRadius(i) + arcPadding / 2)
         .text(
           (d) =>
             `${categoryDisplay[d.name].name}: ${

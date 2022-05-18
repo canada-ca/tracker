@@ -60,6 +60,7 @@ export function RelayPaginationControls({
         isLoading={isLoadingMore}
         aria-label="Previous page"
         variant="primaryOutline"
+        bgColor="gray.50"
       />
 
       <IconButton
@@ -71,6 +72,7 @@ export function RelayPaginationControls({
         aria-label="Next page"
         ml="2"
         variant="primaryOutline"
+        bgColor="gray.50"
       />
       {displayLimitControls}
     </Flex>

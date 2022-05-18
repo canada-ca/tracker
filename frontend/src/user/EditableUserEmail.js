@@ -98,6 +98,7 @@ export function EditableUserEmail({ detailValue, ...props }) {
         <EmailIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
         <Text>{detailValue}</Text>
         <Button
+          aria-label="Edit User Email"
           variant="primary"
           ml="auto"
           onClick={onOpen}

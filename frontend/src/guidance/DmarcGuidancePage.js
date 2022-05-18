@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import {
   Heading,
@@ -30,10 +30,12 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 
 export default function DmarcGuidancePage() {
-  const { domainSlug } = useParams()
+  const { domainSlug, activeTab } = useParams()
   const history = useHistory()
   const location = useLocation()
   const { from } = location.state || { from: { pathname: '/domains' } }
+  const tabNames = ['web', 'email']
+  const defaultActiveTab = tabNames[0]
 
   useDocumentTitle(`${domainSlug}`)
 
@@ -45,6 +47,12 @@ export default function DmarcGuidancePage() {
     onError: (e) => console.log(`error! recieved: ${e}`),
   })
 
+  useEffect(() => {
+    if (!activeTab) {
+      history.replace(`/domains/${domainSlug}/${defaultActiveTab}`)
+    }
+  }, [activeTab, history, domainSlug, defaultActiveTab])
+
   if (loading)
     return (
       <LoadingMessage>
@@ -53,11 +61,20 @@ export default function DmarcGuidancePage() {
     )
   if (error) return <ErrorFallbackMessage error={error} />
 
-  const domainName = data.findDomainByDomain.domain
-  const webScan = data.findDomainByDomain.web
-  const emailScan = data.findDomainByDomain.email
-  const webStatus = data.findDomainByDomain.status
-  const dmarcPhase = data.findDomainByDomain.dmarcPhase
+  const {
+    domain: domainName,
+    web: webScan,
+    email: emailScan,
+    status: webStatus,
+    dmarcPhase,
+  } = data.findDomainByDomain
+
+  const changeActiveTab = (index) => {
+    const tab = tabNames[index]
+    if (activeTab !== tab) {
+      history.replace(`/domains/${domainSlug}/${tab}`)
+    }
+  }
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
       <Box d={{ md: 'flex' }}>
@@ -88,7 +105,12 @@ export default function DmarcGuidancePage() {
           </Link>
         )}
       </Box>
-      <Tabs isFitted variant="enclosed-colored">
+      <Tabs
+        isFitted
+        variant="enclosed-colored"
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        onChange={(i) => changeActiveTab(i)}
+      >
         <TabList mb="4">
           <Tab borderTopWidth="4px">
             <Trans>Web Guidance</Trans>

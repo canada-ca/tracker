@@ -101,6 +101,7 @@ export function EditableUserPassword({ ...props }) {
         <LockIcon mr="2" ml="1" boxSize="1.3rem" aria-hidden="true" />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
         <Button
+          aria-label="Edit User Password"
           variant="primary"
           ml="auto"
           onClick={onOpen}

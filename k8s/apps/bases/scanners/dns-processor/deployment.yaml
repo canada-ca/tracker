@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dns-processor
+  name: dns-processor
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-processor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: dns-processor
+    spec:
+      containers:
+        - name: dns-processor
+          image: gcr.io/track-compliance/dns-processor:master-e8b12e3-1647452871 # {"$imagepolicy": "flux-system:dns-processor"}
+          env:
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              value: http://arangodb.db:8529
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*.dns
+            - name: QUEUE_GROUP
+              value: dnsprocessor
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+          resources: {}
+status: {}
