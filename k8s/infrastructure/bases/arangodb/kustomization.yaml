@@ -3,12 +3,3 @@ kind: Kustomization
 namespace: db
 resources:
 - arangodb-deployment.yaml
-secretGenerator:
-- envs:
-  - arangodb.env
-  name: arangodb
-  namespace: db
-generatorOptions:
-  disableNameSuffixHash: true
-
-

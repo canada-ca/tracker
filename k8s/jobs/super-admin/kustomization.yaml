@@ -3,8 +3,3 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - super-admin-job.yaml
-secretGenerator:
-- envs:
-  - super-admin.env
-  name: super-admin
-  namespace: super-admin
