@@ -5,3 +5,5 @@ secretGenerator:
   - scanners.env
   name: scanners
   namespace: scanners
+generatorOptions:
+  disableNameSuffixHash: true

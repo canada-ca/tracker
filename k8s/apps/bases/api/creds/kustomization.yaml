@@ -6,3 +6,5 @@ secretGenerator:
   - api.env
   name: api
   namespace: api
+generatorOptions:
+  disableNameSuffixHash: true
