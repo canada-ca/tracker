@@ -23,7 +23,7 @@
     "@lingui/react": "^3.13.0",
     "@visx/axis": "^2.4.0",
     "@visx/event": "^2.1.2",
-    "@visx/grid": "^2.4.0",
+    "@visx/grid": "^2.10.0",
     "@visx/group": "^2.1.0",
     "@visx/legend": "^2.2.2",
     "@visx/mock-data": "^2.1.2",
