@@ -5,3 +5,5 @@ secretGenerator:
   - super-admin.env
   name: super-admin
   namespace: super-admin
+generatorOptions:
+  disableNameSuffixHash: true

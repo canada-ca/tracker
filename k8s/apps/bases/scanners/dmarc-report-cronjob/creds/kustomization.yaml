@@ -6,3 +6,5 @@ secretGenerator:
   - dmarc.env
   name: dmarc
   namespace: scanners
+generatorOptions:
+  disableNameSuffixHash: true
