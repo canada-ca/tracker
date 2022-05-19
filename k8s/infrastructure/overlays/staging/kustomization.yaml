@@ -8,6 +8,7 @@ resources:
 - storage-classes.yaml
 patchesStrategicMerge:
   - arangodb-retain-storage-patch.yaml
+  - ingress-gateway-tls-patch.yaml
 patchesJSON6902:
 - target:
     group: install.istio.io
