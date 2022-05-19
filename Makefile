@@ -89,7 +89,8 @@ scanners:
 
 .PHONY: backup
 backup:
-		kubectl apply -k k8s/jobs/backup/$(env)
+		kubectl delete job arangodb-backup-manual -n db --ignore-not-found &&
+		kubectl create job arangodb-backup-manual -n db --from=cronjob/backup
 
 .PHONY: superadmin
 superadmin:
