@@ -32,6 +32,15 @@ spec:
         hpaSpec:
           maxReplicas: 6
           minReplicas: 2
+          metrics:
+            - type: Resource
+              resource:
+                name: cpu
+                targetAverageUtilization: 80
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: istio-ingressgateway
         podDisruptionBudget:
           minAvailable: 1
           selector:
@@ -66,6 +75,15 @@ spec:
         hpaSpec:
           maxReplicas: 6
           minReplicas: 2
+          metrics:
+            - type: Resource
+              resource:
+                name: cpu
+                targetAverageUtilization: 80
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: istiod
         strategy:
           rollingUpdate:
             maxSurge: 100%
