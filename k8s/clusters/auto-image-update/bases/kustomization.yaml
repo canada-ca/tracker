@@ -4,3 +4,4 @@ resources:
   - ../../git-repo
   - image-repo-policies
   - image-update-automation.yaml
+  - tracker-git-repo-secret-patch.yaml
