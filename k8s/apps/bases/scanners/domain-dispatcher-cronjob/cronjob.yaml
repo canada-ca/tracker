@@ -12,6 +12,9 @@ spec:
         metadata:
           labels:
             app: domain-dispatcher
+          annotations:
+            # https://github.com/istio/istio/issues/11045
+            sidecar.istio.io/inject: "false"
         spec:
           containers:
             - name: domain-dispatcher

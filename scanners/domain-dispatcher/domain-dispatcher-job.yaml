@@ -3,6 +3,9 @@ kind: Job
 metadata:
   name: dispatcher
   namespace: scanners
+  annotations:
+    # https://github.com/istio/istio/issues/11045
+    sidecar.istio.io/inject: "false"
 spec:
   ttlSecondsAfterFinished: 21600
   template:
