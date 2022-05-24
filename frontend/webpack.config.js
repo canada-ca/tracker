@@ -38,7 +38,7 @@ module.exports = (env) => {
     devServer: {
       port: 3000,
       host: '0.0.0.0',
-      publicPath: '/',
+      devMiddleware: { publicPath: '/' },
       hot: true,
       historyApiFallback: { disableDotRule: true },
     },
