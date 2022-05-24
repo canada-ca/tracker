@@ -9,7 +9,6 @@ import { execute, subscribe, GraphQLSchema } from 'graphql'
 import depthLimit from 'graphql-depth-limit'
 import { createComplexityLimitRule } from 'graphql-validation-complexity'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
-import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
@@ -63,8 +62,6 @@ export const Server = async ({
       languages: ['en', 'fr'],
     }),
   )
-
-  app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
 
   app.get('/alive', (_req, res) => {
     res.json({ ok: 'yes' })
