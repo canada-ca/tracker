@@ -5,16 +5,14 @@ metadata:
   namespace: api
 spec:
   hosts:
-  - "*"
+    - "*"
   gateways:
-  - istio-system/publicgateway
+    - istio-system/publicgateway
   http:
-  - name: gateway-to-api
-    match:
-    - uri:
-        prefix: /graphql
-    - uri:
-        prefix: /voyager
-    route:
-    - destination:
-        host: tracker-api.api.svc.cluster.local
+    - name: gateway-to-api
+      match:
+        - uri:
+            prefix: /graphql
+      route:
+        - destination:
+            host: tracker-api.api.svc.cluster.local
