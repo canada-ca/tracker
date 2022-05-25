@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: guidance
-          image: gcr.io/track-compliance/services/guidance:master-3550bbd-1636495510 # {"$imagepolicy": "flux-system:guidance"}
+          image: gcr.io/track-compliance/services/guidance:master-b872bfc-1653507691 # {"$imagepolicy": "flux-system:guidance"}
           env:
             - name: DB_URL
               value: "http://arangodb.db:8529"
