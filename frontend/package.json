@@ -63,7 +63,7 @@
     "@lingui/loader": "^3.13.0",
     "@lingui/macro": "^3.13.0",
     "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^11.2.7",
+    "@testing-library/react": "^12.1.5",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.5.0",
     "acorn": "^8.7.0",
