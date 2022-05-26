@@ -103,6 +103,7 @@ const collections = [
         query,
         transaction,
         collections,
+        publish,
         req,
         res,
         i18n,
