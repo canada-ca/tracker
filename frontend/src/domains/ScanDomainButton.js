@@ -11,7 +11,7 @@ const spin = keyframes`
   to {transform: rotate(360deg)}
 `
 
-export function ScanDomainButton({ domain, ...props }) {
+export function ScanDomainButton({ domainUrl, ...props }) {
   const toast = useToast()
 
   const [
@@ -50,9 +50,9 @@ export function ScanDomainButton({ domain, ...props }) {
       icon={
         <RepeatIcon sx={{ animationPlayState }} animation={spinAnimation} />
       }
-      aria-label={`Request scan for ${domain}`}
+      aria-label={`Request scan for ${domainUrl}`}
       onClick={async () => {
-        await requestScan({ variables: { domain } })
+        await requestScan({ variables: { domainUrl: domainUrl } })
       }}
       {...props}
     />
@@ -60,5 +60,5 @@ export function ScanDomainButton({ domain, ...props }) {
 }
 
 ScanDomainButton.propTypes = {
-  domain: string.isRequired,
+  domainUrl: string.isRequired,
 }

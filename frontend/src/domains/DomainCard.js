@@ -102,7 +102,7 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
             </Button>
           )}
         </Stack>
-        <ScanDomainButton domain={url} ml={4} />
+        <ScanDomainButton domainUrl={url} ml={4} />
       </Flex>
     </ListItem>
   )
