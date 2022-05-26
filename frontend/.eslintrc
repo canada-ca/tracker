@@ -1,20 +1,23 @@
 {
-  "extends": [
-    "standard",
-    "prettier",
-    "plugin:react/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings"
-  ],
-  "plugins": ["jest", "react-hooks"],
   "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true,
     "jest/globals": true
   },
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["react", "jest", "import", "react-hooks"],
   "rules": {
     "react/no-unescaped-entities": ["off", {}],
-    "comma-dangle": ["error", "always-multiline"],
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "off",
     "no-unused-vars": [
       "error",
       {
