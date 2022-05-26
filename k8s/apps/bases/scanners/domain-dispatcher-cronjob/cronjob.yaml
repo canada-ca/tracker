@@ -5,6 +5,7 @@ metadata:
   namespace: scanners
 spec:
   schedule: "0 0 * * *"
+  concurrencyPolicy: Replace
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 21600
