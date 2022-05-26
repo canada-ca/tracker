@@ -2,12 +2,12 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { GraphQLString, GraphQLList, GraphQLInt, GraphQLID } from 'graphql'
 import { GraphQLJSON } from 'graphql-scalars'
 
-import { databaseOptions } from '../../../../database-options'
 import { loadDmarcGuidanceTagByTagId } from '../../../guidance-tag/loaders'
 import { guidanceTagType } from '../../../guidance-tag/objects'
 import { dmarcSubType } from '../index'
 import { domainType } from '../../../domain/objects'
 import { StatusEnum } from '../../../enums'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -180,12 +180,16 @@ describe('given the dmarcSubType object', () => {
       let query, drop, truncate, collections, dmarcGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
           rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
+      }))
       })
       beforeEach(async () => {
         await truncate()
@@ -259,12 +263,16 @@ describe('given the dmarcSubType object', () => {
       let query, drop, truncate, collections, dmarcGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
           rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
+      }))
       })
       beforeEach(async () => {
         await truncate()
@@ -338,12 +346,16 @@ describe('given the dmarcSubType object', () => {
       let query, drop, truncate, collections, dmarcGT
       beforeAll(async () => {
         ;({ query, drop, truncate, collections } = await ensure({
-          type: 'database',
-          name: dbNameFromFile(__filename),
-          url,
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
           rootPassword: rootPass,
-          options: databaseOptions({ rootPass }),
-        }))
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
+      }))
       })
       beforeEach(async () => {
         await truncate()

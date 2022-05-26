@@ -1,15 +1,25 @@
 import React from 'react'
-import { any, bool, func, shape, string } from 'prop-types'
+import { any, bool, func, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, Button, Collapse, Stack, Text } from '@chakra-ui/react'
+import { Box, IconButton, Slide, Stack, Text } from '@chakra-ui/react'
+import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
 
-export function InfoPanel({ state, children }) {
+export function InfoPanel({ isOpen, onToggle, children }) {
   return (
-    <Collapse in={state.isVisible}>
-      <Box border="2px" borderColor="gray.400" rounded="md" p="1em" my="1em">
+    <Slide in={isOpen} direction="bottom" style={{ zIndex: 2 }}>
+      <Box
+        bg="white"
+        border="2px"
+        borderColor="gray.400"
+        rounded="md"
+        p="1em"
+        px="8"
+        py="8"
+      >
+        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
         <Stack direction="column">{children}</Stack>
       </Box>
-    </Collapse>
+    </Slide>
   )
 }
 
@@ -25,29 +35,32 @@ export function InfoBox({ title, info }) {
   )
 }
 
-export function InfoButton({ state, changeState, label, ...props }) {
+export function InfoButton({ isOpen, onToggle, ...props }) {
   return (
-    <Button
-      variant="info"
-      display="inline-block"
-      type="button"
-      onClick={() => {
-        changeState({
-          ...state,
-          isVisible: !state.isVisible,
-        })
-      }}
+    <IconButton
+      icon={
+        isOpen ? (
+          <ArrowDownIcon boxSize="1.5rem" />
+        ) : (
+          <ArrowUpIcon boxSize="1.5rem" />
+        )
+      }
+      aria-label={isOpen ? 'Close glossary' : 'Open glossary'}
+      onClick={onToggle}
+      color="black"
+      bg="white"
+      borderColor="black"
+      borderWidth="2px"
+      isRound
+      my="2"
       {...props}
-    >
-      <Trans> {label} </Trans>
-    </Button>
+    />
   )
 }
 
 InfoPanel.propTypes = {
-  state: shape({
-    isVisible: bool,
-  }),
+  isOpen: bool,
+  onToggle: func,
   children: any,
 }
 
@@ -57,9 +70,6 @@ InfoBox.propTypes = {
 }
 
 InfoButton.propTypes = {
-  state: shape({
-    isVisible: bool,
-  }),
-  changeState: func,
-  label: string,
+  isOpen: bool,
+  onToggle: func,
 }

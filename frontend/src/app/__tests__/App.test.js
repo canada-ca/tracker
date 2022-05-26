@@ -60,7 +60,7 @@ describe('<App/>', () => {
   describe('routes', () => {
     describe('/', () => {
       it('renders the main page', async () => {
-        const { getByText } = render(
+        const { getAllByText } = render(
           <MockedProvider mocks={mocks}>
             <UserVarProvider
               userVar={makeVar({
@@ -79,7 +79,7 @@ describe('<App/>', () => {
             </UserVarProvider>
           </MockedProvider>,
         )
-        await waitFor(() => expect(getByText(/Track digital security/i)))
+        await waitFor(() => expect(getAllByText(/Track digital security/i)))
       })
     })
 
@@ -104,9 +104,7 @@ describe('<App/>', () => {
             </UserVarProvider>
           </MockedProvider>,
         )
-        const domains = await waitFor(() =>
-          getByText(/Sign in with your username and password./i),
-        )
+        const domains = await waitFor(() => getByText(/Login to your account/i))
         await waitFor(() => {
           expect(domains).toBeInTheDocument()
         })

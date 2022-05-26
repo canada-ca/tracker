@@ -4,10 +4,8 @@ import { Box } from '@chakra-ui/react'
 
 export const Layout = ({ children, ...props }) => {
   return (
-    <Box w="100%" {...props}>
-      <Box px={4} layerStyle="pageLayout">
-        {children}
-      </Box>
+    <Box w="100%" px="4" {...props}>
+      {children}
     </Box>
   )
 }

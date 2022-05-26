@@ -147,14 +147,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
     // If account is found add just add affiliation
     else {
-      // Generate list of collections names
-      const collectionStrings = []
-      for (const property in collections) {
-        collectionStrings.push(property.toString())
-      }
-
       // Setup Transaction
-      const trx = await transaction(collectionStrings)
+      const trx = await transaction(collections)
 
       // Create affiliation
       try {

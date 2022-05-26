@@ -20,7 +20,7 @@ describe('given the loadDomainOwnership function', () => {
             id: 'dGVzdAo=',
             object: {
               text:
-                '{"Federal": {\n\t"TBS":{\n\t"TEST1": [\n\t\t"test.gc.ca",\n\t\t"test-domain.gc.ca"\n\t],\n\t"TEST2": [\n\t\t"test.canada.ca",\n\t\t"test-domain.canada.ca"\n\t]\n}\n}\n}\n',
+                '{\n\t"TEST1": [\n\t\t"test.gc.ca",\n\t\t"test-domain.gc.ca"\n\t],\n\t"TEST2": [\n\t\t"test.canada.ca",\n\t\t"test-domain.canada.ca"\n\t]\n}\n',
             },
           },
         },

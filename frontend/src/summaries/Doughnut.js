@@ -1,24 +1,21 @@
 import React from 'react'
 import { arrayOf, func, number, object, string } from 'prop-types'
-import { Box, Image, Text } from '@chakra-ui/react'
-import { scaleOrdinal } from 'd3'
+import { Box, Image, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-
-import { CrossHatch, Dots, Stripes, ZigZag } from './patterns'
+import { useLingui } from '@lingui/react'
 
 import { useArcs } from '../utilities/useArcs'
 import trackerLogo from '../images/tracker_v-03.png'
 
 export const Doughnut = ({
-  id, // id is required as svg defs can conflict
   data,
   height,
   width,
   title,
   valueAccessor = (d) => d,
-  innerRadius = Math.ceil(width / 3.5),
+  innerRadius = Math.ceil(width / 2.8),
   outerRadius = Math.ceil(width / 2.2),
-  padAngle = 0.05,
+  padAngle = 0.025,
   children,
   ...rest
 }) => {
@@ -29,78 +26,97 @@ export const Doughnut = ({
     data,
     valueAccessor,
   })
+  const { i18n } = useLingui()
 
-  const patterns = scaleOrdinal().range([
-    data[0] ? data[0].color : '#000',
-    `url(#stripes-${id})`,
-    `url(#dots-${id})`,
-    `url(#crossHatch-${id})`,
-    `url(#zigZag-${id})`,
-  ])
-
-  const patternDefs = (
-    <defs>
-      <Stripes
-        id={`stripes-${id}`}
-        angle={45}
-        background={data[1] ? data[1].color : '#000'}
-        color="#fff"
-      />
-      <Dots
-        id={`dots-${id}`}
-        size={1}
-        background={data[2] ? data[2].color : '#000'}
-        color="#fff"
-      />
-      <CrossHatch
-        id={`crossHatch-${id}`}
-        width={0.8}
-        background={data[3] ? data[3].color : '#000'}
-        color="#fff"
-      />
-      <ZigZag
-        id={`zigZag-${id}`}
-        width={0.4}
-        background={data[4] ? data[4].color : '#000'}
-        color="#fff"
-      />
-    </defs>
+  const domainContext = title.includes('DMARC') ? (
+    <Trans>Email-hosting</Trans>
+  ) : (
+    <Trans>Web-hosting</Trans>
   )
 
-  const doughnutChart = (
-    <svg height={height} width={width}>
-      <title>{title}</title>
-      {patternDefs}
-      <g transform={`translate(${width / 2},${height / 2})`}>
-        {arcs.map((arc, index) => {
-          return children(
-            { d: arc.d, fill: patterns(index / data.length - 1) },
-            index,
-          )
-        })}
-      </g>
-    </svg>
-  )
-
-  const noScanMessage = (
-    <Box>
-      <Image src={trackerLogo} alt={'Tracker Logo'} />
-      <Text fontSize="l" textAlign="center" color="black">
-        <Trans>No scan data for this organization.</Trans>
-      </Text>
-    </Box>
+  const centerMessage = (
+    <>
+      <text
+        display={i18n.locale === 'en' ? 'none' : 'inline'}
+        x={0}
+        y={15}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={
+          // `${width / 256}rem`
+          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
+        }
+        transform={`translate(${width / 2}, ${height / 2})`}
+      >
+        <Trans>Domains</Trans>
+      </text>
+      <text
+        x={0}
+        y={i18n.locale === 'en' ? 20 : 30}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={
+          // `${width / 256}rem`
+          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
+        }
+        transform={`translate(${width / 2}, ${height / 2})`}
+      >
+        {domainContext}
+      </text>
+      <text
+        display={i18n.locale === 'en' ? 'inline' : 'none'}
+        x={0}
+        y={40}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={
+          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 512}rem`
+        }
+        transform={`translate(${width / 2}, ${height / 2})`}
+      >
+        <Trans>Domains</Trans>
+      </text>
+    </>
   )
 
   let chartContent
   if (data[0].total) {
-    chartContent = doughnutChart
+    chartContent = (
+      <svg height={height} width={width}>
+        <title>{title}</title>
+        <text
+          x={0}
+          y={-15}
+          width={Math.ceil(width / 2.8)}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize={`${width / 128}rem`}
+          transform={`translate(${width / 2}, ${height / 2})`}
+        >
+          {data[0].total}
+        </text>
+        {centerMessage}
+        <g transform={`translate(${width / 2},${height / 2})`}>
+          {arcs.map((arc, index) => {
+            return children({ d: arc.d, fill: data[index].color }, index)
+          })}
+        </g>
+      </svg>
+    )
   } else {
-    chartContent = noScanMessage
+    chartContent = (
+      <Box>
+        <Image src={trackerLogo} alt={'Tracker Logo'} />
+        <Text fontSize="l" textAlign="center" color="black">
+          <Trans>No scan data for this organization.</Trans>
+        </Text>
+      </Box>
+    )
   }
 
   return (
     <div {...rest}>
-      {chartContent}
+      <Box my="4">{chartContent}</Box>
       {arcs.map(({ title, count, percentage }, index) => {
         if (percentage % 1 >= 0.5) {
           percentage = Math.ceil(percentage)
@@ -108,12 +124,14 @@ export const Doughnut = ({
           percentage = Math.floor(percentage)
         }
         return (
-          <Box
+          <Stack
+            isInline
+            borderTop={index === 0 && '1px'}
+            textAlign="left"
+            align="center"
             key={`legend:${index}`}
-            backgroundColor="primary"
-            px="2"
+            px="4"
             py={arcs.length > 2 ? '2' : '5'}
-            mx="auto"
             overflow="hidden"
           >
             <svg
@@ -122,28 +140,26 @@ export const Doughnut = ({
               style={{ display: 'inline', marginRight: '1em' }}
               aria-hidden="true"
             >
-              {patternDefs}
               <g>
                 <rect
                   stroke="#fff"
                   strokeWidth="2"
                   width="30"
                   height="30"
-                  fill={patterns(index / data.length - 1)}
+                  fill={data[index].color}
                 />
               </g>
             </svg>
             <p
               style={{
-                color: '#fff',
+                color: 'black',
                 fontWeight: 'bold',
-                backgroundColor: '#2e2e40',
                 display: 'inline',
               }}
             >
               {`${title}: ${count} - ${percentage}% `}
             </p>
-          </Box>
+          </Stack>
         )
       })}
     </div>
@@ -151,7 +167,7 @@ export const Doughnut = ({
 }
 
 Doughnut.propTypes = {
-  id: string.isRequired,
+  id: string,
   data: arrayOf(object),
   title: string,
   children: func,

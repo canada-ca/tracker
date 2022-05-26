@@ -1,22 +1,26 @@
 import React from 'react'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react'
+import { Box, Button, Flex, useToast, Image, Link } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
+
+import sigEn from '../images/goc-header-logo-dark-en.svg'
+import sigFr from '../images/goc-header-logo-dark-fr.svg'
+import trackerLogo from '../images/Asset6.svg'
+import trackerText from '../images/Asset3.svg'
 
 import { LocaleSwitcher } from './LocaleSwitcher'
 
 import { Layout } from '../components/Layout'
 import { useUserVar } from '../utilities/userState'
-import sigEn from '../images/goc-header-logo-en.svg'
-import sigFr from '../images/goc-header-logo-fr.svg'
 import { SIGN_OUT } from '../graphql/mutations'
+import { PhaseBanner } from './PhaseBanner'
+import { useLingui } from '@lingui/react'
 
 export const TopBanner = (props) => {
-  const { i18n } = useLingui()
   const { isLoggedIn, logout } = useUserVar()
   const toast = useToast()
+  const { i18n } = useLingui()
 
   const [signOut] = useMutation(SIGN_OUT, {
     onError(error) {
@@ -43,27 +47,61 @@ export const TopBanner = (props) => {
   })
 
   return (
-    <Layout bg="primary" borderBottom="3px solid" borderBottomColor="accent">
+    <Layout>
       <Flex align="center" fontFamily="body" {...props}>
-        <Box py="4" width={{ base: 272, md: 360 }}>
+        <Box
+          ml="8"
+          mr="4"
+          width={{ base: 272, md: 360 }}
+          display={{ base: 'none', md: 'initial' }}
+        >
           <Image
             src={i18n.locale === 'en' ? sigEn : sigFr}
-            pr={16}
-            py={2}
+            pr="auto"
+            py="6"
             minHeight="41px"
-            alt={'Symbol of the Government of Canada'}
+            alt={t`Symbol of the Government of Canada`}
           />
         </Box>
+        <Link as={RouteLink} to="/">
+          <Flex align="center">
+            <Box
+              my="4"
+              ml="4"
+              width={{ base: 0, md: 125 }}
+              display={{ base: 'none', md: 'initial' }}
+            >
+              <Image src={trackerLogo} alt={t`Tracker logo outline`} />
+            </Box>
+            <Box
+              mr="4"
+              my="4"
+              width={{ base: 0, md: 125 }}
+              display={{ base: 'none', md: 'initial' }}
+            >
+              <Image src={trackerText} alt={t`Tracker logo text`} />
+            </Box>
+          </Flex>
+        </Link>
 
-        <Box ml="auto" />
+        <PhaseBanner
+          phase={<Trans>BETA</Trans>}
+          ml={{ base: '0', md: 'auto' }}
+          mr="2"
+        >
+          <Trans>This is a new service, we are constantly improving.</Trans>
+        </PhaseBanner>
+
+        <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
+          <LocaleSwitcher />
+        </Box>
 
         {isLoggedIn() ? (
           <Button
-            variant="primaryHover"
+            variant="primaryWhite"
             as={RouteLink}
             to="/"
-            mr={2}
-            px={3}
+            px="3"
             display={{ base: 'none', md: 'inline' }}
             onClick={signOut}
           >
@@ -75,28 +113,23 @@ export const TopBanner = (props) => {
               variant="primaryWhite"
               as={RouteLink}
               to="/sign-in"
-              mr={2}
-              px={3}
+              px="3"
+              mr="2"
               display={{ base: 'none', md: 'inline' }}
             >
               <Trans>Sign In</Trans>
             </Button>
             <Button
-              variant="primaryHover"
+              variant="primaryWhite"
               as={RouteLink}
               to="/create-user"
-              mr={2}
-              px={3}
+              px="3"
               display={{ base: 'none', md: 'inline' }}
             >
               <Trans>Create Account</Trans>
             </Button>
           </>
         )}
-
-        <Box py={4}>
-          <LocaleSwitcher />
-        </Box>
       </Flex>
     </Layout>
   )

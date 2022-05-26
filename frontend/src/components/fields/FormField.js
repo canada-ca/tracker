@@ -57,6 +57,7 @@ function FormField({
             autoComplete={autoComplete}
             {...field}
             {...inputProps}
+            borderColor="black"
           />
           {rightElement && (
             <InputRightElement>{rightElement}</InputRightElement>

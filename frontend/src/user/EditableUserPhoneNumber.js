@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -15,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { PhoneIcon } from '@chakra-ui/icons'
+import { PhoneIcon } from '../theme/Icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
@@ -26,8 +27,9 @@ import { PhoneNumberField } from '../components/fields/PhoneNumberField'
 import { AuthenticateField } from '../components/fields/AuthenticateField'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { SET_PHONE_NUMBER, VERIFY_PHONE_NUMBER } from '../graphql/mutations'
+import { EditIcon } from '@chakra-ui/icons'
 
-export function EditableUserPhoneNumber({ detailValue }) {
+export function EditableUserPhoneNumber({ detailValue, ...props }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -254,30 +256,38 @@ export function EditableUserPhoneNumber({ detailValue }) {
   const modalContent = phoneCodeSent ? verifyPhoneModal : setPhoneModal
 
   return (
-    <Stack>
-      <Heading as="h3" size="md">
+    <Box {...props}>
+      <Heading as="h3" size="md" mb="1">
         <Trans>Phone Number:</Trans>
       </Heading>
 
-      <Flex align="center">
-        <PhoneIcon color="gray.300" mr={2} aria-hidden="true" />
+      <Flex
+        align="center"
+        borderWidth="1px"
+        borderColor="gray.500"
+        rounded="md"
+        p="1"
+      >
+        <PhoneIcon mr="2" ml="1" boxSize="1.2rem" aria-hidden="true" />
         {detailValue ? (
           <Text>{detailValue}</Text>
         ) : (
           <Trans>No current phone number</Trans>
         )}
         <Button
+          aria-label="Edit User Phone Number"
           variant="primary"
           ml="auto"
           onClick={onOpen}
           fontSize="sm"
           px="3"
         >
+          <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
         </Button>
       </Flex>
       {modalContent}
-    </Stack>
+    </Box>
   )
 }
 

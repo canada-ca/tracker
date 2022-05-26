@@ -1,0 +1,298 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-api
+  name: tracker-api
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tracker-api
+    spec:
+      initContainers:
+        - image: gcr.io/track-compliance/database-migration:test-0000003
+          name: database-migration
+          env:
+            - name: DB_USER
+              value: root
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_PASS
+            - name: ROOT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_PASS
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_NAME
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_URL
+            - name: DB_DESCRIPTION
+              value: /app/database.json
+          volumeMounts:
+            - name: database-config
+              mountPath: /app
+      containers:
+        - image: gcr.io/track-compliance/api-js:master-0d6bd96-1653415093 # {"$imagepolicy": "flux-system:api"}
+          name: api
+          ports:
+            - containerPort: 4000
+          env:
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_PASS
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_NAME
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_URL
+            - name: CIPHER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: CIPHER_KEY
+            - name: AUTHENTICATED_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: AUTHENTICATED_KEY
+            - name: REFRESH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: REFRESH_KEY
+            - name: SIGN_IN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SIGN_IN_KEY
+            - name: AUTH_TOKEN_EXPIRY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: AUTH_TOKEN_EXPIRY
+            - name: REFRESH_TOKEN_EXPIRY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: REFRESH_TOKEN_EXPIRY
+            - name: LOGIN_REQUIRED
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: LOGIN_REQUIRED
+            - name: NOTIFICATION_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_API_KEY
+            - name: NOTIFICATION_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_API_URL
+            - name: DMARC_REPORT_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DMARC_REPORT_API_URL
+            - name: DMARC_REPORT_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DMARC_REPORT_API_SECRET
+            - name: DMARC_REPORT_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DMARC_REPORT_API_TOKEN
+            - name: TOKEN_HASH
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: TOKEN_HASH
+            - name: DEPTH_LIMIT
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DEPTH_LIMIT
+            - name: COST_LIMIT
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: COST_LIMIT
+            - name: SCALAR_COST
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SCALAR_COST
+            - name: OBJECT_COST
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: OBJECT_COST
+            - name: LIST_FACTOR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: OBJECT_COST
+            - name: DNS_SCANNER_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DNS_SCANNER_ENDPOINT
+            - name: HTTPS_SCANNER_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: HTTPS_SCANNER_ENDPOINT
+            - name: SSL_SCANNER_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SSL_SCANNER_ENDPOINT
+            - name: NOTIFICATION_AUTHENTICATE_EMAIL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_AUTHENTICATE_EMAIL_ID
+            - name: NOTIFICATION_AUTHENTICATE_TEXT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_AUTHENTICATE_TEXT_ID
+            - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
+            - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR
+            - name: NOTIFICATION_ORG_INVITE_EN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_EN
+            - name: NOTIFICATION_ORG_INVITE_FR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_FR
+            - name: NOTIFICATION_PASSWORD_RESET_EN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_PASSWORD_RESET_EN
+            - name: NOTIFICATION_PASSWORD_RESET_FR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_PASSWORD_RESET_FR
+            - name: NOTIFICATION_TWO_FACTOR_CODE_EN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_TWO_FACTOR_CODE_EN
+            - name: NOTIFICATION_TWO_FACTOR_CODE_FR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_TWO_FACTOR_CODE_FR
+            - name: NOTIFICATION_VERIFICATION_EMAIL_EN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_VERIFICATION_EMAIL_EN
+            - name: NOTIFICATION_VERIFICATION_EMAIL_FR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_VERIFICATION_EMAIL_FR
+            - name: TRACING_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: TRACING_ENABLED
+            - name: REDIS_PORT_NUMBER
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: REDIS_PORT_NUMBER
+            - name: REDIS_DOMAIN_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: REDIS_DOMAIN_NAME
+            - name: DKIM_SCAN_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DKIM_SCAN_CHANNEL
+            - name: DMARC_SCAN_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DMARC_SCAN_CHANNEL
+            - name: SPF_SCAN_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SPF_SCAN_CHANNEL
+            - name: SSL_SCAN_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SSL_SCAN_CHANNEL
+            - name: HTTPS_SCAN_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: HTTPS_SCAN_CHANNEL
+            - name: HASHING_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: HASHING_SALT
+          resources:
+            limits:
+              cpu: 300m
+              memory: 150Mi
+            requests:
+              cpu: 300m
+              memory: 70Mi
+      volumes:
+        - name: database-config
+          configMap:
+            name: database-config
+status: {}

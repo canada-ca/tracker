@@ -52,8 +52,8 @@ const getSchema = (options) => {
       string()
         .required(i18n._(t`Selector cannot be empty`))
         .matches(
-          /^([\S]+)([.]_domainkey)$/gm,
-          i18n._(t`Selector must be string ending in '._domainkey'`),
+          /^[a-zA-Z0-9](\.?[a-zA-Z0-9])*$/gm,
+          i18n._(t`Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters`),
         ),
     ),
   }

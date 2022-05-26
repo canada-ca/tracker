@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -15,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { EmailIcon } from '@chakra-ui/icons'
+import { EditIcon } from '@chakra-ui/icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
@@ -24,8 +25,9 @@ import { string } from 'prop-types'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { EmailField } from '../components/fields/EmailField'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
+import { EmailIcon } from '../theme/Icons'
 
-export function EditableUserEmail({ detailValue }) {
+export function EditableUserEmail({ detailValue, ...props }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -81,21 +83,29 @@ export function EditableUserEmail({ detailValue }) {
   )
 
   return (
-    <Stack>
-      <Heading as="h3" size="md">
+    <Box {...props}>
+      <Heading as="h3" size="md" mb="1">
         <Trans>Email:</Trans>
       </Heading>
 
-      <Flex align="center">
-        <EmailIcon color="gray.300" mr={2} aria-hidden="true" />
+      <Flex
+        align="center"
+        borderWidth="1px"
+        borderColor="gray.500"
+        rounded="md"
+        p="1"
+      >
+        <EmailIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
         <Text>{detailValue}</Text>
         <Button
+          aria-label="Edit User Email"
           variant="primary"
           ml="auto"
           onClick={onOpen}
           fontSize="sm"
           px="3"
         >
+          <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
         </Button>
       </Flex>
@@ -163,7 +173,7 @@ export function EditableUserEmail({ detailValue }) {
           </Formik>
         </ModalContent>
       </Modal>
-    </Stack>
+    </Box>
   )
 }
 

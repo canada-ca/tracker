@@ -3,13 +3,27 @@ kind: Kustomization
 resources:
 - ../base
 patchesJSON6902:
+# Patch the operator so that our IP is used.
 - target:
     group: install.istio.io
     version: v1alpha1
     kind: IstioOperator
     name: istio-controlplane
-    namespace: istio-operator
+    namespace: istio-system
   patch: |-
     - op: add
       path: /spec/components/ingressGateways/0/k8s/service/loadBalancerIP
       value: 34.95.5.243
+# Patch the cert-manager service account so that it has permissions to use Cloud
+# DNS:
+# https://cert-manager.io/docs/configuration/acme/dns01/google/#link-ksa-to-gsa-in-kubernetes
+- target:
+    version: v1
+    kind: ServiceAccount
+    name: cert-manager
+    namespace: cert-manager
+  patch: |-
+    - op: add
+      path: "/metadata/annotations"
+      value:
+        iam.gke.io/gcp-service-account: dns01-solver@track-compliance.iam.gserviceaccount.com

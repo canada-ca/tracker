@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {
   Box,
   Button,
-  Divider,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,7 +11,6 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -50,10 +49,9 @@ export default function UserPage() {
   const { i18n } = useLingui()
   const [emailSent, setEmailSent] = useState(false)
   const { logout } = useUserVar()
-  const [sendEmailVerification, { error }] = useMutation(
-    SEND_EMAIL_VERIFICATION,
-    {
-      onError() {
+  const [sendEmailVerification, { loading: loadEmailVerification }] =
+    useMutation(SEND_EMAIL_VERIFICATION, {
+      onError(error) {
         toast({
           title: error.message,
           description: t`Unable to send verification email`,
@@ -74,8 +72,7 @@ export default function UserPage() {
         })
         setEmailSent(true)
       },
-    },
-  )
+    })
 
   const [closeAccount, { loading: loadingCloseAccount }] = useMutation(
     CLOSE_ACCOUNT,
@@ -178,33 +175,26 @@ export default function UserPage() {
           </Trans>
         </NotificationBanner>
       )}
-      <SimpleGrid columns={{ base: 1, md: 2 }} width="100%">
-        <Stack py={25} px="4">
-          <EditableUserDisplayName detailValue={displayName} />
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} width="100%">
+        <Box mt={25} px="4">
+          <EditableUserDisplayName detailValue={displayName} mb="8" />
 
-          <Divider />
+          <EditableUserEmail detailValue={userName} mb="8" />
 
-          <EditableUserEmail detailValue={userName} />
-
-          <Divider />
-
-          <EditableUserPassword />
-
-          <Divider />
+          <EditableUserPassword mb="8" />
 
           <EditableUserLanguage currentLang={preferredLang} />
-        </Stack>
+        </Box>
 
-        <Stack p={25} spacing={4}>
-          <EditableUserPhoneNumber detailValue={phoneNumber} />
-
-          <Divider />
+        <Box mt={25} px="4">
+          <EditableUserPhoneNumber detailValue={phoneNumber} mb="8" />
 
           <EditableUserTFAMethod
             isUserAdmin={queryUserData?.isUserAdmin}
             currentTFAMethod={tfaSendMethod}
             emailValidated={emailValidated}
             phoneValidated={phoneValidated}
+            mb="16"
           />
 
           {!emailValidated && (
@@ -214,27 +204,26 @@ export default function UserPage() {
                 sendEmailVerification({ variables: { userName: userName } })
               }}
               disabled={emailSent}
+              isLoading={loadEmailVerification}
             >
               <EmailIcon mr={2} aria-hidden="true" />
               <Trans>Verify Account</Trans>
             </Button>
           )}
-
-          <Divider />
-
-          <Button
-            variant="danger"
-            onClick={() => {
-              closeAccountOnOpen()
-            }}
-            ml="auto"
-            w={{ base: '100%', md: 'auto' }}
-            mb={2}
-            alignSelf="flex-end"
-          >
-            <Trans> Close Account </Trans>
-          </Button>
-        </Stack>
+          <Flex>
+            <Button
+              variant="danger"
+              onClick={() => {
+                closeAccountOnOpen()
+              }}
+              w={{ base: '100%', md: 'auto' }}
+              ml="auto"
+              mb={2}
+            >
+              <Trans> Close Account </Trans>
+            </Button>
+          </Flex>
+        </Box>
 
         <Modal
           isOpen={closeAccountIsOpen}

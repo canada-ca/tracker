@@ -1,7 +1,8 @@
-import './src/env'
-import { ensure } from 'arango-tools'
+import 'dotenv-safe/config'
+import { Database, aql } from 'arangojs'
 import { Server } from './src/server'
-import { databaseOptions } from './database-options'
+import { createContext } from './src/create-context'
+import { createI18n } from './src/create-i18n'
 import { connect, JSONCodec } from 'nats'
 
 const {
@@ -15,18 +16,60 @@ const {
   OBJECT_COST: objectCost,
   LIST_FACTOR: listFactor,
   TRACING_ENABLED: tracing,
-  LOGIN_REQUIRED,
+  HASHING_SALT,
+  LOGIN_REQUIRED = 'true',
   NATS_URL,
 } = process.env
 
+const collections = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
+
 ;(async () => {
-  const { query, collections, transaction } = await ensure({
-    type: 'database',
-    name: databaseName,
+  const db = new Database({
     url,
-    rootPassword: rootPass,
-    options: databaseOptions({ rootPass }),
+    databaseName,
+    auth: { username: 'root', password: rootPass },
   })
+
+  const query = async function query(strings, ...vars) {
+    return db.query(aql(strings, ...vars), {
+      count: true,
+    })
+  }
+
+  const transaction = async function transaction(collections) {
+    return db.beginTransaction(collections)
+  }
 
   const nc = await connect({ servers: NATS_URL })
 
@@ -45,13 +88,27 @@ const {
   }
 
   const server = await Server({
-    arango: {
-      db: databaseName,
-      url,
-      as: {
-        username: 'root',
-        password: rootPass,
-      },
+    context: async ({ req, res, connection }) => {
+      if (connection) {
+        // XXX: assigning over req?
+        req = {
+          headers: {
+            authorization: connection.authorization,
+          },
+          language: connection.language,
+        }
+      }
+      const i18n = createI18n(req.language)
+      return createContext({
+        query,
+        transaction,
+        collections,
+        req,
+        res,
+        i18n,
+        loginRequiredBool: LOGIN_REQUIRED === 'true', // bool not string
+        salt: HASHING_SALT,
+      })
     },
     maxDepth,
     complexityCost,
@@ -59,12 +116,6 @@ const {
     objectCost,
     listFactor,
     tracing,
-    context: {
-      query,
-      collections,
-      transaction,
-      publish,
-    },
   })
 
   console.log(

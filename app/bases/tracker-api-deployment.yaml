@@ -18,8 +18,39 @@ spec:
       labels:
         app: tracker-api
     spec:
+      initContainers:
+        - image: gcr.io/track-compliance/database-migration:test-0000003
+          name: database-migration
+          env:
+            - name: DB_USER
+              value: root
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_PASS
+            - name: ROOT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_PASS
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_NAME
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: DB_URL
+            - name: DB_DESCRIPTION
+              value: /app/database.json
+          volumeMounts:
+            - name: database-config
+              mountPath: /app
       containers:
-        - image: gcr.io/track-compliance/api-js:master-316da59-1643665562 # {"$imagepolicy": "flux-system:api"}
+        - image: gcr.io/track-compliance/api-js:master-0d6bd96-1653415093 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
@@ -256,4 +287,8 @@ spec:
             requests:
               cpu: 300m
               memory: 70Mi
+      volumes:
+        - name: database-config
+          configMap:
+            name: database-config
 status: {}

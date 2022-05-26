@@ -7,7 +7,7 @@ describe('given a selectors scalar', () => {
     describe('given valid inputs', () => {
       describe('given a valid selector', () => {
         it('returns test selector', () => {
-          const testSelector = 'selector1._domainkey'
+          const testSelector = 'selector1'
           expect(Selectors.serialize(testSelector)).toEqual(testSelector)
         })
       })
@@ -38,7 +38,7 @@ describe('given a selectors scalar', () => {
     describe('given valid inputs', () => {
       describe('given a valid selector', () => {
         it('returns test selector', () => {
-          const testSelector = 'selector1._domainkey'
+          const testSelector = 'selector1'
           expect(Selectors.parseValue(testSelector)).toEqual(testSelector)
         })
       })
@@ -69,7 +69,7 @@ describe('given a selectors scalar', () => {
     describe('given valid inputs', () => {
       describe('given a valid selector', () => {
         it('returns test selector', () => {
-          const testSelector = 'selector1._domainkey'
+          const testSelector = 'selector1'
           const testLiteral = {
             kind: Kind.STRING,
             value: testSelector,

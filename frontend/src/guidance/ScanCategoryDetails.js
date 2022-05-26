@@ -205,7 +205,9 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
   )
 
   return (
-    <AccordionItem buttonLabel={categoryName.toUpperCase()}>
+    <AccordionItem
+      buttonLabel={categoryName === 'ssl' ? 'TLS' : categoryName.toUpperCase()}
+    >
       {webSummary}
       <Divider />
       {tagDetails}

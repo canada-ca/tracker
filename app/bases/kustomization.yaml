@@ -16,4 +16,4 @@ resources:
 - summaries-cronjob.yaml
 - dmarc-report-cronjob.yaml
 - scan-dispatcher-cronjob.yaml
-- log4shell-processor-service.yaml
+- database-configmap.yaml

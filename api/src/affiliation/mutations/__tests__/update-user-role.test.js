@@ -5,7 +5,6 @@ import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
@@ -17,8 +16,42 @@ import {
 } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('update a users role', () => {
   let query, drop, truncate, schema, collections, transaction, i18n, user
@@ -46,11 +79,15 @@ describe('update a users role', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
     })
     beforeEach(async () => {
@@ -162,7 +199,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -239,7 +276,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -325,7 +362,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -402,7 +439,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -497,7 +534,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -640,7 +677,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -718,7 +755,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -805,7 +842,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -883,7 +920,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -979,7 +1016,7 @@ describe('update a users role', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1075,7 +1112,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -1146,7 +1183,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -1217,7 +1254,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -1290,7 +1327,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -1366,7 +1403,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -1442,7 +1479,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -1525,7 +1562,7 @@ describe('update a users role', () => {
                         .fn()
                         .mockReturnValue({ permission: 'super_admin' }),
                     }),
-                    collections,
+                    collections: collectionNames,
                     transaction: jest.fn(),
                     userKey: 123,
                     auth: {
@@ -1608,7 +1645,7 @@ describe('update a users role', () => {
                         .fn()
                         .mockReturnValue({ permission: 'super_admin' }),
                     }),
-                    collections,
+                    collections: collectionNames,
                     transaction: jest.fn(),
                     userKey: 123,
                     auth: {
@@ -1692,7 +1729,7 @@ describe('update a users role', () => {
                       .fn()
                       .mockReturnValue({ permission: 'super_admin' }),
                   }),
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn(),
                   userKey: 123,
                   auth: {
@@ -1771,7 +1808,7 @@ describe('update a users role', () => {
                     count: 1,
                     next: jest.fn().mockReturnValue({ permission: 'admin' }),
                   }),
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn(),
                   userKey: 123,
                   auth: {
@@ -1850,7 +1887,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -1925,7 +1962,7 @@ describe('update a users role', () => {
                   count: 1,
                   next: jest.fn().mockRejectedValue(new Error('cursor error')),
                 }),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -2000,7 +2037,7 @@ describe('update a users role', () => {
                   count: 1,
                   next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step error'),
                 }),
@@ -2075,7 +2112,7 @@ describe('update a users role', () => {
                   count: 1,
                   next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit error'),
@@ -2166,7 +2203,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -2238,7 +2275,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -2310,7 +2347,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -2384,7 +2421,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -2460,7 +2497,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -2536,7 +2573,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -2619,7 +2656,7 @@ describe('update a users role', () => {
                         .fn()
                         .mockReturnValue({ permission: 'super_admin' }),
                     }),
-                    collections,
+                    collections: collectionNames,
                     transaction: jest.fn(),
                     userKey: 123,
                     auth: {
@@ -2702,7 +2739,7 @@ describe('update a users role', () => {
                         .fn()
                         .mockReturnValue({ permission: 'super_admin' }),
                     }),
-                    collections,
+                    collections: collectionNames,
                     transaction: jest.fn(),
                     userKey: 123,
                     auth: {
@@ -2786,7 +2823,7 @@ describe('update a users role', () => {
                       .fn()
                       .mockReturnValue({ permission: 'super_admin' }),
                   }),
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn(),
                   userKey: 123,
                   auth: {
@@ -2865,7 +2902,7 @@ describe('update a users role', () => {
                     count: 1,
                     next: jest.fn().mockReturnValue({ permission: 'admin' }),
                   }),
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn(),
                   userKey: 123,
                   auth: {
@@ -2944,7 +2981,7 @@ describe('update a users role', () => {
               {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -3019,7 +3056,7 @@ describe('update a users role', () => {
                   count: 1,
                   next: jest.fn().mockRejectedValue(new Error('cursor error')),
                 }),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
@@ -3094,7 +3131,7 @@ describe('update a users role', () => {
                   count: 1,
                   next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockRejectedValue('trx step error'),
                 }),
@@ -3169,7 +3206,7 @@ describe('update a users role', () => {
                   count: 1,
                   next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
                   commit: jest.fn().mockRejectedValue('trx commit error'),

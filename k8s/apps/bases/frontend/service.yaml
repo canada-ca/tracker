@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tracker-frontend
+  namespace: frontend
+spec:
+  ports:
+  - name: http-frontend
+    port: 3000
+  selector:
+    app: tracker-frontend
+  type: ClusterIP
+status:
+  loadBalancer: {}

@@ -4,10 +4,10 @@ import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { databaseOptions } from '../../../../database-options'
 import { cleanseInput } from '../../../validators'
 import { loadDomainConnectionsByOrgId, loadDomainByKey } from '../index'
 import { toGlobalId } from 'graphql-relay'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -29,12 +29,16 @@ describe('given the load domain connection using org id function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
         rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
-      }))
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -76,7 +80,7 @@ describe('given the load domain connection using org id function', () => {
       domain = await collections.domains.save({
         domain: 'test.domain.gc.ca',
         lastRan: '2021-01-02 12:12:12.000000',
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -92,7 +96,7 @@ describe('given the load domain connection using org id function', () => {
       domainTwo = await collections.domains.save({
         domain: 'test.domain.canada.ca',
         lastRan: '2021-01-01 12:12:12.000000',
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'fail',
           dmarc: 'fail',
@@ -611,112 +615,6 @@ describe('given the load domain connection using org id function', () => {
             })
           })
         })
-        describe('ordering on LAST_RAN', () => {
-          describe('order direction is ASC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                after: toGlobalId('domain', expectedDomains[1]._key),
-                orderBy: {
-                  field: 'last-ran',
-                  direction: 'ASC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[0]._key),
-                    node: {
-                      ...expectedDomains[0],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: true,
-                  startCursor: toGlobalId('domain', expectedDomains[0]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[0]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-          describe('order direction is DESC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                after: toGlobalId('domain', expectedDomains[0]._key),
-                orderBy: {
-                  field: 'last-ran',
-                  direction: 'DESC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[1]._key),
-                    node: {
-                      ...expectedDomains[1],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: true,
-                  startCursor: toGlobalId('domain', expectedDomains[1]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[1]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-        })
         describe('ordering on DKIM_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
@@ -1104,112 +1002,6 @@ describe('given the load domain connection using org id function', () => {
                 after: toGlobalId('domain', expectedDomains[0]._key),
                 orderBy: {
                   field: 'spf-status',
-                  direction: 'DESC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[1]._key),
-                    node: {
-                      ...expectedDomains[1],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: true,
-                  startCursor: toGlobalId('domain', expectedDomains[1]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[1]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-        })
-        describe('ordering on SSL_STATUS', () => {
-          describe('order direction is ASC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                after: toGlobalId('domain', expectedDomains[1]._key),
-                orderBy: {
-                  field: 'ssl-status',
-                  direction: 'ASC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[0]._key),
-                    node: {
-                      ...expectedDomains[0],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: true,
-                  startCursor: toGlobalId('domain', expectedDomains[0]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[0]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-          describe('order direction is DESC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                after: toGlobalId('domain', expectedDomains[0]._key),
-                orderBy: {
-                  field: 'ssl-status',
                   direction: 'DESC',
                 },
               }
@@ -1355,112 +1147,6 @@ describe('given the load domain connection using org id function', () => {
             })
           })
         })
-        describe('ordering on LAST_RAN', () => {
-          describe('order direction is ASC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                before: toGlobalId('domain', expectedDomains[0]._key),
-                orderBy: {
-                  field: 'last-ran',
-                  direction: 'ASC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[1]._key),
-                    node: {
-                      ...expectedDomains[1],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: true,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('domain', expectedDomains[1]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[1]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-          describe('order direction is DESC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                before: toGlobalId('domain', expectedDomains[1]._key),
-                orderBy: {
-                  field: 'last-ran',
-                  direction: 'DESC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[0]._key),
-                    node: {
-                      ...expectedDomains[0],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: true,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('domain', expectedDomains[0]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[0]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-        })
         describe('ordering on DKIM_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
@@ -1848,112 +1534,6 @@ describe('given the load domain connection using org id function', () => {
                 before: toGlobalId('domain', expectedDomains[1]._key),
                 orderBy: {
                   field: 'spf-status',
-                  direction: 'DESC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[0]._key),
-                    node: {
-                      ...expectedDomains[0],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: true,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('domain', expectedDomains[0]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[0]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-        })
-        describe('ordering on SSL_STATUS', () => {
-          describe('order direction is ASC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                before: toGlobalId('domain', expectedDomains[0]._key),
-                orderBy: {
-                  field: 'ssl-status',
-                  direction: 'ASC',
-                },
-              }
-              const connectionLoader = loadDomainConnectionsByOrgId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-              })
-              const domains = await connectionLoader({
-                orgId: org._id,
-                ownership: false,
-                ...connectionArgs,
-              })
-
-              const expectedStructure = {
-                edges: [
-                  {
-                    cursor: toGlobalId('domain', expectedDomains[1]._key),
-                    node: {
-                      ...expectedDomains[1],
-                    },
-                  },
-                ],
-                totalCount: 2,
-                pageInfo: {
-                  hasNextPage: true,
-                  hasPreviousPage: false,
-                  startCursor: toGlobalId('domain', expectedDomains[1]._key),
-                  endCursor: toGlobalId('domain', expectedDomains[1]._key),
-                },
-              }
-
-              expect(domains).toEqual(expectedStructure)
-            })
-          })
-          describe('order direction is DESC', () => {
-            it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
-              const expectedDomains = await domainLoader.loadMany([
-                domain._key,
-                domainTwo._key,
-              ])
-
-              expectedDomains[0].id = expectedDomains[0]._key
-              expectedDomains[1].id = expectedDomains[1]._key
-
-              const connectionArgs = {
-                first: 1,
-                before: toGlobalId('domain', expectedDomains[1]._key),
-                orderBy: {
-                  field: 'ssl-status',
                   direction: 'DESC',
                 },
               }

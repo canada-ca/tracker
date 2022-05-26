@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { Server } from '../server'
 import { ensure, dbNameFromFile } from 'arango-tools'
-import { databaseOptions } from '../../database-options'
+import dbschema from '../../database.json'
 
 const {
   DB_PASS: rootPass,
@@ -24,11 +24,14 @@ describe('parse server', () => {
     console.warn = mockedWarn
     // create the database so that middleware can connect
     ;({ drop } = await ensure({
-      type: 'database',
-      name,
-      url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      variables: {
+        dbname: name,
+        username: 'root',
+        rootPassword: rootPass,
+        password: rootPass,
+        url,
+      },
+      schema: dbschema,
     }))
   })
 
@@ -40,16 +43,7 @@ describe('parse server', () => {
 
   describe('/alive', () => {
     it('returns 200', async () => {
-      const server = await Server({
-        arango: {
-          db: name,
-          url,
-          as: {
-            username: 'root',
-            password: rootPass,
-          },
-        },
-      })
+      const server = await Server({})
 
       const response = await request(server).get('/alive')
       expect(response.status).toEqual(200)
@@ -79,14 +73,6 @@ describe('parse server', () => {
       it('returns 200', async () => {
         const response = await request(
           await Server({
-            arango: {
-              db: name,
-              url,
-              as: {
-                username: 'root',
-                password: rootPass,
-              },
-            },
             maxDepth,
             complexityCost,
             scalarCost,
@@ -112,15 +98,7 @@ describe('parse server', () => {
         it('returns an error message', async () => {
           const response = await request(
             await Server({
-              arango: {
-                db: name,
-                url,
-                as: {
-                  username: 'root',
-                  password: rootPass,
-                },
-              },
-              maxDepth,
+              maxDepth: 5,
               complexityCost: 1,
               scalarCost: 100,
               objectCost: 100,
@@ -142,18 +120,11 @@ describe('parse server', () => {
           )
         })
       })
+
       describe('query depth is too high', () => {
         it('returns an error message', async () => {
           const response = await request(
             await Server({
-              arango: {
-                db: name,
-                url,
-                as: {
-                  username: 'root',
-                  password: rootPass,
-                },
-              },
               maxDepth: 1,
               complexityCost: 1000,
               scalarCost: 1,

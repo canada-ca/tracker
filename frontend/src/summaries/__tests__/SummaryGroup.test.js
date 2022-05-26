@@ -41,24 +41,9 @@ const data = {
         percentage: 20,
       },
       {
-        name: 'assess',
-        count: 200,
-        percentage: 20,
-      },
-      {
-        name: 'deploy',
-        count: 200,
-        percentage: 20,
-      },
-      {
-        name: 'enforce',
-        count: 200,
-        percentage: 20,
-      },
-      {
-        name: 'maintain',
-        count: 200,
-        percentage: 20,
+        name: 'implemented',
+        count: 800,
+        percentage: 80,
       },
     ],
     total: 1000,
@@ -85,7 +70,11 @@ describe('<SummaryGroup />', () => {
           /HTTPS is configured and HTTP connections redirect to HTTPS \(ITPIN 6.1.1\)/i,
         ),
       ).toBeInTheDocument()
-      expect(getByText(/dmarc phase summary/i)).toBeInTheDocument()
+      expect(
+        getByText(
+          /A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports/i,
+        ),
+      ).toBeInTheDocument()
     })
   })
 })

@@ -28,6 +28,7 @@ const tooltipStyles = {
   borderColor: 'black',
   borderWidth: '1px',
   fontSize: '1.1rem',
+  zIndex: 11,
 }
 
 const totalKeys = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
@@ -81,7 +82,7 @@ export function DmarcReportSummaryGraph({ ...props }) {
   const ResponsiveVerticalGraph = withScreenSize(VerticalGraph)
 
   return (
-    <Stack w="100%" align={{ base: 'center', md: 'flex-start' }}>
+    <Stack w="100%">
       <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
         <Stack
           isInline
@@ -121,11 +122,13 @@ export function DmarcReportSummaryGraph({ ...props }) {
           </Select>
         </Stack>
       </Flex>
-      {isHorizontal ? (
-        <ResponsiveHorizontalGraph data={data} keys={keys} />
-      ) : (
-        <ResponsiveVerticalGraph data={data} keys={keys} />
-      )}
+      <Stack align="center">
+        {isHorizontal ? (
+          <ResponsiveHorizontalGraph data={data} keys={keys} />
+        ) : (
+          <ResponsiveVerticalGraph data={data} keys={keys} />
+        )}
+      </Stack>
     </Stack>
   )
 }
@@ -176,10 +179,12 @@ function VerticalGraph({
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [strong, moderate, moderateAlt, weak],
+    // range: ['#22485B', '#675292', '#A15196', '#F15E6B'].reverse(),
   })
   const ordinalColorScale = scaleOrdinal({
     domain: [t`Pass`, t`Fail DKIM`, t`Fail SPF`, t`Fail`],
     range: [strong, moderate, moderateAlt, weak],
+    // range: ['#22485B', '#675292', '#A15196', '#F15E6B'].reverse(),
   })
 
   dateScale.rangeRound([0, xMax])

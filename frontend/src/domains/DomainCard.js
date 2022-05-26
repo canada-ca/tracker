@@ -9,13 +9,14 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 
 export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
+  const location = useLocation()
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
     border: '1px solid',
@@ -32,7 +33,11 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
     <ListItem {...rest}>
       <Flex
         width="100%"
-        p="4"
+        px="4"
+        py={hasDMARCReport ? '2.5' : '6'}
+        borderWidth="1px"
+        rounded="md"
+        borderColor="black"
         pl={{ md: '8' }}
         alignItems={{ base: 'flex-start', md: 'center' }}
         flexDirection={{ base: 'column', md: 'row' }}
@@ -50,8 +55,7 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           <Text isTruncated>{url}</Text>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
-        <Divider variant="card" display={{ md: 'none' }} />
-        <Flex {...statusGroupingProps}>
+        <Flex {...statusGroupingProps} px="1">
           <StatusBadge text={t`ITPIN`} status={status.policy} />
           <StatusBadge text={t`HTTPS`} status={status.https} />
           <StatusBadge text={t`HSTS`} status={status.hsts} />
@@ -59,7 +63,7 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           <StatusBadge text={t`Curves`} status={status.curves} />
           <StatusBadge text={t`Protocols`} status={status.protocols} />
         </Flex>
-        <Flex {...statusGroupingProps}>
+        <Flex {...statusGroupingProps} px="1">
           <StatusBadge text="SPF" status={status.spf} />
           <StatusBadge text="DKIM" status={status.dkim} />
           <StatusBadge text="DMARC" status={status.dmarc} />
@@ -70,12 +74,15 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           justifySelf="flex-end"
           alignSelf="stretch"
           justifyContent="center"
-          ml={4}
+          ml={{ base: 0, md: '4' }}
         >
           <Button
             variant="primary"
             as={RouteLink}
-            to={`/domains/${url}`}
+            to={{
+              pathname: `/domains/${url}`,
+              state: { from: location.pathname },
+            }}
             px="10"
           >
             <Text whiteSpace="noWrap">

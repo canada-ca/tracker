@@ -3,7 +3,6 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
@@ -12,8 +11,42 @@ import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('removing an organization', () => {
   let query, drop, truncate, schema, collections, transaction, i18n, user
@@ -42,11 +75,15 @@ describe('removing an organization', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
     })
     beforeEach(async () => {
@@ -136,7 +173,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -248,7 +285,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
@@ -362,7 +399,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -427,7 +464,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -494,7 +531,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -562,7 +599,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -630,7 +667,7 @@ describe('removing an organization', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest
                       .fn()
@@ -696,7 +733,7 @@ describe('removing an organization', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest
                       .fn()
@@ -764,7 +801,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
                   commit: jest
@@ -848,7 +885,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -914,7 +951,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -981,7 +1018,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -1049,7 +1086,7 @@ describe('removing an organization', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -1117,7 +1154,7 @@ describe('removing an organization', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest
                       .fn()
@@ -1183,7 +1220,7 @@ describe('removing an organization', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
                     step: jest
                       .fn()
@@ -1251,7 +1288,7 @@ describe('removing an organization', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
                   commit: jest

@@ -17,18 +17,19 @@ module.exports.dmarcReport = async ({
   const orgAcronyms = Object.keys(ownerships)
 
   // loop through orgs
-  for (const orgAcronymEn of orgAcronyms) {
+  for (const orgAcronym of orgAcronyms) {
+    const orgAcronymEn = orgAcronym.split('-')[0]
     // check if org exists
     const checkOrg = await loadCheckOrg({ orgAcronymEn })
     if (!checkOrg) {
-      console.warn(`Org: ${orgAcronymEn} cannot be found in datastore`)
+      console.warn(`Org: ${orgAcronym} cannot be found in datastore`)
       continue
     }
 
-    console.info(`Updating DMARC summary info for org: ${String(orgAcronymEn)}`)
+    console.info(`Updating DMARC summary info for org: ${String(orgAcronym)}`)
 
     // loop through the domains
-    for (const domain of ownerships[orgAcronymEn]) {
+    for (const domain of ownerships[orgAcronym]) {
       // check to see if domain exists
       const checkDomain = await loadCheckDomain({ domain })
       if (!checkDomain) {
@@ -46,7 +47,7 @@ module.exports.dmarcReport = async ({
       // if the domain is not owned create ownership
       if (!orgOwner) {
         console.info(
-          `\t\tAssigning ${domain} ownership to: ${String(orgAcronymEn)}`,
+          `\t\tAssigning ${domain} ownership to: ${String(orgAcronym)}`,
         )
         await createOwnership({ domain, orgAcronymEn })
       }
@@ -56,13 +57,13 @@ module.exports.dmarcReport = async ({
         await removeOwnership({ domain, orgAcronymEn })
 
         console.info(
-          `\t\tAssigning ${domain} ownership to: ${String(orgAcronymEn)}`,
+          `\t\tAssigning ${domain} ownership to: ${String(orgAcronym)}`,
         )
         await createOwnership({ domain, orgAcronymEn })
       } else {
         console.info(
           `\t\tOwnership of ${domain} is already assigned to ${String(
-            orgAcronymEn,
+            orgAcronym,
           )}`,
         )
       }

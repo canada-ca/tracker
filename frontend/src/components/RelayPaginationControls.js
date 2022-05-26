@@ -1,7 +1,8 @@
-import { Button, Select, Flex, Text } from '@chakra-ui/react'
+import { Select, Flex, Text, IconButton } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { array, bool, func, number } from 'prop-types'
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
 export function RelayPaginationControls({
   previous,
@@ -42,7 +43,6 @@ export function RelayPaginationControls({
             resetToFirstPage() // Make sure to provide this as a prop if !onlyPagination
           }}
           width="fit-content"
-          variant="filled"
         >
           {options}
         </Select>
@@ -51,29 +51,29 @@ export function RelayPaginationControls({
   }
 
   return (
-    <Flex align="center" mb="4" {...props}>
-      <Button
+    <Flex align="center" {...props}>
+      <IconButton
         id="previousPageBtn"
+        icon={<ChevronLeftIcon boxSize="2rem" />}
         onClick={previous}
         isDisabled={!hasPreviousPage}
         isLoading={isLoadingMore}
         aria-label="Previous page"
         variant="primaryOutline"
-      >
-        <Trans>Previous</Trans>
-      </Button>
+        bgColor="gray.50"
+      />
 
-      <Button
+      <IconButton
         id="nextPageBtn"
+        icon={<ChevronRightIcon boxSize="2rem" />}
         onClick={next}
         isDisabled={!hasNextPage}
         isLoading={isLoadingMore}
         aria-label="Next page"
         ml="2"
         variant="primaryOutline"
-      >
-        <Trans>Next</Trans>
-      </Button>
+        bgColor="gray.50"
+      />
       {displayLimitControls}
     </Flex>
   )

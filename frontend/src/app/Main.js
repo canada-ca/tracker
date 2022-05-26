@@ -1,10 +1,11 @@
 import React from 'react'
-import { node } from 'prop-types'
+import { bool, node } from 'prop-types'
 import { Flex } from '@chakra-ui/react'
 
 export const Main = ({ children }) => (
   <Flex
     layerStyle="pageLayout"
+    mx="auto"
     as="main"
     id="main"
     fontFamily="body"
@@ -17,4 +18,4 @@ export const Main = ({ children }) => (
   </Flex>
 )
 
-Main.propTypes = { children: node }
+Main.propTypes = { children: node, slideMessageOpen: bool }

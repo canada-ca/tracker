@@ -10,8 +10,8 @@ export function LoadingMessage({ children }) {
         <Spinner
           size="lg"
           speed="0.6s"
-          color="primary"
-          emptyColor="accent"
+          color="btnMain"
+          emptyColor="btnDisabled"
           thickness="0.175em"
         />
         <Text>

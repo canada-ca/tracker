@@ -69,7 +69,7 @@ describe('<CreateUserPage />', () => {
 
     await waitFor(() =>
       expect(
-        queryByText(/Create an account by entering an email and password./),
+        queryByText(/Welcome to Tracker, please enter your details./),
       ).toBeInTheDocument(),
     )
   })

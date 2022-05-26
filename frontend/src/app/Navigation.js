@@ -7,25 +7,21 @@ export const Navigation = ({ children, ...props }) => {
   return (
     <Flex
       as="nav"
-      align="center"
-      justify="space-between"
-      wrap="wrap"
       padding={{ sm: '0.6rem', md: '0.80rem', lg: '1rem', xl: '1rem' }}
-      bg="#fff"
-      py="4px"
       color="primary"
       borderBottom="2px solid"
-      borderBottomColor="gray.300"
+      borderBottomColor="black"
       display={{ base: 'none', md: 'flex' }}
+      mx="12"
       {...props}
     >
       <Stack
-        layerStyle="pageLayout"
+        ml="auto"
         isInline
         alignItems="center"
         flexWrap="wrap"
-        spacing={{ md: 4, lg: 6 }}
-        px={4}
+        spacing={{ md: '4', lg: '6' }}
+        fontWeight="semibold"
       >
         {React.Children.map(children, (child) => {
           if (child !== null) {

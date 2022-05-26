@@ -1,11 +1,14 @@
 ([Français](#sécurité))
 
-# Security
+# Reporting Security Issues
 
-**Do not post any security issues on the public repository!** Security vulnerabilities must be reported by email to zzcybers@tbs-sct.gc.ca
+To report a security issue, email [zztbscybers@tbs-sct.gc.ca](mailto:zztbscybers@tbs-sct.gc.ca) and include the word "SECURITY" in the subject line.
 
+The TBS team will send a response indicating the next steps in handling your report. After the initial reply to your report, the security team will keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
 ______________________
 
-## Sécurité
+## Signalement des problèmes de sécurité
 
-**Ne publiez aucun problème de sécurité sur le dépôt publique!** Les vulnérabilités de sécurité doivent être signalées par courriel à zzcybers@tbs-sct.gc.ca
+Pour signaler un problème de sécurité, envoyez un courriel à [zztbscybers@tbs-sct.gc.ca](mailto:zztbscybers@tbs-sct.gc.ca) et ajoutez le mot « SÉCURITÉ » à la ligne d’objet.
+
+L’équipe du SCT enverra une réponse indiquant les prochaines étapes de la gestion de votre rapport. Après la réponse initiale à votre rapport, l’équipe de sécurité vous tiendra au courant des progrès vers une solution et l’annonce complète, et peut demander des informations ou des conseils supplémentaires.

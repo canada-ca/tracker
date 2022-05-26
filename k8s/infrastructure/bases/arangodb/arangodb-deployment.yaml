@@ -1,0 +1,55 @@
+kind: ArangoDeployment
+apiVersion: database.arangodb.com/v1alpha
+metadata:
+  name: arangodb
+  namespace: db
+  labels:
+    app: 'arangodb'
+spec:
+  image: arangodb/arangodb:3.7.17
+  environment: Production
+  mode: Cluster
+  tls:
+    caSecretName: None
+  externalAccess:
+    type: None
+  bootstrap:
+    passwordSecretNames:
+      root: arangodb
+  agents:
+    count: 3
+    volumeClaimTemplate:
+      spec:
+        storageClassName: slow-delete
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
+        volumeMode: Filesystem
+        persistentVolumeReclaimPolicy: Delete
+  dbservers:
+    count: 3
+    volumeClaimTemplate:
+      spec:
+        storageClassName: fast-delete
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 80Gi
+        volumeMode: Filesystem
+        persistentVolumeReclaimPolicy: Delete
+  coordinators:
+    count: 3
+  single:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        volumeMode: Filesystem
+    storageClassName: standard2
+

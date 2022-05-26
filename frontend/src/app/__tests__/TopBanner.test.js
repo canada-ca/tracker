@@ -25,7 +25,7 @@ describe('<TopBanner />', () => {
   afterEach(cleanup)
 
   it('renders using the language prop correctly', () => {
-    const { getByAltText } = render(
+    const { getByText } = render(
       <MockedProvider>
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
@@ -40,6 +40,6 @@ describe('<TopBanner />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    expect(getByAltText('Symbol of the Government of Canada'))
+    expect(getByText('This is a new service, we are constantly improving.'))
   })
 })

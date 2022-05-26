@@ -3,7 +3,6 @@ import { ensure, dbNameFromFile } from 'arango-tools'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
-import { databaseOptions } from '../../../../database-options'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
@@ -18,8 +17,42 @@ import {
 import { loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
+import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const collectionNames = [
+  'users',
+  'organizations',
+  'domains',
+  'dkim',
+  'dkimResults',
+  'dmarc',
+  'spf',
+  'https',
+  'ssl',
+  'dkimGuidanceTags',
+  'dmarcGuidanceTags',
+  'spfGuidanceTags',
+  'httpsGuidanceTags',
+  'sslGuidanceTags',
+  'chartSummaries',
+  'dmarcSummaries',
+  'aggregateGuidanceTags',
+  'scanSummaryCriteria',
+  'chartSummaryCriteria',
+  'scanSummaries',
+  'affiliations',
+  'claims',
+  'domainsDKIM',
+  'dkimToDkimResults',
+  'domainsDMARC',
+  'domainsSPF',
+  'domainsHTTPS',
+  'domainsSSL',
+  'ownership',
+  'domainsToDmarcSummaries',
+]
 
 describe('removing a domain', () => {
   let schema, i18n, query, drop, truncate, collections, transaction, user
@@ -44,11 +77,15 @@ describe('removing a domain', () => {
   describe('given a successful domain removal', () => {
     beforeEach(async () => {
       ;({ query, drop, truncate, collections, transaction } = await ensure({
-        type: 'database',
-        name: dbNameFromFile(__filename),
-        url,
-        rootPassword: rootPass,
-        options: databaseOptions({ rootPass }),
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
+
+        schema: dbschema,
       }))
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
@@ -232,7 +269,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -320,7 +357,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -394,7 +431,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -457,7 +494,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -548,7 +585,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -626,7 +663,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -745,7 +782,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -833,7 +870,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -907,7 +944,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -970,7 +1007,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1061,7 +1098,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1139,7 +1176,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1235,7 +1272,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1323,7 +1360,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1397,7 +1434,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1460,7 +1497,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1587,7 +1624,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1665,7 +1702,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1753,7 +1790,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1841,7 +1878,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -1915,7 +1952,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -1978,7 +2015,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2105,7 +2142,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2183,7 +2220,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2387,7 +2424,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2475,7 +2512,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2549,7 +2586,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2612,7 +2649,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -2703,7 +2740,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2781,7 +2818,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2871,7 +2908,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -2959,7 +2996,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -3033,7 +3070,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -3096,7 +3133,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: user._key,
                 auth: {
@@ -3223,7 +3260,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -3301,7 +3338,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query,
-                  collections,
+                  collections: collectionNames,
                   transaction,
                   userKey: user._key,
                   auth: {
@@ -3393,7 +3430,7 @@ describe('removing a domain', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -3461,7 +3498,7 @@ describe('removing a domain', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -3533,7 +3570,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -3608,7 +3645,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -3683,7 +3720,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -3760,7 +3797,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -3835,7 +3872,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -3912,7 +3949,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -3982,7 +4019,7 @@ describe('removing a domain', () => {
                   .fn()
                   .mockReturnValueOnce({})
                   .mockRejectedValue(new Error('database error')),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -4056,7 +4093,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: jest.fn().mockReturnValue({ count: 1 }),
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -4130,7 +4167,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: jest.fn().mockReturnValue({ count: 1 }),
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -4209,7 +4246,7 @@ describe('removing a domain', () => {
                   .fn()
                   .mockReturnValueOnce({ count: 0 })
                   .mockReturnValue({ count: 1 }),
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -4291,7 +4328,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: jest.fn().mockReturnValue({ count: 1 }),
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -4368,7 +4405,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: mockedQuery,
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -4444,7 +4481,7 @@ describe('removing a domain', () => {
             {
               i18n,
               query: jest.fn().mockReturnValue({ count: 2 }),
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
               auth: {
@@ -4527,7 +4564,7 @@ describe('removing a domain', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -4595,7 +4632,7 @@ describe('removing a domain', () => {
             {
               i18n,
               query,
-              collections,
+              collections: collectionNames,
               transaction,
               userKey: 123,
               auth: {
@@ -4667,7 +4704,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -4742,7 +4779,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -4817,7 +4854,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -4894,7 +4931,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -4969,7 +5006,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query,
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -5046,7 +5083,7 @@ describe('removing a domain', () => {
               {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -5118,7 +5155,7 @@ describe('removing a domain', () => {
                   .fn()
                   .mockReturnValueOnce({})
                   .mockRejectedValue(new Error('database error')),
-                collections,
+                collections: collectionNames,
                 transaction,
                 userKey: 123,
                 auth: {
@@ -5194,7 +5231,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: jest.fn().mockReturnValue({ count: 1 }),
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -5270,7 +5307,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: jest.fn().mockReturnValue({ count: 1 }),
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -5351,7 +5388,7 @@ describe('removing a domain', () => {
                   .fn()
                   .mockReturnValueOnce({ count: 0 })
                   .mockReturnValue({ count: 1 }),
-                collections,
+                collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
@@ -5435,7 +5472,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: jest.fn().mockReturnValue({ count: 1 }),
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -5514,7 +5551,7 @@ describe('removing a domain', () => {
                 {
                   i18n,
                   query: mockedQuery,
-                  collections,
+                  collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
                   auth: {
@@ -5592,7 +5629,7 @@ describe('removing a domain', () => {
             {
               i18n,
               query: jest.fn().mockReturnValue({ count: 2 }),
-              collections,
+              collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
               auth: {

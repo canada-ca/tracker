@@ -111,7 +111,7 @@ export default function SignInPage() {
   if (loading) return <LoadingMessage />
 
   return (
-    <Box px="4" mx="auto" overflow="hidden">
+    <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '', rememberMe: false }}
@@ -133,47 +133,70 @@ export default function SignInPage() {
             name="form"
             autoComplete="on"
           >
-            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
-              <Trans>Sign in with your username and password.</Trans>
+            <Heading
+              as="h1"
+              fontSize="3xl"
+              mb="8"
+              textAlign={{ lg: 'left', md: 'center' }}
+            >
+              <Trans>Login</Trans>
             </Heading>
 
-            <EmailField name="email" mb={4} />
+            <Box mb="8">
+              <Text fontSize="lg" fontWeight="bold" mb="2">
+                <Trans>Login to your account</Trans>
+              </Text>
+            </Box>
 
-            <PasswordField name="password" mb={2} />
+            <Box w={{ md: '100%', lg: '33%' }}>
+              <EmailField name="email" mb={4} />
 
-            <Flex align="center" mb="4">
-              <Checkbox
-                name="rememberMe"
-                colorScheme="orange"
-                size="lg"
-                onChange={handleChange}
+              <PasswordField name="password" mb={2} />
+
+              <Flex mb="4">
+                <Checkbox
+                  name="rememberMe"
+                  colorScheme="orange"
+                  borderColor="black"
+                  size="lg"
+                  onChange={handleChange}
+                >
+                  <Text fontSize="md">
+                    <Trans>Remember me</Trans>
+                  </Text>
+                </Checkbox>
+
+                <Link
+                  as={RouteLink}
+                  to="/forgot-password"
+                  color="primary"
+                  ml="auto"
+                >
+                  <Text>
+                    <Trans>Forgot your password?</Trans>
+                  </Text>
+                </Link>
+              </Flex>
+
+              <Button
+                variant="primary"
+                isLoading={isSubmitting}
+                type="submit"
+                width="100%"
+                mb={5}
               >
-                <Text fontSize="md">
-                  <Trans>Remember me</Trans>
-                </Text>
-              </Checkbox>
+                <Trans>Sign In</Trans>
+              </Button>
 
-              <Link
-                as={RouteLink}
-                to="/forgot-password"
-                color="primary"
-                ml="auto"
-              >
-                <Text>
-                  <Trans>Forgot your password?</Trans>
-                </Text>
-              </Link>
-            </Flex>
-
-            <Button
-              variant="primary"
-              isLoading={isSubmitting}
-              type="submit"
-              width="100%"
-              mb={5}
-            >
-              <Trans>Sign In</Trans>
-            </Button>
+              <Text textAlign="center">
+                <Trans>
+                  Don't have an account?{' '}
+                  <Link as={RouteLink} to="/create-user">
+                    Sign up
+                  </Link>
+                </Trans>
+              </Text>
+            </Box>
           </form>
         )}
       </Formik>

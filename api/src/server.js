@@ -9,17 +9,10 @@ import { execute, subscribe, GraphQLSchema } from 'graphql'
 import depthLimit from 'graphql-depth-limit'
 import { createComplexityLimitRule } from 'graphql-validation-complexity'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
-import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
-import { createContext } from './create-context'
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
 import { createSubscriptionSchema } from './subscription'
-import { createI18n } from './create-i18n'
-import { verifyToken, userRequired, verifiedRequired } from './auth'
-import { loadUserByKey } from './user/loaders'
-import { customOnConnect } from './on-connect'
-import { arangodb } from 'arango-express'
 
 const createSchema = () =>
   new GraphQLSchema({
@@ -50,7 +43,6 @@ const createValidationRules = (
 }
 
 export const Server = async ({
-  arango = {},
   maxDepth,
   complexityCost,
   scalarCost,
@@ -70,10 +62,6 @@ export const Server = async ({
       languages: ['en', 'fr'],
     }),
   )
-
-  app.use(arangodb(arango))
-
-  app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
 
   app.get('/alive', (_req, res) => {
     res.json({ ok: 'yes' })
@@ -108,7 +96,7 @@ export const Server = async ({
 
   const server = new ApolloServer({
     schema,
-    context: createContext(context),
+    context,
     validationRules: createValidationRules(
       maxDepth,
       complexityCost,
@@ -129,15 +117,6 @@ export const Server = async ({
       schema,
       execute,
       subscribe,
-      onConnect: customOnConnect({
-        createContext,
-        serverContext: context,
-        createI18n,
-        verifyToken,
-        userRequired,
-        loadUserByKey,
-        verifiedRequired,
-      }),
     },
     {
       server: httpServer,

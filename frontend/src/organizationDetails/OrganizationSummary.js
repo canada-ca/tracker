@@ -12,8 +12,8 @@ export function OrganizationSummary({
   province,
 }) {
   return (
-    <Box w="100%" px={4}>
-      <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }}>
+    <Box w="100%">
+      <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }} mb="8">
         <Stack isInline align="center">
           <Text>
             <Trans>Based in:</Trans>

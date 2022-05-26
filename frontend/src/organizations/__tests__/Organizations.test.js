@@ -440,7 +440,7 @@ describe('<Organisations />', () => {
           initialIndex: 0,
         })
 
-        const { getByText } = render(
+        const { getByText, getAllByLabelText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
             <UserVarProvider
               userVar={makeVar({
@@ -469,17 +469,17 @@ describe('<Organisations />', () => {
           expect(getByText(/organization one/)).toBeInTheDocument(),
         )
 
-        const next = await waitFor(() => getByText('Next'))
+        const next = await waitFor(() => getAllByLabelText('Next page'))
 
-        fireEvent.click(next)
+        fireEvent.click(next[0])
 
         await waitFor(() =>
           expect(getByText(/organization two/)).toBeInTheDocument(),
         )
 
-        const previous = await waitFor(() => getByText('Previous'))
+        const previous = await waitFor(() => getAllByLabelText('Previous page'))
 
-        fireEvent.click(previous)
+        fireEvent.click(previous[0])
 
         await waitFor(() =>
           expect(getByText(/organization one/)).toBeInTheDocument(),
@@ -665,7 +665,7 @@ describe('<Organisations />', () => {
           initialIndex: 0,
         })
 
-        const { queryByText } = render(
+        const { queryByText, getAllByLabelText } = render(
           <MockedProvider mocks={mocks} cache={cache}>
             <UserVarProvider
               userVar={makeVar({
@@ -694,9 +694,9 @@ describe('<Organisations />', () => {
           expect(queryByText(/organization one/)).toBeInTheDocument(),
         )
 
-        const next = queryByText('Next')
+        const next = getAllByLabelText('Next page')
 
-        fireEvent.click(next)
+        fireEvent.click(next[0])
 
         await waitFor(() =>
           expect(queryByText(/organization two/)).toBeInTheDocument(),

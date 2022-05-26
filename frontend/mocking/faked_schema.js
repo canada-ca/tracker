@@ -122,6 +122,27 @@ export const getTypeNames = () => gql`
     # Query the currently logged in user.
     findMe: PersonalUser
 
+    # Select users an admin has access to.
+    findMyUsers(
+      # Ordering options for user affiliation
+      orderBy: AffiliationUserOrder
+
+      # String used to search for users.
+      search: String
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): UserConnection
+
     # Query a specific user by user name.
     findUserByUsername(
       # Email address of user you wish to gather data for.
@@ -327,7 +348,7 @@ export const getTypeNames = () => gql`
   # String that conforms to a domain structure.
   scalar DomainScalar
 
-  # A field that conforms to a string, with strings ending in ._domainkey.
+  # A field that conforms to a string.
   scalar Selector
 
   # This object contains how the domain is doing on the various scans we preform, based on the latest scan data.
@@ -559,11 +580,14 @@ export const getTypeNames = () => gql`
 
   # Properties by which domain connections can be ordered.
   enum DomainOrderField {
+    # Order domains by ciphers status.
+    CIPHERS_STATUS
+
+    # Order domains by curves status.
+    CURVES_STATUS
+
     # Order domains by domain.
     DOMAIN
-
-    # Order domains by last ran.
-    LAST_RAN
 
     # Order domains by dkim status.
     DKIM_STATUS
@@ -574,11 +598,17 @@ export const getTypeNames = () => gql`
     # Order domains by https status.
     HTTPS_STATUS
 
+    # Order domains by hsts status.
+    HSTS_STATUS
+
+    # Order domains by ITPIN policy status.
+    POLICY_STATUS
+
+    # Order domains by protocols status.
+    PROTOCOLS_STATUS
+
     # Order domains by spf status.
     SPF_STATUS
-
-    # Order domains by ssl status.
-    SSL_STATUS
   }
 
   # Possible directions in which to order a list of items when provided an \`orderBy\` argument.
@@ -649,6 +679,30 @@ export const getTypeNames = () => gql`
 
     # Users email address.
     userName: EmailAddress
+
+    # Has the user email verified their account.
+    emailValidated: Boolean
+
+    # Users affiliations to various organizations.
+    affiliations(
+      # Ordering options for affiliation connections.
+      orderBy: AffiliationOrgOrder
+
+      # String used to search for affiliated organizations.
+      search: String
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): AffiliationConnection
   }
 
   # A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
@@ -667,6 +721,15 @@ export const getTypeNames = () => gql`
   enum AffiliationUserOrderField {
     # Order affiliation edges by username.
     USER_USERNAME
+
+    # Order affiliation edges by displayName
+    USER_DISPLAYNAME
+
+    # Order affiliation edges by user verification status
+    USER_EMAIL_VALIDATED
+
+    # Order affiliation edges by amount of total affiliations
+    USER_AFFILIATIONS_COUNT
   }
 
   # Ordering options for organization connections
@@ -2330,6 +2393,27 @@ export const getTypeNames = () => gql`
 
     # Order affiliations by org domain count.
     ORG_DOMAIN_COUNT
+  }
+
+  # A connection to a list of items.
+  type UserConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [UserEdge]
+
+    # The total amount of users the user has access to.
+    totalCount: Int
+  }
+
+  # An edge in a connection.
+  type UserEdge {
+    # The item at the end of the edge
+    node: SharedUser
+
+    # A cursor for use in pagination
+    cursor: String!
   }
 
   # Domain object containing information for a given domain.
