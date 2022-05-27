@@ -1,15 +1,8 @@
 import { t } from '@lingui/macro'
 
 export const checkDomainPermission =
-  ({ i18n, query, userKey, auth: { loginRequiredBool } }) =>
+  ({ i18n, query, userKey }) =>
   async ({ domainId }) => {
-    if (userKey === 'NO_USER' && !loginRequiredBool) {
-      const domain = await query`
-        RETURN DOCUMENT(${domainId})
-      `
-      return domain !== undefined
-    }
-
     let userAffiliatedClaims, claim
     const userKeyString = `users/${userKey}`
 
