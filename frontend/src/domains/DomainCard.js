@@ -13,6 +13,7 @@ import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
+import { ScanDomainButton } from './ScanDomainButton'
 
 export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
   const location = useLocation()
@@ -101,6 +102,7 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
             </Button>
           )}
         </Stack>
+        <ScanDomainButton domainUrl={url} ml={4} />
       </Flex>
     </ListItem>
   )
