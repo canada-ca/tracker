@@ -297,7 +297,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                      status: `Successfully removed domain: test.gc.ca from communications-security-establishment.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -308,7 +308,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -386,7 +386,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
+                        'A réussi à supprimer le domaine : test.gc.ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -397,7 +397,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -810,7 +810,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                      status: `Successfully removed domain: test.gc.ca from communications-security-establishment.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -821,7 +821,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -899,7 +899,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
+                        'A réussi à supprimer le domaine : test.gc.ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -910,7 +910,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -1300,7 +1300,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1311,7 +1311,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -1389,7 +1389,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1400,7 +1400,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -1467,7 +1467,7 @@ describe('removing a domain', () => {
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
-          it.skip('removes all scan data', async () => {
+          it('removes all scan data', async () => {
             await graphql(
               schema,
               `
@@ -1818,7 +1818,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1829,7 +1829,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -1907,7 +1907,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1918,7 +1918,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -1985,7 +1985,7 @@ describe('removing a domain', () => {
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
-          it.skip('removes all scan data', async () => {
+          it('removes all scan data', async () => {
             await graphql(
               schema,
               `
@@ -2452,7 +2452,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -2463,7 +2463,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -2541,7 +2541,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -2552,7 +2552,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -2936,7 +2936,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -2947,7 +2947,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -3025,7 +3025,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3036,7 +3036,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -3103,7 +3103,7 @@ describe('removing a domain', () => {
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
-          it.skip('removes all scan data', async () => {
+          it('removes all scan data', async () => {
             await graphql(
               schema,
               `
@@ -3583,7 +3583,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3610,7 +3610,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3658,7 +3658,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3685,7 +3685,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3733,7 +3733,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3760,7 +3760,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3810,7 +3810,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3837,7 +3837,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -3885,7 +3885,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3912,7 +3912,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -3962,7 +3962,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3981,7 +3981,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting domain claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting domain claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -4032,7 +4032,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4051,7 +4051,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting ownership claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting ownership claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -4106,7 +4106,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4125,7 +4125,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -4180,7 +4180,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4199,7 +4199,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -4259,7 +4259,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4278,7 +4278,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove scan data for domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove DKIM data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -4288,7 +4288,6 @@ describe('removing a domain', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
@@ -4341,7 +4340,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4360,7 +4359,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove domain domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -4418,7 +4417,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4437,7 +4436,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove claim for domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove claim for domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -4494,7 +4493,7 @@ describe('removing a domain', () => {
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({
-                    slug: 'domain-gc-ca',
+                    domain: 'domain.gc.ca',
                   }),
                 },
                 loadOrgByKey: {
@@ -4513,7 +4512,7 @@ describe('removing a domain', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Trx commit error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+            `Trx commit error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -4717,7 +4716,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4744,7 +4743,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -4792,7 +4791,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4819,7 +4818,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -4867,7 +4866,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4894,7 +4893,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -4944,7 +4943,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4971,7 +4970,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -5019,7 +5018,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5046,7 +5045,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -5096,7 +5095,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5117,7 +5116,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting domain claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting domain claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -5168,7 +5167,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5189,7 +5188,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting ownership claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting ownership claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -5244,7 +5243,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5265,7 +5264,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -5320,7 +5319,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5341,7 +5340,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -5401,7 +5400,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5422,7 +5421,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove scan data for domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove DKIM data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -5432,7 +5431,6 @@ describe('removing a domain', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
@@ -5485,7 +5483,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5506,7 +5504,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove domain domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -5564,7 +5562,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5585,7 +5583,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove claim for domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove claim for domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -5642,7 +5640,7 @@ describe('removing a domain', () => {
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({
-                    slug: 'domain-gc-ca',
+                    domain: 'domain.gc.ca',
                   }),
                 },
                 loadOrgByKey: {
@@ -5663,7 +5661,7 @@ describe('removing a domain', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Trx commit error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+            `Trx commit error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
           ])
         })
       })
