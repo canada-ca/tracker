@@ -297,7 +297,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                      status: `Successfully removed domain: test.gc.ca from communications-security-establishment.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -308,7 +308,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -386,7 +386,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
+                        'A réussi à supprimer le domaine : test.gc.ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -397,7 +397,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -810,7 +810,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                      status: `Successfully removed domain: test.gc.ca from communications-security-establishment.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -821,7 +821,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -899,7 +899,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de communications-security-establishment.',
+                        'A réussi à supprimer le domaine : test.gc.ca de communications-security-establishment.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -910,7 +910,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: communications-security-establishment.`,
               ])
             })
           })
@@ -1300,7 +1300,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1311,7 +1311,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -1389,7 +1389,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1400,7 +1400,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -1818,7 +1818,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1829,7 +1829,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -1907,7 +1907,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -1918,7 +1918,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -2452,7 +2452,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -2463,7 +2463,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -2541,7 +2541,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -2552,7 +2552,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -2936,7 +2936,7 @@ describe('removing a domain', () => {
                 data: {
                   removeDomain: {
                     result: {
-                      status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                      status: `Successfully removed domain: test.gc.ca from treasury-board-secretariat.`,
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -2947,7 +2947,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
@@ -3025,7 +3025,7 @@ describe('removing a domain', () => {
                   removeDomain: {
                     result: {
                       status:
-                        'A réussi à supprimer le domaine : test-gc-ca de treasury-board-secretariat.',
+                        'A réussi à supprimer le domaine : test.gc.ca de treasury-board-secretariat.',
                       domain: {
                         domain: 'test.gc.ca',
                       },
@@ -3036,7 +3036,7 @@ describe('removing a domain', () => {
 
               expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+                `User: ${user._key} successfully removed domain: test.gc.ca from org: treasury-board-secretariat.`,
               ])
             })
           })
