@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restore-backup
+  namespace: db
+  labels:
+    job: restore-backup
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: download
+          image: rclone/rclone
+          volumeMounts:
+            - mountPath: /tmp/dump
+              name:
+                dump
+          args:
+            - rclone copy :azureblob:dbdump/${RESTORE_BACKUP_DIRECTORY} /tmp/dump
+          command:
+            - /bin/sh
+            - -c
+          env:
+            - name: RESTORE_BACKUP_DIRECTORY
+              valueFrom:
+                secretKeyRef:
+                  key: RESTORE_BACKUP_DIRECTORY
+                  name: restore-backup-directory
+            - name: RCLONE_AZUREBLOB_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  key: az-dbdump-account
+                  name: az-dbdump-account
+            - name: RCLONE_AZUREBLOB_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: az-dbdump-sak
+                  name: az-dbdump-sak
