@@ -3583,7 +3583,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3610,7 +3610,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3658,7 +3658,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3685,7 +3685,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3733,7 +3733,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3760,7 +3760,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -3810,7 +3810,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3837,7 +3837,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -3885,7 +3885,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3912,7 +3912,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -3962,7 +3962,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -3981,7 +3981,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting domain claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting domain claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -4032,7 +4032,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4051,7 +4051,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting ownership claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting ownership claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -4106,7 +4106,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4125,7 +4125,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -4180,7 +4180,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4199,7 +4199,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -4259,7 +4259,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4278,7 +4278,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove scan data for domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove scan data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -4341,7 +4341,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4360,7 +4360,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -4418,7 +4418,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -4437,7 +4437,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove claim for domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove claim for domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -4494,7 +4494,7 @@ describe('removing a domain', () => {
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({
-                    slug: 'domain-gc-ca',
+                    domain: 'domain.gc.ca',
                   }),
                 },
                 loadOrgByKey: {
@@ -4513,7 +4513,7 @@ describe('removing a domain', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Trx commit error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+            `Trx commit error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
           ])
         })
       })
@@ -4717,7 +4717,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4744,7 +4744,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -4792,7 +4792,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4819,7 +4819,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -4867,7 +4867,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4894,7 +4894,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
             ])
           })
         })
@@ -4944,7 +4944,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -4971,7 +4971,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -5019,7 +5019,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5046,7 +5046,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain-gc-ca in temp-org however they do not have permission in that org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -5096,7 +5096,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5117,7 +5117,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting domain claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting domain claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -5168,7 +5168,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5189,7 +5189,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123, when counting ownership claims for domain: domain-gc-ca, error: Error: database error`,
+              `Database error occurred for user: 123, when counting ownership claims for domain: domain.gc.ca, error: Error: database error`,
             ])
           })
         })
@@ -5244,7 +5244,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5265,7 +5265,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing dmarc summary data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -5320,7 +5320,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5341,7 +5341,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain-gc-ca, error: Error: trx step error`,
+                `Trx step error occurred when removing ownership data for user: 123 while attempting to remove domain: domain.gc.ca, error: Error: trx step error`,
               ])
             })
           })
@@ -5401,7 +5401,7 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
-                      slug: 'domain-gc-ca',
+                      domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
@@ -5422,7 +5422,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove scan data for domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove scan data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -5485,7 +5485,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5506,7 +5506,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -5564,7 +5564,7 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
-                        slug: 'domain-gc-ca',
+                        domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
@@ -5585,7 +5585,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove claim for domain-gc-ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove claim for domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -5642,7 +5642,7 @@ describe('removing a domain', () => {
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({
-                    slug: 'domain-gc-ca',
+                    domain: 'domain.gc.ca',
                   }),
                 },
                 loadOrgByKey: {
@@ -5663,7 +5663,7 @@ describe('removing a domain', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Trx commit error occurred while user: 123 attempted to remove domain-gc-ca in org: temp-org, error: Error: Transaction error occurred.`,
+            `Trx commit error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
           ])
         })
       })
