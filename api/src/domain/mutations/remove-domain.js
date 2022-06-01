@@ -302,7 +302,7 @@ export const removeDomain = new mutationWithClientMutationId({
         })
       } catch (err) {
         console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove domain for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove domain ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }

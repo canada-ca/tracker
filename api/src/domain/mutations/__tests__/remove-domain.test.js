@@ -4278,7 +4278,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove scan data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove DKIM data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -4288,7 +4288,6 @@ describe('removing a domain', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
@@ -4360,7 +4359,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove domain domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
@@ -5422,7 +5421,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove scan data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove DKIM data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -5432,7 +5431,6 @@ describe('removing a domain', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
@@ -5506,7 +5504,7 @@ describe('removing a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred while user: 123 attempted to remove domain.gc.ca in org: temp-org, error: Error: Step error`,
+                `Trx step error occurred while user: 123 attempted to remove domain domain.gc.ca in org: temp-org, error: Error: Step error`,
               ])
             })
           })
