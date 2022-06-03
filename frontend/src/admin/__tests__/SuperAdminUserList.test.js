@@ -282,7 +282,7 @@ describe('<SuperAdminUserList />', () => {
         })
 
         describe('admin abilities', () => {
-          it.skip("edit user's role in org", async () => {
+          it("edit user's role in org", async () => {
             const { queryByText, getByRole } = render(
               <MockedProvider mocks={successMocks} cache={createCache()}>
                 <UserVarProvider
@@ -320,7 +320,7 @@ describe('<SuperAdminUserList />', () => {
             fireEvent.click(editBtn)
             await waitFor(() => expect(queryByText(/Edit User/i)))
           })
-          it.skip('remove user from org', async () => {
+          it('remove user from org', async () => {
             const { queryByText, getByRole } = render(
               <MockedProvider mocks={successMocks} cache={createCache()}>
                 <UserVarProvider

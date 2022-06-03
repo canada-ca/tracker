@@ -223,7 +223,7 @@ describe('<UserPage />', () => {
     })
   })
 
-  it.skip('can update password', async () => {
+  it('can update password', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider
@@ -297,7 +297,7 @@ describe('<UserPage />', () => {
     })
   })
 
-  it.skip('can update phone number', async () => {
+  it('can update phone number', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider

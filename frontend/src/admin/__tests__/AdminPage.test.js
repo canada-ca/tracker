@@ -29,7 +29,7 @@ const i18n = setupI18n({
 })
 
 describe('<AdminPage />', () => {
-  it.skip('shows a list of the users organizations', async () => {
+  it('shows a list of the users organizations', async () => {
     const { getByText, getByLabelText } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
         <UserVarProvider
@@ -60,7 +60,7 @@ describe('<AdminPage />', () => {
     })
   })
 
-  it.skip('displays info for admin', async () => {
+  it('displays info for admin', async () => {
     const { getByText, findByRole } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
         <UserVarProvider
@@ -97,7 +97,7 @@ describe('<AdminPage />', () => {
     })
   })
 
-  it.skip('filters organization list', async () => {
+  it('filters organization list', async () => {
     const { getByText, queryByText, findByRole } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
         <UserVarProvider
@@ -187,7 +187,7 @@ function mocks() {
               },
             ],
           },
-          isUserSuperAdmin: true,
+          isUserSuperAdmin: false,
         },
       },
     },
@@ -219,7 +219,7 @@ function mocks() {
               },
             ],
           },
-          isUserSuperAdmin: true,
+          isUserSuperAdmin: false,
         },
       },
     },
