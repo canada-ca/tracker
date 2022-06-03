@@ -150,7 +150,6 @@ export function SuperAdminUserList({ permission }) {
                         onClick={() => {
                           setMutation('remove')
                           onOpen()
-                          console.log(`Removed user from org ${orgName}`)
                         }}
                         p={2}
                         m={0}
@@ -162,7 +161,6 @@ export function SuperAdminUserList({ permission }) {
                         onClick={() => {
                           setMutation('update')
                           onOpen()
-                          console.log(`Edit user in org ${orgName}`)
                         }}
                         p={2}
                         m={0}
