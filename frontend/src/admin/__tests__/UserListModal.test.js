@@ -97,6 +97,244 @@ describe('<UserListModal />', () => {
   })
 
   describe('admin is updating a user', () => {
+    describe('an error is displayed when', () => {
+      it('a server-side error occurs', async () => {
+        const mocks = [
+          {
+            request: {
+              query: UPDATE_USER_ROLE,
+              variables: {
+                orgId: orgId,
+                role: 'ADMIN',
+                userName: editingUserName,
+              },
+            },
+            result: {
+              error: { errors: [{ message: 'error' }] },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="update"
+                      editingUserRole="USER"
+                      permission="ADMIN"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+        expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        // get select element, verify options
+        const roleChangeSelect = getByRole('combobox', {
+          name: /Role:/,
+        })
+        expect(roleChangeSelect.options.length).toEqual(2)
+        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
+          /USER/,
+        )
+        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
+          /ADMIN/,
+        )
+
+        // select new role and update
+        userEvent.selectOptions(roleChangeSelect, 'ADMIN')
+        const confirmUserUpdateButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserUpdateButton)
+
+        // check for "error" toast
+        await waitFor(() => {
+          expect(
+            getAllByText(/Unable to change user role, please try again./)[0],
+          )
+        })
+      })
+      it('a client-side error occurs', async () => {
+        const mocks = [
+          {
+            request: {
+              query: UPDATE_USER_ROLE,
+              variables: {
+                orgId: orgId,
+                role: 'ADMIN',
+                userName: editingUserName,
+              },
+            },
+            result: {
+              data: {
+                updateUserRole: {
+                  result: {
+                    description: 'User role was updated successfully',
+                    __typename: 'AffiliationError',
+                  },
+                  __typename: 'UpdateUserRolePayload',
+                },
+              },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="update"
+                      editingUserRole="USER"
+                      permission="ADMIN"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+        expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        // get select element, verify options
+        const roleChangeSelect = getByRole('combobox', {
+          name: /Role:/,
+        })
+        expect(roleChangeSelect.options.length).toEqual(2)
+        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
+          /USER/,
+        )
+        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
+          /ADMIN/,
+        )
+
+        // select new role and update
+        userEvent.selectOptions(roleChangeSelect, 'ADMIN')
+        const confirmUserUpdateButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserUpdateButton)
+
+        // check for "error" toast
+        await waitFor(() => {
+          expect(getAllByText(/Unable to update user role./)[0]).toBeVisible()
+        })
+      })
+      it('a type error occurs', async () => {
+        const mocks = [
+          {
+            request: {
+              query: UPDATE_USER_ROLE,
+              variables: {
+                orgId: orgId,
+                role: 'ADMIN',
+                userName: editingUserName,
+              },
+            },
+            result: {
+              data: {
+                updateUserRole: {
+                  result: {
+                    description: 'User role was updated successfully',
+                    __typename: 'TypeError',
+                  },
+                  __typename: 'UpdateUserRolePayload',
+                },
+              },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="update"
+                      editingUserRole="USER"
+                      permission="ADMIN"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+        expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        // get select element, verify options
+        const roleChangeSelect = getByRole('combobox', {
+          name: /Role:/,
+        })
+        expect(roleChangeSelect.options.length).toEqual(2)
+        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
+          /USER/,
+        )
+        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
+          /ADMIN/,
+        )
+
+        // select new role and update
+        userEvent.selectOptions(roleChangeSelect, 'ADMIN')
+        const confirmUserUpdateButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserUpdateButton)
+
+        // check for "error" toast
+        await waitFor(() => {
+          expect(
+            getAllByText(/Incorrect send method received./)[0],
+          ).toBeVisible()
+        })
+      })
+    })
     describe('admin has "ADMIN" privileges', () => {
       describe('admin is updating user with "USER" privileges', () => {
         it('admin can change user role to "ADMIN"', async () => {
@@ -414,6 +652,254 @@ describe('<UserListModal />', () => {
   })
 
   describe('admin is adding a new user', () => {
+    describe('when an error occurs', () => {
+      it('server-side error', async () => {
+        const mocks = [
+          {
+            request: {
+              query: INVITE_USER_TO_ORG,
+              variables: {
+                orgId: orgId,
+                requestedRole: 'USER',
+                userName: editingUserName,
+                preferredLang: 'ENGLISH',
+              },
+            },
+            result: {
+              error: {
+                errors: [{ message: 'error' }],
+              },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="create"
+                      permission="ADMIN"
+                      editingUserRole="USER"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+
+        await waitFor(() => {
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+        })
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        // get select element, verify options
+        const newUserRoleSelect = getByRole('combobox', {
+          name: /Role:/,
+        })
+
+        expect(newUserRoleSelect.options.length).toEqual(2)
+        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
+          /USER/,
+        )
+        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
+          /ADMIN/,
+        )
+
+        const confirmUserInviteButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserInviteButton)
+
+        // check for "success" toast and modal to close
+        await waitFor(() => {
+          expect(getAllByText(/An error occurred./)[0]).toBeVisible()
+        })
+      })
+      it('client-side error', async () => {
+        const mocks = [
+          {
+            request: {
+              query: INVITE_USER_TO_ORG,
+              variables: {
+                orgId: orgId,
+                requestedRole: 'USER',
+                userName: editingUserName,
+                preferredLang: 'ENGLISH',
+              },
+            },
+            result: {
+              data: {
+                inviteUserToOrg: {
+                  result: {
+                    description: 'User successfully invited',
+                    __typename: 'AffiliationError',
+                  },
+                  __typename: 'InviteUserToOrgPayload',
+                },
+              },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="create"
+                      permission="ADMIN"
+                      editingUserRole="USER"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+
+        await waitFor(() => {
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+        })
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        // get select element, verify options
+        const newUserRoleSelect = getByRole('combobox', {
+          name: /Role:/,
+        })
+
+        expect(newUserRoleSelect.options.length).toEqual(2)
+        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
+          /USER/,
+        )
+        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
+          /ADMIN/,
+        )
+
+        const confirmUserInviteButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserInviteButton)
+
+        // check for "success" toast and modal to close
+        await waitFor(() => {
+          expect(getAllByText(/Unable to invite user./)[0]).toBeVisible()
+        })
+      })
+      it('incorrect typename error', async () => {
+        const mocks = [
+          {
+            request: {
+              query: INVITE_USER_TO_ORG,
+              variables: {
+                orgId: orgId,
+                requestedRole: 'USER',
+                userName: editingUserName,
+                preferredLang: 'ENGLISH',
+              },
+            },
+            result: {
+              data: {
+                inviteUserToOrg: {
+                  result: {
+                    status: 'User successfully invited',
+                    __typename: 'TyperError',
+                  },
+                  __typename: 'InviteUserToOrgPayload',
+                },
+              },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="create"
+                      permission="ADMIN"
+                      editingUserRole="USER"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+
+        await waitFor(() => {
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+        })
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        // get select element, verify options
+        const newUserRoleSelect = getByRole('combobox', {
+          name: /Role:/,
+        })
+
+        expect(newUserRoleSelect.options.length).toEqual(2)
+        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
+          /USER/,
+        )
+        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
+          /ADMIN/,
+        )
+
+        const confirmUserInviteButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserInviteButton)
+
+        // check for "success" toast and modal to close
+        await waitFor(() => {
+          expect(
+            getAllByText(/Incorrect send method received./)[0],
+          ).toBeVisible()
+        })
+      })
+    })
+
     describe('admin has "ADMIN" privileges', () => {
       it('admin can add a user with "USER" privileges', async () => {
         const mocks = [
