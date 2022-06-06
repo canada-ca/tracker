@@ -30,6 +30,7 @@ const i18n = setupI18n({
 })
 
 const orgId = 'test-id'
+const editingUserId = 'test-id'
 const editingUserName = 'test-username@email.com'
 const orgSlug = 'test-org-slug'
 
@@ -44,6 +45,7 @@ const UserListModalExample = ({ mutation, permission, editingUserRole }) => {
         isOpen={isOpen}
         onClose={onClose}
         orgId={orgId}
+        editingUserId={editingUserId}
         editingUserName={editingUserName}
         editingUserRole={editingUserRole}
         orgSlug={orgSlug}
@@ -646,6 +648,131 @@ describe('<UserListModal />', () => {
             /ADMIN/,
           )
           expect(roleChangeSelect).not.toHaveTextContent(/SUPER_ADMIN/)
+        })
+      })
+    })
+  })
+
+  describe('admin is removing a user', () => {
+    describe('an error is displayed when', () => {
+      it('a server-side error occurs', async () => {
+        const mocks = [
+          {
+            request: {
+              query: REMOVE_USER_FROM_ORG,
+              variables: {
+                orgId,
+                userId: editingUserId,
+              },
+            },
+            result: {
+              error: { errors: [{ message: 'error' }] },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="remove"
+                      permission="ADMIN"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+        expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        const confirmUserUpdateButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserUpdateButton)
+
+        // check for "error" toast
+        await waitFor(() => {
+          expect(getAllByText(/An error occurred./)[0])
+        })
+      })
+      it('a client-side error occurs', async () => {
+        const mocks = [
+          {
+            request: {
+              query: REMOVE_USER_FROM_ORG,
+              variables: {
+                orgId,
+                userId: editingUserId,
+              },
+            },
+            result: {
+              data: {
+                removeUserFromOrg: {
+                  result: {
+                    code: 100,
+                    description: 'User role was updated successfully',
+                    __typename: 'AffiliationError',
+                  },
+                },
+              },
+            },
+          },
+        ]
+
+        const { getAllByText, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={canada}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <UserListModalExample
+                      mutation="remove"
+                      permission="ADMIN"
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        // modal closed
+        const openModalButton = getByRole('button', { name: /Open Modal/ })
+        expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+        // modal opened
+        userEvent.click(openModalButton)
+
+        const confirmUserUpdateButton = getByRole('button', {
+          name: /Confirm/i,
+        })
+        userEvent.click(confirmUserUpdateButton)
+
+        // check for "error" toast
+        await waitFor(() => {
+          expect(getAllByText(/Unable to remove user./)[0])
         })
       })
     })
