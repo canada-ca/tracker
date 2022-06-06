@@ -95,6 +95,226 @@ describe('<TwoFactorAuthenticatePage />', () => {
     })
   })
 
+  describe('when authentication fails', () => {
+    it('server-side error', async () => {
+      const values = {
+        authenticateToken: 'authenticate-token-test',
+        authenticationCode: 123456,
+      }
+
+      const mocks = [
+        {
+          request: {
+            query: AUTHENTICATE,
+            variables: {
+              authenticateToken: values.authenticateToken,
+              authenticationCode: values.authenticationCode,
+            },
+          },
+          result: {
+            error: {
+              errors: [{ message: 'error' }],
+            },
+          },
+        },
+      ]
+
+      // create a history object and inject it so we can inspect it afterwards
+      // for the side effects of our form submission (a redirect to /!).
+      const history = createMemoryHistory({
+        initialEntries: ['/authenticate/phone/authenticate-token-test'],
+        initialIndex: 0,
+      })
+
+      const { container, getByRole, queryByText } = render(
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <Route path="/authenticate/:sendMethod/:authenticateToken">
+                    <TwoFactorAuthenticatePage />
+                  </Route>
+                </Router>
+              </I18nProvider>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+
+      const twoFactorCode = container.querySelector('#twoFactorCode')
+      const form = getByRole('form')
+
+      fireEvent.change(twoFactorCode, {
+        target: {
+          value: values.authenticationCode,
+        },
+      })
+
+      fireEvent.submit(form)
+
+      await waitFor(() => {
+        expect(
+          queryByText(/Unable to sign in to your account, please try again./i),
+        )
+      })
+    })
+    it('client-side error', async () => {
+      const values = {
+        authenticateToken: 'authenticate-token-test',
+        authenticationCode: 123456,
+      }
+
+      const mocks = [
+        {
+          request: {
+            query: AUTHENTICATE,
+            variables: {
+              authenticateToken: values.authenticateToken,
+              authenticationCode: values.authenticationCode,
+            },
+          },
+          result: {
+            data: {
+              authenticate: {
+                result: {
+                  code: 52,
+                  description: 'Hello World',
+                  __typename: 'AuthenticateError',
+                },
+                __typename: 'AuthenticatePayload',
+              },
+            },
+          },
+        },
+      ]
+
+      // create a history object and inject it so we can inspect it afterwards
+      // for the side effects of our form submission (a redirect to /!).
+      const history = createMemoryHistory({
+        initialEntries: ['/authenticate/phone/authenticate-token-test'],
+        initialIndex: 0,
+      })
+
+      const { container, getByRole, queryByText } = render(
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <Route path="/authenticate/:sendMethod/:authenticateToken">
+                    <TwoFactorAuthenticatePage />
+                  </Route>
+                </Router>
+              </I18nProvider>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+
+      const twoFactorCode = container.querySelector('#twoFactorCode')
+      const form = getByRole('form')
+
+      fireEvent.change(twoFactorCode, {
+        target: {
+          value: values.authenticationCode,
+        },
+      })
+
+      fireEvent.submit(form)
+
+      await waitFor(() => {
+        expect(queryByText(/Hello World/i))
+      })
+    })
+    it('type error', async () => {
+      const values = {
+        authenticateToken: 'authenticate-token-test',
+        authenticationCode: 123456,
+      }
+
+      const mocks = [
+        {
+          request: {
+            query: AUTHENTICATE,
+            variables: {
+              authenticateToken: values.authenticateToken,
+              authenticationCode: values.authenticationCode,
+            },
+          },
+          result: {
+            data: {
+              authenticate: {
+                result: {
+                  code: 52,
+                  description: 'Hello World',
+                  __typename: 'AuthenticateError',
+                },
+                __typename: 'AuthenticatePayload',
+              },
+            },
+          },
+        },
+      ]
+
+      // create a history object and inject it so we can inspect it afterwards
+      // for the side effects of our form submission (a redirect to /!).
+      const history = createMemoryHistory({
+        initialEntries: ['/authenticate/phone/authenticate-token-test'],
+        initialIndex: 0,
+      })
+
+      const { container, getByRole, queryByText } = render(
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <Router history={history}>
+                  <Route path="/authenticate/:sendMethod/:authenticateToken">
+                    <TwoFactorAuthenticatePage />
+                  </Route>
+                </Router>
+              </I18nProvider>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
+
+      const twoFactorCode = container.querySelector('#twoFactorCode')
+      const form = getByRole('form')
+
+      fireEvent.change(twoFactorCode, {
+        target: {
+          value: values.authenticationCode,
+        },
+      })
+
+      fireEvent.submit(form)
+
+      await waitFor(() => {
+        expect(queryByText(/Incorrect send method received./i))
+      })
+    })
+  })
+
   describe('when authentication succeeds', () => {
     it('redirects to home page', async () => {
       const values = {
