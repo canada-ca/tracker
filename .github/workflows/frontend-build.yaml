@@ -4,12 +4,14 @@
 name: Build frontend
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "master" ]
     paths: 'frontend/**'
   pull_request:
     branches: [ "master" ]
     paths: 'frontend/**'
+  
 
 jobs:
   test:
