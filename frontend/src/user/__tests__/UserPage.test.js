@@ -321,7 +321,7 @@ describe('<UserPage />', () => {
     })
   })
 
-  it('can update 2FA method', async () => {
+  it('can update MFA method', async () => {
     const { queryByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider
