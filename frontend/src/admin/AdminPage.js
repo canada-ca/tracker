@@ -155,14 +155,14 @@ export default function AdminPage({ isLoginRequired }) {
   )
 
   let adminPanel
-  if (activeMenu === 'organizations') {
-    adminPanel = orgPanel
-  } else if (activeMenu === 'users' && data?.isUserSuperAdmin) {
+  if (activeMenu === 'users' && data?.isUserSuperAdmin) {
     adminPanel = (
       <SuperAdminUserList
         permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
       />
     )
+  } else {
+    adminPanel = orgPanel
   }
 
   return (

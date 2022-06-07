@@ -4,7 +4,7 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import AdminPage from '../AdminPage'
-import { waitFor, render, fireEvent } from '@testing-library/react'
+import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
@@ -30,7 +30,7 @@ const i18n = setupI18n({
 
 describe('<AdminPage />', () => {
   it('shows a list of the users organizations', async () => {
-    const { getByText, getByLabelText } = render(
+    const { getByText } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
@@ -48,11 +48,6 @@ describe('<AdminPage />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-
-    await waitFor(() => {
-      const saMenu = getByLabelText(/Menu/i)
-      fireEvent.change(saMenu, { target: { value: 'organizations' } })
-    })
 
     await waitFor(() => {
       const welcome = getByText(/Select an organization to view admin options/i)
@@ -187,7 +182,7 @@ function mocks() {
               },
             ],
           },
-          isUserSuperAdmin: false,
+          isUserSuperAdmin: true,
         },
       },
     },
@@ -219,7 +214,7 @@ function mocks() {
               },
             ],
           },
-          isUserSuperAdmin: false,
+          isUserSuperAdmin: true,
         },
       },
     },
