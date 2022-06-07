@@ -227,7 +227,7 @@ export function SuperAdminUserList({ permission }) {
                           onOpen()
                           console.log(`Removed user from org ${orgName}`)
                         }}
-                        p={2}
+                        p="2"
                         icon={<MinusIcon />}
                       />
                       <IconButton
@@ -238,7 +238,7 @@ export function SuperAdminUserList({ permission }) {
                           onOpen()
                           console.log(`Edit user in org ${orgName}`)
                         }}
-                        p={2}
+                        p="2"
                         icon={<EditIcon />}
                       />
                     </Stack>
