@@ -21,7 +21,7 @@ export function LandingPage({ isLoggedIn }) {
     <Stack w="100%">
       <Box mb="16" textAlign="left" px="4">
         <Heading as="h1">
-          <Trans>Track Digital Security TEST 3</Trans>
+          <Trans>Track Digital Security TEST</Trans>
         </Heading>
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
         <Text fontSize="xl">
