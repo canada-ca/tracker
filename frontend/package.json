@@ -35,7 +35,7 @@
     "dotenv": "^16.0.1",
     "express": "^4.17.2",
     "formik": "^2.2.9",
-    "framer-motion": "^4.1.17",
+    "framer-motion": "^6.3.11",
     "isomorphic-unfetch": "^3.1.0",
     "json-2-csv": "^3.17.0",
     "make-plural": "^7.1.0",
