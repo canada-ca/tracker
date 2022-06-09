@@ -163,7 +163,7 @@ class TLSScanner:
                         ],
                         "verified_chain_has_sha1_signature": certificate_deployment.verified_chain_has_sha1_signature,
                         "verified_chain_has_legacy_symantec_anchor": certificate_deployment.verified_chain_has_legacy_symantec_anchor,
-                        "ocsp_response": json.loads(_OcspResponseAsJson.from_orm(certificate_deployment.ocsp_response).json()),
+                        "ocsp_response": json.loads(_OcspResponseAsJson.from_orm(certificate_deployment.ocsp_response).json()) if certificate_deployment.ocsp_response else None,
                         "ocsp_response_is_trusted": certificate_deployment.ocsp_response_is_trusted,
                         "verified_certificate_chain": [
                             get_limited_certificate_info(verified_certificate)
