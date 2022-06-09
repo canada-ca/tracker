@@ -282,8 +282,8 @@ describe('<SuperAdminUserList />', () => {
         })
 
         describe('admin abilities', () => {
-          it.skip("edit user's role in org", async () => {
-            const { queryByText, getByRole } = render(
+          it("edit user's role in org", async () => {
+            const { queryByText, getByRole, queryAllByText } = render(
               <MockedProvider mocks={successMocks} cache={createCache()}>
                 <UserVarProvider
                   userVar={makeVar({
@@ -318,10 +318,10 @@ describe('<SuperAdminUserList />', () => {
               name: 'Edit Raegan.Ritchie50@yahoo.com in Kreiger - Schamberger',
             })
             fireEvent.click(editBtn)
-            await waitFor(() => expect(queryByText(/Edit User/i)))
+            await waitFor(() => expect(queryAllByText(/Edit User/i)))
           })
-          it.skip('remove user from org', async () => {
-            const { queryByText, getByRole } = render(
+          it('remove user from org', async () => {
+            const { queryByText, getByRole, queryAllByText } = render(
               <MockedProvider mocks={successMocks} cache={createCache()}>
                 <UserVarProvider
                   userVar={makeVar({
@@ -356,7 +356,7 @@ describe('<SuperAdminUserList />', () => {
               name: 'Remove Raegan.Ritchie50@yahoo.com from Kreiger - Schamberger',
             })
             fireEvent.click(removeBtn)
-            await waitFor(() => expect(queryByText(/Remove User/i)))
+            await waitFor(() => expect(queryAllByText(/Remove User/i)))
           })
         })
       })

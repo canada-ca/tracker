@@ -41,11 +41,7 @@ export default function DmarcGuidancePage() {
   useDocumentTitle(`${domainSlug}`)
 
   const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {
-    variables: {
-      domain: domainSlug,
-    },
-    onComplete: (stuff) => console.log(`completed! recieved: ${stuff}`),
-    onError: (e) => console.log(`error! recieved: ${e}`),
+    variables: { domain: domainSlug },
   })
 
   useEffect(() => {

@@ -87,7 +87,6 @@ export function UserListModal({
             isClosable: true,
             position: 'top-left',
           })
-          console.log('Incorrect inviteUserToOrg.result typename.')
         }
       },
     },
@@ -134,7 +133,6 @@ export function UserListModal({
             isClosable: true,
             position: 'top-left',
           })
-          console.log('Incorrect updateUserRole.result typename.')
         }
       },
     })

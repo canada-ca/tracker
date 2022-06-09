@@ -4,7 +4,7 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import AdminPage from '../AdminPage'
-import { waitFor, render, fireEvent } from '@testing-library/react'
+import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
@@ -29,8 +29,8 @@ const i18n = setupI18n({
 })
 
 describe('<AdminPage />', () => {
-  it.skip('shows a list of the users organizations', async () => {
-    const { getByText, getByLabelText } = render(
+  it('shows a list of the users organizations', async () => {
+    const { getByText } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
@@ -50,17 +50,12 @@ describe('<AdminPage />', () => {
     )
 
     await waitFor(() => {
-      const saMenu = getByLabelText(/Menu/i)
-      fireEvent.change(saMenu, { target: { value: 'organizations' } })
-    })
-
-    await waitFor(() => {
       const welcome = getByText(/Select an organization to view admin options/i)
       expect(welcome).toBeInTheDocument()
     })
   })
 
-  it.skip('displays info for admin', async () => {
+  it('displays info for admin', async () => {
     const { getByText, findByRole } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
         <UserVarProvider
@@ -97,7 +92,7 @@ describe('<AdminPage />', () => {
     })
   })
 
-  it.skip('filters organization list', async () => {
+  it('filters organization list', async () => {
     const { getByText, queryByText, findByRole } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
         <UserVarProvider

@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { cleanup, render, waitFor } from '@testing-library/react'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -11,6 +11,7 @@ import { makeVar } from '@apollo/client'
 import { FloatingMenu } from '../FloatingMenu'
 
 import { UserVarProvider } from '../../utilities/userState'
+import { SIGN_OUT } from '../../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -153,6 +154,109 @@ describe('<FloatingMenu>', () => {
 
         await waitFor(() => {
           expect(wLocation.pathname).toBe('/sign-in')
+        })
+      })
+    })
+    describe('when user is logged in', () => {
+      describe('when the Sign Out button is clicked', () => {
+        afterEach(cleanup)
+        it('succeeds', async () => {
+          const mocks = [
+            {
+              request: {
+                query: SIGN_OUT,
+              },
+              result: {
+                data: {
+                  signOut: {
+                    status: 'wfewgwgew',
+                  },
+                },
+              },
+            },
+          ]
+
+          const { queryByText, getByText } = render(
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: 'fwgegvgerdf',
+                  tfaSendMethod: 'none',
+                  userName: 'user@test.ca',
+                })}
+              >
+                <MemoryRouter initialEntries={['/']}>
+                  <I18nProvider i18n={i18n}>
+                    <ChakraProvider theme={theme}>
+                      <FloatingMenu />
+                    </ChakraProvider>
+                  </I18nProvider>
+                </MemoryRouter>
+              </UserVarProvider>
+            </MockedProvider>,
+          )
+          const menuButton = getByText(/Menu/i)
+          fireEvent.click(menuButton)
+
+          await waitFor(() => {
+            expect(queryByText(/Sign Out/i)).toBeInTheDocument()
+          })
+
+          const signOutButton = getByText(/Sign Out/i)
+          fireEvent.click(signOutButton)
+
+          await waitFor(() => {
+            expect(queryByText(/You have successfully been signed out./i))
+          })
+        })
+        it('fails', async () => {
+          const mocks = [
+            {
+              request: {
+                query: SIGN_OUT,
+              },
+              result: {
+                error: {
+                  errors: [{ message: 'foobar' }],
+                },
+              },
+            },
+          ]
+
+          const { queryByText, getByText } = render(
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: 'fwgegvgerdf',
+                  tfaSendMethod: 'none',
+                  userName: 'user@test.ca',
+                })}
+              >
+                <MemoryRouter initialEntries={['/']}>
+                  <I18nProvider i18n={i18n}>
+                    <ChakraProvider theme={theme}>
+                      <FloatingMenu />
+                    </ChakraProvider>
+                  </I18nProvider>
+                </MemoryRouter>
+              </UserVarProvider>
+            </MockedProvider>,
+          )
+          const menuButton = getByText(/Menu/i)
+          fireEvent.click(menuButton)
+
+          await waitFor(() => {
+            expect(queryByText('Sign Out')).toBeInTheDocument()
+          })
+
+          const signOutButton = getByText('Sign Out')
+          fireEvent.click(signOutButton)
+
+          await waitFor(() => {
+            expect(
+              queryByText(/An error occured when you attempted to sign out/i),
+            )
+          })
         })
       })
     })
