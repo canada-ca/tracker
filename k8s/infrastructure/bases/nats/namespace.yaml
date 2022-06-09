@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pubsub
+  labels:
+    istio-injection: enabled
+spec: {}
+status: {}

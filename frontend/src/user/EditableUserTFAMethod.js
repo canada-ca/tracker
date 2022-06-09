@@ -4,24 +4,31 @@ import {
   Badge,
   Box,
   Button,
+  Flex,
   Heading,
   Select,
   Stack,
   useToast,
 } from '@chakra-ui/react'
-import { CheckIcon, CloseIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { useUserVar } from '../utilities/userState'
+import {
+  EmailIcon,
+  PhoneIcon,
+  RadioCheckedIcon,
+  RadioUncheckedIcon,
+} from '../theme/Icons'
 
 export function EditableUserTFAMethod({
   currentTFAMethod,
   isUserAdmin,
   emailValidated,
   phoneValidated,
+  ...props
 }) {
   const toast = useToast()
   const { login, currentUser } = useUserVar()
@@ -80,48 +87,46 @@ export function EditableUserTFAMethod({
   )
 
   return (
-    <Stack spacing="4">
-      <Heading as="h3" size="md">
+    <Box {...props}>
+      <Heading as="h3" size="md" mb="3">
         <Trans>Two-Factor Authentication:</Trans>
       </Heading>
-      <Stack isInline>
+      <Stack isInline mb="4">
         <Box p="1">
           {emailValidated ? (
-            <CheckIcon
+            <RadioCheckedIcon
               boxSize="icons.lg"
-              color="green.500"
-              pr={2}
+              mr="2"
               aria-label="Email is validated"
             />
           ) : (
-            <CloseIcon
+            <RadioUncheckedIcon
               boxSize="icons.lg"
-              color="red.500"
-              pr={2}
+              mr="2"
               aria-label="Email is not validated"
             />
           )}
-          <Badge variant="outline" color="gray.900">
+          <Badge variant="outline" color="gray.900" p="1">
+            <EmailIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
             <Trans>Email Validated</Trans>
           </Badge>
         </Box>
         <Box p="1">
           {phoneValidated ? (
-            <CheckIcon
+            <RadioCheckedIcon
               boxSize="icons.lg"
-              color="green.500"
-              pr={2}
-              aria-label="Phone is validated"
+              mr="2"
+              aria-label="Email is validated"
             />
           ) : (
-            <CloseIcon
+            <RadioUncheckedIcon
               boxSize="icons.lg"
-              color="red.500"
-              pr={2}
-              aria-label="Phone is not validated"
+              mr="2"
+              aria-label="Email is not validated"
             />
           )}
-          <Badge variant="outline" color="gray.900">
+          <Badge variant="outline" color="gray.900" p="1.5">
+            <PhoneIcon mr="2" ml="1" boxSize="1.1rem" aria-hidden="true" />
             <Trans>Phone Validated</Trans>
           </Badge>
         </Box>
@@ -140,8 +145,15 @@ export function EditableUserTFAMethod({
       >
         {({ handleSubmit, isSubmitting, getFieldProps }) => (
           <form id="tfaForm" onSubmit={handleSubmit}>
-            <Stack isInline align="center" justifyContent="space-between">
+            <Flex
+              align="center"
+              borderWidth="1px"
+              borderColor="gray.500"
+              rounded="md"
+              p="1"
+            >
               <Field
+                aria-label="TFA Method Select"
                 data-testid="tfa-method-select"
                 id="tfaMethod"
                 component={Select}
@@ -155,17 +167,19 @@ export function EditableUserTFAMethod({
                 {phoneValidated && <option value="PHONE">{t`Phone`}</option>}
               </Field>
               <Button
+                aria-label="Save TFA Method"
                 variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}
+                ml="auto"
               >
                 <Trans>Save</Trans>
               </Button>
-            </Stack>
+            </Flex>
           </form>
         )}
       </Formik>
-    </Stack>
+    </Box>
   )
 }
 

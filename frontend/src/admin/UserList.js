@@ -8,22 +8,13 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Text,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon, EmailIcon, MinusIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { number, string } from 'prop-types'
-import { useMutation } from '@apollo/client'
 
 import { UserListModal } from './UserListModal'
 
@@ -37,7 +28,6 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 
 export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
-  const toast = useToast()
   const [mutation, setMutation] = useState()
   const [addedUserName, setAddedUserName] = useState('')
   const [selectedRemoveUser, setSelectedRemoveUser] = useState({
@@ -45,19 +35,9 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     userName: null,
   })
 
-  const {
-    isOpen: removeIsOpen,
-    onOpen: removeOnOpen,
-    onClose: removeOnClose,
-  } = useDisclosure()
-
   const [editingUserRole, setEditingUserRole] = useState()
   const [editingUserName, setEditingUserName] = useState()
-  const {
-    isOpen: updateIsOpen,
-    onOpen: updateOnOpen,
-    onClose: updateOnClose,
-  } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [debouncedSearchUser, setDebouncedSearchUser] = useState('')
 
@@ -85,47 +65,6 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
     nextFetchPolicy: 'cache-first',
   })
 
-  const [removeUser, { loading: removeUserLoading }] = useMutation(
-    REMOVE_USER_FROM_ORG,
-    {
-      refetchQueries: ['PaginatedOrgAffiliations'],
-      awaitRefetchQueries: true,
-
-      onError(error) {
-        toast({
-          title: t`An error occurred.`,
-          description: error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
-      onCompleted({ removeUserFromOrg }) {
-        if (removeUserFromOrg.result.__typename === 'RemoveUserFromOrgResult') {
-          removeOnClose()
-          toast({
-            title: t`User removed.`,
-            description: t`Successfully removed user ${removeUserFromOrg.result.user.userName}.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else if (removeUserFromOrg.result.__typename === 'AffiliationError') {
-          toast({
-            title: t`Unable to remove user.`,
-            description: removeUserFromOrg.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        }
-      },
-    },
-  )
-
   if (error) return <ErrorFallbackMessage error={error} />
 
   const userList = loading ? (
@@ -148,7 +87,8 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 variant="danger"
                 onClick={() => {
                   setSelectedRemoveUser(node.user)
-                  removeOnOpen()
+                  setMutation('remove')
+                  onOpen()
                 }}
                 p={2}
                 m={0}
@@ -161,7 +101,7 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                   setEditingUserRole(userRole)
                   setEditingUserName(node.user.userName)
                   setMutation('update')
-                  updateOnOpen()
+                  onOpen()
                 }}
                 p={2}
                 m={0}
@@ -190,7 +130,7 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           setMutation('create')
           setEditingUserRole('USER')
           setEditingUserName(addedUserName)
-          updateOnOpen()
+          onOpen()
         }}
       >
         <Flex
@@ -246,52 +186,15 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         isLoadingMore={isLoadingMore}
       />
 
-      <Modal
-        isOpen={removeIsOpen}
-        onClose={removeOnClose}
-        motionPreset="slideInBottom"
-      >
-        <ModalOverlay />
-        <ModalContent pb={4}>
-          <ModalHeader>
-            <Trans>Remove User</Trans>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Stack spacing={4} p={25}>
-              <Text>
-                <Trans>Confirm removal of user:</Trans>
-              </Text>
-              <Text fontWeight="bold">{selectedRemoveUser.userName}</Text>
-            </Stack>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              variant="primary"
-              isLoading={removeUserLoading}
-              mr={4}
-              onClick={() =>
-                removeUser({
-                  variables: {
-                    userId: selectedRemoveUser.id,
-                    orgId: orgId,
-                  },
-                })
-              }
-            >
-              <Trans>Confirm</Trans>
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
       <UserListModal
-        isOpen={updateIsOpen}
-        onClose={updateOnClose}
+        isOpen={isOpen}
+        onClose={onClose}
         orgId={orgId}
-        editingUserName={editingUserName}
+        editingUserName={
+          mutation === 'remove' ? selectedRemoveUser.userName : editingUserName
+        }
         editingUserRole={editingUserRole}
+        editingUserId={selectedRemoveUser.id}
         orgSlug={orgSlug}
         permission={permission}
         mutation={mutation}

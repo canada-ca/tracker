@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -15,7 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { PersonIcon } from '../theme/Icons'
+import { UserIcon } from '../theme/Icons'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
 import { useMutation } from '@apollo/client'
@@ -24,8 +25,9 @@ import { string } from 'prop-types'
 import { DisplayNameField } from '../components/fields/DisplayNameField'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
+import { EditIcon } from '@chakra-ui/icons'
 
-export function EditableUserDisplayName({ detailValue }) {
+export function EditableUserDisplayName({ detailValue, ...props }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const initialFocusRef = useRef()
@@ -81,26 +83,29 @@ export function EditableUserDisplayName({ detailValue }) {
   )
 
   return (
-    <Stack>
-      <Heading as="h3" size="md">
+    <Box {...props}>
+      <Heading as="h3" size="md" mb="1">
         <Trans>Display Name:</Trans>
       </Heading>
 
-      <Flex align="center">
-        <PersonIcon
-          color="gray.300"
-          mr={2}
-          boxSize="icons.lg"
-          aria-hidden="true"
-        />
+      <Flex
+        align="center"
+        borderWidth="1px"
+        borderColor="gray.500"
+        rounded="md"
+        p="1"
+      >
+        <UserIcon mr="2" ml="1" boxSize="icons.lg" aria-hidden="true" />
         <Text>{detailValue}</Text>
         <Button
+          aria-label="Edit Display Name"
           variant="primary"
           ml="auto"
           onClick={onOpen}
           fontSize="sm"
           px="3"
         >
+          <EditIcon color="white" mr="2" boxSize="1rem" />
           <Trans>Edit</Trans>
         </Button>
       </Flex>
@@ -168,7 +173,7 @@ export function EditableUserDisplayName({ detailValue }) {
           </Formik>
         </ModalContent>
       </Modal>
-    </Stack>
+    </Box>
   )
 }
 

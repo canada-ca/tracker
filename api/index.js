@@ -3,6 +3,7 @@ import { Database, aql } from 'arangojs'
 import { Server } from './src/server'
 import { createContext } from './src/create-context'
 import { createI18n } from './src/create-i18n'
+import { connect, JSONCodec } from 'nats'
 
 const {
   PORT = 4000,
@@ -17,6 +18,7 @@ const {
   TRACING_ENABLED: tracing,
   HASHING_SALT,
   LOGIN_REQUIRED = 'true',
+  NATS_URL,
 } = process.env
 
 const collections = [
@@ -69,6 +71,22 @@ const collections = [
     return db.beginTransaction(collections)
   }
 
+  const nc = await connect({ servers: NATS_URL })
+
+  const jsm = await nc.jetstreamManager()
+
+  await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
+
+  // create a jetstream client:
+  const js = nc.jetstream()
+
+  // eslint-disable-next-line new-cap
+  const jc = JSONCodec()
+
+  const publish = async ({ channel, msg }) => {
+    await js.publish(channel, jc.encode(msg))
+  }
+
   const server = await Server({
     context: async ({ req, res, connection }) => {
       if (connection) {
@@ -85,6 +103,7 @@ const collections = [
         query,
         transaction,
         collections,
+        publish,
         req,
         res,
         i18n,

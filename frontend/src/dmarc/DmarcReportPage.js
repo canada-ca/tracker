@@ -7,8 +7,8 @@ import {
   Flex,
   Heading,
   Link,
-  Select,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
@@ -20,40 +20,29 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 
 import { TrackerTable } from '../components/TrackerTable'
-import { InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel, InfoButton } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
-import { months } from '../utilities/months'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
+import { MonthSelect } from '../components/MonthSelect'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
+  const fileName = `${domainSlug}_${period}-${year}`
   const history = useHistory()
   const { i18n } = useLingui()
 
-  useDocumentTitle(i18n._(t`DMARC Report for ${domainSlug}`))
+  useDocumentTitle(t`DMARC Report for ${domainSlug}`)
 
-  const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period)
   const [selectedYear, setSelectedYear] = useState(year)
   const [selectedDate, setSelectedDate] = useState(
     `${selectedPeriod}, ${selectedYear}`,
   )
 
-  const [fullPassState, changeFullPassState] = useState({
-    isVisible: false,
-  })
-  const [failDkimState, changeFailDkimState] = useState({
-    isVisible: false,
-  })
-  const [failSpfState, changeFailSpfState] = useState({
-    isVisible: false,
-  })
-  const [fullFailState, changeFullFailState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   // Allows the use of forward/backward navigation
   if (selectedPeriod !== period) setSelectedPeriod(period)
@@ -84,47 +73,6 @@ export default function DmarcReportPage() {
       after: '',
     },
   })
-
-  const options = [
-    <option
-      key="LAST30DAYS"
-      value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
-    >
-      {i18n._(t`Last 30 Days`)}
-    </option>,
-  ]
-
-  // add dmarc date selection options
-  for (let i = currentDate.getMonth(), j = 13; j > 0; i--, j--) {
-    // handle previous year
-    if (i < 0) {
-      const value = `${months[months.length + i].toUpperCase()}, ${
-        currentDate.getFullYear() - 1
-      }`
-      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
-        currentDate.getFullYear() - 1
-      }`
-
-      options.push(
-        <option key={value} value={value}>
-          {translatedValue}
-        </option>,
-      )
-    }
-    // handle current year
-    else {
-      const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${months[
-        i
-      ].toUpperCase()}, ${currentDate.getFullYear()}`
-
-      options.push(
-        <option key={value} value={value}>
-          {translatedValue}
-        </option>,
-      )
-    }
-  }
 
   // Show data for newly selected date
   const handleChange = (e) => {
@@ -166,17 +114,17 @@ export default function DmarcReportPage() {
   // Set graph display using data if data exists
   else if (graphData?.findDomainByDomain?.yearlyDmarcSummaries?.length > 0) {
     const strengths = {
-      fullPass: i18n._(t`Pass`),
-      fullPassPercentage: i18n._(t`Pass`),
+      fullPass: t`Pass`,
+      fullPassPercentage: t`Pass`,
 
-      passSpfOnly: i18n._(t`Fail DKIM`),
-      passSpfOnlyPercentage: i18n._(t`Fail DKIM`),
+      passSpfOnly: t`Fail DKIM`,
+      passSpfOnlyPercentage: t`Fail DKIM`,
 
-      passDkimOnly: i18n._(t`Fail SPF`),
-      passDkimOnlyPercentage: i18n._(t`Fail SPF`),
+      passDkimOnly: t`Fail SPF`,
+      passDkimOnlyPercentage: t`Fail SPF`,
 
-      fail: i18n._(t`Fail`),
-      failPercentage: i18n._(t`Fail`),
+      fail: t`Fail`,
+      failPercentage: t`Fail`,
     }
 
     const formattedGraphData = {
@@ -208,61 +156,61 @@ export default function DmarcReportPage() {
   }
 
   const sourceIpAddress = {
-    Header: i18n._(t`Source IP Address`),
+    Header: t`Source IP Address`,
     accessor: 'sourceIpAddress',
     style: { whiteSpace: 'nowrap' },
   }
   const envelopeFrom = {
-    Header: i18n._(t`Envelope From`),
+    Header: t`Envelope From`,
     accessor: 'envelopeFrom',
     style: { whiteSpace: 'nowrap' },
   }
   const dkimDomains = {
-    Header: i18n._(t`DKIM Domains`),
+    Header: t`DKIM Domains`,
     accessor: 'dkimDomains',
   }
   const dkimSelectors = {
-    Header: i18n._(t`DKIM Selectors`),
+    Header: t`DKIM Selectors`,
     accessor: 'dkimSelectors',
   }
   const totalMessages = {
-    Header: i18n._(t`Total Messages`),
+    Header: t`Total Messages`,
     accessor: 'totalMessages',
     Cell: ({ value }) => value.toLocaleString(i18n.locale),
     style: { textAlign: 'right' },
   }
-  const dnsHost = { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' }
+  const dnsHost = { Header: t`DNS Host`, accessor: 'dnsHost' }
   const spfDomains = {
-    Header: i18n._(t`SPF Domains`),
+    Header: t`SPF Domains`,
     accessor: 'spfDomains',
   }
   const headerFrom = {
-    Header: i18n._(t`Header From`),
+    Header: t`Header From`,
     accessor: 'headerFrom',
     style: { whiteSpace: 'nowrap' },
   }
   const guidance = {
-    Header: i18n._(t`Guidance`),
+    Header: t`Guidance`,
     accessor: 'guidanceTag',
   }
   const spfAligned = {
-    Header: i18n._(t`SPF Aligned`),
+    Header: t`SPF Aligned`,
     accessor: 'spfAligned',
   }
   const spfResults = {
-    Header: i18n._(t`SPF Results`),
+    Header: t`SPF Results`,
     accessor: 'spfResults',
   }
   const dkimAligned = {
-    Header: i18n._(t`DKIM Aligned`),
+    Header: t`DKIM Aligned`,
     accessor: 'dkimAligned',
   }
   const dkimResults = {
-    Header: i18n._(t`DKIM Results`),
+    Header: t`DKIM Results`,
     accessor: 'dkimResults',
   }
   const disposition = {
-    Header: i18n._(t`Disposition`),
+    Header: t`Disposition`,
     accessor: 'disposition',
   }
 
@@ -287,7 +235,7 @@ export default function DmarcReportPage() {
   ) {
     const dkimFailureColumns = [
       {
-        Header: i18n._(t`DKIM Failures by IP Address`),
+        Header: t`DKIM Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -317,70 +265,16 @@ export default function DmarcReportPage() {
         },
       )
 
-    const failDkimInfoPanel = (
-      <InfoPanel state={failDkimState}>
-        <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
-        />
-        <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox
-          title="DKIM Domains"
-          info="The domains used for DKIM validation."
-        />
-        <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
-        />
-        <InfoBox
-          title="DKIM Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
-        />
-        <InfoBox
-          title="DKIM Aligned"
-          info="Is DKIM aligned. Can be true or false."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-        <InfoBox
-          title="Guidance"
-          info="Details for a given guidance tag can be found on the wiki, see below."
-        />
-        <Divider borderColor="gray.500" />
-        <Link
-          isExternal
-          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
-        >
-          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
-        </Link>
-      </InfoPanel>
-    )
-
     dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
           data={dkimFailureNodes}
           columns={dkimFailureColumns}
-          title={i18n._(t`DKIM Failures by IP Address`)}
+          title={t`DKIM Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={failDkimInfoPanel}
-          infoState={failDkimState}
-          changeInfoState={changeFailDkimState}
-          searchPlaceholder={i18n._(t`Search DKIM Failing Items`)}
+          searchPlaceholder={t`Search DKIM Failing Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -416,7 +310,7 @@ export default function DmarcReportPage() {
   ) {
     const fullPassColumns = [
       {
-        Header: i18n._(t`Fully Aligned by IP Address`),
+        Header: t`Fully Aligned by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -443,52 +337,16 @@ export default function DmarcReportPage() {
         },
       )
 
-    const fullPassInfoPanel = (
-      <InfoPanel state={fullPassState}>
-        <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
-        />
-        <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="DKIM Domains"
-          info="Domains used for DKIM validation."
-        />
-        <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-      </InfoPanel>
-    )
-
     fullPassTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
           data={fullPassNodes}
           columns={fullPassColumns}
-          title={i18n._(t`Fully Aligned by IP Address`)}
+          title={t`Fully Aligned by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={fullPassInfoPanel}
-          infoState={fullPassState}
-          changeInfoState={changeFullPassState}
-          searchPlaceholder={i18n._(t`Search Fully Aligned Items`)}
+          searchPlaceholder={t`Search Fully Aligned Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -524,7 +382,7 @@ export default function DmarcReportPage() {
   ) {
     const spfFailureColumns = [
       {
-        Header: i18n._(t`SPF Failures by IP Address`),
+        Header: t`SPF Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -550,63 +408,16 @@ export default function DmarcReportPage() {
         },
       )
 
-    const failSpfInfoPanel = (
-      <InfoPanel state={failSpfState}>
-        <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
-        />
-        <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="SPF Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
-        />
-        <InfoBox
-          title="SPF Aligned"
-          info="Is SPF aligned. Can be true or false."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-        <InfoBox
-          title="Guidance"
-          info="Details for a given guidance tag can be found on the wiki, see below."
-        />
-        <Divider borderColor="gray.500" />
-        <Link
-          isExternal
-          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
-        >
-          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
-        </Link>
-      </InfoPanel>
-    )
-
     spfFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
           data={spfFailureNodes}
           columns={spfFailureColumns}
-          title={i18n._(t`SPF Failures by IP Address`)}
+          title={t`SPF Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={failSpfInfoPanel}
-          infoState={failSpfState}
-          changeInfoState={changeFailSpfState}
-          searchPlaceholder={i18n._(t`Search SPF Failing Items`)}
+          searchPlaceholder={t`Search SPF Failing Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -626,6 +437,11 @@ export default function DmarcReportPage() {
 
   // DMARC Failure Table setup
   let dmarcFailureTable
+  const dmarcFailStats = {
+    none: 0,
+    reject: 0,
+    quarantine: 0,
+  }
 
   // Set DMARC Failure Table Loading
   if (tableLoading) {
@@ -642,7 +458,7 @@ export default function DmarcReportPage() {
   ) {
     const dmarcFailureColumns = [
       {
-        Header: i18n._(t`DMARC Failures by IP Address`),
+        Header: t`DMARC Failures by IP Address`,
         hidden: true,
         columns: [
           sourceIpAddress,
@@ -663,6 +479,10 @@ export default function DmarcReportPage() {
       tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
         (edge) => {
           const node = { ...edge.node }
+
+          // calculate dmarcFailStats totals
+          dmarcFailStats[node.disposition] += node.totalMessages
+
           node.spfDomains = node.spfDomains.replace(/,/g, ', ')
           node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
           node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
@@ -670,53 +490,16 @@ export default function DmarcReportPage() {
         },
       )
 
-    const fullFailInfoPanel = (
-      <InfoPanel state={fullFailState}>
-        <InfoBox title="Source IP Address" info="The domain address." />
-        <InfoBox
-          title="DNS Host"
-          info="Shows the total number of emails that have been sent by this domain during the selected time range."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="DKIM Domains"
-          info="The domains used for DKIM validation."
-        />
-        <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
-        />
-        <InfoBox
-          title="Disposition"
-          info="The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-      </InfoPanel>
-    )
-
     dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <TrackerTable
           data={dmarcFailureNodes}
           columns={dmarcFailureColumns}
-          title={i18n._(t`DMARC Failures by IP Address`)}
+          title={t`DMARC Failures by IP Address`}
           initialSort={initialSort}
           frontendPagination={true}
-          infoPanel={fullFailInfoPanel}
-          infoState={fullFailState}
-          changeInfoState={changeFullFailState}
-          searchPlaceholder={i18n._(t`Search DMARC Failing Items`)}
+          searchPlaceholder={t`Search DMARC Failing Items`}
+          fileName={fileName}
         />
       </ErrorBoundary>
     )
@@ -734,20 +517,41 @@ export default function DmarcReportPage() {
     )
   }
 
+  const fakeEmailDomainBlocks =
+    dmarcFailStats.reject + dmarcFailStats.quarantine
+  const domainSpoofingVolume = fakeEmailDomainBlocks + dmarcFailStats.none
+
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
       <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
-        <AccordionItem buttonLabel="Fully Aligned by IP Address">
+        <AccordionItem buttonLabel={t`Fully Aligned by IP Address`}>
           {fullPassTable}
         </AccordionItem>
-        <AccordionItem buttonLabel="DKIM Failures by IP Address">
+        <AccordionItem buttonLabel={t`DKIM Failures by IP Address`}>
           {dkimFailureTable}
         </AccordionItem>
-        <AccordionItem buttonLabel="SPF Failures by IP Address">
+        <AccordionItem buttonLabel={t`SPF Failures by IP Address`}>
           {spfFailureTable}
         </AccordionItem>
-        <AccordionItem buttonLabel="DMARC Failures by IP Address">
+        <AccordionItem buttonLabel={t`DMARC Failures by IP Address`}>
           {dmarcFailureTable}
+          <Box py="2">
+            <Flex>
+              <Text fontWeight="bold" mr="1">
+                <Trans>Fake email domain blocks (reject + quarantine):</Trans>
+              </Text>
+              <Text>{fakeEmailDomainBlocks}</Text>
+            </Flex>
+            <Flex>
+              <Text fontWeight="bold" mr="1">
+                <Trans>
+                  Volume of messages spoofing domain (reject + quarantine +
+                  none):
+                </Trans>
+              </Text>
+              <Text>{domainSpoofingVolume}</Text>
+            </Flex>
+          </Box>
         </AccordionItem>
       </Accordion>
     </ErrorBoundary>
@@ -787,17 +591,79 @@ export default function DmarcReportPage() {
         >
           <Trans>Showing data for period: </Trans>
         </Text>
-        <Select
+        <MonthSelect
           id="data-date-range"
           width="fit-content"
-          onChange={(e) => handleChange(e)}
-          value={selectedDate}
-        >
-          {options}
-        </Select>
+          handleChange={handleChange}
+          selectedValue={selectedDate}
+        />
       </Flex>
 
       {tableDisplay}
+      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+        <InfoBox
+          title="Source IP Address"
+          info="The IP address of sending server."
+        />
+        <InfoBox
+          title="DNS Host"
+          info="Host from reverse DNS of source IP address."
+        />
+        <InfoBox
+          title="Envelope From"
+          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
+        />
+        <InfoBox
+          title="Header From"
+          info='The address/domain used in the "From" field.'
+        />
+        <InfoBox
+          title="Total Messages"
+          info="The Total Messages from this sender."
+        />
+        <InfoBox
+          title="DKIM Domains"
+          info="The domains used for DKIM validation."
+        />
+        <InfoBox
+          title="DKIM Selectors"
+          info="Pointer to a DKIM public key record in DNS."
+        />
+        <InfoBox
+          title="DKIM Results"
+          info="The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
+        />
+        <InfoBox
+          title="DKIM Aligned"
+          info="Is DKIM aligned. Can be true or false."
+        />
+        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
+        <InfoBox
+          title="SPF Results"
+          info="The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
+        />
+        <InfoBox
+          title="SPF Aligned"
+          info="Is SPF aligned. Can be true or false."
+        />
+        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
+        <InfoBox
+          title="Disposition"
+          info="The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
+        />
+        <InfoBox
+          title="Guidance"
+          info="Details for a given guidance tag can be found on the wiki, see below."
+        />
+        <Divider borderColor="gray.500" />
+        <Link
+          isExternal
+          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+        >
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
     </Box>
   )
 }

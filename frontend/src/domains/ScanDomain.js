@@ -235,7 +235,7 @@ export function ScanDomain() {
                         }
                       />
                       <StatusBadge
-                        text="SSL:"
+                        text="TLS:"
                         status={
                           mergedScan.scan?.ssl
                             ? mergedScan.scan.ssl.status
@@ -277,12 +277,12 @@ export function ScanDomain() {
                 </AccordionButton>
               </h2>
               <AccordionPanel>
-                <Tabs isFitted>
+                <Tabs isFitted variant="enclosed-colored">
                   <TabList mb="4">
-                    <Tab>
+                    <Tab borderTopWidth="4px">
                       <Trans>Web Guidance</Trans>
                     </Tab>
-                    <Tab>
+                    <Tab borderTopWidth="4px">
                       <Trans>Email Guidance</Trans>
                     </Tab>
                   </TabList>
@@ -302,7 +302,7 @@ export function ScanDomain() {
                             </Heading>
                             <Text fontSize={['md', 'lg']}>
                               <Trans>
-                                Results for scans of web technologies (SSL,
+                                Results for scans of web technologies (TLS,
                                 HTTPS).
                               </Trans>
                             </Text>
@@ -346,7 +346,7 @@ export function ScanDomain() {
                               )}
                               {mergedScan?.scan.ssl && (
                                 <ScanCategoryDetails
-                                  categoryName="ssl"
+                                  categoryName="TLS"
                                   categoryData={mergedScan.scan.ssl}
                                 />
                               )}

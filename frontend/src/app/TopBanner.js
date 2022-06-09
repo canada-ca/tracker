@@ -1,6 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Flex, useToast, Image } from '@chakra-ui/react'
+import { Box, Button, Flex, useToast, Image, Link } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
@@ -63,22 +63,26 @@ export const TopBanner = (props) => {
             alt={t`Symbol of the Government of Canada`}
           />
         </Box>
-        <Box
-          my="4"
-          ml="4"
-          width={{ base: 0, md: 125 }}
-          display={{ base: 'none', md: 'initial' }}
-        >
-          <Image src={trackerLogo} alt={t`Tracker logo outline`} />
-        </Box>
-        <Box
-          mr="4"
-          my="4"
-          width={{ base: 0, md: 125 }}
-          display={{ base: 'none', md: 'initial' }}
-        >
-          <Image src={trackerText} alt={t`Tracker logo text`} />
-        </Box>
+        <Link as={RouteLink} to="/">
+          <Flex align="center">
+            <Box
+              my="4"
+              ml="4"
+              width={{ base: 0, md: 125 }}
+              display={{ base: 'none', md: 'initial' }}
+            >
+              <Image src={trackerLogo} alt={t`Tracker logo outline`} />
+            </Box>
+            <Box
+              mr="4"
+              my="4"
+              width={{ base: 0, md: 125 }}
+              display={{ base: 'none', md: 'initial' }}
+            >
+              <Image src={trackerText} alt={t`Tracker logo text`} />
+            </Box>
+          </Flex>
+        </Link>
 
         <PhaseBanner
           phase={<Trans>BETA</Trans>}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, Heading, Select, Stack, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Select, Flex, useToast } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { Field, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
@@ -9,7 +9,7 @@ import { string } from 'prop-types'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 
-export function EditableUserLanguage({ currentLang }) {
+export function EditableUserLanguage({ currentLang, ...props }) {
   const toast = useToast()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
@@ -62,8 +62,8 @@ export function EditableUserLanguage({ currentLang }) {
   )
 
   return (
-    <Stack spacing="4">
-      <Heading as="h3" size="md">
+    <Box {...props}>
+      <Heading as="h3" size="md" mb="1">
         <Trans>Language:</Trans>
       </Heading>
 
@@ -82,8 +82,15 @@ export function EditableUserLanguage({ currentLang }) {
       >
         {({ handleSubmit, isSubmitting, getFieldProps }) => (
           <form id="langForm" onSubmit={handleSubmit}>
-            <Stack isInline align="center" justifyContent="space-between">
+            <Flex
+              align="center"
+              borderWidth="1px"
+              borderColor="gray.500"
+              rounded="md"
+              p="1"
+            >
               <Field
+                aria-label="User Language Select"
                 data-testid="user-language-select"
                 id="lang"
                 component={Select}
@@ -94,17 +101,19 @@ export function EditableUserLanguage({ currentLang }) {
                 <option value="FRENCH">Français</option>
               </Field>
               <Button
+                aria-label="Save User Language"
                 variant="primary"
                 type="submitBtn"
                 isLoading={isSubmitting}
+                ml="auto"
               >
-                <Trans>Save Language</Trans>
+                <Trans>Save</Trans>
               </Button>
-            </Stack>
+            </Flex>
           </form>
         )}
       </Formik>
-    </Stack>
+    </Box>
   )
 }
 

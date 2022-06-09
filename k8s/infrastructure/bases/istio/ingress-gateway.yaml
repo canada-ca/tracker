@@ -1,0 +1,34 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: publicgateway
+  namespace: istio-system
+  labels:
+    istio: publicgateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+      tls:
+        httpsRedirect: true # ITPIN 6.1.1 redirected from HTTP
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "*"
+      tls:
+        mode: SIMPLE
+        credentialName: tracker-credential
+        privateKey: sds
+        serverCertificate: sds
+        minProtocolVersion: TLSV1_2 # ITPIN 6.1.3 implements TLS 1.2, or subsequent versions
+        cipherSuites: # ITPIN 6.1.3 uses supported cryptographic algorithms
+          - ECDHE-ECDSA-AES256-GCM-SHA384
+          - ECDHE-RSA-AES256-GCM-SHA384

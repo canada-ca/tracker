@@ -8,7 +8,7 @@ patchesJSON6902:
     version: v1alpha1
     kind: IstioOperator
     name: istio-controlplane
-    namespace: istio-operator
+    namespace: istio-system
   patch: |-
     - op: remove
       path: /spec/components/pilot

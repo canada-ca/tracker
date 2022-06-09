@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-scanner
+  namespace: scanners
+spec:
+  selector:
+    matchLabels:
+      app: dns-scanner
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: dns-scanner
+    spec:
+      containers:
+        - name: dns-scanner
+          image: gcr.io/track-compliance/dns-scanner:master-603eec3-1647543904 # {"$imagepolicy": "flux-system:dns-scanner"}
+          env:
+            - name: PYTHONWARNINGS
+              value: ignore
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*
+            - name: QUEUE_GROUP
+              value: dnsscanner
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+            - name: SCAN_TIMEOUT
+              value: "80"
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          imagePullPolicy: Always
+          resources: {}
+status: {}

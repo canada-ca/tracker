@@ -23,15 +23,10 @@ import { CheckCircleIcon, MinusIcon, EditIcon } from '@chakra-ui/icons'
 import { bool, func, string } from 'prop-types'
 import { useMutation, useQuery } from '@apollo/client'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Formik } from 'formik'
 
 import { ORGANIZATION_INFORMATION } from '../graphql/queries'
-import {
-  REMOVE_ORGANIZATION,
-  UPDATE_ORGANIZATION,
-  LEAVE_ORG,
-} from '../graphql/mutations'
+import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
 import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
@@ -39,26 +34,17 @@ import {
   getRequirement,
   schemaToValidation,
 } from '../utilities/fieldRequirements'
-import { useHistory } from 'react-router-dom'
 
 export function OrganizationInformation({
   orgSlug,
   removeOrgCallback: setSelectedOrg,
-  isLoginRequired,
   ...props
 }) {
   const toast = useToast()
-  const { i18n } = useLingui()
-  const history = useHistory()
   const {
     isOpen: isRemovalOpen,
     onOpen: onRemovalOpen,
     onClose: onRemovalClose,
-  } = useDisclosure()
-  const {
-    isOpen: leaveOrgIsOpen,
-    onOpen: leaveOrgOnOpen,
-    onClose: leaveOrgOnClose,
   } = useDisclosure()
   const removeOrgBtnRef = useRef()
   const [isEditingOrg, setIsEditingOrg] = useState(false)
@@ -193,57 +179,6 @@ export function OrganizationInformation({
     },
   )
 
-  const [leaveOrganization, { loading: loadingLeaveOrg }] = useMutation(
-    LEAVE_ORG,
-    {
-      onError(error) {
-        toast({
-          title: i18n._(t`An error occurred.`),
-          description: error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
-      onCompleted({ leaveOrganization }) {
-        if (leaveOrganization.result.__typename === 'LeaveOrganizationResult') {
-          toast({
-            title: i18n._(t`Organization left successfully`),
-            description: i18n._(t`You have successfully left ${orgSlug}`),
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          leaveOrgOnClose()
-          history.go(0)
-        } else if (leaveOrganization.result.__typename === 'AffiliationError') {
-          toast({
-            title: i18n._(t`Unable to leave organization.`),
-            description: leaveOrganization.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: i18n._(t`Incorrect send method received.`),
-            description: i18n._(
-              t`Incorrect leaveOrganization.result typename.`,
-            ),
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect leaveOrganization.result typename.')
-        }
-      },
-    },
-  )
-
   if (loading) {
     return (
       <LoadingMessage>
@@ -312,19 +247,6 @@ export function OrganizationInformation({
               aria-label={t`Edit Organization`}
               icon={<EditIcon />}
             />
-            {!isLoginRequired && (
-              <Button
-                variant="danger"
-                order={{ base: 1, md: 2 }}
-                onClick={() => {
-                  leaveOrgOnOpen()
-                }}
-                flexShrink={0}
-                ml="2"
-              >
-                <Trans> Leave Organization </Trans>
-              </Button>
-            )}
           </Flex>
         </Flex>
 
@@ -602,47 +524,6 @@ export function OrganizationInformation({
             </form>
           )}
         </Formik>
-      </Modal>
-
-      <Modal
-        isOpen={leaveOrgIsOpen}
-        onClose={leaveOrgOnClose}
-        motionPreset="slideInBottom"
-      >
-        <ModalOverlay />
-        <ModalContent pb={4}>
-          <ModalHeader>
-            <Trans>Leave Organization</Trans>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Trans>
-              Are you sure you wish to leave {org.name}? You will have to be
-              invited back in to access it.
-            </Trans>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button variant="primaryOutline" mr="4" onClick={leaveOrgOnClose}>
-              <Trans>Cancel</Trans>
-            </Button>
-
-            <Button
-              variant="primary"
-              mr="4"
-              onClick={async () => {
-                await leaveOrganization({
-                  variables: {
-                    orgId: org.id,
-                  },
-                })
-              }}
-              isLoading={loadingLeaveOrg}
-            >
-              <Trans>Confirm</Trans>
-            </Button>
-          </ModalFooter>
-        </ModalContent>
       </Modal>
     </>
   )

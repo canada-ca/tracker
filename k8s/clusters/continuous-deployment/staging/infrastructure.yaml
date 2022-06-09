@@ -1,0 +1,19 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: infrastructure
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./k8s/infrastructure/overlays/staging
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: tracker
+  healthChecks:
+  - kind: Deployment
+    name: istio-ingressgateway
+    namespace: istio-system
+  - kind: Deployment
+    name: istiod
+    namespace: istio-system

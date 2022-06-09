@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restore-backup
+  namespace: db
+  labels:
+    job: restore-backup
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: download
+          image: rclone/rclone
+          volumeMounts:
+            - mountPath: /tmp/dump
+              name:
+                dump
+          args:
+            - rclone copy :gcs:gc-tracker-backups/${RESTORE_BACKUP_DIRECTORY} /tmp/dump
+          command:
+            - /bin/sh
+            - -c
+          env:
+            - name: RCLONE_GCS_PROJECT_NUMBER
+              value: '958151870606'
+            - name: RCLONE_GCS_BUCKET_POLICY_ONLY
+              value: 'true'
+            - name: RESTORE_BACKUP_DIRECTORY
+              valueFrom:
+                secretKeyRef:
+                  key: RESTORE_BACKUP_DIRECTORY
+                  name: restore-backup-directory

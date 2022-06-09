@@ -1,28 +1,17 @@
-import React from 'react'
-import { useQuery, useMutation } from '@apollo/client'
-import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import React, { useEffect } from 'react'
+import { useQuery } from '@apollo/client'
+import { Trans } from '@lingui/macro'
 import {
   Box,
-  Button,
   Flex,
   Heading,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Text,
-  useDisclosure,
-  useToast,
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
@@ -36,79 +25,26 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { ORG_DETAILS_PAGE } from '../graphql/queries'
-import { LEAVE_ORG } from '../graphql/mutations'
-import { bool } from 'prop-types'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 
-export default function OrganizationDetails({ isLoginRequired }) {
-  const { orgSlug } = useParams()
-  const toast = useToast()
+export default function OrganizationDetails() {
+  const { orgSlug, activeTab } = useParams()
   const history = useHistory()
-  const { i18n } = useLingui()
+  const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
+  const defaultActiveTab = tabNames[0]
 
   useDocumentTitle(`${orgSlug}`)
 
-  const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
+  const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },
-    errorPolicy: 'ignore', // allow partial success
+    // errorPolicy: 'ignore', // allow partial success
   })
 
-  const [leaveOrganization, { loading: loadingLeaveOrg }] = useMutation(
-    LEAVE_ORG,
-    {
-      onError(error) {
-        toast({
-          title: i18n._(t`An error occurred.`),
-          description: error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
-      onCompleted({ leaveOrganization }) {
-        if (leaveOrganization.result.__typename === 'LeaveOrganizationResult') {
-          toast({
-            title: i18n._(t`Organization left successfully`),
-            description: i18n._(t`You have successfully left ${orgSlug}`),
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          leaveOrgOnClose()
-          history.push('/organizations')
-        } else if (leaveOrganization.result.__typename === 'AffiliationError') {
-          toast({
-            title: i18n._(t`Unable to leave organization.`),
-            description: leaveOrganization.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: i18n._(t`Incorrect send method received.`),
-            description: i18n._(
-              t`Incorrect leaveOrganization.result typename.`,
-            ),
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect leaveOrganization.result typename.')
-        }
-      },
-    },
-  )
-
-  const {
-    isOpen: leaveOrgIsOpen,
-    onOpen: leaveOrgOnOpen,
-    onClose: leaveOrgOnClose,
-  } = useDisclosure()
+  useEffect(() => {
+    if (!activeTab) {
+      history.replace(`/organizations/${orgSlug}/${defaultActiveTab}`)
+    }
+  }, [activeTab, history, orgSlug, defaultActiveTab])
 
   if (loading) {
     return (
@@ -118,7 +54,17 @@ export default function OrganizationDetails({ isLoginRequired }) {
     )
   }
 
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
+  }
+
   const orgName = data?.organization?.name ?? ''
+  const changeActiveTab = (index) => {
+    const tab = tabNames[index]
+    if (activeTab !== tab) {
+      history.replace(`/organizations/${orgSlug}/${tab}`)
+    }
+  }
 
   return (
     <Box w="100%">
@@ -153,29 +99,21 @@ export default function OrganizationDetails({ isLoginRequired }) {
             </>
           )}
         </Heading>
-        {isLoginRequired && (
-          <Button
-            variant="danger"
-            order={{ base: 1, md: 2 }}
-            onClick={() => {
-              leaveOrgOnOpen()
-            }}
-            flexShrink={0}
-            ml="auto"
-          >
-            <Trans> Leave Organization </Trans>
-          </Button>
-        )}
       </Flex>
-      <Tabs isFitted>
+      <Tabs
+        isFitted
+        variant="enclosed-colored"
+        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        onChange={(i) => changeActiveTab(i)}
+      >
         <TabList mb="4">
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Summary</Trans>
           </Tab>
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>DMARC Phases</Trans>
           </Tab>
-          <Tab>
+          <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
           {!isNaN(data?.organization?.affiliations?.totalCount) && (
@@ -223,51 +161,6 @@ export default function OrganizationDetails({ isLoginRequired }) {
           )}
         </TabPanels>
       </Tabs>
-
-      <Modal
-        isOpen={leaveOrgIsOpen}
-        onClose={leaveOrgOnClose}
-        motionPreset="slideInBottom"
-      >
-        <ModalOverlay />
-        <ModalContent pb={4}>
-          <ModalHeader>
-            <Trans>Leave Organization</Trans>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Trans>
-              Are you sure you wish to leave {orgName}? You will have to be
-              invited back in to access it.
-            </Trans>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button variant="primaryOutline" mr="4" onClick={leaveOrgOnClose}>
-              <Trans>Cancel</Trans>
-            </Button>
-
-            <Button
-              variant="primary"
-              mr="4"
-              onClick={async () => {
-                await leaveOrganization({
-                  variables: {
-                    orgId: data?.organization?.id,
-                  },
-                })
-              }}
-              isLoading={loadingLeaveOrg}
-            >
-              <Trans>Confirm</Trans>
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Box>
   )
-}
-
-OrganizationDetails.propTypes = {
-  isLoginRequired: bool,
 }

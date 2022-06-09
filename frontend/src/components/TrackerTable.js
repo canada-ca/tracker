@@ -5,7 +5,7 @@ import {
   useSortBy,
   useTable,
 } from 'react-table'
-import { any, array, bool, func, number, shape, string } from 'prop-types'
+import { array, bool, func, number, string } from 'prop-types'
 import {
   Box,
   Flex,
@@ -35,10 +35,9 @@ import {
 } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { ExportButton } from './ExportButton'
 
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
-
-import { InfoButton } from './InfoPanel'
 
 export function TrackerTable({ ...props }) {
   const { i18n } = useLingui()
@@ -53,12 +52,10 @@ export function TrackerTable({ ...props }) {
       ? 5
       : 10,
     onSort,
-    infoPanel,
     manualSort,
     manualFilters,
-    infoState,
-    changeInfoState,
     searchPlaceholder,
+    fileName,
   } = props
 
   const [firstRender, setFirstRender] = React.useState(true)
@@ -115,7 +112,7 @@ export function TrackerTable({ ...props }) {
 
   return (
     <Box>
-      <Flex direction="row" my={2}>
+      <Flex direction="row" my="2">
         {!manualFilters && (
           <ReactTableGlobalFilter
             title={title}
@@ -125,18 +122,14 @@ export function TrackerTable({ ...props }) {
             placeholder={searchPlaceholder}
           />
         )}
-
-        {infoState && (
-          <InfoButton
+        {fileName && (
+          <ExportButton
             ml="auto"
-            label="Glossary"
-            state={infoState}
-            changeState={changeInfoState}
+            jsonData={data}
+            fileName={`${fileName}_${title}`}
           />
         )}
       </Flex>
-
-      {infoPanel}
 
       <Table variant="med" {...getTableProps()}>
         <Thead>
@@ -224,7 +217,7 @@ export function TrackerTable({ ...props }) {
                   previousPage()
                 }}
                 disabled={!canPreviousPage}
-                icon={<ChevronLeftIcon />}
+                icon={<ChevronLeftIcon boxSize="2rem" />}
                 aria-label="Go to previous page"
               />
               <IconButton
@@ -233,7 +226,7 @@ export function TrackerTable({ ...props }) {
                   nextPage()
                 }}
                 disabled={!canNextPage}
-                icon={<ChevronRightIcon />}
+                icon={<ChevronRightIcon boxSize="2rem" />}
                 aria-label="Go to next page"
               />
               <IconButton
@@ -306,14 +299,10 @@ TrackerTable.propTypes = {
   title: string,
   initialSort: array.isRequired,
   frontendPagination: bool,
-  infoPanel: any,
-  infoState: shape({
-    isVisible: bool,
-  }),
-  changeInfoState: func,
   searchPlaceholder: string,
   onSort: func,
   selectedDisplayLimit: number,
   manualSort: bool,
   manualFilters: bool,
+  fileName: string,
 }

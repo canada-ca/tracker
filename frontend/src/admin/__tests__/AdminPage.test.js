@@ -37,7 +37,10 @@ describe('<AdminPage />', () => {
         >
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+              <MemoryRouter
+                initialEntries={['/admin/organizations']}
+                initialIndex={0}
+              >
                 <AdminPage />
               </MemoryRouter>
             </ChakraProvider>
@@ -64,7 +67,10 @@ describe('<AdminPage />', () => {
         >
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+              <MemoryRouter
+                initialEntries={['/admin/organizations']}
+                initialIndex={0}
+              >
                 <AdminPage />
               </MemoryRouter>
             </ChakraProvider>
@@ -98,7 +104,10 @@ describe('<AdminPage />', () => {
         >
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter initialEntries={['/admin']} initialIndex={0}>
+              <MemoryRouter
+                initialEntries={['/admin/organizations']}
+                initialIndex={0}
+              >
                 <AdminPage />
               </MemoryRouter>
             </ChakraProvider>
@@ -173,7 +182,7 @@ function mocks() {
               },
             ],
           },
-          isUserSuperAdmin: false,
+          isUserSuperAdmin: true,
         },
       },
     },
@@ -205,7 +214,7 @@ function mocks() {
               },
             ],
           },
-          isUserSuperAdmin: false,
+          isUserSuperAdmin: true,
         },
       },
     },

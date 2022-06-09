@@ -11,11 +11,11 @@ const schema = require(DB_DESCRIPTION)
 ;(async () => {
   await ensure({
     variables: {
-      ROOT_PASS,
-      DB_NAME,
-      DB_USER,
-      DB_PASS,
-      DB_URL,
+      rootPassword: ROOT_PASS,
+      dbname: DB_NAME,
+      username: DB_USER,
+      password: DB_PASS,
+      url: DB_URL,
     },
     schema,
   })

@@ -138,6 +138,7 @@ describe('given findDomainByDomain query', () => {
             userKey: user._key,
             query: query,
             auth: {
+              loginRequiredBool: true,
               checkDomainPermission: checkDomainPermission({
                 query,
                 userKey: user._key,

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: https-processor
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: https-processor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: https-processor
+    spec:
+      containers:
+        - name: https-processor
+          image: gcr.io/track-compliance/https-processor:master-b9a6cdf-1653933153 # {"$imagepolicy": "flux-system:https-processor"}
+          env:
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              value: http://arangodb.db:8529
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*.https
+            - name: QUEUE_GROUP
+              value: httpsprocessor
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources: {}
+status: {}

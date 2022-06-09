@@ -19,13 +19,11 @@ const i18n = setupI18n({
 
 describe('<InfoPanel>', () => {
   it('successfully renders with mocked data', async () => {
-    const state = {
-      isVisible: true,
-    }
+    const isOpen = false
     const { getByText } = render(
       <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>
-          <InfoPanel state={state}>
+          <InfoPanel isOpen={isOpen}>
             <InfoBox title="Domain" info="The domain address." />
             <InfoBox
               title="Total Messages"
@@ -41,15 +39,15 @@ describe('<InfoPanel>', () => {
 
   describe('<InfoButton>', () => {
     it('successfully renders with mocked data', async () => {
-      const { getByText } = render(
+      const { getByLabelText } = render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
-            <InfoButton label="Glossary" />
+            <InfoButton />
           </I18nProvider>
         </ChakraProvider>,
       )
 
-      await waitFor(() => getByText(/Glossary/i))
+      await waitFor(() => getByLabelText(/Open glossary/i))
     })
   })
 })

@@ -19,7 +19,7 @@ const loadDomainOwnership =
 
       const domainOwnership = JSON.parse(repoInfo.data.repository.object.text)
 
-      return domainOwnership.Federal.TBS
+      return domainOwnership
     } catch (err) {
       console.error(
         `Error occurred while fetching domain ownership information: ${err}`,

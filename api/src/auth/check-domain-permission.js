@@ -11,8 +11,8 @@ export const checkDomainPermission =
     try {
       superAdminAffiliationCursor = await query`
       WITH affiliations, organizations, users
-      FOR v, e IN 1..1 ANY ${userKeyString} affiliations 
-        FILTER e.permission == 'super_admin' 
+      FOR v, e IN 1..1 ANY ${userKeyString} affiliations
+        FILTER e.permission == 'super_admin'
         RETURN e.from
     `
     } catch (err) {

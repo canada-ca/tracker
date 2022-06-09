@@ -1,0 +1,40 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: guidance
+  namespace: scanners
+spec:
+  schedule: "59 22 * * *"
+  concurrencyPolicy: Replace
+  startingDeadlineSeconds: 180
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: guidance
+              image: gcr.io/track-compliance/services/guidance:master-a160e28-1653932452 # {"$imagepolicy": "flux-system:guidance"}
+              env:
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_USER
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_PASS
+                - name: DB_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_HOST
+                - name: DB_PORT
+                  value: "8529"
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_NAME
+          restartPolicy: OnFailure

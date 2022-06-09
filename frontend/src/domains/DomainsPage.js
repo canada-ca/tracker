@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -51,15 +51,13 @@ export default function DomainsPage() {
     nextFetchPolicy: 'cache-first',
   })
 
-  const [infoState, changeInfoState] = useState({
-    isVisible: false,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   if (error) return <ErrorFallbackMessage error={error} />
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    { value: 'POLICY_STATUS', text: t`ITPIN Status` },
+    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -89,14 +87,12 @@ export default function DomainsPage() {
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
-          <Box>
-            <DomainCard
-              url={domain}
-              status={status}
-              hasDMARCReport={hasDMARCReport}
-            />
-            <Divider borderColor="gray.900" />
-          </Box>
+          <DomainCard
+            url={domain}
+            status={status}
+            hasDMARCReport={hasDMARCReport}
+            mb="3"
+          />
         </ErrorBoundary>
       )}
     </ListOf>
@@ -104,19 +100,11 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
-      <Stack direction="row" justify="space-between" mb="4">
-        <Heading as="h1" textAlign="left">
-          <Trans>Domains</Trans>
-        </Heading>
+      <Heading as="h1" textAlign="left" mb="4">
+        <Trans>Domains</Trans>
+      </Heading>
 
-        <InfoButton
-          label={t`Glossary`}
-          state={infoState}
-          changeState={changeInfoState}
-        />
-      </Stack>
-
-      <InfoPanel state={infoState}>
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
           title={t`ITPIN`}
@@ -199,6 +187,7 @@ export default function DomainsPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
+        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
       </ErrorBoundary>
     </Box>
   )

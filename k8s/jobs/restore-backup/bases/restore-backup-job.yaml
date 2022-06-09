@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restore-backup
+  namespace: db
+  labels:
+    job: restore-backup
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      serviceAccountName: backup-service
+      volumes:
+        - name: dump
+          emptyDir: { }
+      restartPolicy: Never
+      initContainers: # This field to be patched in overlay
+      containers:
+        - name: restore
+          image: arangodb:3.7.11
+          volumeMounts:
+            - mountPath: /tmp/dump
+              name:
+                dump
+          args:
+            - arangorestore
+            - --server.endpoint=tcp://arangodb:8529
+            - --server.username=$(DB_USER)
+            - --server.password=$(DB_PASS)
+            - --server.database=track_dmarc
+            - --create-collection=false
+            - --include-system-collections=true
+            - --input-directory=/tmp/dump
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: arangodb
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: arangodb
+
+

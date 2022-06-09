@@ -266,4 +266,243 @@ describe('<SignInPage />', () => {
       })
     })
   })
+
+  describe('when sign-in fails', () => {
+    describe('server-side error', () => {
+      it('displays error', async () => {
+        const values = {
+          email: 'testuser@testemail.ca',
+          password: 'testuserpassword',
+          authenticateToken: 'authenticate-token-test',
+        }
+
+        const mocks = [
+          {
+            request: {
+              query: SIGN_IN,
+              variables: {
+                userName: values.email,
+                password: values.password,
+                rememberMe: false,
+              },
+            },
+            result: {
+              error: {
+                errors: [{ message: 'errorMessage' }],
+              },
+            },
+          },
+        ]
+
+        // create a history object and inject it so we can inspect it afterwards
+        // for the side effects of our form submission (a redirect to /!).
+        const history = createMemoryHistory({
+          initialEntries: ['/sign-in'],
+          initialIndex: 0,
+        })
+
+        const { container, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <Router history={history}>
+                    <SignInPage />
+                  </Router>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        const email = container.querySelector('#email')
+        const password = container.querySelector('#password')
+        const form = getByRole('form')
+
+        fireEvent.change(email, {
+          target: {
+            value: values.email,
+          },
+        })
+
+        fireEvent.change(password, {
+          target: {
+            value: values.password,
+          },
+        })
+
+        fireEvent.submit(form)
+
+        await waitFor(() => {
+          expect(
+            queryByText(
+              /Unable to sign in to your account, please try again./i,
+            ),
+          )
+        })
+      })
+    })
+    describe('client-side error', () => {
+      it('displays error', async () => {
+        const values = {
+          email: 'testuser@testemail.ca',
+          password: 'testuserpassword',
+          authenticateToken: 'authenticate-token-test',
+        }
+
+        const mocks = [
+          {
+            request: {
+              query: SIGN_IN,
+              variables: {
+                userName: values.email,
+                password: values.password,
+                rememberMe: false,
+              },
+            },
+            result: {
+              description: 'foobar',
+              __typename: 'SignInError',
+            },
+          },
+        ]
+
+        // create a history object and inject it so we can inspect it afterwards
+        // for the side effects of our form submission (a redirect to /!).
+        const history = createMemoryHistory({
+          initialEntries: ['/sign-in'],
+          initialIndex: 0,
+        })
+
+        const { container, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <Router history={history}>
+                    <SignInPage />
+                  </Router>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        const email = container.querySelector('#email')
+        const password = container.querySelector('#password')
+        const form = getByRole('form')
+
+        fireEvent.change(email, {
+          target: {
+            value: values.email,
+          },
+        })
+
+        fireEvent.change(password, {
+          target: {
+            value: values.password,
+          },
+        })
+
+        fireEvent.submit(form)
+
+        await waitFor(() => {
+          expect(
+            queryByText(
+              /Unable to sign in to your account, please try again./i,
+            ),
+          )
+          expect(queryByText(/foobar/i))
+        })
+      })
+    })
+    describe('incorrect send method', () => {
+      it('displays error', async () => {
+        const values = {
+          email: 'testuser@testemail.ca',
+          password: 'testuserpassword',
+          authenticateToken: 'authenticate-token-test',
+        }
+
+        const mocks = [
+          {
+            request: {
+              query: SIGN_IN,
+              variables: {
+                userName: values.email,
+                password: values.password,
+                rememberMe: false,
+              },
+            },
+            result: {
+              data: {},
+              __typename: 'UnknownError',
+            },
+          },
+        ]
+
+        // create a history object and inject it so we can inspect it afterwards
+        // for the side effects of our form submission (a redirect to /!).
+        const history = createMemoryHistory({
+          initialEntries: ['/sign-in'],
+          initialIndex: 0,
+        })
+
+        const { container, getByRole, queryByText } = render(
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <Router history={history}>
+                    <SignInPage />
+                  </Router>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        const email = container.querySelector('#email')
+        const password = container.querySelector('#password')
+        const form = getByRole('form')
+
+        fireEvent.change(email, {
+          target: {
+            value: values.email,
+          },
+        })
+
+        fireEvent.change(password, {
+          target: {
+            value: values.password,
+          },
+        })
+
+        fireEvent.submit(form)
+
+        await waitFor(() => {
+          expect(queryByText(/Incorrect send method received./i))
+          expect(queryByText(/Incorrect signIn.result typename./i))
+        })
+      })
+    })
+  })
 })

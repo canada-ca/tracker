@@ -15,7 +15,7 @@ export function ScanCard({ scanType, scanData, status }) {
       : ''
   const cardDescription =
     scanType === 'web'
-      ? t`Results for scans of web technologies (SSL, HTTPS).`
+      ? t`Results for scans of web technologies (TLS, HTTPS).`
       : scanType === 'email'
       ? t`Results for scans of email technologies (DMARC, SPF, DKIM).`
       : ''

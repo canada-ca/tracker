@@ -1,4 +1,5 @@
 export * from './find-me'
+export * from './find-my-users'
 export * from './find-user-by-username'
 export * from './login-required'
 export * from './is-user-admin'

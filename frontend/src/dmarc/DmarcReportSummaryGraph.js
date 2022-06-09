@@ -179,10 +179,12 @@ function VerticalGraph({
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [strong, moderate, moderateAlt, weak],
+    // range: ['#22485B', '#675292', '#A15196', '#F15E6B'].reverse(),
   })
   const ordinalColorScale = scaleOrdinal({
     domain: [t`Pass`, t`Fail DKIM`, t`Fail SPF`, t`Fail`],
     range: [strong, moderate, moderateAlt, weak],
+    // range: ['#22485B', '#675292', '#A15196', '#F15E6B'].reverse(),
   })
 
   dateScale.rangeRound([0, xMax])

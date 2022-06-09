@@ -27,9 +27,15 @@ const Button = {
     primary: {
       ...commonProps,
       color: 'gray.50',
-      bg: 'primary',
+      bg: 'btnMain',
       _hover: {
-        bg: 'primary2',
+        bg: 'btnHover',
+      },
+      _active: {
+        bg: 'btnActive',
+      },
+      _disabled: {
+        bg: 'btnDisabled',
       },
     },
     primaryOutline: {
@@ -38,18 +44,6 @@ const Button = {
       bg: 'transparent',
       borderColor: 'primary',
       borderWidth: '1px',
-    },
-    primaryHover: {
-      ...commonProps,
-      color: 'gray.50',
-      bg: 'primary',
-      borderColor: 'gray.50',
-      borderWidth: '1px',
-      _hover: {
-        color: 'accent',
-        bg: 'primary',
-        borderColor: 'accent',
-      },
     },
     primaryWhite: {
       ...commonProps,
@@ -60,16 +54,6 @@ const Button = {
       _hover: {
         color: 'primary',
         bg: 'gray.200',
-      },
-    },
-    outline: {
-      ...commonProps,
-      color: 'primary2',
-      bg: 'transparent',
-      borderColor: 'primary2',
-      borderWidth: '1px',
-      _hover: {
-        bg: 'blue.50',
       },
     },
     danger: {

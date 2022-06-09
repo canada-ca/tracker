@@ -20,16 +20,14 @@ export const TrackerAccordionItem = ({
 }) => {
   return (
     <AccordionItem {...props}>
-      <h2>
-        <Button as={AccordionButton} variant={buttonVariant} p={0} w="100%">
-          <Flex alignItems="center" w="100%">
-            <Spacer />
-            <Trans>{buttonLabel}</Trans>
-            <Spacer />
-            <AccordionIcon mr={2} boxSize="icons.xl" />
-          </Flex>
-        </Button>
-      </h2>
+      <Button as={AccordionButton} variant={buttonVariant} w="100%">
+        <Flex alignItems="center" w="100%">
+          <Spacer />
+          <Trans>{buttonLabel}</Trans>
+          <Spacer />
+          <AccordionIcon mr={2} boxSize="icons.xl" />
+        </Flex>
+      </Button>
       <AccordionPanel {...panelProps}>{children}</AccordionPanel>
     </AccordionItem>
   )
