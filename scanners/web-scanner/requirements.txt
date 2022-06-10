@@ -1,5 +1,4 @@
 asyncio==3.4.3
-asyncio-nats-client==0.11.4
 bitarray==2.3.4
 certifi==2021.10.8
 cffi==1.15.0
@@ -16,6 +15,7 @@ mmh3==3.0.0
 moz-crlite-lib==0.2
 moz-crlite-query==0.4.2
 nassl==4.0.2
+nats-py==2.1.3
 progressbar2==3.55.0
 publicsuffixlist==0.7.11
 pyasn1==0.4.8

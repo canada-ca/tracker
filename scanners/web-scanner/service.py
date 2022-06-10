@@ -1,22 +1,19 @@
-import time
+import functools
 import json
-import argparse, sys
 import logging
 import asyncio
 import os
 import signal
-import traceback
-import datetime as dt
-from concurrent.futures import ProcessPoolExecutor
-from operator import itemgetter
+
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
 from web_scanner import scan_web
-from nats.aio.client import Client as NATS
+import nats
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "web-scanner")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
@@ -63,29 +60,33 @@ def process_results(results):
     return results
 
 
-async def run(loop):
-    nc = NATS()
-
-    async def error_cb(e):
-        print("Error:", e)
+async def scan_service(loop):
+    async def error_cb(error):
+        logger.error(error)
 
     async def closed_cb():
-        print("Connection to NATS is closed.")
+        logger.info("Connection to NATS is closed.")
         await asyncio.sleep(0.1)
         loop.stop()
 
     async def reconnected_cb():
-        print(f"Connected to NATS at {nc.connected_url.netloc}...")
+        logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
+
+    nc = await nats.connect(
+        error_cb=error_cb,
+        closed_cb=closed_cb,
+        reconnected_cb=reconnected_cb,
+        servers=SERVERS,
+        name=NAME,
+    )
+
+    logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     async def subscribe_handler(msg):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
-        print(
-            "Received a message on '{subject} {reply}': {data}".format(
-                subject=subject, reply=reply, data=data
-            )
-        )
+        logger.info("Received a message on '{subject} {reply}': {data}".format(subject=subject, reply=reply, data=data))
         payload = json.loads(msg.data)
 
         domain = payload.get("domain")
@@ -95,74 +96,50 @@ async def run(loop):
         ip_address = payload.get("ip_address")
 
         try:
-            scanner = TLSScanner(domain)
-
-            loop = asyncio.get_event_loop()
-            with ProcessPoolExecutor() as executor:
-                scan_results = await loop.run_in_executor(executor, scanner.run)
+            logger.info(f"Starting web scan on '{domain}' at IP address '{ip_address}'")
+            scan_results = scan_web(domain=domain, ip_address=ip_address)
         except TimeoutError:
-            await nc.publish(
-                f"{PUBLISH_TO}.{domain_key}.tls",
-                json.dumps(
-                    {
-                        "results": {"error": "unreachable"},
-                        "scan_type": "ssl",
-                        "user_key": user_key,
-                        "domain_key": domain_key,
-                        "shared_id": shared_id,
-                    }
-                ).encode(),
-            )
+            scan_results = {"results": {"error": "unreachable"}}
 
         processed_results = process_results(scan_results)
+        logger.info(f"Web results for '{domain}' at IP address '{ip_address}': ", json.dumps(processed_results))
 
         await nc.publish(
-            f"{PUBLISH_TO}.{domain_key}.tls",
+            f"{PUBLISH_TO}.{domain_key}.web",
             json.dumps(
                 {
                     "results": processed_results,
-                    "scan_type": "ssl",
+                    "scan_type": "web",
                     "user_key": user_key,
                     "domain_key": domain_key,
                     "shared_id": shared_id,
+                    "ip_address": ip_address
                 }
             ).encode(),
         )
 
-    try:
+    await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
-        await nc.connect(
-            loop=loop,
-            error_cb=error_cb,
-            closed_cb=closed_cb,
-            reconnected_cb=reconnected_cb,
-            servers=SERVERS,
-            name=NAME,
-        )
-    except Exception as e:
-        print(e)
-
-    print(f"Connected to NATS at {nc.connected_url.netloc}...")
-
-    def signal_handler():
+    def ask_exit(sig_name):
+        logger.error(f"Got signal {sig_name}: exit")
         if nc.is_closed:
             return
-        print("Disconnecting...")
         loop.create_task(nc.close())
 
-    for sig in ("SIGINT", "SIGTERM"):
-        loop.add_signal_handler(getattr(signal, sig), signal_handler)
+    for signal_name in {'SIGINT', 'SIGTERM'}:
+        loop.add_signal_handler(
+            getattr(signal, signal_name),
+            functools.partial(ask_exit, signal_name))
 
-    await nc.subscribe(SUBSCRIBE_TO, QUEUE_GROUP, subscribe_handler)
 
-
-if __name__ == "__main__":
-    import setproctitle
-
-    setproctitle.setproctitle('tls-scanner')
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(run(loop))
+def main():
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(scan_service(loop))
     try:
         loop.run_forever()
     finally:
         loop.close()
+
+
+if __name__ == "__main__":
+    main()

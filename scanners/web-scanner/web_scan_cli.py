@@ -25,3 +25,4 @@ if __name__ == "__main__":
     scan_data = scan_web(domain=args.domain, ip_address=args.ip)
 
     print(json.dumps(scan_data, indent=4))
+
