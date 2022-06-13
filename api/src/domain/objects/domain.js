@@ -17,6 +17,7 @@ import { emailScanType } from '../../email-scan/objects'
 import { webScanType } from '../../web-scan/objects'
 import { organizationOrder } from '../../organization/inputs'
 import { organizationConnection } from '../../organization/objects'
+import { domainTag } from './domain-tag'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -58,6 +59,14 @@ export const domainType = new GraphQLObjectType({
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
       resolve: ({ selectors }) => selectors,
+    },
+    tags: {
+      type: new GraphQLList(domainTag),
+      description: 'Vulnerabilities that the domain has tested positive for.',
+      resolve: async ({ tags }, _, { auth: { userRequired } }) => {
+        await userRequired()
+        return tags
+      },
     },
     status: {
       type: domainStatus,
