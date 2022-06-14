@@ -19,6 +19,7 @@ import {
   loadDomainByDomain,
   loadDomainConnectionsByOrgId,
   loadDomainConnectionsByUserId,
+  loadDomainTagsByOrgId,
 } from './domain/loaders'
 import {
   loadDkimByKey,
@@ -165,6 +166,7 @@ export function initializeLoaders({
       i18n,
       auth: { loginRequiredBool },
     }),
+    loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query }),
     loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
     loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
     loadDmarcByKey: loadDmarcByKey({ query, userKey, i18n }),

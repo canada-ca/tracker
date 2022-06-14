@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro'
 import {
   GraphQLBoolean,
+  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -61,11 +62,26 @@ export const domainType = new GraphQLObjectType({
       resolve: ({ selectors }) => selectors,
     },
     tags: {
-      type: new GraphQLList(domainTag),
+      type: tagType,
       description: 'Vulnerabilities that the domain has tested positive for.',
-      resolve: async ({ tags }, _, { auth: { userRequired } }) => {
-        await userRequired()
-        return tags
+      resolve: async (
+        { tags },
+        _,
+        {
+          auth: {
+            userRequired,
+            verifiedRequired,
+            checkSuperAdmin,
+            superAdminRequired,
+          },
+        },
+      ) => {
+        const user = await userRequired()
+        verifiedRequired({ user })
+
+        const isSuperAdmin = await checkSuperAdmin()
+        superAdminRequired({ user, isSuperAdmin })
+        return { edges: tags, totalCount: tags.length }
       },
     },
     status: {
@@ -235,4 +251,16 @@ export const domainType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
+})
+
+export const tagType = new GraphQLObjectType({
+  name: 'TagConnection',
+  fields: () => ({
+    edges: {
+      type: new GraphQLList(domainTag),
+    },
+    totalCount: {
+      type: GraphQLInt,
+    },
+  }),
 })
