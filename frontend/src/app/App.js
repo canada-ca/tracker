@@ -64,6 +64,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 )
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
+const WebCheckPage = lazyWithRetry(() => import('../admin/WebCheckPage.js'))
 
 export function App() {
   // Hooks to be used with this functional component
@@ -116,9 +117,14 @@ export function App() {
         )}
 
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
-          <RouteLink to="/admin">
-            <Trans>Admin Profile</Trans>
-          </RouteLink>
+          <>
+            <RouteLink to="/admin">
+              <Trans>Admin Profile</Trans>
+            </RouteLink>
+            <RouteLink to="/web-check">
+              <Trans>Web Check</Trans>
+            </RouteLink>
+          </>
         )}
       </Navigation>
 
@@ -248,6 +254,20 @@ export function App() {
               isEmailValidated() &&
               currentTFAMethod() !== 'NONE' ? (
                 <AdminPage isLoginRequired={data?.loginRequired} />
+              ) : (
+                <Redirect
+                  to={{
+                    pathname: '/sign-in',
+                  }}
+                />
+              )}
+            </Page>
+
+            <Page path="/web-check" title={t`WebCheck`}>
+              {isLoggedIn() &&
+              isEmailValidated() &&
+              currentTFAMethod() !== 'NONE' ? (
+                <WebCheckPage />
               ) : (
                 <Redirect
                   to={{
