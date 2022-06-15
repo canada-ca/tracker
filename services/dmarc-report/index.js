@@ -63,6 +63,7 @@ const {
     })
 
   const currentDate = moment().startOf('month').format('YYYY-MM-DD')
+  const lastMonthDate = moment().startOf('month').subtract(1, 'months').format('YYYY-MM-DD')
   const cosmosDates = await loadCosmosDates({
     container: summariesContainer,
   })()
@@ -144,6 +145,7 @@ const {
     upsertSummary: setupUpsertSummary,
     cosmosDates,
     currentDate,
+    lastMonthDate,
   })
   
 })()

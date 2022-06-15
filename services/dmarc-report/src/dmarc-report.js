@@ -11,7 +11,7 @@ module.exports.dmarcReport = async ({
   createSummary,
   upsertSummary,
   cosmosDates,
-  currentDate,
+  lastMonthDate,
 }) => {
   // get org acronyms
   const orgAcronyms = Object.keys(ownerships)
@@ -91,8 +91,8 @@ module.exports.dmarcReport = async ({
             date,
             domain,
           })
-        } else if (date === currentDate) {
-          // update current month
+        } else if (date >= lastMonthDate) {
+          // update month
           console.info(`\t\tUpdating ${date} for ${domain}`)
           await upsertSummary({ date, domain })
         }
