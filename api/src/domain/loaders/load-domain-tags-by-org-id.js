@@ -36,8 +36,6 @@ export const loadDomainTagsByOrgId =
       throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
     }
 
-    console.log('info: ', tagsInfo.tags)
-
     if (tagsInfo.tags.length === 0) {
       return {
         edges: [],

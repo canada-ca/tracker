@@ -55,6 +55,10 @@ export default extendTheme({
     btnHover: '#767676',
     btnActive: '#aeaeae',
     btnDisabled: '#e6e6e6',
+    low: '#EAEAEA',
+    medium: '#F7FFDA',
+    high: '#FFE1B0',
+    critical: '#FFB3BC',
     green: {
       50: '#F2FFF0',
       100: '#C3EEBF',
