@@ -1015,34 +1015,34 @@ export const FIND_MY_USERS = gql`
   }
 `
 export const WEBCHECK_ORGS = gql`
-  query WebCheckOrgs($first: Int!) {
-    findMyOrganizations(
-      first: $first
-      orderBy: { field: NAME, direction: ASC }
-    ) {
+  query FindMyWebCheckOrgs {
+    findMyWebCheckOrganizations {
+      totalCount
       edges {
-        node {
-          name
-          tags {
-            edges {
-              id
-              severity
-            }
-            totalCount
+        id
+        acronym
+        name
+        slug
+        tags {
+          edges {
+            id
+            severity
           }
-          domains(first: $first) {
-            edges {
-              node {
-                domain
-                tags {
-                  edges {
-                    id
-                    firstDetected
-                    severity
-                  }
-                  totalCount
-                }
+          totalCount
+        }
+        domains {
+          totalCount
+          edges {
+            id
+            domain
+            lastRan
+            tags {
+              edges {
+                id
+                firstDetected
+                severity
               }
+              totalCount
             }
           }
         }

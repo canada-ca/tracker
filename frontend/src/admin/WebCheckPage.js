@@ -8,9 +8,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 
 export default function WebCheckPage() {
-  const { loading, error, data } = useQuery(WEBCHECK_ORGS, {
-    variables: { first: 100 },
-  })
+  const { loading, error, data } = useQuery(WEBCHECK_ORGS, {})
   if (loading) return <LoadingMessage />
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -23,10 +21,10 @@ export default function WebCheckPage() {
         <Trans>Vulnerability Scan Dahsboard</Trans>
       </Text>
       <Divider borderBottomColor="gray.900" mb="8" />
-      {data.findMyOrganizations.edges.map(({ node }, idx) => {
+      {data.findMyWebCheckOrganizations.edges.map((node) => {
         return (
-          <Box key={idx}>
-            <Flex>
+          <Box key={node.id}>
+            <Flex mb="2">
               <Text fontWeight="bold">{node.name}</Text>
               {node.tags.edges.map(({ id, severity }) => {
                 return (
@@ -46,7 +44,7 @@ export default function WebCheckPage() {
                 )
               })}
             </Flex>
-            {node.domains.edges.map(({ node }, idx) => {
+            {node.domains.edges.map((node, idx) => {
               return (
                 <Flex key={idx} ml="8">
                   <Text fontWeight="bold">{node.domain}</Text>
@@ -70,11 +68,10 @@ export default function WebCheckPage() {
                 </Flex>
               )
             })}
-            <Divider borderBottomColor="gray.900" mb="8" />
+            <Divider borderBottomColor="gray.900" my="8" />
           </Box>
         )
       })}
-      <Text></Text>
     </Box>
   )
 }
