@@ -45,19 +45,21 @@ export const loadWebCheckConnectionsByUserId =
       throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
     }
 
-    if (orgsInfo.organizations.length === 0) {
-      return {
-        edges: [],
-        totalCount: 0,
-      }
-    }
+    // if (orgsInfo.organizations.length === 0) {
+    //   return {
+    //     edges: [],
+    //     totalCount: 0,
+    //   }
+    // }
 
-    const edges = orgsInfo.organizations.map((org) => {
-      return org
-    })
+    // const edges = orgsInfo.organizations.map((org) => {
+    //   return org
+    // })
 
-    return {
-      edges,
-      totalCount: orgsInfo.totalCount,
-    }
+    // return {
+    //   edges,
+    //   totalCount: orgsInfo.totalCount,
+    // }
+
+    return orgsInfo
   }

@@ -184,8 +184,6 @@ export const findMyWebCheckOrganizations = {
       ...args,
     })
 
-    console.log('orgs:', orgConnections)
-
     console.info(`User ${userKey} successfully retrieved their organizations.`)
 
     return orgConnections
