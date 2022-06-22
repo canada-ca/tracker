@@ -13,64 +13,56 @@ const webCheckType = new GraphQLObjectType({
   name: 'WebCheckConnection',
   description: '',
   fields: () => ({
-    organizations: {
+    edges: {
       type: new GraphQLList(
         new GraphQLObjectType({
-          name: 'WebCheckOrganizationConnection',
+          name: 'WebCheckOrganization',
           fields: () => ({
-            organization: {
-              type: new GraphQLObjectType({
-                name: 'WebCheckOrganization',
-                fields: () => ({
-                  id: globalIdField('organization'),
-                  acronym: {
-                    type: Acronym,
-                    description: 'The organizations acronym.',
-                    resolve: ({ acronym }) => acronym,
-                  },
-                  name: {
-                    type: GraphQLString,
-                    description: 'The full name of the organization.',
-                    resolve: ({ name }) => name,
-                  },
-                  slug: {
-                    type: Slug,
-                    description: 'Slugified name of the organization.',
-                    resolve: ({ slug }) => slug,
-                  },
-                  tags: {
-                    type: tagType,
-                    description:
-                      'Whether or not the domain has a aggregate dmarc report.',
-                    resolve: async (
-                      { _id },
-                      args,
-                      {
-                        _i18n,
-                        // auth: {
-                        //   userRequired,
-                        //   verifiedRequired,
-                        //   checkSuperAdmin,
-                        //   superAdminRequired,
-                        // },
-                        loaders: { loadDomainTagsByOrgId },
-                      },
-                    ) => {
-                      // const user = await userRequired()
-                      // verifiedRequired({ user })
+            id: globalIdField('organization'),
+            acronym: {
+              type: Acronym,
+              description: 'The organizations acronym.',
+              resolve: ({ acronym }) => acronym,
+            },
+            name: {
+              type: GraphQLString,
+              description: 'The full name of the organization.',
+              resolve: ({ name }) => name,
+            },
+            slug: {
+              type: Slug,
+              description: 'Slugified name of the organization.',
+              resolve: ({ slug }) => slug,
+            },
+            tags: {
+              type: tagType,
+              description:
+                'Whether or not the domain has a aggregate dmarc report.',
+              resolve: async (
+                { _id },
+                args,
+                {
+                  _i18n,
+                  // auth: {
+                  //   userRequired,
+                  //   verifiedRequired,
+                  //   checkSuperAdmin,
+                  //   superAdminRequired,
+                  // },
+                  loaders: { loadDomainTagsByOrgId },
+                },
+              ) => {
+                // const user = await userRequired()
+                // verifiedRequired({ user })
 
-                      // const isSuperAdmin = await checkSuperAdmin()
-                      // superAdminRequired({ user, isSuperAdmin })
-                      const orgTags = await loadDomainTagsByOrgId({
-                        orgId: _id,
-                        ...args,
-                      })
-                      return orgTags
-                    },
-                  },
-                }),
-              }),
-              description: '',
+                // const isSuperAdmin = await checkSuperAdmin()
+                // superAdminRequired({ user, isSuperAdmin })
+                const orgTags = await loadDomainTagsByOrgId({
+                  orgId: _id,
+                  ...args,
+                })
+                return orgTags
+              },
             },
             domains: {
               type: new GraphQLObjectType({
@@ -114,7 +106,10 @@ const webCheckType = new GraphQLObjectType({
 
                               // const isSuperAdmin = await checkSuperAdmin()
                               // superAdminRequired({ user, isSuperAdmin })
-                              return { edges: tags, totalCount: tags.length }
+                              return {
+                                edges: tags,
+                                totalCount: tags.length,
+                              }
                             },
                           },
                         }),
@@ -134,7 +129,7 @@ const webCheckType = new GraphQLObjectType({
         }),
       ),
       description: '',
-      resolve: ({ organizations }) => organizations,
+      resolve: ({ edges }) => edges,
     },
     totalCount: {
       type: GraphQLInt,
@@ -185,7 +180,7 @@ export const findMyWebCheckOrganizations = {
     })
 
     console.info(`User ${userKey} successfully retrieved their organizations.`)
-
+    console.log('orgIfno:', orgConnections)
     return orgConnections
   },
 }
