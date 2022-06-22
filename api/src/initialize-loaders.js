@@ -50,6 +50,7 @@ import {
   loadOrgBySlug,
   loadOrgConnectionsByDomainId,
   loadOrgConnectionsByUserId,
+  loadWebCheckConnectionsByUserId,
 } from './organization/loaders'
 import {
   loadUserByUserName,
@@ -302,6 +303,13 @@ export function initializeLoaders({
       language,
       i18n,
       auth: { loginRequiredBool },
+    }),
+    loadWebCheckConnectionsByUserId: loadWebCheckConnectionsByUserId({
+      query,
+      userKey,
+      cleanseInput,
+      language,
+      i18n,
     }),
     loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
     loadUserConnectionsByUserId: loadUserConnectionsByUserId({
