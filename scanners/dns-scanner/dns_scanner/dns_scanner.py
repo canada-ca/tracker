@@ -95,7 +95,7 @@ def scan_domain(domain, dkim_selectors=None):
             scan_result.dkim = dkim_scanner.run()
             logger.info(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
         else:
-            scan_result.dkim = {"error": "missing"}
+            scan_result.dkim = {}
     except TimeoutError:
         print("TIMEOUT")
 
