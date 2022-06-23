@@ -11,17 +11,17 @@ if __name__ == "__main__":
                         help='the domain to scan')
     parser.add_argument('--selectors', type=lambda selectors: [selector for selector in selectors.split(',') if selector],
                         help='a comma-seperated list of DKIM selectors')
-    parser.add_argument('-v', action='store_true',
-                        help='enable verbose logging')
+    parser.add_argument('-v', action='count',
+                        help='enable verbose logging', default=0)
 
     args = parser.parse_args()
 
     from dns_scanner.dns_scanner import scan_domain
 
-    if args.v:
-        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    else:
-        logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
+    log_levels = ["WARNING", "INFO", "DEBUG"]
+    log_level = log_levels[min(args.v, len(log_levels) - 1)]
+
+    logging.basicConfig(stream=sys.stdout, level=getattr(logging, log_level))
 
     res = scan_domain(domain=args.domain, dkim_selectors=args.selectors)
     print(json.dumps(res, indent=4))
