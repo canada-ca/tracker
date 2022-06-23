@@ -5,7 +5,7 @@ import dns.resolver
 from checkdmarc import *
 from dns.resolver import NXDOMAIN, NoAnswer
 
-from .email_scanners import DKIMScanner, DMARCScanner
+from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 
 logger = logging.getLogger(__name__)
 
