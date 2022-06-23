@@ -72,7 +72,8 @@ class DMARCScanner:
                 parsed_rua_domain = extract(rua_domain)
                 rua_org_domain = ".".join([parsed_rua_domain.domain, parsed_rua_domain.suffix])
 
-                # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
+                # If the report destination's organizational does not differ from the provided domain's
+                # organizational domain, assert reports are being accepted.
                 if rua_org_domain == org_domain:
                     rua_value["accepting"] = True
                 else:
@@ -84,16 +85,18 @@ class DMARCScanner:
                         rua_txt_value = (
                             rua_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
                         )
-                        # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
+                        # Assert external reporting arrangement has been authorized if TXT containing version tag
+                        # with value "DMARC1" is found.
                         scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
                             rua_txt_value == "v=DMARC1"
                         )
                     except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN, NoAnswer) as e:
-                        logging.error(f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={self.domain}: {e}")
+                        logging.error(
+                            f"Failed to validate external reporting arrangement between rua address={rua_domain} and domain={self.domain}: {e}")
                         rua_value["accepting"] = "undetermined"
             except (TypeError, KeyError) as e:
-                logging.error(f"Error `{e}` while validating rua for domain: {self.domain}. scan_result: {json.dumps(scan_result, indent=2)}" )
-
+                logging.error(
+                    f"Error `{e}` while validating rua for domain: {self.domain}. scan_result: {json.dumps(scan_result, indent=2)}")
 
         # check_domains function does not always return an array for values in ruf, account for this
         if isinstance(scan_result["dmarc"].get("tags", {}).get("ruf", {}).get("value", []), str):
@@ -119,7 +122,8 @@ class DMARCScanner:
                 parsed_ruf_domain = extract(ruf_domain)
                 ruf_org_domain = ".".join([parsed_ruf_domain.domain, parsed_ruf_domain.suffix])
 
-                # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
+                # If the report destination's organizational does not differ from the provided domain's
+                # organizational domain, assert reports are being accepted.
                 if ruf_org_domain == org_domain:
                     ruf["accepting"] = True
                 else:
@@ -131,12 +135,14 @@ class DMARCScanner:
                         ruf_txt_value = (
                             ruf_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
                         )
-                        # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
+                        # Assert external reporting arrangement has been authorized if TXT containing version tag
+                        # with value "DMARC1" is found.
                         scan_result["dmarc"]["tags"]["ruf"]["accepting"] = (
                             ruf_txt_value == "v=DMARC1"
                         )
                     except (DNSException, SPFError, DMARCError, resolver.NXDOMAIN, NoAnswer) as e:
-                        logging.error(f"Failed to validate external reporting arrangement between ruf address={ruf_domain} and domain={self.domain}: {e}")
+                        logging.error(
+                            f"Failed to validate external reporting arrangement between ruf address={ruf_domain} and domain={self.domain}: {e}")
                         ruf["accepting"] = "undetermined"
             except (TypeError, KeyError) as e:
                 logging.error(f"Error occurred while attempting to validate ruf address for domain={self.domain}: {e}")
@@ -202,7 +208,8 @@ class DKIMScanner:
         for selector in self.selectors:
             record[selector] = {}
             try:
-                # Add period at end of name for DNS query, otherwise it may not resolve in containers due to search in /etc/resolv.conf
+                # Add period at end of name for DNS query, otherwise it may not resolve in containers due to search
+                # in /etc/resolv.conf
                 lookup_url = f"{selector}._domainkey.{self.domain}."
                 # Retrieve public key from DNS
                 pk_txt = dnsplug.get_txt_dnspython(lookup_url)
