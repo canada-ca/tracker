@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro'
 import {
   GraphQLBoolean,
-  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -18,7 +17,6 @@ import { emailScanType } from '../../email-scan/objects'
 import { webScanType } from '../../web-scan/objects'
 import { organizationOrder } from '../../organization/inputs'
 import { organizationConnection } from '../../organization/objects'
-import { domainTag } from './domain-tag'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -60,29 +58,6 @@ export const domainType = new GraphQLObjectType({
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
       resolve: ({ selectors }) => selectors,
-    },
-    tags: {
-      type: tagType,
-      description: 'Vulnerabilities that the domain has tested positive for.',
-      resolve: async (
-        { tags },
-        _,
-        {
-          auth: {
-            userRequired,
-            verifiedRequired,
-            checkSuperAdmin,
-            superAdminRequired,
-          },
-        },
-      ) => {
-        const user = await userRequired()
-        verifiedRequired({ user })
-
-        const isSuperAdmin = await checkSuperAdmin()
-        superAdminRequired({ user, isSuperAdmin })
-        return { edges: tags, totalCount: tags.length }
-      },
     },
     status: {
       type: domainStatus,
@@ -251,16 +226,4 @@ export const domainType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
-})
-
-export const tagType = new GraphQLObjectType({
-  name: 'TagConnection',
-  fields: () => ({
-    edges: {
-      type: new GraphQLList(domainTag),
-    },
-    totalCount: {
-      type: GraphQLInt,
-    },
-  }),
 })

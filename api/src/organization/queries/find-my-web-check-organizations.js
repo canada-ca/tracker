@@ -1,13 +1,26 @@
 import {
+  GraphQLBoolean,
   GraphQLInt,
   GraphQLList,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
-import { tagType } from '../../domain/objects'
+import { domainTag } from '../../domain/objects'
 import { Acronym, Domain, Slug } from '../../scalars'
 import { organizationOrder } from '../inputs'
+
+const tagType = new GraphQLObjectType({
+  name: 'TagConnection',
+  fields: () => ({
+    edges: {
+      type: new GraphQLList(domainTag),
+    },
+    totalCount: {
+      type: GraphQLInt,
+    },
+  }),
+})
 
 const webCheckType = new GraphQLObjectType({
   name: 'WebCheckConnection',
@@ -34,6 +47,12 @@ const webCheckType = new GraphQLObjectType({
               description: 'Slugified name of the organization.',
               resolve: ({ slug }) => slug,
             },
+            verified: {
+              type: GraphQLBoolean,
+              description:
+                'Whether the organization is a verified organization.',
+              resolve: ({ verified }) => verified,
+            },
             tags: {
               type: tagType,
               description:
@@ -43,20 +62,10 @@ const webCheckType = new GraphQLObjectType({
                 args,
                 {
                   _i18n,
-                  // auth: {
-                  //   userRequired,
-                  //   verifiedRequired,
-                  //   checkSuperAdmin,
-                  //   superAdminRequired,
-                  // },
+
                   loaders: { loadDomainTagsByOrgId },
                 },
               ) => {
-                // const user = await userRequired()
-                // verifiedRequired({ user })
-
-                // const isSuperAdmin = await checkSuperAdmin()
-                // superAdminRequired({ user, isSuperAdmin })
                 const orgTags = await loadDomainTagsByOrgId({
                   orgId: _id,
                   ...args,
@@ -89,23 +98,7 @@ const webCheckType = new GraphQLObjectType({
                             type: tagType,
                             description:
                               'Vulnerabilities that the domain has tested positive for.',
-                            resolve: async (
-                              { tags },
-                              _,
-                              // {
-                              //   auth: {
-                              //     userRequired,
-                              //     verifiedRequired,
-                              //     checkSuperAdmin,
-                              //     superAdminRequired,
-                              //   },
-                              // },
-                            ) => {
-                              // const user = await userRequired()
-                              // verifiedRequired({ user })
-
-                              // const isSuperAdmin = await checkSuperAdmin()
-                              // superAdminRequired({ user, isSuperAdmin })
+                            resolve: async ({ tags }, _) => {
                               return {
                                 edges: tags,
                                 totalCount: tags.length,
@@ -151,6 +144,10 @@ export const findMyWebCheckOrganizations = {
       type: GraphQLString,
       description: 'String argument used to search for organizations.',
     },
+    isAdmin: {
+      type: GraphQLBoolean,
+      description: 'Filter orgs based off of the user being an admin of them.',
+    },
     ...connectionArgs,
   },
   resolve: async (
@@ -160,27 +157,23 @@ export const findMyWebCheckOrganizations = {
       userKey,
       auth: {
         checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
+        // userRequired,
+        // verifiedRequired
       },
       loaders: { loadWebCheckConnectionsByUserId },
     },
   ) => {
-    if (loginRequiredBool) {
-      const user = await userRequired()
-      verifiedRequired({ user })
-    }
+    // const user = await userRequired()
+    // verifiedRequired({ user })
 
     const isSuperAdmin = await checkSuperAdmin()
 
-    const orgConnections = await loadWebCheckConnectionsByUserId({
+    const webCheckConnections = await loadWebCheckConnectionsByUserId({
       isSuperAdmin,
       ...args,
     })
 
     console.info(`User ${userKey} successfully retrieved their organizations.`)
-    console.log('orgIfno:', orgConnections)
-    return orgConnections
+    return webCheckConnections
   },
 }

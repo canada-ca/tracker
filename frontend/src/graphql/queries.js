@@ -1015,8 +1015,18 @@ export const FIND_MY_USERS = gql`
   }
 `
 export const WEBCHECK_ORGS = gql`
-  query FindMyWebCheckOrgs {
-    findMyWebCheckOrganizations {
+  query FindMyWebCheckOrgs(
+    $after: String
+    $first: Int
+    $orderBy: OrganizationOrder
+    $search: String
+  ) {
+    findMyWebCheckOrganizations(
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+    ) {
       totalCount
       edges {
         id

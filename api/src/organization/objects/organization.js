@@ -13,7 +13,7 @@ import { Acronym, Slug } from '../../scalars'
 import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder } from '../../domain/inputs'
-import { domainConnection, tagType } from '../../domain/objects'
+import { domainConnection } from '../../domain/objects'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -142,36 +142,6 @@ export const organizationType = new GraphQLObjectType({
             t`Cannot query affiliations on organization without admin permission or higher.`,
           ),
         )
-      },
-    },
-    tags: {
-      type: tagType,
-      description: 'Whether or not the domain has a aggregate dmarc report.',
-      resolve: async (
-        { _id },
-        args,
-        {
-          _i18n,
-          auth: {
-            userRequired,
-            verifiedRequired,
-            checkSuperAdmin,
-            superAdminRequired,
-          },
-          loaders: { loadDomainTagsByOrgId },
-        },
-      ) => {
-        const user = await userRequired()
-        verifiedRequired({ user })
-
-        const isSuperAdmin = await checkSuperAdmin()
-        superAdminRequired({ user, isSuperAdmin })
-        const domainTags = await loadDomainTagsByOrgId({
-          orgId: _id,
-          ...args,
-        })
-        console.log('orgTags:', domainTags)
-        return domainTags
       },
     },
   }),
