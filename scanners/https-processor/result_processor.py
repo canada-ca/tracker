@@ -82,19 +82,11 @@ def process_https(results, domain_key, user_key, db, shared_id):
             if isinstance(hsts, str):
                 hsts = hsts.lower()
 
-                if hsts == "hsts max age too short":
-                    negative_tags.append("https10")
-
-                elif hsts == "no hsts":
+                if hsts == "no hsts":
                     negative_tags.append("https9")
 
             # HSTS Age
             hsts_age = results.get("hsts_age", None)
-
-            if hsts_age is not None:
-                if hsts_age < 31536000:
-                    if "https9" not in negative_tags and "https10" not in negative_tags:
-                        negative_tags.append("https10")
 
             # Preload Status
             preload_status = results.get("preload_status", None)
