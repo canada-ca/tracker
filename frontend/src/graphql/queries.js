@@ -1017,7 +1017,7 @@ export const FIND_MY_USERS = gql`
 export const WEBCHECK_ORGS = gql`
   query FindMyWebCheckOrgs(
     $after: String
-    $first: Int
+    $first: Int!
     $orderBy: OrganizationOrder
     $search: String
   ) {
@@ -1029,33 +1029,42 @@ export const WEBCHECK_ORGS = gql`
     ) {
       totalCount
       edges {
-        id
-        acronym
-        name
-        slug
-        tags {
-          edges {
-            id
-            severity
+        cursor
+        node {
+          id
+          acronym
+          name
+          slug
+          tags {
+            edges {
+              id
+              severity
+            }
+            totalCount
           }
-          totalCount
-        }
-        domains {
-          totalCount
-          edges {
-            id
-            domain
-            lastRan
-            tags {
-              edges {
-                id
-                firstDetected
-                severity
+          domains {
+            totalCount
+            edges {
+              id
+              domain
+              lastRan
+              tags {
+                edges {
+                  id
+                  firstDetected
+                  severity
+                }
+                totalCount
               }
-              totalCount
             }
           }
         }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
     }
   }

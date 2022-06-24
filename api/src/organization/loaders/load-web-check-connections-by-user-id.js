@@ -353,15 +353,15 @@ export const loadWebCheckConnectionsByUserId =
       }
     }
 
-    // const edges = orgsInfo.vulnOrgs.map((org) => {
-    //   return {
-    //     cursor: toGlobalId('organization', org._key),
-    //     node: org,
-    //   }
-    // })
+    const edges = orgsInfo.vulnOrgs.map((org) => {
+      return {
+        cursor: toGlobalId('organization', org._key),
+        node: org,
+      }
+    })
 
     return {
-      edges: orgsInfo.vulnOrgs,
+      edges,
       totalCount: orgsInfo.totalCount,
       pageInfo: {
         hasNextPage: orgsInfo.hasNextPage,
