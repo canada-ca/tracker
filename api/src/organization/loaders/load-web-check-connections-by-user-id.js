@@ -36,6 +36,9 @@ export const loadWebCheckConnectionsByUserId =
         if (orderBy.field === 'acronym') {
           documentField = aql`TRANSLATE(${language}, afterVar.orgDetails).acronym`
           orgField = aql`TRANSLATE(${language}, org.orgDetails).acronym`
+        } else if (orderBy.field === 'name') {
+          documentField = aql`TRANSLATE(${language}, afterVar.orgDetails).name`
+          orgField = aql`TRANSLATE(${language}, org.orgDetails).name`
         }
 
         afterTemplate = aql`
@@ -66,6 +69,9 @@ export const loadWebCheckConnectionsByUserId =
         if (orderBy.field === 'acronym') {
           documentField = aql`TRANSLATE(${language}, beforeVar.orgDetails).acronym`
           orgField = aql`TRANSLATE(${language}, org.orgDetails).acronym`
+        } else if (orderBy.field === 'name') {
+          documentField = aql`TRANSLATE(${language}, beforeVar.orgDetails).name`
+          orgField = aql`TRANSLATE(${language}, org.orgDetails).name`
         }
 
         beforeTemplate = aql`
@@ -134,8 +140,8 @@ export const loadWebCheckConnectionsByUserId =
       )
     }
 
-    let hasNextPageFilter = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(LAST(retrievedOrgs)._key)`
-    let hasPreviousPageFilter = aql`FILTER TO_NUMBER(org._key) < TO_NUMBER(FIRST(retrievedOrgs)._key)`
+    let hasNextPageFilter = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(LAST(vulnOrgs)._key)`
+    let hasPreviousPageFilter = aql`FILTER TO_NUMBER(org._key) < TO_NUMBER(FIRST(vulnOrgs)._key)`
     if (typeof orderBy !== 'undefined') {
       let hasNextPageDirection = aql`<`
       let hasPreviousPageDirection = aql`>`
@@ -150,19 +156,23 @@ export const loadWebCheckConnectionsByUserId =
       /* istanbul ignore else */
       if (orderBy.field === 'acronym') {
         orgField = aql`TRANSLATE(${language}, org.orgDetails).acronym`
-        hasNextPageDocumentField = aql`LAST(retrievedOrgs).acronym`
-        hasPreviousPageDocumentField = aql`FIRST(retrievedOrgs).acronym`
+        hasNextPageDocumentField = aql`LAST(vulnOrgs).acronym`
+        hasPreviousPageDocumentField = aql`FIRST(vulnOrgs).acronym`
+      } else if (orderBy.field === 'name') {
+        orgField = aql`TRANSLATE(${language}, org.orgDetails).name`
+        hasNextPageDocumentField = aql`LAST(vulnOrgs).name`
+        hasPreviousPageDocumentField = aql`FIRST(vulnOrgs).name`
       }
 
       hasNextPageFilter = aql`
         FILTER ${orgField} ${hasNextPageDirection} ${hasNextPageDocumentField}
         OR (${orgField} == ${hasNextPageDocumentField}
-        AND TO_NUMBER(org._key) > TO_NUMBER(LAST(retrievedOrgs)._key))
+        AND TO_NUMBER(org._key) > TO_NUMBER(LAST(vulnOrgs)._key))
       `
       hasPreviousPageFilter = aql`
         FILTER ${orgField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
         OR (${orgField} == ${hasPreviousPageDocumentField}
-        AND TO_NUMBER(org._key) < TO_NUMBER(FIRST(retrievedOrgs)._key))
+        AND TO_NUMBER(org._key) < TO_NUMBER(FIRST(vulnOrgs)._key))
       `
     }
 
@@ -171,6 +181,8 @@ export const loadWebCheckConnectionsByUserId =
       /* istanbul ignore else */
       if (orderBy.field === 'acronym') {
         sortByField = aql`TRANSLATE(${language}, org.orgDetails).acronym ${orderBy.direction},`
+      } else if (orderBy.field === 'name') {
+        sortByField = aql`TRANSLATE(${language}, org.orgDetails).name ${orderBy.direction},`
       }
     }
 
@@ -271,7 +283,8 @@ export const loadWebCheckConnectionsByUserId =
                     )
                 )
             RETURN { organization: org, domains: { edges: vulnDomains, totalCount: LENGTH(vulnDomains) } }
-      )
+        )
+
       LET vulnOrgs = (
           FOR org in retrievedOrgs
               FILTER org.domains.totalCount > 0
@@ -292,19 +305,19 @@ export const loadWebCheckConnectionsByUserId =
                 },
                 TRANSLATE(${language}, org.organization.orgDetails)
               )
-      )
+        )
 
       LET hasNextPage = (LENGTH(
-        FOR org IN vulnOrgs
-          ${filterString}
+        FOR org IN retrievedOrgs
+          FILTER org.domains.totalCount > 0
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(org._key) ${sortString} LIMIT 1
           RETURN org
       ) > 0 ? true : false)
 
       LET hasPreviousPage = (LENGTH(
-        FOR org IN vulnOrgs
-          ${filterString}
+        FOR org IN retrievedOrgs
+          FILTER org.domains.totalCount > 0
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(org._key) ${sortString} LIMIT 1
           RETURN org

@@ -1018,7 +1018,7 @@ export const WEBCHECK_ORGS = gql`
   query FindMyWebCheckOrgs(
     $after: String
     $first: Int!
-    $orderBy: OrganizationOrder
+    $orderBy: OrganizationOrder!
     $search: String
   ) {
     findMyWebCheckOrganizations(

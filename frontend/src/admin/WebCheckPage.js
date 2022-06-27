@@ -21,13 +21,14 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { ListOf } from '../components/ListOf'
 import { SearchBox } from '../components/SearchBox'
+import { RelayPaginationControls } from '../components/RelayPaginationControls'
 
 export default function WebCheckPage() {
   const [orderDirection, setOrderDirection] = useState('ASC')
-  const [orderField, setOrderField] = useState('ACRONYM')
+  const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [orgsPerPage, setOrgsPerPage] = useState(10)
+  const [orgsPerPage, setOrgsPerPage] = useState(1)
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -62,7 +63,10 @@ export default function WebCheckPage() {
 
   if (error) return <ErrorFallbackMessage error={error} />
 
-  const orderByOptions = [{ value: 'ACRONYM', text: t`Acronym` }]
+  const orderByOptions = [
+    { value: 'NAME', text: t`Name` },
+    { value: 'ACRONYM', text: t`Acronym` },
+  ]
 
   const displayTags = (tags) => {
     return (
@@ -190,6 +194,18 @@ export default function WebCheckPage() {
       <Accordion allowMultiple defaultIndex={[]}>
         {orgList}
       </Accordion>
+      <RelayPaginationControls
+        onlyPagination={false}
+        selectedDisplayLimit={orgsPerPage}
+        setSelectedDisplayLimit={setOrgsPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+      />
     </Box>
   )
 }
