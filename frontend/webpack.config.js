@@ -1,11 +1,8 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const { getIfUtils, removeEmpty } = require('webpack-config-utils')
 
 module.exports = (env) => {
-  const { ifNotProduction } = getIfUtils(env)
-
   return {
     mode: env.production ? 'production' : 'development',
     entry: {
@@ -24,11 +21,6 @@ module.exports = (env) => {
         chunks: 'all',
       },
     },
-    resolve: removeEmpty({
-      alias: ifNotProduction({
-        'react-dom': '@hot-loader/react-dom',
-      }),
-    }),
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
