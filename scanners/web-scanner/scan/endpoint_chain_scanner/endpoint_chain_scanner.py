@@ -4,14 +4,20 @@ from urllib.parse import urlsplit
 
 import logging
 import requests
-from requests import Response
+from requests import Response, PreparedRequest
+from requests.exceptions import ConnectTimeout, ConnectionError
 from requests_toolbelt.adapters import host_header_ssl
 from dataclasses import dataclass, field, asdict
 
 logger = logging.getLogger(__name__)
 
-
 TIMEOUT = 10
+
+CONNECTION_ERROR = "CONNECTION_ERROR"
+TIMEOUT_ERROR = "TIMEOUT_ERROR"
+UNKNOWN_ERROR = "UNKNOWN_ERROR"
+
+DEFAULT_REQUEST_HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0"}
 
 
 @dataclass
@@ -55,16 +61,14 @@ class HTTPSConnection(HTTPConnection):
 @dataclass
 class HTTPConnectionRequest:
     uri: str
-    ip_address: Optional[str]
     connection: HTTPConnection = field(init=False, default=None)
     error: Optional[str]
     scheme: str = "http"
 
-    def __init__(self, uri: str, ip_address: Optional[str] = None,
+    def __init__(self, uri: str,
                  http_response: Optional[Response] = None,
-                 error: Optional[BaseException] = None):
+                 error: Optional[str] = None):
         self.uri = uri
-        self.ip_address = ip_address
         self.error = str(error)
         if error:
             return
@@ -79,73 +83,182 @@ class HTTPSConnectionRequest(HTTPConnectionRequest):
     scheme: str = "https"
 
 
-def get_connection_chain(uri, ip_address):
-    connections: list[Union[HTTPConnectionRequest, HTTPSConnectionRequest]] = []
-
+def request_connection(uri: Optional[str] = None,
+                       ip_address: Optional[str] = None,
+                       prepared_request: Optional[PreparedRequest] = None):
+    uri = uri or prepared_request.url
     split_uri = urlsplit(uri)
     scheme = split_uri.scheme
     host = split_uri.hostname
     response = None
+    context = f"while requesting {uri}" if not prepared_request else f"while requesting {uri} during redirect"
 
-    if scheme.lower() == "http":
+
+
+    with requests.Session() as session:
         try:
-            with requests.Session() as session:
-                if ip_address:
-                    req = session.prepare_request(requests.Request("GET", f"http://{ip_address}",
-                                           headers={"Host": host}))
-                else:
-                    req = session.prepare_request(requests.Request("GET", f"http://{host}"))
-                response = session.send(req, allow_redirects=False, timeout=10)
-                connections.append(HTTPConnectionRequest(uri=uri, ip_address=ip_address, http_response=response))
-        except BaseException as e:
-            logger.error(f"Error while requesting {uri}:", e)
-            connections.append(HTTPConnectionRequest(uri=uri,
-                                                      ip_address=ip_address,
-                                                      error=e))
+            if prepared_request:
+                req = prepared_request
+                prepared_request_host = urlsplit(prepared_request.url).hostname
+            else:
+                if scheme.lower() == "https":
+                    session.mount("https://", host_header_ssl.HostHeaderSSLAdapter())
 
-    elif scheme.lower() == "https":
-        try:
-            with requests.Session() as session:
                 if ip_address:
-                    session.mount("https://",
-                                  host_header_ssl.HostHeaderSSLAdapter())
-                    req = requests.Request("GET", f"https://{ip_address}", headers={"Host": host})
+                    req = session.prepare_request(requests.Request("GET", f"{scheme.lower()}://{ip_address}",
+                                                               headers={"Host": host}))
                 else:
-                    req = requests.Request("GET", f"https://{host}")
+                    req = session.prepare_request(requests.Request("GET", f"{scheme.lower()}://{host}"))
 
-                response = session.send(session.prepare_request(req), allow_redirects=False, timeout=10)
-                connections.append(HTTPSConnectionRequest(uri=uri, ip_address=ip_address, http_response=response))
+            response = session.send(req, allow_redirects=False, timeout=TIMEOUT)
+
+            if scheme.lower() == "http":
+                connection = HTTPConnectionRequest(uri=uri, http_response=response)
+            elif scheme.lower() == "https":
+                connection = HTTPSConnectionRequest(uri=uri, http_response=response)
+            return {"connection": connection, "response": response}
+
+        except requests.exceptions.Timeout as e:
+            logger.error(f"Timeout error {context}: {str(e)}")
+            if scheme.lower() == "http":
+                connection = HTTPConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
+            elif scheme.lower() == "https":
+                connection = HTTPSConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
+            return {"connection": connection, "response": response}
+
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"Connection error {context}: {str(e)}")
+            if scheme.lower() == "http":
+                connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_ERROR)
+            elif scheme.lower() == "https":
+                connection = HTTPSConnectionRequest(uri=uri, error=CONNECTION_ERROR)
+            return {"connection": connection, "response": response}
+
         except BaseException as e:
-            logger.error(f"Error while requesting {uri}:", exc_info=True)
-            # logger.exception(f"Error while requesting {uri}")
-            connections.append(HTTPSConnectionRequest(uri=uri,
-                                                      ip_address=ip_address,
-                                                      error=e))
+            logger.error(f"Unknown error {context}: {str(e)}")
+            if scheme.lower() == "http":
+                connection = HTTPConnectionRequest(uri=uri, error=UNKNOWN_ERROR)
+            elif scheme.lower() == "https":
+                connection = HTTPSConnectionRequest(uri=uri, error=UNKNOWN_ERROR)
+            return {"connection": connection, "response": response}
+
+
+def get_connection_chain(uri, ip_address):
+    connections: list[Union[HTTPConnectionRequest, HTTPSConnectionRequest]] = []
+
+    connection_request = request_connection(uri=uri, ip_address=ip_address)
+    connection = connection_request.get("connection")
+    connections.append(connection)
+    response = connection_request.get("response")
 
     while response and response.next and len(connections) < 10:
-        cur_uri = response.next.url
-        next_split_uri = urlsplit(cur_uri)
-        next_scheme = next_split_uri.scheme
+        response.next.headers.pop("Host")
+        connection_request = request_connection(prepared_request=response.next)
+        connection = connection_request.get("connection")
+        connections.append(connection)
+        response = connection_request.get("response")
 
-        try:
-            response = session.send(response.next, allow_redirects=False, timeout=10)
-            if next_scheme.lower() == "http":
-                connections.append(
-                    HTTPConnectionRequest(uri=cur_uri,
-                                          http_response=response))
-            elif next_scheme.lower() == "https":
-                connections.append(
-                    HTTPSConnectionRequest(uri=cur_uri, http_response=response))
-        except BaseException as e:
-            # logger.error(f"Error while requesting during redirection {uri}:", e)
-            logger.exception(f"Error while requesting during redirection {uri}:")
-            if next_scheme.lower() == "http":
-                connections.append(
-                    HTTPConnectionRequest(uri=cur_uri, error=e))
-            elif next_scheme.lower() == "https":
-                connections.append(
-                    HTTPSConnectionRequest(uri=cur_uri, error=e))
-            break
+    # response = connections[0].
+
+
+    #
+    # if scheme.lower() == "http":
+    #     try:
+    #         with requests.Session() as session:
+    #             if ip_address:
+    #                 req = session.prepare_request(requests.Request("GET", f"http://{ip_address}",
+    #                                                                headers={"Host": host}))
+    #             else:
+    #                 req = session.prepare_request(requests.Request("GET", f"http://{host}"))
+    #             response = session.send(req, allow_redirects=False, timeout=TIMEOUT)
+    #             connections.append(HTTPConnectionRequest(uri=uri,  http_response=response))
+    #     except requests.exceptions.Timeout as e:
+    #         logger.error(f"Timeout error while requesting {uri}: {str(e)}")
+    #         connections.append(HTTPConnectionRequest(uri=uri,
+    #                                                  error=TIMEOUT_ERROR))
+    #     except requests.exceptions.ConnectionError as e:
+    #         logger.error(f"Connection error while requesting {uri}: {str(e)}")
+    #         connections.append(HTTPConnectionRequest(uri=uri,
+    #                                                  error=CONNECTION_ERROR))
+    #     except BaseException as e:
+    #         logger.error(f"Unknown error while requesting {uri}: {str(e)}")
+    #         connections.append(HTTPConnectionRequest(uri=uri,
+    #                                                  error=UNKNOWN_ERROR))
+    #
+    # elif scheme.lower() == "https":
+    #     try:
+    #         with requests.Session() as session:
+    #             if ip_address:
+    #                 session.mount("https://",
+    #                               host_header_ssl.HostHeaderSSLAdapter())
+    #                 req = requests.Request("GET", f"https://{ip_address}", headers={"Host": host})
+    #             else:
+    #                 req = requests.Request("GET", f"https://{host}")
+    #
+    #             response = session.send(session.prepare_request(req), allow_redirects=False, timeout=TIMEOUT)
+    #             connections.append(HTTPSConnectionRequest(uri=uri,  http_response=response))
+    #     except requests.exceptions.Timeout as e:
+    #         logger.error(f"Timeout error while requesting {uri}: {str(e)}")
+    #         connections.append(HTTPConnectionRequest(uri=uri,
+    #                                                  error=TIMEOUT_ERROR))
+    #     except requests.exceptions.ConnectionError as e:
+    #         logger.error(f"Connection error while requesting {uri}: {str(e)}")
+    #         connections.append(HTTPConnectionRequest(uri=uri,
+    #                                                  error=CONNECTION_ERROR))
+    #
+    #     except BaseException as e:
+    #         logger.error(f"Unknown error while requesting {uri}: {str(e)}")
+    #         connections.append(HTTPSConnectionRequest(uri=uri,
+    #                                                   error=UNKNOWN_ERROR))
+
+    # while response and response.next and len(connections) < 10:
+    #     cur_uri = response.next.url
+    #     next_split_uri = urlsplit(cur_uri)
+    #     next_scheme = next_split_uri.scheme
+    #
+    #     # response.close()
+    #     logger.error(response.next.__dict__)
+    #     logger.error("\n\n")
+    #     logger.error(response.next.url)
+    #     logger.error(response.next.headers)
+    #     logger.error("\n\n")
+    #
+    #     try:
+    #         response = session.send(response.next, allow_redirects=False, timeout=TIMEOUT)
+    #         if next_scheme.lower() == "http":
+    #             connections.append(
+    #                 HTTPConnectionRequest(uri=cur_uri,
+    #                                       http_response=response))
+    #         elif next_scheme.lower() == "https":
+    #             connections.append(
+    #                 HTTPSConnectionRequest(uri=cur_uri, http_response=response))
+    #     except requests.exceptions.Timeout as e:
+    #         logger.error(f"Timeout error while requesting during redirection {uri}:", e)
+    #         if next_scheme.lower() == "http":
+    #             connections.append(
+    #                 HTTPConnectionRequest(uri=cur_uri, error=TIMEOUT_ERROR))
+    #         elif next_scheme.lower() == "https":
+    #             connections.append(
+    #                 HTTPSConnectionRequest(uri=cur_uri, error=TIMEOUT_ERROR))
+    #         break
+    #     except requests.exceptions.ConnectionError as e:
+    #         logger.error(f"Connection error while requesting during redirection {uri}:", e)
+    #         if next_scheme.lower() == "http":
+    #             connections.append(
+    #                 HTTPConnectionRequest(uri=cur_uri, error=CONNECTION_ERROR))
+    #         elif next_scheme.lower() == "https":
+    #             connections.append(
+    #                 HTTPSConnectionRequest(uri=cur_uri, error=CONNECTION_ERROR))
+    #         break
+    #     except BaseException as e:
+    #         logger.error(f"Unknown error while requesting during redirection {uri}:", e)
+    #         if next_scheme.lower() == "http":
+    #             connections.append(
+    #                 HTTPConnectionRequest(uri=cur_uri, error=UNKNOWN_ERROR))
+    #         elif next_scheme.lower() == "https":
+    #             connections.append(
+    #                 HTTPSConnectionRequest(uri=cur_uri, error=UNKNOWN_ERROR))
+    #         break
 
     return connections
 
@@ -155,15 +268,15 @@ class ChainResult:
     scheme: str
     domain: str
     uri: str = field(init=False)
-    ip_address: str
     has_redirect_loop: bool = field(init=False, default=False)
     connections: list[Union[HTTPConnectionRequest, HTTPSConnectionRequest]] = field(
         init=False)
 
-    def __post_init__(self):
+    def __init__(self, ip_address: str, scheme: str, domain: str):
+        self.scheme = scheme
+        self.domain = domain
         self.uri = f"{self.scheme}://{self.domain}"
-        self.connections = get_connection_chain(uri=self.uri,
-                                                ip_address=self.ip_address)
+        self.connections = get_connection_chain(uri=self.uri, ip_address=ip_address)
 
         for i in range(len(self.connections) - 1):
             cur_conn = self.connections[i]
@@ -194,6 +307,6 @@ class EndpointChainScanResult:
 
 def scan_chain(domain, ip_address) -> EndpointChainScanResult:
     endpoint_scan_result = EndpointChainScanResult(domain=domain,
-                                           ip_address=ip_address)
+                                                   ip_address=ip_address)
 
     return endpoint_scan_result

@@ -4,23 +4,38 @@ import logging
 import asyncio
 import os
 import signal
-
+from arango import ArangoClient
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
-from web_scanner import scan_web
 import nats
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO, format='[%(asctime)s::%(name)::%(levelname)s] :: %(message)s')
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
-NAME = os.getenv("NAME", "web-scanner")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
+NAME = os.getenv("NAME", "web-processor")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.web")
 PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP", "web-scanner")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP", "web-processor")
 SERVER_LIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVER_LIST.split(",")
+
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
+DB_NAME = os.getenv("DB_NAME")
+DB_URL = os.getenv("DB_URL")
+
+current_directory = os.path.dirname(os.path.realpath(__file__))
+# Opening JSON file from:
+# https://raw.githubusercontent.com/CybercentreCanada/ITSP.40.062/main/transport-layer-security/tls-guidance.json
+guidance_file = open(f"{current_directory}/tls-guidance.json")
+guidance = json.load(guidance_file)
+
+logging.basicConfig(level=logging.INFO)
+# Establish DB connection
+arango_client = ArangoClient(hosts=DB_URL)
+db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
 def process_results(results):
@@ -56,7 +71,7 @@ def process_results(results):
     return results
 
 
-async def scan_service(loop):
+async def processor_service(loop):
     async def error_cb(error):
         logger.error(error)
 
@@ -91,29 +106,7 @@ async def scan_service(loop):
         shared_id = payload.get("shared_id")
         ip_address = payload.get("ip_address")
 
-        try:
-            logger.info(f"Starting web scan on '{domain}' at IP address '{ip_address}'")
-            scan_results = scan_web(domain=domain, ip_address=ip_address)
-        except TimeoutError:
-            scan_results = {"results": {"error": "unreachable"}}
-
-        processed_results = process_results(scan_results)
-
-        logger.info(f"Web results for '{domain}' at IP address '{str(ip_address)}': {json.dumps(processed_results)}")
-
-        await nc.publish(
-            f"{PUBLISH_TO}.{domain_key}.web.results",
-            json.dumps(
-                {
-                    "results": processed_results,
-                    "scan_type": "web",
-                    "user_key": user_key,
-                    "domain_key": domain_key,
-                    "shared_id": shared_id,
-                    "ip_address": ip_address
-                }
-            ).encode(),
-        )
+        logger.info(f"Starting web scan processing on '{domain}' at IP address '{ip_address}'")
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
@@ -131,7 +124,7 @@ async def scan_service(loop):
 
 def main():
     loop = asyncio.new_event_loop()
-    loop.run_until_complete(scan_service(loop))
+    loop.run_until_complete(processor_service(loop))
     try:
         loop.run_forever()
     finally:

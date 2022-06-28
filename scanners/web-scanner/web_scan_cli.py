@@ -18,9 +18,9 @@ if __name__ == "__main__":
     from web_scanner import scan_web
 
     if args.v:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s::%(name)::%(levelname)s] :: %(message)s')
     else:
-        logging.basicConfig(level=logging.WARNING)
+        logging.basicConfig(level=logging.WARNING, format='[%(asctime)s::%(name)s::%(levelname)s] :: %(message)s')
 
     scan_data = scan_web(domain=args.domain, ip_address=args.ip)
 

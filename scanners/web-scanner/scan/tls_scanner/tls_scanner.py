@@ -1,5 +1,6 @@
 import json
 import os
+from dataclasses import dataclass
 from typing import Union
 
 import sys
@@ -30,6 +31,32 @@ logger = logging.getLogger()
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
 
 
+@dataclass
+class ServerLocation:
+    hostname: str
+    ip_address: str
+    port: int = 443
+
+
+@dataclass
+class NetworkConfiguration:
+    tls_server_name_indication: str
+    tls_opportunistic_encryption: any
+    tls_client_auth_credentials: any
+    xmpp_to_hostname: any
+    network_timeout: int
+    network_max_retries: int
+
+
+# @dataclass
+# class
+
+# @dataclass
+# class TLSResult:
+#     tls_result:
+
+
+
 class TLSScanner:
     domain: str
     ip: str
@@ -58,11 +85,14 @@ class TLSScanner:
         designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
         designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
 
-        scan_request = ServerScanRequest(
-            server_location=ServerNetworkLocation(hostname=self.domain,
-                                                  ip_address=self.ip_address),
-            scan_commands=designated_scans
-        )
+        try:
+            scan_request = ServerScanRequest(
+                server_location=ServerNetworkLocation(hostname=self.domain,
+                                                      ip_address=self.ip_address),
+                scan_commands=designated_scans
+            )
+        except ServerHostnameCouldNotBeResolved as e:
+            return "z"
 
         scanner.queue_scans([scan_request])
 
@@ -73,7 +103,7 @@ class TLSScanner:
 
         if scan_results.connectivity_error_trace:
             logger.error(f"Error during sslyze connectivity: {json.dumps(scan_results_as_dict)}")
-            return
+            return scan_results_as_dict
 
         def get_accepted_cipher_suite_names(scan_result: ServerScanResult):
             if not scan_result.scan_result:
@@ -175,8 +205,6 @@ class TLSScanner:
                     certificate_info.result.certificate_deployments
                 ]
             }
-
-
 
         certificate_info = get_certificate_scan_info(scan_results)
         accepted_cipher_suites = get_accepted_cipher_suite_names(scan_results)
