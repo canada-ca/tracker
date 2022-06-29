@@ -486,7 +486,7 @@ describe('<CreateUserPage />', () => {
 
       // expect successful message
       const orgCreationToast = await findByText(/Account Created/i)
-      await waitFor(() => expect(orgCreationToast).toBeVisible())
+      await waitFor(() => expect(orgCreationToast).toBeInTheDocument())
     })
 
     it('fails to create account', async () => {
@@ -563,7 +563,7 @@ describe('<CreateUserPage />', () => {
       const orgCreationToast = await findByText(
         /Your account could not be created/,
       )
-      await waitFor(() => expect(orgCreationToast).toBeVisible())
+      await waitFor(() => expect(orgCreationToast).toBeInTheDocument())
     })
   })
 })

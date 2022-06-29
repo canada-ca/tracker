@@ -298,6 +298,7 @@ export function SuperAdminUserList({ permission }) {
               <Box>
                 <Flex w="100%">
                   <AccordionButton
+                    aria-label={userName}
                     width="100%"
                     p="4"
                     alignItems={{ base: 'flex-start', md: 'center' }}

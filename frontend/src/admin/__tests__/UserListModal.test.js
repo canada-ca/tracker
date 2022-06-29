@@ -171,7 +171,7 @@ describe('<UserListModal />', () => {
         await waitFor(() => {
           expect(
             getAllByText(/Unable to change user role, please try again./)[0],
-          )
+          ).toBeInTheDocument()
         })
       })
       it('a client-side error occurs', async () => {
@@ -251,7 +251,9 @@ describe('<UserListModal />', () => {
 
         // check for "error" toast
         await waitFor(() => {
-          expect(getAllByText(/Unable to update user role./)[0]).toBeVisible()
+          expect(
+            getAllByText(/Unable to update user role./)[0],
+          ).toBeInTheDocument()
         })
       })
       it('a type error occurs', async () => {
@@ -333,7 +335,7 @@ describe('<UserListModal />', () => {
         await waitFor(() => {
           expect(
             getAllByText(/Incorrect send method received./)[0],
-          ).toBeVisible()
+          ).toBeInTheDocument()
         })
       })
     })
@@ -418,7 +420,7 @@ describe('<UserListModal />', () => {
           await waitFor(() => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
-            ).toBeVisible()
+            ).toBeInTheDocument()
           })
 
           // wait for modal to close
@@ -601,7 +603,7 @@ describe('<UserListModal />', () => {
           await waitFor(() => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
-            ).toBeVisible()
+            ).toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
@@ -708,7 +710,7 @@ describe('<UserListModal />', () => {
 
         // check for "error" toast
         await waitFor(() => {
-          expect(getAllByText(/An error occurred./)[0])
+          expect(getAllByText(/An error occurred./)[0]).toBeInTheDocument()
         })
       })
       it('a client-side error occurs', async () => {
@@ -772,7 +774,7 @@ describe('<UserListModal />', () => {
 
         // check for "error" toast
         await waitFor(() => {
-          expect(getAllByText(/Unable to remove user./)[0])
+          expect(getAllByText(/Unable to remove user./)[0]).toBeInTheDocument()
         })
       })
     })
@@ -854,7 +856,7 @@ describe('<UserListModal />', () => {
 
         // check for "success" toast and modal to close
         await waitFor(() => {
-          expect(getAllByText(/An error occurred./)[0]).toBeVisible()
+          expect(getAllByText(/An error occurred./)[0]).toBeInTheDocument()
         })
       })
       it('client-side error', async () => {
@@ -937,7 +939,7 @@ describe('<UserListModal />', () => {
 
         // check for "success" toast and modal to close
         await waitFor(() => {
-          expect(getAllByText(/Unable to invite user./)[0]).toBeVisible()
+          expect(getAllByText(/Unable to invite user./)[0]).toBeInTheDocument()
         })
       })
       it('incorrect typename error', async () => {
@@ -1022,7 +1024,7 @@ describe('<UserListModal />', () => {
         await waitFor(() => {
           expect(
             getAllByText(/Incorrect send method received./)[0],
-          ).toBeVisible()
+          ).toBeInTheDocument()
         })
       })
     })
@@ -1108,7 +1110,7 @@ describe('<UserListModal />', () => {
 
         // check for "success" toast and modal to close
         await waitFor(() => {
-          expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+          expect(getAllByText(/Email invitation sent/)[0]).toBeInTheDocument()
         })
 
         // wait for modal to close
@@ -1198,7 +1200,7 @@ describe('<UserListModal />', () => {
 
       // check for "success" toast
       await waitFor(() => {
-        expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+        expect(getAllByText(/Email invitation sent/)[0]).toBeInTheDocument()
       })
 
       // wait for modal to close

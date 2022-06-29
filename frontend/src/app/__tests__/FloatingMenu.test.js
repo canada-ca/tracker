@@ -74,7 +74,7 @@ describe('<FloatingMenu>', () => {
   describe('when the menu is open', () => {
     describe("and the 'Close' button is clicked", () => {
       it('closes the menu', async () => {
-        const { getByText, queryByText } = render(
+        const { getByText } = render(
           <MockedProvider>
             <UserVarProvider
               userVar={makeVar({
@@ -105,7 +105,7 @@ describe('<FloatingMenu>', () => {
         fireEvent.click(closeButton)
 
         await waitFor(() => {
-          expect(queryByText(/Close/i)).not.toBeInTheDocument()
+          expect(closeButton).not.toBeInTheDocument()
         })
       })
     })

@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { theme, ChakraProvider } from '@chakra-ui/react'
 import { I18nProvider } from '@lingui/react'
-import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { makeVar } from '@apollo/client'
@@ -47,20 +47,16 @@ describe('<SignInPage />', () => {
       )
 
       const email = container.querySelector('#email')
-
+      fireEvent.blur(email)
       await waitFor(() => {
-        fireEvent.blur(email)
+        expect(getByText(/Email cannot be empty/i)).toBeInTheDocument()
       })
-
-      const errorElement = getByText(/Email cannot be empty/i)
-
-      expect(errorElement.innerHTML).toMatch(/Email cannot be empty/i)
     })
   })
 
   describe('when the password field is empty', () => {
     it('displays an error message', async () => {
-      const { container } = render(
+      const { container, getByText } = render(
         <MockedProvider>
           <UserVarProvider
             userVar={makeVar({
@@ -81,15 +77,10 @@ describe('<SignInPage />', () => {
       )
 
       const password = container.querySelector('#password')
-
       fireEvent.blur(password)
-
-      const errorElement = await waitFor(
-        () => getByText(container, /Password cannot be empty/i),
-        { container },
-      )
-
-      expect(errorElement.innerHTML).toMatch(/Password cannot be empty/i)
+      await waitFor(() => {
+        expect(getByText(/Password cannot be empty/i)).toBeInTheDocument()
+      })
     })
   })
 
