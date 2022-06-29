@@ -93,13 +93,10 @@ def request_connection(uri: Optional[str] = None,
     response = None
     context = f"while requesting {uri}" if not prepared_request else f"while requesting {uri} during redirect"
 
-
-
     with requests.Session() as session:
         try:
             if prepared_request:
                 req = prepared_request
-                prepared_request_host = urlsplit(prepared_request.url).hostname
             else:
                 if scheme.lower() == "https":
                     session.mount("https://", host_header_ssl.HostHeaderSSLAdapter())
@@ -152,7 +149,8 @@ def get_connection_chain(uri, ip_address):
     response = connection_request.get("response")
 
     while response and response.next and len(connections) < 10:
-        response.next.headers.pop("Host")
+        # delete 'Host' header as it is retained from original request if ip_address it set
+        response.next.headers.pop("Host", None)
         connection_request = request_connection(prepared_request=response.next)
         connection = connection_request.get("connection")
         connections.append(connection)
@@ -290,7 +288,6 @@ class ChainResult:
 @dataclass
 class EndpointChainScanResult:
     # Use asdict() from dataclasses for dict output of this class
-
     domain: str
     ip_address: str
     http_chain_result: Optional[ChainResult] = field(init=False)
