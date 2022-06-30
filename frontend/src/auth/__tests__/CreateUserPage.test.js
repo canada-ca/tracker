@@ -444,7 +444,7 @@ describe('<CreateUserPage />', () => {
           },
         },
       ]
-      const { getByRole, findByText, getByLabelText } = render(
+      const { getByRole, queryByText, getByLabelText, getByText } = render(
         <MockedProvider mocks={successfulMocks}>
           <UserVarProvider
             userVar={makeVar({
@@ -472,11 +472,16 @@ describe('<CreateUserPage />', () => {
 
       const langSelect = getByRole('combobox', { name: /Language:/ })
 
+      const termsAgreement = getByText(
+        /I agree to all Terms, Privacy Policy & Code of Conduct Guidelines/i,
+      )
+
       userEvent.type(emailInput, 'user@test.email.ca')
       userEvent.type(displayNameInput, 'Test User')
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
       userEvent.selectOptions(langSelect, 'ENGLISH')
+      userEvent.click(termsAgreement)
 
       // fire mutation
       const createAccountButton = getByRole('button', {
@@ -485,8 +490,9 @@ describe('<CreateUserPage />', () => {
       userEvent.click(createAccountButton)
 
       // expect successful message
-      const orgCreationToast = await findByText(/Account Created/i)
-      await waitFor(() => expect(orgCreationToast).toBeInTheDocument())
+      await waitFor(() =>
+        expect(queryByText(/Account Created/i)).toBeInTheDocument(),
+      )
     })
 
     it('fails to create account', async () => {
@@ -518,7 +524,7 @@ describe('<CreateUserPage />', () => {
         },
       ]
 
-      const { getByRole, findByText, getByLabelText } = render(
+      const { getByRole, queryByText, getByLabelText, getByText } = render(
         <MockedProvider mocks={unsuccessfulMocks}>
           <UserVarProvider
             userVar={makeVar({
@@ -547,11 +553,16 @@ describe('<CreateUserPage />', () => {
 
       const langSelect = getByRole('combobox', { name: /Language:/ })
 
+      const termsAgreement = getByText(
+        /I agree to all Terms, Privacy Policy & Code of Conduct Guidelines/i,
+      )
+
       userEvent.type(emailInput, 'user@test.email.ca')
       userEvent.type(displayNameInput, 'Test User')
       userEvent.type(passwordInput, 'SuperSecretPassword')
       userEvent.type(confirmPasswordInput, 'SuperSecretPassword')
       userEvent.selectOptions(langSelect, 'ENGLISH')
+      userEvent.click(termsAgreement)
 
       // fire mutation
       const createAccountButton = getByRole('button', {
@@ -560,10 +571,11 @@ describe('<CreateUserPage />', () => {
       userEvent.click(createAccountButton)
 
       // expect error message
-      const orgCreationToast = await findByText(
-        /Your account could not be created/,
+      await waitFor(() =>
+        expect(
+          queryByText(/Unable to create account, please try again./i),
+        ).toBeInTheDocument(),
       )
-      await waitFor(() => expect(orgCreationToast).toBeInTheDocument())
     })
   })
 })

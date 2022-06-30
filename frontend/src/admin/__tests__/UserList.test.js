@@ -285,7 +285,7 @@ describe('<UserList />', () => {
       )
 
       await waitFor(() => {
-        expect(queryByText(/Invite User/)).toBeInTheDocument()
+        expect(queryByText(/Garland.Hudson@yahoo.com/)).toBeInTheDocument()
       })
 
       const userRemoveButtons = getAllByLabelText(/Remove User/)
