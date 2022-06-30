@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/client'
 
 import sigEn from '../images/goc-header-logo-dark-en.svg'
 import sigFr from '../images/goc-header-logo-dark-fr.svg'
-import trackerLogo from '../images/Asset6.svg'
+import trackerLogoOrange from '../images/Frame.svg'
 import trackerText from '../images/Asset3.svg'
 
 import { LocaleSwitcher } from './LocaleSwitcher'
@@ -71,7 +71,7 @@ export const TopBanner = (props) => {
               width={{ base: 0, md: 125 }}
               display={{ base: 'none', md: 'initial' }}
             >
-              <Image src={trackerLogo} alt={t`Tracker logo outline`} />
+              <Image src={trackerLogoOrange} alt={t`Tracker logo outline`} />
             </Box>
             <Box
               mr="4"
