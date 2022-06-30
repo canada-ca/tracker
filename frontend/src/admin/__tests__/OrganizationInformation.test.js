@@ -158,9 +158,11 @@ describe('<OrganizationInformation />', () => {
 
         await findByText(/Org Name/)
 
-        expect(
-          queryByText(/Blank fields will not be included/),
-        ).not.toBeVisible()
+        await waitFor(() => {
+          expect(
+            queryByText(/Blank fields will not be included/),
+          ).not.toBeVisible()
+        })
       })
 
       it('org editing error can open and close', async () => {
@@ -251,16 +253,6 @@ describe('<OrganizationInformation />', () => {
         // ensure editing area is open
         await waitFor(() =>
           expect(getByText(/Blank fields will not be included/)).toBeVisible(),
-        )
-
-        // close editing area
-        userEvent.click(editOrgButton)
-
-        // ensure editing area is closed
-        await waitFor(() =>
-          expect(
-            queryByText(/Blank fields will not be included/),
-          ).not.toBeVisible(),
         )
       })
 
