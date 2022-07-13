@@ -219,15 +219,6 @@ export const loadWebCheckConnectionsByUserId =
           RETURN org._key
         )
       `
-    } else {
-      // TODO remove after dev
-      orgKeysQuery = aql`
-        WITH claims, domains, organizations, organizationSearch
-        LET orgKeys = (
-          FOR org IN organizations
-          RETURN org._key
-        )
-      `
     }
 
     let orgQuery = aql``

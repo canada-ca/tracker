@@ -26,16 +26,12 @@ export const findMyWebCheckOrganizations = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        // userRequired,
-        // verifiedRequired
-      },
+      auth: { checkSuperAdmin, userRequired, verifiedRequired },
       loaders: { loadWebCheckConnectionsByUserId },
     },
   ) => {
-    // const user = await userRequired()
-    // verifiedRequired({ user })
+    const user = await userRequired()
+    verifiedRequired({ user })
 
     const isSuperAdmin = await checkSuperAdmin()
 
