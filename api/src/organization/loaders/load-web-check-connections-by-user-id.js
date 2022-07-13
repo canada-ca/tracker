@@ -19,7 +19,7 @@ export const loadWebCheckConnectionsByUserId =
     let afterVar = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
-      console.log('afterId:', afterId)
+      // console.log('afterId:', afterId)
       if (typeof orderBy === 'undefined') {
         afterTemplate = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(${afterId})`
       } else {
@@ -28,7 +28,13 @@ export const loadWebCheckConnectionsByUserId =
           afterTemplateDirection = aql`>`
         }
 
-        afterVar = aql`LET afterVar = DOCUMENT(organizations, ${afterId})`
+        // afterVar = aql`LET afterVar = DOCUMENT(organizations, ${afterId})`
+        afterVar = aql`LET afterVar = (
+          FOR org IN organizations
+              FILTER org._key == ${afterId}
+              RETURN org
+          )[0]`
+        console.log('afterVar:', afterVar)
 
         let documentField = aql``
         let orgField = aql``
