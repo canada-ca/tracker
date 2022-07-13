@@ -14,12 +14,12 @@ const tagType = new GraphQLObjectType({
   fields: () => ({
     edges: {
       type: new GraphQLList(domainTag),
-      descrpition: '',
+      description: 'List of tags assigned to the domain.',
       resolve: ({ edges }) => edges,
     },
     totalCount: {
       type: GraphQLInt,
-      descrpition: '',
+      description: 'Total number of tags assigned to domain.',
       resolve: ({ totalCount }) => totalCount,
     },
   }),

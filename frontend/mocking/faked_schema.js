@@ -98,6 +98,30 @@ export const getTypeNames = () => gql`
       last: Int
     ): OrganizationConnection
 
+    # Select organizations a user has access to.
+    findMyWebCheckOrganizations(
+      # Ordering options for organization connections
+      orderBy: OrganizationOrder
+
+      # String argument used to search for organizations.
+      search: String
+
+      # Filter orgs based off of the user being an admin of them.
+      isAdmin: Boolean
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): WebCheckOrgConnection
+
     # Select all information on a selected organization that a user has access to.
     findOrganizationBySlug(
       # The slugified organization name you want to retrieve data for.
@@ -109,9 +133,6 @@ export const getTypeNames = () => gql`
 
     # Web summary computed values, used to build summary cards.
     webSummary: CategorizedSummary
-
-    # DMARC summary computed values, used to build summary cards.
-    dmarcSummary: CategorizedSummary
 
     # DMARC phase summary computed values, used to build summary cards.
     dmarcPhaseSummary: CategorizedSummary
@@ -348,7 +369,7 @@ export const getTypeNames = () => gql`
   # String that conforms to a domain structure.
   scalar DomainScalar
 
-  # A field that conforms to a string.
+  # A field that conforms to a DKIM selector. Only alphanumeric characters and periods are allowed, string must also start and end with alphanumeric characters
   scalar Selector
 
   # This object contains how the domain is doing on the various scans we preform, based on the latest scan data.
@@ -707,6 +728,66 @@ export const getTypeNames = () => gql`
 
   # A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
   scalar EmailAddress
+
+  # Ordering options for affiliation connections.
+  input AffiliationOrgOrder {
+    # The field to order affiliations by.
+    field: AffiliationOrgOrderField!
+
+    # The ordering direction.
+    direction: OrderDirection!
+  }
+
+  # Properties by which affiliation connections can be ordered.
+  enum AffiliationOrgOrderField {
+    # Order affiliations by org acronym.
+    ORG_ACRONYM
+
+    # Order affiliations by org name.
+    ORG_NAME
+
+    # Order affiliations by org slug.
+    ORG_SLUG
+
+    # Order affiliations by org zone.
+    ORG_ZONE
+
+    # Order affiliations by org sector.
+    ORG_SECTOR
+
+    # Order affiliations by org country.
+    ORG_COUNTRY
+
+    # Order affiliations by org province.
+    ORG_PROVINCE
+
+    # Order affiliations by org city.
+    ORG_CITY
+
+    # Order affiliations by org verification.
+    ORG_VERIFIED
+
+    # Order affiliations by org summary mail pass count.
+    ORG_SUMMARY_MAIL_PASS
+
+    # Order affiliations by org summary mail fail count.
+    ORG_SUMMARY_MAIL_FAIL
+
+    # Order affiliations by org summary mail total count.
+    ORG_SUMMARY_MAIL_TOTAL
+
+    # Order affiliations by org summary web pass count.
+    ORG_SUMMARY_WEB_PASS
+
+    # Order affiliations by org summary web fail count.
+    ORG_SUMMARY_WEB_FAIL
+
+    # Order affiliations by org summary web total count.
+    ORG_SUMMARY_WEB_TOTAL
+
+    # Order affiliations by org domain count.
+    ORG_DOMAIN_COUNT
+  }
 
   # Ordering options for affiliation connections.
   input AffiliationUserOrder {
@@ -2263,6 +2344,101 @@ export const getTypeNames = () => gql`
     DOMAIN
   }
 
+  # A connection to a list of items.
+  type WebCheckOrgConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [WebCheckOrgEdge]
+
+    # The total amount of organizations the user has access to.
+    totalCount: Int
+  }
+
+  # An edge in a connection.
+  type WebCheckOrgEdge {
+    # The item at the end of the edge
+    node: WebCheckOrg
+
+    # A cursor for use in pagination
+    cursor: String!
+  }
+
+  type WebCheckOrg {
+    # The ID of an object
+    id: ID!
+
+    # The organizations acronym.
+    acronym: Acronym
+
+    # The full name of the organization.
+    name: String
+
+    # Slugified name of the organization.
+    slug: Slug
+
+    # Whether the organization is a verified organization.
+    verified: Boolean
+
+    # Whether or not the domain has a aggregate dmarc report.
+    tags: TagConnection
+    domains: WebCheckDomainConnection
+  }
+
+  type TagConnection {
+    edges: [DomainTag]
+    totalCount: Int
+  }
+
+  # This object contains information about a vulnerability affecting the domain.
+  type DomainTag {
+    # CVE ID of the detected vulnerability.
+    id: String
+
+    # Time that the vulnerability was first scanned
+    firstDetected: String
+
+    # Protocols Status
+    severity: SeverityEnum
+  }
+
+  # Enum used to inform front end of the level of severity of a given vulnerability for a domain
+  enum SeverityEnum {
+    # If the given CVE is of a low level severity
+    LOW
+
+    # If the given CVE is of a medium level severity
+    MEDIUM
+
+    # If the given CVE is of a high level severity
+    HIGH
+
+    # If the given cve is of a critical level severity
+    CRITICAL
+  }
+
+  type WebCheckDomainConnection {
+    edges: [WebCheckDomain]
+
+    # The total amount of domains with vulnerability tags
+    totalCount: Int
+  }
+
+  type WebCheckDomain {
+    # The ID of an object
+    id: ID!
+
+    # Domain that scans will be ran on.
+    domain: DomainScalar
+
+    # The last time that a scan was ran on this domain.
+    lastRan: String
+
+    # Vulnerabilities that the domain has tested positive for.
+    tags: TagConnection
+  }
+
   # This object is used for showing personal user details,
   # and is used for only showing the details of the querying user.
   type PersonalUser implements Node {
@@ -2333,66 +2509,6 @@ export const getTypeNames = () => gql`
 
     # User has not setup any TFA methods.
     NONE
-  }
-
-  # Ordering options for affiliation connections.
-  input AffiliationOrgOrder {
-    # The field to order affiliations by.
-    field: AffiliationOrgOrderField!
-
-    # The ordering direction.
-    direction: OrderDirection!
-  }
-
-  # Properties by which affiliation connections can be ordered.
-  enum AffiliationOrgOrderField {
-    # Order affiliations by org acronym.
-    ORG_ACRONYM
-
-    # Order affiliations by org name.
-    ORG_NAME
-
-    # Order affiliations by org slug.
-    ORG_SLUG
-
-    # Order affiliations by org zone.
-    ORG_ZONE
-
-    # Order affiliations by org sector.
-    ORG_SECTOR
-
-    # Order affiliations by org country.
-    ORG_COUNTRY
-
-    # Order affiliations by org province.
-    ORG_PROVINCE
-
-    # Order affiliations by org city.
-    ORG_CITY
-
-    # Order affiliations by org verification.
-    ORG_VERIFIED
-
-    # Order affiliations by org summary mail pass count.
-    ORG_SUMMARY_MAIL_PASS
-
-    # Order affiliations by org summary mail fail count.
-    ORG_SUMMARY_MAIL_FAIL
-
-    # Order affiliations by org summary mail total count.
-    ORG_SUMMARY_MAIL_TOTAL
-
-    # Order affiliations by org summary web pass count.
-    ORG_SUMMARY_WEB_PASS
-
-    # Order affiliations by org summary web fail count.
-    ORG_SUMMARY_WEB_FAIL
-
-    # Order affiliations by org summary web total count.
-    ORG_SUMMARY_WEB_TOTAL
-
-    # Order affiliations by org domain count.
-    ORG_DOMAIN_COUNT
   }
 
   # A connection to a list of items.
