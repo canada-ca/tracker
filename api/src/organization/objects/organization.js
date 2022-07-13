@@ -14,7 +14,6 @@ import {affiliationUserOrder} from '../../affiliation/inputs'
 import {affiliationConnection} from '../../affiliation/objects'
 import {domainOrder} from '../../domain/inputs'
 import {domainConnection} from '../../domain/objects'
-import {loadOrganizationDomainStatuses} from "../loaders";
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -97,7 +96,7 @@ export const organizationType = new GraphQLObjectType({
           csvOutput += `\n${csvLine}`
         })
         return csvOutput
-      }
+      },
     },
     domains: {
       type: domainConnection.connectionType,
