@@ -213,29 +213,39 @@ class DKIMScanner:
                 lookup_url = f"{selector}._domainkey.{self.domain}."
                 # Retrieve public key from DNS
                 pk_txt = dnsplug.get_txt_dnspython(lookup_url)
-
-                pk, keysize, ktag = self.load_pk(lookup_url, pk_txt)
-
-                # Parse values and convert to dictionary
-                pub = dkim.util.parse_tag_value(pk_txt)
+                dkim_txt_values_bytes = dkim.util.parse_tag_value(pk_txt)
 
                 txt_record = {}
 
-                key_val = pub[b"p"].decode("ascii")
-
-                for key in pub:
-                    if key.decode("ascii") == "t":
-                        record[selector]["t_value"] = pub[key]
-
-                for key, val in pub.items():
+                for key, val in dkim_txt_values_bytes.items():
                     txt_record[key.decode("ascii")] = val.decode("ascii")
 
+                for key, val in txt_record.items():
+                    if key == "t":
+                        record[selector]["t_value"] = val
+
+                if txt_record.get("p"):
+                    pk, keysize, ktag = self.load_pk(lookup_url, pk_txt)
+                    ktag.decode("ascii")
+                else:
+                    pk, keysize, ktag = [None, None, None]
+
+                if pk and pk.get("publicExponent"):
+                    public_exponent = pk.get("publicExponent")
+                else:
+                    public_exponent = None
+
+                if pk and pk.get("modulus"):
+                    modulus = pk.get("modulus")
+                else:
+                    modulus = None
+
                 record[selector]["txt_record"] = txt_record
-                record[selector]["public_key_value"] = key_val
+                record[selector]["public_key_value"] = txt_record.get("p")
                 record[selector]["key_size"] = keysize
-                record[selector]["key_type"] = ktag.decode("ascii")
-                record[selector]["public_key_modulus"] = pk["modulus"]
-                record[selector]["public_exponent"] = pk["publicExponent"]
+                record[selector]["key_type"] = ktag
+                record[selector]["public_key_modulus"] = modulus
+                record[selector]["public_exponent"] = public_exponent
 
             except Exception as e:
                 logging.error(
