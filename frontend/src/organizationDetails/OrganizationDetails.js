@@ -44,7 +44,7 @@ export default function OrganizationDetails() {
     // errorPolicy: 'ignore', // allow partial success
   })
 
-  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, orgDomainStatusData }] = useLazyQuery(
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ORGANIZATION_DOMAINS_STATUSES_CSV, {variables: {orgSlug: orgSlug}}
   )
 
