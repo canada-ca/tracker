@@ -455,6 +455,9 @@ export const getTypeNames = () => gql`
     # The number of domains associated with this organization.
     domainCount: Int
 
+    # CSV formatted output of all domains in the organization including their email and web scan statuses.
+    toCsv: String
+
     # The domains which are associated with this organization.
     domains(
       # Ordering options for domain connections.

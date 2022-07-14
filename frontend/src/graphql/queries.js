@@ -76,6 +76,16 @@ export const HTTPS_AND_DMARC_SUMMARY = gql`
   }
 `
 
+export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
+  query GetOrganizationDomainsStatusesCSV(
+    $orgSlug: Slug!
+  ) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+        toCsv
+    }
+  }
+`
+
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client

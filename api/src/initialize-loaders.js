@@ -49,6 +49,7 @@ import {
   loadOrgBySlug,
   loadOrgConnectionsByDomainId,
   loadOrgConnectionsByUserId,
+  loadOrganizationDomainStatuses,
 } from './organization/loaders'
 import {
   loadUserByUserName,
@@ -294,6 +295,14 @@ export function initializeLoaders({
       auth: { loginRequiredBool },
     }),
     loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+      query,
+      userKey,
+      cleanseInput,
+      language,
+      i18n,
+      auth: { loginRequiredBool },
+    }),
+    loadOrganizationDomainStatuses: loadOrganizationDomainStatuses({
       query,
       userKey,
       cleanseInput,
