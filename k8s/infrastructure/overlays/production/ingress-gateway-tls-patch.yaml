@@ -29,6 +29,7 @@ spec:
         privateKey: sds
         serverCertificate: sds
         minProtocolVersion: TLSV1_2
+        maxProtocolVersion: TLSV1_2
         cipherSuites:
         - TLS_AES_128_GCM_SHA256
         - TLS_AES_256_GCM_SHA384
