@@ -167,7 +167,7 @@ export function initializeLoaders({
       i18n,
       auth: { loginRequiredBool },
     }),
-    loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query }),
+    loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query, userKey, i18n }),
     loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
     loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
     loadDmarcByKey: loadDmarcByKey({ query, userKey, i18n }),

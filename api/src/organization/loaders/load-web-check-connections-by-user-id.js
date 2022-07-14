@@ -3,17 +3,8 @@ import { aql } from 'arangojs'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 
 export const loadWebCheckConnectionsByUserId =
-  ({ query, userKey, cleanseInput, language, i18n, _auth }) =>
-  async ({
-    after,
-    before,
-    first,
-    last,
-    orderBy,
-    search,
-    isAdmin,
-    isSuperAdmin,
-  }) => {
+  ({ query, userKey, cleanseInput, language, i18n }) =>
+  async ({ after, before, first, last, orderBy, search, isSuperAdmin }) => {
     const userDBId = `users/${userKey}`
     let afterTemplate = aql``
     let afterVar = aql``
@@ -208,7 +199,7 @@ export const loadWebCheckConnectionsByUserId =
           RETURN org._key
         )
       `
-    } else if (isAdmin) {
+    } else {
       orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET orgKeys = (
@@ -337,7 +328,7 @@ export const loadWebCheckConnectionsByUserId =
         `Database error occurred while user: ${userKey} was trying to gather tagged organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to load organizations(s). Please try again.`),
+        i18n._(t`Unable to load organization(s). Please try again.`),
       )
     }
 
@@ -349,7 +340,7 @@ export const loadWebCheckConnectionsByUserId =
         `Cursor error occurred while user: ${userKey} was trying to gather tagged organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to load organizations(s). Please try again.`),
+        i18n._(t`Unable to load organization(s). Please try again.`),
       )
     }
 

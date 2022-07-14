@@ -9,7 +9,7 @@ import { globalIdField } from 'graphql-relay'
 import { domainTag } from '../../domain/objects'
 import { Acronym, Domain, Slug } from '../../scalars'
 
-const tagType = new GraphQLObjectType({
+export const tagType = new GraphQLObjectType({
   name: 'TagConnection',
   fields: () => ({
     edges: {
@@ -51,7 +51,7 @@ export const webCheckType = new GraphQLObjectType({
     },
     tags: {
       type: tagType,
-      description: 'Whether or not the domain has a aggregate dmarc report.',
+      description: 'List of tags assigned to domains within the organization.',
       resolve: async (
         { _id },
         args,
