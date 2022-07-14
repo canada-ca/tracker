@@ -8,5 +8,8 @@ resources:
 - backup-cronjob.yaml
 - backup-service-account.yaml
 - storage-classes.yaml
+- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/jaeger.yaml
+- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/kiali.yaml
+- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/prometheus.yaml
 patchesStrategicMerge:
   - certificate.yaml
