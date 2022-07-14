@@ -82,7 +82,7 @@ export const loadWebCheckConnectionsByUserId =
     let limitTemplate = aql``
     if (typeof first === 'undefined' && typeof last === 'undefined') {
       console.warn(
-        `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadOrgConnectionsByUserId.`,
+        `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadWebCheckConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -91,7 +91,7 @@ export const loadWebCheckConnectionsByUserId =
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadOrgConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadWebCheckConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(
@@ -103,7 +103,7 @@ export const loadWebCheckConnectionsByUserId =
       if (first < 0 || last < 0) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         console.warn(
-          `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadOrgConnectionsByUserId.`,
+          `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadWebCheckConnectionsByUserId.`,
         )
         throw new Error(
           i18n._(
@@ -114,7 +114,7 @@ export const loadWebCheckConnectionsByUserId =
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         const amount = typeof first !== 'undefined' ? first : last
         console.warn(
-          `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: loadOrgConnectionsByUserId.`,
+          `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: loadWebCheckConnectionsByUserId.`,
         )
         throw new Error(
           i18n._(
@@ -130,7 +130,7 @@ export const loadWebCheckConnectionsByUserId =
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
       console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadOrgConnectionsByUserId.`,
+        `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadWebCheckConnectionsByUserId.`,
       )
       throw new Error(
         i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -325,7 +325,7 @@ export const loadWebCheckConnectionsByUserId =
     `
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userKey} was trying to gather tagged organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
+        `Database error occurred while user: ${userKey} was trying to gather organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load organization(s). Please try again.`),
@@ -337,7 +337,7 @@ export const loadWebCheckConnectionsByUserId =
       orgsInfo = await requestedOrgsInfo.next()
     } catch (err) {
       console.error(
-        `Cursor error occurred while user: ${userKey} was trying to gather tagged organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
+        `Cursor error occurred while user: ${userKey} was trying to gather organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load organization(s). Please try again.`),

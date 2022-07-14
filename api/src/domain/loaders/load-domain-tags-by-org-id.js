@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 
 export const loadDomainTagsByOrgId =
-  ({ query, userKey, i18n, _auth }) =>
+  ({ query, userKey, i18n }) =>
   async ({ orgId }) => {
     let requestedTagsInfo
     try {
@@ -31,9 +31,9 @@ export const loadDomainTagsByOrgId =
       tagsInfo = await requestedTagsInfo.next()
     } catch (err) {
       console.error(
-        `Cursor error occurred while user: ${userKey} was trying to gather domainTags in loadDomainTagsByOrgId, error: ${err}`,
+        `Error occurred while user: ${userKey} was trying to gather domainTags in loadDomainTagsByOrgId, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
+      throw new Error(i18n._(t`Unable to load tags(s). Please try again.`))
     }
 
     if (tagsInfo.tags.length === 0) {
