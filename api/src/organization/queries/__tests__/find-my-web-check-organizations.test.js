@@ -352,7 +352,7 @@ describe('given findMyWebCheckOrganizations', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Database error occurred while user: ${user._key} was trying to gather tagged organizations in loadWebCheckConnectionsByUserId, error: Error: Database error occurred.`,
+              `Database error occurred while user: ${user._key} was trying to gather organizations in loadWebCheckConnectionsByUserId, error: Error: Database error occurred.`,
             ])
           })
         })
