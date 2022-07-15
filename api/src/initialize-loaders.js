@@ -19,6 +19,7 @@ import {
   loadDomainByDomain,
   loadDomainConnectionsByOrgId,
   loadDomainConnectionsByUserId,
+  loadDomainTagsByOrgId,
 } from './domain/loaders'
 import {
   loadDkimByKey,
@@ -49,6 +50,7 @@ import {
   loadOrgBySlug,
   loadOrgConnectionsByDomainId,
   loadOrgConnectionsByUserId,
+  loadWebCheckConnectionsByUserId,
   loadOrganizationDomainStatuses,
 } from './organization/loaders'
 import {
@@ -166,6 +168,7 @@ export function initializeLoaders({
       i18n,
       auth: { loginRequiredBool },
     }),
+    loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query, userKey, i18n }),
     loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
     loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
     loadDmarcByKey: loadDmarcByKey({ query, userKey, i18n }),
@@ -301,6 +304,13 @@ export function initializeLoaders({
       language,
       i18n,
       auth: { loginRequiredBool },
+    }),
+    loadWebCheckConnectionsByUserId: loadWebCheckConnectionsByUserId({
+      query,
+      userKey,
+      cleanseInput,
+      language,
+      i18n,
     }),
     loadOrganizationDomainStatuses: loadOrganizationDomainStatuses({
       query,
