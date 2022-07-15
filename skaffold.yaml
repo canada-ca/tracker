@@ -98,6 +98,9 @@ profiles:
       kustomize:
         paths:
           - k8s/apps/overlays/test
+          - k8s/apps/bases/api/creds
+          - k8s/apps/bases/scanners/dmarc-report-cronjob/creds
+          - k8s/apps/bases/scanners/scanner-platform/creds
 
 portForward:
   - resourceType: service
@@ -184,6 +187,7 @@ profiles:
           delete: [ "-l app!=arangodb" ]
         paths:
           - k8s/infrastructure/overlays/test
+          - k8s/infrastructure/bases/arangodb/creds
 portForward:
   - resourceType: service
     resourceName: arangodb

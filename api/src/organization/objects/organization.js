@@ -1,19 +1,19 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
-import { connectionArgs, globalIdField } from 'graphql-relay'
+import {connectionArgs, globalIdField} from 'graphql-relay'
 
-import { organizationSummaryType } from './organization-summary'
-import { nodeInterface } from '../../node'
-import { Acronym, Slug } from '../../scalars'
-import { affiliationUserOrder } from '../../affiliation/inputs'
-import { affiliationConnection } from '../../affiliation/objects'
-import { domainOrder } from '../../domain/inputs'
-import { domainConnection } from '../../domain/objects'
+import {organizationSummaryType} from './organization-summary'
+import {nodeInterface} from '../../node'
+import {Acronym, Slug} from '../../scalars'
+import {affiliationUserOrder} from '../../affiliation/inputs'
+import {affiliationConnection} from '../../affiliation/objects'
+import {domainOrder} from '../../domain/inputs'
+import {domainConnection} from '../../domain/objects'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -74,6 +74,29 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'The number of domains associated with this organization.',
       resolve: ({ domainCount }) => domainCount,
+    },
+    toCsv: {
+      type: GraphQLString,
+      description: 'CSV formatted output of all domains in the organization including their email and web scan statuses.',
+      resolve: async (
+        { _id },
+        _args,
+        { loaders: { loadOrganizationDomainStatuses } },
+      ) => {
+        const domains = await loadOrganizationDomainStatuses({
+          orgId: _id,
+        })
+        const headers = ["domain","https","hsts","ciphers","curves","protocols","spf","dkim","dmarc"]
+        let csvOutput = headers.join(',')
+        domains.forEach((domain) => {
+          let csvLine = `${domain.domain}`
+          csvLine += headers.slice(1).reduce((previousValue, currentHeader) => {
+            return `${previousValue},${domain.status[currentHeader]}`
+          }, "")
+          csvOutput += `\n${csvLine}`
+        })
+        return csvOutput
+      },
     },
     domains: {
       type: domainConnection.connectionType,
