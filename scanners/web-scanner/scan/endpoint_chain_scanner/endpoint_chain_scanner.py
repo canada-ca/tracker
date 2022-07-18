@@ -94,6 +94,7 @@ def request_connection(uri: Optional[str] = None,
     context = f"while requesting {uri}" if not prepared_request else f"while requesting {uri} during redirect"
 
     with requests.Session() as session:
+        session.verify = False
         try:
             if prepared_request:
                 req = prepared_request
