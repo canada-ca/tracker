@@ -151,7 +151,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </Text>
       )}
     >
-      {({ id: domainId, domain, selectors }, index) => (
+      {({ id: domainId, domain, selectors, claimTags }, index) => (
         <Box key={'admindomain' + index}>
           <Stack isInline align="center">
             <Stack direction="row" flexGrow="0">
@@ -184,6 +184,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             </Stack>
             <AdminDomainCard
               url={domain}
+              tags={claimTags}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
             />

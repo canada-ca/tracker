@@ -451,7 +451,6 @@ export const loadDomainConnectionsByOrgId =
     }
 
     const edges = domainsInfo.domains.map((domain) => {
-      console.log(domain.claimTags)
       return {
         cursor: toGlobalId('domain', domain._key),
         node: domain,

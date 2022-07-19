@@ -77,11 +77,9 @@ export const HTTPS_AND_DMARC_SUMMARY = gql`
 `
 
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetOrganizationDomainsStatusesCSV(
-    $orgSlug: Slug!
-  ) {
+  query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
-        toCsv
+      toCsv
     }
   }
 `
@@ -532,6 +530,9 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             domain
             lastRan
             selectors
+            claimTags {
+              label
+            }
           }
         }
         pageInfo {
@@ -618,6 +619,9 @@ export const PAGINATED_ORG_DOMAINS = gql`
               ssl
             }
             hasDMARCReport
+            claimTags {
+              label
+            }
           }
         }
       }

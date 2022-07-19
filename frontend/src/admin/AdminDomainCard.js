@@ -1,12 +1,21 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { string } from 'prop-types'
-import { Grid, Link, ListItem, Stack, Text } from '@chakra-ui/react'
+import { array, string } from 'prop-types'
+import {
+  Flex,
+  Grid,
+  Link,
+  ListItem,
+  Stack,
+  Tag,
+  TagLabel,
+  Text,
+} from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
 
-export function AdminDomainCard({ url, ...rest }) {
+export function AdminDomainCard({ url, tags, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -30,8 +39,17 @@ export function AdminDomainCard({ url, ...rest }) {
             <ExternalLinkIcon mx="2px" aria-hidden="true" />
           </Link>
         </Stack>
+        <Flex>
+          {tags?.map(({ label }, idx) => {
+            return (
+              <Tag key={idx}>
+                <TagLabel>{label}</TagLabel>
+              </Tag>
+            )
+          })}
+        </Flex>
       </Grid>
     </ListItem>
   )
 }
-AdminDomainCard.propTypes = { url: string }
+AdminDomainCard.propTypes = { url: string, tags: array }
