@@ -224,11 +224,8 @@ class DKIMScanner:
                     if key == "t":
                         record[selector]["t_value"] = val
 
-                if txt_record.get("p"):
-                    pk, keysize, ktag = self.load_pk(lookup_url, pk_txt)
-                    ktag.decode("ascii")
-                else:
-                    pk, keysize, ktag = [None, None, None]
+                pk, keysize, ktag = self.load_pk(lookup_url, pk_txt)
+                ktag = ktag.decode("ascii")
 
                 if pk and pk.get("publicExponent"):
                     public_exponent = pk.get("publicExponent")
