@@ -210,9 +210,15 @@ export const CREATE_DOMAIN = gql`
     $orgId: ID!
     $domain: DomainScalar!
     $selectors: [Selector]
+    $userTags: [InputTag]
   ) {
     createDomain(
-      input: { orgId: $orgId, domain: $domain, selectors: $selectors }
+      input: {
+        orgId: $orgId
+        domain: $domain
+        selectors: $selectors
+        userTags: $userTags
+      }
     ) {
       result {
         ... on Domain {
@@ -284,6 +290,7 @@ export const UPDATE_DOMAIN = gql`
     $orgId: ID!
     $domain: DomainScalar
     $selectors: [Selector]
+    $userTags: [InputTag]
   ) {
     updateDomain(
       input: {
@@ -291,6 +298,7 @@ export const UPDATE_DOMAIN = gql`
         orgId: $orgId
         domain: $domain
         selectors: $selectors
+        userTags: $userTags
       }
     ) {
       result {

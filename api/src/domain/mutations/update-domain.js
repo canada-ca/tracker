@@ -72,12 +72,7 @@ export const updateDomain = new mutationWithClientMutationId({
       selectors = null
     }
 
-    let userTags
-    if (typeof args.userTags !== 'undefined') {
-      userTags = args.userTags.map((tag) => cleanseInput(tag.label))
-    } else {
-      userTags = null
-    }
+    const userTags = args.userTags
 
     // Check to see if domain exists
     const domain = await loadDomainByKey.load(domainId)

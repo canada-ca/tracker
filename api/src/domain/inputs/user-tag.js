@@ -1,7 +1,7 @@
 import { GraphQLInputObjectType, GraphQLString } from 'graphql'
 
 export const inputTag = new GraphQLInputObjectType({
-  name: 'TagInput',
+  name: 'InputTag',
   description:
     'User-generated tag assigned to domains for labeling and management.',
   fields: () => ({
