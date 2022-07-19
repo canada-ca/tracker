@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
+import { inputTag } from '../inputs/user-tag'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -27,6 +28,10 @@ export const updateDomain = new mutationWithClientMutationId({
       type: new GraphQLList(Selectors),
       description:
         'The updated DKIM selector strings corresponding to this domain.',
+    },
+    userTags: {
+      description: 'List of labelled tags users have applied to the domain.',
+      type: new GraphQLList(inputTag),
     },
   }),
   outputFields: () => ({
@@ -65,6 +70,13 @@ export const updateDomain = new mutationWithClientMutationId({
       selectors = args.selectors.map((selector) => cleanseInput(selector))
     } else {
       selectors = null
+    }
+
+    let userTags
+    if (typeof args.userTags !== 'undefined') {
+      userTags = args.userTags.map((tag) => cleanseInput(tag.label))
+    } else {
+      userTags = null
     }
 
     // Check to see if domain exists
@@ -170,6 +182,26 @@ export const updateDomain = new mutationWithClientMutationId({
         `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    try {
+      await trx.step(
+        async () =>
+          await query`
+          WITH claims, domains, organizations
+          UPSERT { _from: ${org._id}, _to: ${domain._id} }
+            INSERT { tags: ${userTags} }
+            UPDATE { tags: ${userTags} }
+            IN claims
+      `,
+      )
+    } catch (err) {
+      console.error(
+        `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to update domain edge. Please try again.`),
+      )
     }
 
     // Commit transaction

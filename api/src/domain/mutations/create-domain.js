@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { createDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
+import { inputTag } from '../inputs/user-tag'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -21,6 +22,10 @@ export const createDomain = new mutationWithClientMutationId({
     selectors: {
       type: new GraphQLList(Selectors),
       description: 'DKIM selector strings corresponding to this domain.',
+    },
+    userTags: {
+      description: 'List of labelled tags users have applied to the domain.',
+      type: new GraphQLList(inputTag),
     },
   }),
   outputFields: () => ({
@@ -66,6 +71,13 @@ export const createDomain = new mutationWithClientMutationId({
       selectors = args.selectors.map((selector) => cleanseInput(selector))
     } else {
       selectors = []
+    }
+
+    let userTags
+    if (typeof args.userTags !== 'undefined') {
+      userTags = args.userTags.map((tag) => cleanseInput(tag.label))
+    } else {
+      userTags = null
     }
 
     // Check to see if org exists
@@ -116,7 +128,10 @@ export const createDomain = new mutationWithClientMutationId({
         spf: null,
         ssl: null,
       },
-      tags: [],
+      tags: {
+        user: [],
+        webCheck: [],
+      },
     }
 
     // Check to see if domain already belongs to same org
@@ -210,6 +225,7 @@ export const createDomain = new mutationWithClientMutationId({
             INSERT {
               _from: ${org._id},
               _to: ${insertedDomain._id}
+              tags: ${userTags}
             } INTO claims
           `,
         )
@@ -258,6 +274,7 @@ export const createDomain = new mutationWithClientMutationId({
             INSERT {
               _from: ${org._id},
               _to: ${checkDomain._id}
+              tags: ${userTags}
             } INTO claims
           `,
         )
