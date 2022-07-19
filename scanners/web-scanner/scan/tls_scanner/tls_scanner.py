@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 from dataclasses import dataclass, asdict as dataclass_asdict
@@ -8,10 +9,11 @@ from enum import Enum
 from OpenSSL import SSL
 from socket import gaierror
 
+from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
 from sslyze.errors import ConnectionToServerFailed, \
     ServerHostnameCouldNotBeResolved
-from sslyze.plugins.certificate_info._certificate_utils import get_common_names
+from sslyze.plugins.certificate_info._certificate_utils import get_common_names, extract_dns_subject_alternative_names
 from sslyze.plugins.certificate_info.json_output import _CertificateAsJson, \
     _OcspResponseAsJson
 from sslyze.plugins.elliptic_curves_plugin import \
@@ -24,6 +26,8 @@ from sslyze.scanner.models import CipherSuitesScanAttempt, ServerScanResult
 from sslyze.server_setting import (
     ServerNetworkLocation, ServerNetworkConfiguration,
 )
+
+from scan.tls_scanner.query_crlite import query_crlite
 
 logger = logging.getLogger()
 
@@ -59,7 +63,11 @@ class AcceptedCipherSuites:
 
 @dataclass
 class CertificateInfo:
-    z: str
+    expired_cert: bool
+    self_signed_cert: bool
+    bad_chain: bool
+    bad_hostname: bool
+    cert_revoked: bool
 
 
 @dataclass
@@ -203,8 +211,32 @@ class TLSResult:
             return None
 
     @staticmethod
-    def get_certificate_info(scan_result: ServerScanResult):
-        # TODO: This
+    def get_certificate_info(scan_result: ServerScanResult) -> CertificateInfo | None:
+        try:
+            cert_info = scan_result.scan_result.certificate_info.result
+        except AttributeError:
+            return None
+
+        cert_chain = cert_info.certificate_deployments[0].received_certificate_chain
+        leaf_cert = cert_chain[0]
+        # Extract Subject Alternative Names
+        san_list = extract_dns_subject_alternative_names(leaf_cert)
+        # Extract Common Names
+        common_names = get_common_names(leaf_cert.subject)
+
+        bad_hostname = cert_info.certificate_deployments[0].leaf_certificate_subject_matches_hostname
+        must_have_staple = cert_info.certificate_deployments[0].leaf_certificate_has_must_staple_extension
+        expired_cert = True if leaf_cert.not_valid_after < datetime.datetime.now() else False
+        self_signed_cert = True if leaf_cert.issuer is leaf_cert.subject else False
+
+        try:
+            cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
+        except ValueError as e:
+            logging.debug(
+                f"Error while checking revocation status for {scan_result.server_location.hostname}: {str(e)}"
+            )
+            cert_revoked = None
+
         return
 
     @staticmethod
