@@ -6,7 +6,7 @@ export const loadDomainConnectionsByOrgId =
   ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
   async ({ orgId, after, before, first, last, ownership, orderBy, search }) => {
     const userDBId = `users/${userKey}`
-
+    console.log('orgId:', orgId)
     let ownershipOrgsOnly = aql`
       LET claimKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
@@ -382,12 +382,20 @@ export const loadDomainConnectionsByOrgId =
     LET retrievedDomains = (
       ${loopString}
         FILTER domain._key IN domainKeys
+        LET claimTags = (
+          FOR v, e IN 1..1 ANY domain._id claims
+            FILTER e._from == ${orgId}
+            RETURN e.tags
+          // FOR claim IN claims
+          //   FILTER claim._to == domain._id AND claim._from == ${orgId}
+          //   RETURN claim.tags
+        )
         ${afterTemplate}
         ${beforeTemplate}
         SORT
         ${sortByField}
         ${limitTemplate}
-        RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+        RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags }, domain)
     )
 
     LET hasNextPage = (LENGTH(

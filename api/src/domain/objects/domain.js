@@ -17,6 +17,7 @@ import { emailScanType } from '../../email-scan/objects'
 import { webScanType } from '../../web-scan/objects'
 import { organizationOrder } from '../../organization/inputs'
 import { organizationConnection } from '../../organization/objects'
+import { userTag } from './user-tag'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -223,6 +224,17 @@ export const domainType = new GraphQLObjectType({
         return edges
       },
     },
+    claimTags: {
+      description:
+        'List of labelled tags users of an organization have applied to the claimed domain.',
+      type: new GraphQLList(userTag),
+      resolve: ({ claimTags }) => claimTags,
+    },
+    // userTags: {
+    //   description: 'List of labelled tags users have applied to the domain.',
+    //   type: new GraphQLList(userTag),
+    //   resolve: ({ tags }) => tags.user,
+    // },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
