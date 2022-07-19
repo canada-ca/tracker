@@ -7,15 +7,17 @@ import {
   Flex,
   ListItem,
   Stack,
+  Tag,
+  TagLabel,
   Text,
 } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
-import { bool, object, string } from 'prop-types'
+import { array, bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 
-export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
+export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
   const location = useLocation()
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
@@ -69,6 +71,16 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           <StatusBadge text="DMARC" status={status.dmarc} />
         </Flex>
         <Divider variant="card" display={{ md: 'none' }} />
+        <Flex>
+          {tags?.map(({ label }, idx) => {
+            return (
+              <Tag key={idx}>
+                <TagLabel>{label}</TagLabel>
+              </Tag>
+            )
+          })}
+        </Flex>
+        <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"
           justifySelf="flex-end"
@@ -112,4 +124,5 @@ DomainCard.propTypes = {
   url: string.isRequired,
   status: object,
   hasDMARCReport: bool,
+  tags: array,
 }
