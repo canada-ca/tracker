@@ -1,58 +1,68 @@
 {
-    "httpsScanSummaryCriteria": {
-        "pass": [""],
-        "fail": [
-            "https2",
-            "https3",
-            "https4",
-            "https5",
-            "https6",
-            "https7",
-            "https8",
-            "https9",
-            "https10",
-            "https13",
-            "https14",
-            "https15"
-        ],
-        "info": [
-            "https1",
-            "https16" 
-        ]
-    },
-    "sslScanSummaryCriteria": {
-        "pass": ["ssl5"],
-        "fail": [
-            "ssl2",
-            "ssl3",
-            "ssl4",
-            "ssl6",
-            "ssl7",
-            "ssl8"
-        ],
-        "info": ["ssl1"]
-    },
-    "dkimScanSummaryCriteria": {
-        "pass": ["dkim7",
-                 "dkim8"],
-        "fail": [
-            "dkim2",
-            "dkim3",
-            "dkim4",
-            "dkim5",
-            "dkim6",
-            "dkim9",
-            "dkim11",
-            "dkim12"
-        ],
-        "warning": ["dkim10",
-                    "dkim13"],
-        "info": ["dkim1"]
-    },
-    "spfScanSummaryCriteria": {
-        "pass": "spf12"
-    },
-    "dmarcScanSummaryCriteria": {
-        "pass": "dmarc23"
-    }
+  "httpsScanSummaryCriteria": {
+    "pass": [
+      ""
+    ],
+    "fail": [
+      "https2",
+      "https3",
+      "https4",
+      "https5",
+      "https6",
+      "https7",
+      "https8",
+      "https9",
+      "https10",
+      "https13",
+      "https14",
+      "https15"
+    ],
+    "info": [
+      "https1",
+      "https16"
+    ]
+  },
+  "sslScanSummaryCriteria": {
+    "pass": [
+      "ssl5"
+    ],
+    "fail": [
+      "ssl2",
+      "ssl3",
+      "ssl4",
+      "ssl6",
+      "ssl7",
+      "ssl8"
+    ],
+    "info": [
+      "ssl1"
+    ]
+  },
+  "dkimScanSummaryCriteria": {
+    "pass": [],
+    "fail": [
+      "dkim2",
+      "dkim12",
+      "dkim13"
+    ],
+    "info": [
+      "dkim1",
+      "dkim3",
+      "dkim4",
+      "dkim5",
+      "dkim6",
+      "dkim7",
+      "dkim8",
+      "dkim9",
+      "dkim10",
+      "dkim11",
+      "dkim13"
+    ]
+  },
+  "spfScanSummaryCriteria": {
+    "pass": "spf12"
+  },
+  "dmarcScanSummaryCriteria": {
+    "pass": "dmarc23"
+  }
 }
