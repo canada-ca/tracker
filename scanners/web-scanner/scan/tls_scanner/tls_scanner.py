@@ -33,7 +33,7 @@ logger = logging.getLogger()
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
 
-#
+
 # @dataclass
 # class ServerLocation:
 #     hostname: str
@@ -63,11 +63,39 @@ class AcceptedCipherSuites:
 
 @dataclass
 class CertificateInfo:
-    expired_cert: bool
-    self_signed_cert: bool
-    bad_chain: bool
+    not_valid_before: str = None
+    not_valid_after: str = None
+    issuer: str = None
+    subject: str = None
+    expired_cert: bool = None
+    self_signed_cert: bool = None
+    cert_revoked: bool = None
+    common_names: list[str] = None
+
+    def __init__(self, cert: Certificate):
+        self.expired_cert = True if cert.not_valid_after < datetime.datetime.now() else False
+        self.self_signed_cert = True if cert.issuer is cert.subject else False
+        self.not_valid_before = str(cert.not_valid_before)
+        self.not_valid_after = str(cert.not_valid_after)
+        self.issuer = cert.issuer.rfc4514_string()
+        self.subject = cert.subject.rfc4514_string()
+        self.common_names = get_common_names(cert.subject)
+
+        try:
+            self.cert_revoked = query_crlite(cert.public_bytes(Encoding.PEM))
+        except ValueError as e:
+            print("IN ERROR")
+            logging.debug(
+                f"Error while checking revocation status for {cert.subject.rfc4514_string()}: {str(e)}"
+            )
+        print("DONE")
+
+
+
+@dataclass
+class CertificateChainInfo:
+    certificate_info_chain: list[CertificateInfo]
     bad_hostname: bool
-    cert_revoked: bool
 
 
 @dataclass
@@ -92,7 +120,7 @@ class TLSResult:
     scan_status: str | None = None
     accepted_cipher_suites: list[str] | None = None
     accepted_elliptic_curves: list[str] | None = None
-    certificate_info: CertificateInfo | None = None
+    certificate_chain_info: CertificateChainInfo | None = None
     is_vulnerable_to_ccs_injection: bool | None = None
     is_vulnerable_to_heartbleed: bool | None = None
     is_vulnerable_to_robot: str | None = None
@@ -155,7 +183,7 @@ class TLSResult:
         self.scan_status = getattr(scan_results, "scan_status", None)
         self.accepted_cipher_suites = self.get_accepted_cipher_suites(scan_results)
         self.accepted_elliptic_curves = self.get_accepted_curves(scan_results)
-        self.certificate_info = self.get_certificate_info(scan_results)
+        self.certificate_chain_info = self.get_certificate_chain_info(scan_results)
         self.is_vulnerable_to_ccs_injection = self.get_is_vulnerable_to_ccs_injection(scan_results)
         self.is_vulnerable_to_heartbleed = self.get_is_vulnerable_to_heartbleed(scan_results)
         self.is_vulnerable_to_robot = self.get_is_vulnerable_to_robot(scan_results)
@@ -211,7 +239,7 @@ class TLSResult:
             return None
 
     @staticmethod
-    def get_certificate_info(scan_result: ServerScanResult) -> CertificateInfo | None:
+    def get_certificate_chain_info(scan_result: ServerScanResult) -> CertificateChainInfo | None:
         try:
             cert_info = scan_result.scan_result.certificate_info.result
         except AttributeError:
@@ -223,11 +251,10 @@ class TLSResult:
         san_list = extract_dns_subject_alternative_names(leaf_cert)
         # Extract Common Names
         common_names = get_common_names(leaf_cert.subject)
-
         bad_hostname = cert_info.certificate_deployments[0].leaf_certificate_subject_matches_hostname
         must_have_staple = cert_info.certificate_deployments[0].leaf_certificate_has_must_staple_extension
-        expired_cert = True if leaf_cert.not_valid_after < datetime.datetime.now() else False
-        self_signed_cert = True if leaf_cert.issuer is leaf_cert.subject else False
+
+        chain = [CertificateInfo(cert) for cert in cert_chain]
 
         try:
             cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
@@ -237,7 +264,7 @@ class TLSResult:
             )
             cert_revoked = None
 
-        return
+        return CertificateChainInfo(certificate_info_chain=chain, bad_hostname=bad_hostname)
 
     @staticmethod
     def get_is_vulnerable_to_ccs_injection(scan_result: ServerScanResult) -> bool | None:
