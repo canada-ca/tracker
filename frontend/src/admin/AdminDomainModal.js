@@ -1,9 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -16,7 +17,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Stack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
   Text,
   useToast,
 } from '@chakra-ui/react'
@@ -36,12 +41,14 @@ export function AdminDomainModal({
   editingDomainId,
   editingDomainUrl,
   selectorInputList,
+  tagInputList,
   orgSlug,
   mutation,
 }) {
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
+  const [newTag, setNewTag] = useState({ label: '' })
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
@@ -153,6 +160,7 @@ export function AdminDomainModal({
           initialValues={{
             domainUrl: editingDomainUrl,
             selectors: selectorInputList,
+            tags: tagInputList,
           }}
           initialTouched={{
             domainUrl: true,
@@ -168,6 +176,7 @@ export function AdminDomainModal({
                   orgId: orgId,
                   domain: values.domainUrl,
                   selectors: values.selectors,
+                  tags: values.tags,
                 },
               })
             } else if (mutation === 'create') {
@@ -176,6 +185,7 @@ export function AdminDomainModal({
                   orgId: orgId,
                   domain: values.domainUrl,
                   selectors: values.selectors,
+                  tags: values.tags,
                 },
               })
             }
@@ -267,6 +277,58 @@ export function AdminDomainModal({
                       </Box>
                     )}
                   />
+                  <FieldArray
+                    name="tags"
+                    render={(arrayHelpers) => (
+                      <Box>
+                        <Text fontWeight="bold">Tags:</Text>
+                        <Flex>
+                          <Select
+                            mb="2"
+                            mr="2"
+                            onChange={(e) =>
+                              setNewTag({ label: e.target.value })
+                            }
+                          >
+                            <option value={{ label: '' }} hidden>
+                              Select a tag
+                            </option>
+                            <option value={'NEW'}>NEW</option>
+                            <option value={'PROD'}>PROD</option>
+                            <option value={'DEV'}>DEV</option>
+                            <option value={'WEB'}>WEB</option>
+                            <option value={'EMAIL'}>EMAIL</option>
+                            <option value={'PARKED'}>PARKED</option>
+                          </Select>
+                          <IconButton
+                            variant="primary"
+                            icon={<SmallAddIcon size="icons.md" />}
+                            type="button"
+                            px="2"
+                            isDisabled={newTag.label === '' ? true : false}
+                            onClick={() => {
+                              arrayHelpers.push(newTag)
+                            }}
+                            aria-label="add-tag"
+                          />
+                        </Flex>
+                        <Flex>
+                          {values.tags?.map(({ label }, idx) => {
+                            return (
+                              <Tag key={idx} m="2">
+                                <TagLabel>{label}</TagLabel>
+                                <TagCloseButton
+                                  onClick={() => {
+                                    arrayHelpers.remove(idx)
+                                  }}
+                                />
+                              </Tag>
+                            )
+                          })}
+                        </Flex>
+                      </Box>
+                    )}
+                  />
                 </Stack>
               </ModalBody>
 
@@ -296,6 +358,7 @@ AdminDomainModal.propTypes = {
   editingDomainId: string,
   editingDomainUrl: string,
   selectorInputList: array,
+  tagInputList: array,
   orgSlug: string,
   mutation: string,
 }
