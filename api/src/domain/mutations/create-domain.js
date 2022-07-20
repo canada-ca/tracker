@@ -23,7 +23,7 @@ export const createDomain = new mutationWithClientMutationId({
       type: new GraphQLList(Selectors),
       description: 'DKIM selector strings corresponding to this domain.',
     },
-    userTags: {
+    tags: {
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
     },
@@ -73,12 +73,13 @@ export const createDomain = new mutationWithClientMutationId({
       selectors = []
     }
 
-    let userTags
-    if (typeof args.userTags !== 'undefined') {
-      userTags = args.userTags.map((tag) => cleanseInput(tag.label))
-    } else {
-      userTags = null
-    }
+    // let tags
+    // if (typeof args.tags !== 'undefined') {
+    //   tags = args.tags.map((tag) => cleanseInput(tag.label))
+    // } else {
+    //   tags = null
+    // }
+    const tags = args.tags
 
     // Check to see if org exists
     const org = await loadOrgByKey.load(orgId)
@@ -225,7 +226,7 @@ export const createDomain = new mutationWithClientMutationId({
             INSERT {
               _from: ${org._id},
               _to: ${insertedDomain._id}
-              tags: ${userTags}
+              tags: ${tags}
             } INTO claims
           `,
         )
@@ -274,7 +275,7 @@ export const createDomain = new mutationWithClientMutationId({
             INSERT {
               _from: ${org._id},
               _to: ${checkDomain._id}
-              tags: ${userTags}
+              tags: ${tags}
             } INTO claims
           `,
         )

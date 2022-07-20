@@ -29,7 +29,7 @@ export const updateDomain = new mutationWithClientMutationId({
       description:
         'The updated DKIM selector strings corresponding to this domain.',
     },
-    userTags: {
+    tags: {
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
     },
@@ -72,7 +72,7 @@ export const updateDomain = new mutationWithClientMutationId({
       selectors = null
     }
 
-    const userTags = args.userTags
+    const tags = args.tags
 
     // Check to see if domain exists
     const domain = await loadDomainByKey.load(domainId)
@@ -185,8 +185,8 @@ export const updateDomain = new mutationWithClientMutationId({
           await query`
           WITH claims, domains, organizations
           UPSERT { _from: ${org._id}, _to: ${domain._id} }
-            INSERT { tags: ${userTags} }
-            UPDATE { tags: ${userTags} }
+            INSERT { tags: ${tags} }
+            UPDATE { tags: ${tags} }
             IN claims
       `,
       )
