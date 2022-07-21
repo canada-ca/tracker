@@ -3,11 +3,7 @@ import json
 import os
 from dataclasses import dataclass, asdict as dataclass_asdict
 
-import sys
 import logging
-from enum import Enum
-from OpenSSL import SSL
-from socket import gaierror
 
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
@@ -89,7 +85,6 @@ class CertificateInfo:
                 f"Error while checking revocation status for {cert.subject.rfc4514_string()}: {str(e)}"
             )
         print("DONE")
-
 
 
 @dataclass
