@@ -42,7 +42,7 @@ export function AdminDomainCard({ url, tags, ...rest }) {
         <Flex>
           {tags?.map(({ label }, idx) => {
             return (
-              <Tag key={idx}>
+              <Tag key={idx} m="2">
                 <TagLabel>{label}</TagLabel>
               </Tag>
             )

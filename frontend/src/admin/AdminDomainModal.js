@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import {
   Box,
   Button,
-  Flex,
+  Divider,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -17,15 +17,16 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
+  SimpleGrid,
   Stack,
   Tag,
   TagCloseButton,
   TagLabel,
+  TagRightIcon,
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { MinusIcon, SmallAddIcon } from '@chakra-ui/icons'
+import { AddIcon, MinusIcon, SmallAddIcon } from '@chakra-ui/icons'
 import { array, bool, func, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
@@ -48,7 +49,6 @@ export function AdminDomainModal({
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
-  const [newTag, setNewTag] = useState({ label: '' })
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains'],
@@ -147,6 +147,30 @@ export function AdminDomainModal({
     },
   })
 
+  const addableTags = (values, helper) => {
+    const tagOptions = ['NEW', 'PROD', 'DEV', 'WEB', 'EMAIL', 'PARKED']
+    const stringValues = values?.map(({ label }) => {
+      return label
+    })
+    const difference = tagOptions.filter((x) => !stringValues?.includes(x))
+    return difference?.map((label, idx) => {
+      return (
+        <Tag
+          key={idx}
+          id={`add-tag-${label}`}
+          as="button"
+          onClick={(e) => {
+            e.preventDefault()
+            helper.push({ label })
+          }}
+        >
+          <TagLabel>{label}</TagLabel>
+          <TagRightIcon as={AddIcon} color="gray.500" ml="auto" />
+        </Tag>
+      )
+    })
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -160,7 +184,10 @@ export function AdminDomainModal({
           initialValues={{
             domainUrl: editingDomainUrl,
             selectors: selectorInputList,
-            tags: tagInputList,
+            // convert initial tags to input type
+            tags: tagInputList?.map(({ label }) => {
+              return { label }
+            }),
           }}
           initialTouched={{
             domainUrl: true,
@@ -168,8 +195,8 @@ export function AdminDomainModal({
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             // Submit update detail mutation
-
             if (mutation === 'update') {
+              console.log(values.tags)
               await updateDomain({
                 variables: {
                   domainId: editingDomainId,
@@ -282,50 +309,23 @@ export function AdminDomainModal({
                     render={(arrayHelpers) => (
                       <Box>
                         <Text fontWeight="bold">Tags:</Text>
-                        <Flex>
-                          <Select
-                            mb="2"
-                            mr="2"
-                            onChange={(e) =>
-                              setNewTag({ label: e.target.value })
-                            }
-                          >
-                            <option value={{ label: '' }} hidden>
-                              Select a tag
-                            </option>
-                            <option value={'NEW'}>NEW</option>
-                            <option value={'PROD'}>PROD</option>
-                            <option value={'DEV'}>DEV</option>
-                            <option value={'WEB'}>WEB</option>
-                            <option value={'EMAIL'}>EMAIL</option>
-                            <option value={'PARKED'}>PARKED</option>
-                          </Select>
-                          <IconButton
-                            variant="primary"
-                            icon={<SmallAddIcon size="icons.md" />}
-                            type="button"
-                            px="2"
-                            isDisabled={newTag.label === '' ? true : false}
-                            onClick={() => {
-                              arrayHelpers.push(newTag)
-                            }}
-                            aria-label="add-tag"
-                          />
-                        </Flex>
-                        <Flex>
+                        <SimpleGrid columns={3} spacing={2}>
+                          {addableTags(values.tags, arrayHelpers)}
+                        </SimpleGrid>
+                        <Divider borderBottomColor="gray.900" />
+                        <SimpleGrid columns={3} spacing={2}>
                           {values.tags?.map(({ label }, idx) => {
                             return (
-                              <Tag key={idx} m="2">
+                              <Tag key={idx}>
                                 <TagLabel>{label}</TagLabel>
                                 <TagCloseButton
-                                  onClick={() => {
-                                    arrayHelpers.remove(idx)
-                                  }}
+                                  ml="auto"
+                                  onClick={() => arrayHelpers.remove(idx)}
                                 />
                               </Tag>
                             )
                           })}
-                        </Flex>
+                        </SimpleGrid>
                       </Box>
                     )}
                   />
