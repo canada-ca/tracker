@@ -1,4 +1,3 @@
-import logging
 import re
 import subprocess
 
@@ -14,8 +13,6 @@ def query_crlite(pem_cert: bytes) -> tuple[bool, str]:
     query_crlite_path = find_query_crlite.decode("ascii").splitlines()[0]
     if not query_crlite_path:
         FileNotFoundError("rust-query-crlite not found")
-
-    print(query_crlite_path)
 
     completed = subprocess.run(
         [query_crlite_path, "-vv", "x509", filename],
