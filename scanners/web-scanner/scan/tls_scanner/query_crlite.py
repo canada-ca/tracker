@@ -4,7 +4,7 @@ import subprocess
 
 
 def query_crlite(pem_cert: bytes) -> tuple[bool, str]:
-    filename = ".temp.pem"
+    filename = "/tmp/temp.pem"
     f = open(filename, "w")
     f.write(pem_cert.decode("ascii"))
     f.close()
