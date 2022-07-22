@@ -66,6 +66,7 @@ class CertificateInfo:
     expired_cert: bool = None
     self_signed_cert: bool = None
     cert_revoked: bool = None
+    cert_revoked_status: str = None
     common_names: list[str] = None
 
     def __init__(self, cert: Certificate):
@@ -78,13 +79,13 @@ class CertificateInfo:
         self.common_names = get_common_names(cert.subject)
 
         try:
-            self.cert_revoked = query_crlite(cert.public_bytes(Encoding.PEM))
+            cert_not_revoked, self.cert_revoked_status = query_crlite(cert.public_bytes(Encoding.PEM))
+            if type(cert_not_revoked) is bool:
+                self.cert_revoked = not cert_not_revoked
         except ValueError as e:
-            print("IN ERROR")
-            logging.debug(
+            logging.info(
                 f"Error while checking revocation status for {cert.subject.rfc4514_string()}: {str(e)}"
             )
-        print("DONE")
 
 
 @dataclass
@@ -251,13 +252,13 @@ class TLSResult:
 
         chain = [CertificateInfo(cert) for cert in cert_chain]
 
-        try:
-            cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
-        except ValueError as e:
-            logging.debug(
-                f"Error while checking revocation status for {scan_result.server_location.hostname}: {str(e)}"
-            )
-            cert_revoked = None
+        # try:
+        #     cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
+        # except ValueError as e:
+        #     logging.debug(
+        #         f"Error while checking revocation status for {scan_result.server_location.hostname}: {str(e)}"
+        #     )
+        #     cert_revoked = None
 
         return CertificateChainInfo(certificate_info_chain=chain, bad_hostname=bad_hostname)
 

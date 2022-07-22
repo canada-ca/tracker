@@ -1,32 +1,44 @@
 import logging
+import re
 import subprocess
 
 
-def query_crlite(pem_cert: bytes) -> bool:
-    """Checks if a PEM encoded certificate has been revoked with Mozilla's CRLite.
+def query_crlite(pem_cert: bytes) -> tuple[bool, str]:
+    filename = ".temp.pem"
+    f = open(filename, "w")
+    f.write(pem_cert.decode("ascii"))
+    f.close()
 
-    Uses https://github.com/mozilla/moz_crlite_query and will raise an error if it is not installed.
-    Will download a DB of revocations to ~/.crlite_db and update it when needed.
+    find_query_crlite = subprocess.check_output(["which", "rust-query-crlite"])
 
-    :param bytes pem_cert: A PEM encoded X.509 certificate.
-    :return: True if cert is revoked, else False.
-    :rtype: bool
-    :raises ValueError: if revocation status can't be checked
-    """
+    query_crlite_path = find_query_crlite.decode("ascii").splitlines()[0]
+    if not query_crlite_path:
+        FileNotFoundError("rust-query-crlite not found")
+
+    print(query_crlite_path)
+
     completed = subprocess.run(
-        ["moz_crlite_query", "-"],
-        input=pem_cert.decode("ascii"),
+        [query_crlite_path, "-vv", "x509", filename],
         capture_output=True,
-        text=True,
     )
-    # moz_crlite_query prints everything but results to stderr
-    # Logging at debug level for now to monitor updates to DB
-    logging.debug(completed.stderr)
-    if "Revoked" in completed.stdout:
-        return True
-    elif "Valid" in completed.stdout:
-        return False
-    elif "Not Enrolled" in completed.stdout:
-        raise ValueError("Cert issuer not enrolled in CRLite")
-    else:
-        raise ValueError("Cert revocation status could not be checked")
+
+    pattern = r'^(?:INFO|WARN|ERROR) - (\S*) (Good|Expired|NotCovered|NotEnrolled|Revoked)$'
+
+    search_result = re.search(pattern, completed.stderr.decode("ascii"))
+
+    if not search_result:
+        raise ValueError(f"Certificate revocation status not found in rust_query_crlite output: {completed.stderr.decode('ascii')}")
+
+    match search_result.group(2):
+        case "Good":
+            return True, "Good"
+        case "Expired":
+            return True, "Expired"
+        case "NotCovered":
+            return True, "NotCovered"
+        case "NotEnrolled":
+            return True, "NotEnrolled"
+        case "Revoked":
+            return False, "Revoked"
+        case _:
+            raise ValueError("Unknown status result")
