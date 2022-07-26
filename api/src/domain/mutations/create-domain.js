@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 
 import { createDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
-import { inputTag } from '../inputs/user-tag'
+import { inputTag } from '../inputs/domain-tag'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',

@@ -1,2 +1,2 @@
 export * from './domain-order'
-export * from './user-tag'
+export * from './domain-tag'
