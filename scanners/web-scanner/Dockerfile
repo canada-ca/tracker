@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
 RUN wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1l-1ubuntu1.6_amd64.deb -P /working
 
 COPY requirements.txt /requirements.txt
+# Install python requirements to /working/install directory for cleaner copy
 RUN pip3 install --prefix=/working/install -r /requirements.txt
 
 #===============================================================================================
