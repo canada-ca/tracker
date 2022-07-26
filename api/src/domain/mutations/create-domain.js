@@ -73,12 +73,6 @@ export const createDomain = new mutationWithClientMutationId({
       selectors = []
     }
 
-    // let tags
-    // if (typeof args.tags !== 'undefined') {
-    //   tags = args.tags.map((tag) => cleanseInput(tag.label))
-    // } else {
-    //   tags = null
-    // }
     const tags = args.tags
 
     // Check to see if org exists
@@ -129,10 +123,7 @@ export const createDomain = new mutationWithClientMutationId({
         spf: null,
         ssl: null,
       },
-      tags: {
-        user: [],
-        webCheck: [],
-      },
+      tags: [],
     }
 
     // Check to see if domain already belongs to same org
@@ -225,7 +216,7 @@ export const createDomain = new mutationWithClientMutationId({
             WITH claims, domains, organizations
             INSERT {
               _from: ${org._id},
-              _to: ${insertedDomain._id}
+              _to: ${insertedDomain._id},
               tags: ${tags}
             } INTO claims
           `,
