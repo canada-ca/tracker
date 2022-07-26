@@ -531,7 +531,10 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             lastRan
             selectors
             claimTags {
-              label
+              label {
+                en
+                fr
+              }
             }
           }
         }

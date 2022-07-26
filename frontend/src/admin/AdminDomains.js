@@ -187,6 +187,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <AdminDomainCard
               url={domain}
               tags={claimTags}
+              locale={i18n.locale}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
             />

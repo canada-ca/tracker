@@ -230,11 +230,6 @@ export const domainType = new GraphQLObjectType({
       type: new GraphQLList(domainTag),
       resolve: ({ claimTags }) => claimTags,
     },
-    // userTags: {
-    //   description: 'List of labelled tags users have applied to the domain.',
-    //   type: new GraphQLList(domainTag),
-    //   resolve: ({ tags }) => tags.user,
-    // },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',

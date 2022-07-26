@@ -6,6 +6,7 @@ import {
   Divider,
   Flex,
   ListItem,
+  SimpleGrid,
   Stack,
   Tag,
   TagLabel,
@@ -71,15 +72,22 @@ export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
           <StatusBadge text="DMARC" status={status.dmarc} />
         </Flex>
         <Divider variant="card" display={{ md: 'none' }} />
-        <Flex>
+        <SimpleGrid columns={3} spacing={1}>
           {tags?.map(({ label }, idx) => {
             return (
-              <Tag key={idx} m="2">
+              <Tag
+                key={idx}
+                m="2"
+                borderRadius="full"
+                justifySelf={{ base: 'start', md: 'end' }}
+                borderWidth="1px"
+                borderColor="gray.900"
+              >
                 <TagLabel>{label}</TagLabel>
               </Tag>
             )
           })}
-        </Flex>
+        </SimpleGrid>
         <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"

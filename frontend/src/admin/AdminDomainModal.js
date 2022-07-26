@@ -148,23 +148,35 @@ export function AdminDomainModal({
   })
 
   const addableTags = (values, helper) => {
-    const tagOptions = ['NEW', 'PROD', 'DEV', 'WEB', 'EMAIL', 'PARKED']
+    const tagOptions = [
+      { en: 'NEW', fr: 'NOUVEAU' },
+      { en: 'PROD', fr: 'PROD' },
+      { en: 'STAGING', fr: 'DÉVELOPPEMENT' },
+      { en: 'TEST', fr: 'TEST' },
+      { en: 'WEB', fr: 'WEB' },
+      { en: 'INACTIVE', fr: 'INACTIF' },
+    ]
     const stringValues = values?.map(({ label }) => {
-      return label
+      return label[i18n.locale]
     })
-    const difference = tagOptions.filter((x) => !stringValues?.includes(x))
+    const difference = tagOptions.filter(
+      (label) => !stringValues?.includes(label[i18n.locale]),
+    )
     return difference?.map((label, idx) => {
       return (
         <Tag
           key={idx}
-          id={`add-tag-${label}`}
+          id={`add-tag-${label.en}`}
           as="button"
+          _hover={{ bg: 'gray.200' }}
+          borderRadius="full"
+          // justifySelf={{ base: 'start', md: 'end' }}
           onClick={(e) => {
             e.preventDefault()
             helper.push({ label })
           }}
         >
-          <TagLabel>{label}</TagLabel>
+          <TagLabel>{label[i18n.locale]}</TagLabel>
           <TagRightIcon as={AddIcon} color="gray.500" ml="auto" />
         </Tag>
       )
@@ -186,7 +198,8 @@ export function AdminDomainModal({
             selectors: selectorInputList,
             // convert initial tags to input type
             tags: tagInputList?.map(({ label }) => {
-              return { label }
+              const { en, fr } = label
+              return { label: { en, fr } }
             }),
           }}
           initialTouched={{
@@ -196,7 +209,6 @@ export function AdminDomainModal({
           onSubmit={async (values) => {
             // Submit update detail mutation
             if (mutation === 'update') {
-              console.log(values.tags)
               await updateDomain({
                 variables: {
                   domainId: editingDomainId,
@@ -310,14 +322,14 @@ export function AdminDomainModal({
                       <Box>
                         <Text fontWeight="bold">Tags:</Text>
                         <SimpleGrid columns={3} spacing={2}>
-                          {addableTags(values.tags, arrayHelpers)}
-                        </SimpleGrid>
-                        <Divider borderBottomColor="gray.900" />
-                        <SimpleGrid columns={3} spacing={2}>
                           {values.tags?.map(({ label }, idx) => {
                             return (
-                              <Tag key={idx}>
-                                <TagLabel>{label}</TagLabel>
+                              <Tag
+                                key={idx}
+                                borderRadius="full"
+                                // justifySelf={{ base: 'start', md: 'end' }}
+                              >
+                                <TagLabel>{label[i18n.locale]}</TagLabel>
                                 <TagCloseButton
                                   ml="auto"
                                   onClick={() => arrayHelpers.remove(idx)}
@@ -325,6 +337,10 @@ export function AdminDomainModal({
                               </Tag>
                             )
                           })}
+                        </SimpleGrid>
+                        <Divider borderBottomColor="gray.900" />
+                        <SimpleGrid columns={3} spacing={2}>
+                          {addableTags(values.tags, arrayHelpers)}
                         </SimpleGrid>
                       </Box>
                     )}

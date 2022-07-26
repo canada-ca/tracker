@@ -4,27 +4,27 @@ export const TagLabelEnums = new GraphQLEnumType({
   name: 'TagLabelEnums',
   values: {
     NEW: {
-      value: 'new',
+      value: { en: 'NEW', fr: 'NOUVEAU' },
       description: 'Label for tagging domains as new to the system.',
     },
     PROD: {
-      value: 'prod',
+      value: { en: 'PROD', fr: 'PROD' },
       description: 'Label for tagging domains as a production environment.',
     },
     STAGING: {
-      value: 'STAGING',
+      value: { en: 'STAGING', fr: 'DÉVELOPPEMENT' },
       description: 'Label for tagging domains as a staging environment.',
     },
     TEST: {
-      value: 'TEST',
+      value: { en: 'TEST', fr: 'TEST' },
       description: 'Label for tagging domains as a test environment.',
     },
     WEB: {
-      value: 'web',
+      value: { en: 'WEB', fr: 'WEB' },
       description: 'Label for tagging domains as web-hosting.',
     },
-    PARKED: {
-      value: 'parked',
+    INACTIVE: {
+      value: { en: 'INACTIVE', fr: 'INACTIF' },
       description: 'Label for tagging domains that are not active.',
     },
   },

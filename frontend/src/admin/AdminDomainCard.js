@@ -15,14 +15,14 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
 
-export function AdminDomainCard({ url, tags, ...rest }) {
+export function AdminDomainCard({ url, tags, locale, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
         templateColumns={{ base: 'auto', md: '40% 60%' }}
         columnGap="1.5rem"
       >
-        <Stack isInline>
+        <Stack isInline align="center">
           <Text fontWeight="bold">
             <Trans>Domain:</Trans>
           </Text>
@@ -42,8 +42,15 @@ export function AdminDomainCard({ url, tags, ...rest }) {
         <Flex>
           {tags?.map(({ label }, idx) => {
             return (
-              <Tag key={idx} m="2">
-                <TagLabel>{label}</TagLabel>
+              <Tag
+                key={idx}
+                m="2"
+                borderRadius="full"
+                justifySelf={{ base: 'start', md: 'end' }}
+                borderWidth="1px"
+                borderColor="gray.900"
+              >
+                <TagLabel>{label[locale]}</TagLabel>
               </Tag>
             )
           })}
@@ -52,4 +59,4 @@ export function AdminDomainCard({ url, tags, ...rest }) {
     </ListItem>
   )
 }
-AdminDomainCard.propTypes = { url: string, tags: array }
+AdminDomainCard.propTypes = { url: string, tags: array, locale: string }
