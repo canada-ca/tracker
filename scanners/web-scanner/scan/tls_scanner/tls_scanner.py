@@ -17,7 +17,8 @@ from sslyze.plugins.elliptic_curves_plugin import \
     SupportedEllipticCurvesScanAttemptAsJson
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze import Scanner, ServerScanRequest, ServerScanResultAsJson, \
-    CipherSuiteAcceptedByServer, CipherSuiteRejectedByServer, TlsResumptionSupportEnum
+    CipherSuiteAcceptedByServer, CipherSuiteRejectedByServer, TlsResumptionSupportEnum, \
+    CertificateDeploymentAnalysisResult
 from sslyze.scanner.models import CipherSuitesScanAttempt, ServerScanResult
 from sslyze.server_setting import (
     ServerNetworkLocation, ServerNetworkConfiguration,
@@ -68,6 +69,9 @@ class CertificateInfo:
     cert_revoked: bool = None
     cert_revoked_status: str = None
     common_names: list[str] = None
+    serial_number: str = None
+    signature_hash_algorithm: str = None
+    san_list: list[str] = None
 
     def __init__(self, cert: Certificate):
         self.expired_cert = True if cert.not_valid_after < datetime.datetime.now() else False
@@ -77,6 +81,9 @@ class CertificateInfo:
         self.issuer = cert.issuer.rfc4514_string()
         self.subject = cert.subject.rfc4514_string()
         self.common_names = get_common_names(cert.subject)
+        self.serial_number = str(cert.serial_number)
+        self.signature_hash_algorithm = cert.signature_hash_algorithm.name
+        self.san_list = extract_dns_subject_alternative_names(cert)
 
         try:
             cert_not_revoked, self.cert_revoked_status = query_crlite(cert.public_bytes(Encoding.PEM))
@@ -90,8 +97,26 @@ class CertificateInfo:
 
 @dataclass
 class CertificateChainInfo:
-    certificate_info_chain: list[CertificateInfo]
-    bad_hostname: bool
+    certificate_info_chain: list[CertificateInfo] = None
+    bad_hostname: bool = None
+    must_have_staple: bool = None
+    leaf_certificate_is_ev: bool = None
+    received_chain_contains_anchor_certificate: bool = None
+    received_chain_has_valid_order: bool = None
+    verified_chain_has_sha1_signature: bool = None
+    verified_chain_has_legacy_symantec_anchor: bool = None
+
+    def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult):
+        cert_chain = cert_deployment.received_certificate_chain
+        self.bad_hostname = cert_deployment.leaf_certificate_subject_matches_hostname
+        self.must_have_staple = cert_deployment.leaf_certificate_has_must_staple_extension
+        self.leaf_certificate_is_ev = cert_deployment.leaf_certificate_is_ev
+        self.received_chain_contains_anchor_certificate = cert_deployment.received_chain_contains_anchor_certificate
+        self.received_chain_has_valid_order = cert_deployment.received_chain_has_valid_order
+        self.verified_chain_has_sha1_signature = cert_deployment.verified_chain_has_sha1_signature
+        self.verified_chain_has_legacy_symantec_anchor = cert_deployment.verified_chain_has_legacy_symantec_anchor
+
+        self.certificate_info_chain = [CertificateInfo(cert) for cert in cert_chain]
 
 
 @dataclass
@@ -238,29 +263,10 @@ class TLSResult:
     def get_certificate_chain_info(scan_result: ServerScanResult) -> CertificateChainInfo | None:
         try:
             cert_info = scan_result.scan_result.certificate_info.result
+            cert_deployment = cert_info.certificate_deployments[0]
+            return CertificateChainInfo(cert_deployment)
         except AttributeError:
             return None
-
-        cert_chain = cert_info.certificate_deployments[0].received_certificate_chain
-        leaf_cert = cert_chain[0]
-        # Extract Subject Alternative Names
-        san_list = extract_dns_subject_alternative_names(leaf_cert)
-        # Extract Common Names
-        common_names = get_common_names(leaf_cert.subject)
-        bad_hostname = cert_info.certificate_deployments[0].leaf_certificate_subject_matches_hostname
-        must_have_staple = cert_info.certificate_deployments[0].leaf_certificate_has_must_staple_extension
-
-        chain = [CertificateInfo(cert) for cert in cert_chain]
-
-        # try:
-        #     cert_revoked = query_crlite(leaf_cert.public_bytes(Encoding.PEM))
-        # except ValueError as e:
-        #     logging.debug(
-        #         f"Error while checking revocation status for {scan_result.server_location.hostname}: {str(e)}"
-        #     )
-        #     cert_revoked = None
-
-        return CertificateChainInfo(certificate_info_chain=chain, bad_hostname=bad_hostname)
 
     @staticmethod
     def get_is_vulnerable_to_ccs_injection(scan_result: ServerScanResult) -> bool | None:
