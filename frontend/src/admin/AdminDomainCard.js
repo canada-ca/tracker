@@ -46,11 +46,10 @@ export function AdminDomainCard({ url, tags, locale, ...rest }) {
                 key={idx}
                 m="2"
                 borderRadius="full"
-                justifySelf={{ base: 'start', md: 'end' }}
                 borderWidth="1px"
                 borderColor="gray.900"
               >
-                <TagLabel>{label[locale]}</TagLabel>
+                <TagLabel mx="auto">{label[locale]}</TagLabel>
               </Tag>
             )
           })}

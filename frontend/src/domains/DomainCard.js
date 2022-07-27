@@ -17,9 +17,11 @@ import { array, bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
+import { useLingui } from '@lingui/react'
 
 export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
   const location = useLocation()
+  const { i18n } = useLingui()
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
     border: '1px solid',
@@ -72,18 +74,18 @@ export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
           <StatusBadge text="DMARC" status={status.dmarc} />
         </Flex>
         <Divider variant="card" display={{ md: 'none' }} />
-        <SimpleGrid columns={3} spacing={1}>
+        <SimpleGrid columns={3}>
           {tags?.map(({ label }, idx) => {
             return (
               <Tag
                 key={idx}
-                m="2"
+                mx="0.5"
+                my="0.5"
                 borderRadius="full"
-                justifySelf={{ base: 'start', md: 'end' }}
                 borderWidth="1px"
                 borderColor="gray.900"
               >
-                <TagLabel>{label}</TagLabel>
+                <TagLabel mx="auto">{label[i18n.locale]}</TagLabel>
               </Tag>
             )
           })}

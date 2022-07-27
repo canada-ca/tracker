@@ -151,7 +151,7 @@ export function AdminDomainModal({
     const tagOptions = [
       { en: 'NEW', fr: 'NOUVEAU' },
       { en: 'PROD', fr: 'PROD' },
-      { en: 'STAGING', fr: 'DÉVELOPPEMENT' },
+      { en: 'STAGING', fr: 'DÉV' },
       { en: 'TEST', fr: 'TEST' },
       { en: 'WEB', fr: 'WEB' },
       { en: 'INACTIVE', fr: 'INACTIF' },
@@ -170,7 +170,6 @@ export function AdminDomainModal({
           as="button"
           _hover={{ bg: 'gray.200' }}
           borderRadius="full"
-          // justifySelf={{ base: 'start', md: 'end' }}
           onClick={(e) => {
             e.preventDefault()
             helper.push({ label })
@@ -324,15 +323,12 @@ export function AdminDomainModal({
                         <SimpleGrid columns={3} spacing={2}>
                           {values.tags?.map(({ label }, idx) => {
                             return (
-                              <Tag
-                                key={idx}
-                                borderRadius="full"
-                                // justifySelf={{ base: 'start', md: 'end' }}
-                              >
+                              <Tag key={idx} borderRadius="full">
                                 <TagLabel>{label[i18n.locale]}</TagLabel>
                                 <TagCloseButton
                                   ml="auto"
                                   onClick={() => arrayHelpers.remove(idx)}
+                                  aria-label={`remove-tag-${label.en}`}
                                 />
                               </Tag>
                             )

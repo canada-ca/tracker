@@ -623,7 +623,10 @@ export const PAGINATED_ORG_DOMAINS = gql`
             }
             hasDMARCReport
             claimTags {
-              label
+              label {
+                en
+                fr
+              }
             }
           }
         }
