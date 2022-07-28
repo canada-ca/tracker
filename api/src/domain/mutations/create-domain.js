@@ -73,7 +73,12 @@ export const createDomain = new mutationWithClientMutationId({
       selectors = []
     }
 
-    const tags = args.tags
+    let tags
+    if (typeof args.tags !== 'undefined') {
+      tags = args.tags
+    } else {
+      tags = []
+    }
 
     // Check to see if org exists
     const org = await loadOrgByKey.load(orgId)
@@ -123,7 +128,6 @@ export const createDomain = new mutationWithClientMutationId({
         spf: null,
         ssl: null,
       },
-      tags: [],
     }
 
     // Check to see if domain already belongs to same org
@@ -213,7 +217,7 @@ export const createDomain = new mutationWithClientMutationId({
         await trx.step(
           () =>
             query`
-            WITH claims, domains, organizations
+            WITH claims
             INSERT {
               _from: ${org._id},
               _to: ${insertedDomain._id},
@@ -262,10 +266,10 @@ export const createDomain = new mutationWithClientMutationId({
         await trx.step(
           () =>
             query`
-            WITH claims, domains, organizations
+            WITH claims
             INSERT {
               _from: ${org._id},
-              _to: ${checkDomain._id}
+              _to: ${checkDomain._id},
               tags: ${tags}
             } INTO claims
           `,

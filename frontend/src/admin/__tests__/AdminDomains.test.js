@@ -129,6 +129,7 @@ describe('<AdminDomains />', () => {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {
@@ -212,6 +213,7 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               domain: 'test-domain.gc.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {
@@ -301,6 +303,7 @@ describe('<AdminDomains />', () => {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {
@@ -317,34 +320,30 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const {
-        getByText,
-        getByPlaceholderText,
-        findByText,
-        queryByText,
-      } = render(
-        <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <ChakraProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']}>
-                  <AdminDomains
-                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                    orgSlug={'test-org.slug'}
-                    domainsPerPage={4}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ChakraProvider>
-          </UserVarProvider>
-        </MockedProvider>,
-      )
+      const { getByText, getByPlaceholderText, findByText, queryByText } =
+        render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: null,
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/']}>
+                    <AdminDomains
+                      orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                      orgSlug={'test-org.slug'}
+                      domainsPerPage={4}
+                    />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
 
       const addDomainButton = await findByText(/Add Domain/)
 
@@ -383,6 +382,7 @@ describe('<AdminDomains />', () => {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
               selectors: ['selector1'],
+              tags: [],
             },
           },
           result: {
@@ -456,7 +456,9 @@ describe('<AdminDomains />', () => {
 
       await waitFor(() =>
         expect(
-          getByText(/Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters/),
+          getByText(
+            /Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters/,
+          ),
         ).toBeInTheDocument(),
       )
 
@@ -575,6 +577,7 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               domain: 'test.domain.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {

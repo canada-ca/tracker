@@ -72,7 +72,12 @@ export const updateDomain = new mutationWithClientMutationId({
       selectors = null
     }
 
-    const tags = args.tags
+    let tags
+    if (typeof args.tags !== 'undefined') {
+      tags = args.tags
+    } else {
+      tags = null
+    }
 
     // Check to see if domain exists
     const domain = await loadDomainByKey.load(domainId)
@@ -183,7 +188,7 @@ export const updateDomain = new mutationWithClientMutationId({
       await trx.step(
         async () =>
           await query`
-          WITH claims, domains, organizations
+          WITH claims
           UPSERT { _from: ${org._id}, _to: ${domain._id} }
             INSERT { tags: ${tags} }
             UPDATE { tags: ${tags} }
