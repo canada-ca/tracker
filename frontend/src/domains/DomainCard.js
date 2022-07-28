@@ -79,8 +79,7 @@ export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
             return (
               <Tag
                 key={idx}
-                mx="0.5"
-                my="0.5"
+                m="0.5"
                 borderRadius="full"
                 borderWidth="1px"
                 borderColor="gray.900"

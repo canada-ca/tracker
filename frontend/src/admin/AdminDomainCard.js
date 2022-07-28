@@ -44,7 +44,7 @@ export function AdminDomainCard({ url, tags, locale, ...rest }) {
             return (
               <Tag
                 key={idx}
-                m="2"
+                m="1"
                 borderRadius="full"
                 borderWidth="1px"
                 borderColor="gray.900"
