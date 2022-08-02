@@ -36,9 +36,9 @@ class DMARCScanner:
         except (DNSException, SPFError, DMARCError) as e:
             logging.error(f"Failed to check the given domains for DMARC/SPF records. ({e})")
             return {
-                "dmarc": {"error": "missing"},
-                "spf": {"error": "missing"},
-                "mx": {"error": "missing"},
+                "dmarc": {"error": f"Failed to check the given domains for records: {self.domain}"},
+                "spf": {"error": f"Failed to check the given domains for records: {self.domain}"},
+                "mx": {"error": f"Failed to check the given domains for records: {self.domain}"},
             }
 
         if scan_result["dmarc"].get("record", "null") == "null":
@@ -223,6 +223,7 @@ class DKIMScanner:
 
                 for key, val in dkim_txt_values_bytes.items():
                     txt_record[key.decode("ascii")] = val.decode("ascii")
+
 
                 for key, val in txt_record.items():
                     if key == "t":
