@@ -60,8 +60,12 @@ def scan_domain(domain, dkim_selectors=None):
     except NoAnswer:
         a_records = None
 
-    scan_result.resolve_ips = [a_record.to_text() for a_record in a_records]
-    scan_result.resolve_chain = [str(answer).splitlines() for answer in a_records.response.answer]
+    if a_records:
+        scan_result.resolve_ips = [a_record.to_text() for a_record in a_records]
+        scan_result.resolve_chain = [str(answer).splitlines() for answer in a_records.response.answer]
+    else:
+        scan_result.resolve_ips = None
+        scan_result.resolve_chain = None
 
     # Get first CNAME record (in case there is no A record in chain). Checking if chain is valid.
     try:
