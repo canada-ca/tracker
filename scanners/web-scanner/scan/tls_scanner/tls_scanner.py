@@ -97,7 +97,6 @@ class CertificateInfo:
 
 @dataclass
 class CertificateChainInfo:
-    certificate_info_chain: list[CertificateInfo] = None
     bad_hostname: bool = None
     must_have_staple: bool = None
     leaf_certificate_is_ev: bool = None
@@ -105,6 +104,7 @@ class CertificateChainInfo:
     received_chain_has_valid_order: bool = None
     verified_chain_has_sha1_signature: bool = None
     verified_chain_has_legacy_symantec_anchor: bool = None
+    certificate_info_chain: list[CertificateInfo] = None
 
     def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult):
         cert_chain = cert_deployment.received_certificate_chain
@@ -253,8 +253,22 @@ class TLSResult:
 
     @staticmethod
     def get_accepted_curves(scan_result: ServerScanResult) -> list[str] | None:
+        # sslyze returns ANSI curve names occasionally
+        # In at least these two cases we can simply convert to
+        # using the equivalent SECG name, so that this aligns
+        # with CCCS guidance:
+        # https://datatracker.ietf.org/doc/html/rfc4492#appendix-A
+        def convert_to_secg(curve: str):
+            match curve:
+                case "prime192v1":
+                    return "secp192r1"
+                case "prime256v1":
+                    return "secp256r1"
+                case _:
+                    return curve
+
         try:
-            accepted_curves = [curve.name for curve in scan_result.scan_result.elliptic_curves.result.supported_curves]
+            accepted_curves = [convert_to_secg(curve.name) for curve in scan_result.scan_result.elliptic_curves.result.supported_curves]
             return accepted_curves
         except AttributeError:
             return None
