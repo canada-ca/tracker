@@ -21,7 +21,7 @@ if __name__ == "__main__":
     log_levels = ["WARNING", "INFO", "DEBUG"]
     log_level = log_levels[min(args.v, len(log_levels) - 1)]
 
-    logging.basicConfig(stream=sys.stdout, level=getattr(logging, log_level))
+    logging.basicConfig(stream=sys.stderr, level=getattr(logging, log_level))
 
     res = scan_domain(domain=args.domain, dkim_selectors=args.selectors)
     print(json.dumps(res, indent=4))
