@@ -38,9 +38,7 @@ def scan_domain(domain, dkim_selectors=None):
     """
 
     if dkim_selectors is None:
-        dkim_selectors = ["*"]
-    else:
-        dkim_selectors.append("*")
+        dkim_selectors = []
 
     scan_result = DNSScanResult(domain)
 
@@ -60,7 +58,7 @@ def scan_domain(domain, dkim_selectors=None):
     try:
         a_records = dns.resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
     except NoAnswer:
-        a_records = []
+        a_records = None
 
     scan_result.resolve_ips = [a_record.to_text() for a_record in a_records]
     scan_result.resolve_chain = [str(answer).splitlines() for answer in a_records.response.answer]
