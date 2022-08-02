@@ -191,13 +191,17 @@ class DKIMScanner:
         except KeyError:
             pub[b"k"] = b"rsa"
         if pub[b"k"] == b"rsa":
-            try:
-                pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
-                keysize = dkim.bitsize(pk["modulus"])
-            except KeyError:
-                raise KeyFormatError(f"incomplete public key: {s}")
-            except (TypeError, UnparsableKeyError) as e:
-                raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
+            if len(base64.b64decode(pub[b"p"])) == 0:
+                pk = None
+                keysize = None
+            else:
+                try:
+                    pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
+                    keysize = dkim.bitsize(pk["modulus"])
+                except KeyError:
+                    raise KeyFormatError(f"incomplete public key: {s}")
+                except (TypeError, UnparsableKeyError) as e:
+                    raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
             ktag = b"rsa"
         return pk, keysize, ktag
 
