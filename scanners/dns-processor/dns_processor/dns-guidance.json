@@ -1,0 +1,74 @@
+{
+  "dkim": {
+    "pass": [],
+    "fail": [
+      "dkim2",
+      "dkim11",
+      "dkim12",
+      "dkim13"
+    ],
+    "info": [
+      "dkim1",
+      "dkim3",
+      "dkim4",
+      "dkim5",
+      "dkim6",
+      "dkim7",
+      "dkim8",
+      "dkim9",
+      "dkim10",
+      "dkim14"
+    ]
+  },
+  "spf": {
+    "pass": [
+      "spf12"
+    ],
+    "fail": [
+      "spf2",
+      "spf3",
+      "spf4",
+      "spf5",
+      "spf6",
+      "spf10",
+      "spf11"
+    ],
+    "info": [
+      "spf1",
+      "spf7",
+      "spf8",
+      "spf9"
+    ]
+  },
+  "dmarc": {
+    "pass": [
+      "dmarc10",
+      "dmarc23"
+    ],
+    "fail": [
+      "dmarc2",
+      "dmarc3",
+      "dmarc9",
+      "dmarc12"
+    ],
+    "info": [
+      "dmarc1",
+      "dmarc4",
+      "dmarc5",
+      "dmarc6",
+      "dmarc7",
+      "dmarc8",
+      "dmarc11",
+      "dmarc13",
+      "dmarc14",
+      "dmarc15",
+      "dmarc16",
+      "dmarc17",
+      "dmarc18",
+      "dmarc19",
+      "dmarc20",
+      "dmarc21",
+      "dmarc22"
+    ]
+  }
+}
