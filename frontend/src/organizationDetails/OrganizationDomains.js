@@ -89,6 +89,7 @@ export function OrganizationDomains({ orgSlug }) {
           FallbackComponent={ErrorFallbackMessage}
         >
           <DomainCard
+            id={id}
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}

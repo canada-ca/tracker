@@ -584,4 +584,20 @@ export const SIGN_OUT = gql`
   }
 `
 
+export const FAVOURITE_DOMAIN = gql`
+  mutation FavouriteDomain($domainId: ID!) {
+    favouriteDomain(input: { domainId: $domainId }) {
+      result {
+        ... on Domain {
+          domain
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''

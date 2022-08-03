@@ -61,7 +61,6 @@ export const favouriteDomain = new mutationWithClientMutationId({
     let checkDomainCursor
     try {
       checkDomainCursor = await query`
-        WITH favourites
         FOR v, e IN 1..1 ANY ${domain._id} favourites
             FILTER e._from == ${user._id}
             RETURN e

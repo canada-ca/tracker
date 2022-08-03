@@ -5,12 +5,14 @@ import {
   Button,
   Divider,
   Flex,
+  IconButton,
   ListItem,
   SimpleGrid,
   Stack,
   Tag,
   TagLabel,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
@@ -18,10 +20,43 @@ import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 import { useLingui } from '@lingui/react'
+import { StarIcon } from '@chakra-ui/icons'
+import { FAVOURITE_DOMAIN } from '../graphql/mutations'
+import { useMutation } from '@apollo/client'
+import { useUserVar } from '../utilities/userState'
 
-export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
+export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
   const location = useLocation()
   const { i18n } = useLingui()
+  const toast = useToast()
+  const { isLoggedIn } = useUserVar()
+
+  const [favouriteDomain, { _loading, _error }] = useMutation(
+    FAVOURITE_DOMAIN,
+    {
+      onError: ({ message }) => {
+        toast({
+          title: t`An error occurred while favouriting a domain.`,
+          description: message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onCompleted({ _requestScan }) {
+        toast({
+          title: t`Favourited Domain`,
+          description: t`You have successfully added ${url} to myTracker.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
     border: '1px solid',
@@ -123,13 +158,25 @@ export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
             </Button>
           )}
         </Stack>
-        <ScanDomainButton domainUrl={url} ml={4} />
+        <Stack ml={4}>
+          <ScanDomainButton domainUrl={url} />
+          {isLoggedIn() && (
+            <IconButton
+              onClick={async () => {
+                await favouriteDomain({ variables: { domainId: id } })
+              }}
+              variant="primary"
+              icon={<StarIcon />}
+            />
+          )}
+        </Stack>
       </Flex>
     </ListItem>
   )
 }
 
 DomainCard.propTypes = {
+  id: string,
   url: string.isRequired,
   status: object,
   hasDMARCReport: bool,
