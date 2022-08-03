@@ -91,7 +91,7 @@ def process_dkim(dkim_results):
         else:
             dkim_statuses.append(True)
 
-    dkim_status = all(dkim_statuses)
+    dkim_status = all(dkim_statuses) and len(processed_dkim) > 0
 
     return processed_dkim, dkim_status
 
@@ -222,7 +222,7 @@ def process_dmarc(dmarc_results):
             else:
                 dmarc_tags.append("dmarc21")
 
-    # Check RUA Tags
+    # Check RUA _tags
     # "rua": {
     #   "value": [
     #     {
@@ -257,7 +257,7 @@ def process_dmarc(dmarc_results):
                 if "dmarc15" not in dmarc_tags:
                     dmarc_tags.append("dmarc15")
 
-    # Check RUF Tags
+    # Check RUF _tags
     # "ruf": {
     #   "value": [
     #     {
@@ -337,9 +337,6 @@ def process_dmarc(dmarc_results):
 
 
 def process_results(results):
-    timestamp = str(datetime.datetime.utcnow())
-    tags = {"dmarc": [], "dkim": {}, "spf": []}
-
     dkim_tags, dkim_status = process_dkim(results["dkim"])
 
     dmarc_tags, dmarc_status = process_dmarc(results["dmarc"])
@@ -365,27 +362,26 @@ def process_results(results):
                 phase = "maintain"
 
     dmarc_results = {
-        "timestamp": timestamp,
         "record": results["dmarc"].get("record", None),
         "pPolicy": results["dmarc"].get("tags", {}).get("p", {}).get("value", None),
+        "phase": phase,
         "spPolicy": results["dmarc"].get("tags", {}).get("sp", {}).get("value", None),
         "pct": results["dmarc"].get("tags", {}).get("pct", {}).get("value", None),
         "rawJson": results["dmarc"],
-        "neutralTags": dmarc_tags["neutral_tags"],
-        "positiveTags": dmarc_tags["positive_tags"],
-        "negativeTags": dmarc_tags["negative_tags"],
+        "neutral_tags": dmarc_tags["neutral_tags"],
+        "positive_tags": dmarc_tags["positive_tags"],
+        "negative_tags": dmarc_tags["negative_tags"],
     }
 
     spf_record = results["spf"].get("record", None)
     spf_results = {
-        "timestamp": timestamp,
         "record": spf_record,
         "lookups": results["spf"].get("dns_lookups", None),
         "spfDefault": results["spf"].get("all", None),
         "rawJson": results["spf"],
-        "neutralTags": spf_tags["neutral_tags"],
-        "positiveTags": spf_tags["positive_tags"],
-        "negativeTags": spf_tags["negative_tags"],
+        "neutral_tags": spf_tags["neutral_tags"],
+        "positive_tags": spf_tags["positive_tags"],
+        "negative_tags": spf_tags["negative_tags"],
     }
 
     dkim_results = {}
@@ -395,17 +391,20 @@ def process_results(results):
             key_modulus = str(results["dkim"][selector]["public_key_modulus"])
 
             dkim_results[selector] = {
-                        "record": results["dkim"][selector].get("txt_record", None),
-                        "keyLength": results["dkim"][selector].get("key_size", None),
-                        "keyModulus": key_modulus,
-                        "rawJson": results["dkim"][selector],
-                        "neutralTags": dkim_tags[selector]["neutral_tags"],
-                        "positiveTags": dkim_tags[selector]["positive_tags"],
-                        "negativeTags": dkim_tags[selector]["negative_tags"],
-                    }
+                "record": results["dkim"][selector].get("txt_record", None),
+                "key_length": results["dkim"][selector].get("key_size", None),
+                "key_modulus": key_modulus,
+                "key_type": results["dkim"][selector].get("key_type", None),
+                "public_exponent": results["dkim"][selector].get("public_exponent", None),
+                "neutral_tags": dkim_tags[selector]["neutral_tags"],
+                "positive_tags": dkim_tags[selector]["positive_tags"],
+                "negative_tags": dkim_tags[selector]["negative_tags"],
+            }
+
+    timestamp = str(datetime.datetime.utcnow())
 
     return {
-        "dmarc": dmarc_results,
-        "spf": spf_results,
-        "dkim": dkim_results
+        "dmarc": {"timestamp": timestamp, "status": dmarc_status, "results": dmarc_results},
+        "spf": {"timestamp": timestamp, "status": spf_status, "results": spf_results},
+        "dkim": {"timestamp": timestamp, "status": dkim_status, "results": dkim_results}
     }

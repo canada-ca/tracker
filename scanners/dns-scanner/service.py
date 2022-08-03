@@ -69,6 +69,19 @@ async def run(loop):
         try:
             logger.info(f"Starting DNS scan on '{domain}' with DKIM selectors '{str(selectors)}'")
             scan_results = scan_domain(domain=domain, dkim_selectors=selectors)
+
+            await nc.publish(
+                f"{PUBLISH_TO}.{domain_key}.dns",
+                json.dumps(
+                    {
+                        "results": scan_results,
+                        "scan_type": "dns",
+                        "user_key": user_key,
+                        "domain_key": domain_key,
+                        "shared_id": shared_id,
+                    }
+                ).encode(),
+            )
         except TimeoutError:
             logger.error(
                 f"Timeout while scanning {domain} with DKIM selectors '{str(selectors)}'"
@@ -90,19 +103,6 @@ async def run(loop):
                     }
                 ).encode(),
             )
-
-        await nc.publish(
-            f"{PUBLISH_TO}.{domain_key}.dns",
-            json.dumps(
-                {
-                    "results": scan_results,
-                    "scan_type": "dns",
-                    "user_key": user_key,
-                    "domain_key": domain_key,
-                    "shared_id": shared_id,
-                }
-            ).encode(),
-        )
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
