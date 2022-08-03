@@ -44,6 +44,7 @@ const collections = [
   'scanSummaries',
   'affiliations',
   'claims',
+  'favourites',
   'domainsDKIM',
   'dkimToDkimResults',
   'domainsDMARC',
