@@ -28,19 +28,8 @@ class HTTPConnection:
     blocked_category: str = None
 
     def __init__(self, http_response: Response):
-        # print("DICT", http_response.__dict__)
-        # print("LOCATION", http_response.getheader("location"))
-        # print("INFO", http_response.info())
-        # print(http_response.geturl())
-        # print("CODE", http_response.getcode())
-        # print("HEADERS", http_response.getheaders())
-        # if 200 <= http_response.status < 300:
-        #     self.live = "LIVE"
-        # else if 300 <= http_
-
         self.redirect_to = http_response.headers.get("location", None)
         self.status_code = http_response.status_code
-        headers = http_response.headers
         self.headers = dict(http_response.headers)
         if http_response.status_code == 403:
             content = http_response.text
