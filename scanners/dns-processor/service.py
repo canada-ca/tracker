@@ -69,40 +69,21 @@ async def run(loop):
         user_key = payload.get("user_key")
         # shared_id = payload.get("shared_id")
 
-        print(json.dumps(results, indent=4))
-
         processed_results = process_results(results)
 
-        dmarc = processed_results.get("dmarc")
-        dmarc_status = dmarc.get("status")
-
-        spf = processed_results.get("spf")
-        spf_status = spf.get("status")
-
-        dkim = processed_results.get("dkim")
-        dkim_status = dkim.get("status")
+        dmarc_status = processed_results.get("dmarc").get("status")
+        spf_status = processed_results.get("spf").get("status")
+        dkim_status = processed_results.get("dkim").get("status")
 
         if user_key is None:
             try:
-                dmarc_entry = db.collection("dmarc").insert(dmarc)
-                spf_entry = db.collection("spf").insert(spf)
-                dkim_entry = db.collection("dkim").insert(dkim)
+                dns_entry = db.collection("dns").insert(processed_results)
 
                 domain = db.collection("domains").get({"_key": domain_key})
-                db.collection("domainsDMARC").insert(
+                db.collection("domainsDNS").insert(
                     {
                         "_from": domain["_id"],
-                        "_to": dmarc_entry["_id"],
-                    }
-                )
-                db.collection("domainsSPF").insert(
-                    {"_from": domain["_id"],
-                     "_to": spf_entry["_id"]}
-                )
-                db.collection("domainsDKIM").insert(
-                    {
-                        "_from": domain["_id"],
-                        "_to": dkim_entry["_id"],
+                        "_to": dns_entry["_id"]
                     }
                 )
 
@@ -132,7 +113,9 @@ async def run(loop):
                 }.items():
                     domain["status"][key] = val
 
-                domain.update({"phase": dmarc.get("results").get("phase")})
+                dmarc_phase = processed_results.get("dmarc").get("results").get("phase")
+
+                domain.update({"phase": dmarc_phase})
                 db.collection("domains").update(domain)
 
             except Exception as e:

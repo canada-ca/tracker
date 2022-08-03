@@ -363,11 +363,10 @@ def process_results(results):
 
     dmarc_results = {
         "record": results["dmarc"].get("record", None),
-        "pPolicy": results["dmarc"].get("tags", {}).get("p", {}).get("value", None),
-        "phase": phase,
-        "spPolicy": results["dmarc"].get("tags", {}).get("sp", {}).get("value", None),
+        "p_policy": results["dmarc"].get("tags", {}).get("p", {}).get("value", None),
+        "sp_policy": results["dmarc"].get("tags", {}).get("sp", {}).get("value", None),
         "pct": results["dmarc"].get("tags", {}).get("pct", {}).get("value", None),
-        "rawJson": results["dmarc"],
+        "phase": phase,
         "neutral_tags": dmarc_tags["neutral_tags"],
         "positive_tags": dmarc_tags["positive_tags"],
         "negative_tags": dmarc_tags["negative_tags"],
@@ -377,8 +376,7 @@ def process_results(results):
     spf_results = {
         "record": spf_record,
         "lookups": results["spf"].get("dns_lookups", None),
-        "spfDefault": results["spf"].get("all", None),
-        "rawJson": results["spf"],
+        "spf_default": results["spf"].get("all", None),
         "neutral_tags": spf_tags["neutral_tags"],
         "positive_tags": spf_tags["positive_tags"],
         "negative_tags": spf_tags["negative_tags"],
@@ -387,13 +385,13 @@ def process_results(results):
     dkim_results = {}
     if not results["dkim"].get("error"):
         for selector in results["dkim"].keys():
-            # store key_modulus as string, ArangoDB is not capable or storing numbers this size
-            key_modulus = str(results["dkim"][selector]["public_key_modulus"])
+            if results["dkim"][selector].get("error", None):
+                dkim_results[selector] = results["dkim"][selector]
+                continue
 
             dkim_results[selector] = {
                 "record": results["dkim"][selector].get("txt_record", None),
                 "key_length": results["dkim"][selector].get("key_size", None),
-                "key_modulus": key_modulus,
                 "key_type": results["dkim"][selector].get("key_type", None),
                 "public_exponent": results["dkim"][selector].get("public_exponent", None),
                 "neutral_tags": dkim_tags[selector]["neutral_tags"],
@@ -401,10 +399,25 @@ def process_results(results):
                 "negative_tags": dkim_tags[selector]["negative_tags"],
             }
 
+            # store key_modulus as string, ArangoDB is not capable or storing numbers this size
+            key_modulus = results["dkim"][selector].get("public_key_modulus", None)
+            if key_modulus:
+                dkim_results[selector]["key_modulus"] = key_modulus
+
     timestamp = str(datetime.datetime.utcnow())
 
     return {
-        "dmarc": {"timestamp": timestamp, "status": dmarc_status, "results": dmarc_results},
-        "spf": {"timestamp": timestamp, "status": spf_status, "results": spf_results},
-        "dkim": {"timestamp": timestamp, "status": dkim_status, "results": dkim_results}
+        "timestamp": timestamp,
+        "domain": results["domain"],
+        "base_domain": results["base_domain"],
+        "record_exists": results["record_exists"],
+        "rcode": results["rcode"],
+        "resolve_chain": results["resolve_chain"],
+        "resolve_ips": results["resolve_ips"],
+        "cname_record": results["cname_record"],
+        "mx_records": results["mx_records"],
+        "ns_records": results["ns_records"],
+        "dmarc": {"status": dmarc_status, "results": dmarc_results},
+        "spf": {"status": spf_status, "results": spf_results},
+        "dkim": {"status": dkim_status, "results": dkim_results}
     }

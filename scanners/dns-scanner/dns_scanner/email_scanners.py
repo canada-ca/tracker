@@ -216,20 +216,20 @@ class DKIMScanner:
                 # in /etc/resolv.conf
                 lookup_url = f"{selector}._domainkey.{self.domain}."
                 # Retrieve public key from DNS
-                pk_txt = dnsplug.get_txt_dnspython(lookup_url)
-                dkim_txt_values_bytes = dkim.util.parse_tag_value(pk_txt)
+                txt_record_bytes = dnsplug.get_txt_dnspython(lookup_url)
+                dkim_txt_values_bytes = dkim.util.parse_tag_value(txt_record_bytes)
 
-                txt_record = {}
+                parsed_txt_record = {}
 
                 for key, val in dkim_txt_values_bytes.items():
-                    txt_record[key.decode("ascii")] = val.decode("ascii")
+                    parsed_txt_record[key.decode("ascii")] = val.decode("ascii")
 
 
-                for key, val in txt_record.items():
+                for key, val in parsed_txt_record.items():
                     if key == "t":
                         record[selector]["t_value"] = val
 
-                pk, keysize, ktag = self.load_pk(lookup_url, pk_txt)
+                pk, keysize, ktag = self.load_pk(lookup_url, txt_record_bytes)
                 ktag = ktag.decode("ascii")
 
                 if pk and pk.get("publicExponent"):
@@ -242,8 +242,8 @@ class DKIMScanner:
                 else:
                     modulus = None
 
-                record[selector]["txt_record"] = txt_record
-                record[selector]["public_key_value"] = txt_record.get("p")
+                record[selector]["record"] = txt_record_bytes.decode("ascii")
+                record[selector]["public_key_value"] = parsed_txt_record.get("p")
                 record[selector]["key_size"] = keysize
                 record[selector]["key_type"] = ktag
                 record[selector]["public_key_modulus"] = modulus
