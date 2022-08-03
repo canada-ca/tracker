@@ -1089,3 +1089,69 @@ export const WEBCHECK_ORGS = gql`
     }
   }
 `
+export const FIND_MY_TRACKER = gql`
+  query FindMyTracker(
+    $first: Int
+    $after: String
+    $orderBy: DomainOrder
+    $search: String
+  ) {
+    findMyTracker {
+      id
+      summaries {
+        https {
+          categories {
+            name
+            count
+            percentage
+          }
+          total
+        }
+        dmarcPhase {
+          categories {
+            name
+            count
+            percentage
+          }
+          total
+        }
+      }
+      domainCount
+      domains(
+        orderBy: $orderBy
+        search: $search
+        first: $first
+        after: $after
+        myTracker: true
+      ) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        totalCount
+        edges {
+          node {
+            id
+            domain
+            hasDMARCReport
+            status {
+              ciphers
+              curves
+              dkim
+              dmarc
+              hsts
+              https
+              policy
+              protocols
+              spf
+              ssl
+            }
+          }
+          cursor
+        }
+      }
+    }
+  }
+`

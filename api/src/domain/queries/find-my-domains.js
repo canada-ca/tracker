@@ -26,17 +26,6 @@ export const findMyDomains = {
       type: GraphQLString,
       description: 'String used to search for domains.',
     },
-    // filters: {
-    //   type: new GraphQLList(
-    //     new GraphQLObjectType({
-    //       name: 'FilterTags',
-    //       description:
-    //         'Tags provided to the query to filter by certain values or user-generated tags.',
-    //       fields: () => ({}),
-    //     }),
-    //   ),
-    //   description: '',
-    // },
     ...connectionArgs,
   },
   resolve: async (

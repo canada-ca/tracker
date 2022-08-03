@@ -74,7 +74,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
       <Flex
         width="100%"
         px="4"
-        py={hasDMARCReport ? '2.5' : '6'}
+        py={hasDMARCReport || isLoggedIn() ? '2.5' : '6'}
         borderWidth="1px"
         rounded="md"
         borderColor="black"
@@ -166,6 +166,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
                 await favouriteDomain({ variables: { domainId: id } })
               }}
               variant="primary"
+              aria-label={`favourite ${url}`}
               icon={<StarIcon />}
             />
           )}
