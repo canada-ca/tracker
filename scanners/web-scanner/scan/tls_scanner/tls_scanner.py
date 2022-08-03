@@ -220,8 +220,6 @@ class TLSResult:
             self.error = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
             return
 
-        print(json.dumps(scan_results_as_dict))
-
     # Convert object to dict
     def asdict(self):
         return dataclass_asdict(self)

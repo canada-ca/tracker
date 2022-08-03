@@ -7,7 +7,7 @@ import signal
 
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
-from web_scanner import scan_web
+from scan.web_scanner import scan_web
 import nats
 
 load_dotenv()

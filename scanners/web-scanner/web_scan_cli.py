@@ -1,7 +1,6 @@
 import argparse
 import json
 import logging
-import sys
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -15,7 +14,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    from web_scanner import scan_web
+    from scan.web_scanner import scan_web
 
     if args.v:
         logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s::%(name)::%(levelname)s] :: %(message)s')
