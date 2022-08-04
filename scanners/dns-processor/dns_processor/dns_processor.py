@@ -366,7 +366,7 @@ def process_results(results):
     spf_results = {
         "record": spf_record,
         "lookups": results["spf"].get("dns_lookups", None),
-        "spf_default": results["spf"].get("all", None),
+        "spf_default": results["spf"].get("parsed", {}).get("all", None),
         "neutral_tags": spf_tags["neutral_tags"],
         "positive_tags": spf_tags["positive_tags"],
         "negative_tags": spf_tags["negative_tags"],
