@@ -1089,7 +1089,7 @@ export const WEBCHECK_ORGS = gql`
     }
   }
 `
-export const FIND_MY_TRACKER = gql`
+export const MY_TRACKER_PAGE = gql`
   query FindMyTracker(
     $first: Int
     $after: String
@@ -1097,7 +1097,6 @@ export const FIND_MY_TRACKER = gql`
     $search: String
   ) {
     findMyTracker {
-      id
       summaries {
         https {
           categories {

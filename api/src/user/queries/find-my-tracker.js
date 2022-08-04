@@ -8,6 +8,7 @@ export const findMyTracker = {
     'Select all information on a selected organization that a user has access to.',
   resolve: async (
     _,
+    __,
     {
       i18n,
       userKey,

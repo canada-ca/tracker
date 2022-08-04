@@ -3,7 +3,9 @@ import { t } from '@lingui/macro'
 export const loadMyTrackerByUserId =
   ({ query, userKey, i18n }) =>
   async () => {
-    const userDBId = `users/${userKey}`
+    // const userDBId = `users/${userKey}`
+    const userDBId = `users/127188282`
+    userKey = '127188282'
 
     let requestedDomainInfo
     try {
@@ -13,14 +15,17 @@ export const loadMyTrackerByUserId =
                 OPTIONS {bfs: true}
                 RETURN v._key
         )
-        FOR domain IN domains
-            FILTER domain._key IN favDomainKeys
-            RETURN { 
-                id: domain._key, 
-                _type: "domain", 
-                "phase": domain.phase, 
-                "httpsStatus": domain.status.https
-            }
+        LET favDomains = (
+            FOR domain IN domains
+                FILTER domain._key IN favDomainKeys
+                RETURN { 
+                    id: domain._key, 
+                    _type: "domain", 
+                    "phase": domain.phase, 
+                    "httpsStatus": domain.status.https
+                }
+        )
+        RETURN { "domains": favDomains }
         `
     } catch (err) {
       console.error(
@@ -39,8 +44,6 @@ export const loadMyTrackerByUserId =
       throw new Error(i18n._(t`Unable to load domain(s). Please try again.`))
     }
 
-    console.log('domainsInfo:', domainsInfo)
-
     const returnSummaries = {
       https: {
         pass: 0,
@@ -57,7 +60,7 @@ export const loadMyTrackerByUserId =
       },
     }
 
-    domainsInfo.forEach(({ phase, httpsStatus }) => {
+    domainsInfo.domains.forEach(({ phase, httpsStatus }) => {
       // calculate https summary
       if (httpsStatus === 'pass') {
         returnSummaries.https.pass++

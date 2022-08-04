@@ -4,17 +4,15 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql'
-import { connectionArgs, globalIdField } from 'graphql-relay'
+import { connectionArgs } from 'graphql-relay'
 
 import { organizationSummaryType } from '../../organization/objects/organization-summary'
-import { nodeInterface } from '../../node'
 import { domainOrder } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 
 export const myTrackerType = new GraphQLObjectType({
   name: 'MyTrackerResult',
   fields: () => ({
-    id: globalIdField('favourite'),
     summaries: {
       type: organizationSummaryType,
       description:
@@ -26,40 +24,6 @@ export const myTrackerType = new GraphQLObjectType({
       description: 'The number of domains associated with this organization.',
       resolve: ({ domainCount }) => domainCount,
     },
-    // toCsv: {
-    //   type: GraphQLString,
-    //   description:
-    //     'CSV formatted output of all domains in the organization including their email and web scan statuses.',
-    //   resolve: async (
-    //     { _id },
-    //     _args,
-    //     { loaders: { loadOrganizationDomainStatuses } },
-    //   ) => {
-    //     const domains = await loadOrganizationDomainStatuses({
-    //       orgId: _id,
-    //     })
-    //     const headers = [
-    //       'domain',
-    //       'https',
-    //       'hsts',
-    //       'ciphers',
-    //       'curves',
-    //       'protocols',
-    //       'spf',
-    //       'dkim',
-    //       'dmarc',
-    //     ]
-    //     let csvOutput = headers.join(',')
-    //     domains.forEach((domain) => {
-    //       let csvLine = `${domain.domain}`
-    //       csvLine += headers.slice(1).reduce((previousValue, currentHeader) => {
-    //         return `${previousValue},${domain.status[currentHeader]}`
-    //       }, '')
-    //       csvOutput += `\n${csvLine}`
-    //     })
-    //     return csvOutput
-    //   },
-    // },
     domains: {
       type: domainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
@@ -95,7 +59,6 @@ export const myTrackerType = new GraphQLObjectType({
       },
     },
   }),
-  interfaces: [nodeInterface],
   description:
     'Organization object containing information for a given Organization.',
 })

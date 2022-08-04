@@ -1,9 +1,4 @@
-import {
-  GraphQLBoolean,
-  // GraphQLList,
-  // GraphQLObjectType,
-  GraphQLString,
-} from 'graphql'
+import { GraphQLBoolean, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { domainOrder } from '../inputs'
