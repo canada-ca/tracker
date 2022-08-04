@@ -4,6 +4,7 @@ import logging
 import asyncio
 import os
 import signal
+import sys
 
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
@@ -12,11 +13,11 @@ import nats
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO, format='[%(asctime)s::%(name)::%(levelname)s] :: %(message)s')
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "web-scanner")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.web")
 PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
 QUEUE_GROUP = os.getenv("QUEUE_GROUP", "web-scanner")
 SERVER_LIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
@@ -108,6 +109,7 @@ async def scan_service(loop):
                     "results": processed_results,
                     "scan_type": "web",
                     "user_key": user_key,
+                    "domain": domain,
                     "domain_key": domain_key,
                     "shared_id": shared_id,
                     "ip_address": ip_address

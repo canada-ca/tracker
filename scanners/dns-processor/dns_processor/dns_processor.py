@@ -1,24 +1,14 @@
 import json
-import argparse, sys
-import asyncio
 import os
-import signal
 import datetime
-import traceback
-import logging
-from typing import Dict, Any, List
-
 from dotenv import load_dotenv
-from arango import ArangoClient
-from nats.aio.client import Client as NATS
+
 
 load_dotenv()
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 guidance_file = open(f"{current_directory}/dns-guidance.json")
 guidance = json.load(guidance_file)
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def process_dkim(dkim_results):
@@ -402,7 +392,7 @@ def process_results(results):
             # store key_modulus as string, ArangoDB is not capable or storing numbers this size
             key_modulus = results["dkim"][selector].get("public_key_modulus", None)
             if key_modulus:
-                dkim_results[selector]["key_modulus"] = key_modulus
+                dkim_results[selector]["key_modulus"] = str(key_modulus)
 
     timestamp = str(datetime.datetime.utcnow())
 

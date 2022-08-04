@@ -4,21 +4,24 @@ import logging
 import asyncio
 import os
 import signal
+import sys
+import traceback
+
 from arango import ArangoClient
 from dotenv import load_dotenv
-from concurrent.futures import TimeoutError
-from web_processor.web_processor import process_results
 import nats
+from web_processor.web_processor import process_results
+
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "web_processor")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.web")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.web.results")
 PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP", "web_processor")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP", "web-processor")
 SERVER_LIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVER_LIST.split(",")
 
@@ -26,7 +29,6 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
-
 
 
 logging.basicConfig(level=logging.INFO)
@@ -74,14 +76,12 @@ async def processor_service(loop):
 
         processed_results = process_results(results)
 
-
-
         if user_key is None:
             try:
-                sslEntry = db.collection("ssl").insert(ssl_results)
+                ssl_entry = db.collection("ssl").insert(processed_results)
                 domain = db.collection("domains").get({"_key": domain_key})
                 db.collection("domainsSSL").insert(
-                    {"_from": domain["_id"], "timestamp": timestamp, "_to": sslEntry["_id"]}
+                    {"_from": domain["_id"], "timestamp": processed_results["timestamp"], "_to": ssl_entry["_id"]}
                 )
 
                 if domain.get("status", None) == None:
@@ -103,10 +103,10 @@ async def processor_service(loop):
                         }
                     )
 
-                domain["status"]["ssl"] = ssl_status
-                domain["status"]["protocols"] = protocol_status
-                domain["status"]["ciphers"] = cipher_status
-                domain["status"]["curves"] = curve_status
+                domain["status"]["ssl"] = processed_results["ssl_status"]
+                domain["status"]["protocols"] = processed_results["protocol_status"]
+                domain["status"]["ciphers"] = processed_results["cipher_status"]
+                domain["status"]["curves"] = processed_results["curve_status"]
                 db.collection("domains").update(domain)
 
             except Exception as e:
@@ -114,25 +114,6 @@ async def processor_service(loop):
                     f"TLS processor: database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 return
-
-            return {
-                "sharedId": shared_id,
-                "domainKey": domain_key,
-                "status": ssl_status,
-                "results": ssl_results,
-            }
-
-        else:
-            publish_results(
-                {
-                    "sharedId": shared_id,
-                    "domainKey": domain_key,
-                    "status": ssl_status,
-                    "results": ssl_results,
-                },
-                "ssl",
-                user_key,
-            )
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 

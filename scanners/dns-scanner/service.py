@@ -13,7 +13,7 @@ import nats
 
 load_dotenv()
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "dns-scanner")
@@ -75,6 +75,7 @@ async def run(loop):
                 json.dumps(
                     {
                         "results": scan_results,
+                        "domain": domain,
                         "scan_type": "dns",
                         "user_key": user_key,
                         "domain_key": domain_key,
@@ -96,7 +97,7 @@ async def run(loop):
                             "mx": {"error": "missing"},
                             "dkim": {"error": "missing"},
                         },
-                        "scan_type": "dns",
+                        "domain": domain,
                         "user_key": user_key,
                         "domain_key": domain_key,
                         "shared_id": shared_id,

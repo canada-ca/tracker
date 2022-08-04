@@ -38,8 +38,8 @@ def process_tags(results):
         return processed_tags
 
     all_cipher_suites = []
-    for ciphers in results["tls_result"]["accepted_cipher_suites"]:
-        all_cipher_suites.extend(ciphers)
+    for ciphers in results["tls_result"]["accepted_cipher_suites"].keys():
+        all_cipher_suites.extend(results["tls_result"]["accepted_cipher_suites"][ciphers])
 
     for cipher in all_cipher_suites:
         if "RC4" in cipher:
@@ -68,7 +68,8 @@ def process_tags(results):
             weak_curves.append(curve)
 
     try:
-        signature_algorithm = results["tls_result"]["certificate_chain_info"][0]["signature_hash_algorithm"]
+        signature_algorithm = results["tls_result"]["certificate_chain_info"]["certificate_info_chain"][0][
+            "signature_hash_algorithm"]
     except ValueError:
         signature_algorithm = None
 
@@ -77,7 +78,7 @@ def process_tags(results):
             guidance["signature_algorithms"]["recommended"]
             + guidance["signature_algorithms"]["sufficient"]
         ):
-            if results["signature_algorithm"].lower() in algorithm:
+            if signature_algorithm.lower() in algorithm:
                 positive_tags.append("ssl5")
                 break
 
@@ -87,18 +88,16 @@ def process_tags(results):
     if len(weak_curves) > 0:
         negative_tags.append("ssl10")
 
-    if results["tls_results"]["is_vulnerable_to_heartbleed"]:
+    if results["tls_result"]["is_vulnerable_to_heartbleed"]:
         negative_tags.append("ssl7")
 
-    if results["tls_results"]["is_vulnerable_to_ccs_injection"]:
+    if results["tls_result"]["is_vulnerable_to_ccs_injection"]:
         negative_tags.append("ssl8")
 
     return processed_tags
 
 
 def process_results(results):
-    timestamp = str(datetime.datetime.utcnow())
-
     processed_tags = process_tags(results)
 
     if results.get("tls_result").get("error") == "unreachable":
@@ -125,7 +124,7 @@ def process_results(results):
         protocol_status = "pass"
 
         for suite_list in unaccepted_tls_protocols:
-            if len(results["tls_results"]["accepted_cipher_suites"][suite_list]) > 0:
+            if len(results["tls_result"]["accepted_cipher_suites"][suite_list]) > 0:
                 protocol_status = "fail"
 
         # get cipher status
@@ -134,8 +133,13 @@ def process_results(results):
         # get curve status
         curve_status = "fail" if len(processed_tags["weak_curves"]) > 0 else "pass"
 
-    tls_results = {
-        "timestamp": timestamp,
+    timestamp = str(datetime.datetime.utcnow())
+
+    tls_result = {
+        "domain": results["tls_result"]["request_domain"],
+        "ip_address": results["tls_result"]["request_ip_address"],
+        "server_location": results["tls_result"]["server_location"],
+        "certificate_chain_info": results["tls_result"]["certificate_chain_info"],
         "strong_ciphers": processed_tags["strong_ciphers"],
         "acceptable_ciphers": processed_tags["acceptable_ciphers"],
         "weak_ciphers": processed_tags["weak_ciphers"],
@@ -154,4 +158,4 @@ def process_results(results):
         "curve_status": curve_status
     }
 
-    return tls_results
+    return {"tls_result": tls_result, "chain_result": results["chain_result"],"timestamp": timestamp}

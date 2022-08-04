@@ -5,6 +5,7 @@ import asyncio
 import os
 import signal
 import logging
+import sys
 import traceback
 
 from dotenv import load_dotenv
@@ -15,7 +16,7 @@ from dns_processor.dns_processor import process_results
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "dns-processor")
@@ -67,7 +68,7 @@ async def run(loop):
         results = payload.get("results")
         domain_key = payload.get("domain_key")
         user_key = payload.get("user_key")
-        # shared_id = payload.get("shared_id")
+        shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
 
@@ -83,6 +84,7 @@ async def run(loop):
                 db.collection("domainsDNS").insert(
                     {
                         "_from": domain["_id"],
+                        "timestamp": processed_results["timestamp"],
                         "_to": dns_entry["_id"]
                     }
                 )
@@ -117,6 +119,20 @@ async def run(loop):
 
                 domain.update({"phase": dmarc_phase})
                 db.collection("domains").update(domain)
+
+                for ip in results["resolve_ips"]:
+                    await nc.publish(
+                        f"{PUBLISH_TO}.{domain_key}.web",
+                        json.dumps(
+                            {
+                                "user_key": user_key,
+                                "domain": domain["domain"],
+                                "domain_key": domain_key,
+                                "shared_id": shared_id,
+                                "ip_address": ip,
+                            }
+                        ).encode(),
+                    )
 
             except Exception as e:
                 logging.error(
