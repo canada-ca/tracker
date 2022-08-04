@@ -37,9 +37,32 @@ def process_tags(results):
 
         return processed_tags
 
+    accepted_cipher_suites = {}
+
     all_cipher_suites = []
-    for ciphers in results["tls_result"]["accepted_cipher_suites"].keys():
-        all_cipher_suites.extend(results["tls_result"]["accepted_cipher_suites"][ciphers])
+    for protocol in results["tls_result"]["accepted_cipher_suites"].keys():
+        accepted_cipher_suites[protocol] = []
+        for cipher_suite in results["tls_result"]["accepted_cipher_suites"][protocol]:
+            if cipher_suite in (
+                guidance["ciphers"]["1.2"]["recommended"]
+                + guidance["ciphers"]["1.3"]["recommended"]
+            ):
+                strength = "strong"
+            elif cipher_suite in (
+                guidance["ciphers"]["1.2"]["sufficient"]
+                + guidance["ciphers"]["1.3"]["sufficient"]
+            ):
+                strength = "acceptable"
+            else:
+                strength = "weak"
+
+            accepted_cipher_suites[protocol].append({"name": cipher_suite, "strength": strength})
+
+        all_cipher_suites.extend(results["tls_result"]["accepted_cipher_suites"][protocol])
+
+
+    for protocol in accepted_cipher_suites.keys():
+
 
     for cipher in all_cipher_suites:
         if "RC4" in cipher:
