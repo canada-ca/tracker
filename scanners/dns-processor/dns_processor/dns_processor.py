@@ -380,7 +380,7 @@ def process_results(results):
                 continue
 
             dkim_results[selector] = {
-                "record": results["dkim"][selector].get("txt_record", None),
+                "record": results["dkim"][selector].get("record", None),
                 "key_length": results["dkim"][selector].get("key_size", None),
                 "key_type": results["dkim"][selector].get("key_type", None),
                 "public_exponent": results["dkim"][selector].get("public_exponent", None),
