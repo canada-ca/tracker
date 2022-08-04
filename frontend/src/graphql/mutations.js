@@ -600,4 +600,20 @@ export const FAVOURITE_DOMAIN = gql`
   }
 `
 
+export const UNFAVOURITE_DOMAIN = gql`
+  mutation ($domainId: ID!) {
+    unfavouriteDomain(input: { domainId: $domainId }) {
+      result {
+        ... on DomainResult {
+          status
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''
