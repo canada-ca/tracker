@@ -140,6 +140,9 @@ export const getTypeNames = () => gql`
     # Query the currently logged in user.
     findMe: PersonalUser
 
+    # Select all information on a selected organization that a user has access to.
+    findMyTracker: MyTrackerResult
+
     # Select users an admin has access to.
     findMyUsers(
       # Ordering options for user affiliation
@@ -2532,6 +2535,42 @@ export const getTypeNames = () => gql`
     NONE
   }
 
+  # Organization object containing information for a given Organization.
+  type MyTrackerResult {
+    # Summaries based on scan types that are preformed on the given organizations domains.
+    summaries: OrganizationSummary
+
+    # The number of domains associated with this organization.
+    domainCount: Int
+
+    # The domains which are associated with this organization.
+    domains(
+      # Ordering options for domain connections.
+      orderBy: DomainOrder
+
+      # Limit domains to those that belong to an organization that has ownership.
+      ownership: Boolean
+
+      #
+      myTracker: Boolean
+
+      # String used to search for domains.
+      search: String
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): DomainConnection
+  }
+
   # A connection to a list of items.
   type UserConnection {
     # Information to aid in pagination.
@@ -2791,11 +2830,17 @@ export const getTypeNames = () => gql`
     # Mutation used to create a new domain for an organization.
     createDomain(input: CreateDomainInput!): CreateDomainPayload
 
+    #
+    favouriteDomain(input: FavouriteDomainInput!): FavouriteDomainPayload
+
     # This mutation allows the removal of unused domains.
     removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
 
     # This mutation is used to step a manual scan on a requested domain.
     requestScan(input: RequestScanInput!): RequestScanPayload
+
+    #
+    unfavouriteDomain(input: UnfavouriteDomainInput!): UnfavouriteDomainPayload
 
     # Mutation allows the modification of domains if domain is updated through out its life-cycle
     updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
@@ -3066,6 +3111,18 @@ export const getTypeNames = () => gql`
     fr: String
   }
 
+  type FavouriteDomainPayload {
+    # 'CreateDomainUnion' returning either a 'Domain', or 'CreateDomainError' object.
+    result: CreateDomainUnion
+    clientMutationId: String
+  }
+
+  input FavouriteDomainInput {
+    # The global id of the domain you wish to favourite.
+    domainId: ID!
+    clientMutationId: String
+  }
+
   type RemoveDomainPayload {
     # 'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     result: RemoveDomainUnion!
@@ -3104,6 +3161,18 @@ export const getTypeNames = () => gql`
   input RequestScanInput {
     # The domain that the scan will be ran on.
     domain: DomainScalar
+    clientMutationId: String
+  }
+
+  type UnfavouriteDomainPayload {
+    # 'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
+    result: RemoveDomainUnion!
+    clientMutationId: String
+  }
+
+  input UnfavouriteDomainInput {
+    # The global id of the domain you wish to favourite.
+    domainId: ID!
     clientMutationId: String
   }
 

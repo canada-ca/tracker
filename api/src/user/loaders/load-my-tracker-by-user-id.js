@@ -3,9 +3,7 @@ import { t } from '@lingui/macro'
 export const loadMyTrackerByUserId =
   ({ query, userKey, i18n }) =>
   async () => {
-    // const userDBId = `users/${userKey}`
-    const userDBId = `users/127188282`
-    userKey = '127188282'
+    const userDBId = `users/${userKey}`
 
     let requestedDomainInfo
     try {
