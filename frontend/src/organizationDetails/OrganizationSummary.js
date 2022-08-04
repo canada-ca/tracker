@@ -14,14 +14,16 @@ export function OrganizationSummary({
   return (
     <Box w="100%">
       <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }} mb="8">
-        <Stack isInline align="center">
-          <Text>
-            <Trans>Based in:</Trans>
-          </Text>
-          <Text fontWeight="semibold">
-            {city}, {province}
-          </Text>
-        </Stack>
+        {city && province && (
+          <Stack isInline align="center">
+            <Text>
+              <Trans>Based in:</Trans>
+            </Text>
+            <Text fontWeight="semibold">
+              {city}, {province}
+            </Text>
+          </Stack>
+        )}
 
         <Stack isInline align="center">
           <Text fontWeight="semibold">{domainCount}</Text>

@@ -64,6 +64,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 )
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
+const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App() {
   // Hooks to be used with this functional component
@@ -110,9 +111,14 @@ export function App() {
         )}
 
         {isLoggedIn() && (
-          <RouteLink to="/user">
-            <Trans>Account Settings</Trans>
-          </RouteLink>
+          <>
+            <RouteLink to="/my-tracker">
+              <Trans>myTracker</Trans>
+            </RouteLink>
+            <RouteLink to="/user">
+              <Trans>Account Settings</Trans>
+            </RouteLink>
+          </>
         )}
 
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
@@ -314,6 +320,18 @@ export function App() {
             <Page path="/user" title={t`Your Account`}>
               {isLoggedIn() ? (
                 <UserPage username={currentUser.userName} />
+              ) : (
+                <Redirect
+                  to={{
+                    pathname: '/sign-in',
+                  }}
+                />
+              )}
+            </Page>
+
+            <Page path="/my-tracker/:activeTab?" title={t`My Tracker`}>
+              {isLoggedIn() ? (
+                <MyTrackerPage />
               ) : (
                 <Redirect
                   to={{
