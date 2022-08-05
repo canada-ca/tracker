@@ -20,7 +20,7 @@ import { OrganizationSummary } from '../organizationDetails/OrganizationSummary'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
-import { MY_TRACKER_PAGE } from '../graphql/queries'
+import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 
 export default function OrganizationDetails() {
@@ -29,13 +29,7 @@ export default function OrganizationDetails() {
   const tabNames = ['summary', 'dmarc_phases', 'domains']
   const defaultActiveTab = tabNames[0]
 
-  const { loading, error, data } = useQuery(MY_TRACKER_PAGE, {
-    variables: {
-      first: 10,
-      orderBy: { field: 'DOMAIN', direction: 'ASC' },
-      search: '',
-    },
-  })
+  const { loading, error, data } = useQuery(MY_TRACKER_SUMMARY, {})
 
   useEffect(() => {
     if (!activeTab) {
@@ -62,8 +56,6 @@ export default function OrganizationDetails() {
     }
   }
 
-  console.log(activeTab)
-
   return (
     <Box w="100%">
       <Flex
@@ -79,9 +71,17 @@ export default function OrganizationDetails() {
           order={{ base: 2, md: 1 }}
           flexBasis={{ base: '100%', md: 'auto' }}
         >
-          <Trans>My Tracker</Trans>
+          <Trans>myTracker</Trans>
         </Heading>
       </Flex>
+      <Text fontSize="lg" mb="2">
+        <Trans>
+          Welcome to your personal view of Tracker. Moderate the security
+          posture of domains of interest across multiple organizations. To add
+          domains to this view, use the star icon buttons available on domain
+          lists.
+        </Trans>
+      </Text>
       <Tabs
         isFitted
         variant="enclosed-colored"
@@ -123,7 +123,7 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationDomains />
+              <OrganizationDomains orgSlug="my-tracker" domainsPerPage={10} />
             </ErrorBoundary>
           </TabPanel>
         </TabPanels>

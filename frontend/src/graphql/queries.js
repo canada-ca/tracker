@@ -1089,13 +1089,8 @@ export const WEBCHECK_ORGS = gql`
     }
   }
 `
-export const MY_TRACKER_PAGE = gql`
-  query FindMyTracker(
-    $first: Int
-    $after: String
-    $orderBy: DomainOrder
-    $search: String
-  ) {
+export const MY_TRACKER_SUMMARY = gql`
+  query FindMyTracker {
     findMyTracker {
       summaries {
         https {
@@ -1116,6 +1111,18 @@ export const MY_TRACKER_PAGE = gql`
         }
       }
       domainCount
+    }
+  }
+`
+
+export const MY_TRACKER_DOMAINS = gql`
+  query FindMyTracker(
+    $first: Int
+    $after: String
+    $orderBy: DomainOrder
+    $search: String
+  ) {
+    findMyTracker {
       domains(
         orderBy: $orderBy
         search: $search

@@ -12,7 +12,10 @@ import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { PAGINATED_ORG_DOMAINS as FORWARD } from '../graphql/queries'
+import {
+  PAGINATED_ORG_DOMAINS as FORWARD,
+  MY_TRACKER_DOMAINS,
+} from '../graphql/queries'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { SearchBox } from '../components/SearchBox'
 
@@ -29,6 +32,18 @@ export function OrganizationDomains({ orgSlug }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
+  const queryVariables =
+    orgSlug === 'my-tracker'
+      ? {
+          orderBy: { field: orderField, direction: orderDirection },
+          search: debouncedSearchTerm,
+        }
+      : {
+          slug: orgSlug,
+          orderBy: { field: orderField, direction: orderDirection },
+          search: debouncedSearchTerm,
+        }
+
   const {
     loading,
     isLoadingMore,
@@ -40,14 +55,13 @@ export function OrganizationDomains({ orgSlug }) {
     hasNextPage,
     hasPreviousPage,
   } = usePaginatedCollection({
-    fetchForward: FORWARD,
+    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
     recordsPerPage: domainsPerPage,
-    relayRoot: 'findOrganizationBySlug.domains',
-    variables: {
-      slug: orgSlug,
-      orderBy: { field: orderField, direction: orderDirection },
-      search: debouncedSearchTerm,
-    },
+    relayRoot:
+      orgSlug === 'my-tracker'
+        ? 'findMyTracker.domains'
+        : 'findOrganizationBySlug.domains',
+    variables: queryVariables,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   })

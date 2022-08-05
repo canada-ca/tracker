@@ -20,8 +20,8 @@ import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 import { useLingui } from '@lingui/react'
-import { StarIcon } from '@chakra-ui/icons'
-import { FAVOURITE_DOMAIN } from '../graphql/mutations'
+import { MinusIcon, StarIcon } from '@chakra-ui/icons'
+import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
 
@@ -44,7 +44,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
           position: 'top-left',
         })
       },
-      onCompleted({ _requestScan }) {
+      onCompleted() {
         toast({
           title: t`Favourited Domain`,
           description: t`You have successfully added ${url} to myTracker.`,
@@ -56,6 +56,32 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
       },
     },
   )
+
+  const [unfavouriteDomain, { _l, _e }] = useMutation(UNFAVOURITE_DOMAIN, {
+    refetchQueries: ['FindMyTracker'],
+    awaitRefetchQueries: true,
+
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while unfavouriting a domain.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted() {
+      toast({
+        title: t`Unfavourited Domain`,
+        description: t`You have successfully removed ${url} from myTracker.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
@@ -160,16 +186,26 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
         </Stack>
         <Stack ml={4}>
           <ScanDomainButton domainUrl={url} />
-          {isLoggedIn() && (
-            <IconButton
-              onClick={async () => {
-                await favouriteDomain({ variables: { domainId: id } })
-              }}
-              variant="primary"
-              aria-label={`favourite ${url}`}
-              icon={<StarIcon />}
-            />
-          )}
+          {isLoggedIn() &&
+            (location.pathname.match('my-tracker') ? (
+              <IconButton
+                onClick={async () => {
+                  await unfavouriteDomain({ variables: { domainId: id } })
+                }}
+                variant="danger"
+                aria-label={`unfavourite ${url}`}
+                icon={<MinusIcon />}
+              />
+            ) : (
+              <IconButton
+                onClick={async () => {
+                  await favouriteDomain({ variables: { domainId: id } })
+                }}
+                variant="primary"
+                aria-label={`favourite ${url}`}
+                icon={<StarIcon />}
+              />
+            ))}
         </Stack>
       </Flex>
     </ListItem>
