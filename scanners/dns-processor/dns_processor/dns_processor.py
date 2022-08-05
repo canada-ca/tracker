@@ -3,7 +3,6 @@ import os
 import datetime
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -46,8 +45,8 @@ def process_dkim(dkim_results):
 
         # Dkim value invalid
         # Check if v and p exist in txt_record
-        v_tag = dkim_results[selector].get("txt_record", {}).get("v", None)
-        p_tag = dkim_results[selector].get("txt_record", {}).get("p", None)
+        v_tag = dkim_results[selector].get("parsed", {}).get("v", None)
+        p_tag = dkim_results[selector].get("parsed", {}).get("p", None)
 
         if v_tag is None and p_tag is None:
             dkim_tags[selector].append("dkim2")
@@ -55,7 +54,7 @@ def process_dkim(dkim_results):
             dkim_tags[selector].append("dkim12")
 
         # Testing Enabled
-        t_enabled = dkim_results[selector].get("t_value", "")
+        t_enabled = dkim_results[selector].get("parsed", {}).get("t", "")
         if t_enabled.lower() == "y":
             dkim_tags[selector].append("dkim13")
 
@@ -77,11 +76,12 @@ def process_dkim(dkim_results):
 
     for selector in processed_dkim.keys():
         if len(processed_dkim[selector]["negative_tags"]) > 0:
-            dkim_statuses.append(False)
+            dkim_statuses.append("fail")
         else:
-            dkim_statuses.append(True)
+            dkim_statuses.append("pass")
 
-    dkim_status = all(dkim_statuses) and len(processed_dkim) > 0
+    dkim_status = "pass" if all([False if status == "fail" else True for status in dkim_statuses]) and len(
+        processed_dkim) > 0 else "fail"
 
     return processed_dkim, dkim_status
 
@@ -147,9 +147,9 @@ def process_spf(spf_results):
         if tag in guidance["spf"]["info"]:
             processed_spf["neutral_tags"].append(tag)
 
-    spf_status = False
+    spf_status = "fail"
     if "spf12" in processed_spf["positive_tags"] and len(processed_spf["negative_tags"]) == 0:
-        spf_status = True
+        spf_status = "pass"
 
     return processed_spf, spf_status
 
@@ -318,10 +318,10 @@ def process_dmarc(dmarc_results):
         if tag in guidance["dmarc"]["info"]:
             processed_dmarc["neutral_tags"].append(tag)
 
-    dmarc_status = False
+    dmarc_status = "fail"
     if "dmarc10" in processed_dmarc["positive_tags"] and "dmarc23" in processed_dmarc["positive_tags"] and len(
         processed_dmarc["negative_tags"]) == 0:
-        dmarc_status = True
+        dmarc_status = "pass"
 
     return processed_dmarc, dmarc_status
 
@@ -381,6 +381,7 @@ def process_results(results):
 
             dkim_results[selector] = {
                 "record": results["dkim"][selector].get("record", None),
+                "parsed": results["dkim"][selector].get("parsed", None),
                 "key_length": results["dkim"][selector].get("key_size", None),
                 "key_type": results["dkim"][selector].get("key_type", None),
                 "public_exponent": results["dkim"][selector].get("public_exponent", None),

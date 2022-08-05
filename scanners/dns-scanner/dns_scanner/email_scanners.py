@@ -224,11 +224,6 @@ class DKIMScanner:
                 for key, val in dkim_txt_values_bytes.items():
                     parsed_txt_record[key.decode("ascii")] = val.decode("ascii")
 
-
-                for key, val in parsed_txt_record.items():
-                    if key == "t":
-                        record[selector]["t_value"] = val
-
                 pk, keysize, ktag = self.load_pk(lookup_url, txt_record_bytes)
                 ktag = ktag.decode("ascii")
 
@@ -243,7 +238,7 @@ class DKIMScanner:
                     modulus = None
 
                 record[selector]["record"] = txt_record_bytes.decode("ascii")
-                record[selector]["public_key_value"] = parsed_txt_record.get("p")
+                record[selector]["parsed"] = parsed_txt_record
                 record[selector]["key_size"] = keysize
                 record[selector]["key_type"] = ktag
                 record[selector]["public_key_modulus"] = modulus
