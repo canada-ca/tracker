@@ -108,7 +108,7 @@ class CertificateChainInfo:
 
     def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult):
         cert_chain = cert_deployment.received_certificate_chain
-        self.bad_hostname = cert_deployment.leaf_certificate_subject_matches_hostname
+        self.bad_hostname = not cert_deployment.leaf_certificate_subject_matches_hostname
         self.must_have_staple = cert_deployment.leaf_certificate_has_must_staple_extension
         self.leaf_certificate_is_ev = cert_deployment.leaf_certificate_is_ev
         self.received_chain_contains_anchor_certificate = cert_deployment.received_chain_contains_anchor_certificate
