@@ -6,7 +6,7 @@ import { createDomainUnion } from '../unions'
 
 export const favouriteDomain = new mutationWithClientMutationId({
   name: 'FavouriteDomain',
-  description: '',
+  description: "Mutation to add domain to user's personal myTracker view.",
   inputFields: () => ({
     domainId: {
       type: GraphQLNonNull(GraphQLID),

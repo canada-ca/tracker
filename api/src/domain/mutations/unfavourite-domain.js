@@ -6,7 +6,7 @@ import { removeDomainUnion } from '../unions'
 
 export const unfavouriteDomain = new mutationWithClientMutationId({
   name: 'UnfavouriteDomain',
-  description: '',
+  description: "Mutation to remove domain from user's personal myTracker view.",
   inputFields: () => ({
     domainId: {
       type: GraphQLNonNull(GraphQLID),

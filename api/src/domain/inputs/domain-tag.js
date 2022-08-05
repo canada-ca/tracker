@@ -9,7 +9,7 @@ export const inputTag = new GraphQLInputObjectType({
       description: 'label that helps describe the domain.',
       type: new GraphQLInputObjectType({
         name: 'InputTagLabel',
-        description: '',
+        description: 'English and French label for tag.',
         fields: () => ({
           en: {
             type: GraphQLString,

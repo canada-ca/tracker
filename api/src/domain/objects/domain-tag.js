@@ -9,7 +9,7 @@ export const domainTag = new GraphQLObjectType({
       description: 'label that helps describe the domain.',
       type: new GraphQLObjectType({
         name: 'TagLabel',
-        description: '',
+        description: 'English and French label for tag.',
         fields: () => ({
           en: {
             type: GraphQLString,

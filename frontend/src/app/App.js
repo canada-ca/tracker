@@ -329,7 +329,7 @@ export function App() {
               )}
             </Page>
 
-            <Page path="/my-tracker/:activeTab?" title={t`My Tracker`}>
+            <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
               {isLoggedIn() ? (
                 <MyTrackerPage />
               ) : (

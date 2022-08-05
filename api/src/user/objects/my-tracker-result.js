@@ -39,7 +39,8 @@ export const myTrackerType = new GraphQLObjectType({
         },
         myTracker: {
           type: GraphQLBoolean,
-          description: '',
+          description:
+            'Limits domains to those that user has added to their personal myTracker view.',
         },
         search: {
           type: GraphQLString,
