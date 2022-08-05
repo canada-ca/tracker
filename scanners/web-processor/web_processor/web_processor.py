@@ -13,36 +13,32 @@ def process_tags(results):
     neutral_tags = []
     positive_tags = []
     negative_tags = []
-    strong_ciphers = []
-    acceptable_ciphers = []
-    weak_ciphers = []
-    strong_curves = []
-    acceptable_curves = []
-    weak_curves = []
-
-    processed_tags = {
-        "neutral_tags": neutral_tags,
-        "positive_tags": positive_tags,
-        "negative_tags": negative_tags,
-        "strong_ciphers": strong_ciphers,
-        "acceptable_ciphers": acceptable_ciphers,
-        "weak_ciphers": weak_ciphers,
-        "strong_curves": strong_curves,
-        "acceptable_curves": acceptable_curves,
-        "weak_curves": weak_curves
-    }
+    accepted_cipher_suites = {}
+    accepted_elliptic_curves = []
 
     if results.get("tls_result").get("error") == "unreachable":
         neutral_tags.append("ssl9")
 
+        processed_tags = {
+            "neutral_tags": neutral_tags,
+            "positive_tags": positive_tags,
+            "negative_tags": negative_tags,
+            "accepted_cipher_suites": accepted_cipher_suites,
+            "accepted_elliptic_curves": accepted_elliptic_curves
+        }
+
         return processed_tags
 
-    accepted_cipher_suites = {}
-
-    all_cipher_suites = []
     for protocol in results["tls_result"]["accepted_cipher_suites"].keys():
+
         accepted_cipher_suites[protocol] = []
+
         for cipher_suite in results["tls_result"]["accepted_cipher_suites"][protocol]:
+            if "RC4" in cipher_suite:
+                negative_tags.append("ssl3")
+            if "3DES" in cipher_suite:
+                negative_tags.append("ssl4")
+
             if cipher_suite in (
                 guidance["ciphers"]["1.2"]["recommended"]
                 + guidance["ciphers"]["1.3"]["recommended"]
@@ -55,40 +51,20 @@ def process_tags(results):
                 strength = "acceptable"
             else:
                 strength = "weak"
+                negative_tags.append("ssl6")
 
             accepted_cipher_suites[protocol].append({"name": cipher_suite, "strength": strength})
 
-        all_cipher_suites.extend(results["tls_result"]["accepted_cipher_suites"][protocol])
-
-
-    for protocol in accepted_cipher_suites.keys():
-
-
-    for cipher in all_cipher_suites:
-        if "RC4" in cipher:
-            negative_tags.append("ssl3")
-        if "3DES" in cipher:
-            negative_tags.append("ssl4")
-        if cipher in (
-            guidance["ciphers"]["1.2"]["recommended"]
-            + guidance["ciphers"]["1.3"]["recommended"]
-        ):
-            strong_ciphers.append(cipher)
-        elif cipher in (
-            guidance["ciphers"]["1.2"]["sufficient"]
-            + guidance["ciphers"]["1.3"]["sufficient"]
-        ):
-            acceptable_ciphers.append(cipher)
-        else:
-            weak_ciphers.append(cipher)
-
     for curve in results["tls_result"]["accepted_elliptic_curves"]:
         if curve.lower() in guidance["curves"]["recommended"]:
-            strong_curves.append(curve)
+            strength = "strong"
         elif curve.lower() in guidance["curves"]["sufficient"]:
-            acceptable_curves.append(curve)
+            strength = "acceptable"
         else:
-            weak_curves.append(curve)
+            strength = "weak"
+            negative_tags.append("ssl10")
+
+        accepted_elliptic_curves.append({"name": curve, "strength": strength})
 
     try:
         signature_algorithm = results["tls_result"]["certificate_chain_info"]["certificate_info_chain"][0][
@@ -105,17 +81,24 @@ def process_tags(results):
                 positive_tags.append("ssl5")
                 break
 
-    if len(weak_ciphers) > 0:
-        negative_tags.append("ssl6")
-
-    if len(weak_curves) > 0:
-        negative_tags.append("ssl10")
-
     if results["tls_result"]["is_vulnerable_to_heartbleed"]:
         negative_tags.append("ssl7")
 
     if results["tls_result"]["is_vulnerable_to_ccs_injection"]:
         negative_tags.append("ssl8")
+
+    # remove duplicate tags
+    positive_tags = list(set(positive_tags))
+    neutral_tags = list(set(neutral_tags))
+    negative_tags = list(set(negative_tags))
+
+    processed_tags = {
+        "neutral_tags": neutral_tags,
+        "positive_tags": positive_tags,
+        "negative_tags": negative_tags,
+        "accepted_cipher_suites": accepted_cipher_suites,
+        "accepted_elliptic_curves": accepted_elliptic_curves
+    }
 
     return processed_tags
 
@@ -151,10 +134,10 @@ def process_results(results):
                 protocol_status = "fail"
 
         # get cipher status
-        cipher_status = "fail" if len(processed_tags["weak_ciphers"]) > 0 else "pass"
+        cipher_status = "fail" if "ssl6" in processed_tags["negative_tags"] else "pass"
 
         # get curve status
-        curve_status = "fail" if len(processed_tags["weak_curves"]) > 0 else "pass"
+        curve_status = "fail" if "ssl10" in processed_tags["negative_tags"] else "pass"
 
     timestamp = str(datetime.datetime.utcnow())
 
@@ -163,17 +146,13 @@ def process_results(results):
         "ip_address": results["tls_result"]["request_ip_address"],
         "server_location": results["tls_result"]["server_location"],
         "certificate_chain_info": results["tls_result"]["certificate_chain_info"],
-        "strong_ciphers": processed_tags["strong_ciphers"],
-        "acceptable_ciphers": processed_tags["acceptable_ciphers"],
-        "weak_ciphers": processed_tags["weak_ciphers"],
-        "strong_curves": processed_tags["strong_curves"],
-        "acceptable_curves": processed_tags["acceptable_curves"],
-        "weak_curves": processed_tags["weak_curves"],
         "supports_ecdh_key_exchange": results.get("supports_ecdh_key_exchange", False),
         "heartbleed_vulnerable": results.get("heartbleed", False),
         "ccs_injection_vulnerable": results.get("openssl_ccs_injection", False),
-        "neutral_tags": processed_tags["neutral_tags"],
+        "accepted_cipher_suites": processed_tags["accepted_cipher_suites"],
+        "accepted_elliptic_curves": processed_tags["accepted_elliptic_curves"],
         "positive_tags": processed_tags["positive_tags"],
+        "neutral_tags": processed_tags["neutral_tags"],
         "negative_tags": processed_tags["negative_tags"],
         "ssl_status": ssl_status,
         "protocol_status": protocol_status,
@@ -181,4 +160,4 @@ def process_results(results):
         "curve_status": curve_status
     }
 
-    return {"tls_result": tls_result, "chain_result": results["chain_result"],"timestamp": timestamp}
+    return {"tls_result": tls_result, "chain_result": results["chain_result"], "timestamp": timestamp}
