@@ -12,41 +12,9 @@ import { cleanseInput } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
+import { collectionNames } from '../../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
-
-const collectionNames = [
-  'users',
-  'organizations',
-  'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
-  'dkimGuidanceTags',
-  'dmarcGuidanceTags',
-  'spfGuidanceTags',
-  'httpsGuidanceTags',
-  'sslGuidanceTags',
-  'chartSummaries',
-  'dmarcSummaries',
-  'aggregateGuidanceTags',
-  'scanSummaryCriteria',
-  'chartSummaryCriteria',
-  'scanSummaries',
-  'affiliations',
-  'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
-  'ownership',
-  'domainsToDmarcSummaries',
-]
 
 describe('authenticate user account', () => {
   let query, drop, truncate, collections, transaction, schema, i18n
