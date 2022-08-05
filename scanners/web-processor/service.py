@@ -78,10 +78,10 @@ async def processor_service(loop):
 
         if user_key is None:
             try:
-                ssl_entry = db.collection("ssl").insert(processed_results)
+                web_entry = db.collection("web").insert(processed_results)
                 domain = db.collection("domains").get({"_key": domain_key})
-                db.collection("domainsSSL").insert(
-                    {"_from": domain["_id"], "timestamp": processed_results["timestamp"], "_to": ssl_entry["_id"]}
+                db.collection("domainsWeb").insert(
+                    {"_from": domain["_id"], "timestamp": processed_results["timestamp"], "_to": web_entry["_id"]}
                 )
 
                 if domain.get("status", None) == None:
@@ -103,10 +103,10 @@ async def processor_service(loop):
                         }
                     )
 
-                domain["status"]["ssl"] = processed_results["ssl_status"]
-                domain["status"]["protocols"] = processed_results["protocol_status"]
-                domain["status"]["ciphers"] = processed_results["cipher_status"]
-                domain["status"]["curves"] = processed_results["curve_status"]
+                domain["status"]["ssl"] = processed_results["tls_result"]["ssl_status"]
+                domain["status"]["protocols"] = processed_results["tls_result"]["protocol_status"]
+                domain["status"]["ciphers"] = processed_results["tls_result"]["cipher_status"]
+                domain["status"]["curves"] = processed_results["tls_result"]["curve_status"]
                 db.collection("domains").update(domain)
 
             except Exception as e:
