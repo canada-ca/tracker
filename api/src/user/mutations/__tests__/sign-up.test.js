@@ -14,7 +14,7 @@ import { cleanseInput } from '../../../validators'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
-import { collectionNames } from '../../../../collection-names'
+import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 

@@ -10,7 +10,7 @@ import { cleanseInput } from '../../../validators'
 import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
-import { collectionNames } from '../../../../collection-names'
+import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

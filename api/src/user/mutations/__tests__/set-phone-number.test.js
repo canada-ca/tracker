@@ -11,7 +11,7 @@ import { cleanseInput, decryptPhoneNumber } from '../../../validators'
 import { tokenize, userRequired } from '../../../auth'
 import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
-import { collectionNames } from '../../../../collection-names'
+import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()

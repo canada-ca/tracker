@@ -12,7 +12,7 @@ import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
-import { collectionNames } from '../../../../collection-names'
+import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 

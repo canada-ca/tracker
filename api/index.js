@@ -4,7 +4,7 @@ import { Server } from './src/server'
 import { createContext } from './src/create-context'
 import { createI18n } from './src/create-i18n'
 import { connect, JSONCodec } from 'nats'
-import { collectionNames as collections } from './collection-names'
+import { collectionNames as collections } from './src/collection-names'
 
 const {
   PORT = 4000,
