@@ -20,7 +20,7 @@ import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 import { useLingui } from '@lingui/react'
-import { MinusIcon, StarIcon } from '@chakra-ui/icons'
+import { StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
@@ -192,9 +192,9 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
                 onClick={async () => {
                   await unfavouriteDomain({ variables: { domainId: id } })
                 }}
-                variant="danger"
+                variant="primary"
                 aria-label={`unfavourite ${url}`}
-                icon={<MinusIcon />}
+                icon={<StarIcon color="moderate" />}
               />
             ) : (
               <IconButton
