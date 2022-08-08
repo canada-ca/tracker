@@ -10,11 +10,6 @@ from cryptography.x509 import Certificate
 from sslyze.errors import ConnectionToServerFailed, \
     ServerHostnameCouldNotBeResolved
 from sslyze.plugins.certificate_info._certificate_utils import get_common_names, extract_dns_subject_alternative_names
-from sslyze.plugins.certificate_info.json_output import _CertificateAsJson, \
-    _OcspResponseAsJson
-from sslyze.plugins.elliptic_curves_plugin import \
-    SupportedEllipticCurvesScanResultAsJson, \
-    SupportedEllipticCurvesScanAttemptAsJson
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze import Scanner, ServerScanRequest, ServerScanResultAsJson, \
     CipherSuiteAcceptedByServer, CipherSuiteRejectedByServer, TlsResumptionSupportEnum, \
@@ -29,23 +24,6 @@ from scan.tls_scanner.query_crlite import query_crlite
 logger = logging.getLogger()
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
-
-
-# @dataclass
-# class ServerLocation:
-#     hostname: str
-#     ip_address: str
-#     port: int = 443
-#
-#
-# @dataclass
-# class NetworkConfiguration:
-#     tls_server_name_indication: str
-#     tls_opportunistic_encryption: any
-#     tls_client_auth_credentials: any
-#     xmpp_to_hostname: any
-#     network_timeout: int
-#     network_max_retries: int
 
 
 @dataclass
@@ -225,7 +203,6 @@ class TLSResult:
 
     @staticmethod
     def get_accepted_cipher_suites(scan_result: ServerScanResult):
-
         def get_cipher_suite_name(cipher_suites: list[CipherSuiteAcceptedByServer | CipherSuiteRejectedByServer]):
             return [suite.cipher_suite.name for suite in cipher_suites]
 
