@@ -632,7 +632,7 @@ def process_results(results, domain_key, user_key, shared_id):
             for i in tags["dkim"][selector]
         ):
             dkim_statuses.append("fail")
-        elif all(i in ["dkim7", "dkim8"] for i in tags["dkim"][selector]):
+        else:
             dkim_statuses.append("pass")
 
     if len(dkim_statuses) == 0:
