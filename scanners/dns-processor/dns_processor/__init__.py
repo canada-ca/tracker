@@ -540,7 +540,6 @@ def process_results(results, domain_key, user_key, shared_id):
                 "dkim3",
                 "dkim4",
                 "dkim5",
-                "dkim6",
                 "dkim9",
                 "dkim11",
                 "dkim12",
