@@ -48,12 +48,12 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`,
+        `User: ${userKey} attempted to unfavourite ${domainId} however no domain is associated with that id.`,
       )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to remove unknown domain.`),
+        description: i18n._(t`Unable to unfavourite unknown domain.`),
       }
     }
 
@@ -84,7 +84,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
 
     if (typeof checkUserDomain === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to favourite a domain, however domain is not favourited.`,
+        `User: ${userKey} attempted to unfavourite a domain, however domain is not favourited.`,
       )
       return {
         _type: 'error',
@@ -136,7 +136,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
     }
 
     console.info(
-      `User: ${userKey} successfully removed domain ${domainId} from favourites.`,
+      `User: ${userKey} successfully removed domain ${domain.domain} from favourites.`,
     )
 
     return {
