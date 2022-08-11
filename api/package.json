@@ -40,7 +40,7 @@
     "graphql-playground-middleware-express": "^1.7.23",
     "graphql-redis-subscriptions": "^2.4.2",
     "graphql-relay": "^0.9.0",
-    "graphql-scalars": "^1.14.1",
+    "graphql-scalars": "^1.18.0",
     "graphql-subscriptions": "^1.2.1",
     "graphql-validation-complexity": "^0.4.2",
     "ioredis": "^4.28.3",
