@@ -38,4 +38,4 @@ patchesJSON6902:
     - op: add
       path: "/metadata/annotations"
       value:
-        iam.gke.io/gcp-service-account: dns01-solver@track-compliance.iam.gserviceaccount.com
+        iam.gke.io/gcp-service-account=dns01-solver@track-compliance.iam.gserviceaccount.com
