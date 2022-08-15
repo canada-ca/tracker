@@ -1,4 +1,5 @@
-import { GraphQLInputObjectType, GraphQLString } from 'graphql'
+import { GraphQLInputObjectType, GraphQLNonNull } from 'graphql'
+import { DomainTagLabel } from '../../enums'
 
 export const inputTag = new GraphQLInputObjectType({
   name: 'InputTag',
@@ -12,11 +13,11 @@ export const inputTag = new GraphQLInputObjectType({
         description: '',
         fields: () => ({
           en: {
-            type: GraphQLString,
+            type: GraphQLNonNull(DomainTagLabel),
             description: 'The English translation of the label.',
           },
           fr: {
-            type: GraphQLString,
+            type: GraphQLNonNull(DomainTagLabel),
             description: 'The French translation of the label.',
           },
         }),

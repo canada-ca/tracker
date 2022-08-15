@@ -530,12 +530,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             domain
             lastRan
             selectors
-            claimTags {
-              label {
-                en
-                fr
-              }
-            }
+            claimTags
           }
         }
         pageInfo {
@@ -622,12 +617,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
               ssl
             }
             hasDMARCReport
-            claimTags {
-              label {
-                en
-                fr
-              }
-            }
+            claimTags
           }
         }
       }

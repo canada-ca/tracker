@@ -75,7 +75,10 @@ export const createDomain = new mutationWithClientMutationId({
 
     let tags
     if (typeof args.tags !== 'undefined') {
-      tags = args.tags
+      tags = args.tags.forEach(({ en, fr }) => {
+        cleanseInput(en)
+        cleanseInput(fr)
+      })
     } else {
       tags = []
     }

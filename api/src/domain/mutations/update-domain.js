@@ -74,7 +74,11 @@ export const updateDomain = new mutationWithClientMutationId({
 
     let tags
     if (typeof args.tags !== 'undefined') {
-      tags = args.tags
+      tags = args.tags.forEach(({ en, fr }) => {
+        // cleanse input
+        cleanseInput(en)
+        cleanseInput(fr)
+      })
     } else {
       tags = null
     }
@@ -184,24 +188,26 @@ export const updateDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
-    try {
-      await trx.step(
-        async () =>
-          await query`
+    if (typeof tags !== 'undefined') {
+      try {
+        await trx.step(
+          async () =>
+            await query`
           WITH claims
           UPSERT { _from: ${org._id}, _to: ${domain._id} }
             INSERT { tags: ${tags} }
             UPDATE { tags: ${tags} }
             IN claims
       `,
-      )
-    } catch (err) {
-      console.error(
-        `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to update domain edge. Please try again.`),
-      )
+        )
+      } catch (err) {
+        console.error(
+          `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
+        )
+        throw new Error(
+          i18n._(t`Unable to update domain edge. Please try again.`),
+        )
+      }
     }
 
     // Commit transaction

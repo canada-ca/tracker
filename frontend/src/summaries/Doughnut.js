@@ -29,7 +29,7 @@ export const Doughnut = ({
   const { i18n } = useLingui()
 
   const domainContext = title.includes('DMARC') ? (
-    <Trans>Email-hosting</Trans>
+    <Trans>Total</Trans>
   ) : (
     <Trans>Web-hosting</Trans>
   )
@@ -43,7 +43,6 @@ export const Doughnut = ({
         textAnchor="middle"
         dominantBaseline="central"
         fontSize={
-          // `${width / 256}rem`
           i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
         }
         transform={`translate(${width / 2}, ${height / 2})`}
@@ -56,7 +55,6 @@ export const Doughnut = ({
         textAnchor="middle"
         dominantBaseline="central"
         fontSize={
-          // `${width / 256}rem`
           i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
         }
         transform={`translate(${width / 2}, ${height / 2})`}

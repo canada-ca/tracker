@@ -15,7 +15,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
 
-export function AdminDomainCard({ url, tags, locale, ...rest }) {
+export function AdminDomainCard({ url, tags, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -40,7 +40,7 @@ export function AdminDomainCard({ url, tags, locale, ...rest }) {
           </Link>
         </Stack>
         <Flex>
-          {tags?.map(({ label }, idx) => {
+          {tags?.map((tag, idx) => {
             return (
               <Tag
                 key={idx}
@@ -49,7 +49,7 @@ export function AdminDomainCard({ url, tags, locale, ...rest }) {
                 borderWidth="1px"
                 borderColor="gray.900"
               >
-                <TagLabel mx="auto">{label[locale]}</TagLabel>
+                <TagLabel mx="auto">{tag}</TagLabel>
               </Tag>
             )
           })}
@@ -58,4 +58,4 @@ export function AdminDomainCard({ url, tags, locale, ...rest }) {
     </ListItem>
   )
 }
-AdminDomainCard.propTypes = { url: string, tags: array, locale: string }
+AdminDomainCard.propTypes = { url: string, tags: array }

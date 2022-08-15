@@ -1,31 +1,45 @@
 import { GraphQLEnumType } from 'graphql'
 
-export const TagLabelEnums = new GraphQLEnumType({
-  name: 'TagLabelEnums',
+export const DomainTagLabel = new GraphQLEnumType({
+  name: 'DomainTagLabel',
   values: {
     NEW: {
-      value: { en: 'NEW', fr: 'NOUVEAU' },
-      description: 'Label for tagging domains as new to the system.',
+      value: 'NEW',
+      description: 'English label for tagging domains as new to the system.',
+    },
+    NOUVEAU: {
+      value: 'NOUVEAU',
+      description: 'French label for tagging domains as new to the system.',
     },
     PROD: {
-      value: { en: 'PROD', fr: 'PROD' },
-      description: 'Label for tagging domains as a production environment.',
+      value: 'PROD',
+      description:
+        'Bilingual Label for tagging domains as a production environment.',
     },
     STAGING: {
-      value: { en: 'STAGING', fr: 'DÉVELOPPEMENT' },
-      description: 'Label for tagging domains as a staging environment.',
+      value: 'STAGING',
+      description:
+        'English label for tagging domains as a staging environment.',
+    },
+    DEV: {
+      value: 'DÉV',
+      description: 'French label for tagging domains as a staging environment.',
     },
     TEST: {
-      value: { en: 'TEST', fr: 'TEST' },
-      description: 'Label for tagging domains as a test environment.',
+      value: 'TEST',
+      description: 'Bilingual label for tagging domains as a test environment.',
     },
     WEB: {
-      value: { en: 'WEB', fr: 'WEB' },
-      description: 'Label for tagging domains as web-hosting.',
+      value: 'WEB',
+      description: 'Bilingual label for tagging domains as web-hosting.',
     },
     INACTIVE: {
-      value: { en: 'INACTIVE', fr: 'INACTIF' },
-      description: 'Label for tagging domains that are not active.',
+      value: 'INACTIVE',
+      description: 'English label for tagging domains that are not active.',
+    },
+    INACTIF: {
+      value: 'INACTIF',
+      description: 'French label for tagging domains that are not active.',
     },
   },
   description: 'An enum used to assign and test user-generated domain tags',
