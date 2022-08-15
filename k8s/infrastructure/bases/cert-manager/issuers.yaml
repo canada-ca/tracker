@@ -6,7 +6,7 @@ metadata:
   namespace: istio-system
 spec:
   acme:
-    email: mike@korora.ca
+    email: tracker@tbs-sct.gc.ca
     preferredChain: ""
     privateKeySecretRef:
       name: letsencrypt-prod
