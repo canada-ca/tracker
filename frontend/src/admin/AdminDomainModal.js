@@ -147,27 +147,27 @@ export function AdminDomainModal({
     },
   })
 
-  const addableTags = (values, helper) => {
-    const tagOptions = [
-      { en: 'NEW', fr: 'NOUVEAU' },
-      { en: 'PROD', fr: 'PROD' },
-      { en: 'STAGING', fr: 'DÉV' },
-      { en: 'TEST', fr: 'TEST' },
-      { en: 'WEB', fr: 'WEB' },
-      { en: 'INACTIVE', fr: 'INACTIF' },
-    ]
+  const tagOptions = [
+    { en: 'NEW', fr: 'NOUVEAU' },
+    { en: 'PROD', fr: 'PROD' },
+    { en: 'STAGING', fr: 'DEV' },
+    { en: 'TEST', fr: 'TEST' },
+    { en: 'WEB', fr: 'WEB' },
+    { en: 'INACTIVE', fr: 'INACTIF' },
+  ]
 
+  const addableTags = (values, helper) => {
     const stringValues = values?.map((label) => {
-      return label
+      return label[i18n.locale]
     })
     const difference = tagOptions.filter(
-      (label) => !stringValues?.includes(label),
+      (label) => !stringValues?.includes(label[i18n.locale]),
     )
     return difference?.map((label, idx) => {
       return (
         <Tag
           key={idx}
-          id={`add-tag-${label}`}
+          id={`add-tag-${label[i18n.locale]}`}
           as="button"
           _hover={{ bg: 'gray.200' }}
           borderRadius="full"
@@ -176,7 +176,7 @@ export function AdminDomainModal({
             helper.push(label)
           }}
         >
-          <TagLabel>{label}</TagLabel>
+          <TagLabel>{label[i18n.locale]}</TagLabel>
           <TagRightIcon as={AddIcon} color="gray.500" ml="auto" />
         </Tag>
       )
@@ -198,7 +198,9 @@ export function AdminDomainModal({
             selectors: selectorInputList,
             // convert initial tags to input type
             tags: tagInputList?.map((label) => {
-              return label
+              return tagOptions.filter((option) => {
+                return option[i18n.locale] == label
+              })[0]
             }),
           }}
           initialTouched={{
@@ -324,11 +326,13 @@ export function AdminDomainModal({
                           {values.tags?.map((label, idx) => {
                             return (
                               <Tag key={idx} borderRadius="full">
-                                <TagLabel>{label}</TagLabel>
+                                <TagLabel>{label[i18n.locale]}</TagLabel>
                                 <TagCloseButton
                                   ml="auto"
                                   onClick={() => arrayHelpers.remove(idx)}
-                                  aria-label={`remove-tag-${label}`}
+                                  aria-label={`remove-tag-${
+                                    label[i18n.locale]
+                                  }`}
                                 />
                               </Tag>
                             )

@@ -394,7 +394,7 @@ export const loadDomainConnectionsByOrgId =
             FILTER e._from == ${orgId}
             LET translatedTags = (
               FOR tag IN e.tags
-              RETURN TRANSLATE(${language}, tag.label)
+              RETURN TRANSLATE(${language}, tag)
             )
             RETURN translatedTags
         )[0]

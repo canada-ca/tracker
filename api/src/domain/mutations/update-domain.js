@@ -74,11 +74,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     let tags
     if (typeof args.tags !== 'undefined') {
-      tags = args.tags.forEach(({ en, fr }) => {
-        // cleanse input
-        cleanseInput(en)
-        cleanseInput(fr)
-      })
+      tags = args.tags
     } else {
       tags = null
     }
@@ -188,7 +184,7 @@ export const updateDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
-    if (typeof tags !== 'undefined') {
+    if (tags) {
       try {
         await trx.step(
           async () =>
