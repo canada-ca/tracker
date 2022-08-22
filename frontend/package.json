@@ -15,7 +15,7 @@
     "mocker": "nodemon --watch mocking/ --exec 'babel mocking/ -d ./dist/mocking && node dist/mocking/mocker.js'"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.7",
+    "@apollo/client": "^3.6.9",
     "@babel/runtime": "^7.16.7",
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.8",
