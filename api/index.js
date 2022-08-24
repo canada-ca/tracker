@@ -28,6 +28,7 @@ const collections = [
   'dkim',
   'dkimResults',
   'dmarc',
+  'dns',
   'spf',
   'https',
   'ssl',
@@ -101,6 +102,7 @@ const collections = [
       const i18n = createI18n(req.language)
       return createContext({
         query,
+        db,
         transaction,
         collections,
         publish,
