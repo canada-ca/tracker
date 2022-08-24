@@ -188,10 +188,6 @@ export const loadDnsConnectionsByDomainId =
 
     const dnsScans = dnsScanInfo.dnsScans
 
-    if (before) {
-      dnsScans.reverse()
-    }
-
     if (dnsScans.length === 0) {
       return {
         edges: [],
