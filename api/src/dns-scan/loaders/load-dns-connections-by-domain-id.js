@@ -61,8 +61,8 @@ export const loadDnsConnectionsByDomainId =
 
       return cursorString.reduce(
         (acc, currentValue) => {
-          const [key, id] = currentValue.split(':')
-          acc.push({[key]: id})
+          const [type, id] = currentValue.split('::')
+          acc.push({type, id})
           return acc
         },
         [])
@@ -72,6 +72,7 @@ export const loadDnsConnectionsByDomainId =
     let relayAfterTemplate = aql``
     if (usingRelayExplicitly) {
       const cursorList = resolveCursor(after || before)
+
       if (cursorList.length === 0 || cursorList > 2) {
         // TODO: throw error
       }
@@ -82,9 +83,11 @@ export const loadDnsConnectionsByDomainId =
       }
 
       const orderByDirectionArrow = orderBy?.direction === "DESC" ? aql`<` : orderBy?.direction === "ASC" ? aql`>` : null
+      const reverseOrderByDirectionArrow = orderBy?.direction === "DESC" ? aql`>` : orderBy?.direction === "ASC" ? aql`<` : null
 
       relayBeforeTemplate = aql`FILTER TO_NUMBER(dnsScan._key) < TO_NUMBER(${cursorList[0].id})`
       relayAfterTemplate = aql`FILTER TO_NUMBER(dnsScan._key) > TO_NUMBER(${cursorList[0].id})`
+
       if (cursorList.length === 2) {
         relayAfterTemplate = aql`
         FILTER dnsScan.${cursorList[0].type} ${orderByDirectionArrow || aql`>`} ${cursorList[0].id}
@@ -93,7 +96,7 @@ export const loadDnsConnectionsByDomainId =
       `
 
         relayBeforeTemplate = aql`
-        FILTER dnsScan.${cursorList[0].type} ${orderByDirectionArrow || aql`<`} ${cursorList[0].id}
+        FILTER dnsScan.${cursorList[0].type} ${reverseOrderByDirectionArrow || aql`<`} ${cursorList[0].id}
         OR (dnsScan.${cursorList[0].type} == ${cursorList[0].id}
         AND TO_NUMBER(dnsScan._key) < TO_NUMBER(${cursorList[1].id}))
       `
@@ -122,33 +125,58 @@ export const loadDnsConnectionsByDomainId =
       FILTER DATE_FORMAT(dnsScan.timestamp, '%yyyy-%mm-%dd') <= DATE_FORMAT(${endDate}, '%yyyy-%mm-%dd')`
     }
 
+    let removeExtraSliceTemplate = aql`SLICE(dnsScansPlusOne, 0, ${limit})`
     const dnsScanQuery = aql`
-      FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
-        ${startDateFilter}
-        ${endDateFilter}
-        ${before ? relayBeforeTemplate : relayAfterTemplate}
-        ${sortTemplate}
-        LIMIT ${limit + 1}
-        RETURN MERGE({ id: dnsScan._key, _type: "dnsScan" }, dnsScan)
+      LET dnsScansPlusOne = (
+        FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
+          ${startDateFilter}
+          ${endDateFilter}
+          ${before ? relayBeforeTemplate : relayAfterTemplate}
+          ${sortTemplate}
+          LIMIT ${limit + 1}
+          RETURN MERGE({ id: dnsScan._key, _type: "dnsScan" }, dnsScan)
+      )
+      LET hasMoreRelayPage = LENGTH(dnsScansPlusOne) == ${limit} + 1
+      LET hasReversePage = ${!usingRelayExplicitly} ? false : (LENGTH(
+          FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
+            ${startDateFilter}
+            ${endDateFilter}
+            ${before ? relayAfterTemplate : relayBeforeTemplate}
+            LIMIT 1
+            RETURN true
+        ) > 0) ? true : false
+      LET totalCount = COUNT(
+          FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
+            ${startDateFilter}
+            ${endDateFilter}
+            RETURN true
+      )
+      LET dnsScans = ${removeExtraSliceTemplate}
+
+      RETURN {
+        "dnsScans": dnsScans,
+        "hasMoreRelayPage": hasMoreRelayPage,
+        "hasReversePage": hasReversePage,
+        "totalCount": totalCount
+      }
     `
 
     let dnsScanCursor
     try {
-      dnsScanCursor = await db.query(dnsScanQuery, { fullCount: true })
+      dnsScanCursor = await db.query(dnsScanQuery)
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userKey} was trying to get cursor for DNS document '${after || before}' for domain '${domainId}', error: ${err}`,
+        `Database error occurred while user: ${userKey} was trying to get cursor for DNS document with cursor '${after || before}' for domain '${domainId}', error: ${err}`,
       )
       throw new Error(
         i18n._(t`Unable to load DNS scan(s). Please try again.`),
       )
     }
 
-    const fullCount = dnsScanCursor.extra.stats.fullCount
 
-    let dnsScansPlusOne
+    let dnsScanInfo
     try {
-      dnsScansPlusOne = await dnsScanCursor.all()
+      dnsScanInfo = await dnsScanCursor.next()
     } catch (err) {
       console.error(
         `Cursor error occurred while user: ${userKey} was trying to get DNS information for ${domainId}, error: ${err}`,
@@ -158,59 +186,24 @@ export const loadDnsConnectionsByDomainId =
       )
     }
 
-    let reverseRelayPageExistsCursor
-    try {
-      reverseRelayPageExistsCursor = await db.query(aql`
-      RETURN LENGTH(
-        FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
-          ${startDateFilter}
-          ${endDateFilter}
-          ${before ? relayAfterTemplate : relayBeforeTemplate}
-          LIMIT 1
-          RETURN true
-      ) > 0
-    `)
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userKey} was trying to get DNS reverse relay page exists cursor for ${domainId}, error: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to load DNS scan(s). Please try again.`),
-      )
+    const dnsScans = dnsScanInfo.dnsScans
+
+    if (before) {
+      dnsScans.reverse()
     }
 
-
-    let reverseRelayPageExists
-    try {
-      reverseRelayPageExists = await reverseRelayPageExistsCursor.next()
-    } catch (err) {
-      console.error(
-        `Cursor error occurred while user: ${userKey} was trying to get DNS reverse relay page for ${domainId}, error: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to load DNS scan(s). Please try again.`),
-      )
-    }
-
-    if (dnsScansPlusOne.length === 0) {
+    if (dnsScans.length === 0) {
       return {
         edges: [],
-        totalCount: fullCount,
+        totalCount: dnsScanInfo.totalCount,
         pageInfo: {
-          hasNextPage: (after || !usingRelayExplicitly) ? false : reverseRelayPageExists,
-          hasPreviousPage: after ? reverseRelayPageExists : false,
+          hasPreviousPage: !usingRelayExplicitly ? false : after ? dnsScanInfo.hasReversePage : dnsScanInfo.hasMoreRelayPage,
+          hasNextPage: (after || !usingRelayExplicitly) ? dnsScanInfo.hasMoreRelayPage : dnsScanInfo.hasReversePage,
           startCursor: null,
           endCursor: null,
         },
       }
     }
-
-    const moreRelayPageExists = dnsScansPlusOne.length === (limit + 1)
-    if (before) {
-      dnsScansPlusOne.reverse()
-    }
-
-    const dnsScans = moreRelayPageExists ? dnsScansPlusOne.slice(0, -1) : dnsScansPlusOne
 
     const toCursorString = (cursorObjects) => {
       const cursorStringArray = cursorObjects.reduce(
@@ -218,7 +211,7 @@ export const loadDnsConnectionsByDomainId =
           if (cursorObject.type === undefined || cursorObject.id === undefined) {
             // TODO: throw error
           }
-          acc.push(`${cursorObject.type}:${cursorObject.id}`)
+          acc.push(`${cursorObject.type}::${cursorObject.id}`)
           return acc
         }, [])
       const cursorString = cursorStringArray.join('|')
@@ -252,10 +245,10 @@ export const loadDnsConnectionsByDomainId =
 
     return {
       edges: edges,
-      totalCount: fullCount,
+      totalCount: dnsScanInfo.totalCount,
       pageInfo: {
-        hasPreviousPage: !usingRelayExplicitly ? false : after ? reverseRelayPageExists : moreRelayPageExists,
-        hasNextPage: (after || !usingRelayExplicitly) ? moreRelayPageExists : reverseRelayPageExists,
+        hasPreviousPage: !usingRelayExplicitly ? false : after ? dnsScanInfo.hasReversePage : dnsScanInfo.hasMoreRelayPage,
+        hasNextPage: (after || !usingRelayExplicitly) ? dnsScanInfo.hasMoreRelayPage : dnsScanInfo.hasReversePage,
         endCursor: edges.length > 0 ? edges.at(-1).cursor : null,
         startCursor: edges.length > 0 ? edges[0].cursor : null,
       },
