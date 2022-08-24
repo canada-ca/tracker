@@ -74,9 +74,11 @@ import {
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
+import {loadDnsConnectionsByDomainId} from "./dns-scan";
 
 export function initializeLoaders({
   query,
+  db,
   userKey,
   i18n,
   language,
@@ -183,6 +185,13 @@ export function initializeLoaders({
     }),
     loadDmarcConnectionsByDomainId: loadDmarcConnectionsByDomainId({
       query,
+      userKey,
+      cleanseInput,
+      i18n,
+    }),
+    loadDnsConnectionsByDomainId: loadDnsConnectionsByDomainId({
+      query,
+      db,
       userKey,
       cleanseInput,
       i18n,

@@ -1,22 +1,18 @@
-import { t } from '@lingui/macro'
-import {
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLString,
-} from 'graphql'
-import { connectionArgs, globalIdField } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from 'graphql'
+import {connectionArgs, globalIdField} from 'graphql-relay'
 
-import { domainStatus } from './domain-status'
-import { PeriodEnums } from '../../enums'
-import { nodeInterface } from '../../node'
-import { Domain, Selectors, Year } from '../../scalars'
-import { dmarcSummaryType } from '../../dmarc-summaries/objects'
-import { emailScanType } from '../../email-scan/objects'
-import { webScanType } from '../../web-scan/objects'
-import { organizationOrder } from '../../organization/inputs'
-import { organizationConnection } from '../../organization/objects'
+import {domainStatus} from './domain-status'
+import {PeriodEnums} from '../../enums'
+import {nodeInterface} from '../../node'
+import {Domain, Selectors, Year} from '../../scalars'
+import {dmarcSummaryType} from '../../dmarc-summaries/objects'
+import {dnsScanConnection} from '../../dns-scan/objects/dns-scan-connection'
+import {webScanType} from '../../web-scan/objects'
+import {organizationOrder} from '../../organization/inputs'
+import {organizationConnection} from '../../organization/objects'
+import {GraphQLDate} from "graphql-scalars";
+import {dmarcOrder} from "../../email-scan/inputs";
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -106,11 +102,37 @@ export const domainType = new GraphQLObjectType({
         return orgs
       },
     },
-    email: {
-      type: emailScanType,
-      description: 'DKIM, DMARC, and SPF scan results.',
-      resolve: ({ _id, _key }) => {
-        return { _id, _key }
+    dnsScan: {
+      type: dnsScanConnection.connectionType,
+      args: {
+        startDate: {
+          type: GraphQLDate,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDate,
+          description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: dmarcOrder,
+          description: 'Ordering options for DNS connections.',
+        },
+        limit: {
+          type: GraphQLInt,
+          description: 'Number of DNS scans to retrieve.',
+        },
+        ...connectionArgs,
+      },
+      description: `DNS scan results.`,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { loadDnsConnectionsByDomainId } },
+      ) => {
+        return await loadDnsConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
       },
     },
     web: {
