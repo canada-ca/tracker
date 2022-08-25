@@ -3,7 +3,7 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDnsConnectionsByDomainId =
-  ({ query, db, userKey, cleanseInput, i18n }) =>
+  ({ query, userKey, cleanseInput, i18n }) =>
   async ({
     limit,
     domainId,
@@ -51,6 +51,9 @@ export const loadDnsConnectionsByDomainId =
         ),
       )
     }
+
+    before = cleanseInput(before)
+    after = cleanseInput(after)
 
     const usingRelayExplicitly = !!(before || after)
 
@@ -163,7 +166,7 @@ export const loadDnsConnectionsByDomainId =
 
     let dnsScanCursor
     try {
-      dnsScanCursor = await db.query(dnsScanQuery)
+      dnsScanCursor = await query`${dnsScanQuery}`
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to get cursor for DNS document with cursor '${after || before}' for domain '${domainId}', error: ${err}`,
@@ -172,7 +175,6 @@ export const loadDnsConnectionsByDomainId =
         i18n._(t`Unable to load DNS scan(s). Please try again.`),
       )
     }
-
 
     let dnsScanInfo
     try {
