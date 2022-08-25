@@ -8,7 +8,7 @@ import {nodeInterface} from '../../node'
 import {Domain, Selectors, Year} from '../../scalars'
 import {dmarcSummaryType} from '../../dmarc-summaries/objects'
 import {dnsScanConnection} from '../../dns-scan/objects/dns-scan-connection'
-import {webScanType} from '../../web-scan/objects'
+import {webScanConnection, webScanType} from '../../web-scan/objects'
 import {organizationOrder} from '../../organization/inputs'
 import {organizationConnection} from '../../organization/objects'
 import {GraphQLDate} from "graphql-scalars";
@@ -136,10 +136,36 @@ export const domainType = new GraphQLObjectType({
       },
     },
     web: {
-      type: webScanType,
-      description: 'HTTPS, and SSL scan results.',
-      resolve: ({ _id, _key }) => {
-        return { _id, _key }
+      type: webScanConnection.connectionType,
+      description: 'HTTPS, and TLS scan results.',
+      args: {
+        startDate: {
+          type: GraphQLDate,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDate,
+          description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: dmarcOrder,
+          description: 'Ordering options for web connections.',
+        },
+        limit: {
+          type: GraphQLInt,
+          description: 'Number of web scans to retrieve.',
+        },
+        ...connectionArgs,
+      },
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { loadWebConnectionsByDomainId } },
+      ) => {
+        return await loadWebConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
       },
     },
     dmarcSummaryByPeriod: {

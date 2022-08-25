@@ -1,7 +1,7 @@
 import { aql } from 'arangojs'
 import { t } from '@lingui/macro'
 
-export const loadDnsConnectionsByDomainId =
+export const loadWebConnectionsByDomainId =
   ({ query, userKey, cleanseInput, i18n }) =>
   async ({
     limit,
@@ -15,22 +15,22 @@ export const loadDnsConnectionsByDomainId =
   }) => {
     if (limit === undefined) {
       console.warn(
-        `User: ${userKey} did not set \`limit\` argument for: loadDnsConnectionsByDomainId.`,
+        `User: ${userKey} did not set \`limit\` argument for: loadWebConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
-          t`You must provide a \`limit\` value to properly paginate the \`DNS\` connection.`,
+          t`You must provide a \`limit\` value to properly paginate the \`web\` connection.`,
         ),
       )
     }
 
     if (limit <= 0 || limit > 100) {
       console.warn(
-        `User: ${userKey} set \`limit\` argument outside accepted range: loadDnsConnectionsByDomainId.`,
+        `User: ${userKey} set \`limit\` argument outside accepted range: loadWebConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
-          t`You must provide a \`limit\` value in the range of 1-100 to properly paginate the \`DNS\` connection.`,
+          t`You must provide a \`limit\` value in the range of 1-100 to properly paginate the \`web\` connection.`,
         ),
       )
     }
@@ -42,11 +42,11 @@ export const loadDnsConnectionsByDomainId =
 
     if (paginationMethodCount > 1) {
       console.warn(
-        `User: ${userKey} set multiple pagination methods for: loadDnsConnectionsByDomainId.`,
+        `User: ${userKey} set multiple pagination methods for: loadWebConnectionsByDomainId.`,
       )
       throw new Error(
         i18n._(
-          t`You must provide at most one pagination method (\`before\`, \`after\`, \`offset\`) value to properly paginate the \`DNS\` connection.`,
+          t`You must provide at most one pagination method (\`before\`, \`after\`, \`offset\`) value to properly paginate the \`web\` connection.`,
         ),
       )
     }
@@ -87,20 +87,20 @@ export const loadDnsConnectionsByDomainId =
       const orderByDirectionArrow = orderBy?.direction === "DESC" ? aql`<` : orderBy?.direction === "ASC" ? aql`>` : null
       const reverseOrderByDirectionArrow = orderBy?.direction === "DESC" ? aql`>` : orderBy?.direction === "ASC" ? aql`<` : null
 
-      relayBeforeTemplate = aql`FILTER TO_NUMBER(dnsScan._key) < TO_NUMBER(${cursorList[0].id})`
-      relayAfterTemplate = aql`FILTER TO_NUMBER(dnsScan._key) > TO_NUMBER(${cursorList[0].id})`
+      relayBeforeTemplate = aql`FILTER TO_NUMBER(webScan._key) < TO_NUMBER(${cursorList[0].id})`
+      relayAfterTemplate = aql`FILTER TO_NUMBER(webScan._key) > TO_NUMBER(${cursorList[0].id})`
 
       if (cursorList.length === 2) {
         relayAfterTemplate = aql`
-        FILTER dnsScan.${cursorList[0].type} ${orderByDirectionArrow || aql`>`} ${cursorList[0].id}
-        OR (dnsScan.${cursorList[0].type} == ${cursorList[0].id}
-        AND TO_NUMBER(dnsScan._key) > TO_NUMBER(${cursorList[1].id}))
+        FILTER webScan.${cursorList[0].type} ${orderByDirectionArrow || aql`>`} ${cursorList[0].id}
+        OR (webScan.${cursorList[0].type} == ${cursorList[0].id}
+        AND TO_NUMBER(webScan._key) > TO_NUMBER(${cursorList[1].id}))
       `
 
         relayBeforeTemplate = aql`
-        FILTER dnsScan.${cursorList[0].type} ${reverseOrderByDirectionArrow || aql`<`} ${cursorList[0].id}
-        OR (dnsScan.${cursorList[0].type} == ${cursorList[0].id}
-        AND TO_NUMBER(dnsScan._key) < TO_NUMBER(${cursorList[1].id}))
+        FILTER webScan.${cursorList[0].type} ${reverseOrderByDirectionArrow || aql`<`} ${cursorList[0].id}
+        OR (webScan.${cursorList[0].type} == ${cursorList[0].id}
+        AND TO_NUMBER(webScan._key) < TO_NUMBER(${cursorList[1].id}))
       `
       }
     }
@@ -109,38 +109,38 @@ export const loadDnsConnectionsByDomainId =
 
     let sortTemplate
     if (!orderBy) {
-      sortTemplate = aql`SORT TO_NUMBER(dnsScan._key) ${relayDirectionString}`
+      sortTemplate = aql`SORT TO_NUMBER(webScan._key) ${relayDirectionString}`
     }
     else {
-      sortTemplate = aql`SORT dnsScan.${orderBy.field} ${orderBy.direction}, TO_NUMBER(dnsScan._key) ${relayDirectionString}`
+      sortTemplate = aql`SORT webScan.${orderBy.field} ${orderBy.direction}, TO_NUMBER(webScan._key) ${relayDirectionString}`
     }
 
     let startDateFilter = aql``
     if (typeof startDate !== 'undefined') {
       startDateFilter = aql`
-      FILTER DATE_FORMAT(dnsScan.timestamp, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')`
+      FILTER DATE_FORMAT(webScan.timestamp, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')`
     }
 
     let endDateFilter = aql``
     if (typeof endDate !== 'undefined') {
       endDateFilter = aql`
-      FILTER DATE_FORMAT(dnsScan.timestamp, '%yyyy-%mm-%dd') <= DATE_FORMAT(${endDate}, '%yyyy-%mm-%dd')`
+      FILTER DATE_FORMAT(webScan.timestamp, '%yyyy-%mm-%dd') <= DATE_FORMAT(${endDate}, '%yyyy-%mm-%dd')`
     }
 
-    let removeExtraSliceTemplate = aql`SLICE(dnsScansPlusOne, 0, ${limit})`
-    const dnsScanQuery = aql`
-      LET dnsScansPlusOne = (
-        FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
+    let removeExtraSliceTemplate = aql`SLICE(webScansPlusOne, 0, ${limit})`
+    const webScanQuery = aql`
+      LET webScansPlusOne = (
+        FOR webScan, e IN 1 OUTBOUND ${domainId} domainsWeb
           ${startDateFilter}
           ${endDateFilter}
           ${before ? relayBeforeTemplate : relayAfterTemplate}
           ${sortTemplate}
           LIMIT ${limit + 1}
-          RETURN MERGE({ id: dnsScan._key, _type: "dnsScan" }, dnsScan)
+          RETURN MERGE({ id: webScan._key, _type: "webScan" }, webScan)
       )
-      LET hasMoreRelayPage = LENGTH(dnsScansPlusOne) == ${limit} + 1
+      LET hasMoreRelayPage = LENGTH(webScansPlusOne) == ${limit} + 1
       LET hasReversePage = ${!usingRelayExplicitly} ? false : (LENGTH(
-          FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
+          FOR webScan, e IN 1 OUTBOUND ${domainId} domainsWeb
             ${startDateFilter}
             ${endDateFilter}
             ${before ? relayAfterTemplate : relayBeforeTemplate}
@@ -148,54 +148,56 @@ export const loadDnsConnectionsByDomainId =
             RETURN true
         ) > 0) ? true : false
       LET totalCount = COUNT(
-          FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
+          FOR webScan, e IN 1 OUTBOUND ${domainId} domainsWeb
             ${startDateFilter}
             ${endDateFilter}
             RETURN true
       )
-      LET dnsScans = ${removeExtraSliceTemplate}
+      LET webScans = ${removeExtraSliceTemplate}
 
       RETURN {
-        "dnsScans": dnsScans,
+        "webScans": webScans,
         "hasMoreRelayPage": hasMoreRelayPage,
         "hasReversePage": hasReversePage,
         "totalCount": totalCount
       }
     `
 
-    let dnsScanCursor
+    let webScanCursor
     try {
-      dnsScanCursor = await query`${dnsScanQuery}`
+      webScanCursor = await query`${webScanQuery}`
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userKey} was trying to get cursor for DNS document with cursor '${after || before}' for domain '${domainId}', error: ${err}`,
+        `Database error occurred while user: ${userKey} was trying to get cursor for web document with cursor '${after || before}' for domain '${domainId}', error: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to load DNS scan(s). Please try again.`),
+        i18n._(t`Unable to load web scan(s). Please try again.`),
       )
     }
 
-    let dnsScanInfo
+    let webScanInfo
     try {
-      dnsScanInfo = await dnsScanCursor.next()
+      webScanInfo = await webScanCursor.next()
     } catch (err) {
       console.error(
-        `Cursor error occurred while user: ${userKey} was trying to get DNS information for ${domainId}, error: ${err}`,
+        `Cursor error occurred while user: ${userKey} was trying to get web scan information for ${domainId}, error: ${err}`,
       )
       throw new Error(
-        i18n._(t`Unable to load DNS scan(s). Please try again.`),
+        i18n._(t`Unable to load web scan(s). Please try again.`),
       )
     }
 
-    const dnsScans = dnsScanInfo.dnsScans
+    console.log(webScanInfo)
 
-    if (dnsScans.length === 0) {
+    const webScans = webScanInfo.webScans
+
+    if (webScans.length === 0) {
       return {
         edges: [],
-        totalCount: dnsScanInfo.totalCount,
+        totalCount: webScanInfo.totalCount,
         pageInfo: {
-          hasPreviousPage: !usingRelayExplicitly ? false : after ? dnsScanInfo.hasReversePage : dnsScanInfo.hasMoreRelayPage,
-          hasNextPage: (after || !usingRelayExplicitly) ? dnsScanInfo.hasMoreRelayPage : dnsScanInfo.hasReversePage,
+          hasPreviousPage: !usingRelayExplicitly ? false : after ? webScanInfo.hasReversePage : webScanInfo.hasMoreRelayPage,
+          hasNextPage: (after || !usingRelayExplicitly) ? webScanInfo.hasMoreRelayPage : webScanInfo.hasReversePage,
           startCursor: null,
           endCursor: null,
         },
@@ -215,37 +217,37 @@ export const loadDnsConnectionsByDomainId =
       return Buffer.from(cursorString, 'utf8').toString('base64')
     }
 
-    const edges = dnsScans.map((dnsScan) => {
+    const edges = webScans.map((webScan) => {
       let cursor
       if (orderBy) {
         cursor = toCursorString([
           {
             type: orderBy.field,
-            id: dnsScan[orderBy.field]
+            id: webScan[orderBy.field]
           },
           {
             type: "id",
-            id: dnsScan._key
+            id: webScan._key
           }]
         )
       } else {
         cursor = toCursorString([{
           type: "id",
-          id: dnsScan._key
+          id: webScan._key
         }])
       }
       return {
         cursor: cursor,
-        node: dnsScan,
+        node: webScan,
       }
     })
 
     return {
       edges: edges,
-      totalCount: dnsScanInfo.totalCount,
+      totalCount: webScanInfo.totalCount,
       pageInfo: {
-        hasPreviousPage: !usingRelayExplicitly ? false : after ? dnsScanInfo.hasReversePage : dnsScanInfo.hasMoreRelayPage,
-        hasNextPage: (after || !usingRelayExplicitly) ? dnsScanInfo.hasMoreRelayPage : dnsScanInfo.hasReversePage,
+        hasPreviousPage: !usingRelayExplicitly ? false : after ? webScanInfo.hasReversePage : webScanInfo.hasMoreRelayPage,
+        hasNextPage: (after || !usingRelayExplicitly) ? webScanInfo.hasMoreRelayPage : webScanInfo.hasReversePage,
         endCursor: edges.length > 0 ? edges.at(-1).cursor : null,
         startCursor: edges.length > 0 ? edges[0].cursor : null,
       },

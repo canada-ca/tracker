@@ -59,7 +59,7 @@ import {
   loadHttpsByKey,
   loadHttpsConnectionsByDomainId,
   loadSslByKey,
-  loadSslConnectionByDomainId,
+  loadSslConnectionByDomainId, loadWebConnectionsByDomainId,
 } from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
@@ -213,6 +213,13 @@ export function initializeLoaders({
       query,
       userKey,
       cleanseInput,
+    }),
+    loadWebConnectionsByDomainId: loadWebConnectionsByDomainId({
+      query,
+      db,
+      userKey,
+      cleanseInput,
+      i18n,
     }),
     loadDkimGuidanceTagByTagId: loadDkimGuidanceTagByTagId({
       query,
