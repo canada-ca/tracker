@@ -7,6 +7,7 @@ import signal
 import logging
 import sys
 import traceback
+import re
 
 from dotenv import load_dotenv
 from arango import ArangoClient
@@ -34,6 +35,28 @@ DB_URL = os.getenv("DB_URL")
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
+
+
+def to_camelcase(string):
+    string = string
+    # remove underscore and uppercase following letter
+    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    # keep numbers seperated with hyphen
+    string = re.sub('([0-9])_([0-9])', r'\1-\2', string)
+    # remove underscore before numbers
+    string = re.sub('_([0-9])', r'\1', string)
+    # convert snakecase to camel
+    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    return string
+
+
+def snake_to_camel(d):
+    if isinstance(d, str):
+        return d
+    if isinstance(d, list):
+        return [snake_to_camel(entry) for entry in d]
+    if isinstance(d, dict):
+        return {to_camelcase(a): snake_to_camel(b) if isinstance(b, (dict, list)) else b for a, b in d.items()}
 
 
 async def run(loop):
@@ -78,7 +101,7 @@ async def run(loop):
 
         if user_key is None:
             try:
-                dns_entry = db.collection("dns").insert(processed_results)
+                dns_entry = db.collection("dns").insert(snake_to_camel(processed_results))
 
                 domain = db.collection("domains").get({"_key": domain_key})
                 db.collection("domainsDNS").insert(
