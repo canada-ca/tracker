@@ -1,10 +1,11 @@
-import {GraphQLObjectType} from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 import {globalIdField} from 'graphql-relay'
 
 import {domainType} from '../../domain/objects'
 import {nodeInterface} from "../../node";
 import {tlsResultType} from "./tls-result";
 import {webConnectionResultType} from "./web-connection-result";
+import {GraphQLDate} from "graphql-scalars";
 
 export const webScanType = new GraphQLObjectType({
   name: 'WebScan',
@@ -18,6 +19,11 @@ export const webScanType = new GraphQLObjectType({
         domain.id = domain._key
         return domain
       },
+    },
+    timestamp: {
+      type: GraphQLDate,
+      description: `The time when the scan was initiated.`,
+      resolve: ({timestamp}) => new Date(timestamp),
     },
     tlsResult: {
       type: tlsResultType,
