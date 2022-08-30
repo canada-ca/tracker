@@ -112,6 +112,10 @@ async def run(loop):
                     }
                 )
 
+                web_entry = db.collection("web").insert({
+                    "timestamp": str(datetime.datetime.utcnow()),
+                })
+
                 if domain.get("status", None) is None:
                     domain.update(
                         {
@@ -144,6 +148,15 @@ async def run(loop):
                 db.collection("domains").update(domain)
 
                 for ip in results["resolve_ips"]:
+                    web_scan = db.collection("webScan").insert({
+                        "status": "pending",
+                        "ip_address": ip
+                    })
+                    db.collection("webToWebScans").insert({
+                        "_from": web_entry["_id"],
+                        "_to": web_scan["_id"],
+                    })
+
                     await nc.publish(
                         f"{PUBLISH_TO}.{domain_key}.web",
                         json.dumps(
@@ -153,9 +166,12 @@ async def run(loop):
                                 "domain_key": domain_key,
                                 "shared_id": shared_id,
                                 "ip_address": ip,
+                                "web_scan_key": web_scan["_key"]
                             }
                         ).encode(),
                     )
+
+
 
             except Exception as e:
                 logging.error(

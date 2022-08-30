@@ -95,6 +95,7 @@ async def processor_service(loop):
         user_key = payload.get("user_key")
         shared_id = payload.get("shared_id")
         ip_address = payload.get("ip_address")
+        web_scan_key = payload.get("web_scan_key")
 
         logger.info(f"Starting web scan processing on '{domain}' at IP address '{ip_address}'")
 
@@ -102,10 +103,19 @@ async def processor_service(loop):
 
         if user_key is None:
             try:
-                web_entry = db.collection("web").insert(snake_to_camel(processed_results))
+                web_scan_entry = db.collection("webScan").get({'_key': web_scan_key})
+
+                db.collection("webScan").update_match(
+                    {'_key': web_scan_key},
+                    {
+                        "status": "complete",
+                        "results": snake_to_camel(processed_results)
+                    }
+                )
+
                 domain = db.collection("domains").get({"_key": domain_key})
                 db.collection("domainsWeb").insert(
-                    {"_from": domain["_id"], "timestamp": processed_results["timestamp"], "_to": web_entry["_id"]}
+                    {"_from": domain["_id"], "timestamp": processed_results["timestamp"], "_to": web_scan_entry["_id"]}
                 )
 
                 if domain.get("status", None) == None:

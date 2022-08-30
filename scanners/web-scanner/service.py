@@ -91,6 +91,7 @@ async def scan_service(loop):
         user_key = payload.get("user_key")
         shared_id = payload.get("shared_id")
         ip_address = payload.get("ip_address")
+        web_scan_key = payload.get("web_scan_key")
 
         try:
             logger.info(f"Starting web scan on '{domain}' at IP address '{ip_address}'")
@@ -112,7 +113,8 @@ async def scan_service(loop):
                     "domain": domain,
                     "domain_key": domain_key,
                     "shared_id": shared_id,
-                    "ip_address": ip_address
+                    "ip_address": ip_address,
+                    "web_scan_key": web_scan_key
                 }
             ).encode(),
         )
