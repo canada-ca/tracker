@@ -59,7 +59,7 @@ import {
   loadHttpsByKey,
   loadHttpsConnectionsByDomainId,
   loadSslByKey,
-  loadSslConnectionByDomainId, loadWebConnectionsByDomainId,
+  loadSslConnectionByDomainId, loadWebConnectionsByDomainId, loadWebScansByWebId,
 } from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
@@ -215,6 +215,13 @@ export function initializeLoaders({
       cleanseInput,
     }),
     loadWebConnectionsByDomainId: loadWebConnectionsByDomainId({
+      query,
+      db,
+      userKey,
+      cleanseInput,
+      i18n,
+    }),
+    loadWebScansByWebId: loadWebScansByWebId({
       query,
       db,
       userKey,

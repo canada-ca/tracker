@@ -87,20 +87,20 @@ export const loadWebConnectionsByDomainId =
       const orderByDirectionArrow = orderBy?.direction === "DESC" ? aql`<` : orderBy?.direction === "ASC" ? aql`>` : null
       const reverseOrderByDirectionArrow = orderBy?.direction === "DESC" ? aql`>` : orderBy?.direction === "ASC" ? aql`<` : null
 
-      relayBeforeTemplate = aql`FILTER TO_NUMBER(webScan._key) < TO_NUMBER(${cursorList[0].id})`
-      relayAfterTemplate = aql`FILTER TO_NUMBER(webScan._key) > TO_NUMBER(${cursorList[0].id})`
+      relayBeforeTemplate = aql`FILTER TO_NUMBER(web._key) < TO_NUMBER(${cursorList[0].id})`
+      relayAfterTemplate = aql`FILTER TO_NUMBER(web._key) > TO_NUMBER(${cursorList[0].id})`
 
       if (cursorList.length === 2) {
         relayAfterTemplate = aql`
-        FILTER webScan.${cursorList[0].type} ${orderByDirectionArrow || aql`>`} ${cursorList[0].id}
-        OR (webScan.${cursorList[0].type} == ${cursorList[0].id}
-        AND TO_NUMBER(webScan._key) > TO_NUMBER(${cursorList[1].id}))
+        FILTER web.${cursorList[0].type} ${orderByDirectionArrow || aql`>`} ${cursorList[0].id}
+        OR (web.${cursorList[0].type} == ${cursorList[0].id}
+        AND TO_NUMBER(web._key) > TO_NUMBER(${cursorList[1].id}))
       `
 
         relayBeforeTemplate = aql`
-        FILTER webScan.${cursorList[0].type} ${reverseOrderByDirectionArrow || aql`<`} ${cursorList[0].id}
-        OR (webScan.${cursorList[0].type} == ${cursorList[0].id}
-        AND TO_NUMBER(webScan._key) < TO_NUMBER(${cursorList[1].id}))
+        FILTER web.${cursorList[0].type} ${reverseOrderByDirectionArrow || aql`<`} ${cursorList[0].id}
+        OR (web.${cursorList[0].type} == ${cursorList[0].id}
+        AND TO_NUMBER(web._key) < TO_NUMBER(${cursorList[1].id}))
       `
       }
     }
@@ -109,38 +109,38 @@ export const loadWebConnectionsByDomainId =
 
     let sortTemplate
     if (!orderBy) {
-      sortTemplate = aql`SORT TO_NUMBER(webScan._key) ${relayDirectionString}`
+      sortTemplate = aql`SORT TO_NUMBER(web._key) ${relayDirectionString}`
     }
     else {
-      sortTemplate = aql`SORT webScan.${orderBy.field} ${orderBy.direction}, TO_NUMBER(webScan._key) ${relayDirectionString}`
+      sortTemplate = aql`SORT web.${orderBy.field} ${orderBy.direction}, TO_NUMBER(web._key) ${relayDirectionString}`
     }
 
     let startDateFilter = aql``
     if (typeof startDate !== 'undefined') {
       startDateFilter = aql`
-      FILTER DATE_FORMAT(webScan.timestamp, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')`
+      FILTER DATE_FORMAT(web.timestamp, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')`
     }
 
     let endDateFilter = aql``
     if (typeof endDate !== 'undefined') {
       endDateFilter = aql`
-      FILTER DATE_FORMAT(webScan.timestamp, '%yyyy-%mm-%dd') <= DATE_FORMAT(${endDate}, '%yyyy-%mm-%dd')`
+      FILTER DATE_FORMAT(web.timestamp, '%yyyy-%mm-%dd') <= DATE_FORMAT(${endDate}, '%yyyy-%mm-%dd')`
     }
 
-    let removeExtraSliceTemplate = aql`SLICE(webScansPlusOne, 0, ${limit})`
-    const webScanQuery = aql`
-      LET webScansPlusOne = (
-        FOR webScan, e IN 1 OUTBOUND ${domainId} domainsWeb
+    let removeExtraSliceTemplate = aql`SLICE(websPlusOne, 0, ${limit})`
+    const webQuery = aql`
+      LET websPlusOne = (
+        FOR web, e IN 1 OUTBOUND ${domainId} domainsWeb
           ${startDateFilter}
           ${endDateFilter}
           ${before ? relayBeforeTemplate : relayAfterTemplate}
           ${sortTemplate}
           LIMIT ${limit + 1}
-          RETURN MERGE({ id: webScan._key, _type: "webScan" }, webScan)
+          RETURN MERGE({ id: web._key, _type: "web" }, web)
       )
-      LET hasMoreRelayPage = LENGTH(webScansPlusOne) == ${limit} + 1
+      LET hasMoreRelayPage = LENGTH(websPlusOne) == ${limit} + 1
       LET hasReversePage = ${!usingRelayExplicitly} ? false : (LENGTH(
-          FOR webScan, e IN 1 OUTBOUND ${domainId} domainsWeb
+          FOR web, e IN 1 OUTBOUND ${domainId} domainsWeb
             ${startDateFilter}
             ${endDateFilter}
             ${before ? relayAfterTemplate : relayBeforeTemplate}
@@ -148,24 +148,24 @@ export const loadWebConnectionsByDomainId =
             RETURN true
         ) > 0) ? true : false
       LET totalCount = COUNT(
-          FOR webScan, e IN 1 OUTBOUND ${domainId} domainsWeb
+          FOR web, e IN 1 OUTBOUND ${domainId} domainsWeb
             ${startDateFilter}
             ${endDateFilter}
             RETURN true
       )
-      LET webScans = ${removeExtraSliceTemplate}
+      LET webs = ${removeExtraSliceTemplate}
 
       RETURN {
-        "webScans": webScans,
+        "webs": webs,
         "hasMoreRelayPage": hasMoreRelayPage,
         "hasReversePage": hasReversePage,
         "totalCount": totalCount
       }
     `
 
-    let webScanCursor
+    let webCursor
     try {
-      webScanCursor = await query`${webScanQuery}`
+      webCursor = await query`${webQuery}`
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to get cursor for web document with cursor '${after || before}' for domain '${domainId}', error: ${err}`,
@@ -175,9 +175,9 @@ export const loadWebConnectionsByDomainId =
       )
     }
 
-    let webScanInfo
+    let webInfo
     try {
-      webScanInfo = await webScanCursor.next()
+      webInfo = await webCursor.next()
     } catch (err) {
       console.error(
         `Cursor error occurred while user: ${userKey} was trying to get web scan information for ${domainId}, error: ${err}`,
@@ -187,17 +187,15 @@ export const loadWebConnectionsByDomainId =
       )
     }
 
-    console.log(webScanInfo)
+    const webs = webInfo.webs
 
-    const webScans = webScanInfo.webScans
-
-    if (webScans.length === 0) {
+    if (webs.length === 0) {
       return {
         edges: [],
-        totalCount: webScanInfo.totalCount,
+        totalCount: webInfo.totalCount,
         pageInfo: {
-          hasPreviousPage: !usingRelayExplicitly ? false : after ? webScanInfo.hasReversePage : webScanInfo.hasMoreRelayPage,
-          hasNextPage: (after || !usingRelayExplicitly) ? webScanInfo.hasMoreRelayPage : webScanInfo.hasReversePage,
+          hasPreviousPage: !usingRelayExplicitly ? false : after ? webInfo.hasReversePage : webInfo.hasMoreRelayPage,
+          hasNextPage: (after || !usingRelayExplicitly) ? webInfo.hasMoreRelayPage : webInfo.hasReversePage,
           startCursor: null,
           endCursor: null,
         },
@@ -217,37 +215,37 @@ export const loadWebConnectionsByDomainId =
       return Buffer.from(cursorString, 'utf8').toString('base64')
     }
 
-    const edges = webScans.map((webScan) => {
+    const edges = webs.map((web) => {
       let cursor
       if (orderBy) {
         cursor = toCursorString([
           {
             type: orderBy.field,
-            id: webScan[orderBy.field]
+            id: web[orderBy.field]
           },
           {
             type: "id",
-            id: webScan._key
+            id: web._key
           }]
         )
       } else {
         cursor = toCursorString([{
           type: "id",
-          id: webScan._key
+          id: web._key
         }])
       }
       return {
         cursor: cursor,
-        node: webScan,
+        node: web,
       }
     })
 
     return {
       edges: edges,
-      totalCount: webScanInfo.totalCount,
+      totalCount: webInfo.totalCount,
       pageInfo: {
-        hasPreviousPage: !usingRelayExplicitly ? false : after ? webScanInfo.hasReversePage : webScanInfo.hasMoreRelayPage,
-        hasNextPage: (after || !usingRelayExplicitly) ? webScanInfo.hasMoreRelayPage : webScanInfo.hasReversePage,
+        hasPreviousPage: !usingRelayExplicitly ? false : after ? webInfo.hasReversePage : webInfo.hasMoreRelayPage,
+        hasNextPage: (after || !usingRelayExplicitly) ? webInfo.hasMoreRelayPage : webInfo.hasReversePage,
         endCursor: edges.length > 0 ? edges.at(-1).cursor : null,
         startCursor: edges.length > 0 ? edges[0].cursor : null,
       },

@@ -8,7 +8,7 @@ import {nodeInterface} from '../../node'
 import {Domain, Selectors, Year} from '../../scalars'
 import {dmarcSummaryType} from '../../dmarc-summaries/objects'
 import {dnsScanConnection} from '../../dns-scan/objects/dns-scan-connection'
-import {webScanConnection, webScanType} from '../../web-scan/objects'
+import {webConnection, webScanConnection, webScanType} from '../../web-scan/objects'
 import {organizationOrder} from '../../organization/inputs'
 import {organizationConnection} from '../../organization/objects'
 import {GraphQLDate} from "graphql-scalars";
@@ -21,20 +21,20 @@ export const domainType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',
-      resolve: ({ domain }) => domain,
+      resolve: ({domain}) => domain,
     },
     dmarcPhase: {
       type: GraphQLString,
       description: 'The current dmarc phase the domain is compliant to.',
-      resolve: ({ phase }) => phase,
+      resolve: ({phase}) => phase,
     },
     hasDMARCReport: {
       type: GraphQLBoolean,
       description: 'Whether or not the domain has a aggregate dmarc report.',
       resolve: async (
-        { _id },
+        {_id},
         _,
-        { auth: { checkDomainOwnership, userRequired, loginRequiredBool } },
+        {auth: {checkDomainOwnership, userRequired, loginRequiredBool}},
       ) => {
         if (loginRequiredBool) await userRequired()
         const hasDMARCReport = await checkDomainOwnership({
@@ -47,18 +47,18 @@ export const domainType = new GraphQLObjectType({
     lastRan: {
       type: GraphQLString,
       description: 'The last time that a scan was ran on this domain.',
-      resolve: ({ lastRan }) => lastRan,
+      resolve: ({lastRan}) => lastRan,
     },
     selectors: {
       type: new GraphQLList(Selectors),
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: ({ selectors }) => selectors,
+      resolve: ({selectors}) => selectors,
     },
     status: {
       type: domainStatus,
       description: 'The domains scan status, based on the latest scan data.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
     organizations: {
       type: organizationConnection.connectionType,
@@ -85,11 +85,11 @@ export const domainType = new GraphQLObjectType({
       },
       description: 'The organization that this domain belongs to.',
       resolve: async (
-        { _id },
+        {_id},
         args,
         {
-          auth: { checkSuperAdmin },
-          loaders: { loadOrgConnectionsByDomainId },
+          auth: {checkSuperAdmin},
+          loaders: {loadOrgConnectionsByDomainId},
         },
       ) => {
         const isSuperAdmin = await checkSuperAdmin()
@@ -125,9 +125,9 @@ export const domainType = new GraphQLObjectType({
       },
       description: `DNS scan results.`,
       resolve: async (
-        { _id },
+        {_id},
         args,
-        { loaders: { loadDnsConnectionsByDomainId } },
+        {loaders: {loadDnsConnectionsByDomainId}},
       ) => {
         return await loadDnsConnectionsByDomainId({
           domainId: _id,
@@ -136,7 +136,7 @@ export const domainType = new GraphQLObjectType({
       },
     },
     web: {
-      type: webScanConnection.connectionType,
+      type: webConnection.connectionType,
       description: 'HTTPS, and TLS scan results.',
       args: {
         startDate: {
@@ -158,9 +158,9 @@ export const domainType = new GraphQLObjectType({
         ...connectionArgs,
       },
       resolve: async (
-        { _id },
+        {_id},
         args,
-        { loaders: { loadWebConnectionsByDomainId } },
+        {loaders: {loadWebConnectionsByDomainId}},
       ) => {
         return await loadWebConnectionsByDomainId({
           domainId: _id,
@@ -182,8 +182,8 @@ export const domainType = new GraphQLObjectType({
       },
       type: dmarcSummaryType,
       resolve: async (
-        { _id, _key, domain },
-        { month, year },
+        {_id, _key, domain},
+        {month, year},
         {
           i18n,
           userKey,
@@ -191,7 +191,7 @@ export const domainType = new GraphQLObjectType({
             loadDmarcSummaryEdgeByDomainIdAndPeriod,
             loadStartDateFromPeriod,
           },
-          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
+          auth: {checkDomainOwnership, userRequired, loginRequiredBool},
         },
       ) => {
         if (loginRequiredBool) {
@@ -212,7 +212,7 @@ export const domainType = new GraphQLObjectType({
           }
         }
 
-        const startDate = loadStartDateFromPeriod({ period: month, year })
+        const startDate = loadStartDateFromPeriod({period: month, year})
 
         const dmarcSummaryEdge = await loadDmarcSummaryEdgeByDomainIdAndPeriod({
           domainId: _id,
@@ -230,13 +230,13 @@ export const domainType = new GraphQLObjectType({
       description: 'Yearly summarized DMARC aggregate reports.',
       type: new GraphQLList(dmarcSummaryType),
       resolve: async (
-        { _id, _key, domain },
+        {_id, _key, domain},
         __,
         {
           i18n,
           userKey,
-          loaders: { loadDmarcYearlySumEdge },
-          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
+          loaders: {loadDmarcYearlySumEdge},
+          auth: {checkDomainOwnership, userRequired, loginRequiredBool},
         },
       ) => {
         if (loginRequiredBool) {

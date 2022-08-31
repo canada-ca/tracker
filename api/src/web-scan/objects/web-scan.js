@@ -6,36 +6,29 @@ import {nodeInterface} from "../../node";
 import {tlsResultType} from "./tls-result";
 import {webConnectionResultType} from "./web-connection-result";
 import {GraphQLDate} from "graphql-scalars";
+import {webScanResultType} from "./web-scan-result";
 
 export const webScanType = new GraphQLObjectType({
   name: 'WebScan',
   fields: () => ({
-    id: globalIdField('web'),
-    domain: {
-      type: domainType,
-      description: `The domain the scan was ran on.`,
-      resolve: async ({domainId}, _, {loaders: {loadDomainByKey}}) => {
-        const domain = await loadDomainByKey.load(domainId)
-        domain.id = domain._key
-        return domain
-      },
-    },
     timestamp: {
       type: GraphQLDate,
       description: `The time when the scan was initiated.`,
       resolve: ({timestamp}) => new Date(timestamp),
     },
-    tlsResult: {
-      type: tlsResultType,
-      description: `The result for the TLS scan for the scanned server.`,
-      resolve: async({tlsResult}) => tlsResult
+    ipAddress: {
+      type: GraphQLString,
+      description: `IP address for scan target.`,
     },
-    connectionResults: {
-      type: webConnectionResultType,
-      description: `The result for the HTTP connection scan for the scanned server.`,
-      resolve: async({connectionResults}) => connectionResults
-    }
+    status: {
+      type: GraphQLString,
+      description: `The status of the scan for the given domain and IP address.`,
+    },
+    results: {
+      type: webScanResultType,
+      description: `Results of TLS and HTTP connection scans on the given domain.`,
+      resolve: async({results}) => results
+    },
   }),
-  interfaces: [nodeInterface],
-  description: `Results of TLS and HTTP connection scans on the given domain.`,
+  description: `Information for the TLS and HTTP connection scans on the given domain.`,
 })
