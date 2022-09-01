@@ -11,7 +11,11 @@ data:
       "url": "{{url}}",
       "rootPassword": "{{rootPassword}}",
       "options": [
-        { "type": "user", "username": "{{username}}", "password": "{{password}}" },
+        {
+          "type": "user",
+          "username": "{{username}}",
+          "password": "{{password}}"
+        },
         {
           "type": "documentcollection",
           "name": "users",
@@ -41,7 +45,7 @@ data:
         },
         {
           "type": "documentcollection",
-          "name": "dkim",
+          "name": "dns",
           "options": {
             "replicationFactor": 3,
             "writeConcern": 1,
@@ -50,7 +54,7 @@ data:
         },
         {
           "type": "documentcollection",
-          "name": "dkimResults",
+          "name": "web",
           "options": {
             "replicationFactor": 3,
             "writeConcern": 1,
@@ -59,34 +63,7 @@ data:
         },
         {
           "type": "documentcollection",
-          "name": "dmarc",
-          "options": {
-            "replicationFactor": 3,
-            "writeConcern": 1,
-            "numberOfShards": 6
-          }
-        },
-        {
-          "type": "documentcollection",
-          "name": "spf",
-          "options": {
-            "replicationFactor": 3,
-            "writeConcern": 1,
-            "numberOfShards": 6
-          }
-        },
-        {
-          "type": "documentcollection",
-          "name": "https",
-          "options": {
-            "replicationFactor": 3,
-            "writeConcern": 1,
-            "numberOfShards": 6
-          }
-        },
-        {
-          "type": "documentcollection",
-          "name": "ssl",
+          "name": "webScan",
           "options": {
             "replicationFactor": 3,
             "writeConcern": 1,
@@ -212,7 +189,7 @@ data:
         },
         {
           "type": "edgecollection",
-          "name": "domainsDKIM",
+          "name": "domainsDNS",
           "options": {
             "replicationFactor": 3,
             "writeConcern": 1,
@@ -221,7 +198,7 @@ data:
         },
         {
           "type": "edgecollection",
-          "name": "dkimToDkimResults",
+          "name": "domainsWeb",
           "options": {
             "replicationFactor": 3,
             "writeConcern": 1,
@@ -230,34 +207,7 @@ data:
         },
         {
           "type": "edgecollection",
-          "name": "domainsDMARC",
-          "options": {
-            "replicationFactor": 3,
-            "writeConcern": 1,
-            "numberOfShards": 6
-          }
-        },
-        {
-          "type": "edgecollection",
-          "name": "domainsSPF",
-          "options": {
-            "replicationFactor": 3,
-            "writeConcern": 1,
-            "numberOfShards": 6
-          }
-        },
-        {
-          "type": "edgecollection",
-          "name": "domainsHTTPS",
-          "options": {
-            "replicationFactor": 3,
-            "writeConcern": 1,
-            "numberOfShards": 6
-          }
-        },
-        {
-          "type": "edgecollection",
-          "name": "domainsSSL",
+          "name": "webToWebScans",
           "options": {
             "replicationFactor": 3,
             "writeConcern": 1,
@@ -294,7 +244,10 @@ data:
             "links": {
               "domains": {
                 "fields": {
-                  "domain": { "analyzers": ["space-delimiter-analyzer"] }
+                  "domain": {
+                    "analyzers": [
+                      "space-delimiter-analyzer"
+                    ]}
                 }
               }
             }
@@ -311,14 +264,22 @@ data:
                     "fields": {
                       "en": {
                         "fields": {
-                          "acronym": { "analyzers": ["text_en"] },
-                          "name": { "analyzers": ["text_en"] }
+                          "acronym": {
+                            "analyzers": [
+                              "text_en"]},
+                          "name": {
+                            "analyzers": [
+                              "text_en"]}
                         }
                       },
                       "fr": {
                         "fields": {
-                          "acronym": { "analyzers": ["text_fr"] },
-                          "name": { "analyzers": ["text_fr"] }
+                          "acronym": {
+                            "analyzers": [
+                              "text_fr"]},
+                          "name": {
+                            "analyzers": [
+                              "text_fr"]}
                         }
                       }
                     }
@@ -335,8 +296,15 @@ data:
             "links": {
               "users": {
                 "fields": {
-                  "displayName": { "analyzers": ["text_en"] },
-                  "userName": { "analyzers": ["text_en"] }
+                  "displayName": {
+                    "analyzers": [
+                      "text_en"
+                    ]},
+                  "userName": {
+                    "analyzers": [
+                      "text_en"
+                    ]
+                  }
                 }
               }
             }
