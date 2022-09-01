@@ -147,9 +147,9 @@ class TLSResult:
 
         # Scan for common vulnerabilities, certificate info, elliptic curves, etc
         designated_scans.add(ScanCommand.CERTIFICATE_INFO)
-        designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
-        designated_scans.add(ScanCommand.HEARTBLEED)
-        designated_scans.add(ScanCommand.ROBOT)
+        # designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
+        # designated_scans.add(ScanCommand.HEARTBLEED)
+        # designated_scans.add(ScanCommand.ROBOT)
         designated_scans.add(ScanCommand.SESSION_RESUMPTION)
         designated_scans.add(ScanCommand.SESSION_RENEGOTIATION)
         designated_scans.add(ScanCommand.TLS_FALLBACK_SCSV)
