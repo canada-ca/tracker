@@ -114,7 +114,15 @@ async def run(loop):
 
                 web_entry = db.collection("web").insert({
                     "timestamp": str(datetime.datetime.utcnow()),
+                    "domain": processed_results["domain"]
                 })
+                db.collection("domainsWeb").insert(
+                    {
+                        "_from": domain["_id"],
+                        "timestamp": processed_results["timestamp"],
+                        "_to": web_entry["_id"]
+                    }
+                )
 
                 if domain.get("status", None) is None:
                     domain.update(
@@ -150,7 +158,7 @@ async def run(loop):
                 for ip in results["resolve_ips"]:
                     web_scan = db.collection("webScan").insert({
                         "status": "pending",
-                        "ip_address": ip
+                        "ipAddress": ip
                     })
                     db.collection("webToWebScans").insert({
                         "_from": web_entry["_id"],

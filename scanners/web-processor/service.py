@@ -114,7 +114,7 @@ async def processor_service(loop):
                 )
 
                 domain = db.collection("domains").get({"_key": domain_key})
-                db.collection("domainsWeb").insert(
+                db.collection("webToWebScans").insert(
                     {"_from": domain["_id"], "timestamp": processed_results["timestamp"], "_to": web_scan_entry["_id"]}
                 )
 
