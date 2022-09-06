@@ -355,6 +355,7 @@ def process_results(results):
                 phase = "maintain"
 
     dmarc_results = {
+        "status": dmarc_status,
         "record": results["dmarc"].get("record", None),
         "p_policy": results["dmarc"].get("tags", {}).get("p", {}).get("value", None),
         "sp_policy": results["dmarc"].get("tags", {}).get("sp", {}).get("value", None),
@@ -367,6 +368,7 @@ def process_results(results):
 
     spf_record = results["spf"].get("record", None)
     spf_results = {
+        "status": spf_status,
         "record": spf_record,
         "lookups": results["spf"].get("dns_lookups", None),
         "spf_default": results["spf"].get("parsed", {}).get("all", None),
@@ -375,14 +377,18 @@ def process_results(results):
         "negative_tags": spf_tags["negative_tags"],
     }
 
-    dkim_results = {}
+    dkim_results = {
+        "status": dkim_status,
+        "selectors": {}
+    }
     if not results["dkim"].get("error"):
         for selector in results["dkim"].keys():
             if results["dkim"][selector].get("error", None):
-                dkim_results[selector] = results["dkim"][selector]
+                dkim_results["selectors"][selector] = results["dkim"][selector]
                 continue
 
-            dkim_results[selector] = {
+            dkim_results["selectors"][selector] = {
+                "status": dkim_tags[selector].get("status", None),
                 "record": results["dkim"][selector].get("record", None),
                 "parsed": results["dkim"][selector].get("parsed", None),
                 "key_length": results["dkim"][selector].get("key_size", None),
@@ -396,7 +402,7 @@ def process_results(results):
             # store key_modulus as string, ArangoDB is not capable or storing numbers this size
             key_modulus = results["dkim"][selector].get("public_key_modulus", None)
             if key_modulus:
-                dkim_results[selector]["key_modulus"] = str(key_modulus)
+                dkim_results["selectors"][selector]["key_modulus"] = str(key_modulus)
 
     timestamp = str(datetime.datetime.utcnow())
 
@@ -411,7 +417,7 @@ def process_results(results):
         "cname_record": results["cname_record"],
         "mx_records": results["mx_records"],
         "ns_records": results["ns_records"],
-        "dmarc": {"status": dmarc_status} | dmarc_results,
-        "spf": {"status": spf_status} | spf_results,
-        "dkim": {"status": dkim_status} | dkim_results
+        "dmarc": dmarc_results,
+        "spf": spf_results,
+        "dkim": dkim_results
     }

@@ -150,7 +150,7 @@ async def run(loop):
                 }.items():
                     domain["status"][key] = val
 
-                dmarc_phase = processed_results.get("dmarc").get("results").get("phase")
+                dmarc_phase = processed_results.get("dmarc").get("phase")
 
                 domain.update({"phase": dmarc_phase})
                 db.collection("domains").update(domain)
