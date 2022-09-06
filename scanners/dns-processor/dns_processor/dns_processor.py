@@ -408,7 +408,7 @@ def process_results(results):
         "cname_record": results["cname_record"],
         "mx_records": results["mx_records"],
         "ns_records": results["ns_records"],
-        "dmarc": {"status": dmarc_status, "results": dmarc_results},
-        "spf": {"status": spf_status, "results": spf_results},
-        "dkim": {"status": dkim_status, "results": dkim_results}
+        "dmarc": {"status": dmarc_status} | dmarc_results,
+        "spf": {"status": spf_status} | spf_results,
+        "dkim": {"status": dkim_status} | dkim_results
     }
