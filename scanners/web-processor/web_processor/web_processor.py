@@ -142,6 +142,10 @@ def process_tls_results(tls_results):
 
 
 def process_connection_results(connection_results):
+    positive_tags = []
+    neutral_tags = []
+    negative_tags = []
+
     http_connections = connection_results["http_chain_result"]["connections"]
     https_connections = connection_results["https_chain_result"]["connections"]
 
@@ -151,71 +155,96 @@ def process_connection_results(connection_results):
     hsts_status = "info"
     https_status = "info"
 
-    if not http_live and not https_live:
-        return {
-            "hsts_status": hsts_status,
-            "https_status": https_status
-        }
+    https_downgrades = None
+    http_immediately_upgrades = None
+    http_eventually_upgrades = None
+    http_eventually_downgrades = None
+    hsts_parsed = None
 
-    def check_only_https(connections):
+    def check_https_downgrades(connections):
         for connection in connections:
             if connection["scheme"] == "http":
-                return False
-        return True
+                return True
+        return False
 
-    # check if https chain only contains https urls
-    https_keeps_https = check_only_https(https_connections)
+    # check HTTPS properties
+    if https_live:
+        # check if https chain only contains https urls
+        https_downgrades = check_https_downgrades(https_connections)
 
-    # check if http upgrades (redirects) connection to https
-    http_upgrades = False
-    try:
-        if http_connections[1]["scheme"] == "https":
-            http_upgrades = True
-    except IndexError:
-        pass
+        # check HSTS header
+        hsts = None
+        try:
+            hsts = https_connections[0]["connection"]["headers"]["Strict-Transport-Security"]
+        except KeyError:
+            pass
 
-    hsts = None
-    try:
-        hsts = https_connections[0]["connection"]["headers"]["Strict-Transport-Security"]
-    except KeyError:
-        pass
+        if hsts:
+            max_age = None
+            include_subdomains = None
+            preload = None
 
-    max_age = None
-    include_subdomains = None
-    preload = None
+            directives = [directive.strip() for directive in hsts.split(";") if len(directive) > 0]
 
-    if hsts:
-        directives = [directive.strip() for directive in hsts.split(";") if len(directive) > 0]
+            for directive in directives:
+                match directive:
+                    case d if directive.startswith("max-age="):
+                        max_age = int(d.split("=")[1])
+                    case _ if directive == "includeSubDomains":
+                        include_subdomains = True
+                    case _ if directive.startswith("preload"):
+                        preload = True
 
-        for directive in directives:
-            match directive:
-                case d if directive.startswith("max-age="):
-                    max_age = int(d.split("=")[1])
-                case _ if directive == "includeSubDomains":
-                    include_subdomains = True
-                case _ if directive.startswith("preload"):
-                    preload = True
+            hsts_parsed = {
+                "max_age": max_age,
+                "include_subdomains": include_subdomains,
+                "preload": preload
+            }
 
-    hsts_parsed = {
-        "max_age": max_age,
-        "include_subdomains": include_subdomains,
-        "preload": preload
-    }
+            hsts_status = "pass" if hsts and max_age > 0 else "fail"
 
-    hsts_status = "pass" if hsts and max_age > 0 else "fail"
+    # check HTTP properties
+    if http_live:
+        http_immediately_upgrades = False
+        http_eventually_upgrades = False
+        http_eventually_downgrades = False
+        try:
+            # find index of first https upgrade
+            first_https_index = list(conn["scheme"] == "https" for conn in http_connections).index(True)
 
-    http_down_or_redirect = not http_live or http_upgrades
+            # check if HTTP connection is immediately upgraded (redirected) to HTTPS
+            if first_https_index == 1:
+                http_immediately_upgrades = True
+            # check if HTTP connection eventually (after first redirect) is upgrades (redirected) to HTTPS
+            elif first_https_index > 1:
+                http_eventually_upgrades = True
 
-    https_status = "pass" if http_down_or_redirect and https_live and https_keeps_https else "fail"
+            http_eventually_downgrades = check_https_downgrades(https_connections[first_https_index:])
+        except IndexError:
+            pass
+
+    http_down_or_redirect = not http_live or http_immediately_upgrades
+
+    if http_live or https_live:
+        https_status = "pass" if http_down_or_redirect and https_live and not https_downgrades and not http_eventually_downgrades else "fail"
+
+    # process tags
+    if http_eventually_downgrades or https_downgrades:
+        negative_tags.append("https3")
 
     # merge results
     processed_connection_results = {
+        "neutral_tags": neutral_tags,
+        "positive_tags": positive_tags,
+        "negative_tags": negative_tags,
         "hsts_status": hsts_status,
         "https_status": https_status,
         "http_live": http_live,
         "https_live": https_live,
-        "https_keeps_https": https_keeps_https,
-        "http_upgrades": http_upgrades,
+        "https_downgrades": https_downgrades,
+        "http_immediately_upgrades": http_immediately_upgrades,
+        "http_eventually_upgrades": http_eventually_upgrades,
+        "http_eventually_downgrades": http_eventually_downgrades,
         "hsts_parsed": hsts_parsed
     } | connection_results
 
