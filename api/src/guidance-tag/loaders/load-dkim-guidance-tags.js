@@ -7,7 +7,8 @@ export const loadDkimGuidanceTagByTagId = ({
   i18n,
   language,
 }) =>
-  new DataLoader(async (tags) => {
+    async ({tags = []}) => {
+
     let cursor
     try {
       cursor = await query`
@@ -15,7 +16,7 @@ export const loadDkimGuidanceTagByTagId = ({
         FOR tag IN dkimGuidanceTags
           FILTER tag._key IN ${tags}
           RETURN MERGE(
-            { 
+            {
               _id: tag._id,
               _key: tag._key,
               _rev: tag._rev,
@@ -50,4 +51,4 @@ export const loadDkimGuidanceTagByTagId = ({
     }
 
     return tags.map((tag) => tagMap[tag])
-  })
+  }

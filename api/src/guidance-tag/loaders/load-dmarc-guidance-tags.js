@@ -7,7 +7,8 @@ export const loadDmarcGuidanceTagByTagId = ({
   i18n,
   language,
 }) =>
-  new DataLoader(async (tags) => {
+    async ({tags = []}) => {
+
     let cursor
     try {
       cursor = await query`
@@ -50,4 +51,4 @@ export const loadDmarcGuidanceTagByTagId = ({
     }
 
     return tags.map((tag) => tagMap[tag])
-  })
+  }

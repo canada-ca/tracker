@@ -4,19 +4,18 @@ import {GraphQLDate, GraphQLJSONObject} from 'graphql-scalars'
 
 import {domainType} from '../../domain/objects'
 import {nodeInterface} from "../../node";
+import {dmarcType} from "./dmarc";
+import {spfType} from "./spf";
+import {dkimType} from "./dkim";
 
 export const dnsScanType = new GraphQLObjectType({
   name: 'DNSScan',
   fields: () => ({
     id: globalIdField('dns'),
     domain: {
-      type: domainType,
+      type: GraphQLString,
       description: `The domain the scan was ran on.`,
-      resolve: async ({domainId}, _, {loaders: {loadDomainByKey}}) => {
-        const domain = await loadDomainByKey.load(domainId)
-        domain.id = domain._key
-        return domain
-      },
+      resolve: async ({domain}) => domain,
     },
     timestamp: {
       type: GraphQLDate,
@@ -48,15 +47,15 @@ export const dnsScanType = new GraphQLObjectType({
       description: `The NS records for the domain.`
     },
     dmarc: {
-      type: GraphQLJSONObject,
+      type: dmarcType,
       description: `The DMARC scan results for the domain.`
     },
     spf: {
-      type: GraphQLJSONObject,
+      type: spfType,
       description: `The SPF scan results for the domain.`
     },
     dkim: {
-      type: GraphQLJSONObject,
+      type: dkimType,
       description: `The SKIM scan results for the domain.`
     }
   }),

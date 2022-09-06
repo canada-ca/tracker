@@ -7,7 +7,7 @@ export const loadHttpsGuidanceTagByTagId = ({
   i18n,
   language,
 }) =>
-  new DataLoader(async (tags) => {
+    async ({tags = []}) => {
     let cursor
     try {
       cursor = await query`
@@ -50,4 +50,4 @@ export const loadHttpsGuidanceTagByTagId = ({
     }
 
     return tags.map((tag) => tagMap[tag])
-  })
+  }
