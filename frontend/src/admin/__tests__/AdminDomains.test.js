@@ -403,7 +403,6 @@ describe('<AdminDomains />', () => {
         getByPlaceholderText,
         queryAllByText,
         findByText,
-        queryByText,
         getByRole,
       } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
@@ -471,14 +470,9 @@ describe('<AdminDomains />', () => {
         const successMessages = queryAllByText(/Domain added/i)
         expect(successMessages[0]).toBeVisible()
       })
-
-      await waitFor(() =>
-        expect(queryByText('Add Domain Details')).not.toBeInTheDocument(),
-      )
     })
   })
 
-  // TODO removeDomain mutation
   describe('removing a domain', () => {
     it('successfully removes domain from list', async () => {
       const mocks = [
