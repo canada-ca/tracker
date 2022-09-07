@@ -251,7 +251,9 @@ describe('<UserListModal />', () => {
 
         // check for "error" toast
         await waitFor(() => {
-          expect(getAllByText(/Unable to update user role./)[0]).toBeVisible()
+          expect(
+            getAllByText(/Unable to update user role./)[0],
+          ).toBeInTheDocument()
         })
       })
       it('a type error occurs', async () => {
@@ -333,7 +335,7 @@ describe('<UserListModal />', () => {
         await waitFor(() => {
           expect(
             getAllByText(/Incorrect send method received./)[0],
-          ).toBeVisible()
+          ).toBeInTheDocument()
         })
       })
     })
@@ -364,7 +366,7 @@ describe('<UserListModal />', () => {
             },
           ]
 
-          const { getAllByText, queryByRole, getByRole, queryByText } = render(
+          const { getAllByText, getByRole, queryByText } = render(
             <MockedProvider mocks={mocks} cache={createCache()}>
               <UserVarProvider
                 userVar={makeVar({
@@ -418,14 +420,7 @@ describe('<UserListModal />', () => {
           await waitFor(() => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
-            ).toBeVisible()
-          })
-
-          // wait for modal to close
-          await waitFor(() => {
-            expect(
-              queryByRole('combobox', { name: /Role:/ }),
-            ).not.toBeInTheDocument()
+            ).toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
@@ -601,7 +596,7 @@ describe('<UserListModal />', () => {
           await waitFor(() => {
             expect(
               getAllByText(/The user's role has been successfully updated/)[0],
-            ).toBeVisible()
+            ).toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
@@ -1108,7 +1103,7 @@ describe('<UserListModal />', () => {
 
         // check for "success" toast and modal to close
         await waitFor(() => {
-          expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+          expect(getAllByText(/Email invitation sent/)[0]).toBeInTheDocument()
         })
 
         // wait for modal to close
@@ -1198,16 +1193,8 @@ describe('<UserListModal />', () => {
 
       // check for "success" toast
       await waitFor(() => {
-        expect(getAllByText(/Email invitation sent/)[0]).toBeVisible()
+        expect(getAllByText(/Email invitation sent/)[0]).toBeInTheDocument()
       })
-
-      // wait for modal to close
-      await waitFor(
-        () => {
-          expect(newUserRoleSelect).not.toBeInTheDocument()
-        },
-        { timeout: 2000 },
-      )
     })
   })
 })
