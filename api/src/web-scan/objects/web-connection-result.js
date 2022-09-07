@@ -26,15 +26,25 @@ export const webConnectionResultType = new GraphQLObjectType({
       description: `Whether or not the server is serving data over HTTPS`,
       resolve: async ({httpsLive}) => httpsLive
     },
-    httpsKeepsHttps: {
+    httpsDowngrades: {
       type: GraphQLBoolean,
-      description: `Whether or not HTTPS connection is ever downgraded (after redirect for example).`,
-      resolve: async ({httpsKeepsHttps}) => httpsKeepsHttps
+      description: `Whether or not HTTPS connection is immediately downgraded to HTTP.`,
+      resolve: async ({httpsDowngrades}) => httpsDowngrades
     },
-    httpUpgrades: {
+    httpImmediatelyUpgrades: {
       type: GraphQLBoolean,
-      description: `The compliance status for HSTS for the scanned server from this scan.`,
-      resolve: async ({httpUpgrades}) => httpUpgrades
+      description: `Whether or not HTTP connection was immediately upgraded (redirected) to HTTPS.`,
+      resolve: async ({httpImmediatelyUpgrades}) => httpImmediatelyUpgrades
+    },
+    httpEventuallyUpgrades: {
+      type: GraphQLBoolean,
+      description: `Whether or not HTTP connection was eventually upgraded (after first redirect) to HTTPS.`,
+      resolve: async ({httpEventuallyUpgrades}) => httpEventuallyUpgrades
+    },
+    httpsEventuallyDowngrades: {
+      type: GraphQLBoolean,
+      description: `Whether or not HTTPS connection is eventually downgraded to HTTP.`,
+      resolve: async ({httpsEventuallyDowngrades}) => httpsEventuallyDowngrades
     },
     hstsParsed: {
       type: GraphQLJSONObject,

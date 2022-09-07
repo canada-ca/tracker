@@ -158,7 +158,7 @@ def process_connection_results(connection_results):
     https_downgrades = None
     http_immediately_upgrades = None
     http_eventually_upgrades = None
-    http_eventually_downgrades = None
+    https_eventually_downgrades = None
     hsts_parsed = None
 
     def check_https_downgrades(connections):
@@ -207,7 +207,7 @@ def process_connection_results(connection_results):
     if http_live:
         http_immediately_upgrades = False
         http_eventually_upgrades = False
-        http_eventually_downgrades = False
+        https_eventually_downgrades = False
         try:
             # find index of first https upgrade
             first_https_index = list(conn["scheme"] == "https" for conn in http_connections).index(True)
@@ -219,17 +219,17 @@ def process_connection_results(connection_results):
             elif first_https_index > 1:
                 http_eventually_upgrades = True
 
-            http_eventually_downgrades = check_https_downgrades(https_connections[first_https_index:])
+            https_eventually_downgrades = check_https_downgrades(https_connections[first_https_index:])
         except IndexError:
             pass
 
     http_down_or_redirect = not http_live or http_immediately_upgrades
 
     if http_live or https_live:
-        https_status = "pass" if http_down_or_redirect and https_live and not https_downgrades and not http_eventually_downgrades else "fail"
+        https_status = "pass" if http_down_or_redirect and https_live and not https_downgrades and not https_eventually_downgrades else "fail"
 
     # process tags
-    if http_eventually_downgrades or https_downgrades:
+    if https_eventually_downgrades or https_downgrades:
         negative_tags.append("https3")
 
     # merge results
@@ -244,7 +244,7 @@ def process_connection_results(connection_results):
         "https_downgrades": https_downgrades,
         "http_immediately_upgrades": http_immediately_upgrades,
         "http_eventually_upgrades": http_eventually_upgrades,
-        "http_eventually_downgrades": http_eventually_downgrades,
+        "https_eventually_downgrades": https_eventually_downgrades,
         "hsts_parsed": hsts_parsed
     } | connection_results
 

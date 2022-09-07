@@ -16,45 +16,23 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
     )
 
   const tagDetails =
-    categoryName === 'dkim' ? (
-      categoryData?.results?.edges ? (
-        categoryData.results.edges.map(({ node }, idx) => {
+    categoryName === 'dkim' ?  (
+        categoryData?.selectors?.map((result, idx) => {
           return (
             <GuidanceTagList
-              negativeTags={node.negativeGuidanceTags.edges}
-              positiveTags={node.positiveGuidanceTags.edges}
-              neutralTags={node.neutralGuidanceTags.edges}
-              selector={node.selector}
-              key={categoryName + idx}
-            />
-          )
-        })
-      ) : (
-        categoryData?.results?.map((result, idx) => {
-          return (
-            <GuidanceTagList
-              negativeTags={result.negativeGuidanceTags}
-              positiveTags={result.positiveGuidanceTags}
-              neutralTags={result.neutralGuidanceTags}
+              negativeTags={result.negativeTags}
+              positiveTags={result.positiveTags}
+              neutralTags={result.neutralTags}
               selector={result.selector}
               key={categoryName + idx}
             />
           )
         })
-      )
-    ) : categoryData.negativeGuidanceTags.__typename ===
-      'GuidanceTagConnection' ? (
-      <GuidanceTagList
-        negativeTags={categoryData.negativeGuidanceTags.edges}
-        positiveTags={categoryData.positiveGuidanceTags.edges}
-        neutralTags={categoryData.neutralGuidanceTags.edges}
-        key={categoryName}
-      />
     ) : (
       <GuidanceTagList
-        negativeTags={categoryData.negativeGuidanceTags}
-        positiveTags={categoryData.positiveGuidanceTags}
-        neutralTags={categoryData.neutralGuidanceTags}
+        negativeTags={categoryData.negativeTags}
+        positiveTags={categoryData.positiveTags}
+        neutralTags={categoryData.neutralTags}
         key={categoryName}
       />
     )
@@ -64,51 +42,37 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
       <Box bg="gray.100" px="2" py="1">
         <Stack isInline>
           <Text fontWeight="bold">
-            <Trans>Implementation:</Trans>
+            <Trans>HTTP Live:</Trans>
           </Text>
-          <Text>{categoryData?.implementation}</Text>
+          <Text>{String(categoryData?.httpLive)}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
-            <Trans>Enforcement:</Trans>
+            <Trans>HTTPS Live:</Trans>
           </Text>
-          <Text>{categoryData?.enforced}</Text>
+          <Text>{String(categoryData?.httpsLive)}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
-            <Trans>HSTS Status:</Trans>
+            <Trans>HTTP Upgrades to HTTPS:</Trans>
           </Text>
-          <Text>{categoryData?.hsts}</Text>
+          <Text>{String(categoryData?.httpUpgrades)}</Text>
         </Stack>
-        {categoryData?.hstsAge && (
-          <Stack isInline>
-            <Text fontWeight="bold">
-              <Trans>HSTS Age:</Trans>
-            </Text>
-            <Text>{categoryData?.hstsAge}</Text>
-          </Stack>
-        )}
         <Stack isInline>
           <Text fontWeight="bold">
-            <Trans>Preloaded Status:</Trans>
+            <Trans>HSTS Max Age:</Trans>
           </Text>
-          <Text> {categoryData?.preloaded}</Text>
+          <Text>{String(categoryData?.hstsParsed?.maxAge)}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">
+            <Trans>HSTS Preloaded Status:</Trans>
+          </Text>
+          <Text> {String(categoryData?.hstsParsed?.preload)}</Text>
         </Stack>
       </Box>
     ) : categoryName === 'ssl' ? (
       <Box bg="gray.100" px="2" py="1">
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>CCS Injection Vulnerability:</Trans>
-          </Text>
-          <Text>{categoryData?.ccsInjectionVulnerable ? t`Yes` : t`No`}</Text>
-        </Stack>
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>Heartbleed Vulnerability:</Trans>
-          </Text>
-          <Text>{categoryData?.heartbleedVulnerable ? t`Yes` : t`No`}</Text>
-        </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>Supports ECDH Key Exchange:</Trans>
@@ -117,6 +81,19 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
         </Stack>
       </Box>
     ) : null
+
+  const strongCiphers = []
+  const acceptableCiphers = []
+  const weakCiphers = []
+
+
+  for (const protocol in categoryData?.acceptedCipherSuites) {
+    for (const cipherSuite of categoryData?.acceptedCipherSuites[protocol]) {
+      if (cipherSuite.strength === t`strong`) strongCiphers.push(cipherSuite.name)
+      if (cipherSuite.strength === t`acceptable`) acceptableCiphers.push(cipherSuite.name)
+      if (cipherSuite.strength === t`weak`) weakCiphers.push(cipherSuite.name)
+    }
+  }
 
   const mapCiphers = (cipherList) => {
     return (
@@ -147,7 +124,7 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Strong Ciphers:</Trans>
             </Text>
           </Box>
-          {mapCiphers(categoryData?.strongCiphers)}
+          {mapCiphers(strongCiphers)}
         </Box>
         <Divider />
         <Box bg="moderateMuted">
@@ -156,7 +133,7 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Acceptable Ciphers:</Trans>
             </Text>
           </Box>
-          {mapCiphers(categoryData?.acceptableCiphers)}
+          {mapCiphers(acceptableCiphers)}
         </Box>
         <Divider />
         <Box bg="weakMuted">
@@ -165,11 +142,23 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Weak Ciphers:</Trans>
             </Text>
           </Box>
-          {mapCiphers(categoryData?.weakCiphers)}
+          {mapCiphers(weakCiphers)}
         </Box>
       </Stack>
     </Box>
   )
+
+  const strongCurves = []
+  const acceptableCurves = []
+  const weakCurves = []
+
+  if (categoryData?.acceptedEllipticCurves !== undefined) {
+    categoryData?.acceptedEllipticCurves.forEach((curve) => {
+      if (curve.strength === t`strong`) strongCurves.push(curve.name)
+      if (curve.strength === t`acceptable`) acceptableCurves.push(curve.name)
+      if (curve.strength === t`weak`) weakCurves.push(curve.name)
+    })
+  }
 
   const curves = categoryName === 'ssl' && (
     <Box>
@@ -180,7 +169,7 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Strong Curves:</Trans>
             </Text>
           </Box>
-          {mapCiphers(categoryData?.strongCurves)}
+          {mapCiphers(strongCurves)}
         </Box>
         <Divider />
         <Box bg="moderateMuted">
@@ -189,7 +178,7 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Acceptable Curves:</Trans>
             </Text>
           </Box>
-          {mapCiphers(categoryData?.acceptableCurves)}
+          {mapCiphers(acceptableCurves)}
         </Box>
         <Divider />
         <Box bg="weakMuted">
@@ -198,7 +187,7 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
               <Trans>Weak Curves:</Trans>
             </Text>
           </Box>
-          {mapCiphers(categoryData?.weakCurves)}
+          {mapCiphers(weakCurves)}
         </Box>
       </Stack>
     </Box>

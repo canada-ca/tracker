@@ -108,370 +108,6 @@ export const GET_ONE_TIME_SSL_SCANS = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
-  query FindDomainByDomain($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      id
-      domain
-      lastRan
-      status {
-        https
-        ssl
-      }
-      dmarcPhase
-      hasDMARCReport
-      web {
-        https(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              implementation
-              enforced
-              hsts
-              hstsAge
-              preloaded
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        ssl(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              ccsInjectionVulnerable
-              heartbleedVulnerable
-              supportsEcdhKeyExchange
-              acceptableCiphers
-              acceptableCurves
-              strongCiphers
-              strongCurves
-              weakCiphers
-              weakCurves
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      email {
-        dkim(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              results(first: 10) {
-                edges {
-                  cursor
-                  node {
-                    selector
-                    negativeGuidanceTags(first: 5) {
-                      edges {
-                        cursor
-                        node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
-                        }
-                      }
-                    }
-                    neutralGuidanceTags(first: 5) {
-                      edges {
-                        cursor
-                        node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
-                        }
-                      }
-                    }
-                    positiveGuidanceTags(first: 5) {
-                      edges {
-                        cursor
-                        node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        dmarc(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              record
-              pPolicy
-              spPolicy
-              pct
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        spf(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              lookups
-              record
-              spfDefault
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
   query PaginatedOrgAffiliations(
     $orgSlug: Slug!
@@ -614,6 +250,502 @@ export const PAGINATED_ORG_DOMAINS = gql`
     }
   }
 `
+
+// export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+//   query FindDomainByDomain($domain: DomainScalar!) {
+//     findDomainByDomain(domain: $domain) {
+//       id
+//       domain
+//       lastRan
+//       status {
+//         https
+//         ssl
+//       }
+//       dmarcPhase
+//       hasDMARCReport
+//       web {
+//         https(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+//           edges {
+//             cursor
+//             node {
+//               id
+//               timestamp
+//               implementation
+//               enforced
+//               hsts
+//               hstsAge
+//               preloaded
+//               negativeGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               neutralGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               positiveGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//         ssl(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+//           edges {
+//             cursor
+//             node {
+//               id
+//               timestamp
+//               ccsInjectionVulnerable
+//               heartbleedVulnerable
+//               supportsEcdhKeyExchange
+//               acceptableCiphers
+//               acceptableCurves
+//               strongCiphers
+//               strongCurves
+//               weakCiphers
+//               weakCurves
+//               negativeGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               neutralGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               positiveGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//       email {
+//         dkim(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+//           edges {
+//             cursor
+//             node {
+//               id
+//               timestamp
+//               results(first: 10) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     selector
+//                     negativeGuidanceTags(first: 5) {
+//                       edges {
+//                         cursor
+//                         node {
+//                           tagId
+//                           tagName
+//                           guidance
+//                           refLinks {
+//                             description
+//                             refLink
+//                           }
+//                           refLinksTech {
+//                             description
+//                             refLink
+//                           }
+//                         }
+//                       }
+//                     }
+//                     neutralGuidanceTags(first: 5) {
+//                       edges {
+//                         cursor
+//                         node {
+//                           tagId
+//                           tagName
+//                           guidance
+//                           refLinks {
+//                             description
+//                             refLink
+//                           }
+//                           refLinksTech {
+//                             description
+//                             refLink
+//                           }
+//                         }
+//                       }
+//                     }
+//                     positiveGuidanceTags(first: 5) {
+//                       edges {
+//                         cursor
+//                         node {
+//                           tagId
+//                           tagName
+//                           guidance
+//                           refLinks {
+//                             description
+//                             refLink
+//                           }
+//                           refLinksTech {
+//                             description
+//                             refLink
+//                           }
+//                         }
+//                       }
+//                     }
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//         dmarc(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+//           edges {
+//             cursor
+//             node {
+//               id
+//               timestamp
+//               record
+//               pPolicy
+//               spPolicy
+//               pct
+//               negativeGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               neutralGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               positiveGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//         spf(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+//           edges {
+//             cursor
+//             node {
+//               id
+//               timestamp
+//               lookups
+//               record
+//               spfDefault
+//               negativeGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               neutralGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//               positiveGuidanceTags(first: 5) {
+//                 edges {
+//                   cursor
+//                   node {
+//                     tagId
+//                     tagName
+//                     guidance
+//                     refLinks {
+//                       description
+//                       refLink
+//                     }
+//                     refLinksTech {
+//                       description
+//                       refLink
+//                     }
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// `
+
+export const TagInfo = gql`
+  fragment TagInfo on GuidanceTag {
+    id
+    tagId
+    tagName
+    guidance
+    refLinks {
+      description
+      refLink
+    }
+    refLinksTech {
+      description
+      refLink
+    }
+    __typename
+  }
+`
+
+export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+  ${TagInfo}
+  query FindDomainByDomain($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      status {
+        https
+        ssl
+      }
+      dmarcPhase
+      hasDMARCReport
+      web(limit: 1, orderBy: { direction: DESC, field: TIMESTAMP }) {
+        edges {
+          node {
+            results {
+              ipAddress
+              status
+              results {
+                tlsResult {
+                  supportsEcdhKeyExchange
+                  acceptedCipherSuites
+                  acceptedEllipticCurves
+                  positiveTags {
+                    ...TagInfo
+                  }
+                  neutralTags {
+                    ...TagInfo
+                  }
+                  negativeTags {
+                    ...TagInfo
+                  }
+                }
+
+                connectionResults {
+                  httpLive
+                  httpsLive
+                  httpsDowngrades
+                  httpImmediatelyUpgrades
+                  httpEventuallyUpgrades
+                  httpsEventuallyDowngrades
+                  hstsParsed
+                  positiveTags {
+                    ...TagInfo
+                  }
+                  neutralTags {
+                    ...TagInfo
+                  }
+                  negativeTags {
+                    ...TagInfo
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      dnsScan(limit: 1, orderBy: { direction: DESC, field: TIMESTAMP }) {
+        edges {
+          cursor
+          node {
+            id
+            dkim {
+              selectors {
+                selector
+                positiveTags {
+                  ...TagInfo
+                }
+                neutralTags {
+                  ...TagInfo
+                }
+                negativeTags {
+                  ...TagInfo
+                }
+              }
+            }
+            dmarc {
+              record
+              pPolicy
+              spPolicy
+              pct
+              positiveTags {
+                ...TagInfo
+              }
+              neutralTags {
+                ...TagInfo
+              }
+              negativeTags {
+                ...TagInfo
+              }
+            }
+            spf {
+              lookups
+              record
+              spfDefault
+              positiveTags {
+                ...TagInfo
+              }
+              neutralTags {
+                ...TagInfo
+              }
+              negativeTags {
+                ...TagInfo
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+
 
 export const PAGINATED_ORG_AFFILIATIONS = gql`
   query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {

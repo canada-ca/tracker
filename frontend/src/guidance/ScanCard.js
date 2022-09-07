@@ -10,14 +10,14 @@ export function ScanCard({ scanType, scanData, status }) {
   const cardTitle =
     scanType === 'web'
       ? t`Web Scan Results`
-      : scanType === 'email'
-      ? t`Email Scan Results`
+      : scanType === 'dns'
+      ? t`DNS Scan Results`
       : ''
   const cardDescription =
     scanType === 'web'
       ? t`Results for scans of web technologies (TLS, HTTPS).`
-      : scanType === 'email'
-      ? t`Results for scans of email technologies (DMARC, SPF, DKIM).`
+      : scanType === 'dns'
+      ? t`Results for scans of DNS technologies (DMARC, SPF, DKIM).`
       : ''
 
   const dmarcSteps = {
@@ -72,7 +72,7 @@ export function ScanCard({ scanType, scanData, status }) {
           )}
         </Box>
       )
-    } else if (scanType === 'email') {
+    } else if (scanType === 'dns') {
       if (status === null) {
         status = 'UNKNOWN'
       }
@@ -99,21 +99,49 @@ export function ScanCard({ scanType, scanData, status }) {
     }
   }
 
-  const scanCategories = ['https', 'ssl', 'dmarc', 'spf', 'dkim']
+  let scanCategories
 
-  const categoryList = Object.entries(scanData)
-    .filter(([categoryName, _categoryData]) =>
-      scanCategories.includes(categoryName),
+  const categoryList = []
+  if (scanType === 'web') {
+    categoryList.push(
+      <ScanCategoryDetails
+        categoryName="ssl"
+        categoryData={scanData.edges[0]?.node?.results[0]?.results?.tlsResult}
+        key="ssl"
+      />
     )
-    .map(([categoryName, categoryData]) => {
-      return (
-        <ScanCategoryDetails
-          categoryName={categoryName}
-          categoryData={categoryData.edges[0]?.node}
-          key={categoryName}
-        />
-      )
-    })
+
+    categoryList.push(
+      <ScanCategoryDetails
+        categoryName="https"
+        categoryData={scanData.edges[0]?.node?.results[0]?.results?.connectionResults}
+        key="https"
+      />
+    )
+  }
+  else if (scanType === 'dns') {
+    categoryList.push(
+      <ScanCategoryDetails
+        categoryName="dmarc"
+        categoryData={scanData.edges[0]?.node?.dmarc}
+        key="dmarc"
+      />
+    )
+    categoryList.push(
+      <ScanCategoryDetails
+        categoryName="spf"
+        categoryData={scanData.edges[0]?.node?.spf}
+        key="ssl"
+      />
+    )
+    categoryList.push(
+      <ScanCategoryDetails
+        categoryName="dkim"
+        categoryData={scanData.edges[0]?.node?.dkim}
+        key="dkim"
+      />
+    )
+  }
 
   return (
     <Box bg="white" rounded="lg" overflow="hidden" boxShadow="medium" pb="1">

@@ -61,7 +61,7 @@ export default function DmarcGuidancePage() {
   const {
     domain: domainName,
     web: webScan,
-    email: emailScan,
+    dnsScan: dnsScan,
     status: webStatus,
     dmarcPhase,
   } = data.findDomainByDomain
@@ -126,8 +126,8 @@ export default function DmarcGuidancePage() {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <ScanCard
-                scanType="email"
-                scanData={emailScan}
+                scanType="dns"
+                scanData={dnsScan}
                 status={dmarcPhase}
               />
             </ErrorBoundary>
