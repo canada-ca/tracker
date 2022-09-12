@@ -98,6 +98,30 @@ export const getTypeNames = () => gql`
       last: Int
     ): OrganizationConnection
 
+    # Select organizations a user has access to.
+    findMyWebCheckOrganizations(
+      # Ordering options for organization connections
+      orderBy: OrganizationOrder
+
+      # String argument used to search for organizations.
+      search: String
+
+      # Filter orgs based off of the user being an admin of them.
+      isAdmin: Boolean
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): WebCheckOrgConnection
+
     # Select all information on a selected organization that a user has access to.
     findOrganizationBySlug(
       # The slugified organization name you want to retrieve data for.
@@ -499,6 +523,9 @@ export const getTypeNames = () => gql`
 
     # The number of domains associated with this organization.
     domainCount: Int
+
+    # CSV formatted output of all domains in the organization including their email and web scan statuses.
+    toCsv: String
 
     # The domains which are associated with this organization.
     domains(
@@ -1704,6 +1731,101 @@ export const getTypeNames = () => gql`
 
     # Order dmarc summaries by their respective domains.
     DOMAIN
+  }
+
+  # A connection to a list of items.
+  type WebCheckOrgConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [WebCheckOrgEdge]
+
+    # The total amount of organizations the user has access to.
+    totalCount: Int
+  }
+
+  # An edge in a connection.
+  type WebCheckOrgEdge {
+    # The item at the end of the edge
+    node: WebCheckOrg
+
+    # A cursor for use in pagination
+    cursor: String!
+  }
+
+  type WebCheckOrg {
+    # The ID of an object
+    id: ID!
+
+    # The organizations acronym.
+    acronym: Acronym
+
+    # The full name of the organization.
+    name: String
+
+    # Slugified name of the organization.
+    slug: Slug
+
+    # Whether the organization is a verified organization.
+    verified: Boolean
+
+    # Whether or not the domain has a aggregate dmarc report.
+    tags: TagConnection
+    domains: WebCheckDomainConnection
+  }
+
+  type TagConnection {
+    edges: [DomainTag]
+    totalCount: Int
+  }
+
+  # This object contains information about a vulnerability affecting the domain.
+  type DomainTag {
+    # CVE ID of the detected vulnerability.
+    id: String
+
+    # Time that the vulnerability was first scanned
+    firstDetected: String
+
+    # Protocols Status
+    severity: SeverityEnum
+  }
+
+  # Enum used to inform front end of the level of severity of a given vulnerability for a domain
+  enum SeverityEnum {
+    # If the given CVE is of a low level severity
+    LOW
+
+    # If the given CVE is of a medium level severity
+    MEDIUM
+
+    # If the given CVE is of a high level severity
+    HIGH
+
+    # If the given cve is of a critical level severity
+    CRITICAL
+  }
+
+  type WebCheckDomainConnection {
+    edges: [WebCheckDomain]
+
+    # The total amount of domains with vulnerability tags
+    totalCount: Int
+  }
+
+  type WebCheckDomain {
+    # The ID of an object
+    id: ID!
+
+    # Domain that scans will be ran on.
+    domain: DomainScalar
+
+    # The last time that a scan was ran on this domain.
+    lastRan: String
+
+    # Vulnerabilities that the domain has tested positive for.
+    tags: TagConnection
   }
 
   # This object is used for showing personal user details,

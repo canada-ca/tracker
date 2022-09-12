@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
 - certificate.yaml
 - issuers.yaml
-
+- platform

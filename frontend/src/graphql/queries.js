@@ -76,6 +76,16 @@ export const HTTPS_AND_DMARC_SUMMARY = gql`
   }
 `
 
+export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
+  query GetOrganizationDomainsStatusesCSV(
+    $orgSlug: Slug!
+  ) {
+    findOrganizationBySlug(orgSlug: $orgSlug) {
+        toCsv
+    }
+  }
+`
+
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client
@@ -1142,6 +1152,61 @@ export const FIND_MY_USERS = gql`
         hasPreviousPage
         startCursor
         __typename
+      }
+    }
+  }
+`
+export const WEBCHECK_ORGS = gql`
+  query FindMyWebCheckOrgs(
+    $after: String
+    $first: Int!
+    $orderBy: OrganizationOrder!
+    $search: String
+  ) {
+    findMyWebCheckOrganizations(
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+    ) {
+      totalCount
+      edges {
+        cursor
+        node {
+          id
+          acronym
+          name
+          slug
+          tags {
+            edges {
+              id
+              severity
+            }
+            totalCount
+          }
+          domains {
+            totalCount
+            edges {
+              id
+              domain
+              lastRan
+              tags {
+                edges {
+                  id
+                  firstDetected
+                  severity
+                }
+                totalCount
+              }
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
     }
   }

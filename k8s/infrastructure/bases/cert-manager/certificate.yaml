@@ -16,5 +16,5 @@ spec:
     algorithm: RSA
     encoding: PKCS8
     size: 4096
-  secretName: tracker-credential
+  secretName: ingress-cert
 status: {}

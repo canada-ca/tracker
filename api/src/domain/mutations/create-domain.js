@@ -116,6 +116,7 @@ export const createDomain = new mutationWithClientMutationId({
         spf: null,
         ssl: null,
       },
+      tags: [],
     }
 
     // Check to see if domain already belongs to same org

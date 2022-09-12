@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import {useLazyQuery, useQuery} from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
   Box,
@@ -24,8 +24,12 @@ import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import { ORG_DETAILS_PAGE } from '../graphql/queries'
+import {
+  GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
+  ORG_DETAILS_PAGE
+} from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
+import {ExportButton} from "../components/ExportButton";
 
 export default function OrganizationDetails() {
   const { orgSlug, activeTab } = useParams()
@@ -39,6 +43,10 @@ export default function OrganizationDetails() {
     variables: { slug: orgSlug },
     // errorPolicy: 'ignore', // allow partial success
   })
+
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+    GET_ORGANIZATION_DOMAINS_STATUSES_CSV, {variables: {orgSlug: orgSlug}}
+  )
 
   useEffect(() => {
     if (!activeTab) {
@@ -99,6 +107,19 @@ export default function OrganizationDetails() {
             </>
           )}
         </Heading>
+        <ExportButton
+          order={{ base: 2, md: 1 }}
+          ml="auto"
+          mt={{base: "4", md: 0}}
+          fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
+          dataFunction={
+          async () => {
+            const stuff = await getOrgDomainStatuses()
+            return stuff.data?.findOrganizationBySlug?.toCsv
+            }
+          }
+          isLoading={orgDomainStatusesLoading}
+        />
       </Flex>
       <Tabs
         isFitted

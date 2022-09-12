@@ -39,16 +39,16 @@ describe('given findMyOrganizationsQuery', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -375,8 +375,7 @@ describe('given findMyOrganizationsQuery', () => {
                           id: toGlobalId('organization', orgTwo._key),
                           slug: 'ne-pas-secretariat-conseil-tresor',
                           acronym: 'NPSCT',
-                          name:
-                            'Ne Pas Secrétariat du Conseil Trésor du Canada',
+                          name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
                           zone: 'NPFED',
                           sector: 'NPTBS',
                           country: 'Canada',
