@@ -99,8 +99,6 @@ export function ScanCard({ scanType, scanData, status }) {
     }
   }
 
-  let scanCategories
-
   const categoryList = []
   if (scanType === 'web') {
     categoryList.push(
