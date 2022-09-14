@@ -43,7 +43,7 @@ const getSchema = (options) => {
       ),
     acronym: string()
       .matches(
-        /^[A-Z]+(?:_[A-Z]+)*$/gm,
+        /^[A-Z]+(?:_[A-Za-z]+)*$/gm,
         i18n._(t`Acronyms can only use upper case letters and underscores`),
       )
       .max(50, i18n._(t`Acronyms must be at most 50 characters`)),
