@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLID } from 'graphql'
-import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLID} from 'graphql'
+import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { removeDomainUnion } from '../unions'
+import {removeDomainUnion} from '../unions'
 
 export const removeDomain = new mutationWithClientMutationId({
   name: 'RemoveDomain',
@@ -33,22 +33,22 @@ export const removeDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      validators: { cleanseInput },
-      loaders: { loadDomainByKey, loadOrgByKey },
+      auth: {checkPermission, userRequired, verifiedRequired, tfaRequired},
+      validators: {cleanseInput},
+      loaders: {loadDomainByKey, loadOrgByKey},
     },
   ) => {
     // Get User
     const user = await userRequired()
 
-    verifiedRequired({ user })
-    tfaRequired({ user })
+    verifiedRequired({user})
+    tfaRequired({user})
 
     // Cleanse Input
-    const { type: _domainType, id: domainId } = fromGlobalId(
+    const {type: _domainType, id: domainId} = fromGlobalId(
       cleanseInput(args.domainId),
     )
-    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+    const {type: _orgType, id: orgId} = fromGlobalId(cleanseInput(args.orgId))
 
     // Get domain from db
     const domain = await loadDomainByKey.load(domainId)
@@ -83,7 +83,7 @@ export const removeDomain = new mutationWithClientMutationId({
     }
 
     // Get permission
-    const permission = await checkPermission({ orgId: org._id })
+    const permission = await checkPermission({orgId: org._id})
 
     // Check to see if domain belongs to verified check org
     if (org.verified && permission !== 'super_admin') {
@@ -197,95 +197,41 @@ export const removeDomain = new mutationWithClientMutationId({
       // Remove scan data
 
       try {
-        // Remove DKIM data
+        // Remove web data
         await trx.step(async () => {
           await query`
-            WITH dkim, dkimResults
-            FOR dkimV, domainsDkimEdge IN 1..1 OUTBOUND ${domain._id} domainsDKIM
-              FOR dkimResult, dkimToDkimResultsEdge In 1..1 OUTBOUND dkimV._id dkimToDkimResults
-                REMOVE dkimResult IN dkimResults
-                REMOVE dkimToDkimResultsEdge IN dkimToDkimResults
+            WITH web, webScan
+            FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
+              FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
+                REMOVE webScanV IN webScan
+                REMOVE webToWebScansV IN webToWebScans
                 OPTIONS { waitForSync: true }
-              REMOVE dkimV IN dkim
-              REMOVE domainsDkimEdge IN domainsDKIM
+              REMOVE webV IN web
+              REMOVE domainsWebEdge IN domainsWeb
               OPTIONS { waitForSync: true }
           `
         })
       } catch (err) {
         console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove DKIM data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
       try {
-        // Remove DMARC data
+        // Remove DNS data
         await trx.step(async () => {
           await query`
-            WITH dmarc
-            FOR dmarcV, domainsDmarcEdge IN 1..1 OUTBOUND ${domain._id} domainsDMARC
-              REMOVE dmarcV IN dmarc
-              REMOVE domainsDmarcEdge IN domainsDMARC
+            WITH dns
+            FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
+              REMOVE dnsV IN dns
+              REMOVE domainsDNSEdge IN domainsDNS
               OPTIONS { waitForSync: true }
           `
         })
       } catch (err) {
         console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove DMARC data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      try {
-        // Remove HTTPS data
-        await trx.step(async () => {
-          await query`
-            WITH https
-            FOR httpsV, domainsHttpsEdge IN 1..1 OUTBOUND ${domain._id} domainsHTTPS
-              REMOVE httpsV IN https
-              REMOVE domainsHttpsEdge IN domainsHTTPS
-              OPTIONS { waitForSync: true }
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove HTTPS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      try {
-        // Remove SPF data
-        await trx.step(async () => {
-          await query`
-            WITH spf
-            FOR spfV, domainsSpfEdge IN 1..1 OUTBOUND ${domain._id} domainsSPF
-              REMOVE spfV IN spf
-              REMOVE domainsSpfEdge IN domainsSPF
-              OPTIONS { waitForSync: true }
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove SPF data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      try {
-        // Remove SSL data
-        await trx.step(async () => {
-          await query`
-            WITH ssl
-            FOR sslV, domainsSslEdge IN 1..1 OUTBOUND ${domain._id} domainsSSL
-              REMOVE sslV IN ssl
-              REMOVE domainsSslEdge IN domainsSSL
-              OPTIONS { waitForSync: true }
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove SSL data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
