@@ -8,5 +8,5 @@ export const WebOrderField = new GraphQLEnumType({
       value: 'timestamp',
       description: 'Order web edges by timestamp.',
     },
-  }
+  },
 })

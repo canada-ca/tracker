@@ -1,7 +1,7 @@
 import {GraphQLInt} from 'graphql'
 import {connectionDefinitions} from 'graphql-relay'
 
-import {webType} from "./web";
+import {webType} from "./web"
 
 export const webConnection = connectionDefinitions({
   name: 'Web',

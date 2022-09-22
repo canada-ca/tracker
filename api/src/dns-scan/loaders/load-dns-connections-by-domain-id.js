@@ -11,7 +11,7 @@ export const loadDnsConnectionsByDomainId =
              after,
              before,
              offset,
-             orderBy
+             orderBy,
            }) => {
       if (limit === undefined) {
         console.warn(
@@ -35,9 +35,9 @@ export const loadDnsConnectionsByDomainId =
         )
       }
 
-      let paginationMethodCount = [before, after, offset].reduce(
+      const paginationMethodCount = [before, after, offset].reduce(
         (paginationMethod, currentValue) => currentValue + (paginationMethod === undefined),
-        0
+        0,
       )
 
       if (paginationMethodCount > 1) {
@@ -126,7 +126,7 @@ export const loadDnsConnectionsByDomainId =
       FILTER DATE_FORMAT(dnsScan.timestamp, '%yyyy-%mm-%dd') <= DATE_FORMAT(${endDate}, '%yyyy-%mm-%dd')`
       }
 
-      let removeExtraSliceTemplate = aql`SLICE(dnsScansPlusOne, 0, ${limit})`
+      const removeExtraSliceTemplate = aql`SLICE(dnsScansPlusOne, 0, ${limit})`
       const dnsScanQuery = aql`
       LET dnsScansPlusOne = (
         FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
@@ -220,17 +220,17 @@ export const loadDnsConnectionsByDomainId =
           cursor = toCursorString([
             {
               type: orderBy.field,
-              id: dnsScan[orderBy.field]
+              id: dnsScan[orderBy.field],
             },
             {
               type: "id",
-              id: dnsScan._key
-            }]
+              id: dnsScan._key,
+            }],
           )
         } else {
           cursor = toCursorString([{
             type: "id",
-            id: dnsScan._key
+            id: dnsScan._key,
           }])
         }
         return {

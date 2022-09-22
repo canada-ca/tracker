@@ -1,5 +1,5 @@
 import {GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql'
-import {dkimSelectorResultType} from "./dkim-selector-result";
+import {dkimSelectorResultType} from "./dkim-selector-result"
 
 export const dkimType = new GraphQLObjectType({
   name: 'DKIM',
@@ -7,7 +7,7 @@ export const dkimType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: `The compliance status for DKIM for the scanned domain.`,
-      resolve: async ({status}) => status
+      resolve: async ({status}) => status,
     },
     selectors: {
       type: GraphQLList(dkimSelectorResultType),
@@ -17,7 +17,7 @@ export const dkimType = new GraphQLObjectType({
         for (const selector in selectors) {
           selectorArray.push({
             selector: selector,
-            ...selectors[selector]
+            ...selectors[selector],
           })
         }
         return selectorArray

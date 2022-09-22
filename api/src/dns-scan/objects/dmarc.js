@@ -7,7 +7,7 @@ export const dmarcType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: `The compliance status for DMARC for the scanned domain.`,
-      resolve: async ({status}) => status
+      resolve: async ({status}) => status,
     },
     record: {
       type: GraphQLString,
@@ -39,23 +39,23 @@ subdomains where mail is failing the DMARC authentication and alignment checks.`
     positiveTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({positiveTags}, _, {loaders: {loadDmarcGuidanceTagByTagId}},) => {
+      resolve: async ({positiveTags}, _, {loaders: {loadDmarcGuidanceTagByTagId}}) => {
         return await loadDmarcGuidanceTagByTagId({tags: positiveTags})
-      }
+      },
     },
     neutralTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({neutralTags}, _, {loaders: {loadDmarcGuidanceTagByTagId}},) => {
+      resolve: async ({neutralTags}, _, {loaders: {loadDmarcGuidanceTagByTagId}}) => {
         return await loadDmarcGuidanceTagByTagId({tags: neutralTags})
-      }
+      },
     },
     negativeTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({negativeTags}, _, {loaders: {loadDmarcGuidanceTagByTagId}},) => {
+      resolve: async ({negativeTags}, _, {loaders: {loadDmarcGuidanceTagByTagId}}) => {
         return await loadDmarcGuidanceTagByTagId({tags: negativeTags})
-      }
+      },
     },
   }),
   description: `Domain-based Message Authentication, Reporting, and Conformance

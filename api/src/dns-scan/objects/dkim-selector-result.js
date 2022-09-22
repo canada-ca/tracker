@@ -7,12 +7,12 @@ export const dkimSelectorResultType = new GraphQLObjectType({
     selector: {
       type: GraphQLString,
       description: `The selector which was scanned.`,
-      resolve: async ({selector}) => selector
+      resolve: async ({selector}) => selector,
     },
     status: {
       type: GraphQLString,
       description: `The compliance status for DKIM for the scanned domain.`,
-      resolve: async ({status}) => status
+      resolve: async ({status}) => status,
     },
     record: {
       type: GraphQLString,
@@ -42,23 +42,23 @@ export const dkimSelectorResultType = new GraphQLObjectType({
     positiveTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({positiveTags}, _, {loaders: {loadDkimGuidanceTagByTagId}},) => {
+      resolve: async ({positiveTags}, _, {loaders: {loadDkimGuidanceTagByTagId}}) => {
         return await loadDkimGuidanceTagByTagId({tags: positiveTags})
-      }
+      },
     },
     neutralTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({neutralTags}, _, {loaders: {loadDkimGuidanceTagByTagId}},) => {
+      resolve: async ({neutralTags}, _, {loaders: {loadDkimGuidanceTagByTagId}}) => {
         return await loadDkimGuidanceTagByTagId({tags: neutralTags})
-      }
+      },
     },
     negativeTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({negativeTags}, _, {loaders: {loadDkimGuidanceTagByTagId}},) => {
+      resolve: async ({negativeTags}, _, {loaders: {loadDkimGuidanceTagByTagId}}) => {
         return await loadDkimGuidanceTagByTagId({tags: negativeTags})
-      }
+      },
     },
   }),
   description: `DomainKeys Identified Mail (DKIM) permits a person, role, or

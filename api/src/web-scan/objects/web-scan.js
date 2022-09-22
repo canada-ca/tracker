@@ -1,7 +1,7 @@
 import {GraphQLObjectType, GraphQLString} from 'graphql'
 
-import {GraphQLDate} from "graphql-scalars";
-import {webScanResultType} from "./web-scan-result";
+import {GraphQLDate} from "graphql-scalars"
+import {webScanResultType} from "./web-scan-result"
 
 export const webScanType = new GraphQLObjectType({
   name: 'WebScan',
@@ -22,7 +22,7 @@ export const webScanType = new GraphQLObjectType({
     results: {
       type: webScanResultType,
       description: `Results of TLS and HTTP connection scans on the given domain.`,
-      resolve: async ({results}) => results
+      resolve: async ({results}) => results,
     },
   }),
   description: `Information for the TLS and HTTP connection scans on the given domain.`,

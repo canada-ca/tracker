@@ -11,7 +11,7 @@ export const loadWebConnectionsByDomainId =
              after,
              before,
              offset,
-             orderBy
+             orderBy,
            }) => {
       if (limit === undefined) {
         console.warn(
@@ -35,9 +35,9 @@ export const loadWebConnectionsByDomainId =
         )
       }
 
-      let paginationMethodCount = [before, after, offset].reduce(
+      const paginationMethodCount = [before, after, offset].reduce(
         (paginationMethod, currentValue) => currentValue + (paginationMethod === undefined),
-        0
+        0,
       )
 
       if (paginationMethodCount > 1) {
@@ -126,7 +126,7 @@ export const loadWebConnectionsByDomainId =
       FILTER DATE_FORMAT(web.timestamp, '%yyyy-%mm-%dd') <= DATE_FORMAT(${endDate}, '%yyyy-%mm-%dd')`
       }
 
-      let removeExtraSliceTemplate = aql`SLICE(websPlusOne, 0, ${limit})`
+      const removeExtraSliceTemplate = aql`SLICE(websPlusOne, 0, ${limit})`
       const webQuery = aql`
       LET websPlusOne = (
         FOR web, e IN 1 OUTBOUND ${domainId} domainsWeb
@@ -220,17 +220,17 @@ export const loadWebConnectionsByDomainId =
           cursor = toCursorString([
             {
               type: orderBy.field,
-              id: web[orderBy.field]
+              id: web[orderBy.field],
             },
             {
               type: "id",
-              id: web._key
-            }]
+              id: web._key,
+            }],
           )
         } else {
           cursor = toCursorString([{
             type: "id",
-            id: web._key
+            id: web._key,
           }])
         }
         return {

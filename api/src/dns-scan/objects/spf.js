@@ -7,7 +7,7 @@ export const spfType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: `The compliance status for SPF for the scanned domain.`,
-      resolve: async ({status}) => status
+      resolve: async ({status}) => status,
     },
     record: {
       type: GraphQLString,
@@ -27,23 +27,23 @@ export const spfType = new GraphQLObjectType({
     positiveTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({positiveTags}, _, {loaders: {loadSpfGuidanceTagByTagId}},) => {
+      resolve: async ({positiveTags}, _, {loaders: {loadSpfGuidanceTagByTagId}}) => {
         return await loadSpfGuidanceTagByTagId({tags: positiveTags})
-      }
+      },
     },
     neutralTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({neutralTags}, _, {loaders: {loadSpfGuidanceTagByTagId}},) => {
+      resolve: async ({neutralTags}, _, {loaders: {loadSpfGuidanceTagByTagId}}) => {
         return await loadSpfGuidanceTagByTagId({tags: neutralTags})
-      }
+      },
     },
     negativeTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({negativeTags}, _, {loaders: {loadSpfGuidanceTagByTagId}},) => {
+      resolve: async ({negativeTags}, _, {loaders: {loadSpfGuidanceTagByTagId}}) => {
         return await loadSpfGuidanceTagByTagId({tags: negativeTags})
-      }
+      },
     },
   }),
   description: `Email on the Internet can be forged in a number of ways.  In

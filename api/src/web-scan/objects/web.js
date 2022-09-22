@@ -1,9 +1,9 @@
 import {GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql'
 import {globalIdField} from 'graphql-relay'
 
-import {nodeInterface} from "../../node";
-import {GraphQLDate} from "graphql-scalars";
-import {webScanType} from "./web-scan";
+import {nodeInterface} from "../../node"
+import {GraphQLDate} from "graphql-scalars"
+import {webScanType} from "./web-scan"
 
 export const webType = new GraphQLObjectType({
   name: 'Web',
@@ -30,7 +30,7 @@ export const webType = new GraphQLObjectType({
           webId: _id,
           ...args,
         })
-      }
+      },
     },
   }),
   interfaces: [nodeInterface],

@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString,} from 'graphql'
+import {GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {connectionArgs, globalIdField} from 'graphql-relay'
 
 import {domainStatus} from './domain-status'

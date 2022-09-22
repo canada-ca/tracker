@@ -8,5 +8,5 @@ export const DnsOrderField = new GraphQLEnumType({
       value: 'timestamp',
       description: 'Order DNS edges by timestamp.',
     },
-  }
+  },
 })
