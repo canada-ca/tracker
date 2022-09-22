@@ -2167,38 +2167,27 @@ describe('removing a domain', () => {
           _from: org._id,
           _to: domain._id,
         })
-        const dkim = await collections.dkim.save({dkim: true})
-        await collections.domainsDKIM.save({
+
+        const dns = await collections.dns.save({ dns: true })
+        await collections.domainsDNS.save({
           _from: domain._id,
-          _to: dkim._id,
+          _to: dns._id,
         })
-        const dkimResult = await collections.dkimResults.save({
-          dkimResult: true,
-        })
-        await collections.dkimToDkimResults.save({
-          _from: dkim._id,
-          _to: dkimResult._id,
-        })
-        const dmarc = await collections.dmarc.save({dmarc: true})
-        await collections.domainsDMARC.save({
+
+        const web = await collections.web.save({ web: true })
+        await collections.domainsWeb.save({
           _from: domain._id,
-          _to: dmarc._id,
+          _to: web._id,
         })
-        const spf = await collections.spf.save({spf: true})
-        await collections.domainsSPF.save({
-          _from: domain._id,
-          _to: spf._id,
+
+        const webScan = await collections.webScan.save({
+          webScan: true,
         })
-        const https = await collections.https.save({https: true})
-        await collections.domainsHTTPS.save({
-          _from: domain._id,
-          _to: https._id,
+        await collections.webToWebScans.save({
+          _from: web._id,
+          _to: webScan._id,
         })
-        const ssl = await collections.ssl.save({ssl: true})
-        await collections.domainsSSL.save({
-          _from: domain._id,
-          _to: ssl._id,
-        })
+
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
@@ -2540,35 +2529,21 @@ describe('removing a domain', () => {
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult.dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(true)
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(true)
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan.dkim`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(true)
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(true)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan.dmarc`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(true)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(true)
 
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan.spf`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(true)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan.https`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(true)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan.ssl`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(true)
           })
           describe('org owns dmarc summary data', () => {
             beforeEach(async () => {
@@ -3024,71 +2999,21 @@ describe('removing a domain', () => {
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults
-                OPTIONS { waitForSync: true }
-                RETURN dkimResult
-            `
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
 
-            await query`
-              FOR dkimScan IN dkim
-                OPTIONS { waitForSync: true }
-                RETURN dkimScan
-            `
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            await query`
-              FOR dmarcScan IN dmarc
-                OPTIONS { waitForSync: true }
-                RETURN dmarcScan
-            `
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
 
-            await query`
-              FOR spfScan IN spf
-                OPTIONS { waitForSync: true }
-                RETURN spfScan
-            `
-
-            await query`
-              FOR httpsScan IN https
-                OPTIONS { waitForSync: true }
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl
-                OPTIONS { waitForSync: true }
-                RETURN sslScan
-            `
-
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
-
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
-
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
           })
           describe('org owns dmarc summary data', () => {
             beforeEach(async () => {
@@ -4145,7 +4070,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove DKIM data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove web data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -4155,9 +4080,6 @@ describe('removing a domain', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
@@ -5288,7 +5210,7 @@ describe('removing a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred while user: 123 attempted to remove DKIM data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
+              `Trx step error occurred while user: 123 attempted to remove web data for domain.gc.ca in org: temp-org, error: Error: Transaction error occurred.`,
             ])
           })
         })
@@ -5298,9 +5220,6 @@ describe('removing a domain', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
