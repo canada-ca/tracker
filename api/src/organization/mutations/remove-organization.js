@@ -212,10 +212,6 @@ export const removeOrganization = new mutationWithClientMutationId({
       )
     }
 
-    console.log(organization)
-
-    console.log(domainInfo)
-
     for (const domain of domainInfo) {
       if (domain.count === 1) {
         try {
@@ -235,9 +231,9 @@ export const removeOrganization = new mutationWithClientMutationId({
           })
         } catch (err) {
           console.error(
-            `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
+            `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${organization.slug}, ${err}`,
           )
-          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
         try {
@@ -255,7 +251,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
-          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
         try {

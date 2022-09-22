@@ -12,12 +12,12 @@ import {tokenize} from '../../../auth'
 import {organizationConnection} from '../../../organization'
 import {domainStatus} from '../domain-status'
 import {dmarcSummaryType} from '../../../dmarc-summaries'
-import {webScanType} from '../../../web-scan'
+import {webConnection} from '../../../web-scan'
 import {domainType} from '../../index'
 import {Domain, Selectors} from '../../../scalars'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {dnsScanType} from "../../../dns-scan/objects/dns-scan"
+import {dnsScanConnection} from "../../../dns-scan"
 
 describe('given the domain object', () => {
   describe('testing its field definitions', () => {
@@ -75,13 +75,13 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('dnsScan')
-      expect(demoType.email.type).toMatchObject(dnsScanType)
+      expect(demoType.dnsScan.type).toMatchObject(dnsScanConnection.connectionType)
     })
     it('has a web field', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('web')
-      expect(demoType.web.type).toMatchObject(webScanType)
+      expect(demoType.web.type).toMatchObject(webConnection.connectionType)
     })
     it('has a dmarcSummaryByPeriod field', () => {
       const demoType = domainType.getFields()
@@ -270,7 +270,7 @@ describe('given the domain object', () => {
           },
         }
 
-        expect(
+        await expect(
           demoType.organizations.resolve(
             {_id: '1'},
             {first: 1},
@@ -288,21 +288,51 @@ describe('given the domain object', () => {
         ).resolves.toEqual(expectedResult)
       })
     })
-    describe('testing the email resolver', () => {
-      it('returns the resolved value', () => {
+    describe('testing the web resolver', () => {
+      it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.email.resolve({_id: '1', _key: '1'})).toEqual({
+        const response = await demoType.web.resolve(
+            {_id: '1'},
+            {limit: 1},
+            {
+              loaders: {
+                loadWebConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue({"_id": "1", "_key": "1"}),
+              },
+              auth: {
+                checkSuperAdmin: jest.fn().mockReturnValue(false),
+              },
+            },
+          )
+
+        expect(response).toEqual({
           _id: '1',
           _key: '1',
         })
       })
     })
-    describe('testing the web resolver', () => {
-      it('returns the resolved value', () => {
+    describe('testing the DNS resolver', () => {
+      it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.web.resolve({_id: '1', _key: '1'})).toEqual({
+        const response = await demoType.dnsScan.resolve(
+            {_id: '1'},
+            {limit: 1},
+            {
+              loaders: {
+                loadDnsConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue({"_id": "1", "_key": "1"}),
+              },
+              auth: {
+                checkSuperAdmin: jest.fn().mockReturnValue(false),
+              },
+            },
+          )
+
+        expect(response).toEqual({
           _id: '1',
           _key: '1',
         })

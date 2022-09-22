@@ -48,12 +48,7 @@ import {
   loadUserByKey,
   loadUserConnectionsByUserId,
 } from './user/loaders'
-import {
-  loadHttpsByKey,
-  loadHttpsConnectionsByDomainId,
-  loadSslByKey,
-  loadSslConnectionByDomainId, loadWebConnectionsByDomainId, loadWebScansByWebId,
-} from './web-scan/loaders'
+import { loadWebConnectionsByDomainId, loadWebScansByWebId} from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
   loadVerifiedDomainByKey,
@@ -67,7 +62,7 @@ import {
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
-import {loadDnsConnectionsByDomainId} from "./dns-scan";
+import {loadDnsConnectionsByDomainId} from "./dns-scan"
 
 export function initializeLoaders({
   query,
@@ -161,52 +156,12 @@ export function initializeLoaders({
       auth: { loginRequiredBool },
     }),
     loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query, userKey, i18n }),
-    loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
-    loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
-    loadDmarcByKey: loadDmarcByKey({ query, userKey, i18n }),
-    loadSpfByKey: loadSpfByKey({ query, userKey, i18n }),
-    loadDkimConnectionsByDomainId: loadDkimConnectionsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadDkimResultConnectionsByDkimId: loadDkimResultConnectionsByDkimId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadDmarcConnectionsByDomainId: loadDmarcConnectionsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
     loadDnsConnectionsByDomainId: loadDnsConnectionsByDomainId({
       query,
       db,
       userKey,
       cleanseInput,
       i18n,
-    }),
-    loadSpfConnectionsByDomainId: loadSpfConnectionsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadHttpsByKey: loadHttpsByKey({ query, userKey, i18n }),
-    loadHttpsConnectionsByDomainId: loadHttpsConnectionsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-    }),
-    loadSslByKey: loadSslByKey({ query, userKey, i18n }),
-    loadSslConnectionByDomainId: loadSslConnectionByDomainId({
-      query,
-      userKey,
-      cleanseInput,
     }),
     loadWebConnectionsByDomainId: loadWebConnectionsByDomainId({
       query,

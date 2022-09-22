@@ -686,12 +686,10 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toBeDefined()
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(true)
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -744,36 +742,16 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(true)
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toBeDefined()
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(true)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toBeDefined()
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toBeDefined()
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toBeDefined()
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toBeDefined()
           })
           it('does not remove the domain', async () => {
             await graphql(
@@ -1320,7 +1298,7 @@ describe('removing an organization', () => {
           })
         })
         describe('org is the only one claiming the domain', () => {
-          it('removes the dkim result data', async () => {
+          it('removes the web scan result data', async () => {
             await graphql(
               schema,
               `
@@ -1371,12 +1349,11 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
           })
           it('removes the scan data', async () => {
             await graphql(
@@ -1429,36 +1406,16 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
           })
           it('removes the domain', async () => {
             await graphql(
@@ -1591,7 +1548,7 @@ describe('removing an organization', () => {
               _to: domain._id,
             })
           })
-          it('does not remove the dkim result data', async () => {
+          it('does not remove the web scan result data', async () => {
             await graphql(
               schema,
               `
@@ -1642,12 +1599,11 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(true)
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toBeDefined()
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -1700,36 +1656,16 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(true)
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toBeDefined()
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(true)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toBeDefined()
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toBeDefined()
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toBeDefined()
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toBeDefined()
           })
           it('does not remove the domain', async () => {
             await graphql(
@@ -2265,7 +2201,7 @@ describe('removing an organization', () => {
           })
         })
         describe('org is the only one claiming the domain', () => {
-          it('removes the dkim result data', async () => {
+          it('removes the web scan result data', async () => {
             await graphql(
               schema,
               `
@@ -2316,12 +2252,11 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
           })
           it('removes the scan data', async () => {
             await graphql(
@@ -2374,36 +2309,16 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
           })
           it('removes the domain', async () => {
             await graphql(
@@ -2536,7 +2451,7 @@ describe('removing an organization', () => {
               _to: domain._id,
             })
           })
-          it('does not remove the dkim result data', async () => {
+          it('does not remove the web scan result data', async () => {
             await graphql(
               schema,
               `
@@ -2587,12 +2502,11 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(true)
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toBeDefined()
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -2645,36 +2559,16 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(true)
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toBeDefined()
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(true)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toBeDefined()
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toBeDefined()
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toBeDefined()
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toBeDefined()
           })
           it('does not remove the domain', async () => {
             await graphql(
@@ -3805,13 +3699,13 @@ describe('removing an organization', () => {
             ])
           })
         })
-        describe('when removing dkim results data', () => {
+        describe('when removing web scan results data', () => {
           it('throws an error', async () => {
             const mockedCursor = {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{ count: 1, domain: "test.gc.ca" }]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3898,7 +3792,7 @@ describe('removing an organization', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred when user: 123 attempted to remove dkim results while removing org: 123: Error: Trx Step`,
+              `Trx step error occurred while user: 123 attempted to remove web data for test.gc.ca in org: undefined, Error: Trx Step`,
             ])
           })
         })
@@ -3908,7 +3802,7 @@ describe('removing an organization', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{ count: 1, domain: "test.gc.ca" }]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3998,7 +3892,7 @@ describe('removing an organization', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove scan results while removing org: 123, Error: Trx Step`,
+              `Trx step error occurred while user: 123 attempted to remove DNS data for test.gc.ca in org: undefined, error: Error: Trx Step`,
             ])
           })
         })
@@ -4016,10 +3910,6 @@ describe('removing an organization', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockRejectedValue(new Error('Trx Step')),
@@ -4121,10 +4011,6 @@ describe('removing an organization', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
@@ -4300,1342 +4186,6 @@ describe('removing an organization', () => {
           const error = [
             new GraphQLError(
               'Unable to remove organization. Please try again.',
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Trx commit error occurred for user: 123 while attempting remove of org: 123, Error: Commit Error`,
-          ])
-        })
-      })
-    })
-    describe('users language is set to french', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          locale: 'fr',
-          localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
-          },
-          locales: ['en', 'fr'],
-          messages: {
-            en: englishMessages.messages,
-            fr: frenchMessages.messages,
-          },
-        })
-      })
-      describe('the requested org is undefined', () => {
-        it('returns an error', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organization', 123)}"
-                  }
-                ) {
-                  result {
-                    ... on OrganizationResult {
-                      status
-                      organization {
-                        name
-                      }
-                    }
-                    ... on OrganizationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: 123,
-              auth: {
-                checkPermission: jest.fn(),
-                userRequired: jest.fn(),
-                verifiedRequired: jest.fn(),
-              },
-              validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue(undefined),
-                },
-              },
-            },
-          )
-
-          const expectedResponse = {
-            data: {
-              removeOrganization: {
-                result: {
-                  code: 400,
-                  description:
-                    'Impossible de supprimer une organisation inconnue.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove org: 123, but there is no org associated with that id.`,
-          ])
-        })
-      })
-      describe('given an incorrect permission', () => {
-        describe('users belong to the org', () => {
-          describe('users role is admin', () => {
-            describe('user attempts to remove a verified org', () => {
-              it('returns an error', async () => {
-                const response = await graphql(
-                  schema,
-                  `
-                    mutation {
-                      removeOrganization(
-                        input: {
-                          orgId: "${toGlobalId('organization', 123)}"
-                        }
-                      ) {
-                        result {
-                          ... on OrganizationResult {
-                            status
-                            organization {
-                              name
-                            }
-                          }
-                          ... on OrganizationError {
-                            code
-                            description
-                          }
-                        }
-                      }
-                    }
-                  `,
-                  null,
-                  {
-                    i18n,
-                    query,
-                    collections: collectionNames,
-                    transaction,
-                    userKey: 123,
-                    auth: {
-                      checkPermission: jest.fn().mockReturnValue('admin'),
-                      userRequired: jest.fn(),
-                      verifiedRequired: jest.fn(),
-                    },
-                    validators: { cleanseInput },
-                    loaders: {
-                      loadOrgByKey: {
-                        load: jest.fn().mockReturnValue({
-                          _key: 123,
-                          verified: true,
-                          orgDetails: {
-                            en: {
-                              slug: 'treasury-board-secretariat',
-                              acronym: 'TBS',
-                              name: 'Treasury Board of Canada Secretariat',
-                              zone: 'FED',
-                              sector: 'TBS',
-                              country: 'Canada',
-                              province: 'Ontario',
-                              city: 'Ottawa',
-                            },
-                            fr: {
-                              slug: 'secretariat-conseil-tresor',
-                              acronym: 'SCT',
-                              name: 'Secrétariat du Conseil Trésor du Canada',
-                              zone: 'FED',
-                              sector: 'TBS',
-                              country: 'Canada',
-                              province: 'Ontario',
-                              city: 'Ottawa',
-                            },
-                          },
-                        }),
-                      },
-                    },
-                  },
-                )
-
-                const expectedResponse = {
-                  data: {
-                    removeOrganization: {
-                      result: {
-                        code: 403,
-                        description:
-                          "Permission refusée : Veuillez contacter le super administrateur pour qu'il vous aide à supprimer l'organisation.",
-                      },
-                    },
-                  },
-                }
-
-                expect(response).toEqual(expectedResponse)
-                expect(consoleOutput).toEqual([
-                  `User: 123 attempted to remove org: 123, however the user is not a super admin.`,
-                ])
-              })
-            })
-          })
-          describe('users role is user', () => {
-            describe('they attempt to remove the org', () => {
-              it('returns an error', async () => {
-                const response = await graphql(
-                  schema,
-                  `
-                    mutation {
-                      removeOrganization(
-                        input: {
-                          orgId: "${toGlobalId('organization', 123)}"
-                        }
-                      ) {
-                        result {
-                          ... on OrganizationResult {
-                            status
-                            organization {
-                              name
-                            }
-                          }
-                          ... on OrganizationError {
-                            code
-                            description
-                          }
-                        }
-                      }
-                    }
-                  `,
-                  null,
-                  {
-                    i18n,
-                    query,
-                    collections: collectionNames,
-                    transaction,
-                    userKey: 123,
-                    auth: {
-                      checkPermission: jest.fn().mockReturnValue('user'),
-                      userRequired: jest.fn(),
-                      verifiedRequired: jest.fn(),
-                    },
-                    validators: { cleanseInput },
-                    loaders: {
-                      loadOrgByKey: {
-                        load: jest.fn().mockReturnValue({
-                          _key: 123,
-                          verified: false,
-                          orgDetails: {
-                            en: {
-                              slug: 'treasury-board-secretariat',
-                              acronym: 'TBS',
-                              name: 'Treasury Board of Canada Secretariat',
-                              zone: 'FED',
-                              sector: 'TBS',
-                              country: 'Canada',
-                              province: 'Ontario',
-                              city: 'Ottawa',
-                            },
-                            fr: {
-                              slug: 'secretariat-conseil-tresor',
-                              acronym: 'SCT',
-                              name: 'Secrétariat du Conseil Trésor du Canada',
-                              zone: 'FED',
-                              sector: 'TBS',
-                              country: 'Canada',
-                              province: 'Ontario',
-                              city: 'Ottawa',
-                            },
-                          },
-                        }),
-                      },
-                    },
-                  },
-                )
-
-                const expectedResponse = {
-                  data: {
-                    removeOrganization: {
-                      result: {
-                        code: 403,
-                        description:
-                          "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer l'organisation.",
-                      },
-                    },
-                  },
-                }
-
-                expect(response).toEqual(expectedResponse)
-                expect(consoleOutput).toEqual([
-                  `User: 123 attempted to remove org: 123, however the user does not have permission to this organization.`,
-                ])
-              })
-            })
-          })
-        })
-      })
-      describe('given a database error', () => {
-        describe('when getting the ownership information', () => {
-          it('throws an error', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValue(new Error('Database Error'))
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn(),
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123 while attempting to get dmarcSummaryInfo while removing org: 123, Error: Database Error`,
-            ])
-          })
-        })
-        describe('when getting the domain claim count', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([]),
-            }
-
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce(mockedCursor)
-              .mockRejectedValue(new Error('Database Error'))
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn(),
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Database error occurred for user: 123 while attempting to gather domain count while removing org: 123, Error: Database Error`,
-            ])
-          })
-        })
-      })
-      describe('given a cursor error', () => {
-        describe('when getting getting ownership information', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockRejectedValue(new Error('Cursor Error')),
-            }
-
-            const mockedQuery = jest
-              .fn()
-              .mockReturnValueOnce(mockedCursor)
-              .mockRejectedValue(new Error('Database Error'))
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn(),
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Cursor error occurred for user: 123 while attempting to get dmarcSummaryInfo while removing org: 123, Error: Cursor Error`,
-            ])
-          })
-        })
-        describe('when getting getting domain claim count', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockRejectedValue(new Error('Cursor Error')),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: jest.fn(),
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Cursor error occurred for user: 123 while attempting to gather domain count while removing org: 123, Error: Cursor Error`,
-            ])
-          })
-        })
-      })
-      describe('given a trx step error', () => {
-        describe('when removing dmarc summary data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([{}]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValueOnce(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('Trx Step')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove dmarc summaries while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing ownership data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest.fn().mockReturnValue([{}]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValueOnce(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove ownerships while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing dkim results data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockRejectedValue(new Error('Trx Step')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred when user: 123 attempted to remove dkim results while removing org: 123: Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing scan data', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-                mutation {
-                  removeOrganization(
-                    input: {
-                      orgId: "${toGlobalId('organization', 123)}"
-                    }
-                  ) {
-                    result {
-                      ... on OrganizationResult {
-                        status
-                        organization {
-                          name
-                        }
-                      }
-                      ... on OrganizationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove scan results while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing domain', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organization', 123)}"
-                  }
-                ) {
-                  result {
-                    ... on OrganizationResult {
-                      status
-                      organization {
-                        name
-                      }
-                    }
-                    ... on OrganizationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove domains while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-        describe('when removing affiliations and org', () => {
-          it('throws an error', async () => {
-            const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
-            }
-
-            const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-            const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
-            })
-
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organization', 123)}"
-                  }
-                ) {
-                  result {
-                    ... on OrganizationResult {
-                      status
-                      organization {
-                        name
-                      }
-                    }
-                    ... on OrganizationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-              null,
-              {
-                i18n,
-                query: mockedQuery,
-                collections: collectionNames,
-                transaction: mockedTransaction,
-                userKey: 123,
-                auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
-                  userRequired: jest.fn(),
-                  verifiedRequired: jest.fn(),
-                },
-                validators: { cleanseInput },
-                loaders: {
-                  loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({
-                      _key: 123,
-                      verified: false,
-                      orgDetails: {
-                        en: {
-                          slug: 'treasury-board-secretariat',
-                          acronym: 'TBS',
-                          name: 'Treasury Board of Canada Secretariat',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                        fr: {
-                          slug: 'secretariat-conseil-tresor',
-                          acronym: 'SCT',
-                          name: 'Secrétariat du Conseil Trésor du Canada',
-                          zone: 'FED',
-                          sector: 'TBS',
-                          country: 'Canada',
-                          province: 'Ontario',
-                          city: 'Ottawa',
-                        },
-                      },
-                    }),
-                  },
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                "Impossible de supprimer l'organisation. Veuillez réessayer.",
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `Trx step error occurred for user: 123 while attempting to remove affiliations, and the org while removing org: 123, Error: Trx Step`,
-            ])
-          })
-        })
-      })
-      describe('given a trx commit error', () => {
-        it('throws an error', async () => {
-          const mockedCursor = {
-            all: jest.fn().mockReturnValueOnce([]).mockReturnValue([]),
-          }
-
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest.fn().mockReturnValue({}),
-            commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
-          })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              removeOrganization(
-                input: {
-                  orgId: "${toGlobalId('organization', 123)}"
-                }
-              ) {
-                result {
-                  ... on OrganizationResult {
-                    status
-                    organization {
-                      name
-                    }
-                  }
-                  ... on OrganizationError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction: mockedTransaction,
-              userKey: 123,
-              auth: {
-                checkPermission: jest.fn().mockReturnValue('admin'),
-                userRequired: jest.fn(),
-                verifiedRequired: jest.fn(),
-              },
-              validators: { cleanseInput },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    verified: false,
-                    orgDetails: {
-                      en: {
-                        slug: 'treasury-board-secretariat',
-                        acronym: 'TBS',
-                        name: 'Treasury Board of Canada Secretariat',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
-                      fr: {
-                        slug: 'secretariat-conseil-tresor',
-                        acronym: 'SCT',
-                        name: 'Secrétariat du Conseil Trésor du Canada',
-                        zone: 'FED',
-                        sector: 'TBS',
-                        country: 'Canada',
-                        province: 'Ontario',
-                        city: 'Ottawa',
-                      },
-                    },
-                  }),
-                },
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              "Impossible de supprimer l'organisation. Veuillez réessayer.",
             ),
           ]
 
