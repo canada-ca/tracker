@@ -1,36 +1,33 @@
-import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
 import {
   checkPermission,
   userRequired,
   verifiedRequired,
   tfaRequired,
 } from '../../../auth'
-import { loadOrgByKey } from '../../../organization/loaders'
-import { loadUserByKey } from '../../../user/loaders'
-import { loadAffiliationByKey } from '../../loaders'
+import {loadOrgByKey} from '../../../organization/loaders'
+import {loadUserByKey} from '../../../user/loaders'
+import {loadAffiliationByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -44,12 +41,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -178,8 +172,8 @@ describe('given the removeUserFromOrg mutation', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -194,7 +188,7 @@ describe('given the removeUserFromOrg mutation', () => {
 
   describe('given a successful mutation', () => {
     beforeEach(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -277,8 +271,8 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
-                tfaRequired: tfaRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
+                tfaRequired: tfaRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -293,7 +287,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -315,8 +309,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'en',
               localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
+                en: {plurals: {}},
+                fr: {plurals: {}},
               },
               locales: ['en', 'fr'],
               messages: {
@@ -374,8 +368,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -390,7 +384,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -419,8 +413,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'fr',
               localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
+                en: {plurals: {}},
+                fr: {plurals: {}},
               },
               locales: ['en', 'fr'],
               messages: {
@@ -478,8 +472,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -494,7 +488,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -570,8 +564,8 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
-                tfaRequired: tfaRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
+                tfaRequired: tfaRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -586,7 +580,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -608,8 +602,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'en',
               localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
+                en: {plurals: {}},
+                fr: {plurals: {}},
               },
               locales: ['en', 'fr'],
               messages: {
@@ -667,8 +661,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -683,7 +677,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -712,8 +706,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'fr',
               localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
+                en: {plurals: {}},
+                fr: {plurals: {}},
               },
               locales: ['en', 'fr'],
               messages: {
@@ -771,8 +765,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -787,7 +781,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -881,8 +875,8 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
-                tfaRequired: tfaRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
+                tfaRequired: tfaRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -897,7 +891,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -919,8 +913,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'en',
               localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
+                en: {plurals: {}},
+                fr: {plurals: {}},
               },
               locales: ['en', 'fr'],
               messages: {
@@ -978,8 +972,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -994,7 +988,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1023,8 +1017,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'fr',
               localeData: {
-                en: { plurals: {} },
-                fr: { plurals: {} },
+                en: {plurals: {}},
+                fr: {plurals: {}},
               },
               locales: ['en', 'fr'],
               messages: {
@@ -1082,8 +1076,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -1098,7 +1092,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1131,8 +1125,8 @@ describe('given the removeUserFromOrg mutation', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1193,7 +1187,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1268,7 +1262,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1276,7 +1270,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1350,7 +1344,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1358,7 +1352,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1432,13 +1426,13 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1510,7 +1504,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1518,7 +1512,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1593,7 +1587,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1601,7 +1595,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1676,7 +1670,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1684,7 +1678,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1757,7 +1751,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1765,7 +1759,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1834,7 +1828,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1842,7 +1836,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1864,7 +1858,7 @@ describe('given the removeUserFromOrg mutation', () => {
         it('throws an error', async () => {
           const mockedCursor = {
             count: 1,
-            next: jest.fn().mockReturnValue({ permission: 'user' }),
+            next: jest.fn().mockReturnValue({permission: 'user'}),
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -1915,7 +1909,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1923,7 +1917,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1944,7 +1938,7 @@ describe('given the removeUserFromOrg mutation', () => {
       it('throws an error', async () => {
         const mockedCursor = {
           count: 1,
-          next: jest.fn().mockReturnValue({ permission: 'user' }),
+          next: jest.fn().mockReturnValue({permission: 'user'}),
         }
         const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -1996,7 +1990,7 @@ describe('given the removeUserFromOrg mutation', () => {
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 12345 }),
+                load: jest.fn().mockReturnValue({_key: 12345}),
               },
               loadUserByKey: {
                 load: jest.fn().mockReturnValue({
@@ -2004,7 +1998,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 }),
               },
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -2026,8 +2020,8 @@ describe('given the removeUserFromOrg mutation', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -2088,7 +2082,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2163,7 +2157,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2171,7 +2165,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2246,7 +2240,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2254,7 +2248,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2329,13 +2323,13 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2407,7 +2401,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2415,7 +2409,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2490,7 +2484,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2498,7 +2492,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2573,7 +2567,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2581,7 +2575,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2654,7 +2648,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2662,7 +2656,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2731,7 +2725,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2739,7 +2733,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2761,7 +2755,7 @@ describe('given the removeUserFromOrg mutation', () => {
         it('throws an error', async () => {
           const mockedCursor = {
             count: 1,
-            next: jest.fn().mockReturnValue({ permission: 'user' }),
+            next: jest.fn().mockReturnValue({permission: 'user'}),
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -2812,7 +2806,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 12345 }),
+                  load: jest.fn().mockReturnValue({_key: 12345}),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2820,7 +2814,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2841,7 +2835,7 @@ describe('given the removeUserFromOrg mutation', () => {
       it('throws an error', async () => {
         const mockedCursor = {
           count: 1,
-          next: jest.fn().mockReturnValue({ permission: 'user' }),
+          next: jest.fn().mockReturnValue({permission: 'user'}),
         }
         const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -2893,7 +2887,7 @@ describe('given the removeUserFromOrg mutation', () => {
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 12345 }),
+                load: jest.fn().mockReturnValue({_key: 12345}),
               },
               loadUserByKey: {
                 load: jest.fn().mockReturnValue({
@@ -2901,7 +2895,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 }),
               },
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 

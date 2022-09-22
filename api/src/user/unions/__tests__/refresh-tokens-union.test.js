@@ -1,5 +1,5 @@
-import { authResultType, authenticateError } from '../../objects/index'
-import { refreshTokensUnion } from '../refresh-tokens-union'
+import {authResultType, authenticateError} from '../../objects/index'
+import {refreshTokensUnion} from '../refresh-tokens-union'
 
 describe('given the refreshTokensUnion', () => {
   describe('testing the field types', () => {

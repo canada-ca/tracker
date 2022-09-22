@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const leaveOrganizationResultType = new GraphQLObjectType({
   name: 'LeaveOrganizationResult',
@@ -8,7 +8,7 @@ export const leaveOrganizationResultType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: 'Status message confirming the user left the org.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
 })

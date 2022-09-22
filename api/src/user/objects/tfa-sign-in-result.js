@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const tfaSignInResult = new GraphQLObjectType({
   name: 'TFASignInResult',
@@ -8,13 +8,13 @@ export const tfaSignInResult = new GraphQLObjectType({
     authenticateToken: {
       type: GraphQLString,
       description: 'Token used to verify during authentication.',
-      resolve: ({ authenticateToken }) => authenticateToken,
+      resolve: ({authenticateToken}) => authenticateToken,
     },
     sendMethod: {
       type: GraphQLString,
       description:
         'Whether the authentication code was sent through text, or email.',
-      resolve: ({ sendMethod }) => sendMethod,
+      resolve: ({sendMethod}) => sendMethod,
     },
   }),
 })

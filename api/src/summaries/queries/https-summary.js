@@ -1,10 +1,10 @@
-import { categorizedSummaryType } from '../objects'
-import { t } from '@lingui/macro'
+import {categorizedSummaryType} from '../objects'
+import {t} from '@lingui/macro'
 
 export const httpsSummary = {
   type: categorizedSummaryType,
   description: 'HTTPS summary computed values, used to build summary cards.',
-  resolve: async (_, __, { i18n, loaders: { loadChartSummaryByKey } }) => {
+  resolve: async (_, __, {i18n, loaders: {loadChartSummaryByKey}}) => {
     const summary = await loadChartSummaryByKey.load('https')
 
     if (typeof summary === 'undefined') {

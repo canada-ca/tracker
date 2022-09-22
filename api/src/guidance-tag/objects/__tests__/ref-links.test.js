@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { refLinksType } from '../index'
+import {refLinksType} from '../index'
 
 describe('given the refLinksType gql object', () => {
   describe('testing its field definitions', () => {
@@ -23,7 +23,7 @@ describe('given the refLinksType gql object', () => {
         const demoType = refLinksType.getFields()
 
         expect(
-          demoType.description.resolve({ description: 'description' }),
+          demoType.description.resolve({description: 'description'}),
         ).toEqual('description')
       })
     })
@@ -31,7 +31,7 @@ describe('given the refLinksType gql object', () => {
       it('returns the resolved value', () => {
         const demoType = refLinksType.getFields()
 
-        expect(demoType.refLink.resolve({ ref_link: 'ref_link' })).toEqual(
+        expect(demoType.refLink.resolve({ref_link: 'ref_link'})).toEqual(
           'ref_link',
         )
       })

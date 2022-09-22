@@ -1,7 +1,7 @@
-import { GraphQLNonNull } from 'graphql'
+import {GraphQLNonNull} from 'graphql'
 
-import { guidanceTagOrder } from '../guidance-tag-order'
-import { OrderDirection, GuidanceTagOrderField } from '../../../enums'
+import {guidanceTagOrder} from '../guidance-tag-order'
+import {OrderDirection, GuidanceTagOrderField} from '../../../enums'
 
 describe('given the guidanceTagOrder input object', () => {
   describe('testing fields', () => {

@@ -1,11 +1,11 @@
-import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { t } from '@lingui/macro'
+import {GraphQLBoolean, GraphQLNonNull, GraphQLString} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {t} from '@lingui/macro'
 
-import { signInUnion } from '../../user'
+import {signInUnion} from '../../user'
 
-const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
+const {SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY} = process.env
 
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
@@ -44,10 +44,10 @@ export const signIn = new mutationWithClientMutationId({
       transaction,
       uuidv4,
       response,
-      auth: { tokenize, bcrypt },
-      loaders: { loadUserByUserName },
-      validators: { cleanseInput },
-      notify: { sendAuthEmail, sendAuthTextMsg },
+      auth: {tokenize, bcrypt},
+      loaders: {loadUserByUserName},
+      validators: {cleanseInput},
+      notify: {sendAuthEmail, sendAuthTextMsg},
     },
   ) => {
     // Cleanse input
@@ -159,10 +159,10 @@ export const signIn = new mutationWithClientMutationId({
           // Check to see if user has phone validated
           let sendMethod
           if (user.tfaSendMethod === 'phone') {
-            await sendAuthTextMsg({ user })
+            await sendAuthTextMsg({user})
             sendMethod = 'text'
           } else {
-            await sendAuthEmail({ user })
+            await sendAuthEmail({user})
             sendMethod = 'email'
           }
 
@@ -171,7 +171,7 @@ export const signIn = new mutationWithClientMutationId({
           )
 
           const authenticateToken = tokenize({
-            parameters: { userKey: user._key },
+            parameters: {userKey: user._key},
             secret: String(SIGN_IN_KEY),
           })
 
@@ -208,11 +208,11 @@ export const signIn = new mutationWithClientMutationId({
           }
 
           const token = tokenize({
-            parameters: { userKey: user._key },
+            parameters: {userKey: user._key},
           })
 
           const refreshToken = tokenize({
-            parameters: { userKey: user._key, uuid: refreshId },
+            parameters: {userKey: user._key, uuid: refreshId},
             expPeriod: 168,
             secret: String(REFRESH_KEY),
           })

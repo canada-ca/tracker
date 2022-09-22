@@ -1,6 +1,6 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
-import { userPersonalType } from './user-personal'
+import {userPersonalType} from './user-personal'
 
 export const verifyPhoneNumberResultType = new GraphQLObjectType({
   name: 'VerifyPhoneNumberResult',
@@ -11,12 +11,12 @@ export const verifyPhoneNumberResultType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'Informs the user if their phone number was successfully verified.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
     user: {
       type: userPersonalType,
       description: 'The user who verified their phone number.',
-      resolve: ({ user }) => user,
+      resolve: ({user}) => user,
     },
   }),
 })

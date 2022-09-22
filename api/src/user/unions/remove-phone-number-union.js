@@ -1,4 +1,4 @@
-import { GraphQLUnionType } from 'graphql'
+import {GraphQLUnionType} from 'graphql'
 import {
   removePhoneNumberErrorType,
   removePhoneNumberResultType,
@@ -9,7 +9,7 @@ export const removePhoneNumberUnion = new GraphQLUnionType({
   description:
     'This union is used with the `RemovePhoneNumber` mutation, allowing for users to remove their phone number, and support any errors that may occur',
   types: [removePhoneNumberErrorType, removePhoneNumberResultType],
-  resolveType({ _type }) {
+  resolveType({_type}) {
     if (_type === 'result') {
       return removePhoneNumberResultType
     } else {

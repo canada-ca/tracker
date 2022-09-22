@@ -1,13 +1,13 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
-import { loadUserByKey, loadUserByUserName } from '../../user/loaders'
-import { userRequired } from '../index'
+import {loadUserByKey, loadUserByUserName} from '../../user/loaders'
+import {userRequired} from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given a loadUserByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
@@ -25,17 +25,17 @@ describe('given a loadUserByKey dataloader', () => {
 
   describe('given a successful call', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.users.save({
@@ -63,7 +63,7 @@ describe('given a loadUserByKey dataloader', () => {
 
         const testUserRequired = userRequired({
           userKey: expectedUser._key,
-          loadUserByKey: loadUserByKey({ query }),
+          loadUserByKey: loadUserByKey({query}),
         })
         const user = await testUserRequired()
 
@@ -75,8 +75,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -91,7 +91,7 @@ describe('given a loadUserByKey dataloader', () => {
             const testUserRequired = userRequired({
               i18n,
               userKey: undefined,
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             })
             await testUserRequired()
           } catch (err) {
@@ -113,7 +113,7 @@ describe('given a loadUserByKey dataloader', () => {
             const testUserRequired = userRequired({
               i18n,
               userKey: '1',
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             })
             await testUserRequired()
           } catch (err) {
@@ -133,8 +133,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -149,7 +149,7 @@ describe('given a loadUserByKey dataloader', () => {
             const testUserRequired = userRequired({
               i18n,
               userKey: undefined,
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             })
             await testUserRequired()
           } catch (err) {
@@ -171,7 +171,7 @@ describe('given a loadUserByKey dataloader', () => {
             const testUserRequired = userRequired({
               i18n,
               userKey: '1',
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             })
             await testUserRequired()
           } catch (err) {
@@ -193,8 +193,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -237,8 +237,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {

@@ -1,6 +1,6 @@
-import { GraphQLInt, GraphQLString } from 'graphql'
+import {GraphQLInt, GraphQLString} from 'graphql'
 
-import { updateUserPasswordErrorType } from '../update-user-password-error'
+import {updateUserPasswordErrorType} from '../update-user-password-error'
 
 describe('given the updateUserPasswordErrorType object', () => {
   describe('testing the field definitions', () => {
@@ -23,7 +23,7 @@ describe('given the updateUserPasswordErrorType object', () => {
       it('returns the resolved field', () => {
         const demoType = updateUserPasswordErrorType.getFields()
 
-        expect(demoType.code.resolve({ code: 400 })).toEqual(400)
+        expect(demoType.code.resolve({code: 400})).toEqual(400)
       })
     })
     describe('testing the description field', () => {
@@ -31,7 +31,7 @@ describe('given the updateUserPasswordErrorType object', () => {
         const demoType = updateUserPasswordErrorType.getFields()
 
         expect(
-          demoType.description.resolve({ description: 'description' }),
+          demoType.description.resolve({description: 'description'}),
         ).toEqual('description')
       })
     })

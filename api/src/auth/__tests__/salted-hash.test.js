@@ -1,4 +1,4 @@
-import { saltedHash } from '../salted-hash'
+import {saltedHash} from '../salted-hash'
 
 describe('saltedHash()', () => {
   describe('when passed data and a salt', () => {

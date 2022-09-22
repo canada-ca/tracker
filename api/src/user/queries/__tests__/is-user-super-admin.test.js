@@ -1,16 +1,16 @@
-import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import {setupI18n} from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLError, GraphQLSchema} from 'graphql'
 
-import { checkPermission, userRequired } from '../../../auth'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { loadUserByKey } from '../../loaders'
+import {checkPermission, userRequired} from '../../../auth'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {loadUserByKey} from '../../loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given the isUserSuperAdmin query', () => {
   let query, drop, truncate, schema, collections, org, i18n, user
@@ -36,17 +36,17 @@ describe('given the isUserSuperAdmin query', () => {
   describe('given a successful query', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.users.save({
@@ -116,14 +116,14 @@ describe('given the isUserSuperAdmin query', () => {
             userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
+              checkPermission: checkPermission({userKey: user._key, query}),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -159,14 +159,14 @@ describe('given the isUserSuperAdmin query', () => {
             userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
+              checkPermission: checkPermission({userKey: user._key, query}),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -202,14 +202,14 @@ describe('given the isUserSuperAdmin query', () => {
             userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
+              checkPermission: checkPermission({userKey: user._key, query}),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -229,8 +229,8 @@ describe('given the isUserSuperAdmin query', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -282,8 +282,8 @@ describe('given the isUserSuperAdmin query', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {

@@ -2,7 +2,7 @@ import {
   setPhoneNumberErrorType,
   setPhoneNumberResultType,
 } from '../../objects/index'
-import { setPhoneNumberUnion } from '../index'
+import {setPhoneNumberUnion} from '../index'
 
 describe('given the setPhoneNumberUnion', () => {
   describe('testing the field types', () => {

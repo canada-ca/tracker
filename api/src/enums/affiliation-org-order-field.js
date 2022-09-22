@@ -1,4 +1,4 @@
-import { GraphQLEnumType } from 'graphql'
+import {GraphQLEnumType} from 'graphql'
 
 export const AffiliationOrgOrderField = new GraphQLEnumType({
   name: 'AffiliationOrgOrderField',

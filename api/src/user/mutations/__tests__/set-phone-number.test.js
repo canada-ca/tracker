@@ -1,30 +1,27 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import {ensure, dbNameFromFile} from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput, decryptPhoneNumber } from '../../../validators'
-import { tokenize, userRequired } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput, decryptPhoneNumber} from '../../../validators'
+import {tokenize, userRequired} from '../../../auth'
+import {loadUserByUserName, loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 const mockNotify = jest.fn()
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -38,12 +35,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -74,7 +68,7 @@ describe('user sets a new phone number', () => {
   describe('given a successful phone number set', () => {
     let user
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -97,8 +91,8 @@ describe('user sets a new phone number', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -152,7 +146,7 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
@@ -160,7 +154,7 @@ describe('user sets a new phone number', () => {
                 decryptPhoneNumber,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -248,7 +242,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -256,7 +250,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -331,7 +325,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -339,7 +333,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -388,7 +382,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -396,7 +390,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -459,7 +453,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -467,7 +461,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -542,7 +536,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -550,7 +544,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -599,7 +593,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -607,7 +601,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -670,7 +664,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -678,7 +672,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -753,7 +747,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -761,7 +755,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -810,7 +804,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -818,7 +812,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -840,8 +834,8 @@ describe('user sets a new phone number', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -895,7 +889,7 @@ describe('user sets a new phone number', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
@@ -903,7 +897,7 @@ describe('user sets a new phone number', () => {
                 decryptPhoneNumber,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
               notify: {
                 sendTfaTextMsg: mockNotify,
@@ -991,7 +985,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -999,7 +993,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1074,7 +1068,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1082,7 +1076,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1131,7 +1125,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1139,7 +1133,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1202,7 +1196,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1210,7 +1204,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1285,7 +1279,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1293,7 +1287,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1342,7 +1336,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1350,7 +1344,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1413,7 +1407,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1421,7 +1415,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1496,7 +1490,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1504,7 +1498,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1553,7 +1547,7 @@ describe('user sets a new phone number', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
@@ -1561,7 +1555,7 @@ describe('user sets a new phone number', () => {
                   decryptPhoneNumber,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
                 notify: {
                   sendTfaTextMsg: mockNotify,
@@ -1585,8 +1579,8 @@ describe('user sets a new phone number', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1710,7 +1704,7 @@ describe('user sets a new phone number', () => {
                 auth: {
                   bcrypt,
                   tokenize,
-                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                  userRequired: jest.fn().mockReturnValue({_key: 123}),
                 },
                 validators: {
                   cleanseInput,
@@ -1744,8 +1738,8 @@ describe('user sets a new phone number', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1871,7 +1865,7 @@ describe('user sets a new phone number', () => {
                 auth: {
                   bcrypt,
                   tokenize,
-                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                  userRequired: jest.fn().mockReturnValue({_key: 123}),
                 },
                 validators: {
                   cleanseInput,

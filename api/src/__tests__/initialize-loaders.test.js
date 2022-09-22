@@ -1,4 +1,4 @@
-import { initializeLoaders } from '../initialize-loaders'
+import {initializeLoaders} from '../initialize-loaders'
 
 describe('initializeLoaders', () => {
   it('returns a object with a key for each loader', () => {

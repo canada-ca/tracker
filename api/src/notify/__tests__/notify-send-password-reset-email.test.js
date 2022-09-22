@@ -1,8 +1,8 @@
-import { setupI18n } from '@lingui/core'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
-import { sendPasswordResetEmail } from '../index'
+import {sendPasswordResetEmail} from '../index'
 
 const {
   NOTIFICATION_PASSWORD_RESET_EN,
@@ -19,8 +19,8 @@ describe('given the sendPasswordResetEmail function', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -39,8 +39,8 @@ describe('given the sendPasswordResetEmail function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -124,8 +124,8 @@ describe('given the sendPasswordResetEmail function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {

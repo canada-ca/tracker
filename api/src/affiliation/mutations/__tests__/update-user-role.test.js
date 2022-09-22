@@ -1,35 +1,32 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
 import {
   checkPermission,
   userRequired,
   verifiedRequired,
   tfaRequired,
 } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../../user/loaders'
-import { loadOrgByKey } from '../../../organization/loaders'
+import {loadUserByUserName, loadUserByKey} from '../../../user/loaders'
+import {loadOrgByKey} from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -43,12 +40,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -78,7 +72,7 @@ describe('update a users role', () => {
   describe('given a successful role update', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -109,8 +103,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -209,15 +203,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -286,15 +280,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -372,15 +366,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -449,15 +443,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -544,15 +538,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -587,8 +581,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -687,15 +681,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -765,15 +759,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -852,15 +846,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -930,15 +924,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -1026,15 +1020,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
                   validators: {
                     cleanseInput,
@@ -1072,8 +1066,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1402,7 +1396,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 0 }),
+                query: jest.fn().mockReturnValue({count: 0}),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -1478,7 +1472,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 0 }),
+                query: jest.fn().mockReturnValue({count: 0}),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -1560,7 +1554,7 @@ describe('update a users role', () => {
                       count: 1,
                       next: jest
                         .fn()
-                        .mockReturnValue({ permission: 'super_admin' }),
+                        .mockReturnValue({permission: 'super_admin'}),
                     }),
                     collections: collectionNames,
                     transaction: jest.fn(),
@@ -1643,7 +1637,7 @@ describe('update a users role', () => {
                       count: 1,
                       next: jest
                         .fn()
-                        .mockReturnValue({ permission: 'super_admin' }),
+                        .mockReturnValue({permission: 'super_admin'}),
                     }),
                     collections: collectionNames,
                     transaction: jest.fn(),
@@ -1727,7 +1721,7 @@ describe('update a users role', () => {
                     count: 1,
                     next: jest
                       .fn()
-                      .mockReturnValue({ permission: 'super_admin' }),
+                      .mockReturnValue({permission: 'super_admin'}),
                   }),
                   collections: collectionNames,
                   transaction: jest.fn(),
@@ -1806,7 +1800,7 @@ describe('update a users role', () => {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
-                    next: jest.fn().mockReturnValue({ permission: 'admin' }),
+                    next: jest.fn().mockReturnValue({permission: 'admin'}),
                   }),
                   collections: collectionNames,
                   transaction: jest.fn(),
@@ -2035,7 +2029,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({ permission: 'user' }),
+                  next: jest.fn().mockReturnValue({permission: 'user'}),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
@@ -2110,7 +2104,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({ permission: 'user' }),
+                  next: jest.fn().mockReturnValue({permission: 'user'}),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
@@ -2163,8 +2157,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2496,7 +2490,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 0 }),
+                query: jest.fn().mockReturnValue({count: 0}),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -2572,7 +2566,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 0 }),
+                query: jest.fn().mockReturnValue({count: 0}),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -2654,7 +2648,7 @@ describe('update a users role', () => {
                       count: 1,
                       next: jest
                         .fn()
-                        .mockReturnValue({ permission: 'super_admin' }),
+                        .mockReturnValue({permission: 'super_admin'}),
                     }),
                     collections: collectionNames,
                     transaction: jest.fn(),
@@ -2737,7 +2731,7 @@ describe('update a users role', () => {
                       count: 1,
                       next: jest
                         .fn()
-                        .mockReturnValue({ permission: 'super_admin' }),
+                        .mockReturnValue({permission: 'super_admin'}),
                     }),
                     collections: collectionNames,
                     transaction: jest.fn(),
@@ -2821,7 +2815,7 @@ describe('update a users role', () => {
                     count: 1,
                     next: jest
                       .fn()
-                      .mockReturnValue({ permission: 'super_admin' }),
+                      .mockReturnValue({permission: 'super_admin'}),
                   }),
                   collections: collectionNames,
                   transaction: jest.fn(),
@@ -2900,7 +2894,7 @@ describe('update a users role', () => {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
-                    next: jest.fn().mockReturnValue({ permission: 'admin' }),
+                    next: jest.fn().mockReturnValue({permission: 'admin'}),
                   }),
                   collections: collectionNames,
                   transaction: jest.fn(),
@@ -3129,7 +3123,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({ permission: 'user' }),
+                  next: jest.fn().mockReturnValue({permission: 'user'}),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
@@ -3204,7 +3198,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({ permission: 'user' }),
+                  next: jest.fn().mockReturnValue({permission: 'user'}),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({

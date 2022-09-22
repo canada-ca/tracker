@@ -1,12 +1,12 @@
-import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { t } from '@lingui/macro'
-import { GraphQLEmailAddress } from 'graphql-scalars'
+import {GraphQLBoolean, GraphQLNonNull, GraphQLString} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLEmailAddress} from 'graphql-scalars'
 
-import { LanguageEnums } from '../../enums'
-import { signUpUnion } from '../unions'
+import {LanguageEnums} from '../../enums'
+import {signUpUnion} from '../unions'
 
-const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
+const {REFRESH_TOKEN_EXPIRY, REFRESH_KEY} = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -64,10 +64,10 @@ export const signUp = new mutationWithClientMutationId({
       request,
       response,
       uuidv4,
-      auth: { bcrypt, tokenize, verifyToken },
-      loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
-      notify: { sendVerificationEmail },
-      validators: { cleanseInput },
+      auth: {bcrypt, tokenize, verifyToken},
+      loaders: {loadOrgByKey, loadUserByUserName, loadUserByKey},
+      notify: {sendVerificationEmail},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse Inputs
@@ -149,7 +149,7 @@ export const signUp = new mutationWithClientMutationId({
       insertedUserCursor = await trx.step(
         () => query`
           WITH users
-          INSERT ${user} INTO users 
+          INSERT ${user} INTO users
           RETURN MERGE(
             {
               id: NEW._key,
@@ -247,14 +247,14 @@ export const signUp = new mutationWithClientMutationId({
     const returnUser = await loadUserByKey.load(insertedUser._key)
 
     // Generate JWTs
-    const token = tokenize({ parameters: { userKey: insertedUser._key } })
+    const token = tokenize({parameters: {userKey: insertedUser._key}})
 
     const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
-    await sendVerificationEmail({ user: returnUser, verifyUrl })
+    await sendVerificationEmail({user: returnUser, verifyUrl})
 
     const refreshToken = tokenize({
-      parameters: { userKey: user._key, uuid: refreshId },
+      parameters: {userKey: user._key, uuid: refreshId},
       expPeriod: 168,
       secret: String(REFRESH_KEY),
     })

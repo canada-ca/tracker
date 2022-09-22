@@ -1,11 +1,11 @@
 import crypto from 'crypto'
-import { setupI18n } from '@lingui/core'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
-import { sendAuthTextMsg } from '../index'
+import {sendAuthTextMsg} from '../index'
 
-const { CIPHER_KEY, NOTIFICATION_AUTHENTICATE_TEXT_ID } = process.env
+const {CIPHER_KEY, NOTIFICATION_AUTHENTICATE_TEXT_ID} = process.env
 
 describe('given the sendAuthTextMsg function', () => {
   let i18n
@@ -17,8 +17,8 @@ describe('given the sendAuthTextMsg function', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -45,7 +45,7 @@ describe('given the sendAuthTextMsg function', () => {
         'aes-256-ccm',
         String(CIPHER_KEY),
         Buffer.from(phoneDetails.iv, 'hex'),
-        { authTagLength: 16 },
+        {authTagLength: 16},
       )
       let encrypted = cipher.update('+12345678901', 'utf8', 'hex')
       encrypted += cipher.final('hex')
@@ -59,8 +59,8 @@ describe('given the sendAuthTextMsg function', () => {
         phoneDetails,
       }
 
-      const mockedSendAuthTextMsg = sendAuthTextMsg({ notifyClient, i18n })
-      await mockedSendAuthTextMsg({ user })
+      const mockedSendAuthTextMsg = sendAuthTextMsg({notifyClient, i18n})
+      await mockedSendAuthTextMsg({user})
 
       expect(notifyClient.sendSms).toHaveBeenCalledWith(
         NOTIFICATION_AUTHENTICATE_TEXT_ID,
@@ -78,8 +78,8 @@ describe('given the sendAuthTextMsg function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -103,7 +103,7 @@ describe('given the sendAuthTextMsg function', () => {
           'aes-256-ccm',
           String(CIPHER_KEY),
           Buffer.from(phoneDetails.iv, 'hex'),
-          { authTagLength: 16 },
+          {authTagLength: 16},
         )
         let encrypted = cipher.update('+12345678901', 'utf8', 'hex')
         encrypted += cipher.final('hex')
@@ -118,8 +118,8 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg({ notifyClient, i18n })
-          await mockedSendAuthTextMsg({ user })
+          const mockedSendAuthTextMsg = sendAuthTextMsg({notifyClient, i18n})
+          await mockedSendAuthTextMsg({user})
         } catch (err) {
           expect(err).toEqual(
             new Error(
@@ -139,8 +139,8 @@ describe('given the sendAuthTextMsg function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -164,7 +164,7 @@ describe('given the sendAuthTextMsg function', () => {
           'aes-256-ccm',
           String(CIPHER_KEY),
           Buffer.from(phoneDetails.iv, 'hex'),
-          { authTagLength: 16 },
+          {authTagLength: 16},
         )
         let encrypted = cipher.update('+12345678901', 'utf8', 'hex')
         encrypted += cipher.final('hex')
@@ -179,8 +179,8 @@ describe('given the sendAuthTextMsg function', () => {
         }
 
         try {
-          const mockedSendAuthTextMsg = sendAuthTextMsg({ notifyClient, i18n })
-          await mockedSendAuthTextMsg({ user })
+          const mockedSendAuthTextMsg = sendAuthTextMsg({notifyClient, i18n})
+          await mockedSendAuthTextMsg({user})
         } catch (err) {
           expect(err).toEqual(
             new Error(

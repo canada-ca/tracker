@@ -1,11 +1,11 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 export const checkDomainOwnership = ({
-  i18n,
-  query,
-  userKey,
-  auth: { loginRequiredBool },
-}) => async ({ domainId }) => {
+                                       i18n,
+                                       query,
+                                       userKey,
+                                       auth: {loginRequiredBool},
+                                     }) => async ({domainId}) => {
   let userAffiliatedOwnership, ownership
   const userKeyString = `users/${userKey}`
 

@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
-import { setupI18n } from '@lingui/core'
+import {setupI18n} from '@lingui/core'
 
-import { verifyToken } from '../index'
+import {verifyToken} from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 
-const { AUTHENTICATED_KEY } = process.env
+const {AUTHENTICATED_KEY} = process.env
 
 describe('given a encoded token', () => {
   let consoleOutput = []
@@ -25,12 +25,12 @@ describe('given a encoded token', () => {
       const parameters = {
         userKey: 1,
       }
-      const token = jwt.sign({ parameters }, String(AUTHENTICATED_KEY), {
+      const token = jwt.sign({parameters}, String(AUTHENTICATED_KEY), {
         algorithm: 'HS256',
       })
 
-      const testVerify = verifyToken({ i18n })
-      const decoded = testVerify({ token })
+      const testVerify = verifyToken({i18n})
+      const decoded = testVerify({token})
       expect(decoded.userKey).toEqual(1)
     })
   })
@@ -39,8 +39,8 @@ describe('given a encoded token', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -54,13 +54,13 @@ describe('given a encoded token', () => {
         const parameters = {
           userKey: 1,
         }
-        const token = jwt.sign({ parameters }, 'superSecretKey', {
+        const token = jwt.sign({parameters}, 'superSecretKey', {
           algorithm: 'HS256',
         })
 
-        const testVerify = verifyToken({ i18n })
+        const testVerify = verifyToken({i18n})
         expect(() => {
-          testVerify({ token })
+          testVerify({token})
         }).toThrow(Error('Invalid token, please sign in.'))
         expect(consoleOutput).toEqual([
           `JWT was attempted to be verified but secret was incorrect.`,
@@ -73,8 +73,8 @@ describe('given a encoded token', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -88,13 +88,13 @@ describe('given a encoded token', () => {
         const parameters = {
           userKey: 1,
         }
-        const token = jwt.sign({ parameters }, 'superSecretKey', {
+        const token = jwt.sign({parameters}, 'superSecretKey', {
           algorithm: 'HS256',
         })
 
-        const testVerify = verifyToken({ i18n })
+        const testVerify = verifyToken({i18n})
         expect(() => {
-          testVerify({ token })
+          testVerify({token})
         }).toThrow(Error('Jeton invalide, veuillez vous connecter.'))
         expect(consoleOutput).toEqual([
           `JWT was attempted to be verified but secret was incorrect.`,

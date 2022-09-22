@@ -1,6 +1,6 @@
-import { GraphQLInt } from 'graphql'
-import { connectionDefinitions } from 'graphql-relay'
-import { affiliationType } from './affiliation'
+import {GraphQLInt} from 'graphql'
+import {connectionDefinitions} from 'graphql-relay'
+import {affiliationType} from './affiliation'
 
 export const affiliationConnection = connectionDefinitions({
   name: 'Affiliation',
@@ -9,7 +9,7 @@ export const affiliationConnection = connectionDefinitions({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of affiliations the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
+      resolve: ({totalCount}) => totalCount,
     },
   }),
 })

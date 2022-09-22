@@ -1,36 +1,33 @@
-import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { cleanseInput, slugify } from '../../../validators'
+import {cleanseInput, slugify} from '../../../validators'
 import {
   checkPermission,
   userRequired,
   verifiedRequired,
   tfaRequired,
 } from '../../../auth'
-import { loadDomainByKey } from '../../loaders'
-import { loadOrgByKey } from '../../../organization/loaders'
-import { loadUserByKey } from '../../../user/loaders'
+import {loadDomainByKey} from '../../loaders'
+import {loadOrgByKey} from '../../../organization/loaders'
+import {loadUserByKey} from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -44,12 +41,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -79,7 +73,7 @@ describe('updating a domain', () => {
     let org, domain
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -176,10 +170,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -189,9 +183,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -249,10 +243,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -262,9 +256,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -323,10 +317,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -336,9 +330,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -402,10 +396,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -415,9 +409,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -475,10 +469,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -488,9 +482,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -549,10 +543,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -562,9 +556,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -628,10 +622,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -641,9 +635,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -701,10 +695,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -714,9 +708,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -775,10 +769,10 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -788,9 +782,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadDomainByKey: loadDomainByKey({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -823,8 +817,8 @@ describe('updating a domain', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -889,7 +883,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn(),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -967,7 +961,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1045,7 +1039,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1103,7 +1097,7 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 0 }),
+              query: jest.fn().mockReturnValue({count: 0}),
               collections: collectionNames,
               transaction,
               userKey: 123,
@@ -1124,7 +1118,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1204,7 +1198,7 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: { load: jest.fn() },
+                  loadUserByKey: {load: jest.fn()},
                 },
               },
             )
@@ -1256,7 +1250,7 @@ describe('updating a domain', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
@@ -1281,7 +1275,7 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: { load: jest.fn() },
+                  loadUserByKey: {load: jest.fn()},
                 },
               },
             )
@@ -1332,7 +1326,7 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest.fn().mockReturnValue({count: 1}),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
@@ -1358,7 +1352,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1379,8 +1373,8 @@ describe('updating a domain', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1445,7 +1439,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn(),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1524,7 +1518,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1603,7 +1597,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1661,7 +1655,7 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 0 }),
+              query: jest.fn().mockReturnValue({count: 0}),
               collections: collectionNames,
               transaction,
               userKey: 123,
@@ -1682,7 +1676,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )
@@ -1762,7 +1756,7 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: { load: jest.fn() },
+                  loadUserByKey: {load: jest.fn()},
                 },
               },
             )
@@ -1816,7 +1810,7 @@ describe('updating a domain', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest
@@ -1841,7 +1835,7 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: { load: jest.fn() },
+                  loadUserByKey: {load: jest.fn()},
                 },
               },
             )
@@ -1894,7 +1888,7 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest.fn().mockReturnValue({count: 1}),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
@@ -1920,7 +1914,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: { load: jest.fn() },
+                loadUserByKey: {load: jest.fn()},
               },
             },
           )

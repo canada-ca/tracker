@@ -1,6 +1,6 @@
-import { Kind } from 'graphql'
-import { stringify } from 'jest-matcher-utils'
-import { Slug } from '../index'
+import {Kind} from 'graphql'
+import {stringify} from 'jest-matcher-utils'
+import {Slug} from '../index'
 
 describe('given a slug scalar', () => {
   describe('serializing inputs', () => {

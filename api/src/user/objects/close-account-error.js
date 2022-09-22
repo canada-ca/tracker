@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLInt, GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const closeAccountError = new GraphQLObjectType({
   name: 'CloseAccountError',
@@ -8,12 +8,12 @@ export const closeAccountError = new GraphQLObjectType({
     code: {
       type: GraphQLInt,
       description: 'Error code to inform user what the issue is related to.',
-      resolve: ({ code }) => code,
+      resolve: ({code}) => code,
     },
     description: {
       type: GraphQLString,
       description: 'Description of the issue encountered.',
-      resolve: ({ description }) => description,
+      resolve: ({description}) => description,
     },
   }),
 })

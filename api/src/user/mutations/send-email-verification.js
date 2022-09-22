@@ -1,7 +1,7 @@
-import { GraphQLString, GraphQLNonNull } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { t } from '@lingui/macro'
+import {GraphQLString, GraphQLNonNull} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {t} from '@lingui/macro'
 
 export const sendEmailVerification = new mutationWithClientMutationId({
   name: 'SendEmailVerification',
@@ -28,10 +28,10 @@ export const sendEmailVerification = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      auth: { tokenize },
-      validators: { cleanseInput },
-      loaders: { loadUserByUserName },
-      notify: { sendVerificationEmail },
+      auth: {tokenize},
+      validators: {cleanseInput},
+      loaders: {loadUserByUserName},
+      notify: {sendVerificationEmail},
     },
   ) => {
     // Cleanse Input
@@ -42,12 +42,12 @@ export const sendEmailVerification = new mutationWithClientMutationId({
 
     if (typeof user !== 'undefined') {
       const token = tokenize({
-        parameters: { userKey: user._key },
+        parameters: {userKey: user._key},
       })
 
       const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
-      await sendVerificationEmail({ user, verifyUrl })
+      await sendVerificationEmail({user, verifyUrl})
 
       console.info(`User: ${user._key} successfully sent a verification email.`)
     } else {

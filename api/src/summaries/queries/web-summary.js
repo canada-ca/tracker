@@ -1,11 +1,11 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
-import { categorizedSummaryType } from '../objects'
+import {categorizedSummaryType} from '../objects'
 
 export const webSummary = {
   type: categorizedSummaryType,
   description: 'Web summary computed values, used to build summary cards.',
-  resolve: async (_, __, { i18n, loaders: { loadChartSummaryByKey } }) => {
+  resolve: async (_, __, {i18n, loaders: {loadChartSummaryByKey}}) => {
     const summary = await loadChartSummaryByKey.load('web')
 
     if (typeof summary === 'undefined') {

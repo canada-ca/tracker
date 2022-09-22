@@ -1,19 +1,19 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
-import { loadDomainConnectionsByUserId } from '../../loaders'
-import { loadUserByKey } from '../../../user'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {checkSuperAdmin, userRequired, verifiedRequired} from '../../../auth'
+import {loadDomainConnectionsByUserId} from '../../loaders'
+import {loadUserByKey} from '../../../user'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given findMyDomainsQuery', () => {
   let query, drop, truncate, schema, collections, org, i18n, user
@@ -39,17 +39,17 @@ describe('given findMyDomainsQuery', () => {
     let domainOne, domainTwo
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -179,7 +179,7 @@ describe('given findMyDomainsQuery', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               }),
             },
           },
@@ -230,8 +230,8 @@ describe('given findMyDomainsQuery', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -285,7 +285,7 @@ describe('given findMyDomainsQuery', () => {
                   query: mockedQuery,
                   userKey: 1,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                   i18n,
                 }),
               },
@@ -309,8 +309,8 @@ describe('given findMyDomainsQuery', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -364,7 +364,7 @@ describe('given findMyDomainsQuery', () => {
                   query: mockedQuery,
                   userKey: 1,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                   i18n,
                 }),
               },

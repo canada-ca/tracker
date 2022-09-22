@@ -1,12 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
-import { checkDomainPermission } from '../index'
+import {checkDomainPermission} from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given the check domain permission function', () => {
   let query, drop, truncate, collections, org, domain, i18n
@@ -23,17 +23,17 @@ describe('given the check domain permission function', () => {
   describe('given a successful domain permission call', () => {
     let user, permitted
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.users.save({
@@ -103,7 +103,7 @@ describe('given the check domain permission function', () => {
           query,
           userKey: user._key,
         })
-        permitted = await testCheckDomainPermission({ domainId: domain._id })
+        permitted = await testCheckDomainPermission({domainId: domain._id})
         expect(permitted).toEqual(true)
       })
     })
@@ -121,7 +121,7 @@ describe('given the check domain permission function', () => {
             query,
             userKey: user._key,
           })
-          permitted = await testCheckDomainPermission({ domainId: domain._id })
+          permitted = await testCheckDomainPermission({domainId: domain._id})
           expect(permitted).toEqual(true)
         })
       })
@@ -138,7 +138,7 @@ describe('given the check domain permission function', () => {
             query,
             userKey: user._key,
           })
-          permitted = await testCheckDomainPermission({ domainId: domain._id })
+          permitted = await testCheckDomainPermission({domainId: domain._id})
           expect(permitted).toEqual(true)
         })
       })
@@ -152,11 +152,11 @@ describe('given the check domain permission function', () => {
         const testCheckDomainPermission = checkDomainPermission({
           query: jest
             .fn()
-            .mockReturnValueOnce({ count: 0 })
-            .mockReturnValue({ next: jest.fn().mockReturnValue([]) }),
+            .mockReturnValueOnce({count: 0})
+            .mockReturnValue({next: jest.fn().mockReturnValue([])}),
           userKey: 123,
         })
-        permitted = await testCheckDomainPermission({ domainId: 'domains/123' })
+        permitted = await testCheckDomainPermission({domainId: 'domains/123'})
         expect(permitted).toEqual(false)
       })
     })
@@ -165,8 +165,8 @@ describe('given the check domain permission function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -187,7 +187,7 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: 'domains/123' })
+            await testCheckDomainPermission({domainId: 'domains/123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -205,7 +205,7 @@ describe('given the check domain permission function', () => {
         it('returns an appropriate error message', async () => {
           mockQuery = jest
             .fn()
-            .mockReturnValueOnce({ count: 0 })
+            .mockReturnValueOnce({count: 0})
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
@@ -213,7 +213,7 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: 'domains/123' })
+            await testCheckDomainPermission({domainId: 'domains/123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -236,7 +236,7 @@ describe('given the check domain permission function', () => {
           }
           mockQuery = jest
             .fn()
-            .mockReturnValueOnce({ count: 0 })
+            .mockReturnValueOnce({count: 0})
             .mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
@@ -244,7 +244,7 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: 'domains/123' })
+            await testCheckDomainPermission({domainId: 'domains/123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -263,8 +263,8 @@ describe('given the check domain permission function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -285,7 +285,7 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: 'domains/123' })
+            await testCheckDomainPermission({domainId: 'domains/123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -303,7 +303,7 @@ describe('given the check domain permission function', () => {
         it('returns an appropriate error message', async () => {
           mockQuery = jest
             .fn()
-            .mockReturnValueOnce({ count: 0 })
+            .mockReturnValueOnce({count: 0})
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
@@ -311,7 +311,7 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: 'domains/123' })
+            await testCheckDomainPermission({domainId: 'domains/123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -334,7 +334,7 @@ describe('given the check domain permission function', () => {
           }
           mockQuery = jest
             .fn()
-            .mockReturnValueOnce({ count: 1 })
+            .mockReturnValueOnce({count: 1})
             .mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
@@ -342,7 +342,7 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({ domainId: domain._id })
+            await testCheckDomainPermission({domainId: domain._id})
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([

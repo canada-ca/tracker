@@ -1,6 +1,6 @@
-import { Kind } from 'graphql'
-import { stringify } from 'jest-matcher-utils'
-import { Domain } from '../index'
+import {Kind} from 'graphql'
+import {stringify} from 'jest-matcher-utils'
+import {Domain} from '../index'
 
 describe('given a domain scalar', () => {
   describe('serializing inputs', () => {

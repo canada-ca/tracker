@@ -1,6 +1,6 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
-import { domainType } from './domain'
+import {domainType} from './domain'
 
 export const domainResultType = new GraphQLObjectType({
   name: 'DomainResult',
@@ -10,12 +10,12 @@ export const domainResultType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: 'Informs the user if the domain removal was successful.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
     domain: {
       type: domainType,
       description: 'The domain that is being mutated.',
-      resolve: ({ domain }) => domain,
+      resolve: ({domain}) => domain,
     },
   }),
 })

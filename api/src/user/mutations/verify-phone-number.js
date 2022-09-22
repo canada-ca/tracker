@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLInt } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLInt} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { verifyPhoneNumberUnion } from '../unions'
+import {verifyPhoneNumberUnion} from '../unions'
 
 export const verifyPhoneNumber = new mutationWithClientMutationId({
   name: 'verifyPhoneNumber',
@@ -29,8 +29,8 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { userRequired },
-      loaders: { loadUserByKey },
+      auth: {userRequired},
+      loaders: {loadUserByKey},
     },
   ) => {
     // Cleanse Input

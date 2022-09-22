@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { transferOrgOwnershipResult } from '../transfer-org-ownership-result'
+import {transferOrgOwnershipResult} from '../transfer-org-ownership-result'
 
 describe('given the transferOrgOwnershipResult object', () => {
   describe('testing the field definitions', () => {
@@ -17,7 +17,7 @@ describe('given the transferOrgOwnershipResult object', () => {
       it('returns the resolved field', () => {
         const demoType = transferOrgOwnershipResult.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
   })

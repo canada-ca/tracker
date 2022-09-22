@@ -1,8 +1,8 @@
-import { t } from '@lingui/macro'
-import { GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLString} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
 
-import { Domain } from '../../scalars'
+import {Domain} from '../../scalars'
 
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
@@ -18,7 +18,7 @@ export const requestScan = new mutationWithClientMutationId({
     status: {
       type: GraphQLString,
       description: 'Informs the user if the scan was dispatched successfully.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
   mutateAndGetPayload: async (
@@ -33,14 +33,14 @@ export const requestScan = new mutationWithClientMutationId({
         verifiedRequired,
         loginRequiredBool,
       },
-      loaders: { loadDomainByDomain },
-      validators: { cleanseInput },
+      loaders: {loadDomainByDomain},
+      validators: {cleanseInput},
     },
   ) => {
     if (loginRequiredBool) {
       // Get User
       const user = await userRequired()
-      verifiedRequired({ user })
+      verifiedRequired({user})
     }
 
     // Cleanse input
@@ -60,7 +60,7 @@ export const requestScan = new mutationWithClientMutationId({
 
     if (loginRequiredBool) {
       // Check to see if user has access to domain
-      const permission = await checkDomainPermission({ domainId: domain._id })
+      const permission = await checkDomainPermission({domainId: domain._id})
 
       if (!permission) {
         console.warn(

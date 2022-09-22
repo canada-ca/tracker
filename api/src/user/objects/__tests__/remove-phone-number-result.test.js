@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { removePhoneNumberResultType } from '../remove-phone-number-result'
+import {removePhoneNumberResultType} from '../remove-phone-number-result'
 
 describe('given the removePhoneNumberResultType object', () => {
   describe('testing the field definitions', () => {
@@ -17,7 +17,7 @@ describe('given the removePhoneNumberResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = removePhoneNumberResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
   })

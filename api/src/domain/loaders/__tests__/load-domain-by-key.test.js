@@ -1,12 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { loadDomainByKey } from '../index'
+import {loadDomainByKey} from '../index'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given a loadDomainByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
@@ -22,17 +22,17 @@ describe('given a loadDomainByKey dataloader', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.domains.save({
@@ -60,7 +60,7 @@ describe('given a loadDomainByKey dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        const loader = loadDomainByKey({ query })
+        const loader = loadDomainByKey({query})
         const domain = await loader.load(expectedDomain._key)
 
         expect(domain).toEqual(expectedDomain)
@@ -81,7 +81,7 @@ describe('given a loadDomainByKey dataloader', () => {
           expectedDomains.push(tempDomain)
         }
 
-        const loader = loadDomainByKey({ query })
+        const loader = loadDomainByKey({query})
         const domains = await loader.loadMany(domainIds)
         expect(domains).toEqual(expectedDomains)
       })
@@ -92,8 +92,8 @@ describe('given a loadDomainByKey dataloader', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -159,8 +159,8 @@ describe('given a loadDomainByKey dataloader', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {

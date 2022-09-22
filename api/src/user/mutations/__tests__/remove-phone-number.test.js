@@ -1,27 +1,24 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { userRequired } from '../../../auth'
-import { loadUserByKey } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {userRequired} from '../../../auth'
+import {loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -35,12 +32,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -70,7 +64,7 @@ describe('testing the removePhoneNumber mutation', () => {
   describe('given a successful removal', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -93,8 +87,8 @@ describe('testing the removePhoneNumber mutation', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -144,7 +138,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
@@ -192,13 +186,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -231,13 +225,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -270,13 +264,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -324,7 +318,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
@@ -372,13 +366,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -411,13 +405,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -450,13 +444,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -469,8 +463,8 @@ describe('testing the removePhoneNumber mutation', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -520,7 +514,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
@@ -568,13 +562,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -607,13 +601,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -646,13 +640,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -700,7 +694,7 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
@@ -748,13 +742,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -787,13 +781,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -826,13 +820,13 @@ describe('testing the removePhoneNumber mutation', () => {
               auth: {
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query, userKey: user._key }),
+                  loadUserByKey: loadUserByKey({query, userKey: user._key}),
                 }),
               },
             },
           )
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
+          user = await loadUserByKey({query, userKey: user._key}).load(
             user._key,
           )
 
@@ -848,8 +842,8 @@ describe('testing the removePhoneNumber mutation', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -893,7 +887,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 query,
                 transaction: mockedTransaction,
                 auth: {
-                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                  userRequired: jest.fn().mockReturnValue({_key: 123}),
                 },
               },
             )
@@ -947,7 +941,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 query,
                 transaction: mockedTransaction,
                 auth: {
-                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                  userRequired: jest.fn().mockReturnValue({_key: 123}),
                 },
               },
             )
@@ -971,8 +965,8 @@ describe('testing the removePhoneNumber mutation', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1016,7 +1010,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 query,
                 transaction: mockedTransaction,
                 auth: {
-                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                  userRequired: jest.fn().mockReturnValue({_key: 123}),
                 },
               },
             )
@@ -1070,7 +1064,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 query,
                 transaction: mockedTransaction,
                 auth: {
-                  userRequired: jest.fn().mockReturnValue({ _key: 123 }),
+                  userRequired: jest.fn().mockReturnValue({_key: 123}),
                 },
               },
             )

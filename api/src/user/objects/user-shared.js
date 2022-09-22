@@ -1,10 +1,10 @@
-import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
-import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { affiliationOrgOrder } from '../../affiliation/inputs'
-import { affiliationConnection } from '../../affiliation/objects'
+import {GraphQLBoolean, GraphQLObjectType, GraphQLString} from 'graphql'
+import {connectionArgs, globalIdField} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {affiliationOrgOrder} from '../../affiliation/inputs'
+import {affiliationConnection} from '../../affiliation/objects'
 
-import { nodeInterface } from '../../node'
+import {nodeInterface} from '../../node'
 
 export const userSharedType = new GraphQLObjectType({
   name: 'SharedUser',
@@ -13,17 +13,17 @@ export const userSharedType = new GraphQLObjectType({
     displayName: {
       type: GraphQLString,
       description: 'Users display name.',
-      resolve: ({ displayName }) => displayName,
+      resolve: ({displayName}) => displayName,
     },
     userName: {
       type: GraphQLEmailAddress,
       description: 'Users email address.',
-      resolve: ({ userName }) => userName,
+      resolve: ({userName}) => userName,
     },
     emailValidated: {
       type: GraphQLBoolean,
       description: 'Has the user email verified their account.',
-      resolve: ({ emailValidated }) => emailValidated,
+      resolve: ({emailValidated}) => emailValidated,
     },
     affiliations: {
       type: affiliationConnection.connectionType,
@@ -40,9 +40,9 @@ export const userSharedType = new GraphQLObjectType({
         ...connectionArgs,
       },
       resolve: async (
-        { _id },
+        {_id},
         args,
-        { loaders: { loadAffiliationConnectionsByUserId } },
+        {loaders: {loadAffiliationConnectionsByUserId}},
       ) => {
         const affiliations = await loadAffiliationConnectionsByUserId({
           userId: _id,

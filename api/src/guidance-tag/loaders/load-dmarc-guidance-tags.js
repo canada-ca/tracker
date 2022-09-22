@@ -1,13 +1,12 @@
-import DataLoader from 'dataloader'
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 export const loadDmarcGuidanceTagByTagId = ({
-  query,
-  userKey,
-  i18n,
-  language,
-}) =>
-    async ({tags = []}) => {
+                                              query,
+                                              userKey,
+                                              i18n,
+                                              language,
+                                            }) =>
+  async ({tags = []}) => {
 
     let cursor
     try {

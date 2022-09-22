@@ -1,28 +1,25 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { tokenize, verifyToken } from '../../../auth'
-import { loadUserByKey } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {tokenize, verifyToken} from '../../../auth'
+import {loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -36,12 +33,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -72,7 +66,7 @@ describe('user send password reset email', () => {
 
   describe('given a successful validation', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -95,8 +89,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -122,7 +116,7 @@ describe('user send password reset email', () => {
           `
         let user = await cursor.next()
 
-        const token = tokenize({ parameters: { userKey: user._key } })
+        const token = tokenize({parameters: {userKey: user._key}})
 
         const response = await graphql(
           schema,
@@ -156,7 +150,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -192,7 +186,7 @@ describe('user send password reset email', () => {
           `
         let user = await cursor.next()
 
-        const token = tokenize({ parameters: { userKey: user._key } })
+        const token = tokenize({parameters: {userKey: user._key}})
 
         await graphql(
           schema,
@@ -226,7 +220,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -246,8 +240,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -273,7 +267,7 @@ describe('user send password reset email', () => {
           `
         let user = await cursor.next()
 
-        const token = tokenize({ parameters: { userKey: user._key } })
+        const token = tokenize({parameters: {userKey: user._key}})
 
         const response = await graphql(
           schema,
@@ -307,7 +301,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -344,7 +338,7 @@ describe('user send password reset email', () => {
           `
         let user = await cursor.next()
 
-        const token = tokenize({ parameters: { userKey: user._key } })
+        const token = tokenize({parameters: {userKey: user._key}})
 
         await graphql(
           schema,
@@ -378,7 +372,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -400,8 +394,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -482,7 +476,7 @@ describe('user send password reset email', () => {
       describe('userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: undefined },
+            parameters: {userKey: undefined},
           })
 
           const response = await graphql(
@@ -551,7 +545,7 @@ describe('user send password reset email', () => {
       describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: 1 },
+            parameters: {userKey: 1},
           })
           const response = await graphql(
             schema,
@@ -614,7 +608,7 @@ describe('user send password reset email', () => {
         describe('when upserting validation', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
             })
 
             const response = await graphql(
@@ -684,7 +678,7 @@ describe('user send password reset email', () => {
         describe('when upserting validation', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
             })
 
             const response = await graphql(
@@ -757,8 +751,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -839,7 +833,7 @@ describe('user send password reset email', () => {
       describe('userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: undefined },
+            parameters: {userKey: undefined},
           })
 
           const response = await graphql(
@@ -908,7 +902,7 @@ describe('user send password reset email', () => {
       describe('user cannot be found in db', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: 1 },
+            parameters: {userKey: 1},
           })
           const response = await graphql(
             schema,
@@ -971,7 +965,7 @@ describe('user send password reset email', () => {
         describe('when upserting validation', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
             })
 
             const response = await graphql(
@@ -1043,7 +1037,7 @@ describe('user send password reset email', () => {
         describe('when upserting validation', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
             })
 
             const response = await graphql(

@@ -1,7 +1,7 @@
-import { GraphQLNonNull } from 'graphql'
+import {GraphQLNonNull} from 'graphql'
 
-import { affiliationUserOrder } from '../affiliation-user-order'
-import { OrderDirection, AffiliationUserOrderField } from '../../../enums'
+import {affiliationUserOrder} from '../affiliation-user-order'
+import {OrderDirection, AffiliationUserOrderField} from '../../../enums'
 
 describe('given the affiliationOrder input object', () => {
   describe('testing fields', () => {

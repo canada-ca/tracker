@@ -1,7 +1,7 @@
-import { decryptPhoneNumber } from '../decrypt-phone-number'
+import {decryptPhoneNumber} from '../decrypt-phone-number'
 import crypto from 'crypto'
 
-const { CIPHER_KEY } = process.env
+const {CIPHER_KEY} = process.env
 
 describe('given an encrypted phone number field', () => {
   describe('phone number field is a valid phone number', () => {

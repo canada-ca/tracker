@@ -1,5 +1,5 @@
-import { stringify } from 'jest-matcher-utils'
-import { slugify } from '../index'
+import {stringify} from 'jest-matcher-utils'
+import {slugify} from '../index'
 
 describe('given a string', () => {
   it('lowers all characters', () => {

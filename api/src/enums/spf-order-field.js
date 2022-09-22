@@ -1,4 +1,4 @@
-import { GraphQLEnumType } from 'graphql'
+import {GraphQLEnumType} from 'graphql'
 
 export const SpfOrderField = new GraphQLEnumType({
   name: 'SPFOrderField',

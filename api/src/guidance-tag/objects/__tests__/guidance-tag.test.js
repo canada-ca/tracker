@@ -1,7 +1,7 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
-import { guidanceTagType, refLinksType } from '../index'
+import {guidanceTagType, refLinksType} from '../index'
 
 describe('given the guidanceTag gql object', () => {
   describe('testing the field definitions', () => {
@@ -49,7 +49,7 @@ describe('given the guidanceTag gql object', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
+        expect(demoType.id.resolve({id: '1'})).toEqual(
           toGlobalId('guidanceTag', 1),
         )
       })
@@ -58,14 +58,14 @@ describe('given the guidanceTag gql object', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagType.getFields()
 
-        expect(demoType.tagId.resolve({ tagId: 'tagId' })).toEqual('tagId')
+        expect(demoType.tagId.resolve({tagId: 'tagId'})).toEqual('tagId')
       })
     })
     describe('testing the tagName resolver', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagType.getFields()
 
-        expect(demoType.tagName.resolve({ tagName: 'tagName' })).toEqual(
+        expect(demoType.tagName.resolve({tagName: 'tagName'})).toEqual(
           'tagName',
         )
       })
@@ -74,7 +74,7 @@ describe('given the guidanceTag gql object', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagType.getFields()
 
-        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual(
+        expect(demoType.guidance.resolve({guidance: 'guidance'})).toEqual(
           'guidance',
         )
       })
@@ -90,7 +90,7 @@ describe('given the guidanceTag gql object', () => {
           },
         ]
 
-        expect(demoType.refLinks.resolve({ refLinksGuide })).toEqual([
+        expect(demoType.refLinks.resolve({refLinksGuide})).toEqual([
           {
             description: 'description',
             refLink: 'refLink',
@@ -109,7 +109,7 @@ describe('given the guidanceTag gql object', () => {
           },
         ]
 
-        expect(demoType.refLinksTech.resolve({ refLinksTechnical })).toEqual([
+        expect(demoType.refLinksTech.resolve({refLinksTechnical})).toEqual([
           {
             description: 'description',
             refLink: 'refLink',

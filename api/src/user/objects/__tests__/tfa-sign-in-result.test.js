@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { tfaSignInResult } from '../index'
+import {tfaSignInResult} from '../index'
 
 describe('given the tfaSignInResult object', () => {
   describe('testing the field definitions', () => {
@@ -24,7 +24,7 @@ describe('given the tfaSignInResult object', () => {
         const demoType = tfaSignInResult.getFields()
 
         expect(
-          demoType.authenticateToken.resolve({ authenticateToken: 'token' }),
+          demoType.authenticateToken.resolve({authenticateToken: 'token'}),
         ).toEqual('token')
       })
     })
@@ -33,7 +33,7 @@ describe('given the tfaSignInResult object', () => {
         const demoType = tfaSignInResult.getFields()
 
         expect(
-          demoType.sendMethod.resolve({ sendMethod: 'sendMethod' }),
+          demoType.sendMethod.resolve({sendMethod: 'sendMethod'}),
         ).toEqual('sendMethod')
       })
     })

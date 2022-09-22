@@ -1,5 +1,5 @@
-import { StatusEnum } from '../../../enums'
-import { domainStatus } from '../domain-status'
+import {StatusEnum} from '../../../enums'
+import {domainStatus} from '../domain-status'
 
 describe('given the domainStatus object', () => {
   describe('testing its field definitions', () => {
@@ -70,42 +70,42 @@ describe('given the domainStatus object', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.ciphers.resolve({ ciphers: 'pass' })).toEqual('pass')
+        expect(demoType.ciphers.resolve({ciphers: 'pass'})).toEqual('pass')
       })
     })
     describe('testing the curves resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.curves.resolve({ curves: 'pass' })).toEqual('pass')
+        expect(demoType.curves.resolve({curves: 'pass'})).toEqual('pass')
       })
     })
     describe('testing the dkim resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.dkim.resolve({ dkim: 'pass' })).toEqual('pass')
+        expect(demoType.dkim.resolve({dkim: 'pass'})).toEqual('pass')
       })
     })
     describe('testing the dmarc resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.dmarc.resolve({ dmarc: 'pass' })).toEqual('pass')
+        expect(demoType.dmarc.resolve({dmarc: 'pass'})).toEqual('pass')
       })
     })
     describe('testing the https resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.https.resolve({ https: 'pass' })).toEqual('pass')
+        expect(demoType.https.resolve({https: 'pass'})).toEqual('pass')
       })
     })
     describe('testing the hsts resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.hsts.resolve({ hsts: 'pass' })).toEqual('pass')
+        expect(demoType.hsts.resolve({hsts: 'pass'})).toEqual('pass')
       })
     })
 
@@ -179,7 +179,7 @@ describe('given the domainStatus object', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.protocols.resolve({ protocols: 'pass' })).toEqual(
+        expect(demoType.protocols.resolve({protocols: 'pass'})).toEqual(
           'pass',
         )
       })
@@ -188,14 +188,14 @@ describe('given the domainStatus object', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.spf.resolve({ spf: 'pass' })).toEqual('pass')
+        expect(demoType.spf.resolve({spf: 'pass'})).toEqual('pass')
       })
     })
     describe('testing the ssl resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainStatus.getFields()
 
-        expect(demoType.ssl.resolve({ ssl: 'pass' })).toEqual('pass')
+        expect(demoType.ssl.resolve({ssl: 'pass'})).toEqual('pass')
       })
     })
   })

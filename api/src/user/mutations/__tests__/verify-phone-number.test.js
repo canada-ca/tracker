@@ -1,27 +1,24 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { loadUserByKey } from '../../loaders'
-import { userRequired } from '../../../auth'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {loadUserByKey} from '../../loaders'
+import {userRequired} from '../../../auth'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -35,12 +32,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -67,7 +61,7 @@ describe('user send password reset email', () => {
 
   describe('given a successful phone number verification', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -100,8 +94,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -141,11 +135,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -200,11 +194,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -227,8 +221,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -268,11 +262,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -327,11 +321,11 @@ describe('user send password reset email', () => {
             auth: {
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -356,8 +350,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -616,8 +610,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {

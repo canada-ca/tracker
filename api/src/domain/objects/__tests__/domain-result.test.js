@@ -1,7 +1,7 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { domainResultType } from '../domain-result'
-import { domainType } from '../domain'
+import {domainResultType} from '../domain-result'
+import {domainType} from '../domain'
 
 describe('given the domainResultType object', () => {
   describe('testing the field definitions', () => {
@@ -24,15 +24,15 @@ describe('given the domainResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = domainResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
     describe('testing the domain resolver', () => {
       const demoType = domainResultType.getFields()
 
       expect(
-        demoType.domain.resolve({ domain: { id: 1, domain: 'test.gc.ca' } }),
-      ).toEqual({ id: 1, domain: 'test.gc.ca' })
+        demoType.domain.resolve({domain: {id: 1, domain: 'test.gc.ca'}}),
+      ).toEqual({id: 1, domain: 'test.gc.ca'})
     })
   })
 })

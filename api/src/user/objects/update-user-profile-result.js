@@ -1,5 +1,5 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
-import { userPersonalType } from './user-personal'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
+import {userPersonalType} from './user-personal'
 
 export const updateUserProfileResultType = new GraphQLObjectType({
   name: 'UpdateUserProfileResult',
@@ -10,12 +10,12 @@ export const updateUserProfileResultType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'Informs the user if the password reset was successful, and to redirect to sign in page.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
     user: {
       type: userPersonalType,
       description: 'Return the newly updated user information.',
-      resolve: ({ user }) => user,
+      resolve: ({user}) => user,
     },
   }),
 })

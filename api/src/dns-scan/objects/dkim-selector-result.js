@@ -1,12 +1,5 @@
 import {GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql'
-import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLDate } from 'graphql-scalars'
-
-import { dkimResultConnection } from './dkim-result-connection'
-import { dkimResultOrder } from '../inputs'
-import { domainType } from '../../domain/objects'
-import { nodeInterface } from '../../node'
-import {guidanceTagType} from "../../guidance-tag";
+import {guidanceTagType} from "../../guidance-tag"
 
 export const dkimSelectorResultType = new GraphQLObjectType({
   name: 'DKIMSelectorResult',
@@ -24,46 +17,46 @@ export const dkimSelectorResultType = new GraphQLObjectType({
     record: {
       type: GraphQLString,
       description: `DKIM record retrieved during scan.`,
-      resolve: ({ record }) => record,
+      resolve: ({record}) => record,
     },
     keyLength: {
       type: GraphQLString,
       description: 'Size of the Public Key in bits.',
-      resolve: ({ keyLength }) => keyLength,
+      resolve: ({keyLength}) => keyLength,
     },
     keyType: {
       type: GraphQLString,
       description: 'Type of DKIM key used.',
-      resolve: ({ keyType }) => keyType,
+      resolve: ({keyType}) => keyType,
     },
     publicExponent: {
       type: GraphQLInt,
       description: 'The public exponent used for DKIM.',
-      resolve: ({ publicExponent }) => publicExponent,
+      resolve: ({publicExponent}) => publicExponent,
     },
     keyModulus: {
       type: GraphQLString,
       description: 'The key modulus used.',
-      resolve: ({ keyModulus }) => keyModulus,
+      resolve: ({keyModulus}) => keyModulus,
     },
     positiveTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({positiveTags}, _, { loaders: { loadDkimGuidanceTagByTagId } },) => {
+      resolve: async ({positiveTags}, _, {loaders: {loadDkimGuidanceTagByTagId}},) => {
         return await loadDkimGuidanceTagByTagId({tags: positiveTags})
       }
     },
     neutralTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({neutralTags}, _, { loaders: { loadDkimGuidanceTagByTagId } },) => {
+      resolve: async ({neutralTags}, _, {loaders: {loadDkimGuidanceTagByTagId}},) => {
         return await loadDkimGuidanceTagByTagId({tags: neutralTags})
       }
     },
     negativeTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({negativeTags}, _, { loaders: { loadDkimGuidanceTagByTagId } },) => {
+      resolve: async ({negativeTags}, _, {loaders: {loadDkimGuidanceTagByTagId}},) => {
         return await loadDkimGuidanceTagByTagId({tags: negativeTags})
       }
     },

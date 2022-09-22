@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const closeAccountResult = new GraphQLObjectType({
   name: 'CloseAccountResult',
@@ -8,7 +8,7 @@ export const closeAccountResult = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: 'Status of closing the users account.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
 })

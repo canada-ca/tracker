@@ -1,6 +1,6 @@
-import { Kind } from 'graphql'
-import { stringify } from 'jest-matcher-utils'
-import { Acronym } from '../index'
+import {Kind} from 'graphql'
+import {stringify} from 'jest-matcher-utils'
+import {Acronym} from '../index'
 
 describe('given a acronym scalar', () => {
   describe('serializing inputs', () => {

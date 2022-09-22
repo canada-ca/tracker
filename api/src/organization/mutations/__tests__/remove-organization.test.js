@@ -19,12 +19,9 @@ const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -38,12 +35,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -104,38 +98,27 @@ describe('removing an organization', () => {
         domain: 'test.gc.ca',
         slug: 'test-gc-ca',
       })
-      const dkim = await collections.dkim.save({ dkim: true })
-      await collections.domainsDKIM.save({
+
+      const dns = await collections.dns.save({ dns: true })
+      await collections.domainsDNS.save({
         _from: domain._id,
-        _to: dkim._id,
+        _to: dns._id,
       })
-      const dkimResult = await collections.dkimResults.save({
-        dkimResult: true,
-      })
-      await collections.dkimToDkimResults.save({
-        _from: dkim._id,
-        _to: dkimResult._id,
-      })
-      const dmarc = await collections.dmarc.save({ dmarc: true })
-      await collections.domainsDMARC.save({
+
+      const web = await collections.web.save({ web: true })
+      await collections.domainsWeb.save({
         _from: domain._id,
-        _to: dmarc._id,
+        _to: web._id,
       })
-      const spf = await collections.spf.save({ spf: true })
-      await collections.domainsSPF.save({
-        _from: domain._id,
-        _to: spf._id,
+
+      const webScan = await collections.webScan.save({
+        webScan: true,
       })
-      const https = await collections.https.save({ https: true })
-      await collections.domainsHTTPS.save({
-        _from: domain._id,
-        _to: https._id,
+      await collections.webToWebScans.save({
+        _from: web._id,
+        _to: webScan._id,
       })
-      const ssl = await collections.ssl.save({ ssl: true })
-      await collections.domainsSSL.save({
-        _from: domain._id,
-        _to: ssl._id,
-      })
+
       const dmarcSummary = await collections.dmarcSummaries.save({
         dmarcSummary: true,
       })
@@ -398,7 +381,7 @@ describe('removing an organization', () => {
           })
         })
         describe('org is the only one claiming the domain', () => {
-          it('removes the dkim result data', async () => {
+          it('removes the web scan result data', async () => {
             await graphql(
               schema,
               `
@@ -449,12 +432,12 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
           })
           it('removes the scan data', async () => {
             await graphql(
@@ -507,37 +490,20 @@ describe('removing an organization', () => {
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
           })
+
           it('removes the domain', async () => {
             await graphql(
               schema,
@@ -669,7 +635,7 @@ describe('removing an organization', () => {
               _to: domain._id,
             })
           })
-          it('does not remove the dkim result', async () => {
+          it('does not remove the web scan result data', async () => {
             await graphql(
               schema,
               `

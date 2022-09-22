@@ -22,16 +22,6 @@ import {
   loadDomainTagsByOrgId,
 } from './domain/loaders'
 import {
-  loadDkimByKey,
-  loadDkimResultByKey,
-  loadDmarcByKey,
-  loadSpfByKey,
-  loadDkimConnectionsByDomainId,
-  loadDkimResultConnectionsByDkimId,
-  loadDmarcConnectionsByDomainId,
-  loadSpfConnectionsByDomainId,
-} from './email-scan/loaders'
-import {
   loadAggregateGuidanceTagByTagId,
   loadAggregateGuidanceTagConnectionsByTagId,
   loadDkimGuidanceTagByTagId,

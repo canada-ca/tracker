@@ -1,4 +1,4 @@
-import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
+import {Kind, GraphQLError, GraphQLScalarType} from 'graphql'
 
 const validate = (value) => {
   if (typeof value !== typeof 'string') {

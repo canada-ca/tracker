@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const transferOrgOwnershipResult = new GraphQLObjectType({
   name: 'TransferOrgOwnershipResult',
@@ -9,7 +9,7 @@ export const transferOrgOwnershipResult = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'Status message confirming the user transferred ownership of the org.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
 })

@@ -1,10 +1,10 @@
-import { graphql, GraphQLSchema } from 'graphql'
-import { setupI18n } from '@lingui/core'
+import {graphql, GraphQLSchema} from 'graphql'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
 
 describe('signing the user out', () => {
   let schema, i18n
@@ -19,8 +19,8 @@ describe('signing the user out', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -31,7 +31,7 @@ describe('signing the user out', () => {
     })
     it('clears the token', async () => {
       const mockedCookie = jest.fn()
-      const mockedResponse = { cookie: mockedCookie }
+      const mockedResponse = {cookie: mockedCookie}
 
       const response = await graphql(
         schema,
@@ -71,8 +71,8 @@ describe('signing the user out', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -83,7 +83,7 @@ describe('signing the user out', () => {
     })
     it('clears the token', async () => {
       const mockedCookie = jest.fn()
-      const mockedResponse = { cookie: mockedCookie }
+      const mockedResponse = {cookie: mockedCookie}
 
       const response = await graphql(
         schema,

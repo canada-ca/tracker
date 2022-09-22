@@ -1,8 +1,8 @@
-import { GraphQLBoolean, GraphQLString } from 'graphql'
-import { connectionArgs } from 'graphql-relay'
+import {GraphQLBoolean, GraphQLString} from 'graphql'
+import {connectionArgs} from 'graphql-relay'
 
-import { domainOrder } from '../inputs'
-import { domainConnection } from '../objects'
+import {domainOrder} from '../inputs'
+import {domainConnection} from '../objects'
 
 export const findMyDomains = {
   type: domainConnection.connectionType,
@@ -34,12 +34,12 @@ export const findMyDomains = {
         loginRequiredBool,
         verifiedRequired,
       },
-      loaders: { loadDomainConnectionsByUserId },
+      loaders: {loadDomainConnectionsByUserId},
     },
   ) => {
     if (loginRequiredBool) {
       const user = await userRequired()
-      verifiedRequired({ user })
+      verifiedRequired({user})
     }
 
     const isSuperAdmin = await checkSuperAdmin()

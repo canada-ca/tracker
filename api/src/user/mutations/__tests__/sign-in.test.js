@@ -1,30 +1,27 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import {ensure, dbNameFromFile} from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
-import { v4 as uuidv4 } from 'uuid'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
+import {v4 as uuidv4} from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { loadUserByUserName } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {loadUserByUserName} from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
+const {DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -38,12 +35,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -74,7 +68,7 @@ describe('authenticate user account', () => {
   describe('given a successful login', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, transaction } = await ensure({
+      ;({query, drop, truncate, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -126,7 +120,7 @@ describe('authenticate user account', () => {
             cleanseInput,
           },
           loaders: {
-            loadUserByUserName: loadUserByUserName({ query }),
+            loadUserByUserName: loadUserByUserName({query}),
           },
           notify: {
             sendVerificationEmail: jest.fn(),
@@ -149,8 +143,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -210,7 +204,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
@@ -238,7 +232,7 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(expectedResponse)
 
-          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(mockNotify).toHaveBeenCalledWith({user})
 
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
@@ -296,7 +290,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -323,7 +317,7 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
-          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(mockNotify).toHaveBeenCalledWith({user})
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -345,7 +339,7 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = { cookie: mockedCookie }
+            const mockedResponse = {cookie: mockedCookie}
 
             const response = await graphql(
               schema,
@@ -385,7 +379,7 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -441,7 +435,7 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = { cookie: mockedCookie }
+            const mockedResponse = {cookie: mockedCookie}
 
             const response = await graphql(
               schema,
@@ -482,7 +476,7 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -575,7 +569,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -599,8 +593,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -664,7 +658,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
@@ -691,7 +685,7 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
-          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(mockNotify).toHaveBeenCalledWith({user})
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -752,7 +746,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -779,7 +773,7 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
-          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(mockNotify).toHaveBeenCalledWith({user})
           expect(consoleOutput).toEqual([
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           ])
@@ -801,7 +795,7 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = { cookie: mockedCookie }
+            const mockedResponse = {cookie: mockedCookie}
 
             const response = await graphql(
               schema,
@@ -841,7 +835,7 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -897,7 +891,7 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = { cookie: mockedCookie }
+            const mockedResponse = {cookie: mockedCookie}
 
             const response = await graphql(
               schema,
@@ -938,7 +932,7 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
@@ -1035,7 +1029,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
               },
               notify: {
                 sendAuthEmail: mockNotify,
@@ -1061,8 +1055,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1176,7 +1170,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction: jest
                 .fn()
-                .mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
+                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -1260,7 +1254,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction: jest
                 .fn()
-                .mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
+                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -1320,7 +1314,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction: jest
                 .fn()
-                .mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
+                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -1905,8 +1899,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2020,7 +2014,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction: jest
                 .fn()
-                .mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
+                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -2104,7 +2098,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction: jest
                 .fn()
-                .mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
+                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -2164,7 +2158,7 @@ describe('authenticate user account', () => {
               collections: collectionNames,
               transaction: jest
                 .fn()
-                .mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
+                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
               uuidv4,
               auth: {
                 bcrypt: {

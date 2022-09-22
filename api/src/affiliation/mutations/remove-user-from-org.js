@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLID } from 'graphql'
-import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLID} from 'graphql'
+import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { removeUserFromOrgUnion } from '../unions'
+import {removeUserFromOrgUnion} from '../unions'
 
 export const removeUserFromOrg = new mutationWithClientMutationId({
   name: 'RemoveUserFromOrg',
@@ -34,20 +34,20 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadUserByKey },
-      validators: { cleanseInput },
+      auth: {checkPermission, userRequired, verifiedRequired, tfaRequired},
+      loaders: {loadOrgByKey, loadUserByKey},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse Input
-    const { id: requestedUserKey } = fromGlobalId(cleanseInput(args.userId))
-    const { id: requestedOrgKey } = fromGlobalId(cleanseInput(args.orgId))
+    const {id: requestedUserKey} = fromGlobalId(cleanseInput(args.userId))
+    const {id: requestedOrgKey} = fromGlobalId(cleanseInput(args.orgId))
 
     // Get requesting user
     const user = await userRequired()
 
-    verifiedRequired({ user })
-    tfaRequired({ user })
+    verifiedRequired({user})
+    tfaRequired({user})
 
     // Get requested org
     const requestedOrg = await loadOrgByKey.load(requestedOrgKey)
@@ -65,7 +65,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     }
 
     // Check requesting users permission
-    const permission = await checkPermission({ orgId: requestedOrg._id })
+    const permission = await checkPermission({orgId: requestedOrg._id})
     if (permission === 'user' || typeof permission === 'undefined') {
       console.warn(
         `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however they do not have the permission to remove users.`,

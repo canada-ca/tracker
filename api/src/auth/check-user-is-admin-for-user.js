@@ -1,45 +1,45 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 export const checkUserIsAdminForUser =
-  ({ i18n, userKey, query }) =>
-  async ({ userName }) => {
-    const requestingUserId = `users/${userKey}`
-    let cursor
+  ({i18n, userKey, query}) =>
+    async ({userName}) => {
+      const requestingUserId = `users/${userKey}`
+      let cursor
 
-    try {
-      cursor = await query`
+      try {
+        cursor = await query`
       WITH affiliations, organizations, users
       FOR v, e IN 1 INBOUND ${requestingUserId} affiliations
         FILTER e.permission == "super_admin"
         RETURN e.permission
     `
-    } catch (err) {
-      console.error(
-        `Database error when checking to see if user: ${userKey} has super admin permission for user: ${userName}, error: ${err}`,
-      )
-      throw new Error(i18n._(t`Permission error, not an admin for this user.`))
-    }
+      } catch (err) {
+        console.error(
+          `Database error when checking to see if user: ${userKey} has super admin permission for user: ${userName}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Permission error, not an admin for this user.`))
+      }
 
-    let permission
-    try {
-      permission = await cursor.next()
-    } catch (err) {
-      console.error(
-        `Cursor error when checking to see if user: ${userKey} has super admin permission for user: ${userName}, error: ${err}`,
-      )
-      throw new Error(i18n._(t`Permission error, not an admin for this user.`))
-    }
-
-    if (permission === 'super_admin') {
-      return true
-    } else {
+      let permission
       try {
-        cursor = await query`
+        permission = await cursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error when checking to see if user: ${userKey} has super admin permission for user: ${userName}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Permission error, not an admin for this user.`))
+      }
+
+      if (permission === 'super_admin') {
+        return true
+      } else {
+        try {
+          cursor = await query`
         WITH affiliations, organizations, users
         LET requestingUserOrgKeys = (
           FOR v, e IN 1 INBOUND ${requestingUserId} affiliations
             FILTER e.permission == "admin"
-            RETURN v._key    
+            RETURN v._key
         )
 
         LET requestedUser = (
@@ -55,27 +55,27 @@ export const checkUserIsAdminForUser =
 
         RETURN (LENGTH(INTERSECTION(requestingUserOrgKeys, requestedUserOrgKeys)) > 0 ? true : false)
       `
-      } catch (err) {
-        console.error(
-          `Database error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
-        )
-        throw new Error(
-          i18n._(t`Permission error, not an admin for this user.`),
-        )
-      }
+        } catch (err) {
+          console.error(
+            `Database error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
+          )
+          throw new Error(
+            i18n._(t`Permission error, not an admin for this user.`),
+          )
+        }
 
-      let isAdmin
-      try {
-        isAdmin = await cursor.next()
-      } catch (err) {
-        console.error(
-          `Cursor error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
-        )
-        throw new Error(
-          i18n._(t`Permission error, not an admin for this user.`),
-        )
-      }
+        let isAdmin
+        try {
+          isAdmin = await cursor.next()
+        } catch (err) {
+          console.error(
+            `Cursor error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
+          )
+          throw new Error(
+            i18n._(t`Permission error, not an admin for this user.`),
+          )
+        }
 
-      return isAdmin
+        return isAdmin
+      }
     }
-  }

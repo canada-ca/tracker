@@ -1,5 +1,5 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
-import { SeverityEnum } from '../../enums'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
+import {SeverityEnum} from '../../enums'
 
 export const domainTag = new GraphQLObjectType({
   name: 'DomainTag',
@@ -9,17 +9,17 @@ export const domainTag = new GraphQLObjectType({
     id: {
       type: GraphQLString,
       description: 'CVE ID of the detected vulnerability.',
-      resolve: ({ id }) => id,
+      resolve: ({id}) => id,
     },
     firstDetected: {
       type: GraphQLString,
       description: 'Time that the vulnerability was first scanned',
-      resolve: ({ firstDetected }) => firstDetected,
+      resolve: ({firstDetected}) => firstDetected,
     },
     severity: {
       type: SeverityEnum,
       description: 'Protocols Status',
-      resolve: ({ severity }) => severity,
+      resolve: ({severity}) => severity,
     },
   }),
 })

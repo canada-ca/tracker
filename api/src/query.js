@@ -1,6 +1,6 @@
-import { GraphQLObjectType } from 'graphql'
+import {GraphQLObjectType} from 'graphql'
 
-import { nodeField, nodesField } from './node'
+import {nodeField, nodesField} from './node'
 import * as dmarcSummariesQueries from './dmarc-summaries/queries'
 import * as domainQueries from './domain/queries'
 import * as organizationQueries from './organization/queries'

@@ -2,7 +2,7 @@ import {
   updateUserPasswordErrorType,
   updateUserPasswordResultType,
 } from '../../objects/index'
-import { updateUserPasswordUnion } from '../update-user-password-union'
+import {updateUserPasswordUnion} from '../update-user-password-union'
 
 describe('given the updateUserPasswordUnion', () => {
   describe('testing the field types', () => {

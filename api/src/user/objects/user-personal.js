@@ -1,11 +1,11 @@
-import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql'
-import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
+import {GraphQLBoolean, GraphQLObjectType, GraphQLString} from 'graphql'
+import {connectionArgs, globalIdField} from 'graphql-relay'
+import {GraphQLEmailAddress, GraphQLPhoneNumber} from 'graphql-scalars'
 
-import { affiliationOrgOrder } from '../../affiliation/inputs'
-import { affiliationConnection } from '../../affiliation/objects'
-import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
-import { nodeInterface } from '../../node'
+import {affiliationOrgOrder} from '../../affiliation/inputs'
+import {affiliationConnection} from '../../affiliation/objects'
+import {LanguageEnums, TfaSendMethodEnum} from '../../enums'
+import {nodeInterface} from '../../node'
 
 export const userPersonalType = new GraphQLObjectType({
   name: 'PersonalUser',
@@ -14,20 +14,20 @@ export const userPersonalType = new GraphQLObjectType({
     userName: {
       type: GraphQLEmailAddress,
       description: 'Users email address.',
-      resolve: ({ userName }) => userName,
+      resolve: ({userName}) => userName,
     },
     displayName: {
       type: GraphQLString,
       description: 'Name displayed to other users.',
-      resolve: ({ displayName }) => displayName,
+      resolve: ({displayName}) => displayName,
     },
     phoneNumber: {
       type: GraphQLPhoneNumber,
       description: 'The phone number the user has setup with tfa.',
       resolve: (
-        { phoneDetails },
+        {phoneDetails},
         _args,
-        { validators: { decryptPhoneNumber } },
+        {validators: {decryptPhoneNumber}},
       ) => {
         if (typeof phoneDetails === 'undefined' || phoneDetails === null) {
           return null
@@ -38,22 +38,22 @@ export const userPersonalType = new GraphQLObjectType({
     preferredLang: {
       type: LanguageEnums,
       description: 'Users preferred language.',
-      resolve: ({ preferredLang }) => preferredLang,
+      resolve: ({preferredLang}) => preferredLang,
     },
     phoneValidated: {
       type: GraphQLBoolean,
       description: 'Has the user completed phone validation.',
-      resolve: ({ phoneValidated }) => phoneValidated,
+      resolve: ({phoneValidated}) => phoneValidated,
     },
     emailValidated: {
       type: GraphQLBoolean,
       description: 'Has the user email verified their account.',
-      resolve: ({ emailValidated }) => emailValidated,
+      resolve: ({emailValidated}) => emailValidated,
     },
     tfaSendMethod: {
       type: TfaSendMethodEnum,
       description: 'The method in which TFA codes are sent.',
-      resolve: ({ tfaSendMethod }) => tfaSendMethod,
+      resolve: ({tfaSendMethod}) => tfaSendMethod,
     },
     affiliations: {
       type: affiliationConnection.connectionType,
@@ -70,9 +70,9 @@ export const userPersonalType = new GraphQLObjectType({
         ...connectionArgs,
       },
       resolve: async (
-        { _id },
+        {_id},
         args,
-        { loaders: { loadAffiliationConnectionsByUserId } },
+        {loaders: {loadAffiliationConnectionsByUserId}},
       ) => {
         const affiliations = await loadAffiliationConnectionsByUserId({
           userId: _id,

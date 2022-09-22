@@ -1,8 +1,8 @@
-import { GraphQLString, GraphQLNonNull } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLString, GraphQLNonNull} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { updateUserPasswordUnion } from '../unions'
+import {updateUserPasswordUnion} from '../unions'
 
 export const updateUserPassword = new mutationWithClientMutationId({
   name: 'UpdateUserPassword',
@@ -38,8 +38,8 @@ export const updateUserPassword = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { bcrypt, userRequired },
-      validators: { cleanseInput },
+      auth: {bcrypt, userRequired},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse Input

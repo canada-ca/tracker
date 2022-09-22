@@ -1,5 +1,5 @@
-import { affiliationError, updateUserRoleResultType } from '../../objects'
-import { updateUserRoleUnion } from '../update-user-role-union'
+import {affiliationError, updateUserRoleResultType} from '../../objects'
+import {updateUserRoleUnion} from '../update-user-role-union'
 
 describe('given the updateUserRoleUnion', () => {
   describe('testing the field types', () => {

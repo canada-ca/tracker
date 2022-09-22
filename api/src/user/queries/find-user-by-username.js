@@ -1,8 +1,8 @@
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { t } from '@lingui/macro'
-import { GraphQLNonNull } from 'graphql'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {t} from '@lingui/macro'
+import {GraphQLNonNull} from 'graphql'
 
-import { userSharedType } from '../objects'
+import {userSharedType} from '../objects'
 
 export const findUserByUsername = {
   type: userSharedType,
@@ -19,9 +19,9 @@ export const findUserByUsername = {
     {
       i18n,
       userKey,
-      auth: { userRequired, checkUserIsAdminForUser },
-      loaders: { loadUserByUserName },
-      validators: { cleanseInput },
+      auth: {userRequired, checkUserIsAdminForUser},
+      loaders: {loadUserByUserName},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse input
@@ -29,7 +29,7 @@ export const findUserByUsername = {
     // Get querying user
     await userRequired()
 
-    const permission = await checkUserIsAdminForUser({ userName })
+    const permission = await checkUserIsAdminForUser({userName})
 
     if (permission) {
       // Retrieve user by userName

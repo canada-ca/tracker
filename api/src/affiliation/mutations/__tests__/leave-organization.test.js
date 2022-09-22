@@ -1,30 +1,27 @@
-import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { checkOrgOwner, userRequired, verifiedRequired } from '../../../auth'
-import { loadOrgByKey } from '../../../organization/loaders'
-import { loadUserByKey } from '../../../user/loaders'
-import { cleanseInput } from '../../../validators'
-import { createMutationSchema } from '../../../mutation'
-import { createQuerySchema } from '../../../query'
+import {checkOrgOwner, userRequired, verifiedRequired} from '../../../auth'
+import {loadOrgByKey} from '../../../organization/loaders'
+import {loadUserByKey} from '../../../user/loaders'
+import {cleanseInput} from '../../../validators'
+import {createMutationSchema} from '../../../mutation'
+import {createQuerySchema} from '../../../query'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
+const {DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -38,12 +35,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -77,8 +71,8 @@ describe('given a successful leave', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -88,7 +82,7 @@ describe('given a successful leave', () => {
     })
   })
   beforeEach(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
+    ;({query, drop, truncate, collections, transaction} = await ensure({
       variables: {
         dbname: dbNameFromFile(__filename),
         username: 'root',
@@ -143,7 +137,7 @@ describe('given a successful leave', () => {
       _from: org._id,
       _to: domain2._id,
     })
-    const dkim = await collections.dkim.save({ dkim: true })
+    const dkim = await collections.dkim.save({dkim: true})
     await collections.domainsDKIM.save({
       _from: domain._id,
       _to: dkim._id,
@@ -155,22 +149,22 @@ describe('given a successful leave', () => {
       _from: dkim._id,
       _to: dkimResult._id,
     })
-    const dmarc = await collections.dmarc.save({ dmarc: true })
+    const dmarc = await collections.dmarc.save({dmarc: true})
     await collections.domainsDMARC.save({
       _from: domain._id,
       _to: dmarc._id,
     })
-    const spf = await collections.spf.save({ spf: true })
+    const spf = await collections.spf.save({spf: true})
     await collections.domainsSPF.save({
       _from: domain._id,
       _to: spf._id,
     })
-    const https = await collections.https.save({ https: true })
+    const https = await collections.https.save({https: true})
     await collections.domainsHTTPS.save({
       _from: domain._id,
       _to: https._id,
     })
-    const ssl = await collections.ssl.save({ ssl: true })
+    const ssl = await collections.ssl.save({ssl: true})
     await collections.domainsSSL.save({
       _from: domain._id,
       _to: ssl._id,
@@ -250,7 +244,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -260,7 +254,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -335,7 +329,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -345,7 +339,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -399,7 +393,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -409,7 +403,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -419,7 +413,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -490,7 +484,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -500,7 +494,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -510,7 +504,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -538,8 +532,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -592,7 +586,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -602,7 +596,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -628,8 +622,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -682,7 +676,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -692,7 +686,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -797,7 +791,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -807,7 +801,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -882,7 +876,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -892,7 +886,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -942,7 +936,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -952,7 +946,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -962,7 +956,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -1026,7 +1020,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -1036,7 +1030,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -1046,7 +1040,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -1085,7 +1079,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -1095,7 +1089,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -1105,7 +1099,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -1131,8 +1125,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -1185,7 +1179,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1195,7 +1189,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1221,8 +1215,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -1275,7 +1269,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1285,7 +1279,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1365,7 +1359,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({ i18n }),
+            verifiedRequired: verifiedRequired({i18n}),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1375,7 +1369,7 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: { cleanseInput },
+          validators: {cleanseInput},
         },
       )
 
@@ -1424,7 +1418,7 @@ describe('given a successful leave', () => {
           transaction,
           userKey: user._key,
           auth: {
-            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+            checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
             userRequired: userRequired({
               i18n,
               userKey: user._key,
@@ -1434,7 +1428,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({ i18n }),
+            verifiedRequired: verifiedRequired({i18n}),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1444,7 +1438,7 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: { cleanseInput },
+          validators: {cleanseInput},
         },
       )
 
@@ -1508,7 +1502,7 @@ describe('given a successful leave', () => {
           transaction,
           userKey: user._key,
           auth: {
-            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+            checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
             userRequired: userRequired({
               i18n,
               userKey: user._key,
@@ -1518,7 +1512,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({ i18n }),
+            verifiedRequired: verifiedRequired({i18n}),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1528,7 +1522,7 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: { cleanseInput },
+          validators: {cleanseInput},
         },
       )
 
@@ -1572,7 +1566,7 @@ describe('given a successful leave', () => {
           transaction,
           userKey: user._key,
           auth: {
-            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+            checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
             userRequired: userRequired({
               i18n,
               userKey: user._key,
@@ -1582,7 +1576,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({ i18n }),
+            verifiedRequired: verifiedRequired({i18n}),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1592,7 +1586,7 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: { cleanseInput },
+          validators: {cleanseInput},
         },
       )
 
@@ -1608,8 +1602,8 @@ describe('given a successful leave', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1648,7 +1642,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -1658,7 +1652,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -1668,7 +1662,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -1694,8 +1688,8 @@ describe('given a successful leave', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1734,7 +1728,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
+              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -1744,7 +1738,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -1754,7 +1748,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -1802,8 +1796,8 @@ describe('given an unsuccessful leave', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1848,14 +1842,14 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: {
                 load: jest.fn().mockReturnValue(undefined),
               },
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -1911,7 +1905,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -1920,14 +1914,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1977,7 +1971,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -1986,14 +1980,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2044,7 +2038,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2053,14 +2047,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2110,7 +2104,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2119,14 +2113,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2179,7 +2173,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2188,14 +2182,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2247,7 +2241,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2256,14 +2250,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2283,7 +2277,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2317,7 +2311,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2326,14 +2320,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2353,7 +2347,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2388,7 +2382,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2397,14 +2391,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2424,7 +2418,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2464,7 +2458,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2473,14 +2467,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2500,7 +2494,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2541,7 +2535,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2550,14 +2544,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2612,7 +2606,7 @@ describe('given an unsuccessful leave', () => {
             {
               i18n,
               query: mockedQuery,
-              collections: jest.fn({ property: 'string' }),
+              collections: jest.fn({property: 'string'}),
               transaction: mockedTransaction,
               userKey: '123',
               auth: {
@@ -2621,14 +2615,14 @@ describe('given an unsuccessful leave', () => {
                   _key: '123',
                   emailValidated: true,
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2682,7 +2676,7 @@ describe('given an unsuccessful leave', () => {
           {
             i18n,
             query: mockedQuery,
-            collections: jest.fn({ property: 'string' }),
+            collections: jest.fn({property: 'string'}),
             transaction: mockedTransaction,
             userKey: '123',
             auth: {
@@ -2691,14 +2685,14 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 123 }),
+                load: jest.fn().mockReturnValue({_key: 123}),
               },
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -2718,8 +2712,8 @@ describe('given an unsuccessful leave', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -2764,14 +2758,14 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: {
                 load: jest.fn().mockReturnValue(undefined),
               },
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -2828,7 +2822,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2837,14 +2831,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2896,7 +2890,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2905,14 +2899,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2965,7 +2959,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2974,14 +2968,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3033,7 +3027,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3042,14 +3036,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3104,7 +3098,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3113,14 +3107,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3174,7 +3168,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3183,14 +3177,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3212,7 +3206,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -3246,7 +3240,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3255,14 +3249,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3284,7 +3278,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -3319,7 +3313,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3328,14 +3322,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3357,7 +3351,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -3397,7 +3391,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3406,14 +3400,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3435,7 +3429,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1 }]),
+                .mockReturnValue([{count: 1}]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -3476,7 +3470,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({ property: 'string' }),
+                collections: jest.fn({property: 'string'}),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3485,14 +3479,14 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({ _key: 123 }),
+                    load: jest.fn().mockReturnValue({_key: 123}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3549,7 +3543,7 @@ describe('given an unsuccessful leave', () => {
             {
               i18n,
               query: mockedQuery,
-              collections: jest.fn({ property: 'string' }),
+              collections: jest.fn({property: 'string'}),
               transaction: mockedTransaction,
               userKey: '123',
               auth: {
@@ -3558,14 +3552,14 @@ describe('given an unsuccessful leave', () => {
                   _key: '123',
                   emailValidated: true,
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -3621,7 +3615,7 @@ describe('given an unsuccessful leave', () => {
           {
             i18n,
             query: mockedQuery,
-            collections: jest.fn({ property: 'string' }),
+            collections: jest.fn({property: 'string'}),
             transaction: mockedTransaction,
             userKey: '123',
             auth: {
@@ -3630,14 +3624,14 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({ _key: 123 }),
+                load: jest.fn().mockReturnValue({_key: 123}),
               },
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 

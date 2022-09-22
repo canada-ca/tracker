@@ -1,8 +1,8 @@
-import { GraphQLString } from 'graphql'
-import { connectionArgs } from 'graphql-relay'
+import {GraphQLString} from 'graphql'
+import {connectionArgs} from 'graphql-relay'
 
-import { affiliationUserOrder } from '../../affiliation/inputs'
-import { userConnection } from '../objects/user-connection'
+import {affiliationUserOrder} from '../../affiliation/inputs'
+import {userConnection} from '../objects/user-connection'
 
 export const findMyUsers = {
   type: userConnection.connectionType,
@@ -29,14 +29,14 @@ export const findMyUsers = {
         verifiedRequired,
         superAdminRequired,
       },
-      loaders: { loadUserConnectionsByUserId },
+      loaders: {loadUserConnectionsByUserId},
     },
   ) => {
     const user = await userRequired()
-    verifiedRequired({ user })
+    verifiedRequired({user})
 
     const isSuperAdmin = await checkSuperAdmin()
-    superAdminRequired({ user, isSuperAdmin })
+    superAdminRequired({user, isSuperAdmin})
 
     const userConnections = await loadUserConnectionsByUserId({
       isSuperAdmin,

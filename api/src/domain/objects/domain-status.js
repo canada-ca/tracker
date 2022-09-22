@@ -1,5 +1,5 @@
-import { GraphQLObjectType } from 'graphql'
-import { StatusEnum } from '../../enums'
+import {GraphQLObjectType} from 'graphql'
+import {StatusEnum} from '../../enums'
 
 export const domainStatus = new GraphQLObjectType({
   name: 'DomainStatus',
@@ -9,37 +9,37 @@ export const domainStatus = new GraphQLObjectType({
     ciphers: {
       type: StatusEnum,
       description: 'Ciphers Status',
-      resolve: ({ ciphers }) => ciphers,
+      resolve: ({ciphers}) => ciphers,
     },
     curves: {
       type: StatusEnum,
       description: 'Curves Status',
-      resolve: ({ curves }) => curves,
+      resolve: ({curves}) => curves,
     },
     dkim: {
       type: StatusEnum,
       description: 'DKIM Status',
-      resolve: ({ dkim }) => dkim,
+      resolve: ({dkim}) => dkim,
     },
     dmarc: {
       type: StatusEnum,
       description: 'DMARC Status',
-      resolve: ({ dmarc }) => dmarc,
+      resolve: ({dmarc}) => dmarc,
     },
     https: {
       type: StatusEnum,
       description: 'HTTPS Status',
-      resolve: ({ https }) => https,
+      resolve: ({https}) => https,
     },
     hsts: {
       type: StatusEnum,
       description: 'HSTS Status',
-      resolve: ({ hsts }) => hsts,
+      resolve: ({hsts}) => hsts,
     },
     policy: {
       type: StatusEnum,
       description: 'Policy Status',
-      resolve: ({ ciphers, https, hsts, protocols, ssl }) =>
+      resolve: ({ciphers, https, hsts, protocols, ssl}) =>
         [ciphers, https, hsts, protocols, ssl].every((t) => t !== 'fail')
           ? 'pass'
           : 'fail',
@@ -47,17 +47,17 @@ export const domainStatus = new GraphQLObjectType({
     protocols: {
       type: StatusEnum,
       description: 'Protocols Status',
-      resolve: ({ protocols }) => protocols,
+      resolve: ({protocols}) => protocols,
     },
     spf: {
       type: StatusEnum,
       description: 'SPF Status',
-      resolve: ({ spf }) => spf,
+      resolve: ({spf}) => spf,
     },
     ssl: {
       type: StatusEnum,
       description: 'SSL Status',
-      resolve: ({ ssl }) => ssl,
+      resolve: ({ssl}) => ssl,
     },
   }),
 })

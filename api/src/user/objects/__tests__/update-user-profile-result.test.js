@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { updateUserProfileResultType, userPersonalType } from '../index'
+import {updateUserProfileResultType, userPersonalType} from '../index'
 
 describe('given the updateUserProfileResultType object', () => {
   describe('testing the field definitions', () => {
@@ -23,14 +23,14 @@ describe('given the updateUserProfileResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = updateUserProfileResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
     describe('testing the user field', () => {
       it('returns the resolved value', () => {
         const demoType = updateUserProfileResultType.getFields()
 
-        expect(demoType.user.resolve({ user: { id: '1' } })).toEqual({
+        expect(demoType.user.resolve({user: {id: '1'}})).toEqual({
           id: '1',
         })
       })

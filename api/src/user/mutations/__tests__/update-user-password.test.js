@@ -1,31 +1,28 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import {ensure, dbNameFromFile} from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
-import { v4 as uuidv4 } from 'uuid'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
+import {v4 as uuidv4} from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { tokenize, userRequired } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {tokenize, userRequired} from '../../../auth'
+import {loadUserByUserName, loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -39,12 +36,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -75,7 +69,7 @@ describe('authenticate user account', () => {
   describe('given a successful update', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, transaction } = await ensure({
+      ;({query, drop, truncate, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -126,7 +120,7 @@ describe('authenticate user account', () => {
             cleanseInput,
           },
           loaders: {
-            loadUserByUserName: loadUserByUserName({ query }),
+            loadUserByUserName: loadUserByUserName({query}),
           },
           notify: {
             sendVerificationEmail: jest.fn(),
@@ -156,8 +150,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -202,15 +196,15 @@ describe('authenticate user account', () => {
               tokenize,
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             validators: {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -265,7 +259,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
             },
             notify: {
               sendAuthEmail: mockNotfiy,
@@ -294,8 +288,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -340,15 +334,15 @@ describe('authenticate user account', () => {
               tokenize,
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
             },
             validators: {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -403,7 +397,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
             },
             notify: {
               sendAuthEmail: mockNotfiy,
@@ -434,8 +428,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -774,8 +768,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {

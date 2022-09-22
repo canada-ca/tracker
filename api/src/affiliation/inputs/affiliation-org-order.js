@@ -1,6 +1,6 @@
-import { GraphQLInputObjectType, GraphQLNonNull } from 'graphql'
+import {GraphQLInputObjectType, GraphQLNonNull} from 'graphql'
 
-import { OrderDirection, AffiliationOrgOrderField } from '../../enums'
+import {OrderDirection, AffiliationOrgOrderField} from '../../enums'
 
 export const affiliationOrgOrder = new GraphQLInputObjectType({
   name: 'AffiliationOrgOrder',

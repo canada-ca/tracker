@@ -1,8 +1,8 @@
-import { t } from '@lingui/macro'
-import { GraphQLID } from 'graphql'
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLID} from 'graphql'
+import {fromGlobalId, mutationWithClientMutationId} from 'graphql-relay'
 
-import { closeAccountUnion } from '../unions'
+import {closeAccountUnion} from '../unions'
 
 export const closeAccount = new mutationWithClientMutationId({
   name: 'CloseAccount',
@@ -28,9 +28,9 @@ export const closeAccount = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { checkSuperAdmin, userRequired },
-      loaders: { loadUserByKey },
-      validators: { cleanseInput },
+      auth: {checkSuperAdmin, userRequired},
+      loaders: {loadUserByKey},
+      validators: {cleanseInput},
     },
   ) => {
     let submittedUserId
@@ -188,11 +188,11 @@ export const closeAccount = new mutationWithClientMutationId({
             FOR v, e IN 1..1 INBOUND domain._id claims
               RETURN 1
           )
-          RETURN { 
+          RETURN {
             _id: domain._id,
             _key: domain._key,
             domain: domain.domain,
-            count
+            count: count
           }
       `
       } catch (err) {
@@ -214,151 +214,46 @@ export const closeAccount = new mutationWithClientMutationId({
 
       for (const domainObj of domainCountList) {
         if (domainObj.count === 1) {
+          // Remove scan data
+
           try {
-            await trx.step(
-              () => query`
-                WITH dkim, domains, domainsDKIM, dkimToDkimResults, dkimResults
-                LET dkimEdges = (
-                  FOR v, e IN 1..1 OUTBOUND ${domainObj._id} domainsDKIM
-                    RETURN { edgeKey: e._key, dkimId: e._to }
-                )
-                FOR dkimEdge IN dkimEdges
-                  LET dkimResultEdges = (
-                    FOR v, e IN 1..1 OUTBOUND dkimEdge.dkimId dkimToDkimResults
-                      RETURN { edgeKey: e._key, dkimResultId: e._to }
-                  )
-                  LET removeDkimResultEdges = (
-                    FOR dkimResultEdge IN dkimResultEdges
-                      REMOVE dkimResultEdge.edgeKey IN dkimToDkimResults
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeDkimResult = (
-                    FOR dkimResultEdge IN dkimResultEdges
-                      REMOVE PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key 
-                      IN dkimResults OPTIONS { waitForSync: true }
-                  )
-                RETURN true
-              `,
-            )
+            // Remove web data
+            await trx.step(async () => {
+              await query`
+            WITH web, webScan
+            FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domainObj._id} domainsWeb
+              FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
+                REMOVE webScanV IN webScan
+                REMOVE webToWebScansV IN webToWebScans
+                OPTIONS { waitForSync: true }
+              REMOVE webV IN web
+              REMOVE domainsWebEdge IN domainsWeb
+              OPTIONS { waitForSync: true }
+          `
+            })
           } catch (err) {
             console.error(
-              `Trx step error occurred when removing dkimResults when user: ${user._key} attempted to close account: ${userId}: ${err}`,
+              `Trx step error occurred while user: ${userId} attempted to remove web data for ${domainObj.domain} in org: ${affiliation._from} while closing account, ${err}`,
             )
-            throw new Error(
-              i18n._(t`Unable to close account. Please try again.`),
-            )
+            throw new Error(i18n._(t`Unable to close account. Please try again.`))
           }
 
           try {
-            await Promise.all([
-              trx.step(
-                () => query`
-                  WITH dkim, domains, domainsDKIM
-                  LET dkimEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domainObj._id} domainsDKIM
-                      RETURN { edgeKey: e._key, dkimId: e._to }
-                  )
-                  LET removeDkimEdges = (
-                    FOR dkimEdge IN dkimEdges
-                      REMOVE dkimEdge.edgeKey IN domainsDKIM
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeDkim = (
-                    FOR dkimEdge IN dkimEdges
-                      REMOVE PARSE_IDENTIFIER(dkimEdge.dkimId).key
-                      IN dkim OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () => query`
-                  WITH dmarc, domains, domainsDMARC
-                  LET dmarcEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domainObj._id} domainsDMARC
-                      RETURN { edgeKey: e._key, dmarcId: e._to }
-                  )
-                  LET removeDmarcEdges = (
-                    FOR dmarcEdge IN dmarcEdges
-                      REMOVE dmarcEdge.edgeKey IN domainsDMARC
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeDmarc = (
-                    FOR dmarcEdge IN dmarcEdges
-                      REMOVE PARSE_IDENTIFIER(dmarcEdge.dmarcId).key
-                      IN dmarc OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () => query`
-                  WITH spf, domains, domainsSPF
-                  LET spfEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domainObj._id} domainsSPF
-                      RETURN { edgeKey: e._key, spfId: e._to }
-                  )
-                  LET removeSpfEdges = (
-                    FOR spfEdge IN spfEdges
-                      REMOVE spfEdge.edgeKey IN domainsSPF
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeSpf = (
-                    FOR spfEdge IN spfEdges
-                      REMOVE PARSE_IDENTIFIER(spfEdge.spfId).key
-                      IN spf OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () => query`
-                  WITH https, domains, domainsHTTPS
-                  LET httpsEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domainObj._id} domainsHTTPS
-                      RETURN { edgeKey: e._key, httpsId: e._to }
-                  )
-                  LET removeHttpsEdges = (
-                    FOR httpsEdge IN httpsEdges
-                      REMOVE httpsEdge.edgeKey IN domainsHTTPS
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeHttps = (
-                    FOR httpsEdge IN httpsEdges
-                      REMOVE PARSE_IDENTIFIER(httpsEdge.httpsId).key
-                      IN https OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () => query`
-                    WITH ssl, domains, domainsSSL
-                    LET sslEdges = (
-                      FOR v, e IN 1..1 OUTBOUND ${domainObj._id} domainsSSL
-                        RETURN { edgeKey: e._key, sslId: e._to }
-                    )
-                    LET removeSslEdges = (
-                      FOR sslEdge IN sslEdges
-                        REMOVE sslEdge.edgeKey IN domainsSSL
-                        OPTIONS { waitForSync: true }
-                    )
-                    LET removeSsl = (
-                      FOR sslEdge IN sslEdges
-                        REMOVE PARSE_IDENTIFIER(sslEdge.sslId).key
-                        IN ssl OPTIONS { waitForSync: true }
-                    )
-                    RETURN true
-                  `,
-              ),
-            ])
+            // Remove DNS data
+            await trx.step(async () => {
+              await query`
+            WITH dns
+            FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domainObj._id} domainsDNS
+              REMOVE dnsV IN dns
+              REMOVE domainsDNSEdge IN domainsDNS
+              OPTIONS { waitForSync: true }
+          `
+            })
           } catch (err) {
             console.error(
-              `Trx step error occurred when removing scan info when user: ${user._key} attempted to close account: ${userId}: ${err}`,
+              `Trx step error occurred while user: ${userId} attempted to remove DNS data for ${domainObj.domain} in org: ${affiliation._from}, ${err}`,
             )
-            throw new Error(
-              i18n._(t`Unable to close account. Please try again.`),
-            )
+            throw new Error(i18n._(t`Unable to close account. Please try again.`))
           }
 
           try {

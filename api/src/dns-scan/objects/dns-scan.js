@@ -2,7 +2,6 @@ import {GraphQLBoolean, GraphQLList, GraphQLObjectType, GraphQLString} from 'gra
 import {globalIdField} from 'graphql-relay'
 import {GraphQLDate, GraphQLJSONObject} from 'graphql-scalars'
 
-import {domainType} from '../../domain/objects'
 import {nodeInterface} from "../../node";
 import {dmarcType} from "./dmarc";
 import {spfType} from "./spf";

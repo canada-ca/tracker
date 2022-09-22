@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const updateUserPasswordResultType = new GraphQLObjectType({
   name: 'UpdateUserPasswordResultType',
@@ -9,7 +9,7 @@ export const updateUserPasswordResultType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'Informs the user if their password was successfully updated.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
 })

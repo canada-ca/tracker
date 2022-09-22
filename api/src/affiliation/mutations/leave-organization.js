@@ -1,8 +1,8 @@
-import { t } from '@lingui/macro'
-import { GraphQLID, GraphQLNonNull } from 'graphql'
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLID, GraphQLNonNull} from 'graphql'
+import {fromGlobalId, mutationWithClientMutationId} from 'graphql-relay'
 
-import { leaveOrganizationUnion } from '../unions'
+import {leaveOrganizationUnion} from '../unions'
 
 export const leaveOrganization = new mutationWithClientMutationId({
   name: 'LeaveOrganization',
@@ -28,16 +28,16 @@ export const leaveOrganization = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { checkOrgOwner, userRequired, verifiedRequired },
-      loaders: { loadOrgByKey },
-      validators: { cleanseInput },
+      auth: {checkOrgOwner, userRequired, verifiedRequired},
+      loaders: {loadOrgByKey},
+      validators: {cleanseInput},
     },
   ) => {
-    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
+    const {id: orgKey} = fromGlobalId(cleanseInput(args.orgId))
 
     const user = await userRequired()
 
-    verifiedRequired({ user })
+    verifiedRequired({user})
 
     const org = await loadOrgByKey.load(orgKey)
 
@@ -53,7 +53,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
     }
 
     // check to see if org owner
-    const owner = await checkOrgOwner({ orgId: org._id })
+    const owner = await checkOrgOwner({orgId: org._id})
 
     // Setup Trans action
     const trx = await transaction(collections)
@@ -149,7 +149,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
               FOR v, e IN 1..1 INBOUND domain._id claims
                 RETURN 1
             )
-            RETURN { 
+            RETURN {
               _id: domain._id,
               _key: domain._key,
               domain: domain.domain,
@@ -181,7 +181,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
                 query`
                   WITH claims, dkim, domains, domainsDKIM, organizations, dkimToDkimResults, dkimResults
                   LET dkimEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM 
+                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM
                       RETURN { edgeKey: e._key, dkimId: e._to }
                   )
                   FOR dkimEdge IN dkimEdges
@@ -190,13 +190,13 @@ export const leaveOrganization = new mutationWithClientMutationId({
                         RETURN { edgeKey: e._key, dkimResultId: e._to }
                     )
                     LET removeDkimResultEdges = (
-                      FOR dkimResultEdge IN dkimResultEdges 
+                      FOR dkimResultEdge IN dkimResultEdges
                         REMOVE dkimResultEdge.edgeKey IN dkimToDkimResults
                         OPTIONS { waitForSync: true }
                     )
                     LET removeDkimResult = (
-                      FOR dkimResultEdge IN dkimResultEdges 
-                        LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key 
+                      FOR dkimResultEdge IN dkimResultEdges
+                        LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key
                         REMOVE key IN dkimResults
                         OPTIONS { waitForSync: true }
                     )
@@ -219,17 +219,17 @@ export const leaveOrganization = new mutationWithClientMutationId({
                   query`
                   WITH claims, dkim, domains, domainsDKIM, organizations
                   LET dkimEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM 
+                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM
                       RETURN { edgeKey: e._key, dkimId: e._to }
                   )
                   LET removeDkimEdges = (
-                    FOR dkimEdge IN dkimEdges 
+                    FOR dkimEdge IN dkimEdges
                       REMOVE dkimEdge.edgeKey IN domainsDKIM
                       OPTIONS { waitForSync: true }
                   )
                   LET removeDkim = (
-                    FOR dkimEdge IN dkimEdges 
-                      LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key 
+                    FOR dkimEdge IN dkimEdges
+                      LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key
                       REMOVE key IN dkim
                       OPTIONS { waitForSync: true }
                   )
@@ -241,17 +241,17 @@ export const leaveOrganization = new mutationWithClientMutationId({
                   query`
                   WITH claims, dmarc, domains, domainsDMARC, organizations
                   LET dmarcEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDMARC 
+                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDMARC
                       RETURN { edgeKey: e._key, dmarcId: e._to }
                   )
                   LET removeDmarcEdges = (
-                    FOR dmarcEdge IN dmarcEdges 
+                    FOR dmarcEdge IN dmarcEdges
                       REMOVE dmarcEdge.edgeKey IN domainsDMARC
                       OPTIONS { waitForSync: true }
                   )
                   LET removeDmarc = (
-                    FOR dmarcEdge IN dmarcEdges 
-                      LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key 
+                    FOR dmarcEdge IN dmarcEdges
+                      LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key
                       REMOVE key IN dmarc
                       OPTIONS { waitForSync: true }
                   )
@@ -263,17 +263,17 @@ export const leaveOrganization = new mutationWithClientMutationId({
                   query`
                   WITH claims, domains, domainsSPF, organizations, spf
                   LET spfEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSPF 
+                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSPF
                       RETURN { edgeKey: e._key, spfId: e._to }
                   )
                   LET removeSpfEdges = (
-                    FOR spfEdge IN spfEdges 
+                    FOR spfEdge IN spfEdges
                       REMOVE spfEdge.edgeKey IN domainsSPF
                       OPTIONS { waitForSync: true }
                   )
                   LET removeSpf = (
-                    FOR spfEdge IN spfEdges 
-                      LET key = PARSE_IDENTIFIER(spfEdge.spfId).key 
+                    FOR spfEdge IN spfEdges
+                      LET key = PARSE_IDENTIFIER(spfEdge.spfId).key
                       REMOVE key IN spf
                       OPTIONS { waitForSync: true }
                   )
@@ -285,17 +285,17 @@ export const leaveOrganization = new mutationWithClientMutationId({
                   query`
                   WITH claims, domains, domainsHTTPS, https, organizations
                   LET httpsEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsHTTPS 
+                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsHTTPS
                       RETURN { edgeKey: e._key, httpsId: e._to }
                   )
                   LET removeHttpsEdges = (
-                    FOR httpsEdge IN httpsEdges 
+                    FOR httpsEdge IN httpsEdges
                       REMOVE httpsEdge.edgeKey IN domainsHTTPS
                       OPTIONS { waitForSync: true }
                   )
                   LET removeHttps = (
-                    FOR httpsEdge IN httpsEdges 
-                      LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key 
+                    FOR httpsEdge IN httpsEdges
+                      LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key
                       REMOVE key IN https
                       OPTIONS { waitForSync: true }
                   )
@@ -307,17 +307,17 @@ export const leaveOrganization = new mutationWithClientMutationId({
                   query`
                   WITH claims, domains, domainsSSL, organizations, ssl
                   LET sslEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSSL 
+                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSSL
                       RETURN { edgeKey: e._key, sslId: e._to}
                   )
                   LET removeSslEdges = (
-                    FOR sslEdge IN sslEdges 
+                    FOR sslEdge IN sslEdges
                       REMOVE sslEdge.edgeKey IN domainsSSL
                       OPTIONS { waitForSync: true }
                   )
                   LET removeSsl = (
-                    FOR sslEdge IN sslEdges 
-                      LET key = PARSE_IDENTIFIER(sslEdge.sslId).key 
+                    FOR sslEdge IN sslEdges
+                      LET key = PARSE_IDENTIFIER(sslEdge.sslId).key
                       REMOVE key IN ssl
                       OPTIONS { waitForSync: true }
                   )
@@ -345,13 +345,13 @@ export const leaveOrganization = new mutationWithClientMutationId({
                       RETURN { edgeKey: e._key, domainId: e._to }
                   )
                   LET removeDomainEdges = (
-                    FOR domainEdge in domainEdges 
+                    FOR domainEdge in domainEdges
                       REMOVE domainEdge.edgeKey IN claims
                       OPTIONS { waitForSync: true }
                   )
                   LET removeDomain = (
-                    FOR domainEdge in domainEdges 
-                      LET key = PARSE_IDENTIFIER(domainEdge.domainId).key 
+                    FOR domainEdge in domainEdges
+                      LET key = PARSE_IDENTIFIER(domainEdge.domainId).key
                       REMOVE key IN domains
                       OPTIONS { waitForSync: true }
                   )
@@ -380,7 +380,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
                     RETURN { edgeKey: e._key, userKey: e._to }
                 )
                 LET removeUserEdges = (
-                  FOR userEdge IN userEdges 
+                  FOR userEdge IN userEdges
                     REMOVE userEdge.edgeKey IN affiliations
                     OPTIONS { waitForSync: true }
                 )

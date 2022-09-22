@@ -1,6 +1,6 @@
-import { Kind } from 'graphql'
-import { stringify } from 'jest-matcher-utils'
-import { Selectors } from '../index'
+import {Kind} from 'graphql'
+import {stringify} from 'jest-matcher-utils'
+import {Selectors} from '../index'
 
 describe('given a selectors scalar', () => {
   describe('serializing inputs', () => {

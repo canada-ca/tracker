@@ -1,4 +1,4 @@
-import { GraphQLObjectType } from 'graphql'
+import {GraphQLObjectType} from 'graphql'
 
 import * as affiliationMutations from './affiliation/mutations'
 import * as domainMutations from './domain/mutations'

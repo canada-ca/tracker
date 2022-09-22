@@ -1,28 +1,28 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
-import { checkOrgOwner } from '../check-org-owner'
+import {checkOrgOwner} from '../check-org-owner'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given the checkOrgOwner function', () => {
   describe('given a successful check', () => {
     let query, drop, truncate, collections, user, org
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -73,9 +73,9 @@ describe('given the checkOrgOwner function', () => {
         })
       })
       it('returns true', async () => {
-        const testCheckOrgOwner = checkOrgOwner({ query, userKey: user._key })
+        const testCheckOrgOwner = checkOrgOwner({query, userKey: user._key})
 
-        const result = await testCheckOrgOwner({ orgId: org._id })
+        const result = await testCheckOrgOwner({orgId: org._id})
 
         expect(result).toEqual(true)
       })
@@ -90,9 +90,9 @@ describe('given the checkOrgOwner function', () => {
         })
       })
       it('returns false', async () => {
-        const testCheckOrgOwner = checkOrgOwner({ query, userKey: user._key })
+        const testCheckOrgOwner = checkOrgOwner({query, userKey: user._key})
 
-        const result = await testCheckOrgOwner({ orgId: org._id })
+        const result = await testCheckOrgOwner({orgId: org._id})
 
         expect(result).toEqual(false)
       })
@@ -113,7 +113,7 @@ describe('given the checkOrgOwner function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
+            en: {plurals: {}},
           },
           locales: ['en'],
           messages: {
@@ -134,7 +134,7 @@ describe('given the checkOrgOwner function', () => {
           })
 
           try {
-            await testCheckOrgOwner({ orgId: '123' })
+            await testCheckOrgOwner({orgId: '123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(`Unable to load owner information. Please try again.`),
@@ -160,7 +160,7 @@ describe('given the checkOrgOwner function', () => {
           })
 
           try {
-            await testCheckOrgOwner({ orgId: '123' })
+            await testCheckOrgOwner({orgId: '123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(`Unable to load owner information. Please try again.`),
@@ -177,7 +177,7 @@ describe('given the checkOrgOwner function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            fr: { plurals: {} },
+            fr: {plurals: {}},
           },
           locales: ['fr'],
           messages: {
@@ -198,7 +198,7 @@ describe('given the checkOrgOwner function', () => {
           })
 
           try {
-            await testCheckOrgOwner({ orgId: '123' })
+            await testCheckOrgOwner({orgId: '123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -226,7 +226,7 @@ describe('given the checkOrgOwner function', () => {
           })
 
           try {
-            await testCheckOrgOwner({ orgId: '123' })
+            await testCheckOrgOwner({orgId: '123'})
           } catch (err) {
             expect(err).toEqual(
               new Error(

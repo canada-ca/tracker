@@ -1,5 +1,5 @@
-import { authResultType, authenticateError } from '../../objects/index'
-import { authenticateUnion } from '../authenticate-union'
+import {authResultType, authenticateError} from '../../objects/index'
+import {authenticateUnion} from '../authenticate-union'
 
 describe('given the authenticateUnion', () => {
   describe('testing the field types', () => {

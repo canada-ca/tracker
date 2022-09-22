@@ -1,10 +1,10 @@
-import { GraphQLNonNull, GraphQLID } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {GraphQLNonNull, GraphQLID} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
-import { affiliationType } from '../affiliation'
-import { organizationType } from '../../../organization/objects'
-import { RoleEnums } from '../../../enums'
-import { userSharedType } from '../../../user/objects'
+import {affiliationType} from '../affiliation'
+import {organizationType} from '../../../organization/objects'
+import {RoleEnums} from '../../../enums'
+import {userSharedType} from '../../../user/objects'
 
 describe('given the user affiliation object', () => {
   describe('testing the field definitions', () => {
@@ -39,7 +39,7 @@ describe('given the user affiliation object', () => {
       it('returns the resolved value', () => {
         const demoType = affiliationType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
+        expect(demoType.id.resolve({id: '1'})).toEqual(
           toGlobalId('affiliation', '1'),
         )
       })
@@ -48,7 +48,7 @@ describe('given the user affiliation object', () => {
       it('returns the resolved value', () => {
         const demoType = affiliationType.getFields()
 
-        expect(demoType.permission.resolve({ permission: 'admin' })).toEqual(
+        expect(demoType.permission.resolve({permission: 'admin'})).toEqual(
           'admin',
         )
       })
@@ -72,7 +72,7 @@ describe('given the user affiliation object', () => {
 
         await expect(
           demoType.user.resolve(
-            { _to: 'users/1' },
+            {_to: 'users/1'},
             {},
             {
               loaders: {
@@ -121,7 +121,7 @@ describe('given the user affiliation object', () => {
 
         await expect(
           demoType.organization.resolve(
-            { _from: '1' },
+            {_from: '1'},
             {},
             {
               loaders: {

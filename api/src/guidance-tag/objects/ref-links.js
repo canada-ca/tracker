@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const refLinksType = new GraphQLObjectType({
   name: 'RefLinks',
@@ -8,12 +8,12 @@ export const refLinksType = new GraphQLObjectType({
     description: {
       type: GraphQLString,
       description: 'Title of the guidance link.',
-      resolve: ({ description }) => description,
+      resolve: ({description}) => description,
     },
     refLink: {
       type: GraphQLString,
       description: 'URL for the guidance documentation.',
-      resolve: ({ ref_link: refLink }) => refLink,
+      resolve: ({ref_link: refLink}) => refLink,
     },
   }),
 })

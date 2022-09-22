@@ -1,7 +1,7 @@
-import { t } from '@lingui/macro'
-import { mutationWithClientMutationId } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {mutationWithClientMutationId} from 'graphql-relay'
 
-import { removePhoneNumberUnion } from '../unions'
+import {removePhoneNumberUnion} from '../unions'
 
 export const removePhoneNumber = new mutationWithClientMutationId({
   name: 'RemovePhoneNumber',
@@ -17,7 +17,7 @@ export const removePhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     _args,
-    { i18n, collections, query, transaction, auth: { userRequired } },
+    {i18n, collections, query, transaction, auth: {userRequired}},
   ) => {
     // Get requesting user
     const user = await userRequired()
@@ -36,7 +36,7 @@ export const removePhoneNumber = new mutationWithClientMutationId({
         () => query`
         WITH users
         UPSERT { _key: ${user._key} }
-          INSERT { 
+          INSERT {
             phoneDetails: null,
             phoneValidated: false,
             tfaSendMethod: ${tfaSendMethod}

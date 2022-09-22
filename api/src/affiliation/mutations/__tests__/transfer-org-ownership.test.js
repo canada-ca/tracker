@@ -1,30 +1,27 @@
-import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { checkOrgOwner, userRequired, verifiedRequired } from '../../../auth'
-import { loadOrgByKey } from '../../../organization/loaders'
-import { loadUserByKey } from '../../../user/loaders'
-import { cleanseInput } from '../../../validators'
-import { createMutationSchema } from '../../../mutation'
-import { createQuerySchema } from '../../../query'
+import {checkOrgOwner, userRequired, verifiedRequired} from '../../../auth'
+import {loadOrgByKey} from '../../../organization/loaders'
+import {loadUserByKey} from '../../../user/loaders'
+import {cleanseInput} from '../../../validators'
+import {createMutationSchema} from '../../../mutation'
+import {createQuerySchema} from '../../../query'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
+const {DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -38,12 +35,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -76,8 +70,8 @@ describe('given the transferOrgOwnership mutation', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -91,7 +85,7 @@ describe('given the transferOrgOwnership mutation', () => {
   })
   describe('given a successful transfer', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -202,7 +196,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -211,9 +205,9 @@ describe('given the transferOrgOwnership mutation', () => {
                 i18n,
                 userKey: user._key,
               }),
-              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
+              loadUserByKey: loadUserByKey({query, userKey: user._key, i18n}),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -223,7 +217,7 @@ describe('given the transferOrgOwnership mutation', () => {
             RETURN aff
         `
         const testAffiliation = await testAffiliationCursor.next()
-        expect(testAffiliation).toMatchObject({ owner: false })
+        expect(testAffiliation).toMatchObject({owner: false})
       })
       it('sets owner field in the requested users to true', async () => {
         await graphql(
@@ -270,7 +264,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({ i18n }),
+              verifiedRequired: verifiedRequired({i18n}),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -279,9 +273,9 @@ describe('given the transferOrgOwnership mutation', () => {
                 i18n,
                 userKey: user._key,
               }),
-              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
+              loadUserByKey: loadUserByKey({query, userKey: user._key, i18n}),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -291,14 +285,14 @@ describe('given the transferOrgOwnership mutation', () => {
             RETURN aff
         `
         const testAffiliation = await testAffiliationCursor.next()
-        expect(testAffiliation).toMatchObject({ owner: true })
+        expect(testAffiliation).toMatchObject({owner: true})
       })
       describe('users language is set to english', () => {
         beforeAll(() => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
+              en: {plurals: {}},
             },
             locales: ['en'],
             messages: {
@@ -351,7 +345,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -366,7 +360,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -392,7 +386,7 @@ describe('given the transferOrgOwnership mutation', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              fr: { plurals: {} },
+              fr: {plurals: {}},
             },
             locales: ['fr'],
             messages: {
@@ -445,7 +439,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({ i18n }),
+                verifiedRequired: verifiedRequired({i18n}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -460,7 +454,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -489,8 +483,8 @@ describe('given the transferOrgOwnership mutation', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -551,7 +545,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -628,7 +622,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -701,7 +695,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -772,7 +766,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -821,7 +815,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 0 }),
+              query: jest.fn().mockReturnValue({count: 0}),
               collections: collectionNames,
               transaction,
               userKey: user._key,
@@ -845,7 +839,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -919,7 +913,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -968,7 +962,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -992,7 +986,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1042,7 +1036,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1066,7 +1060,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1115,7 +1109,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest.fn().mockReturnValue({count: 1}),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
@@ -1139,7 +1133,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1161,8 +1155,8 @@ describe('given the transferOrgOwnership mutation', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1223,7 +1217,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1300,7 +1294,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1373,7 +1367,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1444,7 +1438,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1493,7 +1487,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 0 }),
+              query: jest.fn().mockReturnValue({count: 0}),
               collections: collectionNames,
               transaction,
               userKey: user._key,
@@ -1517,7 +1511,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1591,7 +1585,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1640,7 +1634,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1664,7 +1658,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1714,7 +1708,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({ count: 1 }),
+                query: jest.fn().mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1738,7 +1732,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1787,7 +1781,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest.fn().mockReturnValue({count: 1}),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
@@ -1811,7 +1805,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 

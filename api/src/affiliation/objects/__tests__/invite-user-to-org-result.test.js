@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { inviteUserToOrgResultType } from '../invite-user-to-org-result'
+import {inviteUserToOrgResultType} from '../invite-user-to-org-result'
 
 describe('given the inviteUserToOrgResultType object', () => {
   describe('testing the field definitions', () => {
@@ -17,7 +17,7 @@ describe('given the inviteUserToOrgResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = inviteUserToOrgResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
   })

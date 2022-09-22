@@ -2,7 +2,7 @@ import {
   removePhoneNumberErrorType,
   removePhoneNumberResultType,
 } from '../../objects/index'
-import { removePhoneNumberUnion } from '../remove-phone-number-union'
+import {removePhoneNumberUnion} from '../remove-phone-number-union'
 
 describe('given the removePhoneNumberUnion', () => {
   describe('testing the field types', () => {

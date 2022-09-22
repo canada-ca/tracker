@@ -1,36 +1,33 @@
-import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { cleanseInput } from '../../../validators'
+import {cleanseInput} from '../../../validators'
 import {
   checkPermission,
   userRequired,
   verifiedRequired,
   tfaRequired,
 } from '../../../auth'
-import { loadDomainByKey } from '../../loaders'
-import { loadOrgByKey } from '../../../organization/loaders'
-import { loadUserByKey } from '../../../user/loaders'
+import {loadDomainByKey} from '../../loaders'
+import {loadOrgByKey} from '../../../organization/loaders'
+import {loadUserByKey} from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -44,12 +41,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -76,7 +70,7 @@ describe('removing a domain', () => {
   })
   describe('given a successful domain removal', () => {
     beforeEach(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -146,38 +140,27 @@ describe('removing a domain', () => {
           _from: org._id,
           _to: domain._id,
         })
-        const dkim = await collections.dkim.save({ dkim: true })
-        await collections.domainsDKIM.save({
+
+        const dns = await collections.dns.save({ dns: true })
+        await collections.domainsDNS.save({
           _from: domain._id,
-          _to: dkim._id,
+          _to: dns._id,
         })
-        const dkimResult = await collections.dkimResults.save({
-          dkimResult: true,
-        })
-        await collections.dkimToDkimResults.save({
-          _from: dkim._id,
-          _to: dkimResult._id,
-        })
-        const dmarc = await collections.dmarc.save({ dmarc: true })
-        await collections.domainsDMARC.save({
+
+        const web = await collections.web.save({ web: true })
+        await collections.domainsWeb.save({
           _from: domain._id,
-          _to: dmarc._id,
+          _to: web._id,
         })
-        const spf = await collections.spf.save({ spf: true })
-        await collections.domainsSPF.save({
-          _from: domain._id,
-          _to: spf._id,
+
+        const webScan = await collections.webScan.save({
+          webScan: true,
         })
-        const https = await collections.https.save({ https: true })
-        await collections.domainsHTTPS.save({
-          _from: domain._id,
-          _to: https._id,
+        await collections.webToWebScans.save({
+          _from: web._id,
+          _to: webScan._id,
         })
-        const ssl = await collections.ssl.save({ ssl: true })
-        await collections.domainsSSL.save({
-          _from: domain._id,
-          _to: ssl._id,
-        })
+
         const dmarcSummary = await collections.dmarcSummaries.save({
           dmarcSummary: true,
         })
@@ -229,8 +212,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'en',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -279,16 +262,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -317,8 +300,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'fr',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -367,16 +350,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -441,16 +424,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -504,49 +487,35 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult.dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(true)
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(true)
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan.dkim`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(true)
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(true)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan.dmarc`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(true)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(true)
 
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan.spf`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(true)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan.https`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(true)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan.ssl`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(true)
           })
           describe('org owns dmarc summary data', () => {
             beforeEach(async () => {
@@ -595,16 +564,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -673,16 +642,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -742,8 +711,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'en',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -792,16 +761,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -830,8 +799,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'fr',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -880,16 +849,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -954,16 +923,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -1017,49 +986,39 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult.dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(true)
+            await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan.dkim`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(true)
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(true)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan.dmarc`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(true)
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(true)
 
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan.spf`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(true)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(true)
 
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan.https`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(true)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan.ssl`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(true)
           })
           describe('org owns dmarc summary data', () => {
             beforeEach(async () => {
@@ -1108,16 +1067,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1186,16 +1145,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1232,8 +1191,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'en',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -1282,16 +1241,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1320,8 +1279,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'fr',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -1370,16 +1329,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1444,16 +1403,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -1507,85 +1466,39 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults
-                OPTIONS { waitForSync: true }
-                RETURN dkimResult
-            `
+            await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
 
-            await query`
-              FOR dkimScan IN dkim
-                OPTIONS { waitForSync: true }
-                RETURN dkimScan
-            `
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
 
-            await query`
-              FOR dmarcScan IN dmarc
-                OPTIONS { waitForSync: true }
-                RETURN dmarcScan
-            `
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            await query`
-              FOR spfScan IN spf
-                OPTIONS { waitForSync: true }
-                RETURN spfScan
-            `
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
 
-            await query`
-              FOR httpsScan IN https
-                OPTIONS { waitForSync: true }
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl
-                OPTIONS { waitForSync: true }
-                RETURN sslScan
-            `
-
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
-
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
-
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
           })
           describe('org owns dmarc summary data', () => {
             beforeEach(async () => {
@@ -1634,16 +1547,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1712,16 +1625,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1750,8 +1663,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'en',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -1800,16 +1713,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1838,8 +1751,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'fr',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -1888,16 +1801,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -1962,16 +1875,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -2025,85 +1938,39 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
 
-            await query`
-              FOR dkimResult IN dkimResults
-                OPTIONS { waitForSync: true }
-                RETURN dkimResult
-            `
+            await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
 
-            await query`
-              FOR dkimScan IN dkim
-                OPTIONS { waitForSync: true }
-                RETURN dkimScan
-            `
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
 
-            await query`
-              FOR dmarcScan IN dmarc
-                OPTIONS { waitForSync: true }
-                RETURN dmarcScan
-            `
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            await query`
-              FOR spfScan IN spf
-                OPTIONS { waitForSync: true }
-                RETURN spfScan
-            `
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
 
-            await query`
-              FOR httpsScan IN https
-                OPTIONS { waitForSync: true }
-                RETURN httpsScan
-            `
-
-            await query`
-              FOR sslScan IN ssl
-                OPTIONS { waitForSync: true }
-                RETURN sslScan
-            `
-
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
-
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
-
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
-
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
           })
           describe('org owns dmarc summary data', () => {
             beforeEach(async () => {
@@ -2152,16 +2019,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -2230,16 +2097,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -2300,7 +2167,7 @@ describe('removing a domain', () => {
           _from: org._id,
           _to: domain._id,
         })
-        const dkim = await collections.dkim.save({ dkim: true })
+        const dkim = await collections.dkim.save({dkim: true})
         await collections.domainsDKIM.save({
           _from: domain._id,
           _to: dkim._id,
@@ -2312,22 +2179,22 @@ describe('removing a domain', () => {
           _from: dkim._id,
           _to: dkimResult._id,
         })
-        const dmarc = await collections.dmarc.save({ dmarc: true })
+        const dmarc = await collections.dmarc.save({dmarc: true})
         await collections.domainsDMARC.save({
           _from: domain._id,
           _to: dmarc._id,
         })
-        const spf = await collections.spf.save({ spf: true })
+        const spf = await collections.spf.save({spf: true})
         await collections.domainsSPF.save({
           _from: domain._id,
           _to: spf._id,
         })
-        const https = await collections.https.save({ https: true })
+        const https = await collections.https.save({https: true})
         await collections.domainsHTTPS.save({
           _from: domain._id,
           _to: https._id,
         })
-        const ssl = await collections.ssl.save({ ssl: true })
+        const ssl = await collections.ssl.save({ssl: true})
         await collections.domainsSSL.save({
           _from: domain._id,
           _to: ssl._id,
@@ -2384,8 +2251,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'en',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -2434,16 +2301,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -2472,8 +2339,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'fr',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -2522,16 +2389,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -2596,16 +2463,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -2659,16 +2526,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -2750,16 +2617,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -2828,16 +2695,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -2868,8 +2735,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'en',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -2918,16 +2785,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -2956,8 +2823,8 @@ describe('removing a domain', () => {
               i18n = setupI18n({
                 locale: 'fr',
                 localeData: {
-                  en: { plurals: {} },
-                  fr: { plurals: {} },
+                  en: {plurals: {}},
+                  fr: {plurals: {}},
                 },
                 locales: ['en', 'fr'],
                 messages: {
@@ -3006,16 +2873,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -3080,16 +2947,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -3143,16 +3010,16 @@ describe('removing a domain', () => {
                   }),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
-                  verifiedRequired: verifiedRequired({ i18n }),
-                  tfaRequired: tfaRequired({ i18n }),
+                  verifiedRequired: verifiedRequired({i18n}),
+                  tfaRequired: tfaRequired({i18n}),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
-                  loadDomainByKey: loadDomainByKey({ query }),
-                  loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadDomainByKey: loadDomainByKey({query}),
+                  loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -3270,16 +3137,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -3348,16 +3215,16 @@ describe('removing a domain', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
-                    loadDomainByKey: loadDomainByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadDomainByKey: loadDomainByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                 },
               )
@@ -3389,8 +3256,8 @@ describe('removing a domain', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -3439,7 +3306,7 @@ describe('removing a domain', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue(undefined),
@@ -3507,7 +3374,7 @@ describe('removing a domain', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
@@ -3515,7 +3382,7 @@ describe('removing a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -3579,7 +3446,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -3654,7 +3521,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -3729,7 +3596,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -3806,7 +3673,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -3881,7 +3748,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -3958,7 +3825,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -4028,7 +3895,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -4092,7 +3959,7 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({count: 1}),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -4102,7 +3969,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -4166,7 +4033,7 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({count: 1}),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -4176,7 +4043,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -4244,8 +4111,8 @@ describe('removing a domain', () => {
                 i18n,
                 query: jest
                   .fn()
-                  .mockReturnValueOnce({ count: 0 })
-                  .mockReturnValue({ count: 1 }),
+                  .mockReturnValueOnce({count: 0})
+                  .mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
@@ -4255,7 +4122,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -4326,7 +4193,7 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({count: 1}),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -4336,7 +4203,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -4413,7 +4280,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -4479,7 +4346,7 @@ describe('removing a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 2 }),
+              query: jest.fn().mockReturnValue({count: 2}),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
@@ -4489,7 +4356,7 @@ describe('removing a domain', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({
@@ -4522,8 +4389,8 @@ describe('removing a domain', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -4572,7 +4439,7 @@ describe('removing a domain', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue(undefined),
@@ -4640,7 +4507,7 @@ describe('removing a domain', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
@@ -4648,7 +4515,7 @@ describe('removing a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -4712,7 +4579,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -4787,7 +4654,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -4862,7 +4729,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -4939,7 +4806,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -5014,7 +4881,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -5091,7 +4958,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -5163,7 +5030,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -5229,7 +5096,7 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({count: 1}),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -5239,7 +5106,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -5305,7 +5172,7 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({count: 1}),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -5315,7 +5182,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -5385,8 +5252,8 @@ describe('removing a domain', () => {
                 i18n,
                 query: jest
                   .fn()
-                  .mockReturnValueOnce({ count: 0 })
-                  .mockReturnValue({ count: 1 }),
+                  .mockReturnValueOnce({count: 0})
+                  .mockReturnValue({count: 1}),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: 123,
@@ -5396,7 +5263,7 @@ describe('removing a domain', () => {
                   verifiedRequired: jest.fn(),
                   tfaRequired: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
@@ -5469,7 +5336,7 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({count: 1}),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -5479,7 +5346,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -5558,7 +5425,7 @@ describe('removing a domain', () => {
                     verifiedRequired: jest.fn(),
                     tfaRequired: jest.fn(),
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
@@ -5626,7 +5493,7 @@ describe('removing a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 2 }),
+              query: jest.fn().mockReturnValue({count: 2}),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
@@ -5636,7 +5503,7 @@ describe('removing a domain', () => {
                 verifiedRequired: jest.fn(),
                 tfaRequired: jest.fn(),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
               loaders: {
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({

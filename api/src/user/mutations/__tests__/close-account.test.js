@@ -1,30 +1,27 @@
-import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { checkSuperAdmin, userRequired } from '../../../auth'
-import { loadOrgByKey } from '../../../organization/loaders'
-import { loadUserByKey } from '../../../user/loaders'
-import { cleanseInput } from '../../../validators'
-import { createMutationSchema } from '../../../mutation'
-import { createQuerySchema } from '../../../query'
+import {checkSuperAdmin, userRequired} from '../../../auth'
+import {loadOrgByKey} from '../../../organization/loaders'
+import {loadUserByKey} from '../../../user/loaders'
+import {cleanseInput} from '../../../validators'
+import {createMutationSchema} from '../../../mutation'
+import {createQuerySchema} from '../../../query'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -38,12 +35,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -73,8 +67,8 @@ describe('given the closeAccount mutation', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -89,7 +83,7 @@ describe('given the closeAccount mutation', () => {
 
   describe('given a successful closing of an account', () => {
     beforeEach(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -143,38 +137,27 @@ describe('given the closeAccount mutation', () => {
           _from: org._id,
           _to: domain._id,
         })
-        const dkim = await collections.dkim.save({ dkim: true })
-        await collections.domainsDKIM.save({
+
+        const dns = await collections.dns.save({ dns: true })
+        await collections.domainsDNS.save({
           _from: domain._id,
-          _to: dkim._id,
+          _to: dns._id,
         })
-        const dkimResult = await collections.dkimResults.save({
-          dkimResult: true,
-        })
-        await collections.dkimToDkimResults.save({
-          _from: dkim._id,
-          _to: dkimResult._id,
-        })
-        const dmarc = await collections.dmarc.save({ dmarc: true })
-        await collections.domainsDMARC.save({
+
+        const web = await collections.web.save({ web: true })
+        await collections.domainsWeb.save({
           _from: domain._id,
-          _to: dmarc._id,
+          _to: web._id,
         })
-        const spf = await collections.spf.save({ spf: true })
-        await collections.domainsSPF.save({
-          _from: domain._id,
-          _to: spf._id,
+
+        const webScan = await collections.webScan.save({
+          webScan: true,
         })
-        const https = await collections.https.save({ https: true })
-        await collections.domainsHTTPS.save({
-          _from: domain._id,
-          _to: https._id,
+        await collections.webToWebScans.save({
+          _from: web._id,
+          _to: webScan._id,
         })
-        const ssl = await collections.ssl.save({ ssl: true })
-        await collections.domainsSSL.save({
-          _from: domain._id,
-          _to: ssl._id,
-        })
+
         const dmarcSummary = await collections.dmarcSummaries.save({
           dmarcSummary: true,
         })
@@ -248,7 +231,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -315,7 +298,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -383,7 +366,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -450,7 +433,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -463,7 +446,7 @@ describe('given the closeAccount mutation', () => {
           })
         })
         describe('org is the only one claiming a domain', () => {
-          it('removes dkimResult data', async () => {
+          it('removes web scan result data', async () => {
             await graphql(
               schema,
               `
@@ -512,16 +495,15 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
           })
           it('removes scan data', async () => {
             await graphql(
@@ -572,40 +554,23 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
 
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
           })
           it('removes claims', async () => {
             await graphql(
@@ -656,7 +621,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -716,7 +681,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -809,7 +774,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -869,7 +834,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -934,7 +899,7 @@ describe('given the closeAccount mutation', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1040,7 +1005,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: user._key,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1114,7 +1079,7 @@ describe('given the closeAccount mutation', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1134,8 +1099,8 @@ describe('given the closeAccount mutation', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -1193,7 +1158,7 @@ describe('given the closeAccount mutation', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1218,8 +1183,8 @@ describe('given the closeAccount mutation', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -1277,7 +1242,7 @@ describe('given the closeAccount mutation', () => {
                   userKey: user._key,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -1346,7 +1311,7 @@ describe('given the closeAccount mutation', () => {
                 userKey: user._key,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -1431,38 +1396,27 @@ describe('given the closeAccount mutation', () => {
           _from: org._id,
           _to: domain._id,
         })
-        const dkim = await collections.dkim.save({ dkim: true })
-        await collections.domainsDKIM.save({
+
+        const dns = await collections.dns.save({ dns: true })
+        await collections.domainsDNS.save({
           _from: domain._id,
-          _to: dkim._id,
+          _to: dns._id,
         })
-        const dkimResult = await collections.dkimResults.save({
-          dkimResult: true,
-        })
-        await collections.dkimToDkimResults.save({
-          _from: dkim._id,
-          _to: dkimResult._id,
-        })
-        const dmarc = await collections.dmarc.save({ dmarc: true })
-        await collections.domainsDMARC.save({
+
+        const web = await collections.web.save({ web: true })
+        await collections.domainsWeb.save({
           _from: domain._id,
-          _to: dmarc._id,
+          _to: web._id,
         })
-        const spf = await collections.spf.save({ spf: true })
-        await collections.domainsSPF.save({
-          _from: domain._id,
-          _to: spf._id,
+
+        const webScan = await collections.webScan.save({
+          webScan: true,
         })
-        const https = await collections.https.save({ https: true })
-        await collections.domainsHTTPS.save({
-          _from: domain._id,
-          _to: https._id,
+        await collections.webToWebScans.save({
+          _from: web._id,
+          _to: webScan._id,
         })
-        const ssl = await collections.ssl.save({ ssl: true })
-        await collections.domainsSSL.save({
-          _from: domain._id,
-          _to: ssl._id,
-        })
+
         const dmarcSummary = await collections.dmarcSummaries.save({
           dmarcSummary: true,
         })
@@ -1543,7 +1497,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1617,7 +1571,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1692,7 +1646,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1764,7 +1718,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -1777,7 +1731,7 @@ describe('given the closeAccount mutation', () => {
           })
         })
         describe('org is the only one claiming a domain', () => {
-          it('removes dkimResult data', async () => {
+          it('removes web scan result data', async () => {
             await graphql(
               schema,
               `
@@ -1833,16 +1787,15 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
-            await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
+            const testWebScanCursor =
+              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScan = await testWebScanCursor.next()
+            expect(testWebScan).toEqual(undefined)
 
-            const testDkimResultCursor =
-              await query`FOR dkimResult IN dkimResults OPTIONS { waitForSync: true } RETURN dkimResult`
-            const testDkimResult = await testDkimResultCursor.next()
-            expect(testDkimResult).toEqual(undefined)
           })
           it('removes scan data', async () => {
             await graphql(
@@ -1900,40 +1853,23 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
-            await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
+            await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
 
-            const testDkimCursor =
-              await query`FOR dkimScan IN dkim OPTIONS { waitForSync: true } RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+            const testDNSCursor =
+              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNS = await testDNSCursor.next()
+            expect(testDNS).toEqual(undefined)
 
-            const testDmarcCursor =
-              await query`FOR dmarcScan IN dmarc OPTIONS { waitForSync: true } RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
+            const testWebCursor =
+              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWeb = await testWebCursor.next()
+            expect(testWeb).toEqual(undefined)
 
-            const testSpfCursor =
-              await query`FOR spfScan IN spf OPTIONS { waitForSync: true } RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
-
-            const testHttpsCursor =
-              await query`FOR httpsScan IN https OPTIONS { waitForSync: true } RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
-
-            const testSslCursor =
-              await query`FOR sslScan IN ssl OPTIONS { waitForSync: true } RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
           })
           it('removes claims', async () => {
             await graphql(
@@ -1991,7 +1927,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2058,7 +1994,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2156,7 +2092,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2221,7 +2157,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2325,7 +2261,7 @@ describe('given the closeAccount mutation', () => {
                     i18n,
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2395,7 +2331,7 @@ describe('given the closeAccount mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2484,7 +2420,7 @@ describe('given the closeAccount mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2505,8 +2441,8 @@ describe('given the closeAccount mutation', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -2569,7 +2505,7 @@ describe('given the closeAccount mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2594,8 +2530,8 @@ describe('given the closeAccount mutation', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -2658,7 +2594,7 @@ describe('given the closeAccount mutation', () => {
                   i18n,
                 }),
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -2728,7 +2664,7 @@ describe('given the closeAccount mutation', () => {
                 i18n,
               }),
             },
-            validators: { cleanseInput },
+            validators: {cleanseInput},
           },
         )
 
@@ -2752,8 +2688,8 @@ describe('given the closeAccount mutation', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2793,7 +2729,7 @@ describe('given the closeAccount mutation', () => {
                 userKey: '123',
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(false),
-                  userRequired: jest.fn().mockReturnValue({ _key: '123' }),
+                  userRequired: jest.fn().mockReturnValue({_key: '123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -2803,7 +2739,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2855,7 +2791,7 @@ describe('given the closeAccount mutation', () => {
                 userKey: '123',
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
-                  userRequired: jest.fn().mockReturnValue({ _key: '123' }),
+                  userRequired: jest.fn().mockReturnValue({_key: '123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -2868,7 +2804,7 @@ describe('given the closeAccount mutation', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2926,7 +2862,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -2936,10 +2872,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2997,7 +2933,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3007,10 +2943,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3069,7 +3005,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3079,10 +3015,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3139,7 +3075,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3149,10 +3085,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3210,7 +3146,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3220,10 +3156,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3282,7 +3218,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3292,10 +3228,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3353,7 +3289,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -3363,10 +3299,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -3424,7 +3360,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -3434,10 +3370,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -3451,10 +3387,11 @@ describe('given the closeAccount mutation', () => {
               ])
             })
           })
-          describe('when removing dkimResult data', () => {
+          describe('when removing web scan result data', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 1 }]),
+                all: jest.fn().
+                mockReturnValue([{count: 1, domain: "test.gc.ca", _from: "organizations/123"}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3496,7 +3433,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -3506,10 +3443,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -3519,14 +3456,15 @@ describe('given the closeAccount mutation', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dkimResults when user: 123 attempted to close account: users/123: Error: trx step error`,
+                `Trx step error occurred while user: users/123 attempted to remove web data for test.gc.ca in org: organizations/123 while closing account, Error: trx step error`,
               ])
             })
           })
           describe('when removing scan data', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 1 }]),
+                all: jest.fn().
+                mockReturnValue([{count: 1, domain: "test.gc.ca", _from: "organizations/123"}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3534,7 +3472,6 @@ describe('given the closeAccount mutation', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockRejectedValue(new Error('trx step error')),
@@ -3569,7 +3506,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -3579,10 +3516,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -3592,14 +3529,15 @@ describe('given the closeAccount mutation', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing scan info when user: 123 attempted to close account: users/123: Error: trx step error`,
+                `Trx step error occurred while user: users/123 attempted to remove web data for test.gc.ca in org: organizations/123 while closing account, Error: trx step error`,
               ])
             })
           })
           describe('when removing domain info', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 1 }]),
+                all: jest.fn().
+                mockReturnValue([{count: 1, domain: "test.gc.ca", _from: "organizations/123"}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3607,10 +3545,6 @@ describe('given the closeAccount mutation', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
@@ -3647,7 +3581,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -3657,10 +3591,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -3679,7 +3613,7 @@ describe('given the closeAccount mutation', () => {
           describe('when removing domain claim', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 2 }]),
+                all: jest.fn().mockReturnValue([{count: 2}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3721,7 +3655,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -3731,10 +3665,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -3752,7 +3686,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing ownership orgs, and affiliations', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3794,7 +3728,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3804,10 +3738,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3824,7 +3758,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing the orgs remaining affiliations', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3867,7 +3801,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3877,10 +3811,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3897,7 +3831,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing the users affiliations', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3942,7 +3876,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -3952,10 +3886,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -3972,7 +3906,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing the user', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -4018,7 +3952,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4028,10 +3962,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4049,7 +3983,7 @@ describe('given the closeAccount mutation', () => {
       describe('trx commit error occurs', () => {
         it('throws an error', async () => {
           const mockedCursor = {
-            all: jest.fn().mockReturnValue([{ count: 2 }]),
+            all: jest.fn().mockReturnValue([{count: 2}]),
           }
 
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -4087,7 +4021,7 @@ describe('given the closeAccount mutation', () => {
                 checkSuperAdmin: jest.fn().mockReturnValue(true),
                 userRequired: jest
                   .fn()
-                  .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                  .mockReturnValue({_key: '123', _id: 'users/123'}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -4097,10 +4031,10 @@ describe('given the closeAccount mutation', () => {
                   userKey: '123',
                 }),
                 loadUserByKey: {
-                  load: jest.fn().mockReturnValue({ _key: '123' }),
+                  load: jest.fn().mockReturnValue({_key: '123'}),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 
@@ -4120,8 +4054,8 @@ describe('given the closeAccount mutation', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -4161,7 +4095,7 @@ describe('given the closeAccount mutation', () => {
                 userKey: '123',
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(false),
-                  userRequired: jest.fn().mockReturnValue({ _key: '123' }),
+                  userRequired: jest.fn().mockReturnValue({_key: '123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4171,7 +4105,7 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4223,7 +4157,7 @@ describe('given the closeAccount mutation', () => {
                 userKey: '123',
                 auth: {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
-                  userRequired: jest.fn().mockReturnValue({ _key: '123' }),
+                  userRequired: jest.fn().mockReturnValue({_key: '123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4236,7 +4170,7 @@ describe('given the closeAccount mutation', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4294,7 +4228,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4304,10 +4238,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4367,7 +4301,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4377,10 +4311,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4441,7 +4375,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4451,10 +4385,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4513,7 +4447,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4523,10 +4457,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4586,7 +4520,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4596,10 +4530,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4660,7 +4594,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -4670,10 +4604,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -4733,7 +4667,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -4743,10 +4677,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -4806,7 +4740,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -4816,10 +4750,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -4835,10 +4769,11 @@ describe('given the closeAccount mutation', () => {
               ])
             })
           })
-          describe('when removing dkimResult data', () => {
+          describe('when removing web scan result data', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 1 }]),
+                all: jest.fn().
+                mockReturnValue([{count: 1, domain: "test.gc.ca", _from: "organizations/123"}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -4880,7 +4815,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -4890,10 +4825,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -4905,14 +4840,15 @@ describe('given the closeAccount mutation', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing dkimResults when user: 123 attempted to close account: users/123: Error: trx step error`,
+                `Trx step error occurred while user: users/123 attempted to remove web data for test.gc.ca in org: organizations/123 while closing account, Error: trx step error`,
               ])
             })
           })
           describe('when removing scan data', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 1 }]),
+                all: jest.fn().
+                mockReturnValue([{count: 1, domain: "test.gc.ca", _from: "organizations/123"}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -4920,7 +4856,6 @@ describe('given the closeAccount mutation', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockRejectedValue(new Error('trx step error')),
@@ -4955,7 +4890,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -4965,10 +4900,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -4980,14 +4915,15 @@ describe('given the closeAccount mutation', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when removing scan info when user: 123 attempted to close account: users/123: Error: trx step error`,
+                `Trx step error occurred while user: users/123 attempted to remove web data for test.gc.ca in org: organizations/123 while closing account, Error: trx step error`,
               ])
             })
           })
           describe('when removing domain info', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 1 }]),
+                all: jest.fn().
+                mockReturnValue([{count: 1, domain: "test.gc.ca", _from: "organizations/123"}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -4995,10 +4931,6 @@ describe('given the closeAccount mutation', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
-                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
@@ -5035,7 +4967,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -5045,10 +4977,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -5069,7 +5001,7 @@ describe('given the closeAccount mutation', () => {
           describe('when removing domain claim', () => {
             it('throws an error', async () => {
               const mockedCursor = {
-                all: jest.fn().mockReturnValue([{ count: 2 }]),
+                all: jest.fn().mockReturnValue([{count: 2}]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -5111,7 +5043,7 @@ describe('given the closeAccount mutation', () => {
                     checkSuperAdmin: jest.fn().mockReturnValue(true),
                     userRequired: jest
                       .fn()
-                      .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                      .mockReturnValue({_key: '123', _id: 'users/123'}),
                   },
                   loaders: {
                     loadOrgByKey: loadOrgByKey({
@@ -5121,10 +5053,10 @@ describe('given the closeAccount mutation', () => {
                       userKey: '123',
                     }),
                     loadUserByKey: {
-                      load: jest.fn().mockReturnValue({ _key: '123' }),
+                      load: jest.fn().mockReturnValue({_key: '123'}),
                     },
                   },
-                  validators: { cleanseInput },
+                  validators: {cleanseInput},
                 },
               )
 
@@ -5144,7 +5076,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing ownership orgs, and affiliations', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -5186,7 +5118,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -5196,10 +5128,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -5218,7 +5150,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing the orgs remaining affiliations', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -5261,7 +5193,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -5271,10 +5203,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -5293,7 +5225,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing the users affiliations', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -5338,7 +5270,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -5348,10 +5280,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -5370,7 +5302,7 @@ describe('given the closeAccount mutation', () => {
         describe('when removing the user', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest.fn().mockReturnValue([{ count: 2 }]),
+              all: jest.fn().mockReturnValue([{count: 2}]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -5416,7 +5348,7 @@ describe('given the closeAccount mutation', () => {
                   checkSuperAdmin: jest.fn().mockReturnValue(true),
                   userRequired: jest
                     .fn()
-                    .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                    .mockReturnValue({_key: '123', _id: 'users/123'}),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -5426,10 +5358,10 @@ describe('given the closeAccount mutation', () => {
                     userKey: '123',
                   }),
                   loadUserByKey: {
-                    load: jest.fn().mockReturnValue({ _key: '123' }),
+                    load: jest.fn().mockReturnValue({_key: '123'}),
                   },
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -5449,7 +5381,7 @@ describe('given the closeAccount mutation', () => {
       describe('trx commit error occurs', () => {
         it('throws an error', async () => {
           const mockedCursor = {
-            all: jest.fn().mockReturnValue([{ count: 2 }]),
+            all: jest.fn().mockReturnValue([{count: 2}]),
           }
 
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -5487,7 +5419,7 @@ describe('given the closeAccount mutation', () => {
                 checkSuperAdmin: jest.fn().mockReturnValue(true),
                 userRequired: jest
                   .fn()
-                  .mockReturnValue({ _key: '123', _id: 'users/123' }),
+                  .mockReturnValue({_key: '123', _id: 'users/123'}),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -5497,10 +5429,10 @@ describe('given the closeAccount mutation', () => {
                   userKey: '123',
                 }),
                 loadUserByKey: {
-                  load: jest.fn().mockReturnValue({ _key: '123' }),
+                  load: jest.fn().mockReturnValue({_key: '123'}),
                 },
               },
-              validators: { cleanseInput },
+              validators: {cleanseInput},
             },
           )
 

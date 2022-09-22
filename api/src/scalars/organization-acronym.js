@@ -1,4 +1,4 @@
-import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
+import {Kind, GraphQLError, GraphQLScalarType} from 'graphql'
 
 const validate = (value) => {
   const ACRONYM_REGEX = /^[A-Za-z0-9_-]{1,50}$/

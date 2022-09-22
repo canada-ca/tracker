@@ -1,5 +1,5 @@
-import { closeAccountError, closeAccountResult } from '../../objects'
-import { closeAccountUnion } from '../close-account-union'
+import {closeAccountError, closeAccountResult} from '../../objects'
+import {closeAccountUnion} from '../close-account-union'
 
 describe('given the closeAccountUnion', () => {
   describe('testing the field types', () => {

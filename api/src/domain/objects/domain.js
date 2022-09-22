@@ -8,11 +8,12 @@ import {nodeInterface} from '../../node'
 import {Domain, Selectors, Year} from '../../scalars'
 import {dmarcSummaryType} from '../../dmarc-summaries/objects'
 import {dnsScanConnection} from '../../dns-scan/objects/dns-scan-connection'
-import {webConnection, webScanConnection, webScanType} from '../../web-scan/objects'
+import {webConnection} from '../../web-scan/objects'
 import {organizationOrder} from '../../organization/inputs'
 import {organizationConnection} from '../../organization/objects'
-import {GraphQLDate} from "graphql-scalars";
-import {dmarcOrder} from "../../email-scan/inputs";
+import {GraphQLDate} from "graphql-scalars"
+import {dnsOrder} from "../../dns-scan/inputs"
+import {webOrder} from "../../web-scan/inputs/web-order"
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -114,7 +115,7 @@ export const domainType = new GraphQLObjectType({
           description: 'End date for date filter.',
         },
         orderBy: {
-          type: dmarcOrder,
+          type: dnsOrder,
           description: 'Ordering options for DNS connections.',
         },
         limit: {
@@ -148,7 +149,7 @@ export const domainType = new GraphQLObjectType({
           description: 'End date for date filter.',
         },
         orderBy: {
-          type: dmarcOrder,
+          type: webOrder,
           description: 'Ordering options for web connections.',
         },
         limit: {

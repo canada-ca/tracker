@@ -1,5 +1,5 @@
-import { affiliationError, removeUserFromOrgResultType } from '../../objects'
-import { removeUserFromOrgUnion } from '../remove-user-from-org-union'
+import {affiliationError, removeUserFromOrgResultType} from '../../objects'
+import {removeUserFromOrgUnion} from '../remove-user-from-org-union'
 
 describe('given the removeUserFromOrgUnion', () => {
   describe('testing the field types', () => {

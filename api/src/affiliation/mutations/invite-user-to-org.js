@@ -1,10 +1,10 @@
-import { GraphQLNonNull, GraphQLID } from 'graphql'
-import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLID} from 'graphql'
+import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {t} from '@lingui/macro'
 
-import { inviteUserToOrgUnion } from '../unions'
-import { LanguageEnums, RoleEnums } from '../../enums'
+import {inviteUserToOrgUnion} from '../unions'
+import {LanguageEnums, RoleEnums} from '../../enums'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
   name: 'InviteUserToOrg',
@@ -53,21 +53,21 @@ able to sign-up and be assigned to that organization in one mutation.`,
         verifiedRequired,
         tfaRequired,
       },
-      loaders: { loadOrgByKey, loadUserByUserName },
-      notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
-      validators: { cleanseInput },
+      loaders: {loadOrgByKey, loadUserByUserName},
+      notify: {sendOrgInviteCreateAccount, sendOrgInviteEmail},
+      validators: {cleanseInput},
     },
   ) => {
     const userName = cleanseInput(args.userName).toLowerCase()
     const requestedRole = cleanseInput(args.requestedRole)
-    const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+    const {id: orgId} = fromGlobalId(cleanseInput(args.orgId))
     const preferredLang = cleanseInput(args.preferredLang)
 
     // Get requesting user
     const user = await userRequired()
 
-    verifiedRequired({ user })
-    tfaRequired({ user })
+    verifiedRequired({user})
+    tfaRequired({user})
 
     // Make sure user is not inviting themselves
     if (user.userName === userName) {
@@ -96,7 +96,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     }
 
     // Check to see requesting users permission to the org is
-    const permission = await checkPermission({ orgId: org._id })
+    const permission = await checkPermission({orgId: org._id})
 
     if (
       typeof permission === 'undefined' ||
@@ -121,7 +121,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // If there is not associated account with that user name send invite to org with create account
     if (typeof requestedUser === 'undefined') {
       const token = tokenize({
-        parameters: { userName, orgKey: org._key, requestedRole },
+        parameters: {userName, orgKey: org._key, requestedRole},
         expPeriod: 24,
       })
       const createAccountLink = `https://${request.get(
@@ -129,7 +129,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       )}/create-user/${token}`
 
       await sendOrgInviteCreateAccount({
-        user: { userName: userName, preferredLang },
+        user: {userName: userName, preferredLang},
         orgName: org.name,
         createAccountLink,
       })

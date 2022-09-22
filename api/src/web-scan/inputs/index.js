@@ -1,2 +1,1 @@
-export * from './https-order'
-export * from './ssl-order'
+export * from './web-order'

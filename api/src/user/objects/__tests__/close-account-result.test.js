@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { closeAccountResult } from '../close-account-result'
+import {closeAccountResult} from '../close-account-result'
 
 describe('given the closeAccountResult object', () => {
   describe('testing the field definitions', () => {
@@ -17,7 +17,7 @@ describe('given the closeAccountResult object', () => {
       it('returns the resolved field', () => {
         const demoType = closeAccountResult.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
   })

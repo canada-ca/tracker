@@ -1,9 +1,9 @@
-import { GraphQLNonNull, GraphQLList, GraphQLID } from 'graphql'
-import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLList, GraphQLID} from 'graphql'
+import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { createDomainUnion } from '../unions'
-import { Domain, Selectors } from '../../scalars'
+import {createDomainUnion} from '../unions'
+import {Domain, Selectors} from '../../scalars'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -47,18 +47,18 @@ export const createDomain = new mutationWithClientMutationId({
         verifiedRequired,
         tfaRequired,
       },
-      loaders: { loadDomainByDomain, loadOrgByKey },
-      validators: { cleanseInput },
+      loaders: {loadDomainByDomain, loadOrgByKey},
+      validators: {cleanseInput},
     },
   ) => {
     // Get User
     const user = await userRequired()
 
-    verifiedRequired({ user })
-    tfaRequired({ user })
+    verifiedRequired({user})
+    tfaRequired({user})
 
     // Cleanse input
-    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+    const {type: _orgType, id: orgId} = fromGlobalId(cleanseInput(args.orgId))
     const domain = cleanseInput(args.domain)
 
     let selectors
@@ -85,7 +85,7 @@ export const createDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if user belongs to org
-    const permission = await checkPermission({ orgId: org._id })
+    const permission = await checkPermission({orgId: org._id})
 
     if (
       permission !== 'user' &&
@@ -220,7 +220,7 @@ export const createDomain = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
     } else {
-      const { selectors: selectorList, status, lastRan } = checkDomain
+      const {selectors: selectorList, status, lastRan} = checkDomain
 
       selectors.forEach((selector) => {
         if (!checkDomain.selectors.includes(selector)) {

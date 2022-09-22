@@ -1,8 +1,8 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
-const { NOTIFICATION_AUTHENTICATE_EMAIL_ID } = process.env
+const {NOTIFICATION_AUTHENTICATE_EMAIL_ID} = process.env
 
-export const sendAuthEmail = ({ notifyClient, i18n }) => async ({ user }) => {
+export const sendAuthEmail = ({notifyClient, i18n}) => async ({user}) => {
   const templateId = NOTIFICATION_AUTHENTICATE_EMAIL_ID
   try {
     await notifyClient.sendEmail(templateId, user.userName, {

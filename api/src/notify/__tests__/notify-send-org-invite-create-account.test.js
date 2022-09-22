@@ -1,8 +1,8 @@
-import { setupI18n } from '@lingui/core'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
-import { sendOrgInviteCreateAccount } from '../index'
+import {sendOrgInviteCreateAccount} from '../index'
 
 const {
   NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN,
@@ -23,8 +23,8 @@ describe('given the sendOrgInviteCreateAccount function', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -38,8 +38,8 @@ describe('given the sendOrgInviteCreateAccount function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -126,8 +126,8 @@ describe('given the sendOrgInviteCreateAccount function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {

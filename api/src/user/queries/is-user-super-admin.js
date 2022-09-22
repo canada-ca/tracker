@@ -1,18 +1,18 @@
-import { GraphQLBoolean } from 'graphql'
-import { t } from '@lingui/macro'
+import {GraphQLBoolean} from 'graphql'
+import {t} from '@lingui/macro'
 
 export const isUserSuperAdmin = {
   type: GraphQLBoolean,
   description: 'Query used to check if the user has a super admin role.',
-  resolve: async (_, __, { i18n, query, userKey, auth: { userRequired } }) => {
+  resolve: async (_, __, {i18n, query, userKey, auth: {userRequired}}) => {
     const user = await userRequired()
 
     let userAdmin
     try {
       userAdmin = await query`
-      FOR v, e IN 1..1 INBOUND ${user._id} affiliations 
-      FILTER e.permission == "super_admin" 
-      LIMIT 1 
+      FOR v, e IN 1..1 INBOUND ${user._id} affiliations
+      FILTER e.permission == "super_admin"
+      LIMIT 1
       RETURN e.permission
       `
     } catch (err) {

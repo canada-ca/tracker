@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { verifyAccountResultType } from '../index'
+import {verifyAccountResultType} from '../index'
 
 describe('given the verifyAccountResultType object', () => {
   describe('testing the field definitions', () => {
@@ -17,7 +17,7 @@ describe('given the verifyAccountResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = verifyAccountResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
   })

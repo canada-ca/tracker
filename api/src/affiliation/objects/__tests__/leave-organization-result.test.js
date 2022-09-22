@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { leaveOrganizationResultType } from '../leave-organization-result'
+import {leaveOrganizationResultType} from '../leave-organization-result'
 
 describe('given the leaveOrganizationResultType object', () => {
   describe('testing the field definitions', () => {
@@ -17,7 +17,7 @@ describe('given the leaveOrganizationResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = leaveOrganizationResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
   })

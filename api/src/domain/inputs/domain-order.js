@@ -1,6 +1,6 @@
-import { GraphQLInputObjectType, GraphQLNonNull } from 'graphql'
+import {GraphQLInputObjectType, GraphQLNonNull} from 'graphql'
 
-import { OrderDirection, DomainOrderField } from '../../enums'
+import {OrderDirection, DomainOrderField} from '../../enums'
 
 export const domainOrder = new GraphQLInputObjectType({
   name: 'DomainOrder',

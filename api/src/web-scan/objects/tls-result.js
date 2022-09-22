@@ -1,10 +1,7 @@
 import {GraphQLBoolean, GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql'
-import {globalIdField} from 'graphql-relay'
-import {GraphQLDate, GraphQLJSONObject} from 'graphql-scalars'
+import {GraphQLJSONObject} from 'graphql-scalars'
 
-import {domainType} from '../../domain/objects'
-import {nodeInterface} from "../../node";
-import {guidanceTagType, loadSslGuidanceTagByTagId} from "../../guidance-tag";
+import {guidanceTagType} from "../../guidance-tag";
 
 export const tlsResultType = new GraphQLObjectType({
   name: 'TLSResult',
@@ -52,21 +49,21 @@ export const tlsResultType = new GraphQLObjectType({
     positiveTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned server from this scan.`,
-      resolve: async ({positiveTags}, _, { loaders: { loadSslGuidanceTagByTagId } },) => {
+      resolve: async ({positiveTags}, _, {loaders: {loadSslGuidanceTagByTagId}},) => {
         return await loadSslGuidanceTagByTagId({tags: positiveTags})
       }
     },
     neutralTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned server from this scan.`,
-      resolve: async ({neutralTags}, _, { loaders: { loadSslGuidanceTagByTagId } },) => {
+      resolve: async ({neutralTags}, _, {loaders: {loadSslGuidanceTagByTagId}},) => {
         return await loadSslGuidanceTagByTagId({tags: neutralTags})
       }
     },
     negativeTags: {
       type: GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned server from this scan.`,
-      resolve: async ({negativeTags}, _, { loaders: { loadSslGuidanceTagByTagId } },) => {
+      resolve: async ({negativeTags}, _, {loaders: {loadSslGuidanceTagByTagId}},) => {
         return await loadSslGuidanceTagByTagId({tags: negativeTags})
       }
     },

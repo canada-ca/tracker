@@ -212,6 +212,10 @@ export const removeOrganization = new mutationWithClientMutationId({
       )
     }
 
+    console.log(organization)
+
+    console.log(domainInfo)
+
     for (const domain of domainInfo) {
       if (domain.count === 1) {
         try {
@@ -220,7 +224,7 @@ export const removeOrganization = new mutationWithClientMutationId({
             await query`
               WITH web, webScan
               FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
-                FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
+                FOR webScanV, webToWebScansV In 1..1 ANY webV._id webToWebScans
                   REMOVE webScanV IN webScan
                   REMOVE webToWebScansV IN webToWebScans
                   OPTIONS { waitForSync: true }
@@ -231,7 +235,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           })
         } catch (err) {
           console.error(
-            `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+            `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
           throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
         }
@@ -249,7 +253,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           })
         } catch (err) {
           console.error(
-            `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+            `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
           throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
         }

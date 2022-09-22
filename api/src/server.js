@@ -2,23 +2,21 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import http from 'http'
-import { ApolloServerPluginLandingPageGraphQLPlayground as enablePlayground } from 'apollo-server-core'
-import { ApolloServer } from 'apollo-server-express'
+import {ApolloServerPluginLandingPageGraphQLPlayground as enablePlayground} from 'apollo-server-core'
+import {ApolloServer} from 'apollo-server-express'
 import requestLanguage from 'express-request-language'
-import { execute, subscribe, GraphQLSchema } from 'graphql'
+import {execute, subscribe, GraphQLSchema} from 'graphql'
 import depthLimit from 'graphql-depth-limit'
-import { createComplexityLimitRule } from 'graphql-validation-complexity'
-import { SubscriptionServer } from 'subscriptions-transport-ws'
+import {createComplexityLimitRule} from 'graphql-validation-complexity'
+import {SubscriptionServer} from 'subscriptions-transport-ws'
 
-import { createQuerySchema } from './query'
-import { createMutationSchema } from './mutation'
-import { createSubscriptionSchema } from './subscription'
+import {createQuerySchema} from './query'
+import {createMutationSchema} from './mutation'
 
 const createSchema = () =>
   new GraphQLSchema({
     query: createQuerySchema(),
     mutation: createMutationSchema(),
-    subscription: createSubscriptionSchema(),
   })
 
 const createValidationRules = (
@@ -43,14 +41,14 @@ const createValidationRules = (
 }
 
 export const Server = async ({
-  maxDepth,
-  complexityCost,
-  scalarCost,
-  objectCost,
-  listFactor,
-  tracing,
-  context = {},
-}) => {
+                               maxDepth,
+                               complexityCost,
+                               scalarCost,
+                               objectCost,
+                               listFactor,
+                               tracing,
+                               context = {},
+                             }) => {
   const app = express()
 
   app.use('*', cors())
@@ -64,11 +62,11 @@ export const Server = async ({
   )
 
   app.get('/alive', (_req, res) => {
-    res.json({ ok: 'yes' })
+    res.json({ok: 'yes'})
   })
 
   app.get('/ready', (_req, res) => {
-    res.json({ ok: 'yes' })
+    res.json({ok: 'yes'})
   })
 
   // default error handler
@@ -110,7 +108,7 @@ export const Server = async ({
   })
 
   await server.start()
-  server.applyMiddleware({ app })
+  server.applyMiddleware({app})
 
   SubscriptionServer.create(
     {

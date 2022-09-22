@@ -3,7 +3,7 @@ import {
   signInError,
   tfaSignInResult,
 } from '../../objects/index'
-import { signInUnion } from '../sign-in-union'
+import {signInUnion} from '../sign-in-union'
 
 describe('given the sign in union', () => {
   describe('testing the field types', () => {

@@ -1,13 +1,13 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
 
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { cleanseInput, slugify } from '../../../validators'
+import {cleanseInput, slugify} from '../../../validators'
 import {
   checkPermission,
   userRequired,
@@ -16,26 +16,23 @@ import {
   verifiedRequired,
   tfaRequired,
 } from '../../../auth'
-import { loadDomainByDomain } from '../../loaders'
+import {loadDomainByDomain} from '../../loaders'
 import {
   loadOrgByKey,
   loadOrgConnectionsByDomainId,
 } from '../../../organization/loaders'
-import { loadUserByKey } from '../../../user/loaders'
+import {loadUserByKey} from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
+const {DB_PASS: rootPass, DB_URL: url, HASHING_SECRET} = process.env
 
 const collectionNames = [
   'users',
   'organizations',
   'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
+  'dns',
+  'web',
+  'webScan',
   'dkimGuidanceTags',
   'dmarcGuidanceTags',
   'spfGuidanceTags',
@@ -49,12 +46,9 @@ const collectionNames = [
   'scanSummaries',
   'affiliations',
   'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
+  'domainsDNS',
+  'domainsWeb',
+  'webToWebScans',
   'ownership',
   'domainsToDmarcSummaries',
 ]
@@ -81,7 +75,7 @@ describe('create a domain', () => {
   })
   describe('given a successful domain creation', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -191,29 +185,29 @@ describe('create a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByDomain: loadDomainByDomain({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequiredBool: true },
+                  auth: {loginRequiredBool: true},
                 }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -344,29 +338,29 @@ describe('create a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByDomain: loadDomainByDomain({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                 }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -474,29 +468,29 @@ describe('create a domain', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
+              checkPermission: checkPermission({userKey: user._key, query}),
               saltedHash: saltedHash(HASHING_SECRET),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
-              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+              checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
             },
             loaders: {
-              loadDomainByDomain: loadDomainByDomain({ query }),
-              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              loadDomainByDomain: loadDomainByDomain({query}),
+              loadOrgByKey: loadOrgByKey({query, language: 'en'}),
               loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                 query,
                 language: 'en',
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
-            validators: { cleanseInput, slugify },
+            validators: {cleanseInput, slugify},
           },
         )
 
@@ -603,29 +597,29 @@ describe('create a domain', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkPermission: checkPermission({ userKey: user._key, query }),
+              checkPermission: checkPermission({userKey: user._key, query}),
               saltedHash: saltedHash(HASHING_SECRET),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
-              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+              checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
             },
             loaders: {
-              loadDomainByDomain: loadDomainByDomain({ query }),
-              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              loadDomainByDomain: loadDomainByDomain({query}),
+              loadOrgByKey: loadOrgByKey({query, language: 'en'}),
               loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                 query,
                 language: 'en',
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
-            validators: { cleanseInput, slugify },
+            validators: {cleanseInput, slugify},
           },
         )
 
@@ -775,29 +769,29 @@ describe('create a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByDomain: loadDomainByDomain({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                 }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -921,29 +915,29 @@ describe('create a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByDomain: loadDomainByDomain({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                 }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -1067,29 +1061,29 @@ describe('create a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByDomain: loadDomainByDomain({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                 }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -1218,29 +1212,29 @@ describe('create a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByDomain: loadDomainByDomain({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                 }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -1364,29 +1358,29 @@ describe('create a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({ userKey: user._key, query }),
+                checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadDomainByDomain: loadDomainByDomain({query}),
+                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: { loginRequired: true },
+                  auth: {loginRequired: true},
                 }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -1448,8 +1442,8 @@ describe('create a domain', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1530,7 +1524,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -1626,7 +1620,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -1724,7 +1718,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -1823,7 +1817,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 
@@ -1917,7 +1911,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 
@@ -2013,7 +2007,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 
@@ -2110,7 +2104,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -2207,7 +2201,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -2308,7 +2302,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -2408,7 +2402,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -2511,7 +2505,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 
@@ -2532,8 +2526,8 @@ describe('create a domain', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2614,7 +2608,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -2710,7 +2704,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -2808,7 +2802,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: { cleanseInput, slugify },
+              validators: {cleanseInput, slugify},
             },
           )
 
@@ -2907,7 +2901,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 
@@ -3003,7 +2997,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 
@@ -3101,7 +3095,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 
@@ -3200,7 +3194,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -3299,7 +3293,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -3402,7 +3396,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -3504,7 +3498,7 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: { cleanseInput, slugify },
+                  validators: {cleanseInput, slugify},
                 },
               )
 
@@ -3609,7 +3603,7 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: { cleanseInput, slugify },
+                validators: {cleanseInput, slugify},
               },
             )
 

@@ -1,15 +1,15 @@
-import { stringify } from 'jest-matcher-utils'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {stringify} from 'jest-matcher-utils'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { cleanseInput } from '../../../validators'
-import { loadDomainConnectionsByOrgId, loadDomainByKey } from '../index'
-import { toGlobalId } from 'graphql-relay'
+import {cleanseInput} from '../../../validators'
+import {loadDomainConnectionsByOrgId, loadDomainByKey} from '../index'
+import {toGlobalId} from 'graphql-relay'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given the load domain connection using org id function', () => {
   let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
@@ -28,17 +28,17 @@ describe('given the load domain connection using org id function', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -122,10 +122,10 @@ describe('given the load domain connection using org id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
-          auth: { loginRequired: true },
+          auth: {loginRequired: true},
         })
 
-        const domainLoader = loadDomainByKey({ query })
+        const domainLoader = loadDomainByKey({query})
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -170,10 +170,10 @@ describe('given the load domain connection using org id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
-          auth: { loginRequired: true },
+          auth: {loginRequired: true},
         })
 
-        const domainLoader = loadDomainByKey({ query })
+        const domainLoader = loadDomainByKey({query})
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -218,10 +218,10 @@ describe('given the load domain connection using org id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
-          auth: { loginRequired: true },
+          auth: {loginRequired: true},
         })
 
-        const domainLoader = loadDomainByKey({ query })
+        const domainLoader = loadDomainByKey({query})
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -265,10 +265,10 @@ describe('given the load domain connection using org id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
-          auth: { loginRequired: true },
+          auth: {loginRequired: true},
         })
 
-        const domainLoader = loadDomainByKey({ query })
+        const domainLoader = loadDomainByKey({query})
         const expectedDomains = await domainLoader.loadMany([
           domain._key,
           domainTwo._key,
@@ -321,10 +321,10 @@ describe('given the load domain connection using org id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
-          auth: { loginRequired: true },
+          auth: {loginRequired: true},
         })
 
-        const domainLoader = loadDomainByKey({ query })
+        const domainLoader = loadDomainByKey({query})
         const expectedDomain = await domainLoader.load(domain._key)
 
         const connectionArgs = {
@@ -333,7 +333,7 @@ describe('given the load domain connection using org id function', () => {
           search: 'test.domain.gc.ca',
         }
 
-        const domains = await connectionLoader({ ...connectionArgs })
+        const domains = await connectionLoader({...connectionArgs})
 
         const expectedStructure = {
           edges: [
@@ -363,7 +363,7 @@ describe('given the load domain connection using org id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
-          auth: { loginRequired: true },
+          auth: {loginRequired: true},
         })
 
         const connectionArgs = {
@@ -409,10 +409,10 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequiredBool: true },
+            auth: {loginRequiredBool: true},
           })
 
-          const domainLoader = loadDomainByKey({ query })
+          const domainLoader = loadDomainByKey({query})
           const expectedDomains = await domainLoader.loadMany([
             domainThree._key,
           ])
@@ -455,10 +455,10 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
           })
 
-          const domainLoader = loadDomainByKey({ query })
+          const domainLoader = loadDomainByKey({query})
           const expectedDomains = await domainLoader.loadMany([
             domain._key,
             domainTwo._key,
@@ -513,7 +513,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on DOMAIN', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -534,7 +534,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -564,7 +564,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -585,7 +585,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -618,7 +618,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on DKIM_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -639,7 +639,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -670,7 +670,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -691,7 +691,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -724,7 +724,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on DMARC_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -745,7 +745,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -776,7 +776,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -797,7 +797,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -830,7 +830,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on HTTPS_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -851,7 +851,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -882,7 +882,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -903,7 +903,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -936,7 +936,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on SPF_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -957,7 +957,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -988,7 +988,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1009,7 +1009,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1044,7 +1044,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on DOMAIN', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1065,7 +1065,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1096,7 +1096,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1117,7 +1117,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1150,7 +1150,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on DKIM_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1171,7 +1171,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1202,7 +1202,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1223,7 +1223,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1256,7 +1256,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on DMARC_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1277,7 +1277,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1308,7 +1308,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1329,7 +1329,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1362,7 +1362,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on HTTPS_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1383,7 +1383,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1414,7 +1414,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1435,7 +1435,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1468,7 +1468,7 @@ describe('given the load domain connection using org id function', () => {
         describe('ordering on SPF_STATUS', () => {
           describe('order direction is ASC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1489,7 +1489,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1520,7 +1520,7 @@ describe('given the load domain connection using org id function', () => {
           })
           describe('order direction is DESC', () => {
             it('returns domains in order', async () => {
-              const domainLoader = loadDomainByKey({ query })
+              const domainLoader = loadDomainByKey({query})
               const expectedDomains = await domainLoader.loadMany([
                 domain._key,
                 domainTwo._key,
@@ -1541,7 +1541,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
               })
               const domains = await connectionLoader({
                 orgId: org._id,
@@ -1579,8 +1579,8 @@ describe('given the load domain connection using org id function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1596,7 +1596,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 
@@ -1625,7 +1625,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 
@@ -1658,7 +1658,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -1689,7 +1689,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -1722,7 +1722,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -1753,7 +1753,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -1789,7 +1789,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
                 i18n,
               })
 
@@ -1826,7 +1826,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
                 i18n,
               })
 
@@ -1867,7 +1867,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 
@@ -1905,7 +1905,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 
@@ -1935,8 +1935,8 @@ describe('given the load domain connection using org id function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1952,7 +1952,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 
@@ -1981,7 +1981,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 
@@ -2014,7 +2014,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -2045,7 +2045,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -2078,7 +2078,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -2109,7 +2109,7 @@ describe('given the load domain connection using org id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               i18n,
             })
 
@@ -2145,7 +2145,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
                 i18n,
               })
 
@@ -2182,7 +2182,7 @@ describe('given the load domain connection using org id function', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: { loginRequired: true },
+                auth: {loginRequired: true},
                 i18n,
               })
 
@@ -2223,7 +2223,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 
@@ -2263,7 +2263,7 @@ describe('given the load domain connection using org id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: { loginRequired: true },
+            auth: {loginRequired: true},
             i18n,
           })
 

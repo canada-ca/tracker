@@ -1,5 +1,5 @@
-import { GraphQLInt } from 'graphql'
-import { guidanceTagConnection } from '../index'
+import {GraphQLInt} from 'graphql'
+import {guidanceTagConnection} from '../index'
 
 describe('given the guidance Tag Connection connection object', () => {
   describe('testing its field definitions', () => {
@@ -15,7 +15,7 @@ describe('given the guidance Tag Connection connection object', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagConnection.connectionType.getFields()
 
-        expect(demoType.totalCount.resolve({ totalCount: 1 })).toEqual(1)
+        expect(demoType.totalCount.resolve({totalCount: 1})).toEqual(1)
       })
     })
   })

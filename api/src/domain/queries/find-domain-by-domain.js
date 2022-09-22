@@ -1,8 +1,8 @@
-import { GraphQLNonNull } from 'graphql'
-import { t } from '@lingui/macro'
-import { Domain } from '../../scalars'
+import {GraphQLNonNull} from 'graphql'
+import {t} from '@lingui/macro'
+import {Domain} from '../../scalars'
 
-import { domainType } from '../objects'
+import {domainType} from '../objects'
 
 export const findDomainByDomain = {
   type: domainType,
@@ -25,14 +25,14 @@ export const findDomainByDomain = {
         verifiedRequired,
         loginRequiredBool,
       },
-      loaders: { loadDomainByDomain },
-      validators: { cleanseInput },
+      loaders: {loadDomainByDomain},
+      validators: {cleanseInput},
     },
   ) => {
     if (loginRequiredBool) {
       // Get User
       const user = await userRequired()
-      verifiedRequired({ user })
+      verifiedRequired({user})
     }
 
     // Cleanse input
@@ -48,7 +48,7 @@ export const findDomainByDomain = {
 
     if (loginRequiredBool) {
       // Check user permission for domain access
-      const permitted = await checkDomainPermission({ domainId: domain._id })
+      const permitted = await checkDomainPermission({domainId: domain._id})
 
       if (!permitted) {
         console.warn(`User ${userKey} could not retrieve domain.`)
