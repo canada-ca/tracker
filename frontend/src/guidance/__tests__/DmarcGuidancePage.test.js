@@ -50,7 +50,7 @@ const mocks = [
       variables: { domain: 'forces.gc.ca' },
     },
     result: {
-      data: rawDmarcGuidancePageData,
+      data: rawDmarcGuidancePageData.data,
     },
   },
 ]
@@ -80,7 +80,7 @@ describe('<DmarcGuidancePage />', () => {
     )
 
     await waitFor(() => {
-      expect(getByText(/forces.gc.ca/i)).toBeInTheDocument()
+      expect(getByText(/canada.ca/i)).toBeInTheDocument()
     })
   })
 })

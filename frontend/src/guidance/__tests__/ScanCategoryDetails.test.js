@@ -25,7 +25,7 @@ const i18n = setupI18n({
 
 const categoryName = 'https'
 const categoryData =
-  rawDmarcGuidancePageData.findDomainByDomain.web.https.edges[0].node
+  rawDmarcGuidancePageData.data.findDomainByDomain.web.edges[0].node
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

@@ -23,8 +23,7 @@ const i18n = setupI18n({
 })
 
 const guidanceTag =
-  rawDmarcGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
-    .negativeGuidanceTags.edges[0].node
+  rawDmarcGuidancePageData.data.findDomainByDomain.dnsScan.edges[0].node.spf.positiveTags[0]
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -51,6 +50,6 @@ describe('<GuidanceTagDetails />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => getAllByText(/DKIM-missing/i))
+    await waitFor(() => getAllByText(/SPF record is properly formed/i))
   })
 })

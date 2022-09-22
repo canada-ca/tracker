@@ -86,7 +86,7 @@ export default function DmarcGuidancePage() {
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>
-        <ScanDomainButton domain={data.findDomainByDomain.domain} ml="auto" />
+        <ScanDomainButton domainUrl={data.findDomainByDomain.domain} ml="auto" />
         {data.findDomainByDomain.hasDMARCReport && (
           <Link
             color="teal.600"
