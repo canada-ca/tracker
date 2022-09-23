@@ -123,15 +123,15 @@ class TLSScanner:
         # Test supported SSL/TLS
         if "SSL_2_0" in tls_supported:
             designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
-        elif "SSL_3_0" in tls_supported:
+        if "SSL_3_0" in tls_supported:
             designated_scans.add(ScanCommand.SSL_3_0_CIPHER_SUITES)
-        elif "TLS_1_0" in tls_supported:
+        if "TLS_1_0" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_0_CIPHER_SUITES)
-        elif "TLS_1_1" in tls_supported:
+        if "TLS_1_1" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_1_CIPHER_SUITES)
-        elif "TLS_1_2" in tls_supported:
+        if "TLS_1_2" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
-        elif "TLS_1_3" in tls_supported:
+        if "TLS_1_3" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
 
         scan_request = ServerScanRequest(
