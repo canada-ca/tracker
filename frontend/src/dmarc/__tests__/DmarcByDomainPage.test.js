@@ -29,7 +29,15 @@ const i18n = setupI18n({
 matchMediaSize()
 
 describe('<DmarcByDomainPage />', () => {
-  const currentYear = new Date().getFullYear().toString()
+  const currentYear = new Date().getFullYear()
+  const getDynamicYear = () => {
+    const currentMonth = new Date().getMonth()
+    if (currentMonth >= 8) {
+      return String(currentYear)
+    } else {
+      return String(currentYear - 1)
+    }
+  }
 
   const mocks = [
     {
@@ -38,7 +46,7 @@ describe('<DmarcByDomainPage />', () => {
         variables: {
           first: 10,
           month: 'LAST30DAYS',
-          year: currentYear,
+          year: currentYear.toString(),
           orderBy: {
             field: 'TOTAL_MESSAGES',
             direction: 'DESC',
@@ -54,7 +62,7 @@ describe('<DmarcByDomainPage />', () => {
         variables: {
           first: 10,
           month: 'AUGUST',
-          year: '2021',
+          year: getDynamicYear(),
           orderBy: {
             field: 'TOTAL_MESSAGES',
             direction: 'DESC',
@@ -181,7 +189,7 @@ describe('<DmarcByDomainPage />', () => {
       name: /showing data for period:/i,
     })
 
-    userEvent.selectOptions(periodSelector, `AUGUST, 2021`)
+    userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`)
 
     await findByText(/another.domain/)
   })

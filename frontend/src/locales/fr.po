@@ -188,7 +188,7 @@ msgid "An error occured when fetching this organization's information"
 msgstr "Une erreur s'est produite lors de la récupération des informations sur cette organisation."
 
 #: src/app/FloatingMenu.js:38
-#: src/app/TopBanner.js:29
+#: src/app/TopBanner.js:31
 msgid "An error occured when you attempted to sign out"
 msgstr "Une erreur s'est produite lorsque vous avez tenté de vous déconnecter."
 
@@ -282,7 +282,7 @@ msgstr "Août"
 msgid "Authenticate"
 msgstr "Authentifier"
 
-#: src/app/TopBanner.js:88
+#: src/app/TopBanner.js:93
 msgid "BETA"
 msgstr "BETA"
 
@@ -456,7 +456,7 @@ msgid "Contact"
 msgstr "Contact"
 
 #: src/app/App.js:213
-#: src/app/App.js:374
+#: src/app/App.js:376
 #: src/app/ContactUsPage.js:39
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -498,13 +498,13 @@ msgid "Country:"
 msgstr "Pays:"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:129
+#: src/app/TopBanner.js:138
 #: src/auth/CreateUserPage.js:225
 msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/admin/AdminPage.js:128
-#: src/app/App.js:328
+#: src/app/App.js:330
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Créer une organisation"
@@ -630,7 +630,7 @@ msgid "DMARC Phases"
 msgstr "Phases DMARC"
 
 #: src/dmarc/DmarcReportPage.js:92
-#: src/domains/DomainCard.js:120
+#: src/domains/DomainCard.js:100
 #: src/guidance/DmarcGuidancePage.js:101
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
@@ -645,7 +645,7 @@ msgid "DMARC Status"
 msgstr "Statut DMARC"
 
 #: src/app/App.js:107
-#: src/app/App.js:302
+#: src/app/App.js:304
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:181
 #: src/dmarc/DmarcByDomainPage.js:241
@@ -677,8 +677,8 @@ msgid "Data Security and Use"
 msgstr "Sécurité et utilisation des données"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-msgid "Data:"
-msgstr "Données:"
+#~ msgid "Data:"
+#~ msgstr "Données:"
 
 #: src/components/MonthSelect.js:55
 #: src/utilities/months.js:15
@@ -772,23 +772,23 @@ msgstr "Domaine mis à jour"
 msgid "Domain url field must not be empty"
 msgstr "Le champ de l'url du domaine ne doit pas être vide"
 
-#: src/admin/AdminDomainCard.js:27
+#: src/admin/AdminDomainCard.js:18
 #: src/admin/WebCheckPage.js:147
-#: src/domains/DomainCard.js:56
+#: src/domains/DomainCard.js:53
 #: src/domains/ScanDomain.js:220
 msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/admin/AdminPanel.js:25
 #: src/app/App.js:104
-#: src/app/App.js:263
+#: src/app/App.js:265
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:73
 #: src/domains/DomainsPage.js:104
 #: src/organizationDetails/OrganizationDetails.js:138
 #: src/organizationDetails/OrganizationDomains.js:74
-#: src/summaries/Doughnut.js:51
-#: src/summaries/Doughnut.js:77
+#: src/summaries/Doughnut.js:50
+#: src/summaries/Doughnut.js:75
 msgid "Domains"
 msgstr "Domaines"
 
@@ -851,7 +851,7 @@ msgstr "Courriel envoyé"
 msgid "Email Validated"
 msgstr "Courriel validé"
 
-#: src/app/App.js:324
+#: src/app/App.js:326
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
@@ -870,8 +870,8 @@ msgid "Email successfully sent"
 msgstr "Courriel envoyé avec succès"
 
 #: src/summaries/Doughnut.js:32
-msgid "Email-hosting"
-msgstr "d'hébergement d'emails"
+#~ msgid "Email-hosting"
+#~ msgstr "d'hébergement d'emails"
 
 #: src/components/fields/EmailField.js:12
 #: src/user/EditableUserEmail.js:88
@@ -929,15 +929,11 @@ msgstr "Exportation vers CSV"
 
 #: src/dmarc/DmarcReportPage.js:126
 #: src/dmarc/DmarcReportPage.js:127
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail"
 msgstr "Échec"
 
 #: src/dmarc/DmarcReportPage.js:120
 #: src/dmarc/DmarcReportPage.js:121
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail DKIM"
 msgstr "Échec DKIM"
 
@@ -948,8 +944,6 @@ msgstr "Échec DKIM %"
 
 #: src/dmarc/DmarcReportPage.js:123
 #: src/dmarc/DmarcReportPage.js:124
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail SPF"
 msgstr "Échec du SPF"
 
@@ -1043,10 +1037,10 @@ msgid "Government of Canada Employees"
 msgstr "Employés du gouvernement du Canada"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:101
-msgid "Graph direction:"
-msgstr "Direction du graphique :"
+#~ msgid "Graph direction:"
+#~ msgstr "Direction du graphique :"
 
-#: src/app/App.js:378
+#: src/app/App.js:380
 #: src/dmarc/DmarcReportPage.js:193
 #: src/dmarc/DmarcReportPage.js:576
 #: src/domains/DomainCard.js:109
@@ -1132,8 +1126,8 @@ msgid "Home"
 msgstr "Accueil"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:109
-msgid "Horizontal View"
-msgstr "Vue horizontale"
+#~ msgid "Horizontal View"
+#~ msgstr "Vue horizontale"
 
 #: src/domains/DomainCard.js:62
 #: src/domains/DomainsPage.js:110
@@ -1316,6 +1310,10 @@ msgstr "Tableau de bord du traqueur disponible en interne <0>Tracker</0>."
 msgid "Internet facing domains"
 msgstr "Domaines orientés vers l'Internet"
 
+#: src/summaries/Doughnut.js:32
+msgid "Internet-facing"
+msgstr "orientés vers l'Internet"
+
 #: src/auth/ForgotPasswordPage.js:19
 #: src/utilities/fieldRequirements.js:14
 msgid "Invalid email"
@@ -1354,8 +1352,8 @@ msgid "Jurisdiction"
 msgstr "Compétence"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:68
-msgid "L-30-D"
-msgstr "30-D-J"
+#~ msgid "L-30-D"
+#~ msgstr "30-D-J"
 
 #: src/auth/LanguageSelect.js:18
 #: src/user/EditableUserLanguage.js:67
@@ -1555,7 +1553,7 @@ msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de 
 msgid "No scan data available for {0}."
 msgstr "Aucune donnée d'analyse disponible pour {0}."
 
-#: src/summaries/Doughnut.js:111
+#: src/summaries/Doughnut.js:109
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
@@ -1670,8 +1668,6 @@ msgstr "Page {0} de {1}"
 
 #: src/dmarc/DmarcReportPage.js:117
 #: src/dmarc/DmarcReportPage.js:118
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Pass"
 msgstr "Passez"
 
@@ -1713,8 +1709,8 @@ msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:121
-msgid "Percentages"
-msgstr "Pourcentages"
+#~ msgid "Percentages"
+#~ msgstr "Pourcentages"
 
 #: src/app/ReadGuidancePage.js:78
 msgid "Perform an assessment of the domains and sub-domains to determine the status of the configuration. Tools available to support this activity includes the <0>Tracker Dashboard</0>, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
@@ -1783,7 +1779,7 @@ msgstr "Statut préchargé:"
 #~ msgid "Previous"
 #~ msgstr "Précédent"
 
-#: src/app/App.js:358
+#: src/app/App.js:360
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:40
@@ -1868,7 +1864,7 @@ msgstr "Supprimer l'utilisateur"
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
-#: src/app/App.js:370
+#: src/app/App.js:372
 #: src/app/FloatingMenu.js:230
 #: src/app/SlideMessage.js:99
 msgid "Report an Issue"
@@ -2180,7 +2176,7 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 
 #: src/app/App.js:172
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:120
+#: src/app/TopBanner.js:129
 #: src/auth/SignInPage.js:188
 msgid "Sign In"
 msgstr "Se connecter"
@@ -2191,12 +2187,12 @@ msgid "Sign In."
 msgstr "Se connecter."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:108
+#: src/app/TopBanner.js:117
 msgid "Sign Out"
 msgstr "Déconnexion"
 
 #: src/app/FloatingMenu.js:48
-#: src/app/TopBanner.js:39
+#: src/app/TopBanner.js:41
 msgid "Sign Out."
 msgstr "Déconnexion."
 
@@ -2245,7 +2241,7 @@ msgstr "Résumé"
 msgid "Supports ECDH Key Exchange:"
 msgstr "Supporte l'échange de clés ECDH:"
 
-#: src/app/TopBanner.js:63
+#: src/app/TopBanner.js:65
 msgid "Symbol of the Government of Canada"
 msgstr "Symbole du gouvernement du Canada"
 
@@ -2285,7 +2281,7 @@ msgstr "Terminaison"
 msgid "Terms & Conditions"
 msgstr "Termes et conditions"
 
-#: src/app/App.js:362
+#: src/app/App.js:364
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
@@ -2354,7 +2350,7 @@ msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'ana
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/app/TopBanner.js:92
+#: src/app/TopBanner.js:101
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 
@@ -2373,7 +2369,6 @@ msgstr "Pour maximiser la sécurité de votre compte, <0>vous devez activer une 
 #: src/dmarc/DmarcByDomainPage.js:142
 #: src/dmarc/DmarcByDomainPage.js:314
 #: src/dmarc/DmarcReportPage.js:177
-#: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
 msgstr "Total des messages"
 
@@ -2391,11 +2386,11 @@ msgstr "Suivre la sécurité numérique"
 msgid "Tracker account has been successfully closed."
 msgstr "Le compte du traqueur a été fermé avec succès."
 
-#: src/app/TopBanner.js:74
+#: src/app/TopBanner.js:76
 msgid "Tracker logo outline"
 msgstr "Contour du logo Suivi"
 
-#: src/app/TopBanner.js:82
+#: src/app/TopBanner.js:84
 msgid "Tracker logo text"
 msgstr "Texte du logo du Suivi"
 
@@ -2615,8 +2610,8 @@ msgid "Verify Account"
 msgstr "Vérifier le compte"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:108
-msgid "Vertical View"
-msgstr "Vue verticale"
+#~ msgid "Vertical View"
+#~ msgstr "Vue verticale"
 
 #: src/organizations/OrganizationCard.js:144
 msgid "View Details"
@@ -2728,7 +2723,7 @@ msgid "You agree to use our website, products and services only for lawful purpo
 msgstr "Vous acceptez d'utiliser notre site Web, nos produits et nos services uniquement à des fins légales et de manière à ne pas enfreindre les droits d'un tiers, ni à restreindre ou à empêcher l'utilisation et la jouissance du site Web, des produits ou des services par un tiers. En outre, vous ne devez pas abuser, compromettre ou interférer avec nos services, ni introduire dans nos services des éléments malveillants ou technologiquement dangereux. Vous ne devez pas tenter d'obtenir un accès non autorisé à notre site Web, à nos produits ou services, au(x) serveur(s) sur le(s)quel(s) ils sont stockés, ou à tout serveur, ordinateur ou base de données connecté à notre site Web, à nos produits ou à nos services, ni les altérer, les désosser ou les modifier. Nous pouvons suspendre ou cesser de vous fournir nos produits ou services si vous ne respectez pas nos conditions ou politiques ou si nous enquêtons sur une suspicion de mauvaise conduite. Tout soupçon d'utilisation illégale de notre site web, de nos produits ou de nos services peut être signalé aux autorités compétentes chargées de l'application de la loi et, si nécessaire, nous coopérerons avec ces autorités en leur divulguant votre identité."
 
 #: src/app/FloatingMenu.js:49
-#: src/app/TopBanner.js:40
+#: src/app/TopBanner.js:42
 msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
 
@@ -2781,7 +2776,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "Vous aurez besoin d'un compte Suivi pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
-#: src/app/App.js:312
+#: src/app/App.js:314
 msgid "Your Account"
 msgstr "Votre compte"
 

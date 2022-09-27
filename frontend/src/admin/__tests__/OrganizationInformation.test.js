@@ -163,7 +163,7 @@ describe('<OrganizationInformation />', () => {
         ).not.toBeVisible()
       })
 
-      it('org editing error can open and close', async () => {
+      it('org editing error can be opened', async () => {
         const mocks = [
           {
             request: {
@@ -251,16 +251,6 @@ describe('<OrganizationInformation />', () => {
         // ensure editing area is open
         await waitFor(() =>
           expect(getByText(/Blank fields will not be included/)).toBeVisible(),
-        )
-
-        // close editing area
-        userEvent.click(editOrgButton)
-
-        // ensure editing area is closed
-        await waitFor(() =>
-          expect(
-            queryByText(/Blank fields will not be included/),
-          ).not.toBeVisible(),
         )
       })
 
