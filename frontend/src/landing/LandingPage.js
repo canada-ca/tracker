@@ -15,7 +15,7 @@ const emailUrlFr =
 const itpinUrlFr =
   'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html'
 
-export function LandingPage({ isLoggedIn }) {
+export function LandingPage({ loginRequired, isLoggedIn }) {
   const { i18n } = useLingui()
   return (
     <Stack w="100%">
@@ -49,12 +49,12 @@ export function LandingPage({ isLoggedIn }) {
           </Trans>
         </Text>
       </Box>
-      {(!document.location.origin.match(/(suivi|tracker).alpha.canada.ca$/) ||
-        isLoggedIn) && <LandingPageSummaries />}
+      {(!loginRequired || isLoggedIn) && <LandingPageSummaries />}
     </Stack>
   )
 }
 
 LandingPage.propTypes = {
+  loginRequired: bool,
   isLoggedIn: bool,
 }
