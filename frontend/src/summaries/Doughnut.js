@@ -29,7 +29,7 @@ export const Doughnut = ({
   const { i18n } = useLingui()
 
   const domainContext = title.includes('DMARC') ? (
-    <Trans>Email-hosting</Trans>
+    <Trans>Internet-facing</Trans>
   ) : (
     <Trans>Web-hosting</Trans>
   )
@@ -43,7 +43,6 @@ export const Doughnut = ({
         textAnchor="middle"
         dominantBaseline="central"
         fontSize={
-          // `${width / 256}rem`
           i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
         }
         transform={`translate(${width / 2}, ${height / 2})`}
@@ -56,7 +55,6 @@ export const Doughnut = ({
         textAnchor="middle"
         dominantBaseline="central"
         fontSize={
-          // `${width / 256}rem`
           i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
         }
         transform={`translate(${width / 2}, ${height / 2})`}
@@ -118,7 +116,11 @@ export const Doughnut = ({
     <div {...rest}>
       <Box my="4">{chartContent}</Box>
       {arcs.map(({ title, count, percentage }, index) => {
-        if (percentage % 1 >= 0.5) {
+        if (
+          (percentage % 1 === 0.5 &&
+            ['Compliant', 'Implemented'].includes(title)) ||
+          percentage % 1 > 0.5
+        ) {
           percentage = Math.ceil(percentage)
         } else {
           percentage = Math.floor(percentage)

@@ -16,6 +16,8 @@ import { useUserVar } from '../utilities/userState'
 import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
+import { ABTestingWrapper } from './ABTestWrapper'
+import { ABTestVariant } from './ABTestVariant'
 
 export const TopBanner = (props) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -49,20 +51,25 @@ export const TopBanner = (props) => {
   return (
     <Layout>
       <Flex align="center" fontFamily="body" {...props}>
-        <Box
-          ml="8"
-          mr="4"
-          width={{ base: 272, md: 360 }}
-          display={{ base: 'none', md: 'initial' }}
-        >
-          <Image
-            src={i18n.locale === 'en' ? sigEn : sigFr}
-            pr="auto"
-            py="6"
-            minHeight="41px"
-            alt={t`Symbol of the Government of Canada`}
-          />
-        </Box>
+        <Link href="https://www.canada.ca/" isExternal>
+          <Flex>
+            <Box
+              ml="8"
+              mr="4"
+              width={{ base: 272, md: 360 }}
+              display={{ base: 'none', md: 'initial' }}
+            >
+              <Image
+                src={i18n.locale === 'en' ? sigEn : sigFr}
+                pr="auto"
+                py="6"
+                minHeight="41px"
+                alt={t`Symbol of the Government of Canada`}
+              />
+            </Box>
+          </Flex>
+        </Link>
+
         <Link as={RouteLink} to="/">
           <Flex align="center">
             <Box
@@ -85,7 +92,14 @@ export const TopBanner = (props) => {
         </Link>
 
         <PhaseBanner
-          phase={<Trans>BETA</Trans>}
+          phase={
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="A">
+                <Trans>BETA</Trans>
+              </ABTestVariant>
+              <ABTestVariant name="B">INSIDER</ABTestVariant>
+            </ABTestingWrapper>
+          }
           ml={{ base: '0', md: 'auto' }}
           mr="2"
         >
