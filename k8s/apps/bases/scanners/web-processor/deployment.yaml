@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: https-processor
+  name: web-processor
   namespace: scanners
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: https-processor
+      app: web-processor
   strategy: {}
   template:
     metadata:
       labels:
-        app: https-processor
+        app: web-processor
     spec:
       containers:
-        - name: https-processor
-          image: gcr.io/track-compliance/https-processor:master-a84caad-1657825399 # {"$imagepolicy": "flux-system:https-processor"}
+        - name: web-processor
+          image: gcr.io/track-compliance/web-processor:master-ab9f0c1-1653508702 # {"$imagepolicy": "flux-system:web-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -35,14 +35,10 @@ spec:
             - name: PUBLISH_TO
               value: domains
             - name: SUBSCRIBE_TO
-              value: domains.*.https
+              value: domains.*.web
             - name: QUEUE_GROUP
-              value: httpsprocessor
+              value: webprocessor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
-            - name: NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
           resources: {}
 status: {}

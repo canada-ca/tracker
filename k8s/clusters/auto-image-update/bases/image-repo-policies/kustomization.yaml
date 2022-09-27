@@ -8,12 +8,10 @@ resources:
   - domain-dispatcher-image-repo-policy.yaml
   - frontend-image-repo-policy.yaml
   - guidance-image-repo-policy.yaml
-  - https-processor-image-repo-policy.yaml
-  - https-scanner-image-repo-policy.yaml
   - log4shell-processor-image-repo-policy.yaml
   - log4shell-scanner-image-repo-policy.yaml
   - spring4shell-scanner-image-repo-policy.yaml
   - summaries-image-repo-policy.yaml
   - super-admin-image-repo-policy.yaml
-  - tls-processor-image-repo-policy.yaml
-  - tls-scanner-image-repo-policy.yaml
+  - web-processor-image-repo-policy.yaml
+  - web-scanner-image-repo-policy.yaml

@@ -1,34 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: https-scanner
+  name: webtls-scanner
   namespace: scanners
 spec:
   selector:
     matchLabels:
-      app: https-scanner
+      app: web-scanner
   strategy: {}
   template:
     metadata:
       labels:
-        app: https-scanner
+        app: web-scanner
     spec:
       containers:
-        - name: https-scanner
-          image: gcr.io/track-compliance/https-scanner:master-5b54291-1642775724 # {"$imagepolicy": "flux-system:https-scanner"}
+        - name: web-scanner
+          image: gcr.io/track-compliance/web-scanner:master-ad1b14d-1637090396 # {"$imagepolicy": "flux-system:web-scanner"}
           env:
-            - name: PYTHONWARNINGS # Requests is so loud...
+            - name: PYTHONWARNINGS
               value: ignore
             - name: PUBLISH_TO
               value: domains
             - name: SUBSCRIBE_TO
               value: domains.*
             - name: QUEUE_GROUP
-              value: httpsscanner
-            - name: SERVERS
+              value: webscanner
+            - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
-            - name: SCAN_TIMEOUT
-              value: "5.0"
             - name: NAME
               valueFrom:
                 fieldRef:
