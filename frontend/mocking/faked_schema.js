@@ -106,9 +106,6 @@ export const getTypeNames = () => gql`
       # String argument used to search for organizations.
       search: String
 
-      # Filter orgs based off of the user being an admin of them.
-      isAdmin: Boolean
-
       # Returns the items in the list that come after the specified cursor.
       after: String
 
@@ -127,6 +124,9 @@ export const getTypeNames = () => gql`
       # The slugified organization name you want to retrieve data for.
       orgSlug: Slug!
     ): Organization
+
+    # CSV formatted output of all domains in all organizations including their email and web scan statuses.
+    getAllOrganizationDomainStatuses: String
 
     # Email summary computed values, used to build summary cards.
     mailSummary: CategorizedSummary
@@ -1070,9 +1070,9 @@ export const getTypeNames = () => gql`
       # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
 
     # Negative guidance tags found during scan.
     negativeGuidanceTags(
@@ -1310,9 +1310,9 @@ export const getTypeNames = () => gql`
       # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
 
     # Negative guidance tags found during DMARC Scan.
     negativeGuidanceTags(
@@ -1463,9 +1463,9 @@ export const getTypeNames = () => gql`
       # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
 
     # Negative guidance tags found during scan.
     negativeGuidanceTags(
@@ -1667,9 +1667,9 @@ export const getTypeNames = () => gql`
       # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
 
     # Negative guidance tags found during scan.
     negativeGuidanceTags(
@@ -1835,9 +1835,9 @@ export const getTypeNames = () => gql`
       # Returns the last n items from the list.
       last: Int
     ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
+    @deprecated(
+      reason: "This has been sub-divided into neutral, negative, and positive tags."
+    )
 
     # Negative guidance tags found during scan.
     negativeGuidanceTags(
@@ -2123,9 +2123,9 @@ export const getTypeNames = () => gql`
 
     # Guidance for any issues that were found from the report.
     guidance: String
-      @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
-      )
+    @deprecated(
+      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+    )
 
     # Guidance for any issues that were found from the report.
     guidanceTag: GuidanceTag
@@ -2279,9 +2279,9 @@ export const getTypeNames = () => gql`
 
     # Guidance for any issues that were found from the report.
     guidance: String
-      @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
-      )
+    @deprecated(
+      reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+    )
 
     # Guidance for any issues that were found from the report.
     guidanceTag: GuidanceTag
@@ -2384,13 +2384,16 @@ export const getTypeNames = () => gql`
     # Whether the organization is a verified organization.
     verified: Boolean
 
-    # Whether or not the domain has a aggregate dmarc report.
+    # List of tags assigned to domains within the organization.
     tags: TagConnection
     domains: WebCheckDomainConnection
   }
 
   type TagConnection {
+    # List of tags assigned to the domain.
     edges: [DomainTag]
+
+    # Total number of tags assigned to domain.
     totalCount: Int
   }
 
@@ -2783,24 +2786,16 @@ export const getTypeNames = () => gql`
     updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
 
     # This mutation allows the creation of an organization inside the database.
-    createOrganization(
-      input: CreateOrganizationInput!
-    ): CreateOrganizationPayload
+    createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
 
     # This mutation allows the removal of unused organizations.
-    removeOrganization(
-      input: RemoveOrganizationInput!
-    ): RemoveOrganizationPayload
+    removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
 
     # Mutation allows the modification of organizations if any changes to the organization may occur.
-    updateOrganization(
-      input: UpdateOrganizationInput!
-    ): UpdateOrganizationPayload
+    updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
 
     # Mutation allows the verification of an organization.
-    verifyOrganization(
-      input: VerifyOrganizationInput!
-    ): VerifyOrganizationPayload
+    verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
 
     # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
     authenticate(input: AuthenticateInput!): AuthenticatePayload
@@ -2840,9 +2835,7 @@ export const getTypeNames = () => gql`
     signUp(input: SignUpInput!): SignUpPayload
 
     # This mutation allows the user to update their account password.
-    updateUserPassword(
-      input: UpdateUserPasswordInput!
-    ): UpdateUserPasswordPayload
+    updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
 
     # This mutation allows the user to update their user profile to change various details of their current profile.
     updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfilePayload
@@ -2949,9 +2942,7 @@ export const getTypeNames = () => gql`
 
   # This union is used with the \`transferOrgOwnership\` mutation, allowing for
   # users to transfer ownership of a given organization, and support any errors that may occur.
-  union TransferOrgOwnershipUnion =
-      AffiliationError
-    | TransferOrgOwnershipResult
+  union TransferOrgOwnershipUnion = AffiliationError | TransferOrgOwnershipResult
 
   # This object is used to inform the user that they successful transferred ownership of a given organization.
   type TransferOrgOwnershipResult {
@@ -3348,9 +3339,7 @@ export const getTypeNames = () => gql`
   }
 
   # This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to remove their phone number, and support any errors that may occur
-  union RemovePhoneNumberUnion =
-      RemovePhoneNumberError
-    | RemovePhoneNumberResult
+  union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while removing their phone number.
   type RemovePhoneNumberError {
@@ -3563,7 +3552,7 @@ export const getTypeNames = () => gql`
 
   # This union is used with the \`updateUserPassword\` mutation, allowing for users to update their password, and support any errors that may occur
   union UpdateUserPasswordUnion =
-      UpdateUserPasswordError
+    UpdateUserPasswordError
     | UpdateUserPasswordResultType
 
   # This object is used to inform the user if any errors occurred while updating their password.
@@ -3600,9 +3589,7 @@ export const getTypeNames = () => gql`
   }
 
   # This union is used with the \`updateUserProfile\` mutation, allowing for users to update their profile, and support any errors that may occur
-  union UpdateUserProfileUnion =
-      UpdateUserProfileError
-    | UpdateUserProfileResult
+  union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
 
   # This object is used to inform the user if any errors occurred while updating their profile.
   type UpdateUserProfileError {
@@ -3674,9 +3661,7 @@ export const getTypeNames = () => gql`
   }
 
   # This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to verify their phone number, and support any errors that may occur
-  union VerifyPhoneNumberUnion =
-      VerifyPhoneNumberError
-    | VerifyPhoneNumberResult
+  union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while verifying their phone number.
   type VerifyPhoneNumberError {
