@@ -6,16 +6,21 @@ import {
   Divider,
   Flex,
   ListItem,
+  SimpleGrid,
   Stack,
+  Tag,
+  TagLabel,
   Text,
 } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
-import { bool, object, string } from 'prop-types'
+import { array, bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
-export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
+export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
   const location = useLocation()
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
@@ -69,6 +74,26 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           <StatusBadge text="DMARC" status={status.dmarc} />
         </Flex>
         <Divider variant="card" display={{ md: 'none' }} />
+        <ABTestingWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            <SimpleGrid columns={3}>
+              {tags?.map((tag, idx) => {
+                return (
+                  <Tag
+                    key={idx}
+                    m="0.5"
+                    borderRadius="full"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                  >
+                    <TagLabel mx="auto">{tag}</TagLabel>
+                  </Tag>
+                )
+              })}
+            </SimpleGrid>
+          </ABTestVariant>
+        </ABTestingWrapper>
+        <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"
           justifySelf="flex-end"
@@ -112,4 +137,5 @@ DomainCard.propTypes = {
   url: string.isRequired,
   status: object,
   hasDMARCReport: bool,
+  tags: array,
 }

@@ -158,6 +158,7 @@ export function initializeLoaders({
     loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
       query,
       userKey,
+      language,
       cleanseInput,
       i18n,
       auth: { loginRequiredBool },

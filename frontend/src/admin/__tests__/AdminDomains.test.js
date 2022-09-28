@@ -129,6 +129,7 @@ describe('<AdminDomains />', () => {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {
@@ -212,6 +213,7 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               domain: 'test-domain.gc.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {
@@ -301,6 +303,7 @@ describe('<AdminDomains />', () => {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {
@@ -381,6 +384,7 @@ describe('<AdminDomains />', () => {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
               selectors: ['selector1'],
+              tags: [],
             },
           },
           result: {
@@ -569,6 +573,7 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               domain: 'test.domain.ca',
               selectors: [],
+              tags: [],
             },
           },
           result: {

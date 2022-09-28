@@ -223,6 +223,12 @@ export const domainType = new GraphQLObjectType({
         return edges
       },
     },
+    claimTags: {
+      description:
+        'List of labelled tags users of an organization have applied to the claimed domain.',
+      type: new GraphQLList(GraphQLString),
+      resolve: ({ claimTags }) => claimTags,
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',

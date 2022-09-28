@@ -83,7 +83,7 @@ export function OrganizationDomains({ orgSlug }) {
       )}
       mb="4"
     >
-      {({ id, domain, status, hasDMARCReport }, index) => (
+      {({ id, domain, status, hasDMARCReport, claimTags }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
@@ -92,6 +92,7 @@ export function OrganizationDomains({ orgSlug }) {
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}
+            tags={claimTags}
             mb="3"
           />
         </ErrorBoundary>

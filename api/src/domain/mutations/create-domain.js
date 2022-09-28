@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { createDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
+import { inputTag } from '../inputs/domain-tag'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -21,6 +22,10 @@ export const createDomain = new mutationWithClientMutationId({
     selectors: {
       type: new GraphQLList(Selectors),
       description: 'DKIM selector strings corresponding to this domain.',
+    },
+    tags: {
+      description: 'List of labelled tags users have applied to the domain.',
+      type: new GraphQLList(inputTag),
     },
   }),
   outputFields: () => ({
@@ -66,6 +71,13 @@ export const createDomain = new mutationWithClientMutationId({
       selectors = args.selectors.map((selector) => cleanseInput(selector))
     } else {
       selectors = []
+    }
+
+    let tags
+    if (typeof args.tags !== 'undefined') {
+      tags = args.tags
+    } else {
+      tags = []
     }
 
     // Check to see if org exists
@@ -116,7 +128,6 @@ export const createDomain = new mutationWithClientMutationId({
         spf: null,
         ssl: null,
       },
-      tags: [],
     }
 
     // Check to see if domain already belongs to same org
@@ -206,10 +217,11 @@ export const createDomain = new mutationWithClientMutationId({
         await trx.step(
           () =>
             query`
-            WITH claims, domains, organizations
+            WITH claims
             INSERT {
               _from: ${org._id},
-              _to: ${insertedDomain._id}
+              _to: ${insertedDomain._id},
+              tags: ${tags}
             } INTO claims
           `,
         )
@@ -254,10 +266,11 @@ export const createDomain = new mutationWithClientMutationId({
         await trx.step(
           () =>
             query`
-            WITH claims, domains, organizations
+            WITH claims
             INSERT {
               _from: ${org._id},
-              _to: ${checkDomain._id}
+              _to: ${checkDomain._id},
+              tags: ${tags}
             } INTO claims
           `,
         )
