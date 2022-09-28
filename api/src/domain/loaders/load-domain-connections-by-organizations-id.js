@@ -393,8 +393,8 @@ export const loadDomainConnectionsByOrgId =
           FOR v, e IN 1..1 ANY domain._id claims
             FILTER e._from == ${orgId}
             LET translatedTags = (
-              FOR tag IN e.tags
-              RETURN TRANSLATE(${language}, tag)
+              FOR tag IN e.tags || []
+                RETURN TRANSLATE(${language}, tag)
             )
             RETURN translatedTags
         )[0]
