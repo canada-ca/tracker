@@ -84,6 +84,12 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   }
 `
 
+export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
+  query GetAllOrganizationDomainStatuses {
+    getAllOrganizationDomainStatuses
+  }
+`
+
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client

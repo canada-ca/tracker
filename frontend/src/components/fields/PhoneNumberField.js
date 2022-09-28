@@ -1,10 +1,9 @@
 import React from 'react'
-import { lazyWithRetry } from '../../utilities/lazyWithRetry'
 import { string } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react'
 import { useField, useFormikContext } from 'formik'
-const PhoneInput = lazyWithRetry(() => import('react-phone-input-2'))
+import PhoneInput from 'react-phone-input-2'
 
 export function PhoneNumberField({ name, label }) {
   const [, meta] = useField(name)
