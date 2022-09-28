@@ -24,6 +24,8 @@ import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
+import { ABTestingWrapper } from './ABTestWrapper'
+import { ABTestVariant } from './ABTestVariant'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
@@ -112,9 +114,13 @@ export function App() {
 
         {isLoggedIn() && (
           <>
-            <RouteLink to="/my-tracker">
-              <Trans>myTracker</Trans>
-            </RouteLink>
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <RouteLink to="/my-tracker">
+                  <Trans>myTracker</Trans>
+                </RouteLink>
+              </ABTestVariant>
+            </ABTestingWrapper>
             <RouteLink to="/user">
               <Trans>Account Settings</Trans>
             </RouteLink>
@@ -332,17 +338,21 @@ export function App() {
               )}
             </Page>
 
-            <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
-              {isLoggedIn() ? (
-                <MyTrackerPage />
-              ) : (
-                <Redirect
-                  to={{
-                    pathname: '/sign-in',
-                  }}
-                />
-              )}
-            </Page>
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
+                  {isLoggedIn() ? (
+                    <MyTrackerPage />
+                  ) : (
+                    <Redirect
+                      to={{
+                        pathname: '/sign-in',
+                      }}
+                    />
+                  )}
+                </Page>
+              </ABTestVariant>
+            </ABTestingWrapper>
 
             <Page path="/validate/:verifyToken" title={t`Email Verification`}>
               {() => <EmailValidationPage />}

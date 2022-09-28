@@ -190,26 +190,30 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
         </Stack>
         <Stack ml={4}>
           <ScanDomainButton domainUrl={url} />
-          {isLoggedIn() &&
-            (location.pathname.match('my-tracker') ? (
-              <IconButton
-                onClick={async () => {
-                  await unfavouriteDomain({ variables: { domainId: id } })
-                }}
-                variant="primary"
-                aria-label={`unfavourite ${url}`}
-                icon={<StarIcon color="moderate" />}
-              />
-            ) : (
-              <IconButton
-                onClick={async () => {
-                  await favouriteDomain({ variables: { domainId: id } })
-                }}
-                variant="primary"
-                aria-label={`favourite ${url}`}
-                icon={<StarIcon />}
-              />
-            ))}
+          <ABTestingWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              {isLoggedIn() &&
+                (location.pathname.match('my-tracker') ? (
+                  <IconButton
+                    onClick={async () => {
+                      await unfavouriteDomain({ variables: { domainId: id } })
+                    }}
+                    variant="primary"
+                    aria-label={`unfavourite ${url}`}
+                    icon={<StarIcon color="moderate" />}
+                  />
+                ) : (
+                  <IconButton
+                    onClick={async () => {
+                      await favouriteDomain({ variables: { domainId: id } })
+                    }}
+                    variant="primary"
+                    aria-label={`favourite ${url}`}
+                    icon={<StarIcon />}
+                  />
+                ))}
+            </ABTestVariant>
+          </ABTestingWrapper>
         </Stack>
       </Flex>
     </ListItem>
