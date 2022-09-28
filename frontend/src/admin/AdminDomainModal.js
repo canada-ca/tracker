@@ -33,6 +33,8 @@ import { useMutation } from '@apollo/client'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminDomainModal({
   isOpen,
@@ -317,34 +319,38 @@ export function AdminDomainModal({
                       </Box>
                     )}
                   />
-                  <FieldArray
-                    name="tags"
-                    render={(arrayHelpers) => (
-                      <Box>
-                        <Text fontWeight="bold">Tags:</Text>
-                        <SimpleGrid columns={3} spacing={2}>
-                          {values.tags?.map((label, idx) => {
-                            return (
-                              <Tag key={idx} borderRadius="full">
-                                <TagLabel>{label[i18n.locale]}</TagLabel>
-                                <TagCloseButton
-                                  ml="auto"
-                                  onClick={() => arrayHelpers.remove(idx)}
-                                  aria-label={`remove-tag-${
-                                    label[i18n.locale]
-                                  }`}
-                                />
-                              </Tag>
-                            )
-                          })}
-                        </SimpleGrid>
-                        <Divider borderBottomColor="gray.900" />
-                        <SimpleGrid columns={3} spacing={2}>
-                          {addableTags(values.tags, arrayHelpers)}
-                        </SimpleGrid>
-                      </Box>
-                    )}
-                  />
+                  <ABTestingWrapper insiderVariantName="B">
+                    <ABTestVariant name="B">
+                      <FieldArray
+                        name="tags"
+                        render={(arrayHelpers) => (
+                          <Box>
+                            <Text fontWeight="bold">Tags:</Text>
+                            <SimpleGrid columns={3} spacing={2}>
+                              {values.tags?.map((label, idx) => {
+                                return (
+                                  <Tag key={idx} borderRadius="full">
+                                    <TagLabel>{label[i18n.locale]}</TagLabel>
+                                    <TagCloseButton
+                                      ml="auto"
+                                      onClick={() => arrayHelpers.remove(idx)}
+                                      aria-label={`remove-tag-${
+                                        label[i18n.locale]
+                                      }`}
+                                    />
+                                  </Tag>
+                                )
+                              })}
+                            </SimpleGrid>
+                            <Divider borderBottomColor="gray.900" />
+                            <SimpleGrid columns={3} spacing={2}>
+                              {addableTags(values.tags, arrayHelpers)}
+                            </SimpleGrid>
+                          </Box>
+                        )}
+                      />
+                    </ABTestVariant>
+                  </ABTestingWrapper>
                 </Stack>
               </ModalBody>
 

@@ -17,6 +17,8 @@ import { array, bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
   const location = useLocation()
@@ -72,21 +74,25 @@ export function DomainCard({ url, status, hasDMARCReport, tags, ...rest }) {
           <StatusBadge text="DMARC" status={status.dmarc} />
         </Flex>
         <Divider variant="card" display={{ md: 'none' }} />
-        <SimpleGrid columns={3}>
-          {tags?.map((tag, idx) => {
-            return (
-              <Tag
-                key={idx}
-                m="0.5"
-                borderRadius="full"
-                borderWidth="1px"
-                borderColor="gray.900"
-              >
-                <TagLabel mx="auto">{tag}</TagLabel>
-              </Tag>
-            )
-          })}
-        </SimpleGrid>
+        <ABTestingWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            <SimpleGrid columns={3}>
+              {tags?.map((tag, idx) => {
+                return (
+                  <Tag
+                    key={idx}
+                    m="0.5"
+                    borderRadius="full"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                  >
+                    <TagLabel mx="auto">{tag}</TagLabel>
+                  </Tag>
+                )
+              })}
+            </SimpleGrid>
+          </ABTestVariant>
+        </ABTestingWrapper>
         <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"

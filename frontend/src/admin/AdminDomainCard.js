@@ -14,6 +14,8 @@ import {
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminDomainCard({ url, tags, ...rest }) {
   return (
@@ -39,21 +41,25 @@ export function AdminDomainCard({ url, tags, ...rest }) {
             <ExternalLinkIcon mx="2px" aria-hidden="true" />
           </Link>
         </Stack>
-        <Flex>
-          {tags?.map((tag, idx) => {
-            return (
-              <Tag
-                key={idx}
-                m="1"
-                borderRadius="full"
-                borderWidth="1px"
-                borderColor="gray.900"
-              >
-                <TagLabel mx="auto">{tag}</TagLabel>
-              </Tag>
-            )
-          })}
-        </Flex>
+        <ABTestingWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            <Flex>
+              {tags?.map((tag, idx) => {
+                return (
+                  <Tag
+                    key={idx}
+                    m="1"
+                    borderRadius="full"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                  >
+                    <TagLabel mx="auto">{tag}</TagLabel>
+                  </Tag>
+                )
+              })}
+            </Flex>
+          </ABTestVariant>
+        </ABTestingWrapper>
       </Grid>
     </ListItem>
   )
