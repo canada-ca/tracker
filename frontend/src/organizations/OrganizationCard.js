@@ -79,7 +79,7 @@ export function OrganizationCard({
               fontSize="lg"
               fontWeight="semibold"
               textDecoration="underline"
-              isTruncated
+              noOfLines={1}
             >
               {name}
             </Text>

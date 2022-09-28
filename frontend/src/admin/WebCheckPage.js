@@ -146,14 +146,14 @@ export default function WebCheckPage() {
                     <Text fontWeight="semibold" mr="1">
                       <Trans>Domain:</Trans>
                     </Text>
-                    <Text isTruncated mr="8">
+                    <Text noOfLines={1} mr="8">
                       {domain}
                     </Text>
 
                     <Text fontWeight="bold" mr="1">
                       <Trans>Last Scanned:</Trans>
                     </Text>
-                    <Text isTruncated>{lastRan}</Text>
+                    <Text noOfLines={1}>{lastRan}</Text>
 
                     {displayTags(tags)}
                     <ScanDomainButton domainUrl={domain} ml={4} />

@@ -74,7 +74,7 @@ export default function DmarcGuidancePage() {
   }
   return (
     <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
-      <Box d={{ md: 'flex' }}>
+      <Box display={{ md: 'flex' }}>
         <IconButton
           icon={<ArrowLeftIcon />}
           onClick={() => history.push(from)}
@@ -86,7 +86,10 @@ export default function DmarcGuidancePage() {
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>
-        <ScanDomainButton domainUrl={data.findDomainByDomain.domain} ml="auto"/>
+        <ScanDomainButton
+          domainUrl={data.findDomainByDomain.domain}
+          ml="auto"
+        />
         {data.findDomainByDomain.hasDMARCReport && (
           <Link
             color="teal.600"
@@ -95,7 +98,7 @@ export default function DmarcGuidancePage() {
             ml={4}
             to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
             as={RouteLink}
-            d="block"
+            display="block"
             textAlign={{ base: 'center', md: 'right' }}
           >
             <Trans>DMARC Report</Trans>

@@ -559,7 +559,7 @@ export default function DmarcReportPage() {
 
   return (
     <Box width="100%" px="2" mx="auto" overflow="hidden" pb="4">
-      <Box d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
+      <Box display={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
         <Box />
         <Heading as="h1" textAlign="center" mb="4">
           {domainSlug.toUpperCase()}

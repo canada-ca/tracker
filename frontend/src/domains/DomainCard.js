@@ -52,7 +52,7 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           <Text fontWeight="semibold">
             <Trans>Domain:</Trans>
           </Text>
-          <Text isTruncated>{url}</Text>
+          <Text noOfLines={1}>{url}</Text>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
         <Flex {...statusGroupingProps} px="1">

@@ -124,7 +124,7 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
         {cipherList.length > 0 ? (
           cipherList.map((cipher, id) => {
             return (
-              <Text key={id} isTruncated fontSize={{ base: 'sm', md: 'md' }}>
+              <Text key={id} noOfLines={1} fontSize={{ base: 'sm', md: 'md' }}>
                 {cipher}
               </Text>
             )
