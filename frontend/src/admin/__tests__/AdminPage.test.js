@@ -84,6 +84,9 @@ describe('<AdminPage />', () => {
     })
     userEvent.click(organizationInput)
 
+    await waitFor(() => {
+      expect(getByText(/Wolf Group/)).toBeInTheDocument()
+    })
     const orgEntry = getByText(/Wolf Group/)
     userEvent.click(orgEntry)
 
