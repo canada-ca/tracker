@@ -163,7 +163,10 @@ export function App() {
         <Suspense fallback={<LoadingMessage />}>
           <Switch>
             <Page exact path="/" title={t`Home`}>
-              <LandingPage isLoggedIn={isLoggedIn()} />
+              <LandingPage
+                loginRequired={data?.loginRequired}
+                isLoggedIn={isLoggedIn()}
+              />
             </Page>
 
             <Page

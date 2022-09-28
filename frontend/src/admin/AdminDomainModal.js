@@ -33,6 +33,8 @@ import { useMutation } from '@apollo/client'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminDomainModal({
   isOpen,
@@ -147,16 +149,17 @@ export function AdminDomainModal({
     },
   })
 
+  const tagOptions = [
+    { en: 'NEW', fr: 'NOUVEAU' },
+    { en: 'PROD', fr: 'PROD' },
+    { en: 'STAGING', fr: 'DEV' },
+    { en: 'TEST', fr: 'TEST' },
+    { en: 'WEB', fr: 'WEB' },
+    { en: 'INACTIVE', fr: 'INACTIF' },
+  ]
+
   const addableTags = (values, helper) => {
-    const tagOptions = [
-      { en: 'NEW', fr: 'NOUVEAU' },
-      { en: 'PROD', fr: 'PROD' },
-      { en: 'STAGING', fr: 'DÉV' },
-      { en: 'TEST', fr: 'TEST' },
-      { en: 'WEB', fr: 'WEB' },
-      { en: 'INACTIVE', fr: 'INACTIF' },
-    ]
-    const stringValues = values?.map(({ label }) => {
+    const stringValues = values?.map((label) => {
       return label[i18n.locale]
     })
     const difference = tagOptions.filter(
@@ -166,13 +169,13 @@ export function AdminDomainModal({
       return (
         <Tag
           key={idx}
-          id={`add-tag-${label.en}`}
+          id={`add-tag-${label[i18n.locale]}`}
           as="button"
           _hover={{ bg: 'gray.200' }}
           borderRadius="full"
           onClick={(e) => {
             e.preventDefault()
-            helper.push({ label })
+            helper.push(label)
           }}
         >
           <TagLabel>{label[i18n.locale]}</TagLabel>
@@ -196,9 +199,10 @@ export function AdminDomainModal({
             domainUrl: editingDomainUrl,
             selectors: selectorInputList,
             // convert initial tags to input type
-            tags: tagInputList?.map(({ label }) => {
-              const { en, fr } = label
-              return { label: { en, fr } }
+            tags: tagInputList?.map((label) => {
+              return tagOptions.filter((option) => {
+                return option[i18n.locale] == label
+              })[0]
             }),
           }}
           initialTouched={{
@@ -244,7 +248,7 @@ export function AdminDomainModal({
                   <DomainField
                     name="domainUrl"
                     label={t`New Domain URL:`}
-                    placeholder={i18n._(t`New Domain URL`)}
+                    placeholder={t`New Domain URL`}
                   />
 
                   <FieldArray
@@ -315,32 +319,38 @@ export function AdminDomainModal({
                       </Box>
                     )}
                   />
-                  <FieldArray
-                    name="tags"
-                    render={(arrayHelpers) => (
-                      <Box>
-                        <Text fontWeight="bold">Tags:</Text>
-                        <SimpleGrid columns={3} spacing={2}>
-                          {values.tags?.map(({ label }, idx) => {
-                            return (
-                              <Tag key={idx} borderRadius="full">
-                                <TagLabel>{label[i18n.locale]}</TagLabel>
-                                <TagCloseButton
-                                  ml="auto"
-                                  onClick={() => arrayHelpers.remove(idx)}
-                                  aria-label={`remove-tag-${label.en}`}
-                                />
-                              </Tag>
-                            )
-                          })}
-                        </SimpleGrid>
-                        <Divider borderBottomColor="gray.900" />
-                        <SimpleGrid columns={3} spacing={2}>
-                          {addableTags(values.tags, arrayHelpers)}
-                        </SimpleGrid>
-                      </Box>
-                    )}
-                  />
+                  <ABTestingWrapper insiderVariantName="B">
+                    <ABTestVariant name="B">
+                      <FieldArray
+                        name="tags"
+                        render={(arrayHelpers) => (
+                          <Box>
+                            <Text fontWeight="bold">Tags:</Text>
+                            <SimpleGrid columns={3} spacing={2}>
+                              {values.tags?.map((label, idx) => {
+                                return (
+                                  <Tag key={idx} borderRadius="full">
+                                    <TagLabel>{label[i18n.locale]}</TagLabel>
+                                    <TagCloseButton
+                                      ml="auto"
+                                      onClick={() => arrayHelpers.remove(idx)}
+                                      aria-label={`remove-tag-${
+                                        label[i18n.locale]
+                                      }`}
+                                    />
+                                  </Tag>
+                                )
+                              })}
+                            </SimpleGrid>
+                            <Divider borderBottomColor="gray.900" />
+                            <SimpleGrid columns={3} spacing={2}>
+                              {addableTags(values.tags, arrayHelpers)}
+                            </SimpleGrid>
+                          </Box>
+                        )}
+                      />
+                    </ABTestVariant>
+                  </ABTestingWrapper>
                 </Stack>
               </ModalBody>
 

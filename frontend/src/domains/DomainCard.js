@@ -19,15 +19,15 @@ import { array, bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
-import { useLingui } from '@lingui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
   const location = useLocation()
-  const { i18n } = useLingui()
   const toast = useToast()
   const { isLoggedIn } = useUserVar()
 
@@ -135,21 +135,25 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
           <StatusBadge text="DMARC" status={status.dmarc} />
         </Flex>
         <Divider variant="card" display={{ md: 'none' }} />
-        <SimpleGrid columns={3}>
-          {tags?.map(({ label }, idx) => {
-            return (
-              <Tag
-                key={idx}
-                m="0.5"
-                borderRadius="full"
-                borderWidth="1px"
-                borderColor="gray.900"
-              >
-                <TagLabel mx="auto">{label[i18n.locale]}</TagLabel>
-              </Tag>
-            )
-          })}
-        </SimpleGrid>
+        <ABTestingWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            <SimpleGrid columns={3}>
+              {tags?.map((tag, idx) => {
+                return (
+                  <Tag
+                    key={idx}
+                    m="0.5"
+                    borderRadius="full"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                  >
+                    <TagLabel mx="auto">{tag}</TagLabel>
+                  </Tag>
+                )
+              })}
+            </SimpleGrid>
+          </ABTestVariant>
+        </ABTestingWrapper>
         <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"

@@ -14,8 +14,10 @@ import {
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
-export function AdminDomainCard({ url, tags, locale, ...rest }) {
+export function AdminDomainCard({ url, tags, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -39,23 +41,27 @@ export function AdminDomainCard({ url, tags, locale, ...rest }) {
             <ExternalLinkIcon mx="2px" aria-hidden="true" />
           </Link>
         </Stack>
-        <Flex>
-          {tags?.map(({ label }, idx) => {
-            return (
-              <Tag
-                key={idx}
-                m="1"
-                borderRadius="full"
-                borderWidth="1px"
-                borderColor="gray.900"
-              >
-                <TagLabel mx="auto">{label[locale]}</TagLabel>
-              </Tag>
-            )
-          })}
-        </Flex>
+        <ABTestingWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            <Flex>
+              {tags?.map((tag, idx) => {
+                return (
+                  <Tag
+                    key={idx}
+                    m="1"
+                    borderRadius="full"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                  >
+                    <TagLabel mx="auto">{tag}</TagLabel>
+                  </Tag>
+                )
+              })}
+            </Flex>
+          </ABTestVariant>
+        </ABTestingWrapper>
       </Grid>
     </ListItem>
   )
 }
-AdminDomainCard.propTypes = { url: string, tags: array, locale: string }
+AdminDomainCard.propTypes = { url: string, tags: array }

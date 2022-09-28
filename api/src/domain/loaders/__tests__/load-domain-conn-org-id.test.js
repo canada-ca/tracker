@@ -12,7 +12,16 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load domain connection using org id function', () => {
-  let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
+  let query,
+    drop,
+    truncate,
+    collections,
+    user,
+    org,
+    domain,
+    domainTwo,
+    i18n,
+    language
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -39,6 +48,7 @@ describe('given the load domain connection using org id function', () => {
 
         schema: dbschema,
       }))
+      language = 'en'
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -123,6 +133,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -171,6 +182,7 @@ describe('given the load domain connection using org id function', () => {
       it('returns a domain', async () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
+          language,
           userKey: user._key,
           cleanseInput,
           auth: { loginRequired: true },
@@ -220,6 +232,7 @@ describe('given the load domain connection using org id function', () => {
       it('returns a domain', async () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
+          language,
           userKey: user._key,
           cleanseInput,
           auth: { loginRequired: true },
@@ -269,6 +282,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -326,6 +340,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -369,6 +384,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -416,6 +432,7 @@ describe('given the load domain connection using org id function', () => {
           const connectionLoader = loadDomainConnectionsByOrgId({
             query,
             userKey: user._key,
+            language,
             cleanseInput,
             auth: { loginRequiredBool: true },
           })
@@ -463,6 +480,7 @@ describe('given the load domain connection using org id function', () => {
           const connectionLoader = loadDomainConnectionsByOrgId({
             query,
             userKey: user._key,
+            language,
             cleanseInput,
             auth: { loginRequired: true },
           })
@@ -545,6 +563,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -597,6 +616,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -652,6 +672,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -705,6 +726,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -760,6 +782,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -813,6 +836,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -868,6 +892,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -921,6 +946,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -976,6 +1002,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1029,6 +1056,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1086,6 +1114,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1139,6 +1168,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1194,6 +1224,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1247,6 +1278,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1302,6 +1334,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1355,6 +1388,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1410,6 +1444,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1463,6 +1498,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1518,6 +1554,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1571,6 +1608,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })

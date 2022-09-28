@@ -84,6 +84,12 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   }
 `
 
+export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
+  query GetAllOrganizationDomainStatuses {
+    getAllOrganizationDomainStatuses
+  }
+`
+
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client
@@ -530,12 +536,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             domain
             lastRan
             selectors
-            claimTags {
-              label {
-                en
-                fr
-              }
-            }
+            claimTags
           }
         }
         pageInfo {
@@ -622,12 +623,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
               ssl
             }
             hasDMARCReport
-            claimTags {
-              label {
-                en
-                fr
-              }
-            }
+            claimTags
           }
         }
       }

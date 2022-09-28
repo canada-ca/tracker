@@ -28,6 +28,7 @@ class TlsVersionEnum(Enum):
     TLSV1 = 3
     TLSV1_1 = 4
     TLSV1_2 = 5
+    TLSV1_3 = 6
 
 
 class TLSScanner:
@@ -67,6 +68,7 @@ class TLSScanner:
             "TLS_1_0": TlsVersionEnum.TLSV1,
             "TLS_1_1": TlsVersionEnum.TLSV1_1,
             "TLS_1_2": TlsVersionEnum.TLSV1_2,
+            "TLS_1_3": TlsVersionEnum.TLSV1_3,
         }.items():
 
             # Only test SSL/TLS connections with lesser versions
@@ -121,15 +123,15 @@ class TLSScanner:
         # Test supported SSL/TLS
         if "SSL_2_0" in tls_supported:
             designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
-        elif "SSL_3_0" in tls_supported:
+        if "SSL_3_0" in tls_supported:
             designated_scans.add(ScanCommand.SSL_3_0_CIPHER_SUITES)
-        elif "TLS_1_0" in tls_supported:
+        if "TLS_1_0" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_0_CIPHER_SUITES)
-        elif "TLS_1_1" in tls_supported:
+        if "TLS_1_1" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_1_CIPHER_SUITES)
-        elif "TLS_1_2" in tls_supported:
+        if "TLS_1_2" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
-        elif "TLS_1_3" in tls_supported:
+        if "TLS_1_3" in tls_supported:
             designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
 
         scan_request = ServerScanRequest(

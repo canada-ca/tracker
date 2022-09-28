@@ -188,7 +188,7 @@ msgid "An error occured when fetching this organization's information"
 msgstr "An error occured when fetching this organization's information"
 
 #: src/app/FloatingMenu.js:38
-#: src/app/TopBanner.js:29
+#: src/app/TopBanner.js:31
 msgid "An error occured when you attempted to sign out"
 msgstr "An error occured when you attempted to sign out"
 
@@ -290,7 +290,7 @@ msgstr "August"
 msgid "Authenticate"
 msgstr "Authenticate"
 
-#: src/app/TopBanner.js:88
+#: src/app/TopBanner.js:93
 msgid "BETA"
 msgstr "BETA"
 
@@ -463,8 +463,8 @@ msgstr "Confirm removal of domain:"
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:219
-#: src/app/App.js:394
+#: src/app/App.js:213
+#: src/app/App.js:376
 #: src/app/ContactUsPage.js:39
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -506,13 +506,13 @@ msgid "Country:"
 msgstr "Country:"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:129
+#: src/app/TopBanner.js:138
 #: src/auth/CreateUserPage.js:225
 msgid "Create Account"
 msgstr "Create Account"
 
 #: src/admin/AdminPage.js:128
-#: src/app/App.js:348
+#: src/app/App.js:330
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Create Organization"
@@ -653,8 +653,8 @@ msgstr "DMARC Report for {domainSlug}"
 msgid "DMARC Status"
 msgstr "DMARC Status"
 
-#: src/app/App.js:108
-#: src/app/App.js:310
+#: src/app/App.js:107
+#: src/app/App.js:304
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:181
 #: src/dmarc/DmarcByDomainPage.js:241
@@ -686,8 +686,8 @@ msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-msgid "Data:"
-msgstr "Data:"
+#~ msgid "Data:"
+#~ msgstr "Data:"
 
 #: src/components/MonthSelect.js:55
 #: src/utilities/months.js:15
@@ -781,7 +781,7 @@ msgstr "Domain updated"
 msgid "Domain url field must not be empty"
 msgstr "Domain url field must not be empty"
 
-#: src/admin/AdminDomainCard.js:27
+#: src/admin/AdminDomainCard.js:18
 #: src/admin/WebCheckPage.js:147
 #: src/domains/DomainCard.js:119
 #: src/domains/ScanDomain.js:220
@@ -880,8 +880,8 @@ msgid "Email successfully sent"
 msgstr "Email successfully sent"
 
 #: src/summaries/Doughnut.js:32
-msgid "Email-hosting"
-msgstr "Email-hosting"
+#~ msgid "Email-hosting"
+#~ msgstr "Email-hosting"
 
 #: src/summaries/Doughnut.js:33
 #~ msgid "Email-hosting <0>domains</0>"
@@ -947,15 +947,11 @@ msgstr "Export to CSV"
 
 #: src/dmarc/DmarcReportPage.js:126
 #: src/dmarc/DmarcReportPage.js:127
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail"
 msgstr "Fail"
 
 #: src/dmarc/DmarcReportPage.js:120
 #: src/dmarc/DmarcReportPage.js:121
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail DKIM"
 msgstr "Fail DKIM"
 
@@ -966,8 +962,6 @@ msgstr "Fail DKIM %"
 
 #: src/dmarc/DmarcReportPage.js:123
 #: src/dmarc/DmarcReportPage.js:124
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail SPF"
 msgstr "Fail SPF"
 
@@ -1065,8 +1059,8 @@ msgid "Government of Canada Employees"
 msgstr "Government of Canada Employees"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:101
-msgid "Graph direction:"
-msgstr "Graph direction:"
+#~ msgid "Graph direction:"
+#~ msgstr "Graph direction:"
 
 #: src/app/App.js:398
 #: src/dmarc/DmarcReportPage.js:193
@@ -1154,8 +1148,8 @@ msgid "Home"
 msgstr "Home"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:109
-msgid "Horizontal View"
-msgstr "Horizontal View"
+#~ msgid "Horizontal View"
+#~ msgstr "Horizontal View"
 
 #: src/admin/AdminDomainModal.js:151
 #~ msgid "INACTIVE"
@@ -1342,6 +1336,10 @@ msgstr "Internally available <0>Tracker Dashboard</0>"
 msgid "Internet facing domains"
 msgstr "Internet facing domains"
 
+#: src/summaries/Doughnut.js:32
+msgid "Internet-facing"
+msgstr "Internet-facing"
+
 #: src/auth/ForgotPasswordPage.js:19
 #: src/utilities/fieldRequirements.js:14
 msgid "Invalid email"
@@ -1380,8 +1378,8 @@ msgid "Jurisdiction"
 msgstr "Jurisdiction"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:68
-msgid "L-30-D"
-msgstr "L-30-D"
+#~ msgid "L-30-D"
+#~ msgstr "L-30-D"
 
 #: src/auth/LanguageSelect.js:18
 #: src/user/EditableUserLanguage.js:67
@@ -1585,7 +1583,7 @@ msgstr "No guidance tags were found for this scan category"
 msgid "No scan data available for {0}."
 msgstr "No scan data available for {0}."
 
-#: src/summaries/Doughnut.js:111
+#: src/summaries/Doughnut.js:109
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
@@ -1696,8 +1694,6 @@ msgstr "Page {0} of {1}"
 
 #: src/dmarc/DmarcReportPage.js:117
 #: src/dmarc/DmarcReportPage.js:118
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Pass"
 msgstr "Pass"
 
@@ -1739,8 +1735,8 @@ msgid "Passwords must match"
 msgstr "Passwords must match"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:121
-msgid "Percentages"
-msgstr "Percentages"
+#~ msgid "Percentages"
+#~ msgstr "Percentages"
 
 #: src/app/ReadGuidancePage.js:78
 msgid "Perform an assessment of the domains and sub-domains to determine the status of the configuration. Tools available to support this activity includes the <0>Tracker Dashboard</0>, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
@@ -2206,7 +2202,7 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 
 #: src/app/App.js:178
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:120
+#: src/app/TopBanner.js:129
 #: src/auth/SignInPage.js:188
 msgid "Sign In"
 msgstr "Sign In"
@@ -2217,12 +2213,12 @@ msgid "Sign In."
 msgstr "Sign In."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:108
+#: src/app/TopBanner.js:117
 msgid "Sign Out"
 msgstr "Sign Out"
 
 #: src/app/FloatingMenu.js:48
-#: src/app/TopBanner.js:39
+#: src/app/TopBanner.js:41
 msgid "Sign Out."
 msgstr "Sign Out."
 
@@ -2272,7 +2268,7 @@ msgstr "Summary"
 msgid "Supports ECDH Key Exchange:"
 msgstr "Supports ECDH Key Exchange:"
 
-#: src/app/TopBanner.js:63
+#: src/app/TopBanner.js:65
 msgid "Symbol of the Government of Canada"
 msgstr "Symbol of the Government of Canada"
 
@@ -2381,7 +2377,7 @@ msgstr "This could be due to improper configuration, or could be the result of a
 msgid "This field cannot be empty"
 msgstr "This field cannot be empty"
 
-#: src/app/TopBanner.js:92
+#: src/app/TopBanner.js:101
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
 
@@ -2400,7 +2396,6 @@ msgstr "To maximize your account's security, <0>please activate a multi-factor a
 #: src/dmarc/DmarcByDomainPage.js:142
 #: src/dmarc/DmarcByDomainPage.js:314
 #: src/dmarc/DmarcReportPage.js:177
-#: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
 msgstr "Total Messages"
 
@@ -2418,11 +2413,11 @@ msgstr "Track Digital Security"
 msgid "Tracker account has been successfully closed."
 msgstr "Tracker account has been successfully closed."
 
-#: src/app/TopBanner.js:74
+#: src/app/TopBanner.js:76
 msgid "Tracker logo outline"
 msgstr "Tracker logo outline"
 
-#: src/app/TopBanner.js:82
+#: src/app/TopBanner.js:84
 msgid "Tracker logo text"
 msgstr "Tracker logo text"
 
@@ -2646,8 +2641,8 @@ msgid "Verify Account"
 msgstr "Verify Account"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:108
-msgid "Vertical View"
-msgstr "Vertical View"
+#~ msgid "Vertical View"
+#~ msgstr "Vertical View"
 
 #: src/organizations/OrganizationCard.js:144
 msgid "View Details"
@@ -2775,7 +2770,7 @@ msgid "You have successfully added {url} to myTracker."
 msgstr "You have successfully added {url} to myTracker."
 
 #: src/app/FloatingMenu.js:49
-#: src/app/TopBanner.js:40
+#: src/app/TopBanner.js:42
 msgid "You have successfully been signed out."
 msgstr "You have successfully been signed out."
 
