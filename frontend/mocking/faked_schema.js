@@ -3126,21 +3126,6 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  # User-generated tag assigned to domains for labeling and management.
-  input InputTag {
-    # label that helps describe the domain.
-    label: InputTagLabel
-  }
-
-  #
-  input InputTagLabel {
-    # The English translation of the label.
-    en: String
-
-    # The French translation of the label.
-    fr: String
-  }
-
   type RemoveDomainPayload {
     # 'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     result: RemoveDomainUnion!
