@@ -55,6 +55,7 @@ import {
   loadOrganizationDomainStatuses,
 } from './organization/loaders'
 import {
+  loadMyTrackerByUserId,
   loadUserByUserName,
   loadUserByKey,
   loadUserConnectionsByUserId,
@@ -328,6 +329,12 @@ export function initializeLoaders({
       language,
       i18n,
       auth: { loginRequiredBool },
+    }),
+    loadMyTrackerByUserId: loadMyTrackerByUserId({
+      query,
+      language,
+      userKey,
+      i18n,
     }),
     loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
     loadUserConnectionsByUserId: loadUserConnectionsByUserId({

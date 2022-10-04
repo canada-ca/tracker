@@ -82,7 +82,7 @@ describe('<MonthSelect />', () => {
     const monthSelect = getByDisplayValue(/Last 30 Days/i)
     fireEvent.click(monthSelect)
     await waitFor(() => {
-      expect(queryByText(/OCTOBER/))
+      expect(queryByText(/Last 30 Days/))
     })
     fireEvent.blur(monthSelect)
   })
@@ -117,10 +117,10 @@ describe('<MonthSelect />', () => {
     const monthSelect = getByDisplayValue(/Last 30 Days/i)
     fireEvent.click(monthSelect)
     await waitFor(() => {
-      expect(queryByText(/OCTOBER/))
+      expect(queryByText(/Last 30 Days/))
     })
 
-    const opt1 = getByText(/OCTOBER/)
+    const opt1 = getByText(/Last 30 Days/)
     fireEvent.click(opt1)
   })
 })

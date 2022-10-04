@@ -118,6 +118,7 @@ export default function DomainsPage() {
           FallbackComponent={ErrorFallbackMessage}
         >
           <DomainCard
+            id={id}
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}
