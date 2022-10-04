@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 
 import { RoleEnums } from '../../enums'
 import { updateUserRoleUnion } from '../unions'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const updateUserRole = new mutationWithClientMutationId({
   name: 'UpdateUserRole',
@@ -261,6 +262,23 @@ given organization.`,
     console.info(
       `User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`,
     )
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: permission?.toUpperCase(),
+      },
+      action: 'update',
+      target: {
+        resource: userName,
+        organization: org.orgDetails.en.name, // name of resource being acted upon
+        resourceType: 'user', // user, org, domain
+      },
+      status: 'success',
+    })
 
     return {
       _type: 'regular',

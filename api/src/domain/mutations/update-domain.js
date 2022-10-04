@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -187,6 +188,24 @@ export const updateDomain = new mutationWithClientMutationId({
     const returnDomain = await loadDomainByKey.load(domain._key)
 
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: permission?.toUpperCase(),
+      },
+      action: 'update',
+      target: {
+        resource: domain.domain,
+        organization: org.orgDetails.en.name, // name of resource being acted upon
+        resourceType: 'domain', // user, org, domain
+      },
+      status: 'success',
+    })
+
     returnDomain.id = returnDomain._key
 
     return returnDomain

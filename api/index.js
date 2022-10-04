@@ -52,6 +52,7 @@ const collections = [
   'domainsSSL',
   'ownership',
   'domainsToDmarcSummaries',
+  'auditLogs',
 ]
 
 ;(async () => {

@@ -1,5 +1,6 @@
 export const logActivity = async ({
-  trx,
+  transaction,
+  collections,
   query,
   initiatedBy = {
     id: '',
@@ -25,11 +26,13 @@ export const logActivity = async ({
     reason,
   }
 
+  const trx = await transaction(collections)
+
   try {
     await trx.step(
       () => query`
           WITH auditLogs
-          INSERT ${auditLog} INTO auditLogs 
+          INSERT ${auditLog} INTO auditLogs
           RETURN MERGE(
             {
               id: NEW._key,
@@ -53,5 +56,5 @@ export const logActivity = async ({
     )
   }
 
-  return { initiatedBy, target, status, action, reason }
+  return auditLog
 }

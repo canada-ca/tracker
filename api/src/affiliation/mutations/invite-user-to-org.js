@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
 import { LanguageEnums, RoleEnums } from '../../enums'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
   name: 'InviteUserToOrg',
@@ -137,6 +138,23 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.info(
         `User: ${userKey} successfully invited user: ${userName} to the service, and org: ${org.slug}.`,
       )
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission?.toUpperCase(),
+        },
+        action: 'add',
+        target: {
+          resource: userName,
+          organization: org.orgDetails.en.name, // name of resource being acted upon
+          resourceType: 'user', // user, org, domain
+        },
+        status: 'success',
+      })
 
       return {
         _type: 'regular',
@@ -189,6 +207,23 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.info(
         `User: ${userKey} successfully invited user: ${requestedUser._key} to the org: ${org.slug}.`,
       )
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission?.toUpperCase(),
+        },
+        action: 'add',
+        target: {
+          resource: userName,
+          organization: org.orgDetails.en.name, // name of resource being acted upon
+          resourceType: 'user', // user, org, domain
+        },
+        status: 'success',
+      })
 
       return {
         _type: 'regular',

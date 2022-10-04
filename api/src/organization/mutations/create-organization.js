@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { Acronym } from '../../scalars'
 import { createOrganizationUnion } from '../unions'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const createOrganization = new mutationWithClientMutationId({
   name: 'CreateOrganization',
@@ -238,6 +239,21 @@ export const createOrganization = new mutationWithClientMutationId({
     console.info(
       `User: ${userKey} successfully created a new organization: ${slugEN}`,
     )
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+      },
+      action: 'create',
+      target: {
+        resource: nameEN, // name of resource being acted upon
+        resourceType: 'organization', // user, org, domain
+      },
+      status: 'success',
+    })
 
     return organization
   },

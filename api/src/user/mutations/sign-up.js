@@ -282,17 +282,18 @@ export const signUp = new mutationWithClientMutationId({
 
     console.info(`User: ${userName} successfully created a new account.`)
     await logActivity({
-      trx,
+      transaction,
+      collections,
       query,
       initiatedBy: {
         userName,
       },
-      action: 'CREATE',
+      action: 'create',
       target: {
         resource: userName, // name of resource being acted upon
-        resourceType: 'USER', // user, org, domain
+        resourceType: 'user', // user, org, domain
       },
-      status: 'SUCCESS',
+      status: 'success',
     })
 
     return {

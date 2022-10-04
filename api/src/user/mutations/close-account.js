@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro'
 import { GraphQLID } from 'graphql'
 import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 import { closeAccountUnion } from '../unions'
 
@@ -496,6 +497,22 @@ export const closeAccount = new mutationWithClientMutationId({
     console.info(
       `User: ${user._key} successfully closed user: ${userId} account.`,
     )
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: submittedUserId ? 'SUPER_ADMIN' : '',
+      },
+      action: 'delete',
+      target: {
+        resource: submittedUserId || user._key, // name of resource being acted upon
+        resourceType: 'user', // user, org, domain
+      },
+      status: 'success',
+    })
 
     return {
       _type: 'regular',

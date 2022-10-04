@@ -41,6 +41,15 @@ data:
         },
         {
           "type": "documentcollection",
+          "name": "auditLogs",
+          "options": {
+            "replicationFactor": 3,
+            "writeConcern": 1,
+            "numberOfShards": 6
+          }
+        },
+        {
+          "type": "documentcollection",
           "name": "dkim",
           "options": {
             "replicationFactor": 3,
