@@ -4,6 +4,7 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { signInUnion } from '../../user'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
 
@@ -240,6 +241,19 @@ export const signIn = new mutationWithClientMutationId({
           console.info(
             `User: ${user._key} successfully signed in, and sent auth msg.`,
           )
+          await logActivity({
+            trx,
+            query,
+            initiatedBy: {
+              userName,
+            },
+            action: 'CREATE',
+            target: {
+              resource: userName, // name of resource being acted upon
+              resourceType: 'USER', // user, org, domain
+            },
+            status: 'SUCCESS',
+          })
 
           return {
             _type: 'regular',

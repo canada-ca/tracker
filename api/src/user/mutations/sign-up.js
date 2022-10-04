@@ -5,6 +5,7 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 
 import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
 
@@ -280,6 +281,19 @@ export const signUp = new mutationWithClientMutationId({
     response.cookie('refresh_token', refreshToken, cookieData)
 
     console.info(`User: ${userName} successfully created a new account.`)
+    await logActivity({
+      trx,
+      query,
+      initiatedBy: {
+        userName,
+      },
+      action: 'CREATE',
+      target: {
+        resource: userName, // name of resource being acted upon
+        resourceType: 'USER', // user, org, domain
+      },
+      status: 'SUCCESS',
+    })
 
     return {
       _type: 'authResult',

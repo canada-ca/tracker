@@ -141,7 +141,7 @@ export default function UserPage() {
     loading: queryUserLoading,
     error: queryUserError,
     data: queryUserData,
-  } = useQuery(QUERY_CURRENT_USER, {})
+  } = useQuery(QUERY_CURRENT_USER, { errorPolicy: 'ignore' })
 
   if (queryUserLoading) {
     return (
