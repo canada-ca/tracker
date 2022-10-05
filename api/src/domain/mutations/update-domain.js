@@ -188,6 +188,21 @@ export const updateDomain = new mutationWithClientMutationId({
     const returnDomain = await loadDomainByKey.load(domain._key)
 
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
+    const updatedProperties = []
+    if (domainToInsert.domain.toLowerCase() !== domain.domain.toLowerCase()) {
+      updatedProperties.push({
+        name: 'domain',
+        oldValue: domain.domain,
+        newValue: domainToInsert.domain,
+      })
+    }
+    if (domainToInsert.selectors !== domain.selectors) {
+      updatedProperties.push({
+        name: 'selectors',
+        oldValue: domain.selectors,
+        newValue: domainToInsert.selectors,
+      })
+    }
     await logActivity({
       transaction,
       collections,
@@ -202,6 +217,7 @@ export const updateDomain = new mutationWithClientMutationId({
         resource: domain.domain,
         organization: org.orgDetails.en.name, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
+        updatedProperties,
       },
       status: 'success',
     })

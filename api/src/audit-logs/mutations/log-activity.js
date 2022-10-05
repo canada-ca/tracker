@@ -13,6 +13,7 @@ export const logActivity = async ({
     resource: '', // name of resource being acted upon
     organization: '', // affiliated org (optional)
     resourceType: '', // user, org, domain
+    updatedProperties: [],
   },
   reason = '',
   status = '',

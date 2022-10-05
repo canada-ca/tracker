@@ -276,6 +276,13 @@ given organization.`,
         resource: userName,
         organization: org.orgDetails.en.name, // name of resource being acted upon
         resourceType: 'user', // user, org, domain
+        updatedProperties: [
+          {
+            name: 'userRole',
+            oldValue: affiliation.permission,
+            newValue: role,
+          },
+        ],
       },
       status: 'success',
     })
