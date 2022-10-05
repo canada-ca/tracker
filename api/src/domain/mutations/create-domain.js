@@ -298,7 +298,7 @@ export const createDomain = new mutationWithClientMutationId({
       action: 'add',
       target: {
         resource: insertDomain.domain,
-        organization: org.orgDetails.en.name, // name of resource being acted upon
+        organization: org.name, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
       },
       status: 'success',

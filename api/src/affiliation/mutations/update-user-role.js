@@ -274,7 +274,7 @@ given organization.`,
       action: 'update',
       target: {
         resource: userName,
-        organization: org.orgDetails.en.name, // name of resource being acted upon
+        organization: org.name, // name of resource being acted upon
         resourceType: 'user', // user, org, domain
         updatedProperties: [
           {

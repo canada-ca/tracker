@@ -215,7 +215,7 @@ export const updateDomain = new mutationWithClientMutationId({
       action: 'update',
       target: {
         resource: domain.domain,
-        organization: org.orgDetails.en.name, // name of resource being acted upon
+        organization: org.name, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
         updatedProperties,
       },

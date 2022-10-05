@@ -206,7 +206,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         action: 'update',
         target: {
           resource: requestedUser.userName,
-          organization: requestedOrg.orgDetails.en.name, // name of resource being acted upon
+          organization: requestedOrg.name, // name of resource being acted upon
           resourceType: 'user', // user, org, domain
         },
         status: 'success',

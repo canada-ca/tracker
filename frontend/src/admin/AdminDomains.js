@@ -38,6 +38,8 @@ import { createValidationSchema } from '../utilities/fieldRequirements'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
+import { Formik } from 'formik'
+import { FormField } from '../components/fields/FormField'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const toast = useToast()
@@ -87,54 +89,51 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const [removeDomain, { loading: removeDomainLoading }] = useMutation(
-    REMOVE_DOMAIN,
-    {
-      refetchQueries: ['PaginatedOrgDomains'],
-      onError(error) {
+  const [removeDomain] = useMutation(REMOVE_DOMAIN, {
+    refetchQueries: ['PaginatedOrgDomains'],
+    onError(error) {
+      toast({
+        title: i18n._(t`An error occurred.`),
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ removeDomain }) {
+      if (removeDomain.result.__typename === 'DomainResult') {
+        removeOnClose()
         toast({
-          title: i18n._(t`An error occurred.`),
-          description: error.message,
+          title: i18n._(t`Domain removed`),
+          description: i18n._(t`Domain removed from ${orgSlug}`),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else if (removeDomain.result.__typename === 'DomainError') {
+        toast({
+          title: i18n._(t`Unable to remove domain.`),
+          description: removeDomain.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      },
-      onCompleted({ removeDomain }) {
-        if (removeDomain.result.__typename === 'DomainResult') {
-          removeOnClose()
-          toast({
-            title: i18n._(t`Domain removed`),
-            description: i18n._(t`Domain removed from ${orgSlug}`),
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else if (removeDomain.result.__typename === 'DomainError') {
-          toast({
-            title: i18n._(t`Unable to remove domain.`),
-            description: removeDomain.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: i18n._(t`Incorrect send method received.`),
-            description: i18n._(t`Incorrect removeDomain.result typename.`),
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect removeDomain.result typename.')
-        }
-      },
+      } else {
+        toast({
+          title: i18n._(t`Incorrect send method received.`),
+          description: i18n._(t`Incorrect removeDomain.result typename.`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect removeDomain.result typename.')
+      }
     },
-  )
+  })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -275,36 +274,52 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
       >
         <ModalOverlay />
         <ModalContent pb={4}>
-          <ModalHeader>
-            <Trans>Remove Domain</Trans>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Stack spacing={4} p={25}>
-              <Text>
-                <Trans>Confirm removal of domain:</Trans>
-              </Text>
-              <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
-            </Stack>
-          </ModalBody>
+          <Formik
+            initialValues={{
+              reason: '',
+            }}
+            initialTouched={{
+              reason: true,
+            }}
+            onSubmit={async (values) => {
+              removeDomain({
+                variables: {
+                  domainId: selectedRemoveDomainId,
+                  orgId: orgId,
+                  reason: values.reason,
+                },
+              })
+            }}
+          >
+            {({ handleSubmit, isSubmitting }) => (
+              <form id="form" onSubmit={handleSubmit}>
+                <ModalHeader>
+                  <Trans>Remove Domain</Trans>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Stack spacing={4} p={25}>
+                    <Text>
+                      <Trans>Confirm removal of domain:</Trans>
+                    </Text>
+                    <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
+                    <FormField name="reason" label={t`Reason`} />
+                  </Stack>
+                </ModalBody>
 
-          <ModalFooter>
-            <Button
-              variant="primary"
-              isLoading={removeDomainLoading}
-              mr={4}
-              onClick={() =>
-                removeDomain({
-                  variables: {
-                    domainId: selectedRemoveDomainId,
-                    orgId: orgId,
-                  },
-                })
-              }
-            >
-              <Trans>Confirm</Trans>
-            </Button>
-          </ModalFooter>
+                <ModalFooter>
+                  <Button
+                    variant="primary"
+                    mr={4}
+                    isLoading={isSubmitting}
+                    type="submit"
+                  >
+                    <Trans>Confirm</Trans>
+                  </Button>
+                </ModalFooter>
+              </form>
+            )}
+          </Formik>
         </ModalContent>
       </Modal>
     </Stack>
