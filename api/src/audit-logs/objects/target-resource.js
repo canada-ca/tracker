@@ -22,7 +22,7 @@ export const targetResourceType = new GraphQLObjectType({
     updatedProperties: {
       type: new GraphQLList(
         new GraphQLObjectType({
-          name: '',
+          name: 'UpdatedProperties',
           description: '',
           fields: () => ({
             name: {

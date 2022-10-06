@@ -11,7 +11,7 @@ export const loadAuditLogs =
         WITH auditLogs
         LET retrievedLogs = (
             FOR log IN auditLogs
-                RETURN log
+                RETURN MERGE({ id: log._key, _type: "auditLog" }, log)
         )
 
         RETURN {
