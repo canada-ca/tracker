@@ -5,6 +5,9 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   IconButton,
   Input,
   InputGroup,
@@ -18,6 +21,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Textarea,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
@@ -39,7 +43,6 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
-import { FormField } from '../components/fields/FormField'
 
 export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const toast = useToast()
@@ -291,7 +294,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
               })
             }}
           >
-            {({ handleSubmit, isSubmitting }) => (
+            {({ handleSubmit, isSubmitting, handleChange }) => (
               <form id="form" onSubmit={handleSubmit}>
                 <ModalHeader>
                   <Trans>Remove Domain</Trans>
@@ -303,7 +306,21 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                       <Trans>Confirm removal of domain:</Trans>
                     </Text>
                     <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
-                    <FormField name="reason" label={t`Reason`} />
+                    <FormControl
+                    // isInvalid={meta.error && meta.touched}
+                    >
+                      <FormLabel htmlFor="reason" fontWeight="bold">
+                        <Trans>Reason</Trans>
+                      </FormLabel>
+                      <Textarea
+                        name="reason"
+                        id="reason"
+                        borderColor="black"
+                        onChange={handleChange}
+                        placeholder={t`Reason for removal of this domain`}
+                      />
+                    </FormControl>
+                    {/* <FormErrorMessage mt={0}>{meta.error}</FormErrorMessage> */}
                   </Stack>
                 </ModalBody>
 

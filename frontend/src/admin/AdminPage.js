@@ -15,6 +15,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { bool } from 'prop-types'
 import { SuperAdminUserList } from './SuperAdminUserList'
+import { AuditLogTable } from './AuditLogTable'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -161,6 +162,8 @@ export default function AdminPage({ isLoginRequired }) {
         permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
       />
     )
+  } else if (activeMenu === 'audit-logs' && data?.isUserSuperAdmin) {
+    adminPanel = <AuditLogTable />
   } else {
     adminPanel = orgPanel
   }
@@ -180,6 +183,7 @@ export default function AdminPage({ isLoginRequired }) {
             >
               <option value="organizations">{t`Organizations`}</option>
               <option value="users">{t`Users`}</option>
+              <option value="audit-logs">{t`Audit Logs`}</option>
             </Select>
           </Flex>
         </label>

@@ -14,12 +14,12 @@ export const initiatedByType = new GraphQLObjectType({
     role: {
       type: GraphQLString,
       description: 'Domain that scans will be ran on.',
-      resolve: ({ userName }) => userName,
+      resolve: ({ role }) => role,
     },
     organization: {
       type: GraphQLString,
       description: 'Domain that scans will be ran on.',
-      resolve: ({ userName }) => userName,
+      resolve: ({ organization }) => organization,
     },
   }),
 })

@@ -77,11 +77,9 @@ export const HTTPS_AND_DMARC_SUMMARY = gql`
 `
 
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetOrganizationDomainsStatusesCSV(
-    $orgSlug: Slug!
-  ) {
+  query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
-        toCsv
+      toCsv
     }
   }
 `
@@ -1075,6 +1073,38 @@ export const WEBCHECK_ORGS = gql`
         hasPreviousPage
         startCursor
         endCursor
+      }
+    }
+  }
+`
+
+export const AUDIT_LOGS = gql`
+  query FindAuditLogs {
+    findAuditLogs {
+      edges {
+        node {
+          id
+          timestamp
+          initiatedBy {
+            id
+            userName
+            role
+            organization
+          }
+          action
+          target {
+            resource
+            organization
+            resourceType
+            updatedProperties {
+              name
+              oldValue
+              newValue
+            }
+          }
+          reason
+          status
+        }
       }
     }
   }

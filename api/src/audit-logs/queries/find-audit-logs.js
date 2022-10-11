@@ -22,12 +22,12 @@ export const findAuditLogs = {
     args,
     {
       userKey,
-      //   auth: {
-      //     checkSuperAdmin,
-      //     userRequired,
-      //     verifiedRequired,
-      //     superAdminRequired,
-      //   },
+      auth: {
+        checkSuperAdmin,
+        userRequired,
+        verifiedRequired,
+        superAdminRequired,
+      },
       loaders: { loadAuditLogs },
     },
   ) => {

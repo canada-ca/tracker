@@ -108,6 +108,7 @@ export function initializeLoaders({
       query,
       userKey,
       i18n,
+      cleanseInput,
     }),
     loadDkimFailConnectionsBySumId: loadDkimFailConnectionsBySumId({
       query,
