@@ -115,7 +115,7 @@ export function App() {
           </RouteLink>
         )}
 
-        {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
+        {isLoggedIn() && isEmailValidated() && (
           <>
             <RouteLink to="/admin">
               <Trans>Admin Profile</Trans>
@@ -246,9 +246,7 @@ export function App() {
             </PrivatePage>
 
             <Page path="/admin/:activeMenu?" title={t`Admin`}>
-              {isLoggedIn() &&
-              isEmailValidated() &&
-              currentTFAMethod() !== 'NONE' ? (
+              {isLoggedIn() && isEmailValidated() ? (
                 <AdminPage isLoginRequired={data?.loginRequired} />
               ) : (
                 <Redirect

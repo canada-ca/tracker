@@ -293,12 +293,15 @@ export const createDomain = new mutationWithClientMutationId({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
-        role: permission?.toUpperCase(),
+        role: permission,
       },
       action: 'add',
       target: {
         resource: insertDomain.domain,
-        organization: org.name, // name of resource being acted upon
+        organization: {
+          id: org._key,
+          name: org.name,
+        }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
       },
       status: 'success',

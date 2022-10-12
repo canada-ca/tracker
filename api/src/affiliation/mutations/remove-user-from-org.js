@@ -201,12 +201,15 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
         initiatedBy: {
           id: user._key,
           userName: user.userName,
-          role: permission?.toUpperCase(),
+          role: permission,
         },
         action: 'update',
         target: {
           resource: requestedUser.userName,
-          organization: requestedOrg.name, // name of resource being acted upon
+          organization: {
+            id: requestedOrg._key,
+            name: requestedOrg.name,
+          }, // name of resource being acted upon
           resourceType: 'user', // user, org, domain
         },
         status: 'success',

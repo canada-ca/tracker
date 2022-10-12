@@ -15,6 +15,7 @@ import { AdminDomains } from './AdminDomains'
 import { UserList } from './UserList'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { AuditLogTable } from './AuditLogTable'
 
 export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
   return (
@@ -26,6 +27,9 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
           </Tab>
           <Tab borderTopWidth="4px">
             <Trans>Users</Trans>
+          </Tab>
+          <Tab borderTopWidth="4px">
+            <Trans>Activity</Trans>
           </Tab>
         </TabList>
 
@@ -48,6 +52,11 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
                 usersPerPage={10}
                 orgId={orgId}
               />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <AuditLogTable orgId={orgId} />
             </ErrorBoundary>
           </TabPanel>
         </TabPanels>

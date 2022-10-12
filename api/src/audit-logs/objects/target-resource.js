@@ -1,4 +1,5 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
+import { globalIdField } from 'graphql-relay'
 
 export const targetResourceType = new GraphQLObjectType({
   name: 'TargetResource',
@@ -10,7 +11,18 @@ export const targetResourceType = new GraphQLObjectType({
       resolve: ({ resource }) => resource,
     },
     organization: {
-      type: GraphQLString,
+      type: new GraphQLObjectType({
+        name: 'TargetOrganization',
+        description: '',
+        fields: () => ({
+          name: {
+            type: GraphQLString,
+            description: 'Domain that scans will be ran on.',
+            resolve: ({ name }) => name,
+          },
+          id: globalIdField('organization'),
+        }),
+      }),
       description: 'Domain that scans will be ran on.',
       resolve: ({ organization }) => organization,
     },

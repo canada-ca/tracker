@@ -466,7 +466,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       initiatedBy: {
         id: user._key,
         userName: user.userName,
-        role: permission?.toUpperCase(),
+        role: permission,
       },
       action: 'delete',
       target: {

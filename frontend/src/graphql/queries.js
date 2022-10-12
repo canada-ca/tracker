@@ -1079,8 +1079,18 @@ export const WEBCHECK_ORGS = gql`
 `
 
 export const AUDIT_LOGS = gql`
-  query FindAuditLogs {
-    findAuditLogs {
+  query FindAuditLogs(
+    $orgId: ID
+    $first: Int!
+    $after: String
+    $orderBy: LogOrder!
+  ) {
+    findAuditLogs(
+      orgId: $orgId
+      first: $first
+      after: $after
+      orderBy: $orderBy
+    ) {
       edges {
         node {
           id
@@ -1094,7 +1104,9 @@ export const AUDIT_LOGS = gql`
           action
           target {
             resource
-            organization
+            organization {
+              name
+            }
             resourceType
             updatedProperties {
               name
@@ -1105,6 +1117,12 @@ export const AUDIT_LOGS = gql`
           reason
           status
         }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
     }
   }

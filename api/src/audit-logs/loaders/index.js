@@ -1,1 +1,1 @@
-export * from './load-audit-logs'
+export * from './load-audit-logs-by-org-id'

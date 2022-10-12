@@ -14,16 +14,18 @@ import {
 import { AUDIT_LOGS } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { string } from 'prop-types'
 
-export function AuditLogTable() {
+export function AuditLogTable({ orgId = null }) {
   const toast = useToast()
   const { loading, error, data } = useQuery(AUDIT_LOGS, {
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
     errorPolicy: 'ignore',
     variables: {
-      first: 100,
+      first: 10,
       orderBy: { field: 'TIMESTAMP', direction: 'ASC' },
+      orgId,
     },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
@@ -72,7 +74,7 @@ export function AuditLogTable() {
                 <Td>{action.toUpperCase()}</Td>
                 <Td>{target.resourceType.toUpperCase()}</Td>
                 <Td>{target.resource}</Td>
-                <Td>{target.organization}</Td>
+                <Td>{target.organization.name}</Td>
                 <Td>{reason}</Td>
                 <Td>{status.toUpperCase()}</Td>
               </Tr>
@@ -82,4 +84,8 @@ export function AuditLogTable() {
       </Table>
     </TableContainer>
   )
+}
+
+AuditLogTable.propTypes = {
+  orgId: string,
 }
