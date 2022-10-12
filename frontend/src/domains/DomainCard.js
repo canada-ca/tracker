@@ -122,7 +122,6 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
         <Flex {...statusGroupingProps} px="1">
-          <StatusBadge text={t`ITPIN`} status={status.policy} />
           <StatusBadge text={t`HTTPS`} status={status.https} />
           <StatusBadge text={t`HSTS`} status={status.hsts} />
           <StatusBadge text={t`Ciphers`} status={status.ciphers} />
