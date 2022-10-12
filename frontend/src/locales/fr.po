@@ -989,7 +989,7 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 
 #: src/guidance/GuidanceTagDetails.js:18
 msgid "For in-depth CCCS implementation guidance:"
-msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS:"
+msgstr "Pour des conseils approfondis sur la mise en œuvre:"
 
 #: src/guidance/GuidanceTagDetails.js:43
 msgid "For technical implementation guidance:"
