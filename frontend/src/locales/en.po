@@ -46,16 +46,16 @@ msgid "404 - Page Not Found"
 msgstr "404 - Page Not Found"
 
 #: src/app/ReadGuidancePage.js:116
-msgid "6.2.1 Newly developed websites and web services must adhere to this ITPIN upon launch."
-msgstr "6.2.1 Newly developed websites and web services must adhere to this ITPIN upon launch."
+#~ msgid "6.2.1 Newly developed websites and web services must adhere to this ITPIN upon launch."
+#~ msgstr "6.2.1 Newly developed websites and web services must adhere to this ITPIN upon launch."
 
 #: src/app/ReadGuidancePage.js:122
-msgid "6.2.2 Websites and web services that involve an exchange of personal information or other sensitive information must receive priority following a risk-based approach, and migrate as soon as possible."
-msgstr "6.2.2 Websites and web services that involve an exchange of personal information or other sensitive information must receive priority following a risk-based approach, and migrate as soon as possible."
+#~ msgid "6.2.2 Websites and web services that involve an exchange of personal information or other sensitive information must receive priority following a risk-based approach, and migrate as soon as possible."
+#~ msgstr "6.2.2 Websites and web services that involve an exchange of personal information or other sensitive information must receive priority following a risk-based approach, and migrate as soon as possible."
 
 #: src/app/ReadGuidancePage.js:130
-msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
-msgstr "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
+#~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
+#~ msgstr "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 
 #: src/summaries/SummaryGroup.js:47
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
@@ -255,6 +255,10 @@ msgstr "An error occurred while verifying your phone number."
 msgid "An error occurred."
 msgstr "An error occurred."
 
+#: src/app/ReadGuidancePage.js:321
+msgid "Another possibility is that your domain is not internet facing."
+msgstr "Another possibility is that your domain is not internet facing."
+
 #: src/termsConditions/TermsConditionsPage.js:225
 msgid "Any data or information disclosed to TBS will be used in a manner consistent with our"
 msgstr "Any data or information disclosed to TBS will be used in a manner consistent with our"
@@ -262,6 +266,10 @@ msgstr "Any data or information disclosed to TBS will be used in a manner consis
 #: src/termsConditions/TermsConditionsPage.js:136
 msgid "Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada."
 msgstr "Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada."
+
+#: src/app/ReadGuidancePage.js:121
+msgid "Application Portfolio Management (APM) systems; and"
+msgstr "Application Portfolio Management (APM) systems; and"
 
 #: src/components/MonthSelect.js:23
 #: src/utilities/months.js:7
@@ -308,16 +316,28 @@ msgstr "Back"
 #~ msgstr "Based in:"
 
 #: src/app/ReadGuidancePage.js:160
-msgid "Based on the assessment, and using the <0>HTTPS Everywhere Guidance Wiki</0>, the following activities may be required:"
-msgstr "Based on the assessment, and using the <0>HTTPS Everywhere Guidance Wiki</0>, the following activities may be required:"
+#~ msgid "Based on the assessment, and using the <0>HTTPS Everywhere Guidance Wiki</0>, the following activities may be required:"
+#~ msgstr "Based on the assessment, and using the <0>HTTPS Everywhere Guidance Wiki</0>, the following activities may be required:"
+
+#: src/app/ReadGuidancePage.js:83
+msgid "Below are steps on how government organizations can leverage the Tracker platform:"
+msgstr "Below are steps on how government organizations can leverage the Tracker platform:"
 
 #: src/admin/OrganizationInformation.js:331
 msgid "Blank fields will not be included when updating the organization."
 msgstr "Blank fields will not be included when updating the organization."
 
+#: src/app/ReadGuidancePage.js:126
+msgid "Business units within your organization."
+msgstr "Business units within your organization."
+
 #: src/termsConditions/TermsConditionsPage.js:25
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
 msgstr "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
+
+#: src/app/ReadGuidancePage.js:313
+msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
+msgstr "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 
 #: src/guidance/ScanCategoryDetails.js:102
 msgid "CCS Injection Vulnerability:"
@@ -699,8 +719,8 @@ msgid "December"
 msgstr "December"
 
 #: src/app/ReadGuidancePage.js:63
-msgid "Departmental business units"
-msgstr "Departmental business units"
+#~ msgid "Departmental business units"
+#~ msgstr "Departmental business units"
 
 #: src/domains/ScanDomain.js:122
 #: src/guidance/ScanCard.js:33
@@ -718,8 +738,12 @@ msgid "Deploy initial DMARC records with policy of none; and"
 msgstr "Deploy initial DMARC records with policy of none; and"
 
 #: src/app/ReadGuidancePage.js:109
-msgid "Develop a prioritized implementation schedule for each of the affected websites and web services, following the recommended prioritization approach in the ITPIN:"
-msgstr "Develop a prioritized implementation schedule for each of the affected websites and web services, following the recommended prioritization approach in the ITPIN:"
+#~ msgid "Develop a prioritized implementation schedule for each of the affected websites and web services, following the recommended prioritization approach in the ITPIN:"
+#~ msgstr "Develop a prioritized implementation schedule for each of the affected websites and web services, following the recommended prioritization approach in the ITPIN:"
+
+#: src/app/ReadGuidancePage.js:175
+msgid "Develop a prioritized schedule to address any failings. Consider prioritizing websites and web services that exchange Protected data."
+msgstr "Develop a prioritized schedule to address any failings. Consider prioritizing websites and web services that exchange Protected data."
 
 #: src/admin/SuperAdminUserList.js:149
 #: src/components/fields/DisplayNameField.js:14
@@ -755,6 +779,10 @@ msgstr "Domain"
 #: src/admin/AdminDomains.js:144
 msgid "Domain List"
 msgstr "Domain List"
+
+#: src/app/ReadGuidancePage.js:366
+msgid "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
+msgstr "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
 
 #: src/admin/AdminDomains.js:236
 #: src/components/fields/DomainField.js:38
@@ -852,6 +880,10 @@ msgstr "Email"
 msgid "Email Guidance"
 msgstr "Email Guidance"
 
+#: src/app/ReadGuidancePage.js:381
+msgid "Email Management Services Configuration Requirements - Canada.ca"
+msgstr "Email Management Services Configuration Requirements - Canada.ca"
+
 #: src/domains/ScanDomain.js:370
 #: src/guidance/ScanCard.js:14
 msgid "Email Scan Results"
@@ -905,8 +937,8 @@ msgid "Enforcement:"
 msgstr "Enforcement:"
 
 #: src/app/ReadGuidancePage.js:139
-msgid "Engage departmental IT planning groups for implementation as appropriate."
-msgstr "Engage departmental IT planning groups for implementation as appropriate."
+#~ msgid "Engage departmental IT planning groups for implementation as appropriate."
+#~ msgstr "Engage departmental IT planning groups for implementation as appropriate."
 
 #: src/createOrganization/CreateOrganizationPage.js:172
 #: src/createOrganization/CreateOrganizationPage.js:183
@@ -949,6 +981,10 @@ msgstr "Envelope From"
 msgid "Export to CSV"
 msgstr "Export to CSV"
 
+#: src/app/ReadGuidancePage.js:31
+msgid "FAQ"
+msgstr "FAQ"
+
 #: src/dmarc/DmarcReportPage.js:126
 #: src/dmarc/DmarcReportPage.js:127
 msgid "Fail"
@@ -988,8 +1024,12 @@ msgid "February"
 msgstr "February"
 
 #: src/app/ReadGuidancePage.js:198
-msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
-msgstr "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
+#~ msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
+#~ msgstr "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
+
+#: src/app/ReadGuidancePage.js:410
+msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity."
+msgstr "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity."
 
 #: src/termsConditions/TermsConditionsPage.js:45
 msgid "For details related to terms pertaining to privacy, please refer to"
@@ -1019,6 +1059,10 @@ msgstr "Forgot your password?"
 #: src/createOrganization/CreateOrganizationPage.js:221
 msgid "French"
 msgstr "French"
+
+#: src/app/ReadGuidancePage.js:215
+msgid "Frequently Asked Questions"
+msgstr "Frequently Asked Questions"
 
 #: src/dmarc/DmarcByDomainPage.js:170
 #: src/dmarc/DmarcByDomainPage.js:330
@@ -1071,6 +1115,7 @@ msgstr "Government of Canada Employees"
 #~ msgstr "Graph direction:"
 
 #: src/app/App.js:411
+#: src/app/ReadGuidancePage.js:28
 #: src/dmarc/DmarcReportPage.js:193
 #: src/dmarc/DmarcReportPage.js:576
 #: src/domains/DomainCard.js:175
@@ -1146,8 +1191,8 @@ msgid "Heartbleed Vulnerability:"
 msgstr "Heartbleed Vulnerability:"
 
 #: src/app/ReadGuidancePage.js:23
-msgid "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
-msgstr "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
+#~ msgid "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
+#~ msgstr "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
 
 #: src/app/App.js:98
 #: src/app/App.js:171
@@ -1158,6 +1203,10 @@ msgstr "Home"
 #: src/dmarc/DmarcReportSummaryGraph.js:109
 #~ msgid "Horizontal View"
 #~ msgstr "Horizontal View"
+
+#: src/app/ReadGuidancePage.js:239
+msgid "How can I edit my domain list?"
+msgstr "How can I edit my domain list?"
 
 #: src/admin/AdminDomainModal.js:151
 #~ msgid "INACTIVE"
@@ -1189,8 +1238,12 @@ msgid "Identify all domains and subdomains used to send mail;"
 msgstr "Identify all domains and subdomains used to send mail;"
 
 #: src/app/ReadGuidancePage.js:36
-msgid "Identify key resources required to act as central point(s) of contact with TBS and the HTTPS Community of Practice."
-msgstr "Identify key resources required to act as central point(s) of contact with TBS and the HTTPS Community of Practice."
+#~ msgid "Identify key resources required to act as central point(s) of contact with TBS and the HTTPS Community of Practice."
+#~ msgstr "Identify key resources required to act as central point(s) of contact with TBS and the HTTPS Community of Practice."
+
+#: src/app/ReadGuidancePage.js:91
+msgid "Identify resources required to act as central point(s) of contact with Treasury Board of Canada Secretariat (TBS). Share the contact list with <0>TBS Cyber Security</0>, as required."
+msgstr "Identify resources required to act as central point(s) of contact with Treasury Board of Canada Secretariat (TBS). Share the contact list with <0>TBS Cyber Security</0>, as required."
 
 #: src/termsConditions/TermsConditionsPage.js:391
 msgid "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
@@ -1199,6 +1252,10 @@ msgstr "If at any time you or your representatives wish to adjust or cancel thes
 #: src/guidance/GuidanceTagList.js:93
 msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
 msgstr "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
+
+#: src/app/ReadGuidancePage.js:396
+msgid "Implementation guidance: email domain protection (ITSP.40.065 v1.1) - Canadian Centre for Cyber Security"
+msgstr "Implementation guidance: email domain protection (ITSP.40.065 v1.1) - Canadian Centre for Cyber Security"
 
 #: src/guidance/ScanCategoryDetails.js:67
 msgid "Implementation:"
@@ -1337,8 +1394,8 @@ msgid "Intellectual Property, Copyright and Trademarks"
 msgstr "Intellectual Property, Copyright and Trademarks"
 
 #: src/app/ReadGuidancePage.js:48
-msgid "Internally available <0>Tracker Dashboard</0>"
-msgstr "Internally available <0>Tracker Dashboard</0>"
+#~ msgid "Internally available <0>Tracker Dashboard</0>"
+#~ msgstr "Internally available <0>Tracker Dashboard</0>"
 
 #: src/organizationDetails/OrganizationSummary.js:14
 msgid "Internet facing domains"
@@ -1357,9 +1414,17 @@ msgstr "Invalid email"
 msgid "Invite User"
 msgstr "Invite User"
 
+#: src/app/ReadGuidancePage.js:221
+msgid "It is not clear to me why a domain has failed?"
+msgstr "It is not clear to me why a domain has failed?"
+
 #: src/app/ReadGuidancePage.js:151
-msgid "It is recommended that SSC partners contact their SSC Service Delivery Manager to discuss the departmental action plan and required steps to submit a request for change."
-msgstr "It is recommended that SSC partners contact their SSC Service Delivery Manager to discuss the departmental action plan and required steps to submit a request for change."
+#~ msgid "It is recommended that SSC partners contact their SSC Service Delivery Manager to discuss the departmental action plan and required steps to submit a request for change."
+#~ msgstr "It is recommended that SSC partners contact their SSC Service Delivery Manager to discuss the departmental action plan and required steps to submit a request for change."
+
+#: src/app/ReadGuidancePage.js:188
+msgid "It is recommended that Shared Service Canada (SSC) partners contact their SSC Service Delivery Manager to discuss action plans and required steps to submit a request for change."
+msgstr "It is recommended that Shared Service Canada (SSC) partners contact their SSC Service Delivery Manager to discuss action plans and required steps to submit a request for change."
 
 #: src/components/RelayPaginationControls.js:33
 #: src/components/TrackerTable.js:271
@@ -1644,17 +1709,29 @@ msgid "November"
 msgstr "November"
 
 #: src/app/ReadGuidancePage.js:173
-msgid "Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS Server Certificates for GC Public Facing Web Services"
-msgstr "Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS Server Certificates for GC Public Facing Web Services"
+#~ msgid "Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS Server Certificates for GC Public Facing Web Services"
+#~ msgstr "Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS Server Certificates for GC Public Facing Web Services"
+
+#: src/app/ReadGuidancePage.js:196
+msgid "Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS Server Certificates for GC public facing web services"
+msgstr "Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS Server Certificates for GC public facing web services"
 
 #: src/app/ReadGuidancePage.js:180
-msgid "Obtain the configuration guidance for the appropriate endpoints (e.g. web server, network/security appliances, etc.) and implement recommended configurations to support HTTPS."
-msgstr "Obtain the configuration guidance for the appropriate endpoints (e.g. web server, network/security appliances, etc.) and implement recommended configurations to support HTTPS."
+#~ msgid "Obtain the configuration guidance for the appropriate endpoints (e.g. web server, network/security appliances, etc.) and implement recommended configurations to support HTTPS."
+#~ msgstr "Obtain the configuration guidance for the appropriate endpoints (e.g. web server, network/security appliances, etc.) and implement recommended configurations to support HTTPS."
+
+#: src/app/ReadGuidancePage.js:203
+msgid "Obtain the configuration guidance for the appropriate endpoints (e.g., web server, network/security appliances, etc.) and implement recommended configurations."
+msgstr "Obtain the configuration guidance for the appropriate endpoints (e.g., web server, network/security appliances, etc.) and implement recommended configurations."
 
 #: src/components/MonthSelect.js:47
 #: src/utilities/months.js:13
 msgid "October"
 msgstr "October"
+
+#: src/app/ReadGuidancePage.js:332
+msgid "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
+msgstr "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 
 #: src/organizationDetails/OrganizationDetails.js:60
 msgid "Organization Details"
@@ -1756,16 +1833,20 @@ msgstr "Passwords must match"
 #~ msgstr "Percentages"
 
 #: src/app/ReadGuidancePage.js:78
-msgid "Perform an assessment of the domains and sub-domains to determine the status of the configuration. Tools available to support this activity includes the <0>Tracker Dashboard</0>, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
-msgstr "Perform an assessment of the domains and sub-domains to determine the status of the configuration. Tools available to support this activity includes the <0>Tracker Dashboard</0>, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
+#~ msgid "Perform an assessment of the domains and sub-domains to determine the status of the configuration. Tools available to support this activity includes the <0>Tracker Dashboard</0>, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
+#~ msgstr "Perform an assessment of the domains and sub-domains to determine the status of the configuration. Tools available to support this activity includes the <0>Tracker Dashboard</0>, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
 
 #: src/app/ReadGuidancePage.js:42
-msgid "Perform an inventory of all departmental domains and subdomains. Sources of information include:"
-msgstr "Perform an inventory of all departmental domains and subdomains. Sources of information include:"
+#~ msgid "Perform an inventory of all departmental domains and subdomains. Sources of information include:"
+#~ msgstr "Perform an inventory of all departmental domains and subdomains. Sources of information include:"
+
+#: src/app/ReadGuidancePage.js:106
+msgid "Perform an inventory of all organizational domains and subdomains. Sources of information include:"
+msgstr "Perform an inventory of all organizational domains and subdomains. Sources of information include:"
 
 #: src/app/ReadGuidancePage.js:189
-msgid "Perform another assessment of the applicable domains and sub-domains to confirm that the configuration has been updated and that HTTPS is enforced in accordance with the ITPIN. Results will appear in the Tracker Dashboard within 24 hours."
-msgstr "Perform another assessment of the applicable domains and sub-domains to confirm that the configuration has been updated and that HTTPS is enforced in accordance with the ITPIN. Results will appear in the Tracker Dashboard within 24 hours."
+#~ msgid "Perform another assessment of the applicable domains and sub-domains to confirm that the configuration has been updated and that HTTPS is enforced in accordance with the ITPIN. Results will appear in the Tracker Dashboard within 24 hours."
+#~ msgstr "Perform another assessment of the applicable domains and sub-domains to confirm that the configuration has been updated and that HTTPS is enforced in accordance with the ITPIN. Results will appear in the Tracker Dashboard within 24 hours."
 
 #: src/user/EditableUserTFAMethod.js:167
 msgid "Phone"
@@ -1791,6 +1872,14 @@ msgstr "Phone number must be a valid phone number that is 10-15 digits long"
 #: src/utilities/fieldRequirements.js:30
 msgid "Please choose your preferred language"
 msgstr "Please choose your preferred language"
+
+#: src/app/ReadGuidancePage.js:224
+msgid "Please contact <0>TBS Cyber Security</0> for help."
+msgstr "Please contact <0>TBS Cyber Security</0> for help."
+
+#: src/app/ReadGuidancePage.js:242
+msgid "Please direct all updates to TBS Cyber Security."
+msgstr "Please direct all updates to TBS Cyber Security."
 
 #: src/utilities/fieldRequirements.js:27
 msgid "Please enter your current password."
@@ -1848,9 +1937,13 @@ msgstr "Protocols"
 msgid "Protocols Status"
 msgstr "Protocols Status"
 
+#: src/app/ReadGuidancePage.js:132
+msgid "Provide an up-to-date list of all domain and sub-domains of publicly accessible websites and web services to TBS Cyber Security. The TBS Cyber Security team is responsible for updating the domain and sub-domain lists within Tracker."
+msgstr "Provide an up-to-date list of all domain and sub-domains of publicly accessible websites and web services to TBS Cyber Security. The TBS Cyber Security team is responsible for updating the domain and sub-domain lists within Tracker."
+
 #: src/app/ReadGuidancePage.js:68
-msgid "Provide an up-to-date list of all domain and sub-domains of the publicly-accessible websites and web services to <0>TBS Cybersecurity</0>."
-msgstr "Provide an up-to-date list of all domain and sub-domains of the publicly-accessible websites and web services to <0>TBS Cybersecurity</0>."
+#~ msgid "Provide an up-to-date list of all domain and sub-domains of the publicly-accessible websites and web services to <0>TBS Cybersecurity</0>."
+#~ msgstr "Provide an up-to-date list of all domain and sub-domains of the publicly-accessible websites and web services to <0>TBS Cybersecurity</0>."
 
 #: src/createOrganization/CreateOrganizationPage.js:206
 #: src/createOrganization/CreateOrganizationPage.js:211
@@ -1869,13 +1962,17 @@ msgstr "Province (FR)"
 msgid "Province:"
 msgstr "Province:"
 
-#: src/app/ReadGuidancePage.js:19
+#: src/app/ReadGuidancePage.js:38
 msgid "Read Guidance"
 msgstr "Read Guidance"
 
 #: src/app/App.js:234
 msgid "Read guidance"
 msgstr "Read guidance"
+
+#: src/app/ReadGuidancePage.js:355
+msgid "References:"
+msgstr "References:"
 
 #: src/auth/CreateUserPage.js:172
 msgid "Register"
@@ -2294,8 +2391,8 @@ msgid "Symbol of the Government of Canada"
 msgstr "Symbol of the Government of Canada"
 
 #: src/app/ReadGuidancePage.js:60
-msgid "TBS Application Portfolio Management (APM)"
-msgstr "TBS Application Portfolio Management (APM)"
+#~ msgid "TBS Application Portfolio Management (APM)"
+#~ msgstr "TBS Application Portfolio Management (APM)"
 
 #: src/termsConditions/TermsConditionsPage.js:206
 msgid "TBS agrees to protect any information you disclose to us in a manner commensurate with the level of protection you use to secure such information, but in any event, with no less than a reasonable level of care."
@@ -2342,6 +2439,14 @@ msgstr "Terms and Conditions"
 #: src/termsConditions/TermsConditionsPage.js:302
 msgid "Terms of Use"
 msgstr "Terms of Use"
+
+#: src/app/ReadGuidancePage.js:112
+msgid "The <0>Tracker</0> platform"
+msgstr "The <0>Tracker</0> platform"
+
+#: src/app/ReadGuidancePage.js:42
+msgid "The Government of Canada’s (GC) <0>Directive on Service and Digital</0> provides expectations on how GC organizations are to manage their Information Technology (IT) services. The focus of the Tracker tool is to help organizations stay in compliance with the directives <1>Email Management Service Configuration Requirements</1> and the directives <2>Web Site and Service Management Configuration Requirements</2>."
+msgstr "The Government of Canada’s (GC) <0>Directive on Service and Digital</0> provides expectations on how GC organizations are to manage their Information Technology (IT) services. The focus of the Tracker tool is to help organizations stay in compliance with the directives <1>Email Management Service Configuration Requirements</1> and the directives <2>Web Site and Service Management Configuration Requirements</2>."
 
 #: src/termsConditions/TermsConditionsPage.js:286
 msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
@@ -2441,6 +2546,10 @@ msgstr "Tracker logo outline"
 #: src/app/TopBanner.js:89
 msgid "Tracker logo text"
 msgstr "Tracker logo text"
+
+#: src/app/ReadGuidancePage.js:169
+msgid "Tracker results refresh every 24 hours."
+msgstr "Tracker results refresh every 24 hours."
 
 #: src/termsConditions/TermsConditionsPage.js:180
 msgid "Trademarks Act"
@@ -2598,6 +2707,10 @@ msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from
 #: src/guidance/ScanCard.js:38
 msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
 msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25%to 100%); and"
+
+#: src/app/ReadGuidancePage.js:141
+msgid "Use Tracker and <0>ITSP.40.062 Transport Layer Security (TLS) guidance</0> to monitor the domains and sub-domains of your organization. Other tools available to support this activity include, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc.."
+msgstr "Use Tracker and <0>ITSP.40.062 Transport Layer Security (TLS) guidance</0> to monitor the domains and sub-domains of your organization. Other tools available to support this activity include, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc.."
 
 #: src/termsConditions/TermsConditionsPage.js:190
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
@@ -2760,9 +2873,29 @@ msgstr "Welcome, you are successfully signed in to your new account!"
 msgid "Welcome, you are successfully signed in!"
 msgstr "Welcome, you are successfully signed in!"
 
+#: src/app/ReadGuidancePage.js:309
+msgid "What does it mean if a domain is “unreachable”?"
+msgstr "What does it mean if a domain is “unreachable”?"
+
+#: src/app/ReadGuidancePage.js:329
+msgid "Where can I get a GC-approved TLS certificate?"
+msgstr "Where can I get a GC-approved TLS certificate?"
+
 #: src/app/ReadGuidancePage.js:145
-msgid "Where necessary adjust IT Plans and budget estimates for the FY where work is expected."
-msgstr "Where necessary adjust IT Plans and budget estimates for the FY where work is expected."
+#~ msgid "Where necessary adjust IT Plans and budget estimates for the FY where work is expected."
+#~ msgstr "Where necessary adjust IT Plans and budget estimates for the FY where work is expected."
+
+#: src/app/ReadGuidancePage.js:182
+msgid "Where necessary adjust IT Plans and budget estimates where work is expected."
+msgstr "Where necessary adjust IT Plans and budget estimates where work is expected."
+
+#: src/app/ReadGuidancePage.js:267
+msgid "While other tools are useful to work alongside Tracker, they do not specifically adhere to the configuration requirements specified in the <0>Email Management Service Configuration Requirements</0> and the <1>Web Site and Service Management Configuration Requirements</1>. For a list of allowed protocols, ciphers, and curves review the <2>ITSP.40.062 TLS guidance</2>."
+msgstr "While other tools are useful to work alongside Tracker, they do not specifically adhere to the configuration requirements specified in the <0>Email Management Service Configuration Requirements</0> and the <1>Web Site and Service Management Configuration Requirements</1>. For a list of allowed protocols, ciphers, and curves review the <2>ITSP.40.062 TLS guidance</2>."
+
+#: src/app/ReadGuidancePage.js:250
+msgid "Why do other tools (<0>Hardenize</0>, <1>SSL Labs</1>, etc.) show positive results for a domain while Tracker shows negative results?"
+msgstr "Why do other tools (<0>Hardenize</0>, <1>SSL Labs</1>, etc.) show positive results for a domain while Tracker shows negative results?"
 
 #: src/guidance/ScanCategoryDetails.js:104
 #: src/guidance/ScanCategoryDetails.js:110
