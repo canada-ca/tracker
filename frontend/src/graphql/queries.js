@@ -1084,12 +1084,14 @@ export const AUDIT_LOGS = gql`
     $first: Int!
     $after: String
     $orderBy: LogOrder!
+    $search: String
   ) {
     findAuditLogs(
       orgId: $orgId
       first: $first
       after: $after
       orderBy: $orderBy
+      search: $search
     ) {
       edges {
         node {
