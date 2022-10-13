@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: dns-processor
   labels:
     app: dns-processor
-  name: dns-processor
   namespace: scanners
 spec:
   replicas: 1
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: dns-processor
-          image: gcr.io/track-compliance/dns-processor:master-28a3e6f-1660071535 # {"$imagepolicy": "flux-system:dns-processor"}
+          image: gcr.io/track-compliance/dns-processor # {"$imagepolicy": "flux-system:dns-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -39,7 +39,7 @@ spec:
             - name: SUBSCRIBE_TO
               value: domains.*.dns
             - name: QUEUE_GROUP
-              value: dnsprocessor
+              value: dns_processor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
           resources: {}

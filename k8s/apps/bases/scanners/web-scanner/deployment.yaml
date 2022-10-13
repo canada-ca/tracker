@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webtls-scanner
+  name: web-scanner
+  labels:
+    app: web-scanner
   namespace: scanners
 spec:
   selector:
@@ -15,16 +17,16 @@ spec:
     spec:
       containers:
         - name: web-scanner
-          image: gcr.io/track-compliance/web-scanner:master-ad1b14d-1637090396 # {"$imagepolicy": "flux-system:web-scanner"}
+          image: gcr.io/track-compliance/web-scanner # {"$imagepolicy": "flux-system:web-scanner"}
           env:
             - name: PYTHONWARNINGS
               value: ignore
             - name: PUBLISH_TO
               value: domains
             - name: SUBSCRIBE_TO
-              value: domains.*
+              value: domains.*.web
             - name: QUEUE_GROUP
-              value: webscanner
+              value: web_scanner
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: NAME
