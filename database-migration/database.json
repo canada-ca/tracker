@@ -34,7 +34,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "dkim",
+      "name": "dns",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -43,7 +43,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "dkimResults",
+      "name": "web",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -52,34 +52,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "dmarc",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "documentcollection",
-      "name": "spf",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "documentcollection",
-      "name": "https",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "documentcollection",
-      "name": "ssl",
+      "name": "webScan",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -205,7 +178,7 @@
     },
     {
       "type": "edgecollection",
-      "name": "domainsDKIM",
+      "name": "domainsDNS",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -214,7 +187,7 @@
     },
     {
       "type": "edgecollection",
-      "name": "dkimToDkimResults",
+      "name": "domainsWeb",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -223,34 +196,7 @@
     },
     {
       "type": "edgecollection",
-      "name": "domainsDMARC",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "edgecollection",
-      "name": "domainsSPF",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "edgecollection",
-      "name": "domainsHTTPS",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "edgecollection",
-      "name": "domainsSSL",
+      "name": "webToWebScans",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
