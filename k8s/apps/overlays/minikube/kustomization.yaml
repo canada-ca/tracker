@@ -19,6 +19,10 @@ replicas:
   count: 1
 - name: dns-scanner
   count: 1
+- name: dns-processor
+  count: 1
 - name: web-scanner
+  count: 1
+- name: web-processor
   count: 1
 
