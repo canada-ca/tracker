@@ -1133,6 +1133,11 @@ export const AUDIT_LOGS = gql`
         hasPreviousPage
         startCursor
         endCursor
+      }
+    }
+  }
+`
+
 export const MY_TRACKER_SUMMARY = gql`
   query FindMyTracker {
     findMyTracker {
