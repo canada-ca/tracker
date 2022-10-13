@@ -57,7 +57,9 @@ def process_results(results):
     return results
 
 
-async def scan_service(loop):
+async def scan_service():
+    loop = asyncio.get_running_loop()
+
     async def error_cb(error):
         logger.error(error)
 
@@ -80,6 +82,7 @@ async def scan_service(loop):
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     async def subscribe_handler(msg):
+        await asyncio.sleep(0.01)
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
@@ -132,15 +135,8 @@ async def scan_service(loop):
             getattr(signal, signal_name),
             functools.partial(ask_exit, signal_name))
 
-
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(scan_service(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+    await asyncio.Future()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(scan_service())
