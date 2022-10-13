@@ -36,6 +36,15 @@ export const loadAuditLogsByOrgId =
         if (orderBy.field === 'timestamp') {
           documentField = aql`afterVar.timestamp`
           logField = aql`log.timestamp`
+        } else if (orderBy.field === 'initiated_by') {
+          documentField = aql`afterVar.initiatedBy.userName`
+          logField = aql`log.initiatedBy.userName`
+        } else if (orderBy.field === 'resource_name') {
+          documentField = aql`afterVar.target.resource`
+          logField = aql`log.target.resource`
+        } else if (orderBy.field === 'status') {
+          documentField = aql`afterVar.status`
+          logField = aql`log.status`
         }
 
         afterTemplate = aql`
@@ -117,24 +126,36 @@ export const loadAuditLogsByOrgId =
         hasPreviousPageDirection = aql`>`
       }
 
-      let domainField = aql``
+      let logField = aql``
       let hasNextPageDocumentField = aql``
       let hasPreviousPageDocumentField = aql``
       /* istanbul ignore else */
       if (orderBy.field === 'timestamp') {
-        domainField = aql`log.timestamp`
+        logField = aql`log.timestamp`
+        hasNextPageDocumentField = aql`LAST(retrievedLogs).log`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedLogs).log`
+      } else if (orderBy.field === 'initiated_by') {
+        logField = aql`log.initiatedBy.userName`
+        hasNextPageDocumentField = aql`LAST(retrievedLogs).log`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedLogs).log`
+      } else if (orderBy.field === 'resource_name') {
+        logField = aql`log.target.resource`
+        hasNextPageDocumentField = aql`LAST(retrievedLogs).log`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedLogs).log`
+      } else if (orderBy.field === 'status') {
+        logField = aql`log.status`
         hasNextPageDocumentField = aql`LAST(retrievedLogs).log`
         hasPreviousPageDocumentField = aql`FIRST(retrievedLogs).log`
       }
 
       hasNextPageFilter = aql`
-      FILTER ${domainField} ${hasNextPageDirection} ${hasNextPageDocumentField}
-      OR (${domainField} == ${hasNextPageDocumentField}
+      FILTER ${logField} ${hasNextPageDirection} ${hasNextPageDocumentField}
+      OR (${logField} == ${hasNextPageDocumentField}
       AND TO_NUMBER(log._key) > TO_NUMBER(LAST(retrievedLogs)._key))
     `
       hasPreviousPageFilter = aql`
-      FILTER ${domainField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
-      OR (${domainField} == ${hasPreviousPageDocumentField}
+      FILTER ${logField} ${hasPreviousPageDirection} ${hasPreviousPageDocumentField}
+      OR (${logField} == ${hasPreviousPageDocumentField}
       AND TO_NUMBER(log._key) < TO_NUMBER(FIRST(retrievedLogs)._key))
     `
     }
@@ -144,6 +165,12 @@ export const loadAuditLogsByOrgId =
       /* istanbul ignore else */
       if (orderBy.field === 'timestamp') {
         sortByField = aql`log.timestamp ${orderBy.direction},`
+      } else if (orderBy.field === 'initiated_by') {
+        sortByField = aql`log.initiatedBy.userName ${orderBy.direction},`
+      } else if (orderBy.field === 'resource_name') {
+        sortByField = aql`log.target.resource ${orderBy.direction},`
+      } else if (orderBy.field === 'status') {
+        sortByField = aql`log.status ${orderBy.direction},`
       }
     }
 
@@ -154,11 +181,8 @@ export const loadAuditLogsByOrgId =
       sortString = aql`ASC`
     }
 
-    console.log('orgId:', orgId)
-
     let logKeysQuery
     if (typeof orgId !== 'undefined' && orgId !== null) {
-      console.log('org audit logs')
       logKeysQuery = aql`
       WITH auditLogs
         LET logKeys = (
@@ -168,7 +192,6 @@ export const loadAuditLogsByOrgId =
         )
       `
     } else if (permission === 'super_admin') {
-      console.log('super admin audit logs')
       logKeysQuery = aql`
       WITH auditLogs
         LET logKeys = (

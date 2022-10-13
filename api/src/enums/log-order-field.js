@@ -8,5 +8,17 @@ export const LogOrderField = new GraphQLEnumType({
       value: 'timestamp',
       description: 'Order domains by spf status.',
     },
+    INITIATED_BY: {
+      value: 'initiated_by',
+      description: 'Order domains by spf status.',
+    },
+    RESOURCE_NAME: {
+      value: 'resource_name',
+      description: 'Order domains by spf status.',
+    },
+    STATUS: {
+      value: 'status',
+      description: 'Order domains by spf status.',
+    },
   },
 })

@@ -179,7 +179,7 @@ export default function AdminPage({ isLoginRequired }) {
         <label>
           <Flex align="center">
             <Text fontSize="lg" fontWeight="bold" ml="2">
-              <Trans>Menu:</Trans>
+              <Trans>Super Admin Menu:</Trans>
             </Text>
             <Select
               w="20%"
