@@ -144,7 +144,7 @@ async def processor_service(loop):
                 db.collection("domains").update(domain)
 
             except Exception as e:
-                logging.error(
+                logger.error(
                     f"TLS processor: database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 return

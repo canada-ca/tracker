@@ -1,20 +1,16 @@
-FROM rust:1.62.1 AS crlite-builder
-RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev b19e5aa
-
-#===============================================================================================
-#===============================================================================================
-
 FROM python:3.10.7-slim-bullseye AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
+
 WORKDIR /working/install
 
 RUN apt-get update && apt-get install -y  --no-install-recommends \
     apt-utils \
     python3 \
     python3-pip \
+    python3-setuptools \
     python3-wheel \
     build-essential \
     python3-dev
@@ -26,23 +22,20 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
+
 FROM python:3.10.7-slim-bullseye
 
 # Copy local code to the container image.
-ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
-WORKDIR /web-scanner
+ENV PYTHONUNBUFFERED 1
 
-# Copy rust-query-crlite
-COPY --from=crlite-builder /usr/local/cargo/bin/rust-query-crlite /usr/local/bin/rust-query-crlite
+WORKDIR /web-processor
+
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
-# Copy local source code
-COPY service.py web_scan_cli.py ./
-COPY scan ./scan
 
-# Update Mozilla CRLite DB for revocation checks
-RUN rust-query-crlite -vvv --update prod x509
+COPY service.py web_processor_cli.py ./
+COPY web_processor ./web_processor
 
 RUN useradd -ms /bin/bash scanner
 USER scanner

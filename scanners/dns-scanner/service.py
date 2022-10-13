@@ -17,10 +17,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s 
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "dns-scanner")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
-PUBLISH_TO = os.getenv("PUBLISH_TO")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP")
-SERVERLIST = os.getenv("NATS_SERVERS")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
+PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP", "dns-scanner")
+SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
 

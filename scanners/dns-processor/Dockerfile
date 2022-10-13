@@ -1,13 +1,12 @@
-FROM ubuntu:20.04
+FROM python:3.10.7-slim-bullseye AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
-WORKDIR /dns
 
-RUN useradd -ms /bin/bash scanner
+WORKDIR /working/install
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y  --no-install-recommends \
     apt-utils \
     python3 \
     python3-pip \
@@ -16,10 +15,28 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     build-essential \
     python3-dev
 
-COPY . .
+COPY requirements.txt /requirements.txt
+# Install python requirements to /working/install directory for cleaner copy
+RUN pip3 install --prefix=/working/install -r /requirements.txt
 
-RUN pip3 install -r requirements.txt
+#===============================================================================================
+#===============================================================================================
 
+FROM python:3.10.7-slim-bullseye
+
+# Copy local code to the container image.
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONWARNINGS ignore
+
+WORKDIR /dns-processor
+
+# Copy installed python modules
+COPY --from=python-builder /working/install/lib /usr/local/lib
+
+COPY service.py dns_processor_cli.py ./
+COPY dns_processor ./dns_processor
+
+RUN useradd -ms /bin/bash scanner
 USER scanner
-# Run the web service on container startup. Using uvicorn, in this case.
+
 CMD ["python3", "service.py"]
