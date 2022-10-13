@@ -1,6 +1,14 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Heading, Link, Text, useDisclosure } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Heading,
+  Link,
+  Text,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -13,15 +21,37 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import { PAGINATED_DOMAINS as FORWARD } from '../graphql/queries'
+import {
+  PAGINATED_DOMAINS as FORWARD,
+  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
+} from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
+import { useLazyQuery } from '@apollo/client'
+import { ExportButton } from '../components/ExportButton'
 
 export default function DomainsPage() {
+  const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+
+  const [
+    getAllOrgDomainStatuses,
+    { loading: allOrgDomainStatusesLoading, _error, _data },
+  ] = useLazyQuery(GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`An error occured when you attempted to download all domain statuses.`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -88,6 +118,7 @@ export default function DomainsPage() {
           FallbackComponent={ErrorFallbackMessage}
         >
           <DomainCard
+            id={id}
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}
@@ -100,9 +131,49 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
-      <Heading as="h1" textAlign="left" mb="4">
-        <Trans>Domains</Trans>
-      </Heading>
+      <Flex
+        flexDirection="row"
+        align="center"
+        mb="4"
+        flexWrap={{ base: 'wrap', md: 'nowrap' }}
+      >
+        <Heading as="h1" textAlign="left" mb="4">
+          <Trans>Domains</Trans>
+        </Heading>
+
+        <ExportButton
+          order={{ base: 2, md: 1 }}
+          ml="auto"
+          mt={{ base: '4', md: 0 }}
+          fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+          dataFunction={async () => {
+            toast({
+              title: t`Getting domain statuses`,
+              description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+              status: 'info',
+              duration: 9000,
+              isClosable: true,
+              position: 'top-left',
+            })
+            const result = await getAllOrgDomainStatuses()
+            if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+              toast({
+                title: t`No data found`,
+                description: t`No data found when retrieving all domain statuses.`,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+                position: 'top-left',
+              })
+
+              throw t`No data found`
+            }
+
+            return result.data?.getAllOrganizationDomainStatuses
+          }}
+          isLoading={allOrgDomainStatusesLoading}
+        />
+      </Flex>
 
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />

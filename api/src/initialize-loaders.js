@@ -52,9 +52,11 @@ import {
   loadOrgConnectionsByDomainId,
   loadOrgConnectionsByUserId,
   loadWebCheckConnectionsByUserId,
+  loadAllOrganizationDomainStatuses,
   loadOrganizationDomainStatuses,
 } from './organization/loaders'
 import {
+  loadMyTrackerByUserId,
   loadUserByUserName,
   loadUserByKey,
   loadUserConnectionsByUserId,
@@ -164,6 +166,7 @@ export function initializeLoaders({
     loadDomainConnectionsByOrgId: loadDomainConnectionsByOrgId({
       query,
       userKey,
+      language,
       cleanseInput,
       i18n,
       auth: { loginRequiredBool },
@@ -319,6 +322,13 @@ export function initializeLoaders({
       language,
       i18n,
     }),
+    loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+      query,
+      userKey,
+      cleanseInput,
+      language,
+      i18n,
+    }),
     loadOrganizationDomainStatuses: loadOrganizationDomainStatuses({
       query,
       userKey,
@@ -326,6 +336,12 @@ export function initializeLoaders({
       language,
       i18n,
       auth: { loginRequiredBool },
+    }),
+    loadMyTrackerByUserId: loadMyTrackerByUserId({
+      query,
+      language,
+      userKey,
+      i18n,
     }),
     loadUserByUserName: loadUserByUserName({ query, userKey, i18n }),
     loadUserConnectionsByUserId: loadUserConnectionsByUserId({

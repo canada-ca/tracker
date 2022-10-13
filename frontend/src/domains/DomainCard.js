@@ -5,18 +5,84 @@ import {
   Button,
   Divider,
   Flex,
+  IconButton,
   ListItem,
+  SimpleGrid,
   Stack,
+  Tag,
+  TagLabel,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
-import { bool, object, string } from 'prop-types'
+import { array, bool, object, string } from 'prop-types'
 
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
+import { StarIcon } from '@chakra-ui/icons'
+import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
+import { useMutation } from '@apollo/client'
+import { useUserVar } from '../utilities/userState'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
-export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
+export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
   const location = useLocation()
+  const toast = useToast()
+  const { isLoggedIn } = useUserVar()
+
+  const [favouriteDomain, { _loading, _error }] = useMutation(
+    FAVOURITE_DOMAIN,
+    {
+      onError: ({ message }) => {
+        toast({
+          title: t`An error occurred while favouriting a domain.`,
+          description: message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onCompleted() {
+        toast({
+          title: t`Favourited Domain`,
+          description: t`You have successfully added ${url} to myTracker.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+
+  const [unfavouriteDomain, { _l, _e }] = useMutation(UNFAVOURITE_DOMAIN, {
+    refetchQueries: ['FindMyTracker'],
+    awaitRefetchQueries: true,
+
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while unfavouriting a domain.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted() {
+      toast({
+        title: t`Unfavourited Domain`,
+        description: t`You have successfully removed ${url} from myTracker.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
+
   const statusGroupingProps = {
     flexDirection: { base: 'column', md: 'row' },
     border: '1px solid',
@@ -34,7 +100,7 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
       <Flex
         width="100%"
         px="4"
-        py={hasDMARCReport ? '2.5' : '6'}
+        py={hasDMARCReport || isLoggedIn() ? '2.5' : '6'}
         borderWidth="1px"
         rounded="md"
         borderColor="black"
@@ -69,6 +135,26 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
           <StatusBadge text="DMARC" status={status.dmarc} />
         </Flex>
         <Divider variant="card" display={{ md: 'none' }} />
+        <ABTestingWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            <SimpleGrid columns={3}>
+              {tags?.map((tag, idx) => {
+                return (
+                  <Tag
+                    key={idx}
+                    m="0.5"
+                    borderRadius="full"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                  >
+                    <TagLabel mx="auto">{tag}</TagLabel>
+                  </Tag>
+                )
+              })}
+            </SimpleGrid>
+          </ABTestVariant>
+        </ABTestingWrapper>
+        <Divider variant="card" display={{ md: 'none' }} />
         <Stack
           fontSize="sm"
           justifySelf="flex-end"
@@ -102,14 +188,42 @@ export function DomainCard({ url, status, hasDMARCReport, ...rest }) {
             </Button>
           )}
         </Stack>
-        <ScanDomainButton domainUrl={url} ml={4} />
+        <Stack ml={4}>
+          <ScanDomainButton domainUrl={url} />
+          <ABTestingWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              {isLoggedIn() &&
+                (location.pathname.match('my-tracker') ? (
+                  <IconButton
+                    onClick={async () => {
+                      await unfavouriteDomain({ variables: { domainId: id } })
+                    }}
+                    variant="primary"
+                    aria-label={`unfavourite ${url}`}
+                    icon={<StarIcon color="moderate" />}
+                  />
+                ) : (
+                  <IconButton
+                    onClick={async () => {
+                      await favouriteDomain({ variables: { domainId: id } })
+                    }}
+                    variant="primary"
+                    aria-label={`favourite ${url}`}
+                    icon={<StarIcon />}
+                  />
+                ))}
+            </ABTestVariant>
+          </ABTestingWrapper>
+        </Stack>
       </Flex>
     </ListItem>
   )
 }
 
 DomainCard.propTypes = {
+  id: string,
   url: string.isRequired,
   status: object,
   hasDMARCReport: bool,
+  tags: array,
 }

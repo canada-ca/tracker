@@ -47,14 +47,10 @@ describe('<SignInPage />', () => {
       )
 
       const email = container.querySelector('#email')
-
+      fireEvent.blur(email)
       await waitFor(() => {
-        fireEvent.blur(email)
+        expect(getByText(/Email cannot be empty/i)).toBeInTheDocument()
       })
-
-      const errorElement = getByText(/Email cannot be empty/i)
-
-      expect(errorElement.innerHTML).toMatch(/Email cannot be empty/i)
     })
   })
 

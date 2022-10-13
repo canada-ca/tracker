@@ -3,7 +3,14 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByOrgId =
-  ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
+  ({
+    query,
+    userKey,
+    language,
+    cleanseInput,
+    i18n,
+    auth: { loginRequiredBool },
+  }) =>
   async ({ orgId, after, before, first, last, ownership, orderBy, search }) => {
     const userDBId = `users/${userKey}`
 
@@ -382,12 +389,21 @@ export const loadDomainConnectionsByOrgId =
     LET retrievedDomains = (
       ${loopString}
         FILTER domain._key IN domainKeys
+        LET claimTags = (
+          FOR v, e IN 1..1 ANY domain._id claims
+            FILTER e._from == ${orgId}
+            LET translatedTags = (
+              FOR tag IN e.tags || []
+                RETURN TRANSLATE(${language}, tag)
+            )
+            RETURN translatedTags
+        )[0]
         ${afterTemplate}
         ${beforeTemplate}
         SORT
         ${sortByField}
         ${limitTemplate}
-        RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+        RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags }, domain)
     )
 
     LET hasNextPage = (LENGTH(

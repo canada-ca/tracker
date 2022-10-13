@@ -24,6 +24,8 @@ import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
+import { ABTestingWrapper } from './ABTestWrapper'
+import { ABTestVariant } from './ABTestVariant'
 
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
@@ -64,6 +66,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 )
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
+const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App() {
   // Hooks to be used with this functional component
@@ -110,9 +113,18 @@ export function App() {
         )}
 
         {isLoggedIn() && (
-          <RouteLink to="/user">
-            <Trans>Account Settings</Trans>
-          </RouteLink>
+          <>
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <RouteLink to="/my-tracker">
+                  <Trans>myTracker</Trans>
+                </RouteLink>
+              </ABTestVariant>
+            </ABTestingWrapper>
+            <RouteLink to="/user">
+              <Trans>Account Settings</Trans>
+            </RouteLink>
+          </>
         )}
 
         {isLoggedIn() && isEmailValidated() && (
@@ -157,7 +169,10 @@ export function App() {
         <Suspense fallback={<LoadingMessage />}>
           <Switch>
             <Page exact path="/" title={t`Home`}>
-              <LandingPage isLoggedIn={isLoggedIn()} />
+              <LandingPage
+                loginRequired={data?.loginRequired}
+                isLoggedIn={isLoggedIn()}
+              />
             </Page>
 
             <Page
@@ -320,6 +335,22 @@ export function App() {
                 />
               )}
             </Page>
+
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
+                  {isLoggedIn() ? (
+                    <MyTrackerPage />
+                  ) : (
+                    <Redirect
+                      to={{
+                        pathname: '/sign-in',
+                      }}
+                    />
+                  )}
+                </Page>
+              </ABTestVariant>
+            </ABTestingWrapper>
 
             <Page path="/validate/:verifyToken" title={t`Email Verification`}>
               {() => <EmailValidationPage />}

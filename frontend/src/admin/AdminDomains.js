@@ -55,6 +55,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [selectorInputList, setSelectorInputList] = useState([])
+  const [tagInputList, setTagInputList] = useState([])
   const [mutation, setMutation] = useState()
 
   const {
@@ -153,7 +154,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </Text>
       )}
     >
-      {({ id: domainId, domain, selectors }, index) => (
+      {({ id: domainId, domain, selectors, claimTags }, index) => (
         <Box key={'admindomain' + index}>
           <Stack isInline align="center">
             <Stack direction="row" flexGrow="0">
@@ -177,6 +178,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   setEditingDomainUrl(domain)
                   setEditingDomainId(domainId)
                   setSelectorInputList(selectors)
+                  setTagInputList(claimTags)
                   setMutation('update')
                   updateOnOpen()
                 }}
@@ -186,6 +188,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             </Stack>
             <AdminDomainCard
               url={domain}
+              tags={claimTags}
+              locale={i18n.locale}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
             />
@@ -203,6 +207,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         onSubmit={async (e) => {
           e.preventDefault() // prevents page from refreshing
           setSelectorInputList([])
+          setTagInputList([])
           setEditingDomainUrl(newDomainUrl)
           setMutation('create')
           updateOnOpen()
@@ -265,6 +270,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         orgId={orgId}
         orgSlug={orgSlug}
         selectorInputList={selectorInputList}
+        tagInputList={tagInputList}
         editingDomainId={editingDomainId}
         editingDomainUrl={editingDomainUrl}
         mutation={mutation}

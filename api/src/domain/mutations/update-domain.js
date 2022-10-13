@@ -5,6 +5,7 @@ import { t } from '@lingui/macro'
 import { updateDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import { inputTag } from '../inputs/domain-tag'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -28,6 +29,10 @@ export const updateDomain = new mutationWithClientMutationId({
       type: new GraphQLList(Selectors),
       description:
         'The updated DKIM selector strings corresponding to this domain.',
+    },
+    tags: {
+      description: 'List of labelled tags users have applied to the domain.',
+      type: new GraphQLList(inputTag),
     },
   }),
   outputFields: () => ({
@@ -66,6 +71,13 @@ export const updateDomain = new mutationWithClientMutationId({
       selectors = args.selectors.map((selector) => cleanseInput(selector))
     } else {
       selectors = null
+    }
+
+    let tags
+    if (typeof args.tags !== 'undefined') {
+      tags = args.tags
+    } else {
+      tags = null
     }
 
     // Check to see if domain exists
@@ -171,6 +183,28 @@ export const updateDomain = new mutationWithClientMutationId({
         `Transaction step error occurred when user: ${userKey} attempted to update domain: ${domainId}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    if (tags) {
+      try {
+        await trx.step(
+          async () =>
+            await query`
+          WITH claims
+          UPSERT { _from: ${org._id}, _to: ${domain._id} }
+            INSERT { tags: ${tags} }
+            UPDATE { tags: ${tags} }
+            IN claims
+      `,
+        )
+      } catch (err) {
+        console.error(
+          `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
+        )
+        throw new Error(
+          i18n._(t`Unable to update domain edge. Please try again.`),
+        )
+      }
     }
 
     // Commit transaction

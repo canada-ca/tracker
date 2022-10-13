@@ -4,6 +4,7 @@ import { Server } from './src/server'
 import { createContext } from './src/create-context'
 import { createI18n } from './src/create-i18n'
 import { connect, JSONCodec } from 'nats'
+import { collectionNames as collections } from './src/collection-names'
 
 const {
   PORT = 4000,
@@ -20,40 +21,6 @@ const {
   LOGIN_REQUIRED = 'true',
   NATS_URL,
 } = process.env
-
-const collections = [
-  'users',
-  'organizations',
-  'domains',
-  'dkim',
-  'dkimResults',
-  'dmarc',
-  'spf',
-  'https',
-  'ssl',
-  'dkimGuidanceTags',
-  'dmarcGuidanceTags',
-  'spfGuidanceTags',
-  'httpsGuidanceTags',
-  'sslGuidanceTags',
-  'chartSummaries',
-  'dmarcSummaries',
-  'aggregateGuidanceTags',
-  'scanSummaryCriteria',
-  'chartSummaryCriteria',
-  'scanSummaries',
-  'affiliations',
-  'claims',
-  'domainsDKIM',
-  'dkimToDkimResults',
-  'domainsDMARC',
-  'domainsSPF',
-  'domainsHTTPS',
-  'domainsSSL',
-  'ownership',
-  'domainsToDmarcSummaries',
-  'auditLogs',
-]
 
 ;(async () => {
   const db = new Database({

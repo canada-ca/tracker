@@ -84,6 +84,12 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
   }
 `
 
+export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
+  query GetAllOrganizationDomainStatuses {
+    getAllOrganizationDomainStatuses
+  }
+`
+
 export const GET_ONE_TIME_SCANS = gql`
   query GetOneTimeScans {
     getOneTimeScans @client
@@ -530,6 +536,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             domain
             lastRan
             selectors
+            claimTags
           }
         }
         pageInfo {
@@ -616,6 +623,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
               ssl
             }
             hasDMARCReport
+            claimTags
           }
         }
       }
@@ -1125,6 +1133,74 @@ export const AUDIT_LOGS = gql`
         hasPreviousPage
         startCursor
         endCursor
+export const MY_TRACKER_SUMMARY = gql`
+  query FindMyTracker {
+    findMyTracker {
+      summaries {
+        https {
+          categories {
+            name
+            count
+            percentage
+          }
+          total
+        }
+        dmarcPhase {
+          categories {
+            name
+            count
+            percentage
+          }
+          total
+        }
+      }
+      domainCount
+    }
+  }
+`
+
+export const MY_TRACKER_DOMAINS = gql`
+  query FindMyTracker(
+    $first: Int
+    $after: String
+    $orderBy: DomainOrder
+    $search: String
+  ) {
+    findMyTracker {
+      domains(
+        orderBy: $orderBy
+        search: $search
+        first: $first
+        after: $after
+        myTracker: true
+      ) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        totalCount
+        edges {
+          node {
+            id
+            domain
+            hasDMARCReport
+            status {
+              ciphers
+              curves
+              dkim
+              dmarc
+              hsts
+              https
+              policy
+              protocols
+              spf
+              ssl
+            }
+          }
+          cursor
+        }
       }
     }
   }

@@ -12,7 +12,16 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load domain connection using org id function', () => {
-  let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
+  let query,
+    drop,
+    truncate,
+    collections,
+    user,
+    org,
+    domain,
+    domainTwo,
+    i18n,
+    language
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -29,16 +38,17 @@ describe('given the load domain connection using org id function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
+      language = 'en'
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -92,6 +102,7 @@ describe('given the load domain connection using org id function', () => {
       await collections.claims.save({
         _from: org._id,
         _to: domain._id,
+        tags: [],
       })
       domainTwo = await collections.domains.save({
         domain: 'test.domain.canada.ca',
@@ -108,6 +119,7 @@ describe('given the load domain connection using org id function', () => {
       await collections.claims.save({
         _from: org._id,
         _to: domainTwo._id,
+        tags: [],
       })
     })
     afterEach(async () => {
@@ -121,6 +133,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -149,6 +162,7 @@ describe('given the load domain connection using org id function', () => {
               cursor: toGlobalId('domain', expectedDomains[1]._key),
               node: {
                 ...expectedDomains[1],
+                claimTags: [],
               },
             },
           ],
@@ -168,6 +182,7 @@ describe('given the load domain connection using org id function', () => {
       it('returns a domain', async () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
+          language,
           userKey: user._key,
           cleanseInput,
           auth: { loginRequired: true },
@@ -197,6 +212,7 @@ describe('given the load domain connection using org id function', () => {
               cursor: toGlobalId('domain', expectedDomains[0]._key),
               node: {
                 ...expectedDomains[0],
+                claimTags: [],
               },
             },
           ],
@@ -216,6 +232,7 @@ describe('given the load domain connection using org id function', () => {
       it('returns a domain', async () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
+          language,
           userKey: user._key,
           cleanseInput,
           auth: { loginRequired: true },
@@ -244,6 +261,7 @@ describe('given the load domain connection using org id function', () => {
               cursor: toGlobalId('domain', expectedDomains[0]._key),
               node: {
                 ...expectedDomains[0],
+                claimTags: [],
               },
             },
           ],
@@ -264,6 +282,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -291,6 +310,7 @@ describe('given the load domain connection using org id function', () => {
               cursor: toGlobalId('domain', expectedDomains[1]._key),
               node: {
                 ...expectedDomains[1],
+                claimTags: [],
               },
             },
           ],
@@ -320,6 +340,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -341,6 +362,7 @@ describe('given the load domain connection using org id function', () => {
               cursor: toGlobalId('domain', expectedDomain._key),
               node: {
                 ...expectedDomain,
+                claimTags: [],
               },
             },
           ],
@@ -362,6 +384,7 @@ describe('given the load domain connection using org id function', () => {
         const connectionLoader = loadDomainConnectionsByOrgId({
           query,
           userKey: user._key,
+          language,
           cleanseInput,
           auth: { loginRequired: true },
         })
@@ -397,6 +420,7 @@ describe('given the load domain connection using org id function', () => {
         await collections.claims.save({
           _from: org._id,
           _to: domainThree._id,
+          tags: [],
         })
         await collections.ownership.save({
           _from: org._id,
@@ -408,6 +432,7 @@ describe('given the load domain connection using org id function', () => {
           const connectionLoader = loadDomainConnectionsByOrgId({
             query,
             userKey: user._key,
+            language,
             cleanseInput,
             auth: { loginRequiredBool: true },
           })
@@ -434,6 +459,7 @@ describe('given the load domain connection using org id function', () => {
                 cursor: toGlobalId('domain', expectedDomains[0]._key),
                 node: {
                   ...expectedDomains[0],
+                  claimTags: [],
                 },
               },
             ],
@@ -454,6 +480,7 @@ describe('given the load domain connection using org id function', () => {
           const connectionLoader = loadDomainConnectionsByOrgId({
             query,
             userKey: user._key,
+            language,
             cleanseInput,
             auth: { loginRequired: true },
           })
@@ -480,18 +507,21 @@ describe('given the load domain connection using org id function', () => {
                 cursor: toGlobalId('domain', expectedDomains[0]._key),
                 node: {
                   ...expectedDomains[0],
+                  claimTags: [],
                 },
               },
               {
                 cursor: toGlobalId('domain', expectedDomains[1]._key),
                 node: {
                   ...expectedDomains[1],
+                  claimTags: [],
                 },
               },
               {
                 cursor: toGlobalId('domain', expectedDomains[2]._key),
                 node: {
                   ...expectedDomains[2],
+                  claimTags: [],
                 },
               },
             ],
@@ -533,6 +563,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -547,6 +578,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -584,6 +616,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -599,6 +632,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -638,6 +672,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -653,6 +688,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -690,6 +726,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -705,6 +742,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -744,6 +782,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -759,6 +798,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -796,6 +836,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -811,6 +852,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -850,6 +892,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -865,6 +908,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -902,6 +946,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -917,6 +962,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -956,6 +1002,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -971,6 +1018,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1008,6 +1056,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1023,6 +1072,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1064,6 +1114,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1079,6 +1130,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1116,6 +1168,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1131,6 +1184,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1170,6 +1224,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1185,6 +1240,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1222,6 +1278,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1237,6 +1294,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1276,6 +1334,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1291,6 +1350,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1328,6 +1388,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1343,6 +1404,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1382,6 +1444,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1397,6 +1460,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1434,6 +1498,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1449,6 +1514,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1488,6 +1554,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1503,6 +1570,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[1]._key),
                     node: {
                       ...expectedDomains[1],
+                      claimTags: [],
                     },
                   },
                 ],
@@ -1540,6 +1608,7 @@ describe('given the load domain connection using org id function', () => {
               const connectionLoader = loadDomainConnectionsByOrgId({
                 query,
                 userKey: user._key,
+                language,
                 cleanseInput,
                 auth: { loginRequired: true },
               })
@@ -1555,6 +1624,7 @@ describe('given the load domain connection using org id function', () => {
                     cursor: toGlobalId('domain', expectedDomains[0]._key),
                     node: {
                       ...expectedDomains[0],
+                      claimTags: [],
                     },
                   },
                 ],
