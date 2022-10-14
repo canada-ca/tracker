@@ -1,29 +1,11 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
-import { Box, Stack, Text } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { SummaryGroup } from '../summaries/SummaryGroup'
 import { number, object, string } from 'prop-types'
 
-export function OrganizationSummary({ summaries, domainCount, userCount }) {
+export function OrganizationSummary({ summaries }) {
   return (
     <Box w="100%">
-      <Stack fontSize="xl" align={{ base: 'center', md: 'flex-start' }} mb="8">
-        <Stack isInline align="center">
-          <Text fontWeight="semibold">{domainCount}</Text>
-          <Text>
-            <Trans>Internet facing domains</Trans>
-          </Text>
-        </Stack>
-
-        {!isNaN(userCount) && (
-          <Stack isInline align="center">
-            <Text fontWeight="semibold">{userCount}</Text>
-            <Text>
-              <Trans>Total users</Trans>
-            </Text>
-          </Stack>
-        )}
-      </Stack>
       <SummaryGroup
         https={summaries?.https}
         dmarcPhases={summaries?.dmarcPhase}

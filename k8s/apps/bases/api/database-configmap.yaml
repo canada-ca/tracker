@@ -359,6 +359,28 @@ data:
               }
             }
           }
+        },
+        {
+          "type": "searchview",
+          "name": "auditLogSearch",
+          "options": {
+            "links": {
+              "auditLogs": {
+                "fields": {
+                  "initiatedBy": {
+                    "fields": {
+                      "userName": { "analyzers": ["text_en"] }
+                    }
+                  },
+                  "target": {
+                    "fields": {
+                      "resource": { "analyzers": ["text_en"] }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       ]
     }

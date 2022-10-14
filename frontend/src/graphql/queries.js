@@ -557,9 +557,6 @@ export const ORG_DETAILS_PAGE = gql`
       id
       name
       acronym
-      domainCount
-      city
-      province
       verified
       summaries {
         https {
@@ -617,7 +614,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
               dmarc
               hsts
               https
-              policy
+              # policy
               protocols
               spf
               ssl
@@ -684,7 +681,7 @@ export const PAGINATED_DOMAINS = gql`
             dmarc
             hsts
             https
-            policy
+            # policy
             protocols
             spf
           }
@@ -1198,7 +1195,7 @@ export const MY_TRACKER_DOMAINS = gql`
               dmarc
               hsts
               https
-              policy
+              # policy
               protocols
               spf
               ssl

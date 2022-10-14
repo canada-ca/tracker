@@ -4,16 +4,7 @@ import { t } from '@lingui/macro'
 
 export const loadAuditLogsByOrgId =
   ({ query, userKey, i18n, cleanseInput }) =>
-  async ({
-    orgId,
-    permission,
-    after,
-    _before,
-    first,
-    last,
-    orderBy,
-    search,
-  }) => {
+  async ({ orgId, permission, after, first, last, orderBy, search }) => {
     let afterTemplate = aql``
     let afterVar = aql``
     if (typeof after !== 'undefined') {
@@ -213,12 +204,15 @@ export const loadAuditLogsByOrgId =
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       logQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
+      LET tokenArr = TOKENS(${search}, "text_en")
       LET searchedLogs = (
         FOR tokenItem in tokenArr
           LET token = LOWER(tokenItem)
           FOR log IN auditLogSearch
-            SEARCH ANALYZER(log.TODO LIKE CONCAT("%", token, "%"))
+            SEARCH ANALYZER(
+              log.initiatedBy.userName LIKE CONCAT("%", token, "%")
+              OR log.target.resource LIKE CONCAT("%", token, "%")
+            , "text_en")
             FILTER log._key IN logKeys
             RETURN log
       )
