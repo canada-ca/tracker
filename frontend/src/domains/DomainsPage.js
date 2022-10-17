@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
-  Box, Divider,
+  Box,
   Flex,
   Heading,
   Link,
