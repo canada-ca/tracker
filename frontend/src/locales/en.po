@@ -187,7 +187,7 @@ msgstr "An error has occurred."
 msgid "An error occured when fetching this organization's information"
 msgstr "An error occured when fetching this organization's information"
 
-#: src/domains/DomainsPage.js:47
+#: src/domains/DomainsPage.js:48
 msgid "An error occured when you attempted to download all domain statuses."
 msgstr "An error occured when you attempted to download all domain statuses."
 
@@ -375,13 +375,13 @@ msgid "Check your associated Tracker email for the verification link"
 msgstr "Check your associated Tracker email for the verification link"
 
 #: src/domains/DomainCard.js:128
-#: src/domains/DomainsPage.js:197
+#: src/domains/DomainsPage.js:198
 #: src/guidance/ScanCategoryDetails.js:216
 #: src/organizationDetails/OrganizationDomains.js:139
 msgid "Ciphers"
 msgstr "Ciphers"
 
-#: src/domains/DomainsPage.js:93
+#: src/domains/DomainsPage.js:94
 #: src/organizationDetails/OrganizationDomains.js:78
 msgid "Ciphers Status"
 msgstr "Ciphers Status"
@@ -550,18 +550,18 @@ msgid "Current Phone Number:"
 msgstr "Current Phone Number:"
 
 #: src/domains/DomainCard.js:129
-#: src/domains/DomainsPage.js:201
+#: src/domains/DomainsPage.js:202
 #: src/guidance/ScanCategoryDetails.js:219
 #: src/organizationDetails/OrganizationDomains.js:143
 msgid "Curves"
 msgstr "Curves"
 
-#: src/domains/DomainsPage.js:94
+#: src/domains/DomainsPage.js:95
 #: src/organizationDetails/OrganizationDomains.js:79
 msgid "Curves Status"
 msgstr "Curves Status"
 
-#: src/domains/DomainsPage.js:221
+#: src/domains/DomainsPage.js:222
 #: src/organizationDetails/OrganizationDomains.js:163
 msgid "DKIM"
 msgstr "DKIM"
@@ -600,12 +600,12 @@ msgstr "DKIM Selectors"
 msgid "DKIM Selectors:"
 msgstr "DKIM Selectors:"
 
-#: src/domains/DomainsPage.js:97
+#: src/domains/DomainsPage.js:98
 #: src/organizationDetails/OrganizationDomains.js:82
 msgid "DKIM Status"
 msgstr "DKIM Status"
 
-#: src/domains/DomainsPage.js:225
+#: src/domains/DomainsPage.js:226
 #: src/organizationDetails/OrganizationDomains.js:167
 msgid "DMARC"
 msgstr "DMARC"
@@ -644,7 +644,7 @@ msgstr "DMARC Phases"
 
 #: src/dmarc/DmarcReportPage.js:92
 #: src/domains/DomainCard.js:186
-#: src/guidance/DmarcGuidancePage.js:101
+#: src/guidance/DmarcGuidancePage.js:102
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -652,7 +652,7 @@ msgstr "DMARC Report"
 msgid "DMARC Report for {domainSlug}"
 msgstr "DMARC Report for {domainSlug}"
 
-#: src/domains/DomainsPage.js:98
+#: src/domains/DomainsPage.js:99
 #: src/organizationDetails/OrganizationDomains.js:83
 msgid "DMARC Status"
 msgstr "DMARC Status"
@@ -745,8 +745,8 @@ msgstr "Disposition"
 
 #: src/dmarc/DmarcByDomainPage.js:124
 #: src/dmarc/DmarcByDomainPage.js:312
-#: src/domains/DomainsPage.js:89
-#: src/domains/DomainsPage.js:179
+#: src/domains/DomainsPage.js:90
+#: src/domains/DomainsPage.js:180
 #: src/organizationDetails/OrganizationDomains.js:74
 #: src/organizationDetails/OrganizationDomains.js:121
 msgid "Domain"
@@ -796,8 +796,8 @@ msgstr "Domain:"
 #: src/app/App.js:107
 #: src/app/App.js:280
 #: src/app/FloatingMenu.js:116
-#: src/domains/DomainsPage.js:103
-#: src/domains/DomainsPage.js:141
+#: src/domains/DomainsPage.js:104
+#: src/domains/DomainsPage.js:142
 #: src/organizationDetails/OrganizationDetails.js:138
 #: src/organizationDetails/OrganizationDomains.js:88
 #: src/summaries/Doughnut.js:50
@@ -848,7 +848,7 @@ msgid "Email"
 msgstr "Email"
 
 #: src/domains/ScanDomain.js:286
-#: src/guidance/DmarcGuidancePage.js:117
+#: src/guidance/DmarcGuidancePage.js:118
 msgid "Email Guidance"
 msgstr "Email Guidance"
 
@@ -1048,7 +1048,7 @@ msgstr "Further details for each organization can be found by clicking on its ro
 #~ msgid "General Public"
 #~ msgstr "General Public"
 
-#: src/domains/DomainsPage.js:151
+#: src/domains/DomainsPage.js:152
 msgid "Getting domain statuses"
 msgstr "Getting domain statuses"
 
@@ -1077,7 +1077,7 @@ msgstr "Government of Canada Employees"
 msgid "Guidance"
 msgstr "Guidance"
 
-#: src/guidance/DmarcGuidancePage.js:56
+#: src/guidance/DmarcGuidancePage.js:57
 msgid "Guidance Tags"
 msgstr "Guidance Tags"
 
@@ -1087,7 +1087,7 @@ msgid "Guidance:"
 msgstr "Guidance:"
 
 #: src/domains/DomainCard.js:127
-#: src/domains/DomainsPage.js:205
+#: src/domains/DomainsPage.js:206
 #: src/organizationDetails/OrganizationDomains.js:147
 msgid "HSTS"
 msgstr "HSTS"
@@ -1096,7 +1096,7 @@ msgstr "HSTS"
 msgid "HSTS Age:"
 msgstr "HSTS Age:"
 
-#: src/domains/DomainsPage.js:92
+#: src/domains/DomainsPage.js:93
 #: src/organizationDetails/OrganizationDomains.js:77
 msgid "HSTS Status"
 msgstr "HSTS Status"
@@ -1106,7 +1106,7 @@ msgid "HSTS Status:"
 msgstr "HSTS Status:"
 
 #: src/domains/DomainCard.js:126
-#: src/domains/DomainsPage.js:209
+#: src/domains/DomainsPage.js:210
 #: src/organizationDetails/OrganizationDomains.js:151
 msgid "HTTPS"
 msgstr "HTTPS"
@@ -1124,7 +1124,7 @@ msgstr "HTTPS Configured"
 msgid "HTTPS Scan Complete"
 msgstr "HTTPS Scan Complete"
 
-#: src/domains/DomainsPage.js:91
+#: src/domains/DomainsPage.js:92
 #: src/organizationDetails/OrganizationDomains.js:76
 msgid "HTTPS Status"
 msgstr "HTTPS Status"
@@ -1164,7 +1164,7 @@ msgstr "Home"
 #~ msgstr "INACTIVE"
 
 #: src/domains/DomainCard.js:125
-#: src/domains/DomainsPage.js:181
+#: src/domains/DomainsPage.js:182
 #: src/organizationDetails/OrganizationDomains.js:123
 msgid "ITPIN"
 msgstr "ITPIN"
@@ -1541,7 +1541,7 @@ msgid "No DMARC phase information available for this organization."
 msgstr "No DMARC phase information available for this organization."
 
 #: src/admin/AdminDomains.js:151
-#: src/domains/DomainsPage.js:110
+#: src/domains/DomainsPage.js:111
 #: src/organizationDetails/OrganizationDomains.js:95
 msgid "No Domains"
 msgstr "No Domains"
@@ -1583,12 +1583,12 @@ msgstr "No data for the Fully Aligned by IP Address table"
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "No data for the SPF Failures by IP Address table"
 
-#: src/domains/DomainsPage.js:161
-#: src/domains/DomainsPage.js:169
+#: src/domains/DomainsPage.js:162
+#: src/domains/DomainsPage.js:170
 msgid "No data found"
 msgstr "No data found"
 
-#: src/domains/DomainsPage.js:162
+#: src/domains/DomainsPage.js:163
 msgid "No data found when retrieving all domain statuses."
 msgstr "No data found when retrieving all domain statuses."
 
@@ -1838,12 +1838,12 @@ msgid "Privacy Notice Statement"
 msgstr "Privacy Notice Statement"
 
 #: src/domains/DomainCard.js:130
-#: src/domains/DomainsPage.js:213
+#: src/domains/DomainsPage.js:214
 #: src/organizationDetails/OrganizationDomains.js:155
 msgid "Protocols"
 msgstr "Protocols"
 
-#: src/domains/DomainsPage.js:95
+#: src/domains/DomainsPage.js:96
 #: src/organizationDetails/OrganizationDomains.js:80
 msgid "Protocols Status"
 msgstr "Protocols Status"
@@ -1917,7 +1917,7 @@ msgstr "Report an Issue"
 msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
-#: src/domains/DomainsPage.js:152
+#: src/domains/DomainsPage.js:153
 msgid "Request successfully sent to get all domain statuses - this may take a minute."
 msgstr "Request successfully sent to get all domain statuses - this may take a minute."
 
@@ -1962,7 +1962,7 @@ msgstr "Role:"
 msgid "Rotate DKIM keys annually."
 msgstr "Rotate DKIM keys annually."
 
-#: src/domains/DomainsPage.js:217
+#: src/domains/DomainsPage.js:218
 #: src/organizationDetails/OrganizationDomains.js:159
 msgid "SPF"
 msgstr "SPF"
@@ -1989,7 +1989,7 @@ msgstr "SPF Failures by IP Address"
 msgid "SPF Results"
 msgstr "SPF Results"
 
-#: src/domains/DomainsPage.js:96
+#: src/domains/DomainsPage.js:97
 #: src/organizationDetails/OrganizationDomains.js:81
 msgid "SPF Status"
 msgstr "SPF Status"
@@ -2058,7 +2058,7 @@ msgstr "Search by Domain URL"
 
 #: src/dmarc/DmarcByDomainPage.js:221
 #: src/dmarc/DmarcByDomainPage.js:287
-#: src/domains/DomainsPage.js:245
+#: src/domains/DomainsPage.js:246
 #: src/organizationDetails/OrganizationDomains.js:186
 msgid "Search for a domain"
 msgstr "Search for a domain"
@@ -2134,7 +2134,7 @@ msgstr "Show {pageSize}"
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
 
-#: src/domains/DomainsPage.js:184
+#: src/domains/DomainsPage.js:185
 #: src/organizationDetails/OrganizationDomains.js:126
 msgid "Shows if the domain is compliant with"
 msgstr "Shows if the domain is compliant with"
@@ -2149,42 +2149,42 @@ msgstr "Shows if the domain is compliant with"
 #~ msgid "Shows if the domain is policy compliant."
 #~ msgstr "Shows if the domain is policy compliant."
 
-#: src/domains/DomainsPage.js:222
+#: src/domains/DomainsPage.js:223
 #: src/organizationDetails/OrganizationDomains.js:164
 msgid "Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
 msgstr "Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
 
-#: src/domains/DomainsPage.js:206
+#: src/domains/DomainsPage.js:207
 #: src/organizationDetails/OrganizationDomains.js:148
 msgid "Shows if the domain meets the HSTS requirements."
 msgstr "Shows if the domain meets the HSTS requirements."
 
-#: src/domains/DomainsPage.js:210
+#: src/domains/DomainsPage.js:211
 #: src/organizationDetails/OrganizationDomains.js:152
 msgid "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements."
 msgstr "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements."
 
-#: src/domains/DomainsPage.js:226
+#: src/domains/DomainsPage.js:227
 #: src/organizationDetails/OrganizationDomains.js:168
 msgid "Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
 msgstr "Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
 
-#: src/domains/DomainsPage.js:218
+#: src/domains/DomainsPage.js:219
 #: src/organizationDetails/OrganizationDomains.js:160
 msgid "Shows if the domain meets the Sender Policy Framework (SPF) requirements."
 msgstr "Shows if the domain meets the Sender Policy Framework (SPF) requirements."
 
-#: src/domains/DomainsPage.js:214
+#: src/domains/DomainsPage.js:215
 #: src/organizationDetails/OrganizationDomains.js:156
 msgid "Shows if the domain uses acceptable protocols."
 msgstr "Shows if the domain uses acceptable protocols."
 
-#: src/domains/DomainsPage.js:198
+#: src/domains/DomainsPage.js:199
 #: src/organizationDetails/OrganizationDomains.js:140
 msgid "Shows if the domain uses only ciphers that are strong or acceptable."
 msgstr "Shows if the domain uses only ciphers that are strong or acceptable."
 
-#: src/domains/DomainsPage.js:202
+#: src/domains/DomainsPage.js:203
 #: src/organizationDetails/OrganizationDomains.js:144
 msgid "Shows if the domain uses only curves that are strong or acceptable."
 msgstr "Shows if the domain uses only curves that are strong or acceptable."
@@ -2348,7 +2348,7 @@ msgid "The advice, guidance or services provided to you by TBS will be provided 
 msgstr "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
 
 #: src/dmarc/DmarcByDomainPage.js:312
-#: src/domains/DomainsPage.js:179
+#: src/domains/DomainsPage.js:180
 #: src/organizationDetails/OrganizationDomains.js:121
 msgid "The domain address."
 msgstr "The domain address."
@@ -2428,6 +2428,10 @@ msgstr "Total users"
 #: src/landing/LandingPage.js:24
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
+
+#: src/domains/SubdomainWarning.js:18
+msgid "Tracker HSTS and HTTPS results display incorrectly when a domain has a non-compliant WWW subdomain. Check your WWW subdomain if your results appear incorrect. For example, the results for www.canada.ca in the Tracker platform are included in the results for canada.ca Work is in progress to separate the results."
+msgstr "Tracker HSTS and HTTPS results display incorrectly when a domain has a non-compliant WWW subdomain. Check your WWW subdomain if your results appear incorrect. For example, the results for www.canada.ca in the Tracker platform are included in the results for canada.ca Work is in progress to separate the results."
 
 #: src/admin/SuperAdminUserList.js:92
 #: src/user/UserPage.js:95
@@ -2718,7 +2722,7 @@ msgid "Web Check"
 msgstr "Web Check"
 
 #: src/domains/ScanDomain.js:283
-#: src/guidance/DmarcGuidancePage.js:114
+#: src/guidance/DmarcGuidancePage.js:115
 msgid "Web Guidance"
 msgstr "Web Guidance"
 
