@@ -1,9 +1,9 @@
-import React from "react"
-import {Flex, Text} from "@chakra-ui/react"
-import {WarningTwoIcon} from "@chakra-ui/icons"
-import {Trans} from "@lingui/macro"
+import React from 'react'
+import { Flex, Text } from '@chakra-ui/react'
+import { WarningTwoIcon } from '@chakra-ui/icons'
+import { Trans } from '@lingui/macro'
 
-export function SubdomainWarning({...props}) {
+export function SubdomainWarning({ ...props }) {
   return (
     <Flex
       direction="row"
@@ -19,7 +19,7 @@ export function SubdomainWarning({...props}) {
           Tracker HSTS and HTTPS results display incorrectly when a domain has a
           non-compliant WWW subdomain. Check your WWW subdomain if your results
           appear incorrect. For example, the results for www.canada.ca in the
-          Tracker platform are included in the results for canada.ca Work is in
+          Tracker platform are included in the results for canada.ca. Work is in
           progress to separate the results.
         </Trans>
       </Text>
