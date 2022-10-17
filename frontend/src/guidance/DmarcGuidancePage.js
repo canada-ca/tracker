@@ -29,6 +29,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 import { ScanDomainButton } from '../domains/ScanDomainButton'
+import {SubdomainWarning} from "../domains/SubdomainWarning"
 
 export default function DmarcGuidancePage() {
   const { domainSlug, activeTab } = useParams()
@@ -120,6 +121,7 @@ export default function DmarcGuidancePage() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <SubdomainWarning mb="4"/>
               <ScanCard scanType="web" scanData={webScan} status={webStatus} />
             </ErrorBoundary>
           </TabPanel>
