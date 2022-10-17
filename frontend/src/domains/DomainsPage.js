@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
-  Box,
+  Box, Divider,
   Flex,
   Heading,
   Link,
@@ -9,7 +9,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import {ExternalLinkIcon} from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -28,6 +28,7 @@ import {
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
+import {SubdomainWarning} from "./SubdomainWarning"
 
 export default function DomainsPage() {
   const toast = useToast()
@@ -244,6 +245,9 @@ export default function DomainsPage() {
           orderByOptions={orderByOptions}
           placeholder={t`Search for a domain`}
         />
+
+        <SubdomainWarning mb="4"/>
+
         {domainList}
 
         <RelayPaginationControls
