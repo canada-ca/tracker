@@ -115,7 +115,7 @@ reports:
 credentials:
 		@cat <<-'EOF' > k8s/apps/bases/scanners/scanner-platform/creds/scanners.env
 		DB_PASS=test
-		DB_HOST=arangodb.db
+		DB_URL=http://arangodb.db:8529
 		DB_USER=root
 		DB_NAME=track_dmarc
 		EOF

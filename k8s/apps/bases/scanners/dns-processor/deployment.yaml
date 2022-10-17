@@ -23,7 +23,10 @@ spec:
             - name: DB_NAME
               value: track_dmarc
             - name: DB_URL
-              value: http://arangodb.db:8529
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_URL
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:

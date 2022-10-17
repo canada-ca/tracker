@@ -13,9 +13,8 @@ from dotenv import load_dotenv
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
-DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
-DB_HOST = os.getenv("DB_HOST")
+DB_URL = os.getenv("DB_URL")
 
 SCAN_TYPES = ["https", "ssl", "dkim", "spf", "dmarc"]
 CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"],
@@ -24,8 +23,8 @@ CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"],
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                          password=DB_PASS, port=DB_PORT):
+def update_scan_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
+                          password=DB_PASS):
     logging.info(f"Updating scan summaries...")
 
     # Establish DB connection
@@ -149,8 +148,8 @@ def update_dmarc_phase_chart_summaries(db):
     logging.info("DMARC phase scan summary updated.")
 
 
-def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                           password=DB_PASS, port=DB_PORT):
+def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
+                           password=DB_PASS):
     logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
@@ -201,8 +200,8 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
     logging.info(f"Chart summary update completed.")
 
 
-def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                         password=DB_PASS, port=DB_PORT):
+def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
+                         password=DB_PASS):
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection

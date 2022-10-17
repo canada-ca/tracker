@@ -1,40 +1,33 @@
-apiVersion: batch/v1beta1
-kind: CronJob
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: guidance
   namespace: scanners
 spec:
-  schedule: "59 22 * * *"
-  concurrencyPolicy: Replace
-  startingDeadlineSeconds: 180
-  jobTemplate:
+  template:
     spec:
-      template:
-        spec:
-          containers:
-            - name: guidance
-              image: gcr.io/track-compliance/services/guidance:master-a84caad-1657825400 # {"$imagepolicy": "flux-system:guidance"}
-              env:
-                - name: DB_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: DB_USER
-                - name: DB_PASS
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: DB_PASS
-                - name: DB_HOST
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: DB_HOST
-                - name: DB_PORT
-                  value: "8529"
-                - name: DB_NAME
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: DB_NAME
-          restartPolicy: OnFailure
+      containers:
+        - name: guidance
+          image: gcr.io/track-compliance/services/guidance:master-a84caad-1657825400 # {"$imagepolicy": "flux-system:guidance"}
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_URL
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
+      restartPolicy: OnFailure

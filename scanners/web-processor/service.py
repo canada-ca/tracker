@@ -103,8 +103,6 @@ async def processor_service(loop):
 
         if user_key is None:
             try:
-                web_scan_entry = db.collection("webScan").get({'_key': web_scan_key})
-
                 db.collection("webScan").update_match(
                     {'_key': web_scan_key},
                     {
@@ -114,9 +112,6 @@ async def processor_service(loop):
                 )
 
                 domain = db.collection("domains").get({"_key": domain_key})
-                db.collection("webToWebScans").insert(
-                    {"_from": domain["_id"], "timestamp": processed_results["timestamp"], "_to": web_scan_entry["_id"]}
-                )
 
                 if domain.get("status", None) == None:
                     domain.update(

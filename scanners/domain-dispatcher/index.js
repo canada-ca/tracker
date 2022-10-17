@@ -11,8 +11,7 @@ const { waitUntil, TimeoutError } = wait
 config()
 
 const {
-  DB_HOST: host,
-  DB_PORT: port,
+  DB_URL: dbUrl,
   DB_COLLECTION: collection,
   DB_NAME: databaseName,
   DB_PASS: password,
@@ -45,7 +44,7 @@ let db
   }
 
   db = new Database({
-    url: `http://${host}:${port}`,
+    url: dbUrl,
     databaseName,
     auth: { username, password },
   })
