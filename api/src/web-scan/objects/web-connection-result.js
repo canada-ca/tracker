@@ -26,11 +26,6 @@ export const webConnectionResultType = new GraphQLObjectType({
       description: `Whether or not the server is serving data over HTTPS`,
       resolve: async ({httpsLive}) => httpsLive,
     },
-    httpsDowngrades: {
-      type: GraphQLBoolean,
-      description: `Whether or not HTTPS connection is immediately downgraded to HTTP.`,
-      resolve: async ({httpsDowngrades}) => httpsDowngrades,
-    },
     httpImmediatelyUpgrades: {
       type: GraphQLBoolean,
       description: `Whether or not HTTP connection was immediately upgraded (redirected) to HTTPS.`,
@@ -38,8 +33,13 @@ export const webConnectionResultType = new GraphQLObjectType({
     },
     httpEventuallyUpgrades: {
       type: GraphQLBoolean,
-      description: `Whether or not HTTP connection was eventually upgraded (after first redirect) to HTTPS.`,
+      description: `Whether or not HTTP connection was eventually upgraded to HTTPS.`,
       resolve: async ({httpEventuallyUpgrades}) => httpEventuallyUpgrades,
+    },
+    httpsImmediatelyDowngrades: {
+      type: GraphQLBoolean,
+      description: `Whether or not HTTPS connection is immediately downgraded to HTTP.`,
+      resolve: async ({httpsImmediatelyDowngrades}) => httpsImmediatelyDowngrades,
     },
     httpsEventuallyDowngrades: {
       type: GraphQLBoolean,

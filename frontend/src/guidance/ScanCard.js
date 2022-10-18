@@ -1,5 +1,5 @@
-import React from 'react'
-import { Accordion, Box, Heading, Stack, Text } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Accordion, Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { any, object, string } from 'prop-types'
 import { t, Trans } from '@lingui/macro'
@@ -7,12 +7,9 @@ import { t, Trans } from '@lingui/macro'
 import { ScanCategoryDetails } from './ScanCategoryDetails'
 
 export function ScanCard({ scanType, scanData, status }) {
-  const cardTitle =
-    scanType === 'web'
-      ? t`Web Scan Results`
-      : scanType === 'dns'
-      ? t`DNS Scan Results`
-      : ''
+  const [currentScanIndex, setCurrentScanIndex] = useState(0)
+
+  const cardTitle = scanType === 'web' ? t`Web Scan Results` : scanType === 'dns' ? t`DNS Scan Results` : ''
   const cardDescription =
     scanType === 'web'
       ? t`Results for scans of web technologies (TLS, HTTPS).`
@@ -53,10 +50,7 @@ export function ScanCard({ scanType, scanData, status }) {
             <Stack isInline align="center" px="2">
               <CheckCircleIcon color="strong" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
-                <Trans>
-                  Web Sites and Services Management Configuration Requirements
-                  Compliant
-                </Trans>
+                <Trans>Web Sites and Services Management Configuration Requirements Compliant</Trans>
               </Text>
             </Stack>
           ) : (
@@ -64,8 +58,7 @@ export function ScanCard({ scanType, scanData, status }) {
               <WarningTwoIcon color="moderate" size="icons.md" />
               <Text fontWeight="bold" fontSize="2xl">
                 <Trans>
-                  Changes required for Web Sites and Services Management
-                  Configuration Requirements compliance
+                  Changes required for Web Sites and Services Management Configuration Requirements compliance
                 </Trans>
               </Text>
             </Stack>
@@ -104,41 +97,43 @@ export function ScanCard({ scanType, scanData, status }) {
     categoryList.push(
       <ScanCategoryDetails
         categoryName="ssl"
-        categoryData={scanData.edges[0]?.node?.results[0]?.results?.tlsResult}
+        categoryData={scanData.edges[0]?.node?.results[currentScanIndex]?.results?.tlsResult}
         key="ssl"
-      />
+      />,
     )
 
     categoryList.push(
       <ScanCategoryDetails
         categoryName="https"
-        categoryData={scanData.edges[0]?.node?.results[0]?.results?.connectionResults}
+        categoryData={scanData.edges[0]?.node?.results[currentScanIndex]?.results?.connectionResults}
         key="https"
-      />
+      />,
+    )
+  } else if (scanType === 'dns') {
+    categoryList.push(
+      <ScanCategoryDetails categoryName="dmarc" categoryData={scanData.edges[0]?.node?.dmarc} key="dmarc" />,
+    )
+    categoryList.push(<ScanCategoryDetails categoryName="spf" categoryData={scanData.edges[0]?.node?.spf} key="ssl" />)
+    categoryList.push(
+      <ScanCategoryDetails categoryName="dkim" categoryData={scanData.edges[0]?.node?.dkim} key="dkim" />,
     )
   }
-  else if (scanType === 'dns') {
-    categoryList.push(
-      <ScanCategoryDetails
-        categoryName="dmarc"
-        categoryData={scanData.edges[0]?.node?.dmarc}
-        key="dmarc"
-      />
-    )
-    categoryList.push(
-      <ScanCategoryDetails
-        categoryName="spf"
-        categoryData={scanData.edges[0]?.node?.spf}
-        key="ssl"
-      />
-    )
-    categoryList.push(
-      <ScanCategoryDetails
-        categoryName="dkim"
-        categoryData={scanData.edges[0]?.node?.dkim}
-        key="dkim"
-      />
-    )
+
+  let ipSelectorArea
+  if (scanType === 'web') {
+    const ipSelectors = scanData.edges[0]?.node?.results.map((result, index) => {
+      return (
+        <Button
+          onClick={() => {
+            setCurrentScanIndex(index)
+          }}
+          key={result.ipAddress}
+        >
+          {result.ipAddress}
+        </Button>
+      )
+    })
+    ipSelectorArea = <Flex flexDirection="row">{ipSelectors}</Flex>
   }
 
   return (
@@ -154,6 +149,8 @@ export function ScanCard({ scanType, scanData, status }) {
       <Box>
         <Stack spacing="30px" px="1" mt="1">
           {topInfo()}
+
+          {scanType === 'web' && ipSelectorArea}
           <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
             {categoryList}
           </Accordion>

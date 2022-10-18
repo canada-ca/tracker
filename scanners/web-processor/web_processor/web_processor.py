@@ -152,12 +152,12 @@ def process_connection_results(connection_results):
     http_live = not http_connections[0]["error"]
     https_live = not https_connections[0]["error"]
 
-    hsts_status = "info"
-    https_status = "info"
+    hsts_status = None
+    https_status = None
 
-    https_downgrades = None
     http_immediately_upgrades = None
     http_eventually_upgrades = None
+    https_immediately_downgrades = None
     https_eventually_downgrades = None
     hsts_parsed = None
 
@@ -169,20 +169,23 @@ def process_connection_results(connection_results):
 
     # check HTTPS properties
     if https_live:
-        # check if https chain only contains https urls
-        https_downgrades = check_https_downgrades(https_connections)
+        # check if https chain immediately downgrades connection
+        https_immediately_downgrades = check_https_downgrades(https_connections[:1])
+
+        # check if https chain eventually downgrades connection
+        https_eventually_downgrades = check_https_downgrades(https_connections)
 
         # check HSTS header
         hsts = None
         try:
-            hsts = https_connections[0]["connection"]["headers"]["Strict-Transport-Security"]
+            hsts = https_connections[0]["connection"]["headers"]["strict-transport-security"]
         except KeyError:
             pass
 
         if hsts:
             max_age = None
-            include_subdomains = None
-            preload = None
+            include_subdomains = False
+            preload = False
 
             directives = [directive.strip() for directive in hsts.split(";") if len(directive) > 0]
 
@@ -205,9 +208,8 @@ def process_connection_results(connection_results):
 
     # check HTTP properties
     if http_live:
-        http_immediately_upgrades = False
-        http_eventually_upgrades = False
-        https_eventually_downgrades = False
+        http_immediately_upgrades = None
+        http_eventually_upgrades = None
         try:
             # find index of first https upgrade
             first_https_index = list(conn["scheme"] == "https" for conn in http_connections).index(True)
@@ -215,21 +217,27 @@ def process_connection_results(connection_results):
             # check if HTTP connection is immediately upgraded (redirected) to HTTPS
             if first_https_index == 1:
                 http_immediately_upgrades = True
-            # check if HTTP connection eventually (after first redirect) is upgrades (redirected) to HTTPS
-            elif first_https_index > 1:
+            # check if HTTP connection eventually is upgraded (redirected) to HTTPS
+            if first_https_index >= 1:
                 http_eventually_upgrades = True
 
-            https_eventually_downgrades = check_https_downgrades(https_connections[first_https_index:])
         except IndexError:
             pass
 
     http_down_or_redirect = not http_live or http_immediately_upgrades
 
-    if http_live or https_live:
-        https_status = "pass" if http_down_or_redirect and https_live and not https_downgrades and not https_eventually_downgrades else "fail"
+    if not http_live and not https_live:
+        # no live endpoints, give info status
+        https_status = "info"
+    else:
+        # live endpoints exist, check for upgrades/downgrades
+        if http_down_or_redirect and https_live and not https_eventually_downgrades:
+            https_status = "pass"
+        else:
+            https_status = "fail"
 
     # process tags
-    if https_eventually_downgrades or https_downgrades:
+    if https_eventually_downgrades or https_immediately_downgrades:
         negative_tags.append("https3")
 
     # merge results
@@ -241,9 +249,9 @@ def process_connection_results(connection_results):
         "https_status": https_status,
         "http_live": http_live,
         "https_live": https_live,
-        "https_downgrades": https_downgrades,
         "http_immediately_upgrades": http_immediately_upgrades,
         "http_eventually_upgrades": http_eventually_upgrades,
+        "https_immediately_downgrades": https_immediately_downgrades,
         "https_eventually_downgrades": https_eventually_downgrades,
         "hsts_parsed": hsts_parsed
     } | connection_results

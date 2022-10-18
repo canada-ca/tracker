@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { object, string } from 'prop-types'
-import { Accordion, Box, Divider, Stack, Text } from '@chakra-ui/react'
+import {Accordion, Box, Button, Divider, Flex, Stack, Text} from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 
 import { GuidanceTagList } from './GuidanceTagList'
@@ -54,15 +54,39 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
-            <Trans>HTTP Upgrades to HTTPS:</Trans>
+            <Trans>HTTP Immediately Upgrades to HTTPS:</Trans>
           </Text>
-          <Text>{String(categoryData?.httpUpgrades)}</Text>
+          <Text>{String(categoryData?.httpImmediatelyUpgrades)}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">
+            <Trans>HTTP Eventually Upgrades to HTTPS:</Trans>
+          </Text>
+          <Text>{String(categoryData?.httpEventuallyUpgrades)}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">
+            <Trans>HTTPS Immediately Downgrades:</Trans>
+          </Text>
+          <Text>{String(categoryData?.httpsImmediatelyDowngrades)}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">
+            <Trans>HTTPS Eventually Downgrades:</Trans>
+          </Text>
+          <Text>{String(categoryData?.httpsEventuallyDowngrades)}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">
             <Trans>HSTS Max Age:</Trans>
           </Text>
           <Text>{String(categoryData?.hstsParsed?.maxAge)}</Text>
+        </Stack>
+        <Stack isInline>
+          <Text fontWeight="bold">
+            <Trans>HSTS Include Subdomains:</Trans>
+          </Text>
+          <Text> {String(categoryData?.hstsParsed?.includeSubdomains)}</Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">

@@ -680,9 +680,9 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 connectionResults {
                   httpLive
                   httpsLive
-                  httpsDowngrades
                   httpImmediatelyUpgrades
                   httpEventuallyUpgrades
+                  httpsImmediatelyDowngrades
                   httpsEventuallyDowngrades
                   hstsParsed
                   positiveTags {
