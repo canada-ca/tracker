@@ -4,12 +4,10 @@ import {
   Box,
   Flex,
   Heading,
-  Link,
   Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import {ExternalLinkIcon} from '@chakra-ui/icons'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -28,7 +26,7 @@ import {
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
-import {SubdomainWarning} from "./SubdomainWarning"
+import { SubdomainWarning } from './SubdomainWarning'
 
 export default function DomainsPage() {
   const toast = useToast()
@@ -88,7 +86,6 @@ export default function DomainsPage() {
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -179,22 +176,6 @@ export default function DomainsPage() {
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         <InfoBox
-          title={t`ITPIN`}
-          info={
-            <>
-              <Trans>Shows if the domain is compliant with</Trans>
-              <Link
-                ml="1"
-                href="https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
-                isExternal
-              >
-                ITPIN 2018-01
-                <ExternalLinkIcon mx="2px" />
-              </Link>
-            </>
-          }
-        />
-        <InfoBox
           title={t`Ciphers`}
           info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
         />
@@ -246,7 +227,7 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
         />
 
-        <SubdomainWarning mb="4"/>
+        <SubdomainWarning mb="4" />
 
         {domainList}
 
