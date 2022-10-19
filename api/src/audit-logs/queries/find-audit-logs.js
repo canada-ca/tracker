@@ -3,6 +3,7 @@ import { GraphQLID, GraphQLString } from 'graphql'
 import { logConnection } from '../objects/log-connection'
 import { logOrder } from '../input/log-order'
 import { t } from '@lingui/macro'
+import { logFilters } from '../input/log-filters'
 
 export const findAuditLogs = {
   type: logConnection.connectionType,
@@ -19,6 +20,10 @@ export const findAuditLogs = {
     search: {
       type: GraphQLString,
       description: 'String used to search for domains.',
+    },
+    filters: {
+      type: logFilters,
+      description: '',
     },
     ...connectionArgs,
   },

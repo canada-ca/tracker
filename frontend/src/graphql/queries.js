@@ -1090,6 +1090,7 @@ export const AUDIT_LOGS = gql`
     $after: String
     $orderBy: LogOrder!
     $search: String
+    $filters: LogFilters
   ) {
     findAuditLogs(
       orgId: $orgId
@@ -1097,6 +1098,7 @@ export const AUDIT_LOGS = gql`
       after: $after
       orderBy: $orderBy
       search: $search
+      filters: $filters
     ) {
       edges {
         node {

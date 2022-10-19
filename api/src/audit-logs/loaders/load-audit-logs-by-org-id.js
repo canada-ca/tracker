@@ -4,7 +4,16 @@ import { t } from '@lingui/macro'
 
 export const loadAuditLogsByOrgId =
   ({ query, userKey, i18n, cleanseInput }) =>
-  async ({ orgId, permission, after, first, last, orderBy, search }) => {
+  async ({
+    orgId,
+    permission,
+    after,
+    first,
+    last,
+    orderBy,
+    search,
+    filters = { resource: [], action: [] },
+  }) => {
     let afterTemplate = aql``
     let afterVar = aql``
     if (typeof after !== 'undefined') {
@@ -172,6 +181,16 @@ export const loadAuditLogsByOrgId =
       sortString = aql`ASC`
     }
 
+    let resourceFilters = aql``
+    if (filters.resource.length > 0) {
+      resourceFilters = aql`FILTER log.target.resourceType IN ${filters.resource}`
+    }
+
+    let actionFilters = aql``
+    if (filters.action.length > 0) {
+      actionFilters = aql`FILTER log.action IN ${filters.action}`
+    }
+
     let logKeysQuery
     if (typeof orgId !== 'undefined' && orgId !== null) {
       logKeysQuery = aql`
@@ -232,6 +251,8 @@ export const loadAuditLogsByOrgId =
       LET retrievedLogs = (
         ${loopString}
           FILTER log._key IN logKeys
+          ${resourceFilters}
+          ${actionFilters}
           ${afterTemplate}
           SORT
           ${sortByField}
@@ -242,6 +263,8 @@ export const loadAuditLogsByOrgId =
       LET hasNextPage = (LENGTH(
       ${loopString}
         FILTER log._key IN logKeys
+        ${resourceFilters}
+        ${actionFilters}
         ${hasNextPageFilter}
         SORT ${sortByField} TO_NUMBER(log._key) ${sortString} LIMIT 1
         RETURN log
@@ -250,6 +273,8 @@ export const loadAuditLogsByOrgId =
     LET hasPreviousPage = (LENGTH(
       ${loopString}
         FILTER log._key IN logKeys
+        ${resourceFilters}
+        ${actionFilters}
         ${hasPreviousPageFilter}
         SORT ${sortByField} TO_NUMBER(log._key) ${sortString} LIMIT 1
         RETURN log

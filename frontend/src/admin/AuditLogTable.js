@@ -1,6 +1,13 @@
-import { Box, Text } from '@chakra-ui/react'
 import React, { useCallback, useState } from 'react'
 import {
+  Box,
+  Grid,
+  GridItem,
+  Button,
+  Divider,
+  Tag,
+  Text,
+  SimpleGrid,
   Table,
   Thead,
   Tbody,
@@ -26,10 +33,11 @@ export function AuditLogTable({ orgId = null }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [logsPerPage, setLogsPerPage] = useState(10)
+  const [activeResourceFilters, setActiveResourceFilters] = useState([])
+  const [activeActionFilters, setActiveActionFilters] = useState([])
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
-
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const {
@@ -50,6 +58,7 @@ export function AuditLogTable({ orgId = null }) {
       orgId,
       orderBy: { field: orderField, direction: orderDirection },
       search: debouncedSearchTerm,
+      filters: { resource: activeResourceFilters, action: activeActionFilters },
     },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
@@ -60,13 +69,31 @@ export function AuditLogTable({ orgId = null }) {
     return <ErrorFallbackMessage error={error} />
   }
 
-  const orderByOptions = [{ value: 'TIMESTAMP', text: t`Timestamp` }]
+  const orderByOptions = [
+    { value: 'TIMESTAMP', text: t`Timestamp` },
+    { value: 'INITIATED_BY', text: t`Initiated By` },
+    { value: 'RESOURCE_NAME', text: t`Resource` },
+    { value: 'STATUS', text: t`Status` },
+  ]
+
+  const resourceFilters = [
+    { value: 'DOMAIN', text: t`Domain` },
+    { value: 'USER', text: t`User` },
+    { value: 'ORGANIZATION', text: t`Organization` },
+  ]
+  const actionFilters = [
+    { value: 'CREATE', text: t`Create` },
+    { value: 'ADD', text: t`Add` },
+    { value: 'UPDATE', text: t`Update` },
+    { value: 'REMOVE', text: t`Remove` },
+    { value: 'DELETE', text: t`Delete` },
+  ]
 
   let logTable
   if (loading || isLoadingMore) {
     logTable = (
       <LoadingMessage>
-        <Trans>User List</Trans>
+        <Trans>Audit Logs</Trans>
       </LoadingMessage>
     )
   } else if (nodes.length === 0) {
@@ -81,14 +108,30 @@ export function AuditLogTable({ orgId = null }) {
         <Table>
           <Thead>
             <Tr>
-              <Th>Time Generated</Th>
-              <Th>Initiated By</Th>
-              <Th>Action</Th>
-              <Th>Resource Type</Th>
-              <Th>Resource Name</Th>
-              <Th>Organization</Th>
-              <Th>Reason</Th>
-              <Th>Status</Th>
+              <Th>
+                <Trans>Time Generated</Trans>
+              </Th>
+              <Th>
+                <Trans>Initiated By</Trans>
+              </Th>
+              <Th>
+                <Trans>Action</Trans>
+              </Th>
+              <Th>
+                <Trans>Resource Type</Trans>
+              </Th>
+              <Th>
+                <Trans>Resource Name</Trans>
+              </Th>
+              <Th>
+                <Trans>Organization</Trans>
+              </Th>
+              <Th>
+                <Trans>Reason</Trans>
+              </Th>
+              {/* <Th>
+                <Trans>Status</Trans>
+              </Th> */}
             </Tr>
           </Thead>
           <Tbody>
@@ -100,7 +143,7 @@ export function AuditLogTable({ orgId = null }) {
                 action,
                 target,
                 reason,
-                status,
+                // status,
               }) => {
                 return (
                   <Tr key={id}>
@@ -111,7 +154,7 @@ export function AuditLogTable({ orgId = null }) {
                     <Td>{target.resource}</Td>
                     <Td>{target.organization.name}</Td>
                     <Td>{reason}</Td>
-                    <Td>{status.toUpperCase()}</Td>
+                    {/* <Td>{status.toUpperCase()}</Td> */}
                   </Tr>
                 )
               },
@@ -140,7 +183,123 @@ export function AuditLogTable({ orgId = null }) {
         orderByOptions={orderByOptions}
         placeholder={t`Search for an activity`}
       />
-      {logTable}
+      <Grid templateColumns="repeat(5, 1fr)" gap={4}>
+        <GridItem colSpan={4}>{logTable}</GridItem>
+        <GridItem colStart={5} colEnd={6}>
+          <Box h="auto" borderColor="gray.900" borderWidth="1px" rounded="md">
+            <Text px="2" pt="2" fontWeight="bold">
+              <Trans>Filter Tags</Trans>
+            </Text>
+            <Divider />
+            <Box p="2">
+              <Text fontWeight="bold">
+                <Trans>Resource:</Trans>
+              </Text>
+              <SimpleGrid mb="2" columns={2} spacingX="2" spacingY="2">
+                {resourceFilters.map(({ value, text }, idx) => {
+                  return (
+                    <Tag
+                      key={idx}
+                      borderRadius="full"
+                      borderWidth="1px"
+                      borderColor="gray.900"
+                      bg={
+                        activeResourceFilters.indexOf(value) < 0
+                          ? 'gray.50'
+                          : 'gray.900'
+                      }
+                      color={
+                        activeResourceFilters.indexOf(value) < 0
+                          ? 'gray.900'
+                          : 'gray.50'
+                      }
+                      as="button"
+                      _hover={
+                        activeResourceFilters.indexOf(value) < 0
+                          ? { bg: 'gray.200' }
+                          : { bg: 'gray.500' }
+                      }
+                      onClick={() => {
+                        let optionIdx = activeResourceFilters.indexOf(value)
+                        if (optionIdx < 0) {
+                          setActiveResourceFilters([
+                            ...activeResourceFilters,
+                            value,
+                          ])
+                        } else {
+                          setActiveResourceFilters(
+                            activeResourceFilters.filter(
+                              (tag) => tag !== value,
+                            ),
+                          )
+                        }
+                      }}
+                    >
+                      <Text mx="auto">{text}</Text>
+                    </Tag>
+                  )
+                })}
+              </SimpleGrid>
+              <Text fontWeight="bold">
+                <Trans>Action:</Trans>
+              </Text>
+              <SimpleGrid columns={2} spacingX="2" spacingY="2">
+                {actionFilters.map(({ value, text }, idx) => {
+                  return (
+                    <Tag
+                      key={idx}
+                      borderRadius="full"
+                      borderWidth="1px"
+                      borderColor="gray.900"
+                      bg={
+                        activeActionFilters.indexOf(value) < 0
+                          ? 'gray.50'
+                          : 'gray.900'
+                      }
+                      color={
+                        activeActionFilters.indexOf(value) < 0
+                          ? 'gray.900'
+                          : 'gray.50'
+                      }
+                      as="button"
+                      _hover={
+                        activeActionFilters.indexOf(value) < 0
+                          ? { bg: 'gray.200' }
+                          : { bg: 'gray.500' }
+                      }
+                      onClick={() => {
+                        let optionIdx = activeActionFilters.indexOf(value)
+                        if (optionIdx < 0) {
+                          setActiveActionFilters([
+                            ...activeActionFilters,
+                            value,
+                          ])
+                        } else {
+                          setActiveActionFilters(
+                            activeActionFilters.filter((tag) => tag !== value),
+                          )
+                        }
+                      }}
+                    >
+                      <Text mx="auto">{text}</Text>
+                    </Tag>
+                  )
+                })}
+              </SimpleGrid>
+              <Button
+                mt="100%"
+                variant="primaryOutline"
+                onClick={() => {
+                  setActiveResourceFilters([])
+                  setActiveActionFilters([])
+                }}
+              >
+                Clear
+              </Button>
+            </Box>
+          </Box>
+        </GridItem>
+      </Grid>
       <RelayPaginationControls
         onlyPagination={false}
         selectedDisplayLimit={logsPerPage}
