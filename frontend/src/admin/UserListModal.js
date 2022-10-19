@@ -45,7 +45,7 @@ export function UserListModal({
   const [addUser, { loading: _addUserLoading }] = useMutation(
     INVITE_USER_TO_ORG,
     {
-      refetchQueries: ['PaginatedOrgAffiliations'],
+      refetchQueries: ['PaginatedOrgAffiliations', 'FindAuditLogs'],
       awaitRefetchQueries: true,
 
       onError(error) {
@@ -94,7 +94,7 @@ export function UserListModal({
 
   const [updateUserRole, { loading: _updateLoading, error: _updateError }] =
     useMutation(UPDATE_USER_ROLE, {
-      refetchQueries: ['FindMyUsers'],
+      refetchQueries: ['FindMyUsers', 'FindAuditLogs'],
       awaitRefetchQueries: true,
 
       onError(updateError) {
@@ -143,7 +143,7 @@ export function UserListModal({
   const [removeUser, { loading: _removeUserLoading }] = useMutation(
     REMOVE_USER_FROM_ORG,
     {
-      refetchQueries: ['FindMyUsers'],
+      refetchQueries: ['FindMyUsers', 'FindAuditLogs'],
       awaitRefetchQueries: true,
 
       onError(error) {

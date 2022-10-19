@@ -53,7 +53,7 @@ export function AdminDomainModal({
   const { i18n } = useLingui()
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
-    refetchQueries: ['PaginatedOrgDomains'],
+    refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -101,7 +101,7 @@ export function AdminDomainModal({
   })
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
-    refetchQueries: ['PaginatedOrgDomains'],
+    refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
 
     onError(error) {
       toast({

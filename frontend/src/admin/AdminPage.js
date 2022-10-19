@@ -178,7 +178,7 @@ export default function AdminPage({ isLoginRequired }) {
       {data?.isUserSuperAdmin && (
         <label>
           <Flex align="center">
-            <Text fontSize="lg" fontWeight="bold" ml="2">
+            <Text fontSize="lg" fontWeight="bold" mr="2">
               <Trans>Super Admin Menu:</Trans>
             </Text>
             <Select

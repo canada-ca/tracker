@@ -19,9 +19,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Stack,
   Text,
-  Textarea,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
@@ -94,7 +94,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const [removeDomain] = useMutation(REMOVE_DOMAIN, {
-    refetchQueries: ['PaginatedOrgDomains'],
+    refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -312,21 +312,29 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                       <Trans>Confirm removal of domain:</Trans>
                     </Text>
                     <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
-                    <FormControl
-                    // isInvalid={meta.error && meta.touched}
-                    >
+
+                    <FormControl>
                       <FormLabel htmlFor="reason" fontWeight="bold">
                         <Trans>Reason</Trans>
                       </FormLabel>
-                      <Textarea
+                      <Select
+                        isRequired
+                        borderColor="black"
                         name="reason"
                         id="reason"
-                        borderColor="black"
                         onChange={handleChange}
-                        placeholder={t`Reason for removal of this domain`}
-                      />
+                      >
+                        <option value="1">
+                          <Trans>Reason 1</Trans>
+                        </option>
+                        <option value="2">
+                          <Trans>Reason 2</Trans>
+                        </option>
+                        <option value="3">
+                          <Trans>Reason 3</Trans>
+                        </option>
+                      </Select>
                     </FormControl>
-                    {/* <FormErrorMessage mt={0}>{meta.error}</FormErrorMessage> */}
                   </Stack>
                 </ModalBody>
 
