@@ -511,7 +511,6 @@ export const closeAccount = new mutationWithClientMutationId({
         resource: submittedUserId || user._key, // name of resource being acted upon
         resourceType: 'user', // user, org, domain
       },
-      status: 'success',
     })
 
     return {

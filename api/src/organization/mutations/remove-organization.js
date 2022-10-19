@@ -473,7 +473,6 @@ export const removeOrganization = new mutationWithClientMutationId({
         resource: organization.orgDetails.en.name, // name of resource being acted upon
         resourceType: 'organization', // user, org, domain
       },
-      status: 'success',
     })
 
     return {

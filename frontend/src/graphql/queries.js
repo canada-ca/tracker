@@ -1124,7 +1124,6 @@ export const AUDIT_LOGS = gql`
             }
           }
           reason
-          status
         }
       }
       pageInfo {

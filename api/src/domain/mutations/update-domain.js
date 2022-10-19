@@ -256,7 +256,6 @@ export const updateDomain = new mutationWithClientMutationId({
         resourceType: 'domain', // user, org, domain
         updatedProperties,
       },
-      status: 'success',
     })
 
     returnDomain.id = returnDomain._key

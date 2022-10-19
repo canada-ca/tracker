@@ -317,7 +317,6 @@ export const createDomain = new mutationWithClientMutationId({
         }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
       },
-      status: 'success',
     })
 
     return {

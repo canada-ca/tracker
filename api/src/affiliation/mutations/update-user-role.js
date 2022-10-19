@@ -287,7 +287,6 @@ given organization.`,
           },
         ],
       },
-      status: 'success',
     })
 
     return {

@@ -293,7 +293,6 @@ export const signUp = new mutationWithClientMutationId({
         resource: userName, // name of resource being acted upon
         resourceType: 'user', // user, org, domain
       },
-      status: 'success',
     })
 
     return {

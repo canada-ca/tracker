@@ -156,7 +156,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
           }, // name of resource being acted upon
           resourceType: 'user', // user, org, domain
         },
-        status: 'success',
       })
 
       return {
@@ -228,7 +227,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
           }, // name of resource being acted upon
           resourceType: 'user', // user, org, domain
         },
-        status: 'success',
       })
 
       return {

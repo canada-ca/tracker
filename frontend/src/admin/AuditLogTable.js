@@ -129,22 +129,11 @@ export function AuditLogTable({ orgId = null }) {
               <Th>
                 <Trans>Reason</Trans>
               </Th>
-              {/* <Th>
-                <Trans>Status</Trans>
-              </Th> */}
             </Tr>
           </Thead>
           <Tbody>
             {nodes.map(
-              ({
-                id,
-                timestamp,
-                initiatedBy,
-                action,
-                target,
-                reason,
-                // status,
-              }) => {
+              ({ id, timestamp, initiatedBy, action, target, reason }) => {
                 return (
                   <Tr key={id}>
                     <Td>{timestamp}</Td>
@@ -154,7 +143,6 @@ export function AuditLogTable({ orgId = null }) {
                     <Td>{target.resource}</Td>
                     <Td>{target.organization.name}</Td>
                     <Td>{reason}</Td>
-                    {/* <Td>{status.toUpperCase()}</Td> */}
                   </Tr>
                 )
               },

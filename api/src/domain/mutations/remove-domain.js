@@ -369,7 +369,6 @@ export const removeDomain = new mutationWithClientMutationId({
         resourceType: 'domain', // user, org, domain
       },
       reason: args.reason,
-      status: 'success',
     })
 
     return {

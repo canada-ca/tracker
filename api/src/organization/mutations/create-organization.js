@@ -252,7 +252,6 @@ export const createOrganization = new mutationWithClientMutationId({
         resource: nameEN, // name of resource being acted upon
         resourceType: 'organization', // user, org, domain
       },
-      status: 'success',
     })
 
     return organization
