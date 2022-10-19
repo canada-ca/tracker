@@ -28,7 +28,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "jest": "^28.1.0",
     "jest-fetch-mock": "^3.0.3",
-    "jest-matcher-utils": "^28.1.0",
+    "jest-matcher-utils": "^29.2.1",
     "prettier": "^2.6.2"
   }
 }
