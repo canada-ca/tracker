@@ -1,9 +1,10 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { removeDomainUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import { DomainRemovalReasonEnum } from '../../enums'
 
 export const removeDomain = new mutationWithClientMutationId({
   name: 'RemoveDomain',
@@ -18,7 +19,7 @@ export const removeDomain = new mutationWithClientMutationId({
       description: 'The organization you wish to remove the domain from.',
     },
     reason: {
-      type: GraphQLNonNull(GraphQLString),
+      type: GraphQLNonNull(DomainRemovalReasonEnum),
       description:
         'The reason given for why this domain is being removed from the organization.',
     },

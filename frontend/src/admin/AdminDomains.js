@@ -6,7 +6,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  // FormErrorMessage,
   FormLabel,
   IconButton,
   Input,
@@ -313,6 +312,16 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                     </Text>
                     <Text fontWeight="bold">{selectedRemoveDomainUrl}</Text>
 
+                    <Text>
+                      <Trans>
+                        A domain may only be removed for one of the reasons
+                        below. For a domain to no longer exist, it must be
+                        removed from the DNS completely. If you need to remove
+                        this domain for a different reason, please contact TBS
+                        Cyber Security.
+                      </Trans>
+                    </Text>
+
                     <FormControl>
                       <FormLabel htmlFor="reason" fontWeight="bold">
                         <Trans>Reason</Trans>
@@ -324,14 +333,18 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                         id="reason"
                         onChange={handleChange}
                       >
-                        <option value="1">
-                          <Trans>Reason 1</Trans>
+                        <option hidden value="">
+                          <Trans>
+                            Select a reason for removing this domain
+                          </Trans>
                         </option>
-                        <option value="2">
-                          <Trans>Reason 2</Trans>
+                        <option value="NONEXISTENT">
+                          <Trans>This domain no longer exists</Trans>
                         </option>
-                        <option value="3">
-                          <Trans>Reason 3</Trans>
+                        <option value="WRONG_ORG">
+                          <Trans>
+                            This domain does not belong to this organization
+                          </Trans>
                         </option>
                       </Select>
                     </FormControl>
