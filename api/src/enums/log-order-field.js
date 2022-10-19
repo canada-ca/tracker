@@ -16,9 +16,5 @@ export const LogOrderField = new GraphQLEnumType({
       value: 'resource_name',
       description: 'Order domains by spf status.',
     },
-    STATUS: {
-      value: 'status',
-      description: 'Order domains by spf status.',
-    },
   },
 })

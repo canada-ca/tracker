@@ -34,11 +34,6 @@ export const auditLogType = new GraphQLObjectType({
       description: 'Domain that scans will be ran on.',
       resolve: ({ reason }) => reason,
     },
-    status: {
-      type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
-      resolve: ({ status }) => status,
-    },
   }),
   interfaces: [nodeInterface],
 })
