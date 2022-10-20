@@ -3,7 +3,7 @@ import { globalIdField } from 'graphql-relay'
 
 export const initiatedByType = new GraphQLObjectType({
   name: 'InitiatedBy',
-  description: '',
+  description: 'Information on the user that initiated the logged action',
   fields: () => ({
     id: globalIdField('user'),
     userName: {

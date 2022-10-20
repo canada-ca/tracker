@@ -7,7 +7,7 @@ import { logFilters } from '../input/log-filters'
 
 export const findAuditLogs = {
   type: logConnection.connectionType,
-  description: '',
+  description: 'Select activity logs a user has access to.',
   args: {
     orgId: {
       type: GraphQLID,
@@ -15,7 +15,7 @@ export const findAuditLogs = {
     },
     orderBy: {
       type: logOrder,
-      description: '',
+      description: 'Ordering options for log connections.',
     },
     search: {
       type: GraphQLString,
@@ -23,7 +23,7 @@ export const findAuditLogs = {
     },
     filters: {
       type: logFilters,
-      description: '',
+      description: 'Keywords used to filter log results.',
     },
     ...connectionArgs,
   },

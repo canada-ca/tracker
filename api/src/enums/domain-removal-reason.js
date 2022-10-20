@@ -5,12 +5,12 @@ export const DomainRemovalReasonEnum = new GraphQLEnumType({
   values: {
     NONEXISTENT: {
       value: 'nonexistent',
-      description: '',
+      description: 'Domain does not exist.',
     },
     WRONG_ORG: {
       value: 'wrong_org',
-      description: '',
+      description: 'Domain was in the incorrect organization.',
     },
   },
-  description: '',
+  description: 'Reason why a domain was removed from an organization.',
 })

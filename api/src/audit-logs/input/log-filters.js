@@ -8,11 +8,11 @@ export const logFilters = new GraphQLInputObjectType({
   fields: () => ({
     resource: {
       type: new GraphQLList(ResourceTypeEnums),
-      description: '',
+      description: 'List of resource types to include when returning logs.',
     },
     action: {
       type: new GraphQLList(UserActionEnums),
-      description: '',
+      description: 'List of user actions to include when returning logs.',
     },
   }),
 })

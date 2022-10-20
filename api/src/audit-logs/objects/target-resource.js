@@ -3,22 +3,22 @@ import { globalIdField } from 'graphql-relay'
 
 export const targetResourceType = new GraphQLObjectType({
   name: 'TargetResource',
-  description: '',
+  description: 'Resource that was the target of a specified action by a user.',
   fields: () => ({
     resource: {
       type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      description: 'Name of the targeted resource.',
       resolve: ({ resource }) => resource,
     },
     organization: {
       type: new GraphQLObjectType({
         name: 'TargetOrganization',
-        description: '',
+        description: 'Organization that the resource is affiliated with.',
         fields: () => ({
           id: globalIdField('organization'),
           name: {
             type: GraphQLString,
-            description: '',
+            description: 'Name of the affiliated organization.',
             resolve: async ({ id, name }, _, { loaders: { loadOrgByKey } }) => {
               const org = await loadOrgByKey.load(id)
               if (typeof org === 'undefined') {
@@ -29,39 +29,40 @@ export const targetResourceType = new GraphQLObjectType({
           },
         }),
       }),
-      description: 'Domain that scans will be ran on.',
+      description: 'Organization that the resource is affiliated with.',
       resolve: ({ organization }) => organization,
     },
     resourceType: {
       type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      description:
+        'Type of resource that was modified: user, domain, or organization.',
       resolve: ({ resourceType }) => resourceType,
     },
     updatedProperties: {
       type: new GraphQLList(
         new GraphQLObjectType({
           name: 'UpdatedProperties',
-          description: '',
+          description: 'Object describing how a resource property was updated.',
           fields: () => ({
             name: {
               type: GraphQLString,
-              description: 'Domain that scans will be ran on.',
+              description: 'Name of updated resource.',
               resolve: ({ name }) => name,
             },
             oldValue: {
               type: GraphQLString,
-              description: 'Domain that scans will be ran on.',
+              description: 'Old value of updated property.',
               resolve: ({ oldValue }) => oldValue,
             },
             newValue: {
               type: GraphQLString,
-              description: 'Domain that scans will be ran on.',
+              description: 'New value of updated property.',
               resolve: ({ newValue }) => newValue,
             },
           }),
         }),
       ),
-      description: 'Domain that scans will be ran on.',
+      description: 'List of resource properties that were modified.',
       resolve: ({ updatedProperties }) => updatedProperties,
     },
   }),

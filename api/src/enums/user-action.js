@@ -5,24 +5,24 @@ export const UserActionEnums = new GraphQLEnumType({
   values: {
     CREATE: {
       value: 'create',
-      description: '',
+      description: 'A new resource was created.',
     },
     DELETE: {
       value: 'delete',
-      description: '',
+      description: 'A resource was deleted.',
     },
     ADD: {
       value: 'add',
-      description: '',
+      description: 'An affiliation between resources was created.',
     },
     UPDATE: {
       value: 'update',
-      description: '',
+      description: 'Properties of a resource or affiliation were modified.',
     },
     REMOVE: {
       value: 'remove',
-      description: '',
+      description: 'An affiliation between resources was deleted.',
     },
   },
-  description: '',
+  description: 'Describes actions performed by users to modify resources.',
 })

@@ -5,16 +5,16 @@ export const ResourceTypeEnums = new GraphQLEnumType({
   values: {
     USER: {
       value: 'user',
-      description: '',
+      description: 'A user account affiliated with an organization.',
     },
     ORGANIZATION: {
       value: 'organization',
-      description: '',
+      description: 'An organization.',
     },
     DOMAIN: {
       value: 'domain',
-      description: '',
+      description: 'A domain affiliated with an organization.',
     },
   },
-  description: '',
+  description: 'Keywords used to decribe resources that can be modified.',
 })

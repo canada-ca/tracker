@@ -6,7 +6,8 @@ import { targetResourceType } from './target-resource'
 
 export const auditLogType = new GraphQLObjectType({
   name: 'AuditLog',
-  description: '',
+  description:
+    'A record of activity that modified the state of a user, domain, or organization',
   fields: () => ({
     id: globalIdField('auditLog'),
     timestamp: {
