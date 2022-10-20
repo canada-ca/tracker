@@ -234,7 +234,11 @@ export const CREATE_DOMAIN = gql`
 `
 
 export const REMOVE_DOMAIN = gql`
-  mutation RemoveDomain($domainId: ID!, $orgId: ID!, $reason: String!) {
+  mutation RemoveDomain(
+    $domainId: ID!
+    $orgId: ID!
+    $reason: DomainRemovalReasonEnum!
+  ) {
     removeDomain(
       input: { domainId: $domainId, orgId: $orgId, reason: $reason }
     ) {

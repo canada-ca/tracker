@@ -316,9 +316,9 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                       <Trans>
                         A domain may only be removed for one of the reasons
                         below. For a domain to no longer exist, it must be
-                        removed from the DNS completely. If you need to remove
-                        this domain for a different reason, please contact TBS
-                        Cyber Security.
+                        removed from the DNS. If you need to remove this domain
+                        for a different reason, please contact TBS Cyber
+                        Security.
                       </Trans>
                     </Text>
 

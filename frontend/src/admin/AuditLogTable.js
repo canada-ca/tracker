@@ -70,10 +70,9 @@ export function AuditLogTable({ orgId = null }) {
   }
 
   const orderByOptions = [
-    { value: 'TIMESTAMP', text: t`Timestamp` },
+    { value: 'TIMESTAMP', text: t`Time Generated` },
     { value: 'INITIATED_BY', text: t`Initiated By` },
-    { value: 'RESOURCE_NAME', text: t`Resource` },
-    { value: 'STATUS', text: t`Status` },
+    { value: 'RESOURCE_NAME', text: t`Resource Name` },
   ]
 
   const resourceFilters = [
@@ -134,12 +133,29 @@ export function AuditLogTable({ orgId = null }) {
           <Tbody>
             {nodes.map(
               ({ id, timestamp, initiatedBy, action, target, reason }) => {
+                const resourceType = resourceFilters.find(
+                  ({ value }) => target.resourceType.toUpperCase() === value,
+                )
+                action = actionFilters.find(
+                  ({ value }) => action.toUpperCase() === value,
+                )
+                if (typeof reason !== 'undefined') {
+                  if (reason === 'nonexistent') {
+                    reason = <Trans>This domain no longer exists</Trans>
+                  } else if (reason === 'wrong_org') {
+                    reason = (
+                      <Trans>
+                        This domain does not belong to this organization
+                      </Trans>
+                    )
+                  }
+                }
                 return (
                   <Tr key={id}>
                     <Td>{timestamp}</Td>
                     <Td>{initiatedBy.userName}</Td>
-                    <Td>{action.toUpperCase()}</Td>
-                    <Td>{target.resourceType.toUpperCase()}</Td>
+                    <Td>{action.text.toUpperCase()}</Td>
+                    <Td>{resourceType.text.toUpperCase()}</Td>
                     <Td>{target.resource}</Td>
                     <Td>{target.organization.name}</Td>
                     <Td>{reason}</Td>
@@ -176,7 +192,7 @@ export function AuditLogTable({ orgId = null }) {
         <GridItem colStart={5} colEnd={6}>
           <Box h="auto" borderColor="gray.900" borderWidth="1px" rounded="md">
             <Text px="2" pt="2" fontWeight="bold">
-              <Trans>Filter Tags</Trans>
+              <Trans>Filters</Trans>
             </Text>
             <Divider />
             <Box p="2">

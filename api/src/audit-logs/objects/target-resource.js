@@ -15,12 +15,18 @@ export const targetResourceType = new GraphQLObjectType({
         name: 'TargetOrganization',
         description: '',
         fields: () => ({
+          id: globalIdField('organization'),
           name: {
             type: GraphQLString,
-            description: 'Domain that scans will be ran on.',
-            resolve: ({ name }) => name,
+            description: '',
+            resolve: async ({ id, name }, _, { loaders: { loadOrgByKey } }) => {
+              const org = await loadOrgByKey.load(id)
+              if (typeof org === 'undefined') {
+                return name
+              }
+              return org.name
+            },
           },
-          id: globalIdField('organization'),
         }),
       }),
       description: 'Domain that scans will be ran on.',
