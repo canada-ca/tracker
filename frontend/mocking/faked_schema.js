@@ -14,6 +14,33 @@ export const getTypeNames = () => gql`
       ids: [ID!]!
     ): [Node]!
 
+    # Select activity logs a user has access to.
+    findAuditLogs(
+      # The organization you wish to remove the domain from.
+      orgId: ID
+
+      # Ordering options for log connections.
+      orderBy: LogOrder
+
+      # String used to search for domains.
+      search: String
+
+      # Keywords used to filter log results.
+      filters: LogFilters
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): AuditLogConnection
+
     # Query for dmarc summaries the user has access to.
     findMyDmarcSummaries(
       # Ordering options for dmarc summaries connections
@@ -241,14 +268,14 @@ export const getTypeNames = () => gql`
   }
 
   # A connection to a list of items.
-  type DmarcSummaryConnection {
+  type AuditLogConnection {
     # Information to aid in pagination.
     pageInfo: PageInfo!
 
     # A list of edges.
-    edges: [DmarcSummaryEdge]
+    edges: [AuditLogEdge]
 
-    # The total amount of dmarc summaries the user has access to.
+    # The total amount of logs the user has access to.
     totalCount: Int
   }
 
@@ -265,6 +292,168 @@ export const getTypeNames = () => gql`
 
     # When paginating forwards, the cursor to continue.
     endCursor: String
+  }
+
+  # An edge in a connection.
+  type AuditLogEdge {
+    # The item at the end of the edge
+    node: AuditLog
+
+    # A cursor for use in pagination
+    cursor: String!
+  }
+
+  # A record of activity that modified the state of a user, domain, or organization
+  type AuditLog implements Node {
+    # The ID of an object
+    id: ID!
+
+    # Domain that scans will be ran on.
+    timestamp: String
+
+    # Domain that scans will be ran on.
+    initiatedBy: InitiatedBy
+
+    # Domain that scans will be ran on.
+    action: String
+
+    # Domain that scans will be ran on.
+    target: TargetResource
+
+    # Domain that scans will be ran on.
+    reason: String
+  }
+
+  # Information on the user that initiated the logged action
+  type InitiatedBy {
+    # The ID of an object
+    id: ID!
+
+    # Domain that scans will be ran on.
+    userName: String
+
+    # Domain that scans will be ran on.
+    role: String
+
+    # Domain that scans will be ran on.
+    organization: String
+  }
+
+  # Resource that was the target of a specified action by a user.
+  type TargetResource {
+    # Name of the targeted resource.
+    resource: String
+
+    # Organization that the resource is affiliated with.
+    organization: TargetOrganization
+
+    # Type of resource that was modified: user, domain, or organization.
+    resourceType: String
+
+    # List of resource properties that were modified.
+    updatedProperties: [UpdatedProperties]
+  }
+
+  # Organization that the resource is affiliated with.
+  type TargetOrganization {
+    # The ID of an object
+    id: ID!
+
+    # Name of the affiliated organization.
+    name: String
+  }
+
+  # Object describing how a resource property was updated.
+  type UpdatedProperties {
+    # Name of updated resource.
+    name: String
+
+    # Old value of updated property.
+    oldValue: String
+
+    # New value of updated property.
+    newValue: String
+  }
+
+  # Ordering options for audit logs.
+  input LogOrder {
+    # The field to order logs by.
+    field: LogOrderField!
+
+    # The ordering direction.
+    direction: OrderDirection!
+  }
+
+  # Properties by which domain connections can be ordered.
+  enum LogOrderField {
+    # Order domains by spf status.
+    TIMESTAMP
+
+    # Order domains by spf status.
+    INITIATED_BY
+
+    # Order domains by spf status.
+    RESOURCE_NAME
+  }
+
+  # Possible directions in which to order a list of items when provided an 'orderBy' argument.
+  enum OrderDirection {
+    # Specifies an ascending order for a given 'orderBy' argument.
+    ASC
+
+    # Specifies a descending order for a given 'orderBy' argument.
+    DESC
+  }
+
+  # Filtering options for audit logs.
+  input LogFilters {
+    # List of resource types to include when returning logs.
+    resource: [ResourceTypeEnums]
+
+    # List of user actions to include when returning logs.
+    action: [UserActionEnums]
+  }
+
+  # Keywords used to decribe resources that can be modified.
+  enum ResourceTypeEnums {
+    # A user account affiliated with an organization.
+    USER
+
+    # An organization.
+    ORGANIZATION
+
+    # A domain affiliated with an organization.
+    DOMAIN
+  }
+
+  # Describes actions performed by users to modify resources.
+  enum UserActionEnums {
+    # A new resource was created.
+    CREATE
+
+    # A resource was deleted.
+    DELETE
+
+    # An affiliation between resources was created.
+    ADD
+
+    # Properties of a resource or affiliation were modified.
+    UPDATE
+
+    # An affiliation between resources was deleted.
+    REMOVE
+  }
+
+  # A connection to a list of items.
+  type DmarcSummaryConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [DmarcSummaryEdge]
+
+    # The total amount of dmarc summaries the user has access to.
+    totalCount: Int
   }
 
   # An edge in a connection.
@@ -369,7 +558,7 @@ export const getTypeNames = () => gql`
     yearlyDmarcSummaries: [DmarcSummary]
 
     # List of labelled tags users of an organization have applied to the claimed domain.
-    claimTags: [DomainTag]
+    claimTags: [String]
   }
 
   # String that conforms to a domain structure.
@@ -639,15 +828,6 @@ export const getTypeNames = () => gql`
 
     # Order domains by spf status.
     SPF_STATUS
-  }
-
-  # Possible directions in which to order a list of items when provided an 'orderBy' argument.
-  enum OrderDirection {
-    # Specifies an ascending order for a given 'orderBy' argument.
-    ASC
-
-    # Specifies a descending order for a given 'orderBy' argument.
-    DESC
   }
 
   # A connection to a list of items.
@@ -1987,21 +2167,6 @@ export const getTypeNames = () => gql`
   # A field that conforms to a 4 digit integer.
   scalar Year
 
-  # User-generated tag assigned to domains for labeling and management.
-  type DomainTag {
-    # label that helps describe the domain.
-    label: TagLabel
-  }
-
-  #
-  type TagLabel {
-    # The English translation of the label.
-    en: String
-
-    # The French translation of the label.
-    fr: String
-  }
-
   # This object displays the percentages of the category totals.
   type CategoryPercentages {
     # Percentage of messages that are failing all checks.
@@ -2145,7 +2310,7 @@ export const getTypeNames = () => gql`
     # Guidance for any issues that were found from the report.
     guidance: String
       @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+        reason: "This has been turned into the 'guidanceTag' field providing detailed information to act upon if a given tag is present."
       )
 
     # Guidance for any issues that were found from the report.
@@ -2301,7 +2466,7 @@ export const getTypeNames = () => gql`
     # Guidance for any issues that were found from the report.
     guidance: String
       @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+        reason: "This has been turned into the 'guidanceTag' field providing detailed information to act upon if a given tag is present."
       )
 
     # Guidance for any issues that were found from the report.
@@ -2554,7 +2719,7 @@ export const getTypeNames = () => gql`
       # Limit domains to those that belong to an organization that has ownership.
       ownership: Boolean
 
-      #
+      # Limits domains to those that user has added to their personal myTracker view.
       myTracker: Boolean
 
       # String used to search for domains.
@@ -2833,7 +2998,7 @@ export const getTypeNames = () => gql`
     # Mutation used to create a new domain for an organization.
     createDomain(input: CreateDomainInput!): CreateDomainPayload
 
-    #
+    # Mutation to add domain to user's personal myTracker view.
     favouriteDomain(input: FavouriteDomainInput!): FavouriteDomainPayload
 
     # This mutation allows the removal of unused domains.
@@ -2842,7 +3007,7 @@ export const getTypeNames = () => gql`
     # This mutation is used to step a manual scan on a requested domain.
     requestScan(input: RequestScanInput!): RequestScanPayload
 
-    #
+    # Mutation to remove domain from user's personal myTracker view.
     unfavouriteDomain(input: UnfavouriteDomainInput!): UnfavouriteDomainPayload
 
     # Mutation allows the modification of domains if domain is updated through out its life-cycle
@@ -3101,17 +3266,41 @@ export const getTypeNames = () => gql`
 
   # User-generated tag assigned to domains for labeling and management.
   input InputTag {
-    # label that helps describe the domain.
-    label: InputTagLabel
-  }
-
-  #
-  input InputTagLabel {
     # The English translation of the label.
-    en: String
+    en: DomainTagLabel!
 
     # The French translation of the label.
-    fr: String
+    fr: DomainTagLabel!
+  }
+
+  # An enum used to assign and test user-generated domain tags
+  enum DomainTagLabel {
+    # English label for tagging domains as new to the system.
+    NEW
+
+    # French label for tagging domains as new to the system.
+    NOUVEAU
+
+    # Bilingual Label for tagging domains as a production environment.
+    PROD
+
+    # English label for tagging domains as a staging environment.
+    STAGING
+
+    # French label for tagging domains as a staging environment.
+    DEV
+
+    # Bilingual label for tagging domains as a test environment.
+    TEST
+
+    # Bilingual label for tagging domains as web-hosting.
+    WEB
+
+    # English label for tagging domains that are not active.
+    INACTIVE
+
+    # French label for tagging domains that are not active.
+    INACTIF
   }
 
   type FavouriteDomainPayload {
@@ -3152,7 +3341,19 @@ export const getTypeNames = () => gql`
 
     # The organization you wish to remove the domain from.
     orgId: ID!
+
+    # The reason given for why this domain is being removed from the organization.
+    reason: DomainRemovalReasonEnum!
     clientMutationId: String
+  }
+
+  # Reason why a domain was removed from an organization.
+  enum DomainRemovalReasonEnum {
+    # Domain does not exist.
+    NONEXISTENT
+
+    # Domain was in the incorrect organization.
+    WRONG_ORG
   }
 
   type RequestScanPayload {
@@ -3458,7 +3659,7 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  # This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to remove their phone number, and support any errors that may occur
+  # This union is used with the 'RemovePhoneNumber' mutation, allowing for users to remove their phone number, and support any errors that may occur
   union RemovePhoneNumberUnion =
       RemovePhoneNumberError
     | RemovePhoneNumberResult
@@ -3710,7 +3911,7 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  # This union is used with the \`updateUserProfile\` mutation, allowing for users to update their profile, and support any errors that may occur
+  # This union is used with the 'updateUserProfile' mutation, allowing for users to update their profile, and support any errors that may occur
   union UpdateUserProfileUnion =
       UpdateUserProfileError
     | UpdateUserProfileResult
@@ -3784,7 +3985,7 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  # This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to verify their phone number, and support any errors that may occur
+  # This union is used with the 'verifyPhoneNumber' mutation, allowing for users to verify their phone number, and support any errors that may occur
   union VerifyPhoneNumberUnion =
       VerifyPhoneNumberError
     | VerifyPhoneNumberResult
