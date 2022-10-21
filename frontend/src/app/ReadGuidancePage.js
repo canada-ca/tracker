@@ -408,8 +408,11 @@ export default function ReadGuidancePage() {
 
       <Text fontSize="xl">
         <Trans>
-          For any questions or concerns related to the ITPIN and related
-          implementation guidance, contact TBS Cybersecurity.
+          For any questions or concerns, please contact{' '}
+          <Link href="mailto:zzTBSCybers@tbs-sct.gc.ca" color="blue.500">
+            TBS Cyber Security
+          </Link>{' '}
+          .
         </Trans>
       </Text>
     </Box>
