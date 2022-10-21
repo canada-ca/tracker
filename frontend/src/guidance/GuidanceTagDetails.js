@@ -15,7 +15,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
     guidanceTag.refLinks.length !== 0 ? (
       <Stack isInline={guidanceTag.refLinks.length <= 1}>
         <Text fontWeight="bold">
-          <Trans>For in-depth CCCS implementation guidance:</Trans>
+          <Trans>For in-depth implementation guidance:</Trans>
         </Text>
         {guidanceTag.refLinks.map((node, index) => (
           <Link

@@ -1036,8 +1036,8 @@ msgid "For details related to terms pertaining to privacy, please refer to"
 msgstr "For details related to terms pertaining to privacy, please refer to"
 
 #: src/guidance/GuidanceTagDetails.js:18
-msgid "For in-depth CCCS implementation guidance:"
-msgstr "For in-depth CCCS implementation guidance:"
+msgid "For in-depth implementation guidance:"
+msgstr "For in-depth implementation guidance:"
 
 #: src/guidance/GuidanceTagDetails.js:43
 msgid "For technical implementation guidance:"
