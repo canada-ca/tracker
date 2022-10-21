@@ -139,11 +139,11 @@ msgstr "Les acronymes ne peuvent utiliser que des lettres majuscules et des cara
 msgid "Acronyms must be at most 50 characters"
 msgstr "Les acronymes doivent comporter au maximum 50 caractères."
 
-#: src/admin/AuditLogTable.js:117
+#: src/admin/AuditLogTable.js:118
 msgid "Action"
 msgstr "Action"
 
-#: src/admin/AuditLogTable.js:248
+#: src/admin/AuditLogTable.js:274
 msgid "Action:"
 msgstr "Action :"
 
@@ -151,7 +151,7 @@ msgstr "Action :"
 msgid "Activity"
 msgstr "Activité"
 
-#: src/admin/AuditLogTable.js:85
+#: src/admin/AuditLogTable.js:86
 msgid "Add"
 msgstr "Ajouter"
 
@@ -306,7 +306,7 @@ msgid "Assess current state;"
 msgstr "Évaluer l’état actuel."
 
 #: src/admin/AdminPage.js:191
-#: src/admin/AuditLogTable.js:95
+#: src/admin/AuditLogTable.js:96
 msgid "Audit Logs"
 msgstr "Journaux d'audit"
 
@@ -534,7 +534,7 @@ msgstr "Pays (FR)"
 msgid "Country:"
 msgstr "Pays:"
 
-#: src/admin/AuditLogTable.js:84
+#: src/admin/AuditLogTable.js:85
 msgid "Create"
 msgstr "Créer"
 
@@ -727,7 +727,7 @@ msgstr "Sécurité et utilisation des données"
 msgid "December"
 msgstr "Décembre"
 
-#: src/admin/AuditLogTable.js:88
+#: src/admin/AuditLogTable.js:89
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -776,7 +776,7 @@ msgstr "Affiche le nom de l'organisation, son acronyme et une coche bleue s'il s
 msgid "Disposition"
 msgstr "Disposition"
 
-#: src/admin/AuditLogTable.js:79
+#: src/admin/AuditLogTable.js:80
 #: src/dmarc/DmarcByDomainPage.js:124
 #: src/dmarc/DmarcByDomainPage.js:312
 #: src/domains/DomainsPage.js:89
@@ -1013,7 +1013,7 @@ msgstr "Domaine favori"
 msgid "February"
 msgstr "Février"
 
-#: src/admin/AuditLogTable.js:195
+#: src/admin/AuditLogTable.js:221
 msgid "Filters"
 msgstr "Filtres"
 
@@ -1362,8 +1362,8 @@ msgstr "L'information contenue dans ce site, à l'exception des éléments de pr
 msgid "Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the"
 msgstr "Les renseignements partagés avec le SCT ou acquis par l'entremise de systèmes hébergés par le SCT peuvent faire l'objet d'une divulgation publique en vertu de la Loi sur la protection des renseignements personnels."
 
-#: src/admin/AuditLogTable.js:74
-#: src/admin/AuditLogTable.js:114
+#: src/admin/AuditLogTable.js:75
+#: src/admin/AuditLogTable.js:115
 msgid "Initiated By"
 msgstr "Initiée par"
 
@@ -1521,6 +1521,10 @@ msgstr "Nom (EN)"
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
+#: src/admin/AuditLogTable.js:171
+msgid "Name:"
+msgstr "Nom:"
+
 #: src/guidance/GuidanceTagList.js:124
 msgid "Negative Tags"
 msgstr "Étiquettes négatives"
@@ -1557,6 +1561,10 @@ msgstr "Nouveau mot de passe:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
+#: src/admin/AuditLogTable.js:177
+msgid "New Value:"
+msgstr "Nouvelle valeur :"
+
 #: src/components/RelayPaginationControls.js:75
 #~ msgid "Next"
 #~ msgstr "Suivant"
@@ -1590,7 +1598,7 @@ msgstr "Aucune organisation"
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
 
-#: src/admin/AuditLogTable.js:101
+#: src/admin/AuditLogTable.js:102
 msgid "No activity logs"
 msgstr "Aucun journal d'activité"
 
@@ -1691,8 +1699,12 @@ msgstr "Obtenez les conseils de configuration pour les points d'extrémité appr
 msgid "October"
 msgstr "Octobre"
 
-#: src/admin/AuditLogTable.js:81
-#: src/admin/AuditLogTable.js:126
+#: src/admin/AuditLogTable.js:174
+msgid "Old Value:"
+msgstr "Ancienne valeur :"
+
+#: src/admin/AuditLogTable.js:82
+#: src/admin/AuditLogTable.js:127
 msgid "Organization"
 msgstr "Organisation"
 
@@ -1918,7 +1930,7 @@ msgid "Read guidance"
 msgstr "Conseils de lecture"
 
 #: src/admin/AdminDomains.js:327
-#: src/admin/AuditLogTable.js:129
+#: src/admin/AuditLogTable.js:133
 msgid "Reason"
 msgstr "Raison"
 
@@ -1935,7 +1947,7 @@ msgstr "Rejeter tous les messages provenant de domaines autres que les domaines 
 msgid "Remember me"
 msgstr "Rappelle-toi de moi"
 
-#: src/admin/AuditLogTable.js:87
+#: src/admin/AuditLogTable.js:88
 msgid "Remove"
 msgstr "Retirer"
 
@@ -1982,16 +1994,16 @@ msgstr "Réinitialiser le mot de passe"
 #~ msgid "Resource"
 #~ msgstr "Ressources"
 
-#: src/admin/AuditLogTable.js:75
-#: src/admin/AuditLogTable.js:123
+#: src/admin/AuditLogTable.js:76
+#: src/admin/AuditLogTable.js:124
 msgid "Resource Name"
 msgstr "Nom de la ressource"
 
-#: src/admin/AuditLogTable.js:120
+#: src/admin/AuditLogTable.js:121
 msgid "Resource Type"
 msgstr "Type de ressource"
 
-#: src/admin/AuditLogTable.js:200
+#: src/admin/AuditLogTable.js:226
 msgid "Resource:"
 msgstr "Ressource :"
 
@@ -2122,7 +2134,7 @@ msgstr "Rechercher les éléments défaillants du SPF"
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
-#: src/admin/AuditLogTable.js:188
+#: src/admin/AuditLogTable.js:214
 msgid "Search by initiated by, resource name"
 msgstr "Recherche par initié par, nom de la ressource"
 
@@ -2476,12 +2488,12 @@ msgid "This could be due to improper configuration, or could be the result of a 
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
 #: src/admin/AdminDomains.js:345
-#: src/admin/AuditLogTable.js:147
+#: src/admin/AuditLogTable.js:151
 msgid "This domain does not belong to this organization"
 msgstr "Ce domaine n'appartient pas à cette organisation"
 
 #: src/admin/AdminDomains.js:342
-#: src/admin/AuditLogTable.js:144
+#: src/admin/AuditLogTable.js:148
 msgid "This domain no longer exists"
 msgstr "Ce domaine n'existe plus"
 
@@ -2498,8 +2510,8 @@ msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
-#: src/admin/AuditLogTable.js:73
-#: src/admin/AuditLogTable.js:111
+#: src/admin/AuditLogTable.js:74
+#: src/admin/AuditLogTable.js:112
 msgid "Time Generated"
 msgstr "Temps généré"
 
@@ -2682,13 +2694,17 @@ msgstr "Domaine non favorisé"
 msgid "Unscanned"
 msgstr "Non balayé"
 
-#: src/admin/AuditLogTable.js:86
+#: src/admin/AuditLogTable.js:87
 msgid "Update"
 msgstr "Mise à jour"
 
 #: src/admin/OrganizationInformation.js:149
 msgid "Updated Organization"
 msgstr "Organisation mise à jour"
+
+#: src/admin/AuditLogTable.js:130
+msgid "Updated Properties"
+msgstr "Propriétés actualisées"
 
 #: src/domains/ScanDomain.js:126
 #: src/guidance/ScanCard.js:37
@@ -2704,7 +2720,7 @@ msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer prog
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 msgstr "L'utilisation de la propriété intellectuelle en violation du présent accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Suivi."
 
-#: src/admin/AuditLogTable.js:80
+#: src/admin/AuditLogTable.js:81
 msgid "User"
 msgstr "Utilisateur"
 
