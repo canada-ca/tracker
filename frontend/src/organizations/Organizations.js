@@ -120,7 +120,7 @@ export default function Organizations() {
         />
         <InfoBox
           title={t`HTTPS Configured`}
-          info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)`}
+          info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS`}
         />
         <InfoBox
           title={t`DMARC Configuration`}
