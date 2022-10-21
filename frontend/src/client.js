@@ -87,10 +87,10 @@ export const currentUserVar = makeVar({
 })
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql',
-  // process.env.NODE_ENV === 'production'
-  //   ? `https://${window.location.host}/graphql`
-  //   : '/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? `https://${window.location.host}/graphql`
+      : '/graphql',
 })
 
 const headersLink = setContext((_, { headers }) => {
