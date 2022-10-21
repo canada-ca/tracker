@@ -52,12 +52,20 @@ export const targetResourceType = new GraphQLObjectType({
             oldValue: {
               type: GraphQLString,
               description: 'Old value of updated property.',
-              resolve: ({ oldValue }) => oldValue,
+              resolve: ({ oldValue }) => {
+                if (Array.isArray(oldValue)) {
+                  return JSON.stringify(oldValue)
+                } else return oldValue
+              },
             },
             newValue: {
               type: GraphQLString,
               description: 'New value of updated property.',
-              resolve: ({ newValue }) => newValue,
+              resolve: ({ newValue }) => {
+                if (Array.isArray(newValue)) {
+                  return JSON.stringify(newValue)
+                } else return newValue
+              },
             },
           }),
         }),

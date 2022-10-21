@@ -15,6 +15,7 @@ import {
   Th,
   Td,
   TableContainer,
+  Flex,
 } from '@chakra-ui/react'
 
 import { AUDIT_LOGS } from '../graphql/queries'
@@ -126,6 +127,9 @@ export function AuditLogTable({ orgId = null }) {
                 <Trans>Organization</Trans>
               </Th>
               <Th>
+                <Trans>Updated Properties</Trans>
+              </Th>
+              <Th>
                 <Trans>Reason</Trans>
               </Th>
             </Tr>
@@ -158,6 +162,28 @@ export function AuditLogTable({ orgId = null }) {
                     <Td>{resourceType.text.toUpperCase()}</Td>
                     <Td>{target.resource}</Td>
                     <Td>{target.organization.name}</Td>
+                    <Td>
+                      {target?.updatedProperties?.map(
+                        ({ name, oldValue, newValue }) => {
+                          return (
+                            <Box key={name}>
+                              <Flex>
+                                <Trans>Name:</Trans> {name}
+                              </Flex>
+                              <Flex>
+                                <Trans>Old Value:</Trans> {oldValue}
+                              </Flex>
+                              <Flex>
+                                <Trans>New Value:</Trans> {newValue}
+                              </Flex>
+                              {target?.updatedProperties?.length > 1 && (
+                                <Divider />
+                              )}
+                            </Box>
+                          )
+                        },
+                      )}
+                    </Td>
                     <Td>{reason}</Td>
                   </Tr>
                 )
@@ -185,7 +211,7 @@ export function AuditLogTable({ orgId = null }) {
         setOrderDirection={setOrderDirection}
         resetToFirstPage={resetToFirstPage}
         orderByOptions={orderByOptions}
-        placeholder={t`Search for an activity`}
+        placeholder={t`Search by initiated by, resource name`}
       />
       <Grid templateColumns="repeat(5, 1fr)" gap={4}>
         <GridItem colSpan={4}>{logTable}</GridItem>

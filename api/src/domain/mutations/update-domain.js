@@ -230,12 +230,16 @@ export const updateDomain = new mutationWithClientMutationId({
         newValue: domainToInsert.domain,
       })
     }
-    if (domainToInsert.selectors !== domain.selectors) {
-      updatedProperties.push({
-        name: 'selectors',
-        oldValue: domain.selectors,
-        newValue: domainToInsert.selectors,
-      })
+    if (typeof selectors !== 'undefined') {
+      if (
+        JSON.stringify(domainToInsert.selectors) !==
+        JSON.stringify(domain.selectors)
+      )
+        updatedProperties.push({
+          name: 'selectors',
+          oldValue: domain.selectors,
+          newValue: domainToInsert.selectors,
+        })
     }
     await logActivity({
       transaction,

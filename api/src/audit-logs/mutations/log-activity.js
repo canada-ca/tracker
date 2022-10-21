@@ -16,13 +16,11 @@ export const logActivity = async ({
     updatedProperties: [],
   },
   reason = '',
-  status = '',
 }) => {
   const auditLog = {
     timestamp: new Date().toISOString(),
     initiatedBy,
     target,
-    status,
     action,
     reason,
   }

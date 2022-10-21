@@ -2122,6 +2122,10 @@ msgstr "Rechercher les éléments défaillants du SPF"
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
+#: src/admin/AuditLogTable.js:188
+msgid "Search by initiated by, resource name"
+msgstr "Recherche par initié par, nom de la ressource"
+
 #: src/dmarc/DmarcByDomainPage.js:221
 #: src/dmarc/DmarcByDomainPage.js:287
 #: src/domains/DomainsPage.js:245
@@ -2138,8 +2142,8 @@ msgid "Search for a user (email)"
 msgstr "Recherche d'un utilisateur (email)"
 
 #: src/admin/AuditLogTable.js:188
-msgid "Search for an activity"
-msgstr "Recherche d'une activité"
+#~ msgid "Search for an activity"
+#~ msgstr "Recherche d'une activité"
 
 #: src/organizations/Organizations.js:151
 msgid "Search for an organization"
