@@ -214,6 +214,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', secondOrg._key)}"
                     }
@@ -302,6 +303,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', secondOrg._key)}"
                     }
@@ -376,6 +378,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', secondOrg._key)}"
                     }
@@ -439,6 +442,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', secondOrg._key)}"
                     }
@@ -530,6 +534,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -608,6 +613,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -727,6 +733,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', secondOrg._key)}"
                     }
@@ -815,6 +822,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', domain._key)}"
                     orgId: "${toGlobalId('organization', secondOrg._key)}"
                   }
@@ -889,6 +897,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', secondOrg._key)}"
                     }
@@ -952,6 +961,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', secondOrg._key)}"
                     }
@@ -1043,6 +1053,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -1121,6 +1132,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -1217,6 +1229,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -1305,6 +1318,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', domain._key)}"
                     orgId: "${toGlobalId('organization', org._key)}"
                   }
@@ -1379,6 +1393,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -1442,6 +1457,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -1569,6 +1585,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', org._key)}"
                       }
@@ -1647,6 +1664,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -1735,6 +1753,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -1823,6 +1842,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -1897,6 +1917,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -1960,6 +1981,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -2087,6 +2109,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', org._key)}"
                       }
@@ -2165,6 +2188,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -2369,6 +2393,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -2457,6 +2482,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -2531,6 +2557,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -2594,6 +2621,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -2685,6 +2713,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', org._key)}"
                       }
@@ -2763,6 +2792,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -2853,6 +2883,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -2941,6 +2972,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -3015,6 +3047,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -3078,6 +3111,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', domain._key)}"
                       orgId: "${toGlobalId('organization', org._key)}"
                     }
@@ -3205,6 +3239,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', org._key)}"
                       }
@@ -3283,6 +3318,7 @@ describe('removing a domain', () => {
                   mutation {
                     removeDomain(
                       input: {
+                      reason: WRONG_ORG,
                         domainId: "${toGlobalId('domain', domain._key)}"
                         orgId: "${toGlobalId('organization', secondOrg._key)}"
                       }
@@ -3375,6 +3411,7 @@ describe('removing a domain', () => {
             mutation {
               removeDomain(
                 input: {
+                      reason: WRONG_ORG,
                   domainId: "${toGlobalId('domain', 1)}"
                   orgId: "${toGlobalId('organization', 1)}"
                 }
@@ -3443,6 +3480,7 @@ describe('removing a domain', () => {
             mutation {
               removeDomain(
                 input: {
+                      reason: WRONG_ORG,
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 1)}"
                 }
@@ -3515,6 +3553,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -3590,6 +3629,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -3665,6 +3705,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -3742,6 +3783,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -3817,6 +3859,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -3894,6 +3937,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -3961,6 +4005,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4038,6 +4083,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4112,6 +4158,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4188,6 +4235,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4272,6 +4320,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', 123)}"
                       orgId: "${toGlobalId('organization', 456)}"
                     }
@@ -4349,6 +4398,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', 123)}"
                       orgId: "${toGlobalId('organization', 456)}"
                     }
@@ -4425,6 +4475,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4508,6 +4559,7 @@ describe('removing a domain', () => {
             mutation {
               removeDomain(
                 input: {
+                      reason: WRONG_ORG,
                   domainId: "${toGlobalId('domain', 1)}"
                   orgId: "${toGlobalId('organization', 1)}"
                 }
@@ -4576,6 +4628,7 @@ describe('removing a domain', () => {
             mutation {
               removeDomain(
                 input: {
+                      reason: WRONG_ORG,
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 1)}"
                 }
@@ -4648,6 +4701,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4723,6 +4777,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4798,6 +4853,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4875,6 +4931,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -4950,6 +5007,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -5027,6 +5085,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -5096,6 +5155,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -5175,6 +5235,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -5251,6 +5312,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -5329,6 +5391,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
@@ -5415,6 +5478,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', 123)}"
                       orgId: "${toGlobalId('organization', 456)}"
                     }
@@ -5494,6 +5558,7 @@ describe('removing a domain', () => {
                 mutation {
                   removeDomain(
                     input: {
+                      reason: WRONG_ORG,
                       domainId: "${toGlobalId('domain', 123)}"
                       orgId: "${toGlobalId('organization', 456)}"
                     }
@@ -5572,6 +5637,7 @@ describe('removing a domain', () => {
               mutation {
                 removeDomain(
                   input: {
+                      reason: WRONG_ORG,
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 456)}"
                   }
