@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Link, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { number, string } from 'prop-types'
 
@@ -16,7 +16,6 @@ import {
   PAGINATED_ORG_DOMAINS as FORWARD,
   MY_TRACKER_DOMAINS,
 } from '../graphql/queries'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { SearchBox } from '../components/SearchBox'
 
 export function OrganizationDomains({ orgSlug }) {
@@ -72,7 +71,6 @@ export function OrganizationDomains({ orgSlug }) {
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -119,22 +117,6 @@ export function OrganizationDomains({ orgSlug }) {
     <Box>
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`ITPIN`}
-          info={
-            <>
-              <Trans>Shows if the domain is compliant with</Trans>
-              <Link
-                ml="1"
-                href="https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
-                isExternal
-              >
-                ITPIN 2018-01
-                <ExternalLinkIcon mx="2px" />
-              </Link>
-            </>
-          }
-        />
         <InfoBox
           title={t`Ciphers`}
           info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
