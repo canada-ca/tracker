@@ -3,9 +3,7 @@ import { array, string } from 'prop-types'
 import { Accordion, Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
-
 import { GuidanceTagDetails } from './GuidanceTagDetails'
-
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
 
 export function GuidanceTagList({

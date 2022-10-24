@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Text } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
 
 export function DetailList({ details }) {
   const mappedDetails = details.map((detail, idx) => {

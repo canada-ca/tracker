@@ -7,8 +7,6 @@ import {
   Tab,
   TabPanel,
   Flex,
-  Button,
-  Text,
   IconButton,
   Heading,
   Link,
@@ -17,7 +15,6 @@ import {
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { SubdomainWarning } from '../domains/SubdomainWarning'
 import { useQuery } from '@apollo/client'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { Trans } from '@lingui/macro'
@@ -124,12 +121,16 @@ const GuidancePage = () => {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <WebGuidance webScan={webScan} />
+              <WebGuidance
+                webScan={webScan}
+                sslStatus={webStatus.ssl}
+                httpsStatus={webStatus.https}
+              />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <EmailGuidance emailScan={emailScan} />
+              <EmailGuidance emailScan={emailScan} dmarcPhase={dmarcPhase} />
             </ErrorBoundary>
           </TabPanel>
         </TabPanels>
