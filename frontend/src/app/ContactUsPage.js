@@ -16,8 +16,8 @@ export default function ContactUsPage() {
         <Text mb="8">
           <Trans>
             Individuals from a departmental information technology group may
-            contact the TBS Cyber Security mailbox for ITPIN interpretation and
-            domain management.
+            contact the TBS Cyber Security mailbox for results interpretation
+            and domain management.
           </Trans>
         </Text>
         <Text fontWeight="bold" mb="4">
