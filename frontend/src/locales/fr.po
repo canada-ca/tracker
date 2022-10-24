@@ -73,11 +73,11 @@ msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
 msgid "ADMIN"
 msgstr "ADMIN"
 
-#: src/guidance/ScanCategoryDetails.js:156
+#: src/guidance/ScanDetails.js:156
 #~ msgid "Acceptable Ciphers:"
 #~ msgstr "Ciphers acceptés:"
 
-#: src/guidance/ScanCategoryDetails.js:189
+#: src/guidance/ScanDetails.js:189
 #~ msgid "Acceptable Curves:"
 #~ msgstr "Courbes acceptables:"
 
@@ -339,7 +339,7 @@ msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos service
 msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 msgstr "Par défaut, nos analyseurs vérifient les domaines se terminant par « .gc.ca » et « .canada.ca ». Si votre domaine se termine autrement, vous devez communiquer avec nous pour nous en aviser. Envoyez un courriel à l’équipe responsable de la cybersécurité du SCT pour confirmer que ce domaine vous appartient. "
 
-#: src/guidance/ScanCategoryDetails.js:102
+#: src/guidance/ScanDetails.js:102
 #~ msgid "CCS Injection Vulnerability:"
 #~ msgstr "Vulnérabilité d'injection de CCS:"
 
@@ -927,7 +927,7 @@ msgstr "Courrier électronique:"
 msgid "Enforcement"
 msgstr "Application de la loi"
 
-#: src/guidance/ScanCategoryDetails.js:73
+#: src/guidance/ScanDetails.js:73
 #~ msgid "Enforcement:"
 #~ msgstr "Application de la loi:"
 
@@ -1136,7 +1136,7 @@ msgstr "Orientation:"
 msgid "HSTS"
 msgstr "HSTS"
 
-#: src/guidance/ScanCategoryDetails.js:86
+#: src/guidance/ScanDetails.js:86
 #~ msgid "HSTS Age:"
 #~ msgstr "Âge du HSTS:"
 
@@ -1145,7 +1145,7 @@ msgstr "HSTS"
 msgid "HSTS Status"
 msgstr "Statut HSTS"
 
-#: src/guidance/ScanCategoryDetails.js:79
+#: src/guidance/ScanDetails.js:79
 #~ msgid "HSTS Status:"
 #~ msgstr "Statut HSTS:"
 
@@ -1190,7 +1190,7 @@ msgstr "L'analyse HTTPS du domaine \"{0}\" est terminée."
 msgid "Header From"
 msgstr "En-tête De"
 
-#: src/guidance/ScanCategoryDetails.js:108
+#: src/guidance/ScanDetails.js:108
 #~ msgid "Heartbleed Vulnerability:"
 #~ msgstr "Vulnérabilité Heartbleed:"
 
@@ -1265,7 +1265,7 @@ msgstr "Mise en œuvre"
 msgid "Implementation guidance: email domain protection (ITSP.40.065 v1.1) - Canadian Centre for Cyber Security"
 msgstr "Directives de mise en œuvre – protection du domaine de courrier (ITSP.40.065 v1.1) – Centre canadien pour la cybersécurité"
 
-#: src/guidance/ScanCategoryDetails.js:67
+#: src/guidance/ScanDetails.js:67
 #~ msgid "Implementation:"
 #~ msgstr "Mise en œuvre:"
 
@@ -1603,9 +1603,9 @@ msgstr "Nouveau numéro de téléphone:"
 #~ msgid "Next"
 #~ msgstr "Suivant"
 
-#: src/guidance/ScanCategoryDetails.js:104
-#: src/guidance/ScanCategoryDetails.js:110
-#: src/guidance/ScanCategoryDetails.js:116
+#: src/guidance/ScanDetails.js:104
+#: src/guidance/ScanDetails.js:110
+#: src/guidance/ScanDetails.js:116
 #~ msgid "No"
 #~ msgstr "Non"
 
@@ -1669,7 +1669,7 @@ msgstr "Aucune donnée n'a été trouvée lors de la récupération de tous les 
 msgid "No guidance tags were found for this scan category"
 msgstr "Aucune balise d'orientation n'a été trouvée pour cette catégorie de balayage."
 
-#: src/guidance/ScanCategoryDetails.js:14
+#: src/guidance/ScanDetails.js:14
 #~ msgid "No scan data available for {0}."
 #~ msgstr "Aucune donnée d'analyse disponible pour {0}."
 
@@ -1911,7 +1911,7 @@ msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à u
 msgid "Positive Tags"
 msgstr "Étiquettes positives"
 
-#: src/guidance/ScanCategoryDetails.js:93
+#: src/guidance/ScanDetails.js:93
 #~ msgid "Preloaded Status:"
 #~ msgstr "Statut préchargé:"
 
@@ -2394,7 +2394,7 @@ msgstr "L'utilisateur {0} a été supprimé."
 msgid "Summary"
 msgstr "Résumé"
 
-#: src/guidance/ScanCategoryDetails.js:114
+#: src/guidance/ScanDetails.js:114
 #~ msgid "Supports ECDH Key Exchange:"
 #~ msgstr "Supporte l'échange de clés ECDH:"
 
@@ -2844,11 +2844,11 @@ msgstr "Nous avons envoyé un SMS à votre numéro de téléphone enregistré av
 msgid "We've sent you an email with an authentication code to sign into Tracker."
 msgstr "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Suivi."
 
-#: src/guidance/ScanCategoryDetails.js:165
+#: src/guidance/ScanDetails.js:165
 #~ msgid "Weak Ciphers:"
 #~ msgstr "Ciphers faibles:"
 
-#: src/guidance/ScanCategoryDetails.js:198
+#: src/guidance/ScanDetails.js:198
 #~ msgid "Weak Curves:"
 #~ msgstr "Courbes faibles:"
 
@@ -2914,9 +2914,9 @@ msgstr "Même si d’autres outils sont utiles en complément de Tracker, ils ne
 msgid "Why do other tools (<0>Hardenize</0>, <1>SSL Labs</1>, etc.) show positive results for a domain while Tracker shows negative results?"
 msgstr "Pourquoi d’autres outils (<0>Hardenize</0>, <1>Laboratoires SSL</1>, etc.) affichent-ils des résultats positifs pour un domaine alors que Tracker affiche des résultats négatifs?"
 
-#: src/guidance/ScanCategoryDetails.js:104
-#: src/guidance/ScanCategoryDetails.js:110
-#: src/guidance/ScanCategoryDetails.js:116
+#: src/guidance/ScanDetails.js:104
+#: src/guidance/ScanDetails.js:110
+#: src/guidance/ScanDetails.js:116
 #~ msgid "Yes"
 #~ msgstr "Oui"
 

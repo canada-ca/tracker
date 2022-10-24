@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ScanCard } from './ScanCard'
 import { t, Trans } from '@lingui/macro'
-import { ScanDetails } from './ScanCategoryDetails'
+import { ScanDetails } from './ScanDetails'
 import { GuidanceTagList } from './GuidanceTagList'
 import { Box, ListItem, OrderedList, Text } from '@chakra-ui/react'
 

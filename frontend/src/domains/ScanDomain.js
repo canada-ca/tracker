@@ -27,7 +27,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { StatusBadge } from './StatusBadge'
 
-import { ScanCategoryDetails } from '../guidance/ScanCategoryDetails'
+import { ScanDetails } from '../guidance/ScanDetails'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { StatusIcon } from '../components/StatusIcon'
 import { createValidationSchema } from '../utilities/fieldRequirements'
@@ -339,13 +339,13 @@ export function ScanDomain() {
                             </Box>
                             <Accordion allowMultiple defaultIndex={[0, 1]}>
                               {mergedScan?.scan.https && (
-                                <ScanCategoryDetails
+                                <ScanDetails
                                   categoryName="https"
                                   categoryData={mergedScan.scan.https}
                                 />
                               )}
                               {mergedScan?.scan.ssl && (
-                                <ScanCategoryDetails
+                                <ScanDetails
                                   categoryName="TLS"
                                   categoryData={mergedScan.scan.ssl}
                                 />
@@ -412,19 +412,19 @@ export function ScanDomain() {
                             </Box>
                             <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
                               {mergedScan?.scan.dkim && (
-                                <ScanCategoryDetails
+                                <ScanDetails
                                   categoryName="dkim"
                                   categoryData={mergedScan.scan.dkim}
                                 />
                               )}
                               {mergedScan?.scan.dmarc && (
-                                <ScanCategoryDetails
+                                <ScanDetails
                                   categoryName="dmarc"
                                   categoryData={mergedScan.scan.dmarc}
                                 />
                               )}
                               {mergedScan?.scan.spf && (
-                                <ScanCategoryDetails
+                                <ScanDetails
                                   categoryName="spf"
                                   categoryData={mergedScan.scan.spf}
                                 />
