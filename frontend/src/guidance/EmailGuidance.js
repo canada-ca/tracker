@@ -26,7 +26,7 @@ const EmailGuidance = ({ emailScan, dmarcPhase = 'unknown' }) => {
       dmarcSteps = [
         t`Identify all authorized senders;`,
         t`Deploy SPF records for all domains;`,
-        t`Dploy DKIM records and keys for all domains and senders; and`,
+        t`Deploy DKIM records and keys for all domains and senders; and`,
         t`Monitor DMARC reports and correct misconfigurations.`,
       ]
       break
