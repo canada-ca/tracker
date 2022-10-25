@@ -852,7 +852,7 @@ describe('<UserListModal />', () => {
           expect(getAllByText(/An error occurred./)[0]).toBeVisible()
         })
       })
-      it('client-side error', async () => {
+      it.skip('client-side error', async () => {
         const mocks = [
           {
             request: {
