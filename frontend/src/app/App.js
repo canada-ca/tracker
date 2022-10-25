@@ -26,8 +26,8 @@ import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ABTestingWrapper } from './ABTestWrapper'
 import { ABTestVariant } from './ABTestVariant'
-import GuidancePage from '../guidance/GuidancePage'
 
+const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
 const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
