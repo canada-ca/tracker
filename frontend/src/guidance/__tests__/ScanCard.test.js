@@ -1,7 +1,7 @@
 import React from 'react'
-import { theme, ChakraProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider, Text } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
@@ -11,7 +11,6 @@ import { en } from 'make-plural/plurals'
 import { ScanCard } from '../ScanCard'
 
 import { UserVarProvider } from '../../utilities/userState'
-import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,10 +22,6 @@ const i18n = setupI18n({
   },
 })
 
-const scanType = 'web'
-const scanData = rawDmarcGuidancePageData.findDomainByDomain.web
-const webStatus = rawDmarcGuidancePageData.findDomainByDomain.status
-
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -37,7 +32,7 @@ Object.defineProperty(window, 'matchMedia', {
 
 describe('<ScanCard />', () => {
   it('renders', async () => {
-    const { getAllByText } = render(
+    const { getByText } = render(
       <MockedProvider>
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
@@ -46,16 +41,20 @@ describe('<ScanCard />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <ScanCard
-                  scanType={scanType}
-                  scanData={scanData}
-                  status={webStatus}
-                />
+                  title="HTTPS"
+                  description="Testing scan card description"
+                >
+                  <Text>This is the children area - rendered in ScanCard</Text>
+                </ScanCard>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => getAllByText(/Web Scan Results/i))
+    expect(getByText(/Testing scan card description/i)).toBeInTheDocument()
+    expect(
+      getByText(/This is the children area - rendered in ScanCard/i),
+    ).toBeInTheDocument()
   })
 })

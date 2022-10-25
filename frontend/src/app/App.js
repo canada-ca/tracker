@@ -27,6 +27,7 @@ import { useLingui } from '@lingui/react'
 import { ABTestingWrapper } from './ABTestWrapper'
 import { ABTestVariant } from './ABTestVariant'
 
+const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
 const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
@@ -48,9 +49,6 @@ const ResetPasswordPage = lazyWithRetry(() =>
 )
 const DmarcByDomainPage = lazyWithRetry(() =>
   import('../dmarc/DmarcByDomainPage'),
-)
-const DmarcGuidancePage = lazyWithRetry(() =>
-  import('../guidance/DmarcGuidancePage'),
 )
 const TermsConditionsPage = lazyWithRetry(() =>
   import('../termsConditions/TermsConditionsPage'),
@@ -295,7 +293,7 @@ export function App() {
             >
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <DmarcGuidancePage />
+                  <GuidancePage />
                 </ErrorBoundary>
               )}
             </PrivatePage>
