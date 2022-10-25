@@ -338,22 +338,6 @@ export function App() {
               )}
             </Page>
 
-            <ABTestingWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
-                  {isLoggedIn() ? (
-                    <MyTrackerPage />
-                  ) : (
-                    <Redirect
-                      to={{
-                        pathname: '/sign-in',
-                      }}
-                    />
-                  )}
-                </Page>
-              </ABTestVariant>
-            </ABTestingWrapper>
-
             <Page path="/validate/:verifyToken" title={t`Email Verification`}>
               {() => <EmailValidationPage />}
             </Page>
@@ -373,6 +357,22 @@ export function App() {
             </Page>
 
             <Page component={PageNotFound} title="404" />
+
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
+                  {isLoggedIn() ? (
+                    <MyTrackerPage />
+                  ) : (
+                    <Redirect
+                      to={{
+                        pathname: '/sign-in',
+                      }}
+                    />
+                  )}
+                </Page>
+              </ABTestVariant>
+            </ABTestingWrapper>
           </Switch>
         </Suspense>
       </Main>
