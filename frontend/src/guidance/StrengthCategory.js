@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Text } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
-export function StrengthCategory({ items, strength, type }) {
+export function StrengthCategory({ items, strength, title }) {
   let titleBg = 'info'
   let mainBg = 'info'
-  let title = ''
 
   switch (strength) {
     case 'strong':
@@ -20,15 +19,6 @@ export function StrengthCategory({ items, strength, type }) {
     case 'weak':
       titleBg = 'weakMuted'
       mainBg = 'weak'
-      break
-  }
-
-  switch (type) {
-    case 'ciphers':
-      title = t`Strong Ciphers:`
-      break
-    case 'curves':
-      title = t`Strong Curves:`
       break
   }
 
@@ -67,5 +57,5 @@ export function StrengthCategory({ items, strength, type }) {
 StrengthCategory.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string).isRequired,
   strength: PropTypes.oneOf(['strong', 'acceptable', 'weak']).isRequired,
-  type: PropTypes.oneOf(['curves', 'ciphers']).isRequired,
+  title: PropTypes.string.isRequired,
 }

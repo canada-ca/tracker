@@ -68,17 +68,17 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
           <Accordion allowMultiple defaultIndex={[0, 1]}>
             <ScanDetails title={t`Ciphers`}>
               <StrengthCategory
-                type="ciphers"
+                title={t`Strong Ciphers:`}
                 strength="strong"
                 items={tlsScan.strongCiphers}
               />
               <StrengthCategory
-                type="ciphers"
+                title={t`Acceptable Ciphers:`}
                 strength="acceptable"
                 items={tlsScan.acceptableCiphers}
               />
               <StrengthCategory
-                type="ciphers"
+                title={t`Weak Ciphers:`}
                 strength="weak"
                 items={tlsScan.weakCiphers}
               />
@@ -86,17 +86,17 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
 
             <ScanDetails title={t`Curves`}>
               <StrengthCategory
-                type="ciphers"
+                title={t`Strong Curves:`}
                 strength="strong"
                 items={tlsScan.strongCiphers}
               />
               <StrengthCategory
-                type="ciphers"
+                title={t`Acceptable Curves:`}
                 strength="acceptable"
                 items={tlsScan.acceptableCiphers}
               />
               <StrengthCategory
-                type="ciphers"
+                title={t`Weak Curves:`}
                 strength="weak"
                 items={tlsScan.weakCiphers}
               />
