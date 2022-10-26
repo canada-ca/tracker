@@ -1,17 +1,16 @@
 import React from 'react'
-import { theme, Accordion, ChakraProvider } from '@chakra-ui/react'
+import { theme, Accordion, ChakraProvider, Text } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/client/testing'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import { ScanCategoryDetails } from '../ScanCategoryDetails'
+import { ScanDetails } from '../ScanDetails'
 
 import { UserVarProvider } from '../../utilities/userState'
-import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -23,10 +22,6 @@ const i18n = setupI18n({
   },
 })
 
-const categoryName = 'https'
-const categoryData =
-  rawDmarcGuidancePageData.findDomainByDomain.web.https.edges[0].node
-
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -35,9 +30,9 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
-describe('<ScanCategoryDetails />', () => {
+describe('<ScanDetails />', () => {
   it('renders', async () => {
-    const { getAllByText } = render(
+    const { getByText } = render(
       <MockedProvider>
         <UserVarProvider
           userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
@@ -46,10 +41,9 @@ describe('<ScanCategoryDetails />', () => {
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <Accordion>
-                  <ScanCategoryDetails
-                    categoryName={categoryName}
-                    categoryData={categoryData}
-                  />
+                  <ScanDetails title="ScanTitle">
+                    <Text>This is a test for ScanDetails children</Text>
+                  </ScanDetails>
                 </Accordion>
               </MemoryRouter>
             </I18nProvider>
@@ -57,6 +51,9 @@ describe('<ScanCategoryDetails />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => getAllByText(/HTTPS/i))
+    expect(getByText(/ScanTitle/i)).toBeInTheDocument()
+    expect(
+      getByText(/This is a test For ScanDetails children/i),
+    ).toBeInTheDocument()
   })
 })
