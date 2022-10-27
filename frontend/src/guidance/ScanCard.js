@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Accordion, Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import React from 'react'
+import { Accordion, Box, Heading, Stack, Text } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
 
 export function ScanCard({ title, description, children }) {
@@ -17,20 +17,9 @@ export function ScanCard({ title, description, children }) {
         <Stack spacing="30px" px="1" mt="1">
           <Accordion
             allowMultiple
-            defaultIndex={
-              Array.isArray(children)
-                ? children.map((_child, idx) => idx)
-                : children !== undefined
-                ? 1
-                : 0
-            }
+            defaultIndex={Array.isArray(children) ? children.map((_child, idx) => idx) : children !== undefined ? 1 : 0}
           >
             {children}
-          {topInfo()}
-
-          {scanType === 'web' && ipSelectorArea}
-          <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
-            {categoryList}
           </Accordion>
         </Stack>
       </Box>

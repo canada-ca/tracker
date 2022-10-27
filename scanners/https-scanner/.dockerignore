@@ -1,4 +1,0 @@
-*.yaml
-Dockerfile
-tests
-**/*.env
