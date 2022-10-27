@@ -41,11 +41,13 @@ export const findAuditLogs = {
   ) => {
     const user = await userRequired()
     verifiedRequired({ user })
+
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-    // Check to see if user belongs to org
-    const permission = await checkPermission({ orgId })
     // Get Org from db
     const org = await loadOrgByKey.load(orgId)
+
+    // Check to see if user belongs to org
+    const permission = await checkPermission({ orgId: org._id })
     if (permission === 'admin' || permission === 'super_admin') {
       const auditLogCollection = await loadAuditLogsByOrgId({
         ...args,
