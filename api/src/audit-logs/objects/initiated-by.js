@@ -1,5 +1,7 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 import { globalIdField } from 'graphql-relay'
+import { GraphQLEmailAddress } from 'graphql-scalars'
+import { RoleEnums } from '../../enums'
 
 export const initiatedByType = new GraphQLObjectType({
   name: 'InitiatedBy',
@@ -7,18 +9,18 @@ export const initiatedByType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('user'),
     userName: {
-      type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      type: GraphQLEmailAddress,
+      description: 'User email address.',
       resolve: ({ userName }) => userName,
     },
     role: {
-      type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      type: RoleEnums,
+      description: 'User permission level.',
       resolve: ({ role }) => role,
     },
     organization: {
       type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      description: 'User affiliated organization.',
       resolve: ({ organization }) => organization,
     },
   }),

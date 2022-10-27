@@ -1,5 +1,6 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
 import { globalIdField } from 'graphql-relay'
+import { ResourceTypeEnums } from '../../enums/resource-type'
 
 export const targetResourceType = new GraphQLObjectType({
   name: 'TargetResource',
@@ -33,7 +34,7 @@ export const targetResourceType = new GraphQLObjectType({
       resolve: ({ organization }) => organization,
     },
     resourceType: {
-      type: GraphQLString,
+      type: ResourceTypeEnums,
       description:
         'Type of resource that was modified: user, domain, or organization.',
       resolve: ({ resourceType }) => resourceType,

@@ -11,7 +11,7 @@ export const findAuditLogs = {
   args: {
     orgId: {
       type: GraphQLID,
-      description: 'The organization you wish to remove the domain from.',
+      description: 'The organization you wish to query the logs from.',
     },
     orderBy: {
       type: logOrder,
@@ -19,7 +19,8 @@ export const findAuditLogs = {
     },
     search: {
       type: GraphQLString,
-      description: 'String used to search for domains.',
+      description:
+        'String used to search for logs by initiant user or target resource.',
     },
     filters: {
       type: logFilters,

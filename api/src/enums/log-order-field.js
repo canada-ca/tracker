@@ -6,15 +6,15 @@ export const LogOrderField = new GraphQLEnumType({
   values: {
     TIMESTAMP: {
       value: 'timestamp',
-      description: 'Order domains by spf status.',
+      description: 'Order logs by timestamp.',
     },
     INITIATED_BY: {
       value: 'initiated_by',
-      description: 'Order domains by spf status.',
+      description: "Order logs by initiant's username.",
     },
     RESOURCE_NAME: {
       value: 'resource_name',
-      description: 'Order domains by spf status.',
+      description: 'Order logs by name of targeted resource.',
     },
   },
 })

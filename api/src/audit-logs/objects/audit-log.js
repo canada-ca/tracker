@@ -1,5 +1,7 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 import { globalIdField } from 'graphql-relay'
+import { DomainRemovalReasonEnum } from '../../enums'
+import { UserActionEnums } from '../../enums/user-action'
 import { nodeInterface } from '../../node'
 import { initiatedByType } from './initiated-by'
 import { targetResourceType } from './target-resource'
@@ -12,27 +14,27 @@ export const auditLogType = new GraphQLObjectType({
     id: globalIdField('auditLog'),
     timestamp: {
       type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      description: 'Datetime string the activity occured.',
       resolve: ({ timestamp }) => timestamp,
     },
     initiatedBy: {
       type: initiatedByType,
-      description: 'Domain that scans will be ran on.',
+      description: 'Username of admin that initiated the activity.',
       resolve: ({ initiatedBy }) => initiatedBy,
     },
     action: {
-      type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      type: UserActionEnums,
+      description: 'Type of activity that was initiated.',
       resolve: ({ action }) => action,
     },
     target: {
       type: targetResourceType,
-      description: 'Domain that scans will be ran on.',
+      description: 'Information on targeted resource.',
       resolve: ({ target }) => target,
     },
     reason: {
-      type: GraphQLString,
-      description: 'Domain that scans will be ran on.',
+      type: DomainRemovalReasonEnum,
+      description: 'Optional reason for action, used for domain removal.',
       resolve: ({ reason }) => reason,
     },
   }),
