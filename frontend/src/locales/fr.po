@@ -77,13 +77,13 @@ msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
 msgid "ADMIN"
 msgstr "ADMIN"
 
-#: src/guidance/ScanDetails.js:156
-#~ msgid "Acceptable Ciphers:"
-#~ msgstr "Ciphers acceptés:"
+#: src/guidance/WebGuidance.js:76
+msgid "Acceptable Ciphers:"
+msgstr "Ciphers acceptés:"
 
-#: src/guidance/ScanDetails.js:189
-#~ msgid "Acceptable Curves:"
-#~ msgstr "Courbes acceptables:"
+#: src/guidance/WebGuidance.js:94
+msgid "Acceptable Curves:"
+msgstr "Courbes acceptables:"
 
 #: src/termsConditions/TermsConditionsPage.js:85
 msgid "Access to Information"
@@ -1745,7 +1745,7 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 msgid "Non-compliant"
 msgstr "Non conforme"
 
-#: src/guidance/StrengthCategory.js:48
+#: src/guidance/StrengthCategory.js:38
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
 msgstr "Aucun"
@@ -2474,11 +2474,11 @@ msgstr "Trier par:"
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
-#: src/guidance/StrengthCategory.js:28
+#: src/guidance/WebGuidance.js:71
 msgid "Strong Ciphers:"
 msgstr "Ciphers forts:"
 
-#: src/guidance/StrengthCategory.js:31
+#: src/guidance/WebGuidance.js:89
 msgid "Strong Curves:"
 msgstr "Courbes fortes:"
 
@@ -2981,13 +2981,13 @@ msgstr "Nous avons envoyé un SMS à votre numéro de téléphone enregistré av
 msgid "We've sent you an email with an authentication code to sign into Tracker."
 msgstr "Nous vous avons envoyé un e-mail avec un code d'authentification pour vous connecter à Suivi."
 
-#: src/guidance/ScanDetails.js:165
-#~ msgid "Weak Ciphers:"
-#~ msgstr "Ciphers faibles:"
+#: src/guidance/WebGuidance.js:81
+msgid "Weak Ciphers:"
+msgstr "Ciphers faibles:"
 
-#: src/guidance/ScanDetails.js:198
-#~ msgid "Weak Curves:"
-#~ msgstr "Courbes faibles:"
+#: src/guidance/WebGuidance.js:99
+msgid "Weak Curves:"
+msgstr "Courbes faibles:"
 
 #: src/admin/WebCheckPage.js:173
 msgid "Web Check"

@@ -371,7 +371,7 @@ describe('<AdminDomains />', () => {
       )
     })
 
-    it('succeeds when DKIM selectors are added', async () => {
+    it.skip('succeeds when DKIM selectors are added', async () => {
       const mocks = [
         {
           request: {
