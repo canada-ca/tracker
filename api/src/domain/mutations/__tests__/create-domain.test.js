@@ -23,35 +23,9 @@ import {
 } from '../../../organization/loaders'
 import {loadUserByKey} from '../../../user/loaders'
 import dbschema from '../../../../database.json'
+import { collectionNames } from '../../../collection-names'
 
 const {DB_PASS: rootPass, DB_URL: url, HASHING_SECRET} = process.env
-
-const collectionNames = [
-  'users',
-  'organizations',
-  'domains',
-  'dns',
-  'web',
-  'webScan',
-  'dkimGuidanceTags',
-  'dmarcGuidanceTags',
-  'spfGuidanceTags',
-  'httpsGuidanceTags',
-  'sslGuidanceTags',
-  'chartSummaries',
-  'dmarcSummaries',
-  'aggregateGuidanceTags',
-  'scanSummaryCriteria',
-  'chartSummaryCriteria',
-  'scanSummaries',
-  'affiliations',
-  'claims',
-  'domainsDNS',
-  'domainsWeb',
-  'webToWebScans',
-  'ownership',
-  'domainsToDmarcSummaries',
-]
 
 describe('create a domain', () => {
   let query, drop, truncate, schema, collections, transaction, user, org

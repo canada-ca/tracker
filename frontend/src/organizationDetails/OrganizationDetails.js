@@ -114,8 +114,8 @@ export default function OrganizationDetails() {
           fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
           dataFunction={
           async () => {
-            const stuff = await getOrgDomainStatuses()
-            return stuff.data?.findOrganizationBySlug?.toCsv
+            const result = await getOrgDomainStatuses()
+            return result.data?.findOrganizationBySlug?.toCsv
             }
           }
           isLoading={orgDomainStatusesLoading}

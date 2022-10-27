@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Link, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { number, string } from 'prop-types'
 
@@ -12,8 +12,10 @@ import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { PAGINATED_ORG_DOMAINS as FORWARD } from '../graphql/queries'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import {
+  PAGINATED_ORG_DOMAINS as FORWARD,
+  MY_TRACKER_DOMAINS,
+} from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 
 export function OrganizationDomains({ orgSlug }) {
@@ -29,6 +31,18 @@ export function OrganizationDomains({ orgSlug }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
+  const queryVariables =
+    orgSlug === 'my-tracker'
+      ? {
+          orderBy: { field: orderField, direction: orderDirection },
+          search: debouncedSearchTerm,
+        }
+      : {
+          slug: orgSlug,
+          orderBy: { field: orderField, direction: orderDirection },
+          search: debouncedSearchTerm,
+        }
+
   const {
     loading,
     isLoadingMore,
@@ -40,14 +54,13 @@ export function OrganizationDomains({ orgSlug }) {
     hasNextPage,
     hasPreviousPage,
   } = usePaginatedCollection({
-    fetchForward: FORWARD,
+    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
     recordsPerPage: domainsPerPage,
-    relayRoot: 'findOrganizationBySlug.domains',
-    variables: {
-      slug: orgSlug,
-      orderBy: { field: orderField, direction: orderDirection },
-      search: debouncedSearchTerm,
-    },
+    relayRoot:
+      orgSlug === 'my-tracker'
+        ? 'findMyTracker.domains'
+        : 'findOrganizationBySlug.domains',
+    variables: queryVariables,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   })
@@ -58,7 +71,6 @@ export function OrganizationDomains({ orgSlug }) {
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -83,15 +95,17 @@ export function OrganizationDomains({ orgSlug }) {
       )}
       mb="4"
     >
-      {({ id, domain, status, hasDMARCReport }, index) => (
+      {({ id, domain, status, hasDMARCReport, claimTags }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
         >
           <DomainCard
+            id={id}
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}
+            tags={claimTags}
             mb="3"
           />
         </ErrorBoundary>
@@ -103,22 +117,6 @@ export function OrganizationDomains({ orgSlug }) {
     <Box>
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`ITPIN`}
-          info={
-            <>
-              <Trans>Shows if the domain is compliant with</Trans>
-              <Link
-                ml="1"
-                href="https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
-                isExternal
-              >
-                ITPIN 2018-01
-                <ExternalLinkIcon mx="2px" />
-              </Link>
-            </>
-          }
-        />
         <InfoBox
           title={t`Ciphers`}
           info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}

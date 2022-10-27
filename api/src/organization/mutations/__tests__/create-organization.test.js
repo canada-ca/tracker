@@ -12,35 +12,9 @@ import { userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgBySlug } from '../../loaders'
 import dbschema from '../../../../database.json'
+import { collectionNames } from '../../../collection-names'
 
 const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
-
-const collectionNames = [
-  'users',
-  'organizations',
-  'domains',
-  'dns',
-  'web',
-  'webScan',
-  'dkimGuidanceTags',
-  'dmarcGuidanceTags',
-  'spfGuidanceTags',
-  'httpsGuidanceTags',
-  'sslGuidanceTags',
-  'chartSummaries',
-  'dmarcSummaries',
-  'aggregateGuidanceTags',
-  'scanSummaryCriteria',
-  'chartSummaryCriteria',
-  'scanSummaries',
-  'affiliations',
-  'claims',
-  'domainsDNS',
-  'domainsWeb',
-  'webToWebScans',
-  'ownership',
-  'domainsToDmarcSummaries',
-]
 
 describe('create an organization', () => {
   let query, drop, truncate, schema, collections, transaction, user

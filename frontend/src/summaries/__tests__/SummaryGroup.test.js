@@ -67,7 +67,7 @@ describe('<SummaryGroup />', () => {
       )
       expect(
         getByText(
-          /HTTPS is configured and HTTP connections redirect to HTTPS \(ITPIN 6.1.1\)/i,
+          /HTTPS is configured and HTTP connections redirect to HTTPS/i,
         ),
       ).toBeInTheDocument()
       expect(

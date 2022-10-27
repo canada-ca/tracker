@@ -21,13 +21,29 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
 
 
+class TlsVersionEnum(Enum):
+    """SSL version constants. (Sourced from OpenSSL)"""
+
+    SSLV2 = 1
+    SSLV3 = 2
+    TLSV1 = 3
+    TLSV1_1 = 4
+    TLSV1_2 = 5
+    TLSV1_3 = 6
+
+
 class TLSScanner:
     domain: str
     ip: str
 
-    def __init__(self, domain, ip_address=None):
-        self.domain = domain
-        self.ip_address = ip_address
+        for version, method in {
+            "SSL_2_0": TlsVersionEnum.SSLV2,
+            "SSL_3_0": TlsVersionEnum.SSLV3,
+            "TLS_1_0": TlsVersionEnum.TLSV1,
+            "TLS_1_1": TlsVersionEnum.TLSV1_1,
+            "TLS_1_2": TlsVersionEnum.TLSV1_2,
+            "TLS_1_3": TlsVersionEnum.TLSV1_3,
+        }.items():
 
     #
     # def get_server_info(self):
@@ -98,12 +114,18 @@ class TLSScanner:
 
 
         # Test supported SSL/TLS
-        designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
-        designated_scans.add(ScanCommand.SSL_3_0_CIPHER_SUITES)
-        designated_scans.add(ScanCommand.TLS_1_0_CIPHER_SUITES)
-        designated_scans.add(ScanCommand.TLS_1_1_CIPHER_SUITES)
-        designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
-        designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
+        if "SSL_2_0" in tls_supported:
+            designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
+        if "SSL_3_0" in tls_supported:
+            designated_scans.add(ScanCommand.SSL_3_0_CIPHER_SUITES)
+        if "TLS_1_0" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_0_CIPHER_SUITES)
+        if "TLS_1_1" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_1_CIPHER_SUITES)
+        if "TLS_1_2" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
+        if "TLS_1_3" in tls_supported:
+            designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
 
         scan_request = ServerScanRequest(
             server_location=ServerNetworkLocation(hostname=self.domain,

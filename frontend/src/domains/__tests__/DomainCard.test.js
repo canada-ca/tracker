@@ -7,6 +7,8 @@ import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 
 import { DomainCard } from '../DomainCard'
+import { UserVarProvider } from '../../utilities/userState'
+import { makeVar } from '@apollo/client'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -30,23 +32,27 @@ const status = {
   ssl: 'pass',
 }
 
-describe('<OrganizationsCard />', () => {
+describe('<DomainCard />', () => {
   it('successfully renders card with domain name', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <MemoryRouter initialEntries={['/']}>
-          <ChakraProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <List>
-                <DomainCard
-                  url="tbs-sct.gc.ca"
-                  status={status}
-                  hasDMARCReport={true}
-                />
-              </List>
-            </I18nProvider>
-          </ChakraProvider>
-        </MemoryRouter>
+        <UserVarProvider
+          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+        >
+          <MemoryRouter initialEntries={['/']}>
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <List>
+                  <DomainCard
+                    url="tbs-sct.gc.ca"
+                    status={status}
+                    hasDMARCReport={true}
+                  />
+                </List>
+              </I18nProvider>
+            </ChakraProvider>
+          </MemoryRouter>
+        </UserVarProvider>
       </MockedProvider>,
     )
 

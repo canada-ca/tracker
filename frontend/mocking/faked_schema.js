@@ -106,9 +106,6 @@ export const getTypeNames = () => gql`
       # String argument used to search for organizations.
       search: String
 
-      # Filter orgs based off of the user being an admin of them.
-      isAdmin: Boolean
-
       # Returns the items in the list that come after the specified cursor.
       after: String
 
@@ -128,6 +125,9 @@ export const getTypeNames = () => gql`
       orgSlug: Slug!
     ): Organization
 
+    # CSV formatted output of all domains in all organizations including their email and web scan statuses.
+    getAllOrganizationDomainStatuses: String
+
     # Email summary computed values, used to build summary cards.
     mailSummary: CategorizedSummary
 
@@ -142,6 +142,9 @@ export const getTypeNames = () => gql`
 
     # Query the currently logged in user.
     findMe: PersonalUser
+
+    # Select all information on a selected organization that a user has access to.
+    findMyTracker: MyTrackerResult
 
     # Select users an admin has access to.
     findMyUsers(
@@ -412,6 +415,9 @@ export const getTypeNames = () => gql`
 
     # Yearly summarized DMARC aggregate reports.
     yearlyDmarcSummaries: [DmarcSummary]
+
+    # List of labelled tags users of an organization have applied to the claimed domain.
+    claimTags: [String]
   }
 
   # String that conforms to a domain structure.
@@ -1770,18 +1776,21 @@ export const getTypeNames = () => gql`
     # Whether the organization is a verified organization.
     verified: Boolean
 
-    # Whether or not the domain has a aggregate dmarc report.
+    # List of tags assigned to domains within the organization.
     tags: TagConnection
     domains: WebCheckDomainConnection
   }
 
   type TagConnection {
-    edges: [DomainTag]
+    # List of tags assigned to the domain.
+    edges: [VulnerabilityTag]
+
+    # Total number of tags assigned to domain.
     totalCount: Int
   }
 
   # This object contains information about a vulnerability affecting the domain.
-  type DomainTag {
+  type VulnerabilityTag {
     # CVE ID of the detected vulnerability.
     id: String
 
@@ -1898,6 +1907,42 @@ export const getTypeNames = () => gql`
 
     # User has not setup any TFA methods.
     NONE
+  }
+
+  # Organization object containing information for a given Organization.
+  type MyTrackerResult {
+    # Summaries based on scan types that are preformed on the given organizations domains.
+    summaries: OrganizationSummary
+
+    # The number of domains associated with this organization.
+    domainCount: Int
+
+    # The domains which are associated with this organization.
+    domains(
+      # Ordering options for domain connections.
+      orderBy: DomainOrder
+
+      # Limit domains to those that belong to an organization that has ownership.
+      ownership: Boolean
+
+      # Limits domains to those that user has added to their personal myTracker view.
+      myTracker: Boolean
+
+      # String used to search for domains.
+      search: String
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): DomainConnection
   }
 
   # A connection to a list of items.
@@ -2159,11 +2204,17 @@ export const getTypeNames = () => gql`
     # Mutation used to create a new domain for an organization.
     createDomain(input: CreateDomainInput!): CreateDomainPayload
 
+    # Mutation to add domain to user's personal myTracker view.
+    favouriteDomain(input: FavouriteDomainInput!): FavouriteDomainPayload
+
     # This mutation allows the removal of unused domains.
     removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
 
     # This mutation is used to step a manual scan on a requested domain.
     requestScan(input: RequestScanInput!): RequestScanPayload
+
+    # Mutation to remove domain from user's personal myTracker view.
+    unfavouriteDomain(input: UnfavouriteDomainInput!): UnfavouriteDomainPayload
 
     # Mutation allows the modification of domains if domain is updated through out its life-cycle
     updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
@@ -2401,6 +2452,60 @@ export const getTypeNames = () => gql`
 
     # DKIM selector strings corresponding to this domain.
     selectors: [Selector]
+
+    # List of labelled tags users have applied to the domain.
+    tags: [InputTag]
+    clientMutationId: String
+  }
+
+  # User-generated tag assigned to domains for labeling and management.
+  input InputTag {
+    # The English translation of the label.
+    en: DomainTagLabel!
+
+    # The French translation of the label.
+    fr: DomainTagLabel!
+  }
+
+  # An enum used to assign and test user-generated domain tags
+  enum DomainTagLabel {
+    # English label for tagging domains as new to the system.
+    NEW
+
+    # French label for tagging domains as new to the system.
+    NOUVEAU
+
+    # Bilingual Label for tagging domains as a production environment.
+    PROD
+
+    # English label for tagging domains as a staging environment.
+    STAGING
+
+    # French label for tagging domains as a staging environment.
+    DEV
+
+    # Bilingual label for tagging domains as a test environment.
+    TEST
+
+    # Bilingual label for tagging domains as web-hosting.
+    WEB
+
+    # English label for tagging domains that are not active.
+    INACTIVE
+
+    # French label for tagging domains that are not active.
+    INACTIF
+  }
+
+  type FavouriteDomainPayload {
+    # \`CreateDomainUnion\` returning either a \`Domain\`, or \`CreateDomainError\` object.
+    result: CreateDomainUnion
+    clientMutationId: String
+  }
+
+  input FavouriteDomainInput {
+    # The global id of the domain you wish to favourite.
+    domainId: ID!
     clientMutationId: String
   }
 
@@ -2445,6 +2550,18 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type UnfavouriteDomainPayload {
+    # \`RemoveDomainUnion\` returning either a \`DomainResultType\`, or \`DomainErrorType\` object.
+    result: RemoveDomainUnion!
+    clientMutationId: String
+  }
+
+  input UnfavouriteDomainInput {
+    # The global id of the domain you wish to favourite.
+    domainId: ID!
+    clientMutationId: String
+  }
+
   type UpdateDomainPayload {
     # \`UpdateDomainUnion\` returning either a \`Domain\`, or \`DomainError\` object.
     result: UpdateDomainUnion
@@ -2468,6 +2585,9 @@ export const getTypeNames = () => gql`
 
     # The updated DKIM selector strings corresponding to this domain.
     selectors: [Selector]
+
+    # List of labelled tags users have applied to the domain.
+    tags: [InputTag]
     clientMutationId: String
   }
 

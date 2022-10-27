@@ -12,7 +12,7 @@ export const loadDomainConnectionsByUserId =
              ownership,
              orderBy,
              isSuperAdmin,
-             search,
+             myTracker,search,
            }) => {
       const userDBId = `users/${userKey}`
 
@@ -326,7 +326,16 @@ export const loadDomainConnectionsByUserId =
       }
 
       let domainKeysQuery
-      if (!loginRequiredBool) {
+      if (myTracker) {
+      domainKeysQuery = aql`
+      WITH favourites
+      LET domainKeys = (
+        FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
+          OPTIONS {bfs: true}
+          RETURN v._key
+      )
+      `
+    } else if (!loginRequiredBool) {
         domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET domainKeys = UNIQUE(FLATTEN(

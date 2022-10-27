@@ -6,14 +6,14 @@ import {
   GraphQLString,
 } from 'graphql'
 import { globalIdField } from 'graphql-relay'
-import { domainTag } from '../../domain/objects'
+import { vulnerabilityTag } from '../../domain/objects'
 import { Acronym, Domain, Slug } from '../../scalars'
 
 export const tagType = new GraphQLObjectType({
   name: 'TagConnection',
   fields: () => ({
     edges: {
-      type: new GraphQLList(domainTag),
+      type: new GraphQLList(vulnerabilityTag),
       description: 'List of tags assigned to the domain.',
       resolve: ({ edges }) => edges,
     },

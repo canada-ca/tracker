@@ -1,7 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Heading, Link, Text, useDisclosure } from '@chakra-ui/react'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -13,15 +19,38 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import { PAGINATED_DOMAINS as FORWARD } from '../graphql/queries'
+import {
+  PAGINATED_DOMAINS as FORWARD,
+  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
+} from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
+import { useLazyQuery } from '@apollo/client'
+import { ExportButton } from '../components/ExportButton'
+import { SubdomainWarning } from './SubdomainWarning'
 
 export default function DomainsPage() {
+  const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+
+  const [
+    getAllOrgDomainStatuses,
+    { loading: allOrgDomainStatusesLoading, _error, _data },
+  ] = useLazyQuery(GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`An error occured when you attempted to download all domain statuses.`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -57,7 +86,6 @@ export default function DomainsPage() {
 
   const orderByOptions = [
     { value: 'DOMAIN', text: t`Domain` },
-    // { value: 'POLICY_STATUS', text: t`ITPIN Status` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -88,6 +116,7 @@ export default function DomainsPage() {
           FallbackComponent={ErrorFallbackMessage}
         >
           <DomainCard
+            id={id}
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}
@@ -100,28 +129,52 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
-      <Heading as="h1" textAlign="left" mb="4">
-        <Trans>Domains</Trans>
-      </Heading>
+      <Flex
+        flexDirection="row"
+        align="center"
+        mb="4"
+        flexWrap={{ base: 'wrap', md: 'nowrap' }}
+      >
+        <Heading as="h1" textAlign="left" mb="4">
+          <Trans>Domains</Trans>
+        </Heading>
+
+        <ExportButton
+          order={{ base: 2, md: 1 }}
+          ml="auto"
+          mt={{ base: '4', md: 0 }}
+          fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+          dataFunction={async () => {
+            toast({
+              title: t`Getting domain statuses`,
+              description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+              status: 'info',
+              duration: 9000,
+              isClosable: true,
+              position: 'top-left',
+            })
+            const result = await getAllOrgDomainStatuses()
+            if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+              toast({
+                title: t`No data found`,
+                description: t`No data found when retrieving all domain statuses.`,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+                position: 'top-left',
+              })
+
+              throw t`No data found`
+            }
+
+            return result.data?.getAllOrganizationDomainStatuses
+          }}
+          isLoading={allOrgDomainStatusesLoading}
+        />
+      </Flex>
 
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`ITPIN`}
-          info={
-            <>
-              <Trans>Shows if the domain is compliant with</Trans>
-              <Link
-                ml="1"
-                href="https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
-                isExternal
-              >
-                ITPIN 2018-01
-                <ExternalLinkIcon mx="2px" />
-              </Link>
-            </>
-          }
-        />
         <InfoBox
           title={t`Ciphers`}
           info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
@@ -173,6 +226,9 @@ export default function DomainsPage() {
           orderByOptions={orderByOptions}
           placeholder={t`Search for a domain`}
         />
+
+        <SubdomainWarning mb="4" />
+
         {domainList}
 
         <RelayPaginationControls

@@ -9,35 +9,9 @@ import {createMutationSchema} from '../../../mutation'
 import {userRequired} from '../../../auth'
 import {loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
+import { collectionNames } from '../../../collection-names'
 
 const {DB_PASS: rootPass, DB_URL: url} = process.env
-
-const collectionNames = [
-  'users',
-  'organizations',
-  'domains',
-  'dns',
-  'web',
-  'webScan',
-  'dkimGuidanceTags',
-  'dmarcGuidanceTags',
-  'spfGuidanceTags',
-  'httpsGuidanceTags',
-  'sslGuidanceTags',
-  'chartSummaries',
-  'dmarcSummaries',
-  'aggregateGuidanceTags',
-  'scanSummaryCriteria',
-  'chartSummaryCriteria',
-  'scanSummaries',
-  'affiliations',
-  'claims',
-  'domainsDNS',
-  'domainsWeb',
-  'webToWebScans',
-  'ownership',
-  'domainsToDmarcSummaries',
-]
 
 describe('testing the removePhoneNumber mutation', () => {
   let query, drop, truncate, schema, i18n, collections, transaction, user

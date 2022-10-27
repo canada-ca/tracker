@@ -14,7 +14,7 @@ export function SummaryGroup({ https, dmarcPhases }) {
     <SummaryCard
       id="httpsStatus"
       title={t`HTTPS Configuration Summary`}
-      description={t`HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)`}
+      description={t`HTTPS is configured and HTTP connections redirect to HTTPS`}
       categoryDisplay={{
         fail: {
           name: t`Non-compliant`,

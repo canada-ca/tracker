@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@chakra-ui/react'
+import {Button} from '@chakra-ui/react'
 import { arrayOf, object, string, func } from 'prop-types'
 import { json2csvAsync } from 'json-2-csv'
 import { Trans } from '@lingui/macro'

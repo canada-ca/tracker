@@ -12,35 +12,9 @@ import {cleanseInput} from '../../../validators'
 import {createMutationSchema} from '../../../mutation'
 import {createQuerySchema} from '../../../query'
 import dbschema from '../../../../database.json'
+import { collectionNames } from '../../../collection-names'
 
 const {DB_PASS: rootPass, DB_URL: url} = process.env
-
-const collectionNames = [
-  'users',
-  'organizations',
-  'domains',
-  'dns',
-  'web',
-  'webScan',
-  'dkimGuidanceTags',
-  'dmarcGuidanceTags',
-  'spfGuidanceTags',
-  'httpsGuidanceTags',
-  'sslGuidanceTags',
-  'chartSummaries',
-  'dmarcSummaries',
-  'aggregateGuidanceTags',
-  'scanSummaryCriteria',
-  'chartSummaryCriteria',
-  'scanSummaries',
-  'affiliations',
-  'claims',
-  'domainsDNS',
-  'domainsWeb',
-  'webToWebScans',
-  'ownership',
-  'domainsToDmarcSummaries',
-]
 
 describe('given the closeAccount mutation', () => {
   let i18n,

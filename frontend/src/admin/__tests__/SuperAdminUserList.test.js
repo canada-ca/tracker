@@ -213,7 +213,9 @@ describe('<SuperAdminUserList />', () => {
     // wait for query to load
     await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
     // get user data
-    await waitFor(() => expect(queryByText(/Jonathan Kassulke/i)))
+    await waitFor(() =>
+      expect(queryByText(/Jonathan Kassulke/i)).toBeInTheDocument(),
+    )
   })
   describe('individual user cards', () => {
     it('are clickable', async () => {
@@ -239,9 +241,11 @@ describe('<SuperAdminUserList />', () => {
       // wait for query to load
       await waitFor(() => expect(queryByText(/search/i)).toBeInTheDocument())
       // get user data
-      await waitFor(() => expect(queryByText(/Jonathan Kassulke/i)))
+      await waitFor(() =>
+        expect(queryByText(/Raegan.Ritchie50@yahoo.com/i)).toBeInTheDocument(),
+      )
       const userCard1 = getByRole('button', {
-        name: /Raegan.Ritchie50@yahoo.com/,
+        name: /Raegan.Ritchie50@yahoo.com/i,
       })
       fireEvent.click(userCard1)
     })
@@ -272,13 +276,19 @@ describe('<SuperAdminUserList />', () => {
             expect(queryByText(/search/i)).toBeInTheDocument(),
           )
           // get user data
-          await waitFor(() => expect(queryByText(/Jonathan Kassulke/i)))
+          await waitFor(() =>
+            expect(
+              queryByText(/Raegan.Ritchie50@yahoo.com/i),
+            ).toBeInTheDocument(),
+          )
           const userCard1 = getByRole('button', {
-            name: /Raegan.Ritchie50@yahoo.com/,
+            name: /Raegan.Ritchie50@yahoo.com/i,
           })
           fireEvent.click(userCard1)
 
-          await waitFor(() => expect(queryByText(/Kreiger - Schamberger/i)))
+          await waitFor(() =>
+            expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument(),
+          )
         })
 
         describe('admin abilities', () => {
@@ -307,18 +317,25 @@ describe('<SuperAdminUserList />', () => {
               expect(queryByText(/search/i)).toBeInTheDocument(),
             )
             // get user data
-            await waitFor(() => expect(queryByText(/Jonathan Kassulke/i)))
+            await waitFor(() =>
+              expect(
+                queryByText(/Raegan.Ritchie50@yahoo.com/i),
+              ).toBeInTheDocument(),
+            )
             const userCard1 = getByRole('button', {
-              name: /Raegan.Ritchie50@yahoo.com/,
+              name: /Raegan.Ritchie50@yahoo.com/i,
             })
             fireEvent.click(userCard1)
-            await waitFor(() => expect(queryByText(/Kreiger - Schamberger/i)))
-
+            await waitFor(() =>
+              expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument(),
+            )
             const editBtn = getByRole('button', {
               name: 'Edit Raegan.Ritchie50@yahoo.com in Kreiger - Schamberger',
             })
             fireEvent.click(editBtn)
-            await waitFor(() => expect(queryAllByText(/Edit User/i)))
+            await waitFor(() =>
+              expect(queryAllByText(/Edit User/i)[0]).toBeInTheDocument(),
+            )
           })
           it('remove user from org', async () => {
             const { queryByText, getByRole, queryAllByText } = render(
@@ -345,13 +362,18 @@ describe('<SuperAdminUserList />', () => {
               expect(queryByText(/search/i)).toBeInTheDocument(),
             )
             // get user data
-            await waitFor(() => expect(queryByText(/Jonathan Kassulke/i)))
+            await waitFor(() =>
+              expect(
+                queryByText(/Raegan.Ritchie50@yahoo.com/i),
+              ).toBeInTheDocument(),
+            )
             const userCard1 = getByRole('button', {
-              name: /Raegan.Ritchie50@yahoo.com/,
+              name: /Raegan.Ritchie50@yahoo.com/i,
             })
             fireEvent.click(userCard1)
-            await waitFor(() => expect(queryByText(/Kreiger - Schamberger/i)))
-
+            await waitFor(() =>
+              expect(queryByText(/Kreiger - Schamberger/i)).toBeInTheDocument(),
+            )
             const removeBtn = getByRole('button', {
               name: 'Remove Raegan.Ritchie50@yahoo.com from Kreiger - Schamberger',
             })
@@ -386,9 +408,13 @@ describe('<SuperAdminUserList />', () => {
             expect(queryByText(/search/i)).toBeInTheDocument(),
           )
           // get user data
-          await waitFor(() => expect(queryByText(/Jonathan Kassulke/i)))
+          await waitFor(() =>
+            expect(
+              queryByText(/Raegan.Ritchie50@yahoo.com/i),
+            ).toBeInTheDocument(),
+          )
           const userCard1 = getByRole('button', {
-            name: /Raegan.Ritchie50@yahoo.com/,
+            name: /Raegan.Ritchie50@yahoo.com/i,
           })
           fireEvent.click(userCard1)
 
@@ -397,7 +423,7 @@ describe('<SuperAdminUserList />', () => {
               queryByText(
                 /This user is not affiliated with any organizations/i,
               ),
-            ),
+            ).toBeInTheDocument(),
           )
         })
       })

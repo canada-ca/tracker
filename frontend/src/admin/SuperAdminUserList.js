@@ -40,16 +40,19 @@ import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
 export function SuperAdminUserList({ permission }) {
-  const [mutation, setMutation] = useState()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('USER_USERNAME')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [usersPerPage, setUsersPerPage] = useState(10)
-  const [closeAccountUser, setCloseAccountUser] = useState({
+  const [editUserRole, setEditUserRole] = useState({
+    mutation: '',
     userName: '',
     displayName: '',
     userId: '',
+    userRole: '',
+    orgName: '',
+    orgId: '',
   })
 
   const toast = useToast()
@@ -223,7 +226,14 @@ export function SuperAdminUserList({ permission }) {
                         aria-label={`Remove ${userName} from ${orgName}`}
                         variant="danger"
                         onClick={() => {
-                          setMutation('remove')
+                          setEditUserRole({
+                            mutation: 'remove',
+                            userId,
+                            userName,
+                            userRole,
+                            orgName,
+                            orgId,
+                          })
                           onOpen()
                         }}
                         p="2"
@@ -233,7 +243,14 @@ export function SuperAdminUserList({ permission }) {
                         aria-label={`Edit ${userName} in ${orgName}`}
                         variant="primary"
                         onClick={() => {
-                          setMutation('update')
+                          setEditUserRole({
+                            mutation: 'update',
+                            userId,
+                            userName,
+                            userRole,
+                            orgName,
+                            orgId,
+                          })
                           onOpen()
                         }}
                         p="2"
@@ -278,14 +295,14 @@ export function SuperAdminUserList({ permission }) {
                     <UserListModal
                       isOpen={isOpen}
                       onClose={onClose}
-                      orgId={orgId}
-                      editingUserName={userName}
-                      editingUserRole={userRole}
-                      editingUserId={userId}
+                      orgId={editUserRole.orgId}
+                      editingUserName={editUserRole.userName}
+                      editingUserRole={editUserRole.userRole}
+                      editingUserId={editUserRole.userId}
                       orgSlug={slug}
-                      orgName={orgName}
+                      orgName={editUserRole.orgName}
                       permission={permission}
-                      mutation={mutation}
+                      mutation={editUserRole.mutation}
                     />
                   </Flex>
                 )
@@ -331,7 +348,7 @@ export function SuperAdminUserList({ permission }) {
                     alignSelf="center"
                     variant="danger"
                     onClick={() => {
-                      setCloseAccountUser({ userId, userName, displayName })
+                      setEditUserRole({ userId, userName, displayName })
                       closeAccountOnOpen()
                     }}
                     w={{ base: '100%', md: 'auto' }}
@@ -358,11 +375,11 @@ export function SuperAdminUserList({ permission }) {
                     matchEmail: true,
                   }}
                   validationSchema={createValidationSchema(['matchEmail'], {
-                    matches: closeAccountUser.userName,
+                    matches: editUserRole.userName,
                   })}
                   onSubmit={async () => {
                     await closeAccount({
-                      variables: { userId: closeAccountUser.userId },
+                      variables: { userId: editUserRole.userId },
                     })
                   }}
                 >
@@ -378,20 +395,20 @@ export function SuperAdminUserList({ permission }) {
                           <Trans>
                             This action CANNOT be reversed, are you sure you
                             wish to to close the account{' '}
-                            {closeAccountUser.displayName}?
+                            {editUserRole.displayName}?
                           </Trans>
 
                           <Text mb="1rem">
                             <Trans>
-                              Enter "{closeAccountUser.userName}" below to
-                              confirm removal. This field is case-sensitive.
+                              Enter "{editUserRole.userName}" below to confirm
+                              removal. This field is case-sensitive.
                             </Trans>
                           </Text>
 
                           <FormField
                             name="matchEmail"
                             label={t`User Email`}
-                            placeholder={closeAccountUser.userName}
+                            placeholder={editUserRole.userName}
                           />
                         </ModalBody>
 

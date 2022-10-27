@@ -210,9 +210,15 @@ export const CREATE_DOMAIN = gql`
     $orgId: ID!
     $domain: DomainScalar!
     $selectors: [Selector]
+    $tags: [InputTag]
   ) {
     createDomain(
-      input: { orgId: $orgId, domain: $domain, selectors: $selectors }
+      input: {
+        orgId: $orgId
+        domain: $domain
+        selectors: $selectors
+        tags: $tags
+      }
     ) {
       result {
         ... on Domain {
@@ -284,6 +290,7 @@ export const UPDATE_DOMAIN = gql`
     $orgId: ID!
     $domain: DomainScalar
     $selectors: [Selector]
+    $tags: [InputTag]
   ) {
     updateDomain(
       input: {
@@ -291,6 +298,7 @@ export const UPDATE_DOMAIN = gql`
         orgId: $orgId
         domain: $domain
         selectors: $selectors
+        tags: $tags
       }
     ) {
       result {
@@ -572,6 +580,38 @@ export const SIGN_OUT = gql`
   mutation SignOut {
     signOut(input: {}) {
       status
+    }
+  }
+`
+
+export const FAVOURITE_DOMAIN = gql`
+  mutation FavouriteDomain($domainId: ID!) {
+    favouriteDomain(input: { domainId: $domainId }) {
+      result {
+        ... on Domain {
+          domain
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
+export const UNFAVOURITE_DOMAIN = gql`
+  mutation ($domainId: ID!) {
+    unfavouriteDomain(input: { domainId: $domainId }) {
+      result {
+        ... on DomainResult {
+          status
+        }
+        ... on DomainError {
+          code
+          description
+        }
+      }
     }
   }
 `

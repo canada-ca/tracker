@@ -73,7 +73,7 @@ describe('<FloatingMenu>', () => {
   })
   describe('when the menu is open', () => {
     describe("and the 'Close' button is clicked", () => {
-      it('closes the menu', async () => {
+      it.skip('closes the menu', async () => {
         const { getByText, queryByText } = render(
           <MockedProvider>
             <UserVarProvider

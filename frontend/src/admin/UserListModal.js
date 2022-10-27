@@ -94,6 +94,9 @@ export function UserListModal({
 
   const [updateUserRole, { loading: _updateLoading, error: _updateError }] =
     useMutation(UPDATE_USER_ROLE, {
+      refetchQueries: ['FindMyUsers'],
+      awaitRefetchQueries: true,
+
       onError(updateError) {
         toast({
           title: updateError.message,

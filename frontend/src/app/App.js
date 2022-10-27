@@ -24,7 +24,10 @@ import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
+import { ABTestingWrapper } from './ABTestWrapper'
+import { ABTestVariant } from './ABTestVariant'
 
+const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
 const CreateUserPage = lazyWithRetry(() => import('../auth/CreateUserPage'))
 const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
@@ -47,9 +50,6 @@ const ResetPasswordPage = lazyWithRetry(() =>
 const DmarcByDomainPage = lazyWithRetry(() =>
   import('../dmarc/DmarcByDomainPage'),
 )
-const DmarcGuidancePage = lazyWithRetry(() =>
-  import('../guidance/DmarcGuidancePage'),
-)
 const TermsConditionsPage = lazyWithRetry(() =>
   import('../termsConditions/TermsConditionsPage'),
 )
@@ -64,6 +64,7 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 )
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
+const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App() {
   // Hooks to be used with this functional component
@@ -110,9 +111,18 @@ export function App() {
         )}
 
         {isLoggedIn() && (
-          <RouteLink to="/user">
-            <Trans>Account Settings</Trans>
-          </RouteLink>
+          <>
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <RouteLink to="/my-tracker">
+                  <Trans>myTracker</Trans>
+                </RouteLink>
+              </ABTestVariant>
+            </ABTestingWrapper>
+            <RouteLink to="/user">
+              <Trans>Account Settings</Trans>
+            </RouteLink>
+          </>
         )}
 
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
@@ -157,7 +167,10 @@ export function App() {
         <Suspense fallback={<LoadingMessage />}>
           <Switch>
             <Page exact path="/" title={t`Home`}>
-              <LandingPage isLoggedIn={isLoggedIn()} />
+              <LandingPage
+                loginRequired={data?.loginRequired}
+                isLoggedIn={isLoggedIn()}
+              />
             </Page>
 
             <Page
@@ -280,7 +293,7 @@ export function App() {
             >
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <DmarcGuidancePage />
+                  <GuidancePage />
                 </ErrorBoundary>
               )}
             </PrivatePage>
@@ -314,6 +327,22 @@ export function App() {
             <Page path="/user" title={t`Your Account`}>
               {isLoggedIn() ? (
                 <UserPage username={currentUser.userName} />
+              ) : (
+                <Redirect
+                  to={{
+                    pathname: '/sign-in',
+                  }}
+                />
+              )}
+            </Page>
+
+            <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
+              {isLoggedIn() ? (
+                <ABTestingWrapper insiderVariantName="B">
+                  <ABTestVariant name="B">
+                    <MyTrackerPage />
+                  </ABTestVariant>
+                </ABTestingWrapper>
               ) : (
                 <Redirect
                   to={{

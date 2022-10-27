@@ -1,44 +1,41 @@
 import React, { useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import PropTypes from 'prop-types'
 import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Flex,
+  IconButton,
   Heading,
   Link,
-  Box,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  IconButton,
 } from '@chakra-ui/react'
-import { ArrowLeftIcon, LinkIcon } from '@chakra-ui/icons'
+
+import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { useQuery } from '@apollo/client'
+import { LoadingMessage } from '../components/LoadingMessage'
+import { Trans } from '@lingui/macro'
 import {
   Link as RouteLink,
-  useParams,
-  useLocation,
   useHistory,
+  useLocation,
+  useParams,
 } from 'react-router-dom'
-import { Trans } from '@lingui/macro'
-import { ErrorBoundary } from 'react-error-boundary'
-
-import { ScanCard } from './ScanCard'
-
-import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { LoadingMessage } from '../components/LoadingMessage'
-import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
+import { ArrowLeftIcon, LinkIcon } from '@chakra-ui/icons'
 import { ScanDomainButton } from '../domains/ScanDomainButton'
+import WebGuidance from './WebGuidance'
+import EmailGuidance from './EmailGuidance'
 
-export default function DmarcGuidancePage() {
+const GuidancePage = () => {
   const { domainSlug, activeTab } = useParams()
   const history = useHistory()
   const location = useLocation()
   const { from } = location.state || { from: { pathname: '/domains' } }
   const tabNames = ['web', 'email']
   const defaultActiveTab = tabNames[0]
-
-  useDocumentTitle(`${domainSlug}`)
 
   const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {
     variables: { domain: domainSlug },
@@ -72,9 +69,14 @@ export default function DmarcGuidancePage() {
       history.replace(`/domains/${domainSlug}/${tab}`)
     }
   }
+
   return (
-    <Stack spacing="25px" mb="6" px="4" mx="auto" minW="100%">
-      <Box d={{ md: 'flex' }}>
+    <Flex flexDirection="column" width="100%">
+      <Flex
+        flexDirection={{ base: 'column', md: 'row' }}
+        alignItems="center"
+        mb="4"
+      >
         <IconButton
           icon={<ArrowLeftIcon />}
           onClick={() => history.push(from)}
@@ -86,7 +88,10 @@ export default function DmarcGuidancePage() {
         <Heading textAlign={{ base: 'center', md: 'left' }}>
           {domainName.toUpperCase()}
         </Heading>
-        <ScanDomainButton domainUrl={data.findDomainByDomain.domain} ml="auto" />
+        <ScanDomainButton
+          domainUrl={data.findDomainByDomain.domain}
+          ml="auto"
+        />
         {data.findDomainByDomain.hasDMARCReport && (
           <Link
             color="teal.600"
@@ -102,7 +107,7 @@ export default function DmarcGuidancePage() {
             <LinkIcon ml="4px" aria-hidden="true" />
           </Link>
         )}
-      </Box>
+      </Flex>
       <Tabs
         isFitted
         variant="enclosed-colored"
@@ -110,30 +115,32 @@ export default function DmarcGuidancePage() {
         onChange={(i) => changeActiveTab(i)}
       >
         <TabList mb="4">
-          <Tab borderTopWidth="4px">
-            <Trans>Web Guidance</Trans>
-          </Tab>
-          <Tab borderTopWidth="4px">
-            <Trans>Email Guidance</Trans>
-          </Tab>
+          <Tab borderTopWidth="0.25">Web Guidance</Tab>
+          <Tab borderTopWidth="0.25">Email Guidance</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <ScanCard scanType="web" scanData={webScan} status={webStatus} />
+              <WebGuidance
+                webScan={webScan}
+                sslStatus={webStatus.ssl}
+                httpsStatus={webStatus.https}
+              />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <ScanCard
-                scanType="dns"
-                scanData={dnsScan}
-                status={dmarcPhase}
-              />
+              <EmailGuidance emailScan={emailScan} dmarcPhase={dmarcPhase} />
             </ErrorBoundary>
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Stack>
+    </Flex>
   )
 }
+
+GuidancePage.propTypes = {
+  children: PropTypes.element,
+}
+
+export default GuidancePage

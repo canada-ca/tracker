@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import {
   BrowserRouter as Router,
   useHistory,
@@ -83,7 +83,8 @@ const I18nApp = () => {
 const setUpApp = async () => {
   await activate(defaultLocale)
 
-  ReactDOM.render(
+  const root = createRoot(document.getElementById('root'))
+  root.render(
     <ApolloProvider client={client}>
       <UserVarProvider userVar={currentUserVar}>
         <ChakraProvider theme={canada}>
@@ -93,7 +94,6 @@ const setUpApp = async () => {
         </ChakraProvider>
       </UserVarProvider>
     </ApolloProvider>,
-    document.getElementById('root'),
   )
 
   // If you want your app to work offline and load faster, you can change

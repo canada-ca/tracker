@@ -4,6 +4,7 @@ import { useLingui } from '@lingui/react'
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -16,17 +17,24 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  SimpleGrid,
   Stack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
+  TagRightIcon,
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { MinusIcon, SmallAddIcon } from '@chakra-ui/icons'
+import { AddIcon, MinusIcon, SmallAddIcon } from '@chakra-ui/icons'
 import { array, bool, func, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminDomainModal({
   isOpen,
@@ -36,6 +44,7 @@ export function AdminDomainModal({
   editingDomainId,
   editingDomainUrl,
   selectorInputList,
+  tagInputList,
   orgSlug,
   mutation,
 }) {
@@ -140,6 +149,42 @@ export function AdminDomainModal({
     },
   })
 
+  const tagOptions = [
+    { en: 'NEW', fr: 'NOUVEAU' },
+    { en: 'PROD', fr: 'PROD' },
+    { en: 'STAGING', fr: 'DEV' },
+    { en: 'TEST', fr: 'TEST' },
+    { en: 'WEB', fr: 'WEB' },
+    { en: 'INACTIVE', fr: 'INACTIF' },
+  ]
+
+  const addableTags = (values, helper) => {
+    const stringValues = values?.map((label) => {
+      return label[i18n.locale]
+    })
+    const difference = tagOptions.filter(
+      (label) => !stringValues?.includes(label[i18n.locale]),
+    )
+    return difference?.map((label, idx) => {
+      return (
+        <Tag
+          key={idx}
+          id={`add-tag-${label[i18n.locale]}`}
+          as="button"
+          _hover={{ bg: 'gray.200' }}
+          borderRadius="full"
+          onClick={(e) => {
+            e.preventDefault()
+            helper.push(label)
+          }}
+        >
+          <TagLabel>{label[i18n.locale]}</TagLabel>
+          <TagRightIcon as={AddIcon} color="gray.500" ml="auto" />
+        </Tag>
+      )
+    })
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -153,6 +198,12 @@ export function AdminDomainModal({
           initialValues={{
             domainUrl: editingDomainUrl,
             selectors: selectorInputList,
+            // convert initial tags to input type
+            tags: tagInputList?.map((label) => {
+              return tagOptions.filter((option) => {
+                return option[i18n.locale] == label
+              })[0]
+            }),
           }}
           initialTouched={{
             domainUrl: true,
@@ -160,7 +211,6 @@ export function AdminDomainModal({
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             // Submit update detail mutation
-
             if (mutation === 'update') {
               await updateDomain({
                 variables: {
@@ -168,6 +218,7 @@ export function AdminDomainModal({
                   orgId: orgId,
                   domain: values.domainUrl,
                   selectors: values.selectors,
+                  tags: values.tags,
                 },
               })
             } else if (mutation === 'create') {
@@ -176,6 +227,7 @@ export function AdminDomainModal({
                   orgId: orgId,
                   domain: values.domainUrl,
                   selectors: values.selectors,
+                  tags: values.tags,
                 },
               })
             }
@@ -196,7 +248,7 @@ export function AdminDomainModal({
                   <DomainField
                     name="domainUrl"
                     label={t`New Domain URL:`}
-                    placeholder={i18n._(t`New Domain URL`)}
+                    placeholder={t`New Domain URL`}
                   />
 
                   <FieldArray
@@ -267,6 +319,38 @@ export function AdminDomainModal({
                       </Box>
                     )}
                   />
+                  <ABTestingWrapper insiderVariantName="B">
+                    <ABTestVariant name="B">
+                      <FieldArray
+                        name="tags"
+                        render={(arrayHelpers) => (
+                          <Box>
+                            <Text fontWeight="bold">Tags:</Text>
+                            <SimpleGrid columns={3} spacing={2}>
+                              {values.tags?.map((label, idx) => {
+                                return (
+                                  <Tag key={idx} borderRadius="full">
+                                    <TagLabel>{label[i18n.locale]}</TagLabel>
+                                    <TagCloseButton
+                                      ml="auto"
+                                      onClick={() => arrayHelpers.remove(idx)}
+                                      aria-label={`remove-tag-${
+                                        label[i18n.locale]
+                                      }`}
+                                    />
+                                  </Tag>
+                                )
+                              })}
+                            </SimpleGrid>
+                            <Divider borderBottomColor="gray.900" />
+                            <SimpleGrid columns={3} spacing={2}>
+                              {addableTags(values.tags, arrayHelpers)}
+                            </SimpleGrid>
+                          </Box>
+                        )}
+                      />
+                    </ABTestVariant>
+                  </ABTestingWrapper>
                 </Stack>
               </ModalBody>
 
@@ -296,6 +380,7 @@ AdminDomainModal.propTypes = {
   editingDomainId: string,
   editingDomainUrl: string,
   selectorInputList: array,
+  tagInputList: array,
   orgSlug: string,
   mutation: string,
 }
