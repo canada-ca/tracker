@@ -7,9 +7,9 @@ import { GuidanceTagList } from './GuidanceTagList'
 import { Box, ListItem, OrderedList, Text } from '@chakra-ui/react'
 
 const EmailGuidance = ({ emailScan, dmarcPhase = 'unknown' }) => {
-  const dmarcScan = emailScan.dmarc.edges[0].node
-  const spfScan = emailScan.spf.edges[0].node
-  const dkimScan = emailScan.dkim.edges[0].node.results.edges[0].node
+  const dmarcScan = emailScan.dmarc.edges[0]?.node
+  const spfScan = emailScan.spf.edges[0]?.node
+  const dkimScan = emailScan.dkim.edges[0]?.node.results.edges[0]?.node
 
   let dmarcSteps
 
@@ -76,23 +76,23 @@ const EmailGuidance = ({ emailScan, dmarcPhase = 'unknown' }) => {
 
         <ScanDetails title={`DMARC`}>
           <GuidanceTagList
-            positiveTags={dmarcScan.positiveGuidanceTags.edges}
-            neutralTags={dmarcScan.neutralGuidanceTags.edges}
-            negativeTags={dmarcScan.negativeGuidanceTags.edges}
+            positiveTags={dmarcScan?.positiveGuidanceTags.edges}
+            neutralTags={dmarcScan?.neutralGuidanceTags.edges}
+            negativeTags={dmarcScan?.negativeGuidanceTags.edges}
           />
         </ScanDetails>
         <ScanDetails title={`SPF`}>
           <GuidanceTagList
-            positiveTags={spfScan.positiveGuidanceTags.edges}
-            neutralTags={spfScan.neutralGuidanceTags.edges}
-            negativeTags={spfScan.negativeGuidanceTags.edges}
+            positiveTags={spfScan?.positiveGuidanceTags.edges}
+            neutralTags={spfScan?.neutralGuidanceTags.edges}
+            negativeTags={spfScan?.negativeGuidanceTags.edges}
           />
         </ScanDetails>
         <ScanDetails title={`DKIM`}>
           <GuidanceTagList
-            positiveTags={dkimScan.positiveGuidanceTags.edges}
-            neutralTags={dkimScan.neutralGuidanceTags.edges}
-            negativeTags={dkimScan.negativeGuidanceTags.edges}
+            positiveTags={dkimScan?.positiveGuidanceTags.edges}
+            neutralTags={dkimScan?.neutralGuidanceTags.edges}
+            negativeTags={dkimScan?.negativeGuidanceTags.edges}
           />
         </ScanDetails>
       </ScanCard>
