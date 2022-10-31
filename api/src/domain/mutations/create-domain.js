@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { createDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 
 export const createDomain = new mutationWithClientMutationId({
@@ -298,6 +299,25 @@ export const createDomain = new mutationWithClientMutationId({
     console.info(
       `User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
     )
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: permission,
+      },
+      action: 'add',
+      target: {
+        resource: insertDomain.domain,
+        organization: {
+          id: org._key,
+          name: org.name,
+        }, // name of resource being acted upon
+        resourceType: 'domain', // user, org, domain
+      },
+    })
 
     return {
       ...returnDomain,

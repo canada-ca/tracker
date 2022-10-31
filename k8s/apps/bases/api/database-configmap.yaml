@@ -41,6 +41,15 @@ data:
         },
         {
           "type": "documentcollection",
+          "name": "auditLogs",
+          "options": {
+            "replicationFactor": 3,
+            "writeConcern": 1,
+            "numberOfShards": 6
+          }
+        },
+        {
+          "type": "documentcollection",
           "name": "dkim",
           "options": {
             "replicationFactor": 3,
@@ -346,6 +355,28 @@ data:
                 "fields": {
                   "displayName": { "analyzers": ["text_en"] },
                   "userName": { "analyzers": ["text_en"] }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "searchview",
+          "name": "auditLogSearch",
+          "options": {
+            "links": {
+              "auditLogs": {
+                "fields": {
+                  "initiatedBy": {
+                    "fields": {
+                      "userName": { "analyzers": ["text_en"] }
+                    }
+                  },
+                  "target": {
+                    "fields": {
+                      "resource": { "analyzers": ["text_en"] }
+                    }
+                  }
                 }
               }
             }

@@ -3,6 +3,8 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { removeDomainUnion } from '../unions'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
+import { DomainRemovalReasonEnum } from '../../enums'
 
 export const removeDomain = new mutationWithClientMutationId({
   name: 'RemoveDomain',
@@ -15,6 +17,11 @@ export const removeDomain = new mutationWithClientMutationId({
     orgId: {
       type: GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to remove the domain from.',
+    },
+    reason: {
+      type: GraphQLNonNull(DomainRemovalReasonEnum),
+      description:
+        'The reason given for why this domain is being removed from the organization.',
     },
   }),
   outputFields: () => ({
@@ -306,7 +313,6 @@ export const removeDomain = new mutationWithClientMutationId({
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
-
     } else {
       try {
         await trx.step(async () => {
@@ -345,6 +351,27 @@ export const removeDomain = new mutationWithClientMutationId({
     console.info(
       `User: ${userKey} successfully removed domain: ${domain.domain} from org: ${org.slug}.`,
     )
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: permission,
+      },
+      action: 'remove',
+      target: {
+        resource: domain.domain,
+        organization: {
+          id: org._key,
+          name: org.name,
+        }, // name of resource being acted upon
+        resourceType: 'domain', // user, org, domain
+      },
+      reason: args.reason,
+    })
+
     return {
       _type: 'result',
       status: i18n._(

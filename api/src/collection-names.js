@@ -22,6 +22,7 @@ export const collectionNames = [
   'affiliations',
   'claims',
   'favourites',
+  'auditLogs',
   'domainsDKIM',
   'dkimToDkimResults',
   'domainsDMARC',

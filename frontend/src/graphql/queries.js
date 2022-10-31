@@ -557,9 +557,6 @@ export const ORG_DETAILS_PAGE = gql`
       id
       name
       acronym
-      domainCount
-      city
-      province
       verified
       summaries {
         https {
@@ -617,7 +614,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
               dmarc
               hsts
               https
-              policy
+              # policy
               protocols
               spf
               ssl
@@ -684,7 +681,7 @@ export const PAGINATED_DOMAINS = gql`
             dmarc
             hsts
             https
-            policy
+            # policy
             protocols
             spf
           }
@@ -1085,6 +1082,60 @@ export const WEBCHECK_ORGS = gql`
     }
   }
 `
+
+export const AUDIT_LOGS = gql`
+  query FindAuditLogs(
+    $orgId: ID
+    $first: Int!
+    $after: String
+    $orderBy: LogOrder!
+    $search: String
+    $filters: LogFilters
+  ) {
+    findAuditLogs(
+      orgId: $orgId
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+      filters: $filters
+    ) {
+      edges {
+        node {
+          id
+          timestamp
+          initiatedBy {
+            id
+            userName
+            role
+            organization
+          }
+          action
+          target {
+            resource
+            organization {
+              name
+            }
+            resourceType
+            updatedProperties {
+              name
+              oldValue
+              newValue
+            }
+          }
+          reason
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+`
+
 export const MY_TRACKER_SUMMARY = gql`
   query FindMyTracker {
     findMyTracker {
@@ -1145,7 +1196,7 @@ export const MY_TRACKER_DOMAINS = gql`
               dmarc
               hsts
               https
-              policy
+              # policy
               protocols
               spf
               ssl
