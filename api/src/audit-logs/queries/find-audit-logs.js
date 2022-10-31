@@ -47,7 +47,7 @@ export const findAuditLogs = {
     const org = await loadOrgByKey.load(orgId)
 
     // Check to see if user belongs to org
-    const permission = await checkPermission({ orgId: org._id })
+    const permission = await checkPermission({ orgId: org?._id })
     if (permission === 'admin' || permission === 'super_admin') {
       const auditLogCollection = await loadAuditLogsByOrgId({
         ...args,
