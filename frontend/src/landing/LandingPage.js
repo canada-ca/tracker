@@ -5,6 +5,7 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
+import { GettingStarted } from './GettingStarted'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -48,6 +49,9 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
             services. Track how government sites are becoming more secure.
           </Trans>
         </Text>
+        <Stack align="center">
+          <GettingStarted />
+        </Stack>
       </Box>
       {(!loginRequired || isLoggedIn) && <LandingPageSummaries />}
     </Stack>
