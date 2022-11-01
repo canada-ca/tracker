@@ -1001,6 +1001,7 @@ export const FIND_MY_USERS = gql`
           userName
           displayName
           emailValidated
+          insideUser
           affiliations(first: 10) {
             totalCount
             edges {
