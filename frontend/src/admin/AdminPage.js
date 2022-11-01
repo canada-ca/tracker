@@ -15,6 +15,8 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { bool } from 'prop-types'
 import { SuperAdminUserList } from './SuperAdminUserList'
+import { AuditLogTable } from './AuditLogTable'
+import { ErrorBoundary } from 'react-error-boundary'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -161,6 +163,12 @@ export default function AdminPage({ isLoginRequired }) {
         permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
       />
     )
+  } else if (activeMenu === 'audit-logs' && data?.isUserSuperAdmin) {
+    adminPanel = (
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <AuditLogTable />
+      </ErrorBoundary>
+    )
   } else {
     adminPanel = orgPanel
   }
@@ -170,8 +178,8 @@ export default function AdminPage({ isLoginRequired }) {
       {data?.isUserSuperAdmin && (
         <label>
           <Flex align="center">
-            <Text fontSize="lg" fontWeight="bold" ml="2">
-              <Trans>Menu:</Trans>
+            <Text fontSize="lg" fontWeight="bold" mr="2">
+              <Trans>Super Admin Menu:</Trans>
             </Text>
             <Select
               w="20%"
@@ -180,6 +188,7 @@ export default function AdminPage({ isLoginRequired }) {
             >
               <option value="organizations">{t`Organizations`}</option>
               <option value="users">{t`Users`}</option>
+              <option value="audit-logs">{t`Audit Logs`}</option>
             </Select>
           </Flex>
         </label>

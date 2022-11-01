@@ -57,6 +57,10 @@ msgstr "404 - Page non trouvée"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
+#: src/admin/AdminDomains.js:316
+msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
+msgstr "Un domaine ne peut être supprimé que pour l'une des raisons ci-dessous. Pour qu'un domaine n'existe plus, il doit être supprimé du DNS. Si vous devez supprimer ce domaine pour une autre raison, veuillez contacter TBS Cyber Security."
+
 #: src/summaries/SummaryGroup.js:47
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 msgstr "Une politique DMARC minimale de \"p=none\" avec au moins une adresse définie comme destinataire des rapports agrégés."
@@ -135,7 +139,23 @@ msgstr "Les acronymes ne peuvent utiliser que des lettres majuscules et des cara
 msgid "Acronyms must be at most 50 characters"
 msgstr "Les acronymes doivent comporter au maximum 50 caractères."
 
-#: src/admin/AdminDomains.js:248
+#: src/admin/AuditLogTable.js:118
+msgid "Action"
+msgstr "Action"
+
+#: src/admin/AuditLogTable.js:274
+msgid "Action:"
+msgstr "Action :"
+
+#: src/admin/AdminPanel.js:32
+msgid "Activity"
+msgstr "Activité"
+
+#: src/admin/AuditLogTable.js:86
+msgid "Add"
+msgstr "Ajouter"
+
+#: src/admin/AdminDomains.js:249
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
@@ -246,7 +266,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 
 #: src/admin/AdminDomainModal.js:59
 #: src/admin/AdminDomainModal.js:108
-#: src/admin/AdminDomains.js:97
+#: src/admin/AdminDomains.js:99
 #: src/admin/UserListModal.js:53
 #: src/admin/UserListModal.js:151
 #: src/auth/TwoFactorAuthenticatePage.js:29
@@ -292,6 +312,11 @@ msgstr "Êtes-vous sûr de vouloir supprimer définitivement l'organisation \"{0
 #: src/guidance/EmailGuidance.js:20
 msgid "Assess current state;"
 msgstr "Évaluer l’état actuel."
+
+#: src/admin/AdminPage.js:191
+#: src/admin/AuditLogTable.js:96
+msgid "Audit Logs"
+msgstr "Journaux d'audit"
 
 #: src/components/MonthSelect.js:39
 #: src/utilities/months.js:11
@@ -453,7 +478,7 @@ msgid "Compliant"
 msgstr "Conforme"
 
 #: src/admin/AdminDomainModal.js:364
-#: src/admin/AdminDomains.js:311
+#: src/admin/AdminDomains.js:361
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
 #: src/admin/SuperAdminUserList.js:430
@@ -475,7 +500,7 @@ msgstr "Confirmer le nouveau mot de passe:"
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe:"
 
-#: src/admin/AdminDomains.js:291
+#: src/admin/AdminDomains.js:311
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine:"
 
@@ -487,7 +512,7 @@ msgstr "Confirmer la suppression du domaine:"
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:226
+#: src/app/App.js:228
 #: src/app/App.js:405
 #: src/app/ContactUsPage.js:39
 #: src/app/SlideMessage.js:103
@@ -529,13 +554,17 @@ msgstr "Pays (FR)"
 msgid "Country:"
 msgstr "Pays:"
 
+#: src/admin/AuditLogTable.js:85
+msgid "Create"
+msgstr "Créer"
+
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:143
 #: src/auth/CreateUserPage.js:225
 msgid "Create Account"
 msgstr "Créer un compte"
 
-#: src/admin/AdminPage.js:128
+#: src/admin/AdminPage.js:130
 #: src/app/App.js:359
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
@@ -657,7 +686,7 @@ msgstr "Défaillances du DMARC par adresse IP"
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
-#: src/organizationDetails/OrganizationDetails.js:135
+#: src/organizationDetails/OrganizationDetails.js:136
 #: src/user/MyTrackerPage.js:96
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
@@ -677,7 +706,7 @@ msgstr "Rapport DMARC pour {domainSlug}"
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/app/App.js:108
+#: src/app/App.js:110
 #: src/app/App.js:317
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:181
@@ -717,6 +746,10 @@ msgstr "Sécurité et utilisation des données"
 #: src/utilities/months.js:15
 msgid "December"
 msgstr "Décembre"
+
+#: src/admin/AuditLogTable.js:89
+msgid "Delete"
+msgstr "Supprimer"
 
 #: src/app/ReadGuidancePage.js:63
 #~ msgid "Departmental business units"
@@ -767,6 +800,7 @@ msgstr "Affiche le nom de l'organisation, son acronyme et une coche bleue s'il s
 msgid "Disposition"
 msgstr "Disposition"
 
+#: src/admin/AuditLogTable.js:80
 #: src/dmarc/DmarcByDomainPage.js:124
 #: src/dmarc/DmarcByDomainPage.js:312
 #: src/domains/DomainsPage.js:88
@@ -776,7 +810,7 @@ msgstr "Disposition"
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/admin/AdminDomains.js:144
+#: src/admin/AdminDomains.js:145
 msgid "Domain List"
 msgstr "Liste des domaines"
 
@@ -797,11 +831,11 @@ msgstr "URL du domaine:"
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
-#: src/admin/AdminDomains.js:109
+#: src/admin/AdminDomains.js:111
 msgid "Domain removed"
 msgstr "Domaine supprimé"
 
-#: src/admin/AdminDomains.js:110
+#: src/admin/AdminDomains.js:112
 msgid "Domain removed from {orgSlug}"
 msgstr "Domaine supprimé de {orgSlug}"
 
@@ -820,8 +854,8 @@ msgstr "Le champ de l'url du domaine ne doit pas être vide"
 msgid "Domain:"
 msgstr "Domaine:"
 
-#: src/admin/AdminPanel.js:25
-#: src/app/App.js:105
+#: src/admin/AdminPanel.js:26
+#: src/app/App.js:107
 #: src/app/App.js:278
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:101
@@ -1017,6 +1051,10 @@ msgstr "Domaine favori"
 #: src/utilities/months.js:5
 msgid "February"
 msgstr "Février"
+
+#: src/admin/AuditLogTable.js:221
+msgid "Filters"
+msgstr "Filtres"
 
 #: src/app/ReadGuidancePage.js:198
 #~ msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
@@ -1299,7 +1337,7 @@ msgstr "Incorrect inviteUserToOrg.result typename."
 #~ msgid "Incorrect leaveOrganization.result typename."
 #~ msgstr "Incorrect leaveOrganization.result typename."
 
-#: src/admin/AdminDomains.js:128
+#: src/admin/AdminDomains.js:130
 msgid "Incorrect removeDomain.result typename."
 msgstr "Incorrect removeDomain.result typename."
 
@@ -1313,7 +1351,7 @@ msgstr "Incorrect resetPassword.result typename."
 
 #: src/admin/AdminDomainModal.js:91
 #: src/admin/AdminDomainModal.js:140
-#: src/admin/AdminDomains.js:127
+#: src/admin/AdminDomains.js:129
 #: src/admin/SuperAdminUserList.js:110
 #: src/admin/UserListModal.js:83
 #: src/admin/UserListModal.js:132
@@ -1401,6 +1439,11 @@ msgstr "L'information contenue dans ce site, à l'exception des éléments de pr
 msgid "Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the"
 msgstr "Les renseignements partagés avec le SCT ou acquis par l'entremise de systèmes hébergés par le SCT peuvent faire l'objet d'une divulgation publique en vertu de la Loi sur la protection des renseignements personnels."
 
+#: src/admin/AuditLogTable.js:75
+#: src/admin/AuditLogTable.js:115
+msgid "Initiated By"
+msgstr "Initiée par"
+
 #: src/termsConditions/TermsConditionsPage.js:131
 msgid "Intellectual Property, Copyright and Trademarks"
 msgstr "Propriété intellectuelle, droits d'auteur et marques de commerce"
@@ -1410,8 +1453,8 @@ msgstr "Propriété intellectuelle, droits d'auteur et marques de commerce"
 #~ msgstr "Tableau de bord du traqueur disponible en interne <0>Tracker</0>."
 
 #: src/organizationDetails/OrganizationSummary.js:14
-msgid "Internet facing domains"
-msgstr "Domaines orientés vers l'Internet"
+#~ msgid "Internet facing domains"
+#~ msgstr "Domaines orientés vers l'Internet"
 
 #: src/summaries/Doughnut.js:32
 msgid "Internet-facing"
@@ -1531,8 +1574,8 @@ msgid "Menu"
 msgstr "Menu"
 
 #: src/admin/AdminPage.js:174
-msgid "Menu:"
-msgstr "Menu :"
+#~ msgid "Menu:"
+#~ msgstr "Menu :"
 
 #: src/domains/ScanDomain.js:123
 #: src/guidance/EmailGuidance.js:30
@@ -1563,7 +1606,11 @@ msgstr "Nom (EN)"
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
-#: src/guidance/GuidanceTagList.js:122
+#: src/admin/AuditLogTable.js:171
+msgid "Name:"
+msgstr "Nom:"
+
+#: src/guidance/GuidanceTagList.js:124
 msgid "Negative Tags"
 msgstr "Étiquettes négatives"
 
@@ -1599,6 +1646,10 @@ msgstr "Nouveau mot de passe:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
+#: src/admin/AuditLogTable.js:177
+msgid "New Value:"
+msgstr "Nouvelle valeur :"
+
 #: src/components/RelayPaginationControls.js:75
 #~ msgid "Next"
 #~ msgstr "Suivant"
@@ -1613,9 +1664,9 @@ msgstr "Nouveau numéro de téléphone:"
 msgid "No DMARC phase information available for this organization."
 msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organisation."
 
-#: src/admin/AdminDomains.js:151
-#: src/domains/DomainsPage.js:108
-#: src/organizationDetails/OrganizationDomains.js:93
+#: src/admin/AdminDomains.js:152
+#: src/domains/DomainsPage.js:110
+#: src/organizationDetails/OrganizationDomains.js:95
 msgid "No Domains"
 msgstr "Aucun domaine"
 
@@ -1631,6 +1682,10 @@ msgstr "Aucune organisation"
 #: src/organizationDetails/OrganizationAffiliations.js:50
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
+
+#: src/admin/AuditLogTable.js:102
+msgid "No activity logs"
+msgstr "Aucun journal d'activité"
 
 #: src/user/EditableUserPhoneNumber.js:275
 msgid "No current phone number"
@@ -1737,6 +1792,15 @@ msgstr "Obtenir une orientation en matière de configuration pour les points ter
 msgid "October"
 msgstr "Octobre"
 
+#: src/admin/AuditLogTable.js:174
+msgid "Old Value:"
+msgstr "Ancienne valeur :"
+
+#: src/admin/AuditLogTable.js:82
+#: src/admin/AuditLogTable.js:127
+msgid "Organization"
+msgstr "Organisation"
+
 #: src/app/ReadGuidancePage.js:332
 msgid "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 msgstr "Vous pouvez notamment communiquer avec l’<0>équipe responsable des services WebSSL de SPC</0> ou utiliser <1>Let’sEncrypt</1>. Pour en apprendre davantage, veuillez vous reporter aux <2>Recommandations pour les certificats de serveur TLS</2>."
@@ -1771,15 +1835,15 @@ msgstr "Le nom de l'organisation ne correspond pas."
 msgid "Organization not updated"
 msgstr "Organisation non mise à jour"
 
-#: src/admin/AdminPage.js:75
-#: src/admin/AdminPage.js:91
+#: src/admin/AdminPage.js:77
+#: src/admin/AdminPage.js:93
 #: src/admin/UserListModal.js:255
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/admin/AdminPage.js:181
-#: src/app/App.js:102
-#: src/app/App.js:238
+#: src/admin/AdminPage.js:189
+#: src/app/App.js:104
+#: src/app/App.js:240
 #: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:72
 #: src/organizations/Organizations.js:109
@@ -1978,6 +2042,11 @@ msgstr "Conseils de lecture"
 msgid "Read guidance"
 msgstr "Conseils de lecture"
 
+#: src/admin/AdminDomains.js:327
+#: src/admin/AuditLogTable.js:133
+msgid "Reason"
+msgstr "Raison"
+
 #: src/app/ReadGuidancePage.js:355
 msgid "References:"
 msgstr "Références :"
@@ -1995,7 +2064,11 @@ msgstr "Rejeter tous les messages provenant de domaines autres que les domaines 
 msgid "Remember me"
 msgstr "Rappelle-toi de moi"
 
-#: src/admin/AdminDomains.js:285
+#: src/admin/AuditLogTable.js:88
+msgid "Remove"
+msgstr "Retirer"
+
+#: src/admin/AdminDomains.js:305
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -2033,6 +2106,23 @@ msgstr "Numérisation demandée"
 #: src/app/App.js:214
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
+
+#: src/admin/AuditLogTable.js:75
+#~ msgid "Resource"
+#~ msgstr "Ressources"
+
+#: src/admin/AuditLogTable.js:76
+#: src/admin/AuditLogTable.js:124
+msgid "Resource Name"
+msgstr "Nom de la ressource"
+
+#: src/admin/AuditLogTable.js:121
+msgid "Resource Type"
+msgstr "Type de ressource"
+
+#: src/admin/AuditLogTable.js:226
+msgid "Resource:"
+msgstr "Ressource :"
 
 #: src/guidance/GuidanceTagDetails.js:81
 #: src/guidance/GuidanceTagList.js:73
@@ -2157,9 +2247,13 @@ msgstr "Recherche d'éléments entièrement alignés"
 msgid "Search SPF Failing Items"
 msgstr "Rechercher les éléments défaillants du SPF"
 
-#: src/admin/AdminDomains.js:237
+#: src/admin/AdminDomains.js:238
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
+
+#: src/admin/AuditLogTable.js:214
+msgid "Search by initiated by, resource name"
+msgstr "Recherche par initié par, nom de la ressource"
 
 #: src/dmarc/DmarcByDomainPage.js:221
 #: src/dmarc/DmarcByDomainPage.js:287
@@ -2176,11 +2270,15 @@ msgstr "Recherche d'une organisation étiquetée"
 msgid "Search for a user (email)"
 msgstr "Recherche d'un utilisateur (email)"
 
+#: src/admin/AuditLogTable.js:188
+#~ msgid "Search for an activity"
+#~ msgstr "Recherche d'une activité"
+
 #: src/organizations/Organizations.js:151
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
-#: src/admin/AdminDomains.js:223
+#: src/admin/AdminDomains.js:224
 #: src/admin/UserList.js:149
 #: src/components/ReactTableGlobalFilter.js:36
 #: src/components/SearchBox.js:65
@@ -2195,12 +2293,16 @@ msgstr "Secteur:"
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
-#: src/admin/AdminPage.js:78
-#: src/admin/AdminPage.js:94
+#: src/admin/AdminDomains.js:337
+msgid "Select a reason for removing this domain"
+msgstr "Sélectionnez une raison pour la suppression de ce domaine"
+
+#: src/admin/AdminPage.js:80
+#: src/admin/AdminPage.js:96
 msgid "Select an organization"
 msgstr "Sélectionnez une organisation"
 
-#: src/admin/AdminPage.js:151
+#: src/admin/AdminPage.js:153
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
 
@@ -2389,10 +2491,18 @@ msgstr "Soumettre"
 msgid "Successfully removed user {0}."
 msgstr "L'utilisateur {0} a été supprimé."
 
-#: src/organizationDetails/OrganizationDetails.js:132
+#: src/organizationDetails/OrganizationDetails.js:133
 #: src/user/MyTrackerPage.js:93
 msgid "Summary"
 msgstr "Résumé"
+
+#: src/admin/AdminPage.js:182
+msgid "Super Admin Menu:"
+msgstr "Super Admin Menu :"
+
+#: src/guidance/ScanCategoryDetails.js:114
+msgid "Supports ECDH Key Exchange:"
+msgstr "Supporte l'échange de clés ECDH:"
 
 #: src/guidance/ScanDetails.js:114
 #~ msgid "Supports ECDH Key Exchange:"
@@ -2514,6 +2624,16 @@ msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la 
 msgid "This could be due to improper configuration, or could be the result of a scan error"
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
+#: src/admin/AdminDomains.js:345
+#: src/admin/AuditLogTable.js:151
+msgid "This domain does not belong to this organization"
+msgstr "Ce domaine n'appartient pas à cette organisation"
+
+#: src/admin/AdminDomains.js:342
+#: src/admin/AuditLogTable.js:148
+msgid "This domain no longer exists"
+msgstr "Ce domaine n'existe plus"
+
 #: src/createOrganization/CreateOrganizationPage.js:37
 #: src/utilities/fieldRequirements.js:50
 msgid "This field cannot be empty"
@@ -2527,7 +2647,12 @@ msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
-#: src/app/App.js:140
+#: src/admin/AuditLogTable.js:74
+#: src/admin/AuditLogTable.js:112
+msgid "Time Generated"
+msgstr "Temps généré"
+
+#: src/app/App.js:142
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "Pour activer toutes les fonctionnalités de l'application et maximiser la sécurité de votre compte, <0>vous devez vérifier votre compte</0>."
 
@@ -2542,8 +2667,8 @@ msgid "Total Messages"
 msgstr "Total des messages"
 
 #: src/organizationDetails/OrganizationSummary.js:22
-msgid "Total users"
-msgstr "total des utilisateurs"
+#~ msgid "Total users"
+#~ msgstr "total des utilisateurs"
 
 #: src/app/SlideMessage.js:51
 #: src/landing/LandingPage.js:24
@@ -2625,7 +2750,7 @@ msgstr "Impossible d'inviter un utilisateur."
 #~ msgid "Unable to leave organization."
 #~ msgstr "Impossible de quitter l'organisation."
 
-#: src/admin/AdminDomains.js:118
+#: src/admin/AdminDomains.js:120
 msgid "Unable to remove domain."
 msgstr "Impossible de supprimer le domaine."
 
@@ -2714,9 +2839,17 @@ msgstr "Domaine non favorisé"
 msgid "Unscanned"
 msgstr "Non balayé"
 
+#: src/admin/AuditLogTable.js:87
+msgid "Update"
+msgstr "Mise à jour"
+
 #: src/admin/OrganizationInformation.js:149
 msgid "Updated Organization"
 msgstr "Organisation mise à jour"
+
+#: src/admin/AuditLogTable.js:130
+msgid "Updated Properties"
+msgstr "Propriétés actualisées"
 
 #: src/domains/ScanDomain.js:126
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
@@ -2741,6 +2874,10 @@ msgstr "Utiliser Tracker et <0>l’orientation du protocole de sécurité de la 
 #: src/termsConditions/TermsConditionsPage.js:190
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 msgstr "L'utilisation de la propriété intellectuelle en violation du présent accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Suivi."
+
+#: src/admin/AuditLogTable.js:81
+msgid "User"
+msgstr "Utilisateur"
 
 #: src/organizationDetails/OrganizationAffiliations.js:39
 msgid "User Affiliations"
@@ -2772,9 +2909,9 @@ msgstr "Utilisateur supprimé."
 msgid "User:"
 msgstr "Utilisateur:"
 
-#: src/admin/AdminPage.js:182
-#: src/admin/AdminPanel.js:28
-#: src/organizationDetails/OrganizationDetails.js:142
+#: src/admin/AdminPage.js:190
+#: src/admin/AdminPanel.js:29
+#: src/organizationDetails/OrganizationDetails.js:143
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -3026,8 +3163,8 @@ msgstr "et par les lois, politiques, règlements et accords internationaux appli
 msgid "https://https-everywhere.canada.ca/en/help/"
 msgstr "https://https-everywhere.canada.ca/en/help/"
 
-#: src/app/App.js:118
-#: src/app/App.js:339
+#: src/app/App.js:120
+#: src/app/App.js:341
 #: src/user/MyTrackerPage.js:43
 #: src/user/MyTrackerPage.js:74
 msgid "myTracker"

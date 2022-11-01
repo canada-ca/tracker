@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import {useLazyQuery, useQuery} from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
   Box,
@@ -26,10 +26,10 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import {
   GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
-  ORG_DETAILS_PAGE
+  ORG_DETAILS_PAGE,
 } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
-import {ExportButton} from "../components/ExportButton";
+import { ExportButton } from '../components/ExportButton'
 
 export default function OrganizationDetails() {
   const { orgSlug, activeTab } = useParams()
@@ -44,9 +44,12 @@ export default function OrganizationDetails() {
     // errorPolicy: 'ignore', // allow partial success
   })
 
-  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
-    GET_ORGANIZATION_DOMAINS_STATUSES_CSV, {variables: {orgSlug: orgSlug}}
-  )
+  const [
+    getOrgDomainStatuses,
+    { loading: orgDomainStatusesLoading, _error, _data },
+  ] = useLazyQuery(GET_ORGANIZATION_DOMAINS_STATUSES_CSV, {
+    variables: { orgSlug: orgSlug },
+  })
 
   useEffect(() => {
     if (!activeTab) {
@@ -110,14 +113,12 @@ export default function OrganizationDetails() {
         <ExportButton
           order={{ base: 2, md: 1 }}
           ml="auto"
-          mt={{base: "4", md: 0}}
+          mt={{ base: '4', md: 0 }}
           fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
-          dataFunction={
-          async () => {
+          dataFunction={async () => {
             const result = await getOrgDomainStatuses()
             return result.data?.findOrganizationBySlug?.toCsv
-            }
-          }
+          }}
           isLoading={orgDomainStatusesLoading}
         />
       </Flex>
@@ -147,13 +148,7 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationSummary
-                summaries={data?.organization?.summaries}
-                domainCount={data?.organization?.domainCount}
-                userCount={data?.organization?.affiliations?.totalCount}
-                city={data?.organization?.city}
-                province={data?.organization?.province}
-              />
+              <OrganizationSummary summaries={data?.organization?.summaries} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>

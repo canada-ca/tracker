@@ -8,6 +8,7 @@ import * as summaryQueries from './summaries/queries'
 import * as userQueries from './user/queries'
 import * as verifiedDomainQueries from './verified-domains/queries'
 import * as verifiedOrgQueries from './verified-organizations/queries'
+import * as auditLogQueries from './audit-logs/queries'
 
 export const createQuerySchema = () => {
   return new GraphQLObjectType({
@@ -15,6 +16,8 @@ export const createQuerySchema = () => {
     fields: () => ({
       node: nodeField,
       nodes: nodesField,
+      // Audit Log Queries
+      ...auditLogQueries,
       // Dmarc Summary Queries
       ...dmarcSummariesQueries,
       // Domain Queries

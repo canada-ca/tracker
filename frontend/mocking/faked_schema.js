@@ -14,6 +14,33 @@ export const getTypeNames = () => gql`
       ids: [ID!]!
     ): [Node]!
 
+    # Select activity logs a user has access to.
+    findAuditLogs(
+      # The organization you wish to remove the domain from.
+      orgId: ID
+
+      # Ordering options for log connections.
+      orderBy: LogOrder
+
+      # String used to search for domains.
+      search: String
+
+      # Keywords used to filter log results.
+      filters: LogFilters
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): AuditLogConnection
+
     # Query for dmarc summaries the user has access to.
     findMyDmarcSummaries(
       # Ordering options for dmarc summaries connections
@@ -241,14 +268,14 @@ export const getTypeNames = () => gql`
   }
 
   # A connection to a list of items.
-  type DmarcSummaryConnection {
+  type AuditLogConnection {
     # Information to aid in pagination.
     pageInfo: PageInfo!
 
     # A list of edges.
-    edges: [DmarcSummaryEdge]
+    edges: [AuditLogEdge]
 
-    # The total amount of dmarc summaries the user has access to.
+    # The total amount of logs the user has access to.
     totalCount: Int
   }
 
@@ -265,6 +292,168 @@ export const getTypeNames = () => gql`
 
     # When paginating forwards, the cursor to continue.
     endCursor: String
+  }
+
+  # An edge in a connection.
+  type AuditLogEdge {
+    # The item at the end of the edge
+    node: AuditLog
+
+    # A cursor for use in pagination
+    cursor: String!
+  }
+
+  # A record of activity that modified the state of a user, domain, or organization
+  type AuditLog implements Node {
+    # The ID of an object
+    id: ID!
+
+    # Domain that scans will be ran on.
+    timestamp: String
+
+    # Domain that scans will be ran on.
+    initiatedBy: InitiatedBy
+
+    # Domain that scans will be ran on.
+    action: String
+
+    # Domain that scans will be ran on.
+    target: TargetResource
+
+    # Domain that scans will be ran on.
+    reason: String
+  }
+
+  # Information on the user that initiated the logged action
+  type InitiatedBy {
+    # The ID of an object
+    id: ID!
+
+    # Domain that scans will be ran on.
+    userName: String
+
+    # Domain that scans will be ran on.
+    role: String
+
+    # Domain that scans will be ran on.
+    organization: String
+  }
+
+  # Resource that was the target of a specified action by a user.
+  type TargetResource {
+    # Name of the targeted resource.
+    resource: String
+
+    # Organization that the resource is affiliated with.
+    organization: TargetOrganization
+
+    # Type of resource that was modified: user, domain, or organization.
+    resourceType: String
+
+    # List of resource properties that were modified.
+    updatedProperties: [UpdatedProperties]
+  }
+
+  # Organization that the resource is affiliated with.
+  type TargetOrganization {
+    # The ID of an object
+    id: ID!
+
+    # Name of the affiliated organization.
+    name: String
+  }
+
+  # Object describing how a resource property was updated.
+  type UpdatedProperties {
+    # Name of updated resource.
+    name: String
+
+    # Old value of updated property.
+    oldValue: String
+
+    # New value of updated property.
+    newValue: String
+  }
+
+  # Ordering options for audit logs.
+  input LogOrder {
+    # The field to order logs by.
+    field: LogOrderField!
+
+    # The ordering direction.
+    direction: OrderDirection!
+  }
+
+  # Properties by which domain connections can be ordered.
+  enum LogOrderField {
+    # Order domains by spf status.
+    TIMESTAMP
+
+    # Order domains by spf status.
+    INITIATED_BY
+
+    # Order domains by spf status.
+    RESOURCE_NAME
+  }
+
+  # Possible directions in which to order a list of items when provided an 'orderBy' argument.
+  enum OrderDirection {
+    # Specifies an ascending order for a given 'orderBy' argument.
+    ASC
+
+    # Specifies a descending order for a given 'orderBy' argument.
+    DESC
+  }
+
+  # Filtering options for audit logs.
+  input LogFilters {
+    # List of resource types to include when returning logs.
+    resource: [ResourceTypeEnums]
+
+    # List of user actions to include when returning logs.
+    action: [UserActionEnums]
+  }
+
+  # Keywords used to decribe resources that can be modified.
+  enum ResourceTypeEnums {
+    # A user account affiliated with an organization.
+    USER
+
+    # An organization.
+    ORGANIZATION
+
+    # A domain affiliated with an organization.
+    DOMAIN
+  }
+
+  # Describes actions performed by users to modify resources.
+  enum UserActionEnums {
+    # A new resource was created.
+    CREATE
+
+    # A resource was deleted.
+    DELETE
+
+    # An affiliation between resources was created.
+    ADD
+
+    # Properties of a resource or affiliation were modified.
+    UPDATE
+
+    # An affiliation between resources was deleted.
+    REMOVE
+  }
+
+  # A connection to a list of items.
+  type DmarcSummaryConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [DmarcSummaryEdge]
+
+    # The total amount of dmarc summaries the user has access to.
+    totalCount: Int
   }
 
   # An edge in a connection.
@@ -687,15 +876,6 @@ export const getTypeNames = () => gql`
 
     # Order domains by spf status.
     SPF_STATUS
-  }
-
-  # Possible directions in which to order a list of items when provided an \`orderBy\` argument.
-  enum OrderDirection {
-    # Specifies an ascending order for a given \`orderBy\` argument.
-    ASC
-
-    # Specifies a descending order for a given \`orderBy\` argument.
-    DESC
   }
 
   # A connection to a list of items.
@@ -2221,16 +2401,24 @@ export const getTypeNames = () => gql`
     updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
 
     # This mutation allows the creation of an organization inside the database.
-    createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
+    createOrganization(
+      input: CreateOrganizationInput!
+    ): CreateOrganizationPayload
 
     # This mutation allows the removal of unused organizations.
-    removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
+    removeOrganization(
+      input: RemoveOrganizationInput!
+    ): RemoveOrganizationPayload
 
     # Mutation allows the modification of organizations if any changes to the organization may occur.
-    updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
+    updateOrganization(
+      input: UpdateOrganizationInput!
+    ): UpdateOrganizationPayload
 
     # Mutation allows the verification of an organization.
-    verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
+    verifyOrganization(
+      input: VerifyOrganizationInput!
+    ): VerifyOrganizationPayload
 
     # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
     authenticate(input: AuthenticateInput!): AuthenticatePayload
@@ -2266,7 +2454,9 @@ export const getTypeNames = () => gql`
     signUp(input: SignUpInput!): SignUpPayload
 
     # This mutation allows the user to update their account password.
-    updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
+    updateUserPassword(
+      input: UpdateUserPasswordInput!
+    ): UpdateUserPasswordPayload
 
     # This mutation allows the user to update their user profile to change various details of their current profile.
     updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfilePayload
@@ -2373,7 +2563,9 @@ export const getTypeNames = () => gql`
 
   # This union is used with the \`transferOrgOwnership\` mutation, allowing for
   # users to transfer ownership of a given organization, and support any errors that may occur.
-  union TransferOrgOwnershipUnion = AffiliationError | TransferOrgOwnershipResult
+  union TransferOrgOwnershipUnion =
+      AffiliationError
+    | TransferOrgOwnershipResult
 
   # This object is used to inform the user that they successful transferred ownership of a given organization.
   type TransferOrgOwnershipResult {
@@ -2532,7 +2724,19 @@ export const getTypeNames = () => gql`
 
     # The organization you wish to remove the domain from.
     orgId: ID!
+
+    # The reason given for why this domain is being removed from the organization.
+    reason: DomainRemovalReasonEnum!
     clientMutationId: String
+  }
+
+  # Reason why a domain was removed from an organization.
+  enum DomainRemovalReasonEnum {
+    # Domain does not exist.
+    NONEXISTENT
+
+    # Domain was in the incorrect organization.
+    WRONG_ORG
   }
 
   type RequestScanPayload {
@@ -2839,7 +3043,9 @@ export const getTypeNames = () => gql`
   }
 
   # This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to remove their phone number, and support any errors that may occur
-  union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
+  union RemovePhoneNumberUnion =
+      RemovePhoneNumberError
+    | RemovePhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while removing their phone number.
   type RemovePhoneNumberError {
@@ -3087,7 +3293,9 @@ export const getTypeNames = () => gql`
   }
 
   # This union is used with the \`updateUserProfile\` mutation, allowing for users to update their profile, and support any errors that may occur
-  union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
+  union UpdateUserProfileUnion =
+      UpdateUserProfileError
+    | UpdateUserProfileResult
 
   # This object is used to inform the user if any errors occurred while updating their profile.
   type UpdateUserProfileError {
@@ -3159,7 +3367,9 @@ export const getTypeNames = () => gql`
   }
 
   # This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to verify their phone number, and support any errors that may occur
-  union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
+  union VerifyPhoneNumberUnion =
+      VerifyPhoneNumberError
+    | VerifyPhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while verifying their phone number.
   type VerifyPhoneNumberError {

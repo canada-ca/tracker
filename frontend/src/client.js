@@ -24,6 +24,7 @@ export function createCache() {
           findMyDmarcSummaries: relayStylePagination(),
           findMyOrganizations: relayStylePagination(['isAdmin']),
           findMyUsers: relayStylePagination(),
+          findAuditLogs: relayStylePagination(),
           findMyWebCheckOrganizations: relayStylePagination(),
           getOneTimeScans: {
             merge(existing = [], incoming) {

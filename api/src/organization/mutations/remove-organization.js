@@ -3,6 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { removeOrganizationUnion } from '../unions'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const removeOrganization = new mutationWithClientMutationId({
   name: 'RemoveOrganization',
@@ -340,6 +341,21 @@ export const removeOrganization = new mutationWithClientMutationId({
     console.info(
       `User: ${userKey} successfully removed org: ${organization._key}.`,
     )
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: permission,
+      },
+      action: 'delete',
+      target: {
+        resource: organization.orgDetails.en.name, // name of resource being acted upon
+        resourceType: 'organization', // user, org, domain
+      },
+    })
 
     return {
       _type: 'result',
