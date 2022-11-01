@@ -45,6 +45,7 @@ export default function TwoFactorAuthenticatePage() {
           tfaSendMethod: authenticate.result.user.tfaSendMethod,
           userName: authenticate.result.user.userName,
           emailValidated: authenticate.result.user.emailValidated,
+          insideUser: authenticate.result.user.insideUser,
         })
         if (authenticate.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (authenticate.result.user.preferredLang === 'FRENCH')

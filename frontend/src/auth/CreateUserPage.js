@@ -51,6 +51,7 @@ export default function CreateUserPage() {
           tfaSendMethod: signUp.result.user.tfaSendMethod,
           userName: signUp.result.user.userName,
           emailValidated: signUp.result.user.emailValidated,
+          insideUser: signUp.result.user.insideUser,
         })
         if (signUp.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signUp.result.user.preferredLang === 'FRENCH') activate('fr')

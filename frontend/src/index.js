@@ -42,6 +42,7 @@ const I18nApp = () => {
           tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
           userName: refreshTokens.result.user.userName,
           emailValidated: refreshTokens.result.user.emailValidated,
+          insideUser: refreshTokens.result.user.insideUser,
         })
         if (from.pathname !== '/') history.replace(from)
       }
