@@ -42,6 +42,7 @@ import {
   SIGN_OUT,
 } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
+import { InsideUserSwtich } from './InsideUserSwitch'
 
 export default function UserPage() {
   const toast = useToast()
@@ -163,6 +164,7 @@ export default function UserPage() {
     tfaSendMethod,
     emailValidated,
     phoneValidated,
+    insideUser,
   } = queryUserData?.userPage
 
   return (
@@ -210,6 +212,7 @@ export default function UserPage() {
               <Trans>Verify Account</Trans>
             </Button>
           )}
+          <InsideUserSwtich insideUser={insideUser || false} />
           <Flex>
             <Button
               variant="danger"

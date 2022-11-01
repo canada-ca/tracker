@@ -1,0 +1,77 @@
+import { useMutation } from '@apollo/client'
+import { Badge, Box, Switch, useToast } from '@chakra-ui/react'
+import { Trans, t } from '@lingui/macro'
+import { bool } from 'prop-types'
+import React from 'react'
+import { UPDATE_USER_PROFILE } from '../graphql/mutations'
+export function InsideUserSwtich({ insideUser }) {
+  const toast = useToast()
+  const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
+    UPDATE_USER_PROFILE,
+    {
+      onError: ({ message }) => {
+        toast({
+          title: t`An error occurred while updating your email address.`,
+          description: message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onCompleted({ updateUserProfile }) {
+        console.log(updateUserProfile)
+        if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
+          toast({
+            title: t`Insider status changed`,
+            description: t`You have successfully updated your insider preference.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else if (
+          updateUserProfile.result.__typename === 'UpdateUserProfileError'
+        ) {
+          toast({
+            title: t`Unable to update to your insider status, please try again.`,
+            description: updateUserProfile.result.description,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t`Incorrect send method received.`,
+            description: t`Incorrect updateUserProfile.result typename.`,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          console.log('Incorrect updateUserProfile.result typename.')
+        }
+      },
+    },
+  )
+  return (
+    <Box p="1">
+      <Switch
+        defaultChecked={insideUser}
+        onChange={async (e) =>
+          await updateUserProfile({
+            variables: { insideUser: e.target.checked },
+          })
+        }
+      />
+      <Badge variant="outline" color="gray.900" p="1.5">
+        <Trans>Inside User</Trans>
+      </Badge>
+    </Box>
+  )
+}
+
+InsideUserSwtich.propTypes = {
+  insideUser: bool.isRequired,
+}
