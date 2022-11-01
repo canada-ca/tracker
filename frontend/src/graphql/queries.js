@@ -713,6 +713,7 @@ export const QUERY_CURRENT_USER = gql`
       tfaSendMethod
       phoneValidated
       emailValidated
+      insideUser
     }
     isUserAdmin
   }
