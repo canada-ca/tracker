@@ -1,16 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import {
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Flex,
-  IconButton,
-  Heading,
-  Link,
-} from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, IconButton, Heading, Link } from '@chakra-ui/react'
 
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -18,12 +8,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useQuery } from '@apollo/client'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { Trans } from '@lingui/macro'
-import {
-  Link as RouteLink,
-  useHistory,
-  useLocation,
-  useParams,
-} from 'react-router-dom'
+import { Link as RouteLink, useHistory, useLocation, useParams } from 'react-router-dom'
 import { ArrowLeftIcon, LinkIcon } from '@chakra-ui/icons'
 import { ScanDomainButton } from '../domains/ScanDomainButton'
 import WebGuidance from './WebGuidance'
@@ -55,13 +40,7 @@ const GuidancePage = () => {
     )
   if (error) return <ErrorFallbackMessage error={error} />
 
-  const {
-    domain: domainName,
-    web: webScan,
-    dnsScan: dnsScan,
-    status: webStatus,
-    dmarcPhase,
-  } = data.findDomainByDomain
+  const { domain: domainName, web: webScan, dnsScan: dnsScan, status: webStatus, dmarcPhase } = data.findDomainByDomain
 
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
@@ -72,11 +51,7 @@ const GuidancePage = () => {
 
   return (
     <Flex flexDirection="column" width="100%">
-      <Flex
-        flexDirection={{ base: 'column', md: 'row' }}
-        alignItems="center"
-        mb="4"
-      >
+      <Flex flexDirection={{ base: 'column', md: 'row' }} alignItems="center" mb="4">
         <IconButton
           icon={<ArrowLeftIcon />}
           onClick={() => history.push(from)}
@@ -85,13 +60,8 @@ const GuidancePage = () => {
           aria-label="back"
           mr="0.5rem"
         />
-        <Heading textAlign={{ base: 'center', md: 'left' }}>
-          {domainName.toUpperCase()}
-        </Heading>
-        <ScanDomainButton
-          domainUrl={data.findDomainByDomain.domain}
-          ml="auto"
-        />
+        <Heading textAlign={{ base: 'center', md: 'left' }}>{domainName.toUpperCase()}</Heading>
+        <ScanDomainButton domainUrl={data.findDomainByDomain.domain} ml="auto" />
         {data.findDomainByDomain.hasDMARCReport && (
           <Link
             color="teal.600"
@@ -121,16 +91,12 @@ const GuidancePage = () => {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <WebGuidance
-                webScan={webScan}
-                sslStatus={webStatus.ssl}
-                httpsStatus={webStatus.https}
-              />
+              <WebGuidance webScan={webScan} sslStatus={webStatus.ssl} httpsStatus={webStatus.https} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <EmailGuidance emailScan={emailScan} dmarcPhase={dmarcPhase} />
+              <EmailGuidance dnsScan={dnsScan} dmarcPhase={dmarcPhase} />
             </ErrorBoundary>
           </TabPanel>
         </TabPanels>

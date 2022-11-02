@@ -6,10 +6,10 @@ import { ScanDetails } from './ScanDetails'
 import { GuidanceTagList } from './GuidanceTagList'
 import { Box, ListItem, OrderedList, Text } from '@chakra-ui/react'
 
-const EmailGuidance = ({ emailScan, dmarcPhase = 'unknown' }) => {
-  const dmarcScan = emailScan.dmarc.edges[0]?.node
-  const spfScan = emailScan.spf.edges[0]?.node
-  const dkimScan = emailScan.dkim.edges[0]?.node.results.edges[0]?.node
+const EmailGuidance = ({ dnsScan, dmarcPhase = 'unknown' }) => {
+  const dmarcScan = dnsScan.edges[0]?.node?.dmarc
+  const spfScan = dnsScan.edges[0]?.node?.spf
+  const dkimScan = dnsScan.edges[0]?.node?.dkim
 
   let dmarcSteps
 
@@ -63,9 +63,7 @@ const EmailGuidance = ({ emailScan, dmarcPhase = 'unknown' }) => {
       >
         <Box mb={4}>
           <Text fontWeight="bold" fontSize="2xl">
-            <Trans>
-              DMARC Implementation Phase: {dmarcPhase.toUpperCase()}
-            </Trans>
+            <Trans>DMARC Implementation Phase: {dmarcPhase.toUpperCase()}</Trans>
           </Text>
           {dmarcSteps && (
             <Box bg="gray.100" px="2" py="1">
@@ -76,23 +74,23 @@ const EmailGuidance = ({ emailScan, dmarcPhase = 'unknown' }) => {
 
         <ScanDetails title={`DMARC`}>
           <GuidanceTagList
-            positiveTags={dmarcScan?.positiveGuidanceTags.edges}
-            neutralTags={dmarcScan?.neutralGuidanceTags.edges}
-            negativeTags={dmarcScan?.negativeGuidanceTags.edges}
+            positiveTags={dmarcScan?.positiveGuidanceTags?.edges}
+            neutralTags={dmarcScan?.neutralGuidanceTags?.edges}
+            negativeTags={dmarcScan?.negativeGuidanceTags?.edges}
           />
         </ScanDetails>
         <ScanDetails title={`SPF`}>
           <GuidanceTagList
-            positiveTags={spfScan?.positiveGuidanceTags.edges}
-            neutralTags={spfScan?.neutralGuidanceTags.edges}
-            negativeTags={spfScan?.negativeGuidanceTags.edges}
+            positiveTags={spfScan?.positiveGuidanceTags?.edges}
+            neutralTags={spfScan?.neutralGuidanceTags?.edges}
+            negativeTags={spfScan?.negativeGuidanceTags?.edges}
           />
         </ScanDetails>
         <ScanDetails title={`DKIM`}>
           <GuidanceTagList
-            positiveTags={dkimScan?.positiveGuidanceTags.edges}
-            neutralTags={dkimScan?.neutralGuidanceTags.edges}
-            negativeTags={dkimScan?.negativeGuidanceTags.edges}
+            positiveTags={dkimScan?.positiveGuidanceTags?.edges}
+            neutralTags={dkimScan?.neutralGuidanceTags?.edges}
+            negativeTags={dkimScan?.negativeGuidanceTags?.edges}
           />
         </ScanDetails>
       </ScanCard>
@@ -101,7 +99,7 @@ const EmailGuidance = ({ emailScan, dmarcPhase = 'unknown' }) => {
 }
 
 EmailGuidance.propTypes = {
-  emailScan: PropTypes.object.isRequired,
+  dnsScan: PropTypes.object.isRequired,
   dmarcPhase: PropTypes.string,
 }
 

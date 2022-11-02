@@ -24,9 +24,7 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
     description: httpsScan.enforced,
   })
 
-  const complianceInfo = [sslStatus, httpsStatus].every(
-    (status) => status === 'PASS',
-  ) ? (
+  const complianceInfo = [sslStatus, httpsStatus].every((status) => status === 'PASS') ? (
     <Stack isInline align="center" px="2">
       <CheckCircleIcon color="strong" size="icons.md" />
       <Text fontWeight="bold" fontSize="2xl">
@@ -37,8 +35,7 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
     <Stack isInline align="center" px="2">
       <WarningTwoIcon color="moderate" size="icons.md" />
       <Text fontWeight="bold" fontSize="2xl">
-        Changes required for Web Sites and Services Management Configuration
-        Requirements compliance
+        Changes required for Web Sites and Services Management Configuration Requirements compliance
       </Text>
     </Stack>
   )
@@ -46,60 +43,37 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
   return (
     <>
       <SubdomainWarning mb={4} />
-      <ScanCard
-        description={t`Web Scan Results`}
-        title={t`Results for scans of web technologies (TLS, HTTPS).`}
-      >
+      <ScanCard description={t`Web Scan Results`} title={t`Results for scans of web technologies (TLS, HTTPS).`}>
         <Box pb="1">{complianceInfo}</Box>
         <ScanDetails title={t`HTTPS`}>
           <DetailList details={httpDetailList} />
           <GuidanceTagList
-            positiveTags={httpsScan.positiveGuidanceTags.edges}
-            neutralTags={httpsScan.neutralGuidanceTags.edges}
-            negativeTags={httpsScan.negativeGuidanceTags.edges}
+            positiveTags={httpsScan.positiveGuidanceTags?.edges}
+            neutralTags={httpsScan.neutralGuidanceTags?.edges}
+            negativeTags={httpsScan.negativeGuidanceTags?.edges}
           />
         </ScanDetails>
         <ScanDetails title={t`TLS`}>
           <GuidanceTagList
-            positiveTags={tlsScan.positiveGuidanceTags.edges}
-            neutralTags={tlsScan.neutralGuidanceTags.edges}
-            negativeTags={tlsScan.negativeGuidanceTags.edges}
+            positiveTags={tlsScan.positiveGuidanceTags?.edges}
+            neutralTags={tlsScan.neutralGuidanceTags?.edges}
+            negativeTags={tlsScan.negativeGuidanceTags?.edges}
           />
           <Accordion allowMultiple defaultIndex={[0, 1]}>
             <ScanDetails title={t`Ciphers`}>
-              <StrengthCategory
-                title={t`Strong Ciphers:`}
-                strength="strong"
-                items={tlsScan.strongCiphers}
-              />
+              <StrengthCategory title={t`Strong Ciphers:`} strength="strong" items={tlsScan.strongCiphers} />
               <StrengthCategory
                 title={t`Acceptable Ciphers:`}
                 strength="acceptable"
                 items={tlsScan.acceptableCiphers}
               />
-              <StrengthCategory
-                title={t`Weak Ciphers:`}
-                strength="weak"
-                items={tlsScan.weakCiphers}
-              />
+              <StrengthCategory title={t`Weak Ciphers:`} strength="weak" items={tlsScan.weakCiphers} />
             </ScanDetails>
 
             <ScanDetails title={t`Curves`}>
-              <StrengthCategory
-                title={t`Strong Curves:`}
-                strength="strong"
-                items={tlsScan.strongCiphers}
-              />
-              <StrengthCategory
-                title={t`Acceptable Curves:`}
-                strength="acceptable"
-                items={tlsScan.acceptableCiphers}
-              />
-              <StrengthCategory
-                title={t`Weak Curves:`}
-                strength="weak"
-                items={tlsScan.weakCiphers}
-              />
+              <StrengthCategory title={t`Strong Curves:`} strength="strong" items={tlsScan.strongCiphers} />
+              <StrengthCategory title={t`Acceptable Curves:`} strength="acceptable" items={tlsScan.acceptableCiphers} />
+              <StrengthCategory title={t`Weak Curves:`} strength="weak" items={tlsScan.weakCiphers} />
             </ScanDetails>
           </Accordion>
         </ScanDetails>
