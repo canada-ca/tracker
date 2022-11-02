@@ -196,7 +196,7 @@ export default function UserPage() {
             currentTFAMethod={tfaSendMethod}
             emailValidated={emailValidated}
             phoneValidated={phoneValidated}
-            mb="16"
+            mb="8"
           />
 
           {!emailValidated && (
@@ -213,7 +213,7 @@ export default function UserPage() {
             </Button>
           )}
           <InsideUserSwtich insideUser={insideUser || false} />
-          <Flex>
+          <Flex mt="auto">
             <Button
               variant="danger"
               onClick={() => {
