@@ -66,8 +66,7 @@ export function InsideUserSwtich({ insideUser }) {
   return (
     <Flex p="1" align="center">
       <Tooltip
-        label={t`For users interested in using new features that are still in
-              progress.`}
+        label={t`For users interested in using new features that are still in progress.`}
       >
         <QuestionOutlineIcon />
       </Tooltip>
