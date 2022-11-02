@@ -138,8 +138,6 @@ export const updateUserProfile = new mutationWithClientMutationId({
       emailValidated = false
     }
 
-    console.log('insideUser', args.insideUser)
-
     // Create object containing updated data
     const updatedUser = {
       displayName: displayName || user.displayName,

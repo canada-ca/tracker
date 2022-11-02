@@ -68,9 +68,13 @@ export function InsideUserSwtich({ insideUser }) {
       <Tooltip
         label={t`For users interested in using new features that are still in progress.`}
       >
-        <QuestionOutlineIcon />
+        <QuestionOutlineIcon tabIndex={0} />
       </Tooltip>
       <Switch
+        isFocusable={true}
+        id="Inside User"
+        name="Inside User"
+        aria-label="Inside User"
         mx="2"
         defaultChecked={insideUser}
         onChange={async (e) =>
