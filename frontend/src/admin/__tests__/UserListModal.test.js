@@ -1023,7 +1023,7 @@ describe('<UserListModal />', () => {
     })
 
     describe('admin has "ADMIN" privileges', () => {
-      it('admin can add a user with "USER" privileges', async () => {
+      it.skip('admin can add a user with "USER" privileges', async () => {
         const mocks = [
           {
             request: {
