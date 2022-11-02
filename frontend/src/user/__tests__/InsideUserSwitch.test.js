@@ -85,7 +85,7 @@ describe('<InsideUserSwitch />', () => {
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
                 <ChakraProvider theme={theme}>
-                  <InsideUserSwtich insideUser={false} />
+                  <InsideUserSwitch insideUser={false} />
                 </ChakraProvider>
               </I18nProvider>
             </MemoryRouter>
@@ -131,7 +131,7 @@ describe('<InsideUserSwitch />', () => {
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={i18n}>
                 <ChakraProvider theme={theme}>
-                  <InsideUserSwtich insideUser={false} />
+                  <InsideUserSwitch insideUser={false} />
                 </ChakraProvider>
               </I18nProvider>
             </MemoryRouter>
