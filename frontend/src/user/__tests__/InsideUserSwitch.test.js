@@ -10,7 +10,7 @@ import { makeVar } from '@apollo/client'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { UPDATE_USER_PROFILE } from '../../graphql/mutations'
-import { InsideUserSwtich } from '../InsideUserSwitch'
+import { InsideUserSwitch } from '../InsideUserSwitch'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -32,7 +32,7 @@ describe('<InsideUserSwitch />', () => {
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={i18n}>
               <ChakraProvider theme={theme}>
-                <InsideUserSwtich insideUser={false} />
+                <InsideUserSwitch insideUser={false} />
               </ChakraProvider>
             </I18nProvider>
           </MemoryRouter>
