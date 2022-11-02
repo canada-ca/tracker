@@ -42,7 +42,7 @@ import {
   SIGN_OUT,
 } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
-import { InsideUserSwtich } from './InsideUserSwitch'
+import { InsideUserSwitch } from './InsideUserSwitch'
 
 export default function UserPage() {
   const toast = useToast()
@@ -201,6 +201,7 @@ export default function UserPage() {
 
           {!emailValidated && (
             <Button
+              mb="4"
               variant="primary"
               onClick={() => {
                 sendEmailVerification({ variables: { userName: userName } })
@@ -212,7 +213,9 @@ export default function UserPage() {
               <Trans>Verify Account</Trans>
             </Button>
           )}
-          <InsideUserSwtich insideUser={insideUser || false} />
+
+          <InsideUserSwitch insideUser={insideUser || false} />
+
           <Flex mt="auto">
             <Button
               variant="danger"

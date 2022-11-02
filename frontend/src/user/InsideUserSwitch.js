@@ -6,7 +6,8 @@ import { bool } from 'prop-types'
 import React from 'react'
 import { UPDATE_USER_PROFILE } from '../graphql/mutations'
 import { useUserVar } from '../utilities/userState'
-export function InsideUserSwtich({ insideUser }) {
+
+export function InsideUserSwitch({ insideUser }) {
   const toast = useToast()
   const { login, currentUser } = useUserVar()
 
@@ -15,7 +16,7 @@ export function InsideUserSwtich({ insideUser }) {
     {
       onError: ({ message }) => {
         toast({
-          title: t`An error occurred while updating your email address.`,
+          title: t`An error occurred while updating your insider preference.`,
           description: message,
           status: 'error',
           duration: 9000,
@@ -51,7 +52,7 @@ export function InsideUserSwtich({ insideUser }) {
           })
         } else {
           toast({
-            title: t`Incorrect send method received.`,
+            title: t`Incorrect update method received.`,
             description: t`Incorrect updateUserProfile.result typename.`,
             status: 'error',
             duration: 9000,
@@ -90,6 +91,6 @@ export function InsideUserSwtich({ insideUser }) {
   )
 }
 
-InsideUserSwtich.propTypes = {
+InsideUserSwitch.propTypes = {
   insideUser: bool.isRequired,
 }
