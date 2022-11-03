@@ -60,15 +60,15 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
               />
             </ErrorBoundary>
           </TabPanel>
-          <ABTestingWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <TabPanel>
+          <TabPanel>
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AuditLogTable orgId={orgId} />
                 </ErrorBoundary>
-              </TabPanel>
-            </ABTestVariant>
-          </ABTestingWrapper>
+              </ABTestVariant>
+            </ABTestingWrapper>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Stack>
