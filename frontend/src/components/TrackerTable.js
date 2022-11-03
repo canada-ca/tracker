@@ -38,6 +38,7 @@ import { useLingui } from '@lingui/react'
 import { ExportButton } from './ExportButton'
 
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
+import { InfoButton } from './InfoPanel'
 
 export function TrackerTable({ ...props }) {
   const { i18n } = useLingui()
@@ -56,6 +57,7 @@ export function TrackerTable({ ...props }) {
     manualFilters,
     searchPlaceholder,
     fileName,
+    onToggle,
   } = props
 
   const [firstRender, setFirstRender] = React.useState(true)
@@ -122,6 +124,13 @@ export function TrackerTable({ ...props }) {
             placeholder={searchPlaceholder}
           />
         )}
+
+        <InfoButton
+          onToggle={onToggle}
+          ml="auto"
+          borderWidth="1px"
+          borderColor="black"
+        />
         {fileName && (
           <ExportButton
             ml="auto"
@@ -305,4 +314,5 @@ TrackerTable.propTypes = {
   manualSort: bool,
   manualFilters: bool,
   fileName: string,
+  onToggle: func,
 }

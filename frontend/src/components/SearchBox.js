@@ -15,6 +15,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { array, bool, func, number, string } from 'prop-types'
+import { InfoButton } from './InfoPanel'
 
 export function SearchBox({
   selectedDisplayLimit,
@@ -31,6 +32,7 @@ export function SearchBox({
   resetToFirstPage,
   orderByOptions,
   placeholder,
+  onToggle,
   ...props
 }) {
   const orderIconName =
@@ -81,6 +83,7 @@ export function SearchBox({
             />
           </InputGroup>
         </Flex>
+        <InfoButton onToggle={onToggle} />
         <Stack isInline align="center" ml={{ md: '5%' }}>
           <Text
             as="label"
@@ -157,4 +160,5 @@ SearchBox.propTypes = {
   orderByOptions: array,
   placeholder: string,
   inputAriaLabel: string,
+  onToggle: func,
 }

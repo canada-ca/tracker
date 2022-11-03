@@ -22,7 +22,7 @@ import { Link as RouteLink } from 'react-router-dom'
 
 import { TrackerTable } from '../components/TrackerTable'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { toConstantCase } from '../helpers/toConstantCase'
@@ -224,6 +224,7 @@ export default function DmarcByDomainPage() {
         manualSort={true}
         manualFilters={true}
         onSort={updateOrderBy}
+        onToggle={onToggle}
       />
     )
 
@@ -307,7 +308,7 @@ export default function DmarcByDomainPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
-        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
+        {/* <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" /> */}
         <InfoPanel isOpen={isOpen} onToggle={onToggle}>
           <InfoBox title={t`Domain`} info={t`The domain address.`} />
           <InfoBox

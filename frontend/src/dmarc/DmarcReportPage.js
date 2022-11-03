@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 
 import { TrackerTable } from '../components/TrackerTable'
-import { InfoBox, InfoPanel, InfoButton } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
@@ -275,6 +275,7 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search DKIM Failing Items`}
           fileName={fileName}
+          onToggle={onToggle}
         />
       </ErrorBoundary>
     )
@@ -347,6 +348,7 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search Fully Aligned Items`}
           fileName={fileName}
+          onToggle={onToggle}
         />
       </ErrorBoundary>
     )
@@ -418,6 +420,7 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search SPF Failing Items`}
           fileName={fileName}
+          onToggle={onToggle}
         />
       </ErrorBoundary>
     )
@@ -500,6 +503,7 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search DMARC Failing Items`}
           fileName={fileName}
+          onToggle={onToggle}
         />
       </ErrorBoundary>
     )
@@ -600,7 +604,7 @@ export default function DmarcReportPage() {
       </Flex>
 
       {tableDisplay}
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
+      {/* <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" /> */}
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox
           title="Source IP Address"

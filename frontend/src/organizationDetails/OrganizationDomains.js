@@ -9,7 +9,7 @@ import { ListOf } from '../components/ListOf'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import {
@@ -166,6 +166,7 @@ export function OrganizationDomains({ orgSlug }) {
         resetToFirstPage={resetToFirstPage}
         orderByOptions={orderByOptions}
         placeholder={t`Search for a domain`}
+        onToggle={onToggle}
       />
       {domainList}
       <RelayPaginationControls
@@ -180,7 +181,6 @@ export function OrganizationDomains({ orgSlug }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }

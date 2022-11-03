@@ -9,7 +9,7 @@ import { OrganizationCard } from './OrganizationCard'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
@@ -149,7 +149,9 @@ export default function Organizations() {
           resetToFirstPage={resetToFirstPage}
           orderByOptions={orderByOptions}
           placeholder={t`Search for an organization`}
+          onToggle={onToggle}
         />
+
         {orgList}
         <RelayPaginationControls
           onlyPagination={false}
@@ -164,7 +166,6 @@ export default function Organizations() {
           isLoadingMore={isLoadingMore}
         />
       </ErrorBoundary>
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }
