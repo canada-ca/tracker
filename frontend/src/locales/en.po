@@ -245,9 +245,12 @@ msgid "An error occurred while updating your display name."
 msgstr "An error occurred while updating your display name."
 
 #: src/user/EditableUserEmail.js:40
-#: src/user/InsideUserSwitch.js:18
 msgid "An error occurred while updating your email address."
 msgstr "An error occurred while updating your email address."
+
+#: src/user/InsideUserSwitch.js:19
+msgid "An error occurred while updating your insider preference."
+msgstr "An error occurred while updating your insider preference."
 
 #: src/user/EditableUserLanguage.js:20
 msgid "An error occurred while updating your language."
@@ -375,7 +378,7 @@ msgid "Canadians rely on the Government of Canada to provide secure digital serv
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
 #: src/admin/SuperAdminUserList.js:432
-#: src/user/UserPage.js:286
+#: src/user/UserPage.js:289
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -460,8 +463,8 @@ msgstr "Close"
 
 #: src/admin/SuperAdminUserList.js:369
 #: src/admin/SuperAdminUserList.js:402
-#: src/user/UserPage.js:226
-#: src/user/UserPage.js:257
+#: src/user/UserPage.js:229
+#: src/user/UserPage.js:260
 msgid "Close Account"
 msgstr "Close Account"
 
@@ -489,7 +492,7 @@ msgstr "Compliant"
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserPhoneNumber.js:188
 #: src/user/EditableUserPhoneNumber.js:246
-#: src/user/UserPage.js:295
+#: src/user/UserPage.js:298
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -995,7 +998,7 @@ msgstr "English"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 
-#: src/user/UserPage.js:267
+#: src/user/UserPage.js:270
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 
@@ -1060,6 +1063,10 @@ msgstr "Fake email domain blocks (reject + quarantine):"
 msgid "Favourited Domain"
 msgstr "Favourited Domain"
 
+#: src/user/InsideUserSwitch.js:88
+msgid "Feature Preview"
+msgstr "Feature Preview"
+
 #: src/components/MonthSelect.js:15
 #: src/utilities/months.js:5
 msgid "February"
@@ -1105,7 +1112,7 @@ msgstr "For technical implementation guidance:"
 #~ "For users interested in using new features that are still in\n"
 #~ "progress."
 
-#: src/user/InsideUserSwitch.js:69
+#: src/user/InsideUserSwitch.js:70
 msgid "For users interested in using new features that are still in progress."
 msgstr "For users interested in using new features that are still in progress."
 
@@ -1396,7 +1403,6 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPhoneNumber.js:67
 #: src/user/EditableUserPhoneNumber.js:118
 #: src/user/EditableUserTFAMethod.js:76
-#: src/user/InsideUserSwitch.js:54
 #: src/user/UserPage.js:116
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
@@ -1418,6 +1424,10 @@ msgstr "Incorrect signUp.result typename."
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
 
+#: src/user/InsideUserSwitch.js:55
+msgid "Incorrect update method received."
+msgstr "Incorrect update method received."
+
 #: src/admin/AdminDomainModal.js:141
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
@@ -1434,7 +1444,7 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserEmail.js:73
 #: src/user/EditableUserLanguage.js:52
 #: src/user/EditableUserTFAMethod.js:77
-#: src/user/InsideUserSwitch.js:55
+#: src/user/InsideUserSwitch.js:56
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
 
@@ -1476,15 +1486,15 @@ msgid "Initiated By"
 msgstr "Initiated By"
 
 #: src/user/InsideUserSwitch.js:83
-msgid "Inside User"
-msgstr "Inside User"
+#~ msgid "Inside User"
+#~ msgstr "Inside User"
 
 #: src/admin/SuperAdminUserList.js:151
 #: src/admin/SuperAdminUserList.js:350
 msgid "Insider"
 msgstr "Insider"
 
-#: src/user/InsideUserSwitch.js:30
+#: src/user/InsideUserSwitch.js:31
 msgid "Insider status changed"
 msgstr "Insider status changed"
 
@@ -2660,7 +2670,7 @@ msgstr "These terms and conditions shall be governed by and interpreted under th
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 
-#: src/user/UserPage.js:261
+#: src/user/UserPage.js:264
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 
@@ -2861,7 +2871,7 @@ msgstr "Unable to update to your TFA send method, please try again."
 msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
-#: src/user/InsideUserSwitch.js:45
+#: src/user/InsideUserSwitch.js:46
 msgid "Unable to update to your insider status, please try again."
 msgstr "Unable to update to your insider status, please try again."
 
@@ -2944,7 +2954,7 @@ msgid "User Affiliations"
 msgstr "User Affiliations"
 
 #: src/admin/SuperAdminUserList.js:421
-#: src/user/UserPage.js:275
+#: src/user/UserPage.js:278
 msgid "User Email"
 msgstr "User Email"
 
@@ -2993,7 +3003,7 @@ msgstr "Verified"
 msgid "Verify"
 msgstr "Verify"
 
-#: src/user/UserPage.js:212
+#: src/user/UserPage.js:213
 msgid "Verify Account"
 msgstr "Verify Account"
 
@@ -3179,7 +3189,7 @@ msgstr "You have successfully updated your display name."
 msgid "You have successfully updated your email."
 msgstr "You have successfully updated your email."
 
-#: src/user/InsideUserSwitch.js:31
+#: src/user/InsideUserSwitch.js:32
 msgid "You have successfully updated your insider preference."
 msgstr "You have successfully updated your insider preference."
 

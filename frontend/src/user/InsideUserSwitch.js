@@ -85,7 +85,7 @@ export function InsideUserSwitch({ insideUser }) {
         }
       />
       <Badge variant="outline" color="gray.900" p="1.5">
-        <Trans>Inside User</Trans>
+        <Trans>Feature Preview</Trans>
       </Badge>
     </Flex>
   )

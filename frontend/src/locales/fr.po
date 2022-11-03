@@ -245,9 +245,12 @@ msgid "An error occurred while updating your display name."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre nom d'affichage."
 
 #: src/user/EditableUserEmail.js:40
-#: src/user/InsideUserSwitch.js:18
 msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
+
+#: src/user/InsideUserSwitch.js:19
+msgid "An error occurred while updating your insider preference."
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'initié."
 
 #: src/user/EditableUserLanguage.js:20
 msgid "An error occurred while updating your language."
@@ -375,7 +378,7 @@ msgid "Canadians rely on the Government of Canada to provide secure digital serv
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
 #: src/admin/SuperAdminUserList.js:432
-#: src/user/UserPage.js:286
+#: src/user/UserPage.js:289
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -460,8 +463,8 @@ msgstr "Fermer"
 
 #: src/admin/SuperAdminUserList.js:369
 #: src/admin/SuperAdminUserList.js:402
-#: src/user/UserPage.js:226
-#: src/user/UserPage.js:257
+#: src/user/UserPage.js:229
+#: src/user/UserPage.js:260
 msgid "Close Account"
 msgstr "Fermer le compte"
 
@@ -489,7 +492,7 @@ msgstr "Conforme"
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserPhoneNumber.js:188
 #: src/user/EditableUserPhoneNumber.js:246
-#: src/user/UserPage.js:295
+#: src/user/UserPage.js:298
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -983,7 +986,7 @@ msgstr "Anglais"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/user/UserPage.js:267
+#: src/user/UserPage.js:270
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -1048,6 +1051,10 @@ msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 msgid "Favourited Domain"
 msgstr "Domaine favori"
 
+#: src/user/InsideUserSwitch.js:88
+msgid "Feature Preview"
+msgstr "Aperçu des fonctionnalités"
+
 #: src/components/MonthSelect.js:15
 #: src/utilities/months.js:5
 msgid "February"
@@ -1081,7 +1088,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre:"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique:"
 
-#: src/user/InsideUserSwitch.js:69
+#: src/user/InsideUserSwitch.js:70
 msgid "For users interested in using new features that are still in progress."
 msgstr "Pour les utilisateurs intéressés par l'utilisation de nouvelles fonctionnalités qui sont encore en cours de développement."
 
@@ -1372,7 +1379,6 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPhoneNumber.js:67
 #: src/user/EditableUserPhoneNumber.js:118
 #: src/user/EditableUserTFAMethod.js:76
-#: src/user/InsideUserSwitch.js:54
 #: src/user/UserPage.js:116
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
@@ -1394,6 +1400,10 @@ msgstr "Incorrect signUp.result typename."
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
 
+#: src/user/InsideUserSwitch.js:55
+msgid "Incorrect update method received."
+msgstr "Méthode de mise à jour incorrecte reçue."
+
 #: src/admin/AdminDomainModal.js:141
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
@@ -1410,7 +1420,7 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserEmail.js:73
 #: src/user/EditableUserLanguage.js:52
 #: src/user/EditableUserTFAMethod.js:77
-#: src/user/InsideUserSwitch.js:55
+#: src/user/InsideUserSwitch.js:56
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
 
@@ -1452,15 +1462,15 @@ msgid "Initiated By"
 msgstr "Initiée par"
 
 #: src/user/InsideUserSwitch.js:83
-msgid "Inside User"
-msgstr "Utilisateur interne"
+#~ msgid "Inside User"
+#~ msgstr "Utilisateur interne"
 
 #: src/admin/SuperAdminUserList.js:151
 #: src/admin/SuperAdminUserList.js:350
 msgid "Insider"
 msgstr "Insider"
 
-#: src/user/InsideUserSwitch.js:30
+#: src/user/InsideUserSwitch.js:31
 msgid "Insider status changed"
 msgstr "Changement de statut d'initié"
 
@@ -2628,7 +2638,7 @@ msgstr "Les présentes conditions générales sont régies et interprétées en 
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {0} ?"
 
-#: src/user/UserPage.js:261
+#: src/user/UserPage.js:264
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
@@ -2821,7 +2831,7 @@ msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réess
 msgid "Unable to update to your display name, please try again."
 msgstr "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer."
 
-#: src/user/InsideUserSwitch.js:45
+#: src/user/InsideUserSwitch.js:46
 msgid "Unable to update to your insider status, please try again."
 msgstr "Impossible de mettre à jour votre statut d'initié, veuillez réessayer."
 
@@ -2904,7 +2914,7 @@ msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
 #: src/admin/SuperAdminUserList.js:421
-#: src/user/UserPage.js:275
+#: src/user/UserPage.js:278
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
@@ -2953,7 +2963,7 @@ msgstr "Vérifié"
 msgid "Verify"
 msgstr "Vérifier"
 
-#: src/user/UserPage.js:212
+#: src/user/UserPage.js:213
 msgid "Verify Account"
 msgstr "Vérifier le compte"
 
@@ -3131,7 +3141,7 @@ msgstr "Vous avez réussi à mettre à jour votre nom d'affichage."
 msgid "You have successfully updated your email."
 msgstr "Vous avez mis à jour votre courriel avec succès."
 
-#: src/user/InsideUserSwitch.js:31
+#: src/user/InsideUserSwitch.js:32
 msgid "You have successfully updated your insider preference."
 msgstr "Vous avez réussi à mettre à jour vos préférences d'initié."
 
