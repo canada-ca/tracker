@@ -39,7 +39,9 @@ describe('<InsideUserSwitch />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => expect(getByText(/Inside User/i)).toBeInTheDocument())
+    await waitFor(() =>
+      expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
+    )
   })
 
   describe('When the user toggles their insider status', () => {
@@ -93,7 +95,9 @@ describe('<InsideUserSwitch />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => expect(getByText(/Inside User/i)).toBeInTheDocument())
+      await waitFor(() =>
+        expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
+      )
       const betaSwitch = getByLabelText(/Inside User/i)
       userEvent.click(betaSwitch)
       await waitFor(() => expect(getByText(/Insider status changed/i)))
@@ -139,7 +143,9 @@ describe('<InsideUserSwitch />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() => expect(getByText(/Inside User/i)).toBeInTheDocument())
+      await waitFor(() =>
+        expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
+      )
       const betaSwitch = getByLabelText(/Inside User/i)
       userEvent.click(betaSwitch)
       await waitFor(() =>
