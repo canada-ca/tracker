@@ -39,6 +39,9 @@ export const loadUserConnectionsByUserId =
         } else if (orderBy.field === 'user-affiliations-totalCount') {
           documentField = aql`afterVar.affiliations.totalCount`
           userField = aql`user.affiliations.totalCount`
+        } else if (orderBy.field === 'user-insider') {
+          documentField = aql`afterVar.insiderUser`
+          userField = aql`user.insiderUser`
         }
 
         afterTemplate = aql`
@@ -81,6 +84,9 @@ export const loadUserConnectionsByUserId =
         } else if (orderBy.field === 'user-affiliations-totalCount') {
           documentField = aql`beforeVar.affiliations.totalCount`
           userField = aql`user.affiliations.totalCount`
+        } else if (orderBy.field === 'user-insider') {
+          documentField = aql`beforeVar.insideUser`
+          userField = aql`user.insideUser`
         }
 
         beforeTemplate = aql`
@@ -182,6 +188,10 @@ export const loadUserConnectionsByUserId =
         userField = aql`user.affiliations.totalCount`
         hasNextPageDocumentField = aql`LAST(retrievedUsers).affiliations.totalCount`
         hasPreviousPageDocumentField = aql`FIRST(retrievedUsers).affiliations.totalCount`
+      } else if (orderBy.field === 'user-insider') {
+        userField = aql`user.insideUser`
+        hasNextPageDocumentField = aql`LAST(retrievedUsers).insideUser`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedUsers).insideUser`
       }
 
       hasNextPageFilter = aql`
@@ -207,6 +217,8 @@ export const loadUserConnectionsByUserId =
         sortByField = aql`user.emailValidated ${orderBy.direction},`
       } else if (orderBy.field === 'user-affiliations-totalCount') {
         sortByField = aql`user.affiliations.totalCount ${orderBy.direction},`
+      } else if (orderBy.field === 'user-insider') {
+        sortByField = aql`user.insideUser ${orderBy.direction},`
       }
     }
 

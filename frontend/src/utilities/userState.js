@@ -13,6 +13,7 @@ export function UserVarProvider({
     tfaSendMethod: null,
     userName: null,
     emailValidated: null,
+    insideUser: null,
   }),
   children,
 }) {
@@ -24,7 +25,8 @@ export function UserVarProvider({
       currentUser?.jwt ||
       currentUser?.userName ||
       currentUser?.tfaSendMethod ||
-      currentUser?.emailValidated
+      currentUser?.emailValidated ||
+      currentUser?.insideUser
     )
   }
 
@@ -46,6 +48,7 @@ export function UserVarProvider({
       userName: null,
       tfaSendMethod: null,
       emailValidated: null,
+      insideUser: null,
     })
     await client.resetStore()
   }

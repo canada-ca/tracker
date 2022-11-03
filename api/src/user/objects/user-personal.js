@@ -55,6 +55,11 @@ export const userPersonalType = new GraphQLObjectType({
       description: 'The method in which TFA codes are sent.',
       resolve: ({ tfaSendMethod }) => tfaSendMethod,
     },
+    insideUser: {
+      type: GraphQLBoolean,
+      description: 'Does the user want to see new features in progress.',
+      resolve: ({ insideUser }) => insideUser,
+    },
     affiliations: {
       type: affiliationConnection.connectionType,
       description: 'Users affiliations to various organizations.',
