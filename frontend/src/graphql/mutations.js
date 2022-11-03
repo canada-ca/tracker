@@ -150,6 +150,7 @@ export const UPDATE_USER_PROFILE = gql`
     $userName: EmailAddress
     $preferredLang: LanguageEnums
     $tfaSendMethod: TFASendMethodEnum
+    $insideUser: Boolean
   ) {
     updateUserProfile(
       input: {
@@ -157,6 +158,7 @@ export const UPDATE_USER_PROFILE = gql`
         userName: $userName
         preferredLang: $preferredLang
         tfaSendMethod: $tfaSendMethod
+        insideUser: $insideUser
       }
     ) {
       result {
@@ -168,6 +170,7 @@ export const UPDATE_USER_PROFILE = gql`
             userName
             preferredLang
             tfaSendMethod
+            insideUser
           }
         }
         ... on UpdateUserProfileError {

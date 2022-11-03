@@ -2,8 +2,8 @@ import React from 'react'
 import { any, string } from 'prop-types'
 import { useUserVar } from '../utilities/userState'
 
-const isInsiderUser = ({ userName }) => {
-  return userName.endsWith('@tbs-sct.gc.ca')
+const isInsiderUser = ({ userName, insideUser }) => {
+  return userName.endsWith('@tbs-sct.gc.ca') || insideUser
 }
 
 export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
@@ -12,7 +12,12 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
 
   // only one variant
   if (!children.length) {
-    if (isInsiderUser({ userName: currentUser?.userName || '' })) {
+    if (
+      isInsiderUser({
+        userName: currentUser?.userName || '',
+        insideUser: currentUser?.insideUser || false,
+      })
+    ) {
       if (children.props.name === insiderVariantName) return <>{children}</>
       else return <></>
     } else {
@@ -21,7 +26,12 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
     }
   }
   // A + B variants
-  if (isInsiderUser({ userName: currentUser?.userName || '' })) {
+  if (
+    isInsiderUser({
+      userName: currentUser?.userName || '',
+      insideUser: currentUser?.insideUser || false,
+    })
+  ) {
     childIndex = children.findIndex(
       (variant) => variant.props.name === insiderVariantName,
     )

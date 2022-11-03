@@ -17,6 +17,7 @@ import {
   MY_TRACKER_DOMAINS,
 } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
+import { SubdomainWarning } from '../domains/SubdomainWarning'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -168,7 +169,11 @@ export function OrganizationDomains({ orgSlug }) {
         placeholder={t`Search for a domain`}
         onToggle={onToggle}
       />
+
+      <SubdomainWarning mb="4" />
+
       {domainList}
+
       <RelayPaginationControls
         onlyPagination={false}
         selectedDisplayLimit={domainsPerPage}
