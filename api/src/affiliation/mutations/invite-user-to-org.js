@@ -155,6 +155,9 @@ able to sign-up and be assigned to that organization in one mutation.`,
             name: org.name,
           }, // name of resource being acted upon
           resourceType: 'user', // user, org, domain
+          updatedProperties: [
+            { name: 'role', oldValue: '', newValue: requestedRole },
+          ],
         },
       })
 
