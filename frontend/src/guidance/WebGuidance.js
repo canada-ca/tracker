@@ -11,8 +11,8 @@ import { DetailList } from './DetailList'
 import { CheckCircleIcon, WarningTwoIcon } from '@chakra-ui/icons'
 
 const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
-  const httpsScan = webScan.https.edges[0].node
-  const tlsScan = webScan.ssl.edges[0].node
+  const httpsScan = webScan?.edges[0]?.node?.results[0]?.results?.connectionResults
+  const tlsScan = webScan?.edges[0]?.node?.results[0]?.results?.tlsResult
 
   const httpDetailList = []
   httpDetailList.push({
@@ -23,6 +23,21 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
     category: t`Enforcement`,
     description: httpsScan.enforced,
   })
+
+  const getCiphersByStrength = (cipherList, strength) => {
+    return cipherList.reduce((acc, curr) => {
+      if (curr.strength === strength) acc.push(curr.name)
+      return acc
+    })
+  }
+
+  const allCipherSuites = Object.values(tlsScan.acceptedCipherSuites).reduce((acc, curr) => {
+    return [...acc, ...curr]
+  }, [])
+
+  const strongCipherSuites = getCiphersByStrength(allCipherSuites, 'strong')
+  const acceptableCipherSuites = getCiphersByStrength(allCipherSuites, 'acceptable')
+  const weakCipherSuites = getCiphersByStrength(allCipherSuites, 'weak')
 
   const complianceInfo = [sslStatus, httpsStatus].every((status) => status === 'PASS') ? (
     <Stack isInline align="center" px="2">
@@ -48,26 +63,22 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
         <ScanDetails title={t`HTTPS`}>
           <DetailList details={httpDetailList} />
           <GuidanceTagList
-            positiveTags={httpsScan.positiveGuidanceTags?.edges}
-            neutralTags={httpsScan.neutralGuidanceTags?.edges}
-            negativeTags={httpsScan.negativeGuidanceTags?.edges}
+            positiveTags={httpsScan.positiveTags}
+            neutralTags={httpsScan.neutralTags}
+            negativeTags={httpsScan.negativeTags}
           />
         </ScanDetails>
         <ScanDetails title={t`TLS`}>
           <GuidanceTagList
-            positiveTags={tlsScan.positiveGuidanceTags?.edges}
-            neutralTags={tlsScan.neutralGuidanceTags?.edges}
-            negativeTags={tlsScan.negativeGuidanceTags?.edges}
+            positiveTags={tlsScan.positiveTags}
+            neutralTags={tlsScan.neutralTags}
+            negativeTags={tlsScan.negativeTags}
           />
           <Accordion allowMultiple defaultIndex={[0, 1]}>
             <ScanDetails title={t`Ciphers`}>
-              <StrengthCategory title={t`Strong Ciphers:`} strength="strong" items={tlsScan.strongCiphers} />
-              <StrengthCategory
-                title={t`Acceptable Ciphers:`}
-                strength="acceptable"
-                items={tlsScan.acceptableCiphers}
-              />
-              <StrengthCategory title={t`Weak Ciphers:`} strength="weak" items={tlsScan.weakCiphers} />
+              <StrengthCategory title={t`Strong Ciphers:`} strength="strong" items={strongCipherSuites} />
+              <StrengthCategory title={t`Acceptable Ciphers:`} strength="acceptable" items={acceptableCipherSuites} />
+              <StrengthCategory title={t`Weak Ciphers:`} strength="weak" items={weakCipherSuites} />
             </ScanDetails>
 
             <ScanDetails title={t`Curves`}>

@@ -6,12 +6,7 @@ import { t, Trans } from '@lingui/macro'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
 
-export function GuidanceTagList({
-  negativeTags,
-  positiveTags,
-  neutralTags,
-  selector,
-}) {
+export function GuidanceTagList({ negativeTags, positiveTags, neutralTags, selector }) {
   const selectorHeading = (
     <Heading as="h3" size="sm">
       {selector}
@@ -24,20 +19,11 @@ export function GuidanceTagList({
         return (
           <Box
             key={guidanceTag + index}
-            bg={
-              tagType === 'negative'
-                ? 'weakMuted'
-                : tagType === 'positive'
-                ? 'strongMuted'
-                : 'infoMuted'
-            }
+            bg={tagType === 'negative' ? 'weakMuted' : tagType === 'positive' ? 'strongMuted' : 'infoMuted'}
             pb="1"
           >
-            {guidanceTag.node ? (
-              <GuidanceTagDetails
-                guidanceTag={guidanceTag.node}
-                tagType={tagType}
-              />
+            {guidanceTag?.node ? (
+              <GuidanceTagDetails guidanceTag={guidanceTag.node} tagType={tagType} />
             ) : (
               <GuidanceTagDetails guidanceTag={guidanceTag} tagType={tagType} />
             )}
@@ -59,16 +45,10 @@ export function GuidanceTagList({
 
   const noTags = (
     <Stack isInline align="center" bg="moderateMuted" px="2">
-      <WarningTwoIcon
-        color="moderate"
-        display={{ base: 'none', md: 'initial' }}
-      />
+      <WarningTwoIcon color="moderate" display={{ base: 'none', md: 'initial' }} />
       <Box>
         <Stack isInline align="center">
-          <WarningTwoIcon
-            color="moderate"
-            display={{ base: 'initial', md: 'none' }}
-          />
+          <WarningTwoIcon color="moderate" display={{ base: 'initial', md: 'none' }} />
           <Text fontWeight="bold">
             <Trans>Result:</Trans>
           </Text>
@@ -81,16 +61,12 @@ export function GuidanceTagList({
             <Trans>Guidance:</Trans>
           </Text>
           <Text>
-            <Trans>
-              This could be due to improper configuration, or could be the
-              result of a scan error
-            </Trans>
+            <Trans>This could be due to improper configuration, or could be the result of a scan error</Trans>
           </Text>
         </Stack>
         <Text fontWeight="bold">
           <Trans>
-            If you believe this was caused by a problem with Tracker, please use
-            the "Report an Issue" link below
+            If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below
           </Trans>
         </Text>
       </Box>
@@ -110,9 +86,8 @@ export function GuidanceTagList({
           <AccordionItem buttonLabel={t`Neutral Tags`} buttonVariant="info">
             <Box>
               <Trans>
-                Neutral tags highlight relevant configuration details, but are
-                not addressed within policy requirements and have no impact on
-                scoring.
+                Neutral tags highlight relevant configuration details, but are not addressed within policy requirements
+                and have no impact on scoring.
               </Trans>
             </Box>
             {neutralTagList}
@@ -124,10 +99,7 @@ export function GuidanceTagList({
           </AccordionItem>
         )}
       </Accordion>
-      {!positiveTagList?.length &&
-        !neutralTagList?.length &&
-        !negativeTagList?.length &&
-        noTags}
+      {!positiveTagList?.length && !neutralTagList?.length && !negativeTagList?.length && noTags}
     </Box>
   )
 }
