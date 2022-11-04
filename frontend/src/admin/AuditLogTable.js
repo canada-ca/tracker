@@ -29,18 +29,17 @@ import { SearchBox } from '../components/SearchBox'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 
 export function AuditLogTable({ orgId = null }) {
-  const [orderDirection, setOrderDirection] = useState('ASC')
+  const [orderDirection, setOrderDirection] = useState('DESC')
   const [orderField, setOrderField] = useState('TIMESTAMP')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [logsPerPage, setLogsPerPage] = useState(10)
+  const [logsPerPage, setLogsPerPage] = useState(20)
   const [activeResourceFilters, setActiveResourceFilters] = useState([])
   const [activeActionFilters, setActiveActionFilters] = useState([])
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
-
   const {
     loading,
     isLoadingMore,
@@ -109,7 +108,7 @@ export function AuditLogTable({ orgId = null }) {
           <Thead>
             <Tr>
               <Th>
-                <Trans>Time Generated</Trans>
+                <Trans>Time Generated (UTC)</Trans>
               </Th>
               <Th>
                 <Trans>Initiated By</Trans>
@@ -144,9 +143,9 @@ export function AuditLogTable({ orgId = null }) {
                   ({ value }) => action.toUpperCase() === value,
                 )
                 if (typeof reason !== 'undefined') {
-                  if (reason === 'nonexistent') {
+                  if (reason === 'NONEXISTENT') {
                     reason = <Trans>This domain no longer exists</Trans>
-                  } else if (reason === 'wrong_org') {
+                  } else if (reason === 'WRONG_ORG') {
                     reason = (
                       <Trans>
                         This domain does not belong to this organization
