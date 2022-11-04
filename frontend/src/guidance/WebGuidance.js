@@ -93,12 +93,12 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
               <StrengthCategory
                 title={t`Acceptable Curves:`}
                 strength="acceptable"
-                items={tlsScan.strongCurves}
+                items={tlsScan.acceptableCurves}
               />
               <StrengthCategory
                 title={t`Weak Curves:`}
                 strength="weak"
-                items={tlsScan.strongCurves}
+                items={tlsScan.weakCurves}
               />
             </ScanDetails>
           </Accordion>
