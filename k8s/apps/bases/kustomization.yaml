@@ -9,5 +9,4 @@ resources:
   - scanners/web-processor
   - scanners/dmarc-report-cronjob
   - scanners/domain-dispatcher-cronjob
-  - scanners/guidance-cronjob
   - scanners/summaries-cronjob
