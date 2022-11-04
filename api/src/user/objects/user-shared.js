@@ -25,6 +25,11 @@ export const userSharedType = new GraphQLObjectType({
       description: 'Has the user email verified their account.',
       resolve: ({emailValidated}) => emailValidated,
     },
+    insideUser: {
+      type: GraphQLBoolean,
+      description: 'Does the user want to see new features in progress.',
+      resolve: ({ insideUser }) => insideUser,
+    },
     affiliations: {
       type: affiliationConnection.connectionType,
       description: 'Users affiliations to various organizations.',

@@ -10,15 +10,19 @@ export const AffiliationUserOrderField = new GraphQLEnumType({
     },
     USER_DISPLAYNAME: {
       value: 'user-displayName',
-      description: 'Order affiliation edges by displayName',
+      description: 'Order affiliation edges by displayName.',
     },
     USER_EMAIL_VALIDATED: {
       value: 'user-emailValidated',
-      description: 'Order affiliation edges by user verification status',
+      description: 'Order affiliation edges by user verification status.',
+    },
+    USER_INSIDER: {
+      value: 'user-insider',
+      description: 'Order affiliation edges by user insider status.',
     },
     USER_AFFILIATIONS_COUNT: {
       value: 'user-affiliations-totalCount',
-      description: 'Order affiliation edges by amount of total affiliations',
+      description: 'Order affiliation edges by amount of total affiliations.',
     },
   },
 })

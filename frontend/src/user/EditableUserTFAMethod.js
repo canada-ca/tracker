@@ -116,13 +116,13 @@ export function EditableUserTFAMethod({
             <RadioCheckedIcon
               boxSize="icons.lg"
               mr="2"
-              aria-label="Email is validated"
+              aria-label="Phone is validated"
             />
           ) : (
             <RadioUncheckedIcon
               boxSize="icons.lg"
               mr="2"
-              aria-label="Email is not validated"
+              aria-label="Phone is not validated"
             />
           )}
           <Badge variant="outline" color="gray.900" p="1.5">

@@ -1,4 +1,4 @@
-import {GraphQLString} from 'graphql'
+import {GraphQLString, GraphQLBoolean} from 'graphql'
 import {mutationWithClientMutationId} from 'graphql-relay'
 import {GraphQLEmailAddress} from 'graphql-scalars'
 import {t} from '@lingui/macro'
@@ -29,6 +29,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
       description:
         'The method in which the user wishes to have their TFA code sent via.',
     },
+    insideUser: {
+      type: GraphQLBoolean,
+      description:
+        'The updated boolean which represents if the user wants to see features in progress.',
+    },
   }),
   outputFields: () => ({
     result: {
@@ -58,6 +63,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const userName = cleanseInput(args.userName).toLowerCase()
     const preferredLang = cleanseInput(args.preferredLang)
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
+    const insideUserBool = args.insideUser
 
     // Get user info from DB
     const user = await userRequired()
@@ -139,6 +145,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
       preferredLang: preferredLang || user.preferredLang,
       tfaSendMethod: tfaSendMethod,
       emailValidated,
+      insideUser:
+        typeof insideUserBool !== 'undefined'
+          ? insideUserBool
+          : user?.insideUser,
     }
 
     // Setup Transaction

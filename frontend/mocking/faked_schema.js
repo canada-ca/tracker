@@ -941,6 +941,9 @@ export const getTypeNames = () => gql`
     # Has the user email verified their account.
     emailValidated: Boolean
 
+    # Does the user want to see new features in progress.
+    insideUser: Boolean
+
     # Users affiliations to various organizations.
     affiliations(
       # Ordering options for affiliation connections.
@@ -2046,6 +2049,9 @@ export const getTypeNames = () => gql`
 
     # The method in which TFA codes are sent.
     tfaSendMethod: TFASendMethodEnum
+
+    # Does the user want to see new features in progress.
+    insideUser: Boolean
 
     # Users affiliations to various organizations.
     affiliations(
@@ -3327,6 +3333,9 @@ export const getTypeNames = () => gql`
 
     # The method in which the user wishes to have their TFA code sent via.
     tfaSendMethod: TFASendMethodEnum
+
+    # The updated boolean which represents if the user wants to see features in progress.
+    insideUser: Boolean
     clientMutationId: String
   }
 

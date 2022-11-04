@@ -157,11 +157,11 @@ export function AuditLogTable({ orgId = null }) {
                 return (
                   <Tr key={id}>
                     <Td>{timestamp}</Td>
-                    <Td>{initiatedBy.userName}</Td>
-                    <Td>{action.text.toUpperCase()}</Td>
-                    <Td>{resourceType.text.toUpperCase()}</Td>
-                    <Td>{target.resource}</Td>
-                    <Td>{target.organization.name}</Td>
+                    <Td>{initiatedBy?.userName}</Td>
+                    <Td>{action?.text.toUpperCase()}</Td>
+                    <Td>{resourceType?.text.toUpperCase()}</Td>
+                    <Td>{target?.resource}</Td>
+                    <Td>{target?.organization?.name}</Td>
                     <Td>
                       {target?.updatedProperties?.map(
                         ({ name, oldValue, newValue }) => {

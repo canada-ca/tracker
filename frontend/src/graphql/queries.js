@@ -845,6 +845,7 @@ export const QUERY_CURRENT_USER = gql`
       tfaSendMethod
       phoneValidated
       emailValidated
+      insideUser
     }
     isUserAdmin
   }
@@ -1132,6 +1133,7 @@ export const FIND_MY_USERS = gql`
           userName
           displayName
           emailValidated
+          insideUser
           affiliations(first: 10) {
             totalCount
             edges {

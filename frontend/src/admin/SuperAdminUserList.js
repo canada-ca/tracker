@@ -148,6 +148,7 @@ export function SuperAdminUserList({ permission }) {
     { value: 'USER_USERNAME', text: t`Email` },
     { value: 'USER_DISPLAYNAME', text: t`Display Name` },
     { value: 'USER_EMAIL_VALIDATED', text: t`Verified` },
+    { value: 'USER_INSIDER', text: t`Insider` },
   ]
 
   const userList =
@@ -166,6 +167,7 @@ export function SuperAdminUserList({ permission }) {
           userName,
           displayName,
           emailValidated,
+          insideUser,
           affiliations,
         }) => {
           const { totalCount, edges: orgEdges } = affiliations
@@ -328,7 +330,7 @@ export function SuperAdminUserList({ permission }) {
                     <Flex w="100%" textAlign="left">
                       <Text minW="33%">{userName}</Text>
                       <Text minW="25%">{displayName}</Text>
-                      <Box minW="25%">
+                      <Flex minW="25%">
                         <Badge
                           variant="solid"
                           bg={emailValidated ? 'strong' : 'weak'}
@@ -338,7 +340,16 @@ export function SuperAdminUserList({ permission }) {
                         >
                           <Trans>Verified</Trans>
                         </Badge>
-                      </Box>
+                        <Badge
+                          variant="solid"
+                          bg={insideUser ? 'strong' : 'weak'}
+                          pt={1}
+                          mr={{ md: '1rem' }}
+                          justifySelf={{ base: 'start', md: 'end' }}
+                        >
+                          <Trans>Insider</Trans>
+                        </Badge>
+                      </Flex>
                       <Text minW="17%">
                         <Trans>Affiliations:</Trans> {totalCount}
                       </Text>

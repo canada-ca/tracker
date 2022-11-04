@@ -82,9 +82,9 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
             </ScanDetails>
 
             <ScanDetails title={t`Curves`}>
-              <StrengthCategory title={t`Strong Curves:`} strength="strong" items={tlsScan.strongCiphers} />
-              <StrengthCategory title={t`Acceptable Curves:`} strength="acceptable" items={tlsScan.acceptableCiphers} />
-              <StrengthCategory title={t`Weak Curves:`} strength="weak" items={tlsScan.weakCiphers} />
+              <StrengthCategory title={t`Strong Curves:`} strength="strong" items={tlsScan.strongCurves} />
+              <StrengthCategory title={t`Acceptable Curves:`} strength="acceptable" items={tlsScan.acceptableCurves} />
+              <StrengthCategory title={t`Weak Curves:`} strength="weak" items={tlsScan.weakCurves} />
             </ScanDetails>
           </Accordion>
         </ScanDetails>
