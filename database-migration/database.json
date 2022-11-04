@@ -1,10 +1,10 @@
 {
   "type": "database",
-  "name": "{{DB_NAME}}",
-  "url": "{{DB_URL}}",
-  "rootPassword": "{{ROOT_PASS}}",
+  "name": "{{dbname}}",
+  "url": "{{url}}",
+  "rootPassword": "{{rootPassword}}",
   "options": [
-    { "type": "user", "username": "{{DB_USER}}", "password": "{{DB_PASS}}" },
+    { "type": "user", "username": "{{username}}", "password": "{{password}}" },
     {
       "type": "documentcollection",
       "name": "users",
@@ -26,6 +26,15 @@
     {
       "type": "documentcollection",
       "name": "domains",
+      "options": {
+        "replicationFactor": 3,
+        "writeConcern": 1,
+        "numberOfShards": 6
+      }
+    },
+    {
+      "type": "documentcollection",
+      "name": "auditLogs",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -178,6 +187,15 @@
     },
     {
       "type": "edgecollection",
+      "name": "favourites",
+      "options": {
+        "replicationFactor": 3,
+        "writeConcern": 1,
+        "numberOfShards": 6
+      }
+    },
+    {
+      "type": "edgecollection",
       "name": "domainsDNS",
       "options": {
         "replicationFactor": 3,
@@ -276,6 +294,28 @@
             "fields": {
               "displayName": { "analyzers": ["text_en"] },
               "userName": { "analyzers": ["text_en"] }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "searchview",
+      "name": "auditLogSearch",
+      "options": {
+        "links": {
+          "auditLogs": {
+            "fields": {
+              "initiatedBy": {
+                "fields": {
+                  "userName": { "analyzers": ["text_en"] }
+                }
+              },
+              "target": {
+                "fields": {
+                  "resource": { "analyzers": ["text_en"] }
+                }
+              }
             }
           }
         }
