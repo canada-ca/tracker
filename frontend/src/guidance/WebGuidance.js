@@ -28,7 +28,7 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
     return cipherList.reduce((acc, curr) => {
       if (curr.strength === strength) acc.push(curr.name)
       return acc
-    })
+    }, [])
   }
 
   const allCipherSuites = Object.values(tlsScan.acceptedCipherSuites).reduce((acc, curr) => {
@@ -38,6 +38,10 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
   const strongCipherSuites = getCiphersByStrength(allCipherSuites, 'strong')
   const acceptableCipherSuites = getCiphersByStrength(allCipherSuites, 'acceptable')
   const weakCipherSuites = getCiphersByStrength(allCipherSuites, 'weak')
+
+  const strongCurves = getCiphersByStrength(tlsScan.acceptedEllipticCurves, 'strong')
+  const acceptableCurves = getCiphersByStrength(tlsScan.acceptedEllipticCurves, 'acceptable')
+  const weakCurves = getCiphersByStrength(tlsScan.acceptedEllipticCurves, 'weak')
 
   const complianceInfo = [sslStatus, httpsStatus].every((status) => status === 'PASS') ? (
     <Stack isInline align="center" px="2">
@@ -82,9 +86,9 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
             </ScanDetails>
 
             <ScanDetails title={t`Curves`}>
-              <StrengthCategory title={t`Strong Curves:`} strength="strong" items={tlsScan.strongCurves} />
-              <StrengthCategory title={t`Acceptable Curves:`} strength="acceptable" items={tlsScan.acceptableCurves} />
-              <StrengthCategory title={t`Weak Curves:`} strength="weak" items={tlsScan.weakCurves} />
+              <StrengthCategory title={t`Strong Curves:`} strength="strong" items={strongCurves} />
+              <StrengthCategory title={t`Acceptable Curves:`} strength="acceptable" items={acceptableCurves} />
+              <StrengthCategory title={t`Weak Curves:`} strength="weak" items={weakCurves} />
             </ScanDetails>
           </Accordion>
         </ScanDetails>

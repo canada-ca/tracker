@@ -74,23 +74,23 @@ const EmailGuidance = ({ dnsScan, dmarcPhase = 'unknown' }) => {
 
         <ScanDetails title={`DMARC`}>
           <GuidanceTagList
-            positiveTags={dmarcScan?.positiveGuidanceTags}
-            neutralTags={dmarcScan?.neutralGuidanceTags}
-            negativeTags={dmarcScan?.negativeGuidanceTags}
+            positiveTags={dmarcScan?.positiveTags}
+            neutralTags={dmarcScan?.neutralTags}
+            negativeTags={dmarcScan?.negativeTags}
           />
         </ScanDetails>
         <ScanDetails title={`SPF`}>
           <GuidanceTagList
-            positiveTags={spfScan?.positiveGuidanceTags}
-            neutralTags={spfScan?.neutralGuidanceTags}
-            negativeTags={spfScan?.negativeGuidanceTags}
+            positiveTags={spfScan?.positiveTags}
+            neutralTags={spfScan?.neutralTags}
+            negativeTags={spfScan?.negativeTags}
           />
         </ScanDetails>
         <ScanDetails title={`DKIM`}>
           <GuidanceTagList
-            positiveTags={dkimScan?.positiveGuidanceTags}
-            neutralTags={dkimScan?.neutralGuidanceTags}
-            negativeTags={dkimScan?.negativeGuidanceTags}
+            positiveTags={dkimScan?.positiveTags}
+            neutralTags={dkimScan?.neutralTags}
+            negativeTags={dkimScan?.negativeTags}
           />
         </ScanDetails>
       </ScanCard>
