@@ -209,10 +209,10 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 20,
           orderBy: {
             field: 'TIMESTAMP',
-            direction: 'ASC',
+            direction: 'DESC',
           },
           orgId: null,
           search: '',
@@ -310,10 +310,10 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 20,
           orderBy: {
             field: 'TIMESTAMP',
-            direction: 'ASC',
+            direction: 'DESC',
           },
           orgId: null,
           search: '',
@@ -361,10 +361,10 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 20,
           orderBy: {
             field: 'TIMESTAMP',
-            direction: 'ASC',
+            direction: 'DESC',
           },
           orgId: null,
           search: '',
@@ -412,10 +412,10 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 10,
+          first: 20,
           orderBy: {
             field: 'TIMESTAMP',
-            direction: 'ASC',
+            direction: 'DESC',
           },
           orgId: null,
           search: '',
