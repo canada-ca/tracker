@@ -49,7 +49,7 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
             services. Track how government sites are becoming more secure.
           </Trans>
         </Text>
-        <Stack align="center">
+        <Stack mt="4" align="center">
           <GettingStarted />
         </Stack>
       </Box>

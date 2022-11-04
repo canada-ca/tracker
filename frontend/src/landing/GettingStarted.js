@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { Link as RouteLink } from 'react-router-dom'
+import { QuestionIcon } from '@chakra-ui/icons'
 
 export function GettingStarted() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -24,11 +25,11 @@ export function GettingStarted() {
   return (
     <>
       <Button ref={btnRef} variant="primary" onClick={onOpen}>
-        Get Started
+        Get Started <QuestionIcon ml="2" />
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="right"
+        placement="bottom"
         onClose={onClose}
         finalFocusRef={btnRef}
       >
@@ -136,17 +137,15 @@ export function GettingStarted() {
                     organization.
                   </Trans>
                 </Text>
-                <UnorderedList>
-                  <ListItem>
-                    <Text>
-                      <Trans>
-                        If a domain is no longer in use but still exists on the
-                        DNS, it is still vulnerable to email spoofing attacks
-                        (and should remain in Tracker).
-                      </Trans>
-                    </Text>
-                  </ListItem>
-                </UnorderedList>
+              </ListItem>
+              <ListItem>
+                <Text>
+                  <Trans>
+                    If a domain is no longer in use but still exists on the DNS,
+                    it is still vulnerable to email spoofing attacks (and should
+                    remain in Tracker).
+                  </Trans>
+                </Text>
               </ListItem>
             </UnorderedList>
             <Text fontWeight="bold" mb="2">
