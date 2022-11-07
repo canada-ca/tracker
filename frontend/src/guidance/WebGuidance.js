@@ -2,27 +2,44 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { SubdomainWarning } from '../domains/SubdomainWarning'
 import { ScanCard } from './ScanCard'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { ScanDetails } from './ScanDetails'
 import { GuidanceTagList } from './GuidanceTagList'
 import { StrengthCategory } from './StrengthCategory'
 import { Accordion, Box, Stack, Text } from '@chakra-ui/react'
 import { DetailList } from './DetailList'
 import { CheckCircleIcon, WarningTwoIcon } from '@chakra-ui/icons'
+import NoGuidanceText from './NoGuidanceText'
 
 const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
   const httpsScan = webScan?.edges[0]?.node?.results[0]?.results?.connectionResults
   const tlsScan = webScan?.edges[0]?.node?.results[0]?.results?.tlsResult
 
-  const httpDetailList = []
-  httpDetailList.push({
-    category: t`Implementation`,
-    description: httpsScan.implementation,
-  })
-  httpDetailList.push({
-    category: t`Enforcement`,
-    description: httpsScan.enforced,
-  })
+  let httpsGuidance
+  if (!httpsScan) {
+    httpsGuidance = <NoGuidanceText category="https" />
+  } else {
+    const httpDetailList = []
+    httpDetailList.push({
+      category: t`Implementation`,
+      description: httpsScan.implementation,
+    })
+    httpDetailList.push({
+      category: t`Enforcement`,
+      description: httpsScan.enforced,
+    })
+
+    httpsGuidance = (
+      <>
+        <DetailList details={httpDetailList} />
+        <GuidanceTagList
+          positiveTags={httpsScan.positiveTags}
+          neutralTags={httpsScan.neutralTags}
+          negativeTags={httpsScan.negativeTags}
+        />
+      </>
+    )
+  }
 
   const getCiphersByStrength = (cipherList, strength) => {
     return cipherList.reduce((acc, curr) => {
@@ -64,14 +81,7 @@ const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
       <SubdomainWarning mb={4} />
       <ScanCard description={t`Web Scan Results`} title={t`Results for scans of web technologies (TLS, HTTPS).`}>
         <Box pb="1">{complianceInfo}</Box>
-        <ScanDetails title={t`HTTPS`}>
-          <DetailList details={httpDetailList} />
-          <GuidanceTagList
-            positiveTags={httpsScan.positiveTags}
-            neutralTags={httpsScan.neutralTags}
-            negativeTags={httpsScan.negativeTags}
-          />
-        </ScanDetails>
+        <ScanDetails title={t`HTTPS`}>{httpsGuidance}</ScanDetails>
         <ScanDetails title={t`TLS`}>
           <GuidanceTagList
             positiveTags={tlsScan.positiveTags}
