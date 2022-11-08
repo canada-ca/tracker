@@ -185,7 +185,29 @@ export const updateDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
+    let claimCursor
+    let currentTags = ''
     if (tags) {
+      try {
+        claimCursor = await query`
+        WITH claims
+        FOR claim IN claims
+          FILTER claim._from == ${org._id} && claim._to == ${domain._id}
+          RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
+      `
+      } catch (err) {
+        console.error(
+          `Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
+        )
+      }
+      try {
+        currentTags = await claimCursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
+        )
+      }
+
       try {
         await trx.step(
           async () =>
@@ -222,6 +244,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const returnDomain = await loadDomainByKey.load(domain._key)
 
     console.info(`User: ${userKey} successfully updated domain: ${domainId}.`)
+
     const updatedProperties = []
     if (domainToInsert.domain.toLowerCase() !== domain.domain.toLowerCase()) {
       updatedProperties.push({
@@ -230,37 +253,51 @@ export const updateDomain = new mutationWithClientMutationId({
         newValue: domainToInsert.domain,
       })
     }
-    if (typeof selectors !== 'undefined') {
-      if (
-        JSON.stringify(domainToInsert.selectors) !==
+    if (
+      typeof selectors !== 'undefined' &&
+      JSON.stringify(domainToInsert.selectors) !==
         JSON.stringify(domain.selectors)
-      )
-        updatedProperties.push({
-          name: 'selectors',
-          oldValue: domain.selectors,
-          newValue: domainToInsert.selectors,
-        })
+    ) {
+      updatedProperties.push({
+        name: 'selectors',
+        oldValue: domain.selectors,
+        newValue: domainToInsert.selectors,
+      })
     }
-    await logActivity({
-      transaction,
-      collections,
-      query,
-      initiatedBy: {
-        id: user._key,
-        userName: user.userName,
-        role: permission,
-      },
-      action: 'update',
-      target: {
-        resource: domain.domain,
-        organization: {
-          id: org._key,
-          name: org.name,
-        }, // name of resource being acted upon
-        resourceType: 'domain', // user, org, domain
-        updatedProperties,
-      },
-    })
+
+    if (
+      typeof tags !== 'undefined' &&
+      JSON.stringify(currentTags.tags) !== JSON.stringify(tags)
+    ) {
+      updatedProperties.push({
+        name: 'tags',
+        oldValue: currentTags.tags,
+        newValue: tags,
+      })
+    }
+
+    if (updatedProperties.length > 0) {
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission,
+        },
+        action: 'update',
+        target: {
+          resource: domain.domain,
+          organization: {
+            id: org._key,
+            name: org.name,
+          }, // name of resource being acted upon
+          resourceType: 'domain', // user, org, domain
+          updatedProperties,
+        },
+      })
+    }
 
     returnDomain.id = returnDomain._key
 

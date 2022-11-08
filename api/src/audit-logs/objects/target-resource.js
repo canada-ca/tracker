@@ -53,10 +53,15 @@ export const targetResourceType = new GraphQLObjectType({
             oldValue: {
               type: GraphQLString,
               description: 'Old value of updated property.',
-              resolve: ({ oldValue }) => {
+              resolve: ({ name, oldValue }) => {
                 if (Array.isArray(oldValue)) {
+                  if (name === 'tags') {
+                    // TODO translate tags
+                    return JSON.stringify(oldValue)
+                  }
                   return JSON.stringify(oldValue)
-                } else return oldValue
+                }
+                return oldValue
               },
             },
             newValue: {

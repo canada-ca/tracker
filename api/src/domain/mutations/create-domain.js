@@ -312,6 +312,14 @@ export const createDomain = new mutationWithClientMutationId({
       })
     }
 
+    if (typeof tags !== 'undefined' && tags.length > 0) {
+      updatedProperties.push({
+        name: 'tags',
+        oldValue: [],
+        newValue: tags,
+      })
+    }
+
     await logActivity({
       transaction,
       collections,

@@ -100,7 +100,7 @@ export function AuditLogTable({ orgId = null }) {
     )
   } else {
     logTable = (
-      <TableContainer>
+      <TableContainer mb="2">
         <Table>
           <Thead>
             <Tr>
