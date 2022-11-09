@@ -22,7 +22,7 @@ import { Link as RouteLink } from 'react-router-dom'
 
 import { TrackerTable } from '../components/TrackerTable'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { toConstantCase } from '../helpers/toConstantCase'
@@ -224,7 +224,6 @@ export default function DmarcByDomainPage() {
         manualSort={true}
         manualFilters={true}
         onSort={updateOrderBy}
-        onToggle={onToggle}
       />
     )
 
@@ -279,20 +278,32 @@ export default function DmarcByDomainPage() {
         )}
       </Flex>
 
-      <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
-        <InputLeftElement>
-          <SearchIcon />
-        </InputLeftElement>
-        <Input
-          type="text"
-          placeholder={t`Search for a domain`}
-          onChange={(e) => {
-            setSearchTerm(e.target.value)
-            resetToFirstPage()
-          }}
-        />
-      </InputGroup>
+      <Flex>
+        <InputGroup
+          w={{ base: '100%', md: '50%' }}
+          mb={{ base: '8px', md: '0' }}
+        >
+          <InputLeftElement>
+            <SearchIcon />
+          </InputLeftElement>
+          <Input
+            borderColor="black"
+            type="text"
+            placeholder={t`Search for a domain`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              resetToFirstPage()
+            }}
+          />
+        </InputGroup>
 
+        <InfoButton
+          onToggle={onToggle}
+          ml="100%"
+          borderColor="black"
+          borderWidth="1px"
+        />
+      </Flex>
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls

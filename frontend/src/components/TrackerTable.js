@@ -125,12 +125,14 @@ export function TrackerTable({ ...props }) {
           />
         )}
 
-        <InfoButton
-          onToggle={onToggle}
-          ml="auto"
-          borderWidth="1px"
-          borderColor="black"
-        />
+        {typeof onToggle !== 'undefined' && (
+          <InfoButton
+            onToggle={onToggle}
+            ml="auto"
+            borderWidth="1px"
+            borderColor="black"
+          />
+        )}
         {fileName && (
           <ExportButton
             ml="auto"
