@@ -18,14 +18,15 @@ import {
 import { Trans } from '@lingui/macro'
 import { Link as RouteLink } from 'react-router-dom'
 import { QuestionIcon } from '@chakra-ui/icons'
+import { string } from 'prop-types'
 
-export function GettingStarted() {
+export function GettingStarted({ locale }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef()
   return (
     <>
       <Button ref={btnRef} variant="primary" onClick={onOpen}>
-        Get Started <QuestionIcon ml="2" />
+        <Trans>Get Started</Trans> <QuestionIcon ml="2" />
       </Button>
       <Drawer
         isOpen={isOpen}
@@ -36,7 +37,9 @@ export function GettingStarted() {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Getting Started Using Tracker</DrawerHeader>
+          <DrawerHeader>
+            <Trans>Getting Started Using Tracker</Trans>
+          </DrawerHeader>
 
           <DrawerBody>
             <Text fontWeight="bold">
@@ -161,7 +164,11 @@ export function GettingStarted() {
                   <Trans>
                     Requirements:{' '}
                     <Link
-                      href="https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html"
+                      href={
+                        locale === 'en'
+                          ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html'
+                          : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html'
+                      }
                       color="blue.500"
                       isExternal
                     >
@@ -176,7 +183,11 @@ export function GettingStarted() {
                   <Trans>
                     Implementation:{' '}
                     <Link
-                      href="https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#a3"
+                      href={
+                        locale === 'en'
+                          ? 'https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#a3'
+                          : 'https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062'
+                      }
                       color="blue.500"
                       isExternal
                     >
@@ -196,7 +207,11 @@ export function GettingStarted() {
                   <Trans>
                     Requirements:{' '}
                     <Link
-                      href="https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html"
+                      href={
+                        locale === 'en'
+                          ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
+                          : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/courriels.html'
+                      }
                       color="blue.500"
                       isExternal
                     >
@@ -210,7 +225,11 @@ export function GettingStarted() {
                   <Trans>
                     Implementation:{' '}
                     <Link
-                      href="https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
+                      href={
+                        locale === 'en'
+                          ? 'https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection'
+                          : 'https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier'
+                      }
                       color="blue.500"
                       isExternal
                     >
@@ -237,4 +256,8 @@ export function GettingStarted() {
       </Drawer>
     </>
   )
+}
+
+GettingStarted.propTypes = {
+  locale: string,
 }

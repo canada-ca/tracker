@@ -50,7 +50,7 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
           </Trans>
         </Text>
         <Stack mt="4" align="center">
-          <GettingStarted />
+          <GettingStarted locale={i18n.locale} />
         </Stack>
       </Box>
       {(!loginRequired || isLoggedIn) && <LandingPageSummaries />}
