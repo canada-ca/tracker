@@ -7,7 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useQuery } from '@apollo/client'
 import { LoadingMessage } from '../components/LoadingMessage'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Link as RouteLink, useHistory, useLocation, useParams } from 'react-router-dom'
 import { ArrowLeftIcon, LinkIcon } from '@chakra-ui/icons'
 import { ScanDomainButton } from '../domains/ScanDomainButton'
@@ -96,7 +96,7 @@ const GuidancePage = () => {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <EmailGuidance dnsScan={dnsScan} dmarcPhase={dmarcPhase} />
+              <EmailGuidance dnsScan={dnsScan} dmarcPhase={dmarcPhase || t`unknown`} />
             </ErrorBoundary>
           </TabPanel>
         </TabPanels>

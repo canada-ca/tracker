@@ -6,7 +6,7 @@ import { ScanDetails } from './ScanDetails'
 import { GuidanceTagList } from './GuidanceTagList'
 import { Box, ListItem, OrderedList, Text } from '@chakra-ui/react'
 
-const EmailGuidance = ({ dnsScan, dmarcPhase = 'unknown' }) => {
+const EmailGuidance = ({ dnsScan, dmarcPhase }) => {
   const dmarcScan = dnsScan.edges[0]?.node?.dmarc
   const spfScan = dnsScan.edges[0]?.node?.spf
   const dkimScan = dnsScan.edges[0]?.node?.dkim
