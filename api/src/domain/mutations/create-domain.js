@@ -332,6 +332,7 @@ export const createDomain = new mutationWithClientMutationId({
       action: 'add',
       target: {
         resource: insertDomain.domain,
+        updatedProperties,
         organization: {
           id: org._key,
           name: org.name,
