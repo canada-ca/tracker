@@ -158,6 +158,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -311,6 +312,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -441,6 +443,7 @@ describe('create a domain', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            publish: jest.fn(),
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               saltedHash: saltedHash(HASHING_SECRET),
@@ -570,6 +573,7 @@ describe('create a domain', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            publish: jest.fn(),
             auth: {
               checkPermission: checkPermission({ userKey: user._key, query }),
               saltedHash: saltedHash(HASHING_SECRET),
@@ -742,6 +746,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -888,6 +893,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -1034,6 +1040,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -1185,6 +1192,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -1331,6 +1339,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
