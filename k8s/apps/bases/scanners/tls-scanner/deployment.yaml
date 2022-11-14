@@ -12,6 +12,8 @@ spec:
     metadata:
       labels:
         app: tls-scanner
+      annotations:
+        traffic.sidecar.istio.io/includeOutboundIPRanges: 10.0.0.0/8
     spec:
       containers:
         - name: tls-scanner
