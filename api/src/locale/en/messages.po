@@ -24,7 +24,7 @@ msgid "Cannot query affiliations on organization without admin permission or hig
 msgstr "Cannot query affiliations on organization without admin permission or higher."
 
 #: src/audit-logs/loaders/load-audit-logs-by-org-id.js:244
-#: src/audit-logs/queries/find-audit-logs.js:59
+#: src/audit-logs/queries/find-audit-logs.js:62
 msgid "Cannot query audit logs on organization without admin permission or higher."
 msgstr "Cannot query audit logs on organization without admin permission or higher."
 
@@ -167,7 +167,7 @@ msgstr "Passing both `first` and `last` to paginate the `SSL` connection is not 
 msgid "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `SpfFailureTable` connection is not supported."
 
-#: src/user/loaders/load-user-connections-by-user-id.js:110
+#: src/user/loaders/load-user-connections-by-user-id.js:116
 msgid "Passing both `first` and `last` to paginate the `User` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `User` connection is not supported."
 
@@ -203,7 +203,7 @@ msgstr "Passwords do not match."
 msgid "Permission Denied: Could not retrieve specified organization."
 msgstr "Permission Denied: Could not retrieve specified organization."
 
-#: src/user/mutations/update-user-profile.js:108
+#: src/user/mutations/update-user-profile.js:114
 msgid "Permission Denied: Multi-factor authentication is required for admin accounts"
 msgstr "Permission Denied: Multi-factor authentication is required for admin accounts"
 
@@ -299,7 +299,7 @@ msgstr "Phone number has been successfully removed."
 msgid "Phone number has been successfully set, you will receive a verification text message shortly."
 msgstr "Phone number has been successfully set, you will receive a verification text message shortly."
 
-#: src/user/mutations/update-user-profile.js:187
+#: src/user/mutations/update-user-profile.js:197
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
@@ -352,7 +352,7 @@ msgstr "Requesting `{amount}` records on the `Organization` connection exceeds t
 msgid "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `SpfFailureTable` connection exceeds the `{argSet}` limit of 100 records."
 
-#: src/user/loaders/load-user-connections-by-user-id.js:133
+#: src/user/loaders/load-user-connections-by-user-id.js:139
 msgid "Requesting `{amount}` records on the `User` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `User` connection exceeds the `{argSet}` limit of 100 records."
 
@@ -402,7 +402,7 @@ msgstr "Successfully dispatched one time scan."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:235
+#: src/affiliation/mutations/invite-user-to-org.js:238
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
@@ -426,7 +426,7 @@ msgstr "Successfully removed organization: {0}."
 msgid "Successfully removed user from organization."
 msgstr "Successfully removed user from organization."
 
-#: src/affiliation/mutations/invite-user-to-org.js:164
+#: src/affiliation/mutations/invite-user-to-org.js:167
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "Successfully sent invitation to service, and organization email."
 
@@ -645,8 +645,8 @@ msgstr "Unable to find verified organization(s). Please try again."
 msgid "Unable to invite user to unknown organization."
 msgstr "Unable to invite user to unknown organization."
 
-#: src/affiliation/mutations/invite-user-to-org.js:191
-#: src/affiliation/mutations/invite-user-to-org.js:206
+#: src/affiliation/mutations/invite-user-to-org.js:194
+#: src/affiliation/mutations/invite-user-to-org.js:209
 msgid "Unable to invite user. Please try again."
 msgstr "Unable to invite user. Please try again."
 
@@ -792,6 +792,11 @@ msgstr "Unable to load full pass data. Please try again."
 msgid "Unable to load log(s). Please try again."
 msgstr "Unable to load log(s). Please try again."
 
+#: src/audit-logs/loaders/load-audit-log-by-key.js:19
+#: src/audit-logs/loaders/load-audit-log-by-key.js:31
+msgid "Unable to load log. Please try again."
+msgstr "Unable to load log. Please try again."
+
 #: src/summaries/queries/mail-summary.js:12
 msgid "Unable to load mail summary. Please try again."
 msgstr "Unable to load mail summary. Please try again."
@@ -831,7 +836,7 @@ msgstr "Unable to load tags(s). Please try again."
 #: src/user/loaders/load-user-by-key.js:31
 #: src/user/loaders/load-user-by-username.js:19
 #: src/user/loaders/load-user-by-username.js:31
-#: src/user/loaders/load-user-connections-by-user-id.js:333
+#: src/user/loaders/load-user-connections-by-user-id.js:345
 msgid "Unable to load user(s). Please try again."
 msgstr "Unable to load user(s). Please try again."
 
@@ -871,7 +876,7 @@ msgstr "Unable to query domain(s). Please try again."
 msgid "Unable to query log(s). Please try again."
 msgstr "Unable to query log(s). Please try again."
 
-#: src/user/loaders/load-user-connections-by-user-id.js:323
+#: src/user/loaders/load-user-connections-by-user-id.js:335
 msgid "Unable to query user(s). Please try again."
 msgstr "Unable to query user(s). Please try again."
 
@@ -1018,15 +1023,15 @@ msgstr "Unable to set phone number, please try again."
 msgid "Unable to sign in, please try again."
 msgstr "Unable to sign in, please try again."
 
-#: src/user/mutations/sign-up.js:199
-#: src/user/mutations/sign-up.js:213
+#: src/user/mutations/sign-up.js:200
+#: src/user/mutations/sign-up.js:214
 msgid "Unable to sign up, please contact org admin for a new invite."
 msgstr "Unable to sign up, please contact org admin for a new invite."
 
-#: src/user/mutations/sign-up.js:167
-#: src/user/mutations/sign-up.js:177
-#: src/user/mutations/sign-up.js:235
-#: src/user/mutations/sign-up.js:245
+#: src/user/mutations/sign-up.js:168
+#: src/user/mutations/sign-up.js:178
+#: src/user/mutations/sign-up.js:236
+#: src/user/mutations/sign-up.js:246
 msgid "Unable to sign up. Please try again."
 msgstr "Unable to sign up. Please try again."
 
@@ -1071,7 +1076,7 @@ msgstr "Unable to unfavourite domain. Please try again."
 msgid "Unable to unfavourite unknown domain."
 msgstr "Unable to unfavourite unknown domain."
 
-#: src/domain/mutations/update-domain.js:205
+#: src/domain/mutations/update-domain.js:227
 msgid "Unable to update domain edge. Please try again."
 msgstr "Unable to update domain edge. Please try again."
 
@@ -1085,7 +1090,7 @@ msgstr "Unable to update domain that does not belong to the given organization."
 
 #: src/domain/mutations/update-domain.js:144
 #: src/domain/mutations/update-domain.js:185
-#: src/domain/mutations/update-domain.js:217
+#: src/domain/mutations/update-domain.js:239
 msgid "Unable to update domain. Please try again."
 msgstr "Unable to update domain. Please try again."
 
@@ -1114,8 +1119,8 @@ msgstr "Unable to update password, passwords do not match requirements. Please t
 msgid "Unable to update password. Please try again."
 msgstr "Unable to update password. Please try again."
 
-#: src/user/mutations/update-user-profile.js:161
-#: src/user/mutations/update-user-profile.js:170
+#: src/user/mutations/update-user-profile.js:171
+#: src/user/mutations/update-user-profile.js:180
 msgid "Unable to update profile. Please try again."
 msgstr "Unable to update profile. Please try again."
 
@@ -1164,7 +1169,7 @@ msgstr "Unable to verify account. Please try again."
 msgid "Unable to verify if user is a super admin, please try again."
 msgstr "Unable to verify if user is a super admin, please try again."
 
-#: src/user/mutations/update-user-profile.js:96
+#: src/user/mutations/update-user-profile.js:102
 #: src/user/queries/is-user-admin.js:58
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Unable to verify if user is an admin, please try again."
@@ -1187,7 +1192,7 @@ msgstr "User could not be queried."
 msgid "User role was updated successfully."
 msgstr "User role was updated successfully."
 
-#: src/user/mutations/update-user-profile.js:75
+#: src/user/mutations/update-user-profile.js:81
 msgid "Username not available, please try another."
 msgstr "Username not available, please try another."
 
@@ -1272,7 +1277,7 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `SSL
 msgid "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `SpfFailureTable` connection."
 
-#: src/user/loaders/load-user-connections-by-user-id.js:101
+#: src/user/loaders/load-user-connections-by-user-id.js:107
 msgid "You must provide a `first` or `last` value to properly paginate the `User` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `User` connection."
 
@@ -1317,7 +1322,7 @@ msgstr "You must provide a `year` value to access the `DmarcSummaries` connectio
 #: src/organization/loaders/load-organization-connections-by-domain-id.js:230
 #: src/organization/loaders/load-organization-connections-by-user-id.js:229
 #: src/organization/loaders/load-web-check-connections-by-user-id.js:136
-#: src/user/loaders/load-user-connections-by-user-id.js:148
+#: src/user/loaders/load-user-connections-by-user-id.js:154
 #: src/verified-domains/loaders/load-verified-domain-connections-by-organization-id.js:164
 #: src/verified-domains/loaders/load-verified-domain-connections.js:164
 #: src/verified-organizations/loaders/load-verified-organization-connections-by-domain-id.js:214
@@ -1400,7 +1405,7 @@ msgstr "`{argSet}` on the `SSL` connection cannot be less than zero."
 msgid "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 msgstr "`{argSet}` on the `SpfFailureTable` connection cannot be less than zero."
 
-#: src/user/loaders/load-user-connections-by-user-id.js:122
+#: src/user/loaders/load-user-connections-by-user-id.js:128
 msgid "`{argSet}` on the `User` connection cannot be less than zero."
 msgstr "`{argSet}` on the `User` connection cannot be less than zero."
 
