@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         app: web-scanner
+      annotations:
+        traffic.sidecar.istio.io/includeOutboundIPRanges: 10.0.0.0/8
     spec:
       containers:
         - name: web-scanner
