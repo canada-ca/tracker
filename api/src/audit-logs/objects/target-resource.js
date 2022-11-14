@@ -56,7 +56,8 @@ export const targetResourceType = new GraphQLObjectType({
               resolve: ({ oldValue }) => {
                 if (Array.isArray(oldValue)) {
                   return JSON.stringify(oldValue)
-                } else return oldValue
+                }
+                return oldValue
               },
             },
             newValue: {

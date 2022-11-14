@@ -299,6 +299,27 @@ export const createDomain = new mutationWithClientMutationId({
     console.info(
       `User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
     )
+
+    const updatedProperties = []
+    if (
+      typeof insertDomain.selectors !== 'undefined' &&
+      insertDomain.selectors.length > 0
+    ) {
+      updatedProperties.push({
+        name: 'selectors',
+        oldValue: [],
+        newValue: insertDomain.selectors,
+      })
+    }
+
+    if (typeof tags !== 'undefined' && tags.length > 0) {
+      updatedProperties.push({
+        name: 'tags',
+        oldValue: [],
+        newValue: tags,
+      })
+    }
+
     await logActivity({
       transaction,
       collections,

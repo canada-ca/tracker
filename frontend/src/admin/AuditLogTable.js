@@ -1,13 +1,10 @@
 import React, { useCallback, useState } from 'react'
 import {
   Box,
-  Grid,
-  GridItem,
   Button,
   Divider,
   Tag,
   Text,
-  SimpleGrid,
   Table,
   Thead,
   Tbody,
@@ -29,18 +26,17 @@ import { SearchBox } from '../components/SearchBox'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 
 export function AuditLogTable({ orgId = null }) {
-  const [orderDirection, setOrderDirection] = useState('ASC')
+  const [orderDirection, setOrderDirection] = useState('DESC')
   const [orderField, setOrderField] = useState('TIMESTAMP')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [logsPerPage, setLogsPerPage] = useState(10)
+  const [logsPerPage, setLogsPerPage] = useState(20)
   const [activeResourceFilters, setActiveResourceFilters] = useState([])
   const [activeActionFilters, setActiveActionFilters] = useState([])
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
-
   const {
     loading,
     isLoadingMore,
@@ -104,12 +100,12 @@ export function AuditLogTable({ orgId = null }) {
     )
   } else {
     logTable = (
-      <TableContainer>
+      <TableContainer mb="2">
         <Table>
           <Thead>
             <Tr>
               <Th>
-                <Trans>Time Generated</Trans>
+                <Trans>Time Generated (UTC)</Trans>
               </Th>
               <Th>
                 <Trans>Initiated By</Trans>
@@ -144,9 +140,9 @@ export function AuditLogTable({ orgId = null }) {
                   ({ value }) => action.toUpperCase() === value,
                 )
                 if (typeof reason !== 'undefined') {
-                  if (reason === 'nonexistent') {
+                  if (reason === 'NONEXISTENT') {
                     reason = <Trans>This domain no longer exists</Trans>
-                  } else if (reason === 'wrong_org') {
+                  } else if (reason === 'WRONG_ORG') {
                     reason = (
                       <Trans>
                         This domain does not belong to this organization
@@ -213,123 +209,115 @@ export function AuditLogTable({ orgId = null }) {
         orderByOptions={orderByOptions}
         placeholder={t`Search by initiated by, resource name`}
       />
-      <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-        <GridItem colSpan={4}>{logTable}</GridItem>
-        <GridItem colStart={5} colEnd={6}>
-          <Box h="auto" borderColor="gray.900" borderWidth="1px" rounded="md">
-            <Text px="2" pt="2" fontWeight="bold">
-              <Trans>Filters</Trans>
+      <Box h="auto" borderColor="gray.900" borderWidth="1px" rounded="md">
+        <Flex>
+          <Flex align="center">
+            <Text fontWeight="bold" mx="2">
+              <Trans>Resource:</Trans>
             </Text>
-            <Divider />
-            <Box p="2">
-              <Text fontWeight="bold">
-                <Trans>Resource:</Trans>
-              </Text>
-              <SimpleGrid mb="2" columns={2} spacingX="2" spacingY="2">
-                {resourceFilters.map(({ value, text }, idx) => {
-                  return (
-                    <Tag
-                      key={idx}
-                      borderRadius="full"
-                      borderWidth="1px"
-                      borderColor="gray.900"
-                      bg={
-                        activeResourceFilters.indexOf(value) < 0
-                          ? 'gray.50'
-                          : 'gray.900'
-                      }
-                      color={
-                        activeResourceFilters.indexOf(value) < 0
-                          ? 'gray.900'
-                          : 'gray.50'
-                      }
-                      as="button"
-                      _hover={
-                        activeResourceFilters.indexOf(value) < 0
-                          ? { bg: 'gray.200' }
-                          : { bg: 'gray.500' }
-                      }
-                      onClick={() => {
-                        let optionIdx = activeResourceFilters.indexOf(value)
-                        if (optionIdx < 0) {
-                          setActiveResourceFilters([
-                            ...activeResourceFilters,
-                            value,
-                          ])
-                        } else {
-                          setActiveResourceFilters(
-                            activeResourceFilters.filter(
-                              (tag) => tag !== value,
-                            ),
-                          )
-                        }
-                      }}
-                    >
-                      <Text mx="auto">{text}</Text>
-                    </Tag>
-                  )
-                })}
-              </SimpleGrid>
-              <Text fontWeight="bold">
-                <Trans>Action:</Trans>
-              </Text>
-              <SimpleGrid columns={2} spacingX="2" spacingY="2">
-                {actionFilters.map(({ value, text }, idx) => {
-                  return (
-                    <Tag
-                      key={idx}
-                      borderRadius="full"
-                      borderWidth="1px"
-                      borderColor="gray.900"
-                      bg={
-                        activeActionFilters.indexOf(value) < 0
-                          ? 'gray.50'
-                          : 'gray.900'
-                      }
-                      color={
-                        activeActionFilters.indexOf(value) < 0
-                          ? 'gray.900'
-                          : 'gray.50'
-                      }
-                      as="button"
-                      _hover={
-                        activeActionFilters.indexOf(value) < 0
-                          ? { bg: 'gray.200' }
-                          : { bg: 'gray.500' }
-                      }
-                      onClick={() => {
-                        let optionIdx = activeActionFilters.indexOf(value)
-                        if (optionIdx < 0) {
-                          setActiveActionFilters([
-                            ...activeActionFilters,
-                            value,
-                          ])
-                        } else {
-                          setActiveActionFilters(
-                            activeActionFilters.filter((tag) => tag !== value),
-                          )
-                        }
-                      }}
-                    >
-                      <Text mx="auto">{text}</Text>
-                    </Tag>
-                  )
-                })}
-              </SimpleGrid>
-              <Button
-                mt="100%"
-                variant="primaryOutline"
-                onClick={() => {
-                  setActiveResourceFilters([])
-                  setActiveActionFilters([])
-                }}
-              >
-                Clear
-              </Button>
-            </Box>
-          </Box>
-        </GridItem>
-      </Grid>
+            {resourceFilters.map(({ value, text }, idx) => {
+              return (
+                <Tag
+                  mx="1"
+                  key={idx}
+                  borderRadius="full"
+                  borderWidth="1px"
+                  borderColor="gray.900"
+                  bg={
+                    activeResourceFilters.indexOf(value) < 0
+                      ? 'gray.50'
+                      : 'gray.900'
+                  }
+                  color={
+                    activeResourceFilters.indexOf(value) < 0
+                      ? 'gray.900'
+                      : 'gray.50'
+                  }
+                  as="button"
+                  _hover={
+                    activeResourceFilters.indexOf(value) < 0
+                      ? { bg: 'gray.200' }
+                      : { bg: 'gray.500' }
+                  }
+                  onClick={() => {
+                    let optionIdx = activeResourceFilters.indexOf(value)
+                    if (optionIdx < 0) {
+                      setActiveResourceFilters([
+                        ...activeResourceFilters,
+                        value,
+                      ])
+                    } else {
+                      setActiveResourceFilters(
+                        activeResourceFilters.filter((tag) => tag !== value),
+                      )
+                    }
+                  }}
+                >
+                  <Text mx="auto">{text}</Text>
+                </Tag>
+              )
+            })}
+          </Flex>
+
+          <Flex align="center">
+            <Text fontWeight="bold" mx="2">
+              <Trans>Action:</Trans>
+            </Text>
+            {actionFilters.map(({ value, text }, idx) => {
+              return (
+                <Tag
+                  mx="1"
+                  key={idx}
+                  borderRadius="full"
+                  borderWidth="1px"
+                  borderColor="gray.900"
+                  bg={
+                    activeActionFilters.indexOf(value) < 0
+                      ? 'gray.50'
+                      : 'gray.900'
+                  }
+                  color={
+                    activeActionFilters.indexOf(value) < 0
+                      ? 'gray.900'
+                      : 'gray.50'
+                  }
+                  as="button"
+                  _hover={
+                    activeActionFilters.indexOf(value) < 0
+                      ? { bg: 'gray.200' }
+                      : { bg: 'gray.500' }
+                  }
+                  onClick={() => {
+                    let optionIdx = activeActionFilters.indexOf(value)
+                    if (optionIdx < 0) {
+                      setActiveActionFilters([...activeActionFilters, value])
+                    } else {
+                      setActiveActionFilters(
+                        activeActionFilters.filter((tag) => tag !== value),
+                      )
+                    }
+                  }}
+                >
+                  <Text mx="auto">{text}</Text>
+                </Tag>
+              )
+            })}
+          </Flex>
+          <Button
+            ml="auto"
+            my="2"
+            mr="2"
+            variant="primaryOutline"
+            onClick={() => {
+              setActiveResourceFilters([])
+              setActiveActionFilters([])
+            }}
+          >
+            Clear
+          </Button>
+        </Flex>
+      </Box>
+      {logTable}
       <RelayPaginationControls
         onlyPagination={false}
         selectedDisplayLimit={logsPerPage}

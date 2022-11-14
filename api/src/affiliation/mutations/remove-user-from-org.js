@@ -203,7 +203,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
           userName: user.userName,
           role: permission,
         },
-        action: 'update',
+        action: 'remove',
         target: {
           resource: requestedUser.userName,
           organization: {

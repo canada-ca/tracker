@@ -470,7 +470,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       },
       action: 'delete',
       target: {
-        resource: organization.orgDetails.en.name, // name of resource being acted upon
+        resource: organization.name, // name of resource being acted upon
         resourceType: 'organization', // user, org, domain
       },
     })
