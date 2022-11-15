@@ -46,6 +46,7 @@ export const createDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      publish,
       auth: {
         checkPermission,
         saltedHash,
@@ -338,6 +339,18 @@ export const createDomain = new mutationWithClientMutationId({
           name: org.name,
         }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
+      },
+    })
+
+    await publish({
+      channel: `domains.${returnDomain._key}`,
+      msg: {
+        domain: returnDomain.domain,
+        domain_key: returnDomain._key,
+        selectors: returnDomain.selectors ? returnDomain.selectors : [],
+        hash: returnDomain.hash,
+        user_key: null, // only used for One Time Scans
+        shared_id: null, // only used for One Time Scans
       },
     })
 
