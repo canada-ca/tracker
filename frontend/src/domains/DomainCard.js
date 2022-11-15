@@ -120,7 +120,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
           <Text isTruncated>{url}</Text>
           <ABTestingWrapper insiderVariantName="B">
             <ABTestVariant name="B">
-              <Flex>
+              <Flex flexWrap="wrap">
                 {tags?.map((tag, idx) => {
                   return (
                     <Tag
