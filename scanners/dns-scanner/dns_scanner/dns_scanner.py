@@ -229,12 +229,22 @@ class DKIMScanner():
                 for key, val in pub.items():
                     txt_record[key.decode("ascii")] = val.decode("ascii")
 
+                if pk and pk.get("publicExponent"):
+                    public_exponent = pk.get("publicExponent")
+                else:
+                    public_exponent = None
+
+                if pk and pk.get("modulus"):
+                    modulus = pk.get("modulus")
+                else:
+                    modulus = None
+
                 record[selector]["txt_record"] = txt_record
                 record[selector]["public_key_value"] = key_val
                 record[selector]["key_size"] = keysize
                 record[selector]["key_type"] = ktag.decode("ascii")
-                record[selector]["public_key_modulus"] = pk["modulus"]
-                record[selector]["public_exponent"] = pk["publicExponent"]
+                record[selector]["public_key_modulus"] = modulus
+                record[selector]["public_exponent"] = public_exponent
 
             except Exception as e:
                 logging.error(
