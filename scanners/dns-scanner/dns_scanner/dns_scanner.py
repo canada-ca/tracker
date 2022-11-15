@@ -8,7 +8,7 @@ import tldextract
 import dkim
 from checkdmarc import *
 from dns import resolver
-from dkim import dnsplug, crypto, KeyFormatError
+from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 from dns.resolver import NoAnswer
 
@@ -187,16 +187,19 @@ class DKIMScanner():
         except KeyError:
             pub[b"k"] = b"rsa"
         if pub[b"k"] == b"rsa":
-            try:
-                pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
-                keysize = dkim.bitsize(pk["modulus"])
-            except KeyError:
-                raise KeyFormatError(f"incomplete public key: {s}")
-            except (TypeError, UnparsableKeyError) as e:
-                raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
             ktag = b"rsa"
+            if len(base64.b64decode(pub[b"p"])) == 0:
+                pk = None
+                keysize = None
+            else:
+                try:
+                    pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
+                    keysize = dkim.bitsize(pk["modulus"])
+                except KeyError:
+                    raise KeyFormatError(f"incomplete public key: {s}")
+                except (TypeError, UnparsableKeyError) as e:
+                    raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
         return pk, keysize, ktag
-
 
     def run(self):
 
