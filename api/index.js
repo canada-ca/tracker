@@ -74,6 +74,7 @@ const {
         publish,
         req,
         res,
+        language: req.language,
         i18n,
         loginRequiredBool: LOGIN_REQUIRED === 'true', // bool not string
         salt: HASHING_SALT,
