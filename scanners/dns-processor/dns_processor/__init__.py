@@ -85,11 +85,6 @@ def process_results(results, domain_key, user_key, shared_id):
             k_tag = results["dkim"][selector].get("txt_record", {}).get("k", None)
             p_tag = results["dkim"][selector].get("txt_record", {}).get("p", None)
 
-            if v_tag is None and k_tag is None and p_tag is None:
-                tags["dkim"][selector].append("dkim2")
-            elif v_tag is None or k_tag is None or p_tag is None:
-                tags["dkim"][selector].append("dkim12")
-
             # Testing Enabled
             t_enabled = results["dkim"][selector].get("t_value", "")
             if t_enabled.lower() == "true":
@@ -383,21 +378,21 @@ def process_results(results, domain_key, user_key, shared_id):
             }
             for tag in [
                 "dkim2",
-                "dkim3",
-                "dkim4",
                 "dkim5",
-                "dkim6",
-                "dkim7",
-                "dkim8",
-                "dkim9",
-                "dkim10",
                 "dkim11",
                 "dkim12",
                 "dkim13",
+                "dkim14",
             ]:
                 if tag in tags["dkim"][selector]:
                     guidance_tags["dkim"][selector]["negativeTags"].append(tag)
-            for tag in ["dkim6", "dkim7"]:
+            for tag in [
+                "dkim9",
+                "dkim10",
+            ]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["neutralTags"].append(tag)
+            for tag in ["dkim6", "dkim7", "dkim8"]:
                 if tag in tags["dkim"][selector]:
                     guidance_tags["dkim"][selector]["positiveTags"].append(tag)
     elif phase == "enforce":
@@ -427,21 +422,21 @@ def process_results(results, domain_key, user_key, shared_id):
             }
             for tag in [
                 "dkim2",
-                "dkim3",
-                "dkim4",
                 "dkim5",
-                "dkim6",
-                "dkim7",
-                "dkim8",
-                "dkim9",
-                "dkim10",
                 "dkim11",
                 "dkim12",
                 "dkim13",
+                "dkim14",
             ]:
                 if tag in tags["dkim"][selector]:
                     guidance_tags["dkim"][selector]["negativeTags"].append(tag)
-            for tag in ["dkim6", "dkim7"]:
+            for tag in [
+                "dkim9",
+                "dkim10",
+            ]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["neutralTags"].append(tag)
+            for tag in ["dkim6", "dkim7", "dkim8"]:
                 if tag in tags["dkim"][selector]:
                     guidance_tags["dkim"][selector]["positiveTags"].append(tag)
     else:
@@ -461,12 +456,25 @@ def process_results(results, domain_key, user_key, shared_id):
                 "negativeTags": [],
                 "positiveTags": [],
             }
-            for tag in ["dkim5", "dkim8", "dkim9", "dkim11", "dkim12", "dkim13"]:
+            for tag in [
+                "dkim2",
+                "dkim5",
+                "dkim11",
+                "dkim12",
+                "dkim13",
+                "dkim14",
+            ]:
                 if tag in tags["dkim"][selector]:
                     guidance_tags["dkim"][selector]["negativeTags"].append(tag)
-            for tag in ["dkim2", "dkim3", "dkim4", "dkim6", "dkim7", "dkim10"]:
+            for tag in [
+                "dkim9",
+                "dkim10",
+            ]:
                 if tag in tags["dkim"][selector]:
                     guidance_tags["dkim"][selector]["neutralTags"].append(tag)
+            for tag in ["dkim6", "dkim7", "dkim8"]:
+                if tag in tags["dkim"][selector]:
+                    guidance_tags["dkim"][selector]["positiveTags"].append(tag)
 
     dmarcResults = {
         "timestamp": timestamp,
