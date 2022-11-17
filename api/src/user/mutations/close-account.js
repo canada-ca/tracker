@@ -42,6 +42,7 @@ export const closeAccount = new mutationWithClientMutationId({
     const user = await userRequired()
 
     let userId = ''
+    let targetUserName = ''
     if (submittedUserId) {
       const permission = await checkSuperAdmin()
       if (!permission) {
@@ -69,8 +70,10 @@ export const closeAccount = new mutationWithClientMutationId({
         }
       }
       userId = checkUser._id
+      targetUserName = checkUser.userName
     } else {
       userId = user._id
+      targetUserName = user.userName
     }
 
     // check to see if user owns any orgs
@@ -508,7 +511,7 @@ export const closeAccount = new mutationWithClientMutationId({
       },
       action: 'delete',
       target: {
-        resource: user.userName, // name of resource being acted upon
+        resource: targetUserName, // name of resource being acted upon
         resourceType: 'user', // user, org, domain
       },
     })
