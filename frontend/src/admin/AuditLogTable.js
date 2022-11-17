@@ -133,6 +133,10 @@ export function AuditLogTable({ orgId = null }) {
           <Tbody>
             {nodes.map(
               ({ id, timestamp, initiatedBy, action, target, reason }) => {
+                const formatTimestamp = (ts) => {
+                  const dateTime = ts.split('T')
+                  return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
+                }
                 const resourceType = resourceFilters.find(
                   ({ value }) => target.resourceType.toUpperCase() === value,
                 )
@@ -152,7 +156,7 @@ export function AuditLogTable({ orgId = null }) {
                 }
                 return (
                   <Tr key={id}>
-                    <Td>{timestamp}</Td>
+                    <Td>{formatTimestamp(timestamp)}</Td>
                     <Td>{initiatedBy?.userName}</Td>
                     <Td>{action?.text.toUpperCase()}</Td>
                     <Td>{resourceType?.text.toUpperCase()}</Td>
