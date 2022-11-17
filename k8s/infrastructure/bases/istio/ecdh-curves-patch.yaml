@@ -12,9 +12,7 @@ spec:
     match:
       context: GATEWAY
       listener:
-        filterChain:
-          filter:
-            name: "envoy.transport_sockets.tls"
+        name: "0.0.0.0_8443"
     patch:
       operation: MERGE
       value:
