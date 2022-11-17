@@ -9,7 +9,12 @@ export const targetResourceType = new GraphQLObjectType({
     resource: {
       type: GraphQLString,
       description: 'Name of the targeted resource.',
-      resolve: ({ resource }) => resource,
+      resolve: async ({ resource, resourceType }, _, { language }) => {
+        if (resourceType === 'organization') {
+          return resource[`${language}`]
+        }
+        return resource
+      },
     },
     organization: {
       type: new GraphQLObjectType({
