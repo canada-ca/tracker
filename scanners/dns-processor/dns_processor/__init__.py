@@ -545,12 +545,11 @@ def process_results(results, domain_key, user_key, shared_id):
             i
             in [
                 "dkim2",
-                "dkim3",
-                "dkim4",
                 "dkim5",
-                "dkim9",
                 "dkim11",
                 "dkim12",
+                "dkim13",
+                "dkim14",
             ]
             for i in tags["dkim"][selector]
         ):
