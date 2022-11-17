@@ -508,7 +508,7 @@ export const closeAccount = new mutationWithClientMutationId({
       },
       action: 'delete',
       target: {
-        resource: submittedUserId || user._key, // name of resource being acted upon
+        resource: user.userName, // name of resource being acted upon
         resourceType: 'user', // user, org, domain
       },
     })
