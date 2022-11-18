@@ -46,36 +46,6 @@ export const removeOrganization = new mutationWithClientMutationId({
     // Get org from db
     const organization = await loadOrgByKey.load(orgId)
 
-    // Get all org details for comparison
-    let orgCursor
-    try {
-      orgCursor = await query`
-        WITH organizations
-        FOR org IN organizations
-          FILTER org._key == ${organization._key}
-          RETURN org
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred while retrieving org: ${organization._key} for update, err: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
-    }
-
-    let compareOrg
-    try {
-      compareOrg = await orgCursor.next()
-    } catch (err) {
-      console.error(
-        `Cursor error occurred while retrieving org: ${organization._key} for update, err: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
-    }
-
     // Check to see if org exists
     if (!organization) {
       console.warn(
@@ -439,6 +409,24 @@ export const removeOrganization = new mutationWithClientMutationId({
       }
     }
 
+    let orgCursor
+    let compareOrg
+    if (typeof organization !== 'undefined') {
+      // Get all org details for comparison
+      try {
+        orgCursor = await query`
+        WITH organizations
+        FOR org IN organizations
+          FILTER org._key == ${organization._key}
+          RETURN org
+      `
+      } catch (err) {}
+
+      try {
+        compareOrg = await orgCursor.next()
+      } catch (err) {}
+    }
+
     try {
       await Promise.all([
         trx.step(
@@ -501,8 +489,8 @@ export const removeOrganization = new mutationWithClientMutationId({
       action: 'delete',
       target: {
         resource: {
-          en: compareOrg.orgDetails.en.name,
-          fr: compareOrg.orgDetails.fr.name,
+          en: compareOrg.orgDetails.en.name || organization.name,
+          fr: compareOrg.orgDetails.fr.name || organization.name,
         }, // name of resource being acted upon
         resourceType: 'organization', // user, org, domain
       },
