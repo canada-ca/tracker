@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 
 import { Acronym } from '../../scalars'
 import { updateOrganizationUnion } from '../unions'
+import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const updateOrganization = new mutationWithClientMutationId({
   name: 'UpdateOrganization',
@@ -285,6 +286,58 @@ export const updateOrganization = new mutationWithClientMutationId({
     const organization = await loadOrgByKey.load(orgKey)
 
     console.info(`User: ${userKey}, successfully updated org ${orgKey}.`)
+
+    const updatedProperties = []
+    if (nameEN) {
+      updatedProperties.push({
+        name: 'nameEN',
+        oldValue: compareOrg.orgDetails.en.name,
+        newValue: nameEN,
+      })
+    }
+    if (nameFR) {
+      updatedProperties.push({
+        name: 'nameFR',
+        oldValue: compareOrg.orgDetails.fr.name,
+        newValue: nameFR,
+      })
+    }
+    if (acronymEN) {
+      updatedProperties.push({
+        name: 'acronymEN',
+        oldValue: compareOrg.orgDetails.en.acronym,
+        newValue: acronymEN,
+      })
+    }
+    if (acronymFR) {
+      updatedProperties.push({
+        name: 'acronymFR',
+        oldValue: compareOrg.orgDetails.fr.acronym,
+        newValue: acronymFR,
+      })
+    }
+    if (updatedProperties.length > 0) {
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission,
+        },
+        action: 'update',
+        target: {
+          resource: {
+            en: compareOrg.orgDetails.en.name,
+            fr: compareOrg.orgDetails.fr.name,
+          },
+          resourceType: 'organization', // user, org, domain
+          updatedProperties,
+        },
+      })
+    }
+
     return organization
   },
 })
