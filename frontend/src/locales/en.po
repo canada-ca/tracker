@@ -143,7 +143,7 @@ msgstr "Acronyms must be at most 50 characters"
 msgid "Action"
 msgstr "Action"
 
-#: src/admin/AuditLogTable.js:264
+#: src/admin/AuditLogTable.js:268
 msgid "Action:"
 msgstr "Action:"
 
@@ -191,7 +191,7 @@ msgstr "Admin Profile"
 msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Admin accounts must activate a multi-factor authentication option."
 
-#: src/admin/SuperAdminUserList.js:354
+#: src/admin/SuperAdminUserList.js:356
 msgid "Affiliations:"
 msgstr "Affiliations:"
 
@@ -216,7 +216,7 @@ msgstr "An error occured when you attempted to download all domain statuses."
 msgid "An error occured when you attempted to sign out"
 msgstr "An error occured when you attempted to sign out"
 
-#: src/domains/DomainCard.js:39
+#: src/domains/DomainCard.js:38
 msgid "An error occurred while favouriting a domain."
 msgstr "An error occurred while favouriting a domain."
 
@@ -228,7 +228,7 @@ msgstr "An error occurred while removing this organization."
 msgid "An error occurred while requesting a scan."
 msgstr "An error occurred while requesting a scan."
 
-#: src/domains/DomainCard.js:66
+#: src/domains/DomainCard.js:65
 msgid "An error occurred while unfavouriting a domain."
 msgstr "An error occurred while unfavouriting a domain."
 
@@ -249,8 +249,12 @@ msgid "An error occurred while updating your email address."
 msgstr "An error occurred while updating your email address."
 
 #: src/user/InsideUserSwitch.js:19
-msgid "An error occurred while updating your insider preference."
-msgstr "An error occurred while updating your insider preference."
+msgid "An error occurred while updating your inside user preference."
+msgstr "An error occurred while updating your inside user preference."
+
+#: src/user/InsideUserSwitch.js:19
+#~ msgid "An error occurred while updating your insider preference."
+#~ msgstr "An error occurred while updating your insider preference."
 
 #: src/user/EditableUserLanguage.js:20
 msgid "An error occurred while updating your language."
@@ -377,7 +381,7 @@ msgstr "By default our scanners check domains ending in “.gc.ca” and “.can
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
-#: src/admin/SuperAdminUserList.js:432
+#: src/admin/SuperAdminUserList.js:434
 #: src/user/UserPage.js:289
 msgid "Cancel"
 msgstr "Cancel"
@@ -423,7 +427,7 @@ msgstr "Changes Required for ITPIN Compliance"
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Check your associated Tracker email for the verification link"
 
-#: src/domains/DomainCard.js:127
+#: src/domains/DomainCard.js:147
 #: src/domains/DomainsPage.js:179
 #: src/guidance/WebGuidance.js:69
 #: src/organizationDetails/OrganizationDomains.js:122
@@ -461,8 +465,8 @@ msgstr "Clear"
 msgid "Close"
 msgstr "Close"
 
-#: src/admin/SuperAdminUserList.js:369
-#: src/admin/SuperAdminUserList.js:402
+#: src/admin/SuperAdminUserList.js:371
+#: src/admin/SuperAdminUserList.js:404
 #: src/user/UserPage.js:229
 #: src/user/UserPage.js:260
 msgid "Close Account"
@@ -485,7 +489,7 @@ msgstr "Compliant"
 #: src/admin/AdminDomains.js:361
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
-#: src/admin/SuperAdminUserList.js:441
+#: src/admin/SuperAdminUserList.js:443
 #: src/admin/UserListModal.js:299
 #: src/user/EditableUserDisplayName.js:168
 #: src/user/EditableUserEmail.js:168
@@ -602,7 +606,7 @@ msgstr "Current Password:"
 msgid "Current Phone Number:"
 msgstr "Current Phone Number:"
 
-#: src/domains/DomainCard.js:128
+#: src/domains/DomainCard.js:148
 #: src/domains/DomainsPage.js:183
 #: src/guidance/WebGuidance.js:87
 #: src/organizationDetails/OrganizationDomains.js:126
@@ -696,7 +700,7 @@ msgid "DMARC Phases"
 msgstr "DMARC Phases"
 
 #: src/dmarc/DmarcReportPage.js:92
-#: src/domains/DomainCard.js:185
+#: src/domains/DomainCard.js:186
 #: src/guidance/GuidancePage.js:106
 msgid "DMARC Report"
 msgstr "DMARC Report"
@@ -853,7 +857,7 @@ msgstr "Domain url field must not be empty"
 
 #: src/admin/AdminDomainCard.js:29
 #: src/admin/WebCheckPage.js:147
-#: src/domains/DomainCard.js:119
+#: src/domains/DomainCard.js:118
 #: src/domains/ScanDomain.js:220
 msgid "Domain:"
 msgstr "Domain:"
@@ -994,7 +998,7 @@ msgid "English"
 msgstr "English"
 
 #: src/admin/OrganizationInformation.js:501
-#: src/admin/SuperAdminUserList.js:413
+#: src/admin/SuperAdminUserList.js:415
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 
@@ -1059,7 +1063,7 @@ msgstr "Fail SPF %"
 msgid "Fake email domain blocks (reject + quarantine):"
 msgstr "Fake email domain blocks (reject + quarantine):"
 
-#: src/domains/DomainCard.js:49
+#: src/domains/DomainCard.js:48
 msgid "Favourited Domain"
 msgstr "Favourited Domain"
 
@@ -1191,7 +1195,7 @@ msgstr "Government of Canada Employees"
 #: src/app/ReadGuidancePage.js:28
 #: src/dmarc/DmarcReportPage.js:193
 #: src/dmarc/DmarcReportPage.js:576
-#: src/domains/DomainCard.js:174
+#: src/domains/DomainCard.js:175
 msgid "Guidance"
 msgstr "Guidance"
 
@@ -1204,7 +1208,7 @@ msgstr "Guidance Tags"
 msgid "Guidance:"
 msgstr "Guidance:"
 
-#: src/domains/DomainCard.js:126
+#: src/domains/DomainCard.js:146
 #: src/domains/DomainsPage.js:187
 #: src/organizationDetails/OrganizationDomains.js:130
 msgid "HSTS"
@@ -1223,7 +1227,7 @@ msgstr "HSTS Status"
 #~ msgid "HSTS Status:"
 #~ msgstr "HSTS Status:"
 
-#: src/domains/DomainCard.js:125
+#: src/domains/DomainCard.js:145
 #: src/domains/DomainsPage.js:191
 #: src/guidance/WebGuidance.js:54
 #: src/organizationDetails/OrganizationDomains.js:134
@@ -1485,18 +1489,23 @@ msgstr "Information shared with TBS, or acquired via systems hosted by TBS, may 
 msgid "Initiated By"
 msgstr "Initiated By"
 
-#: src/user/InsideUserSwitch.js:83
-#~ msgid "Inside User"
-#~ msgstr "Inside User"
+#: src/admin/SuperAdminUserList.js:151
+#: src/admin/SuperAdminUserList.js:351
+msgid "Inside User"
+msgstr "Inside User"
+
+#: src/user/InsideUserSwitch.js:31
+msgid "Inside user status changed"
+msgstr "Inside user status changed"
 
 #: src/admin/SuperAdminUserList.js:151
 #: src/admin/SuperAdminUserList.js:350
-msgid "Insider"
-msgstr "Insider"
+#~ msgid "Insider"
+#~ msgstr "Insider"
 
 #: src/user/InsideUserSwitch.js:31
-msgid "Insider status changed"
-msgstr "Insider status changed"
+#~ msgid "Insider status changed"
+#~ msgstr "Insider status changed"
 
 #: src/termsConditions/TermsConditionsPage.js:131
 msgid "Intellectual Property, Copyright and Trademarks"
@@ -1664,7 +1673,7 @@ msgstr "Name (EN)"
 msgid "Name (FR)"
 msgstr "Name (FR)"
 
-#: src/admin/AuditLogTable.js:167
+#: src/admin/AuditLogTable.js:171
 msgid "Name:"
 msgstr "Name:"
 
@@ -1704,7 +1713,7 @@ msgstr "New Password:"
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
 
-#: src/admin/AuditLogTable.js:173
+#: src/admin/AuditLogTable.js:177
 msgid "New Value:"
 msgstr "New Value:"
 
@@ -1850,7 +1859,7 @@ msgstr "Obtain the configuration guidance for the appropriate endpoints (e.g., w
 msgid "October"
 msgstr "October"
 
-#: src/admin/AuditLogTable.js:170
+#: src/admin/AuditLogTable.js:174
 msgid "Old Value:"
 msgstr "Old Value:"
 
@@ -2056,7 +2065,7 @@ msgstr "Privacy Act."
 msgid "Privacy Notice Statement"
 msgstr "Privacy Notice Statement"
 
-#: src/domains/DomainCard.js:129
+#: src/domains/DomainCard.js:149
 #: src/domains/DomainsPage.js:195
 #: src/organizationDetails/OrganizationDomains.js:138
 msgid "Protocols"
@@ -2178,7 +2187,7 @@ msgstr "Resource Name"
 msgid "Resource Type"
 msgstr "Resource Type"
 
-#: src/admin/AuditLogTable.js:216
+#: src/admin/AuditLogTable.js:220
 msgid "Resource:"
 msgstr "Resource:"
 
@@ -2309,7 +2318,7 @@ msgstr "Search SPF Failing Items"
 msgid "Search by Domain URL"
 msgstr "Search by Domain URL"
 
-#: src/admin/AuditLogTable.js:210
+#: src/admin/AuditLogTable.js:214
 msgid "Search by initiated by, resource name"
 msgstr "Search by initiated by, resource name"
 
@@ -2324,7 +2333,7 @@ msgstr "Search for a domain"
 msgid "Search for a tagged organization"
 msgstr "Search for a tagged organization"
 
-#: src/admin/SuperAdminUserList.js:471
+#: src/admin/SuperAdminUserList.js:473
 msgid "Search for a user (email)"
 msgstr "Search for a user (email)"
 
@@ -2670,7 +2679,7 @@ msgstr "The user's role has been successfully updated"
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 
-#: src/admin/SuperAdminUserList.js:406
+#: src/admin/SuperAdminUserList.js:408
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 
@@ -2687,12 +2696,12 @@ msgid "This could be due to improper configuration, or could be the result of a 
 msgstr "This could be due to improper configuration, or could be the result of a scan error"
 
 #: src/admin/AdminDomains.js:345
-#: src/admin/AuditLogTable.js:147
+#: src/admin/AuditLogTable.js:151
 msgid "This domain does not belong to this organization"
 msgstr "This domain does not belong to this organization"
 
 #: src/admin/AdminDomains.js:342
-#: src/admin/AuditLogTable.js:144
+#: src/admin/AuditLogTable.js:148
 msgid "This domain no longer exists"
 msgstr "This domain no longer exists"
 
@@ -2879,8 +2888,12 @@ msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
 #: src/user/InsideUserSwitch.js:46
-msgid "Unable to update to your insider status, please try again."
-msgstr "Unable to update to your insider status, please try again."
+msgid "Unable to update to your inside user status, please try again."
+msgstr "Unable to update to your inside user status, please try again."
+
+#: src/user/InsideUserSwitch.js:46
+#~ msgid "Unable to update to your insider status, please try again."
+#~ msgstr "Unable to update to your insider status, please try again."
 
 #: src/user/EditableUserLanguage.js:42
 msgid "Unable to update to your preferred language, please try again."
@@ -2906,7 +2919,7 @@ msgstr "Unable to update your phone number, please try again."
 msgid "Unable to verify your phone number, please try again."
 msgstr "Unable to verify your phone number, please try again."
 
-#: src/domains/DomainCard.js:76
+#: src/domains/DomainCard.js:75
 msgid "Unfavourited Domain"
 msgstr "Unfavourited Domain"
 
@@ -2960,7 +2973,7 @@ msgstr "User"
 msgid "User Affiliations"
 msgstr "User Affiliations"
 
-#: src/admin/SuperAdminUserList.js:421
+#: src/admin/SuperAdminUserList.js:423
 #: src/user/UserPage.js:278
 msgid "User Email"
 msgstr "User Email"
@@ -3158,7 +3171,7 @@ msgstr "You agree to protect any information disclosed to you by TBS in accordan
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
-#: src/domains/DomainCard.js:50
+#: src/domains/DomainCard.js:49
 msgid "You have successfully added {url} to myTracker."
 msgstr "You have successfully added {url} to myTracker."
 
@@ -3176,7 +3189,7 @@ msgstr "You have successfully been signed out."
 msgid "You have successfully removed {0}."
 msgstr "You have successfully removed {0}."
 
-#: src/domains/DomainCard.js:77
+#: src/domains/DomainCard.js:76
 msgid "You have successfully removed {url} from myTracker."
 msgstr "You have successfully removed {url} from myTracker."
 
@@ -3197,8 +3210,12 @@ msgid "You have successfully updated your email."
 msgstr "You have successfully updated your email."
 
 #: src/user/InsideUserSwitch.js:32
-msgid "You have successfully updated your insider preference."
-msgstr "You have successfully updated your insider preference."
+msgid "You have successfully updated your inside user preference."
+msgstr "You have successfully updated your inside user preference."
+
+#: src/user/InsideUserSwitch.js:32
+#~ msgid "You have successfully updated your insider preference."
+#~ msgstr "You have successfully updated your insider preference."
 
 #: src/user/EditableUserPassword.js:55
 msgid "You have successfully updated your password."

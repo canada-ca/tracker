@@ -143,7 +143,7 @@ msgstr "Les acronymes doivent comporter au maximum 50 caractères."
 msgid "Action"
 msgstr "Action"
 
-#: src/admin/AuditLogTable.js:264
+#: src/admin/AuditLogTable.js:268
 msgid "Action:"
 msgstr "Action :"
 
@@ -191,7 +191,7 @@ msgstr "Profil de l'administrateur"
 msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
 
-#: src/admin/SuperAdminUserList.js:354
+#: src/admin/SuperAdminUserList.js:356
 msgid "Affiliations:"
 msgstr "Affiliations :"
 
@@ -216,7 +216,7 @@ msgstr "Une erreur s'est produite lorsque vous avez tenté de télécharger tous
 msgid "An error occured when you attempted to sign out"
 msgstr "Une erreur s'est produite lorsque vous avez tenté de vous déconnecter."
 
-#: src/domains/DomainCard.js:39
+#: src/domains/DomainCard.js:38
 msgid "An error occurred while favouriting a domain."
 msgstr "Une erreur s'est produite lors de la mise en favori d'un domaine."
 
@@ -228,7 +228,7 @@ msgstr "Une erreur s'est produite lors de la suppression de cette organisation."
 msgid "An error occurred while requesting a scan."
 msgstr "Une erreur s'est produite lors de la demande d'un scan."
 
-#: src/domains/DomainCard.js:66
+#: src/domains/DomainCard.js:65
 msgid "An error occurred while unfavouriting a domain."
 msgstr "Une erreur s'est produite lors du dé-favorisage d'un domaine."
 
@@ -249,8 +249,12 @@ msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
 
 #: src/user/InsideUserSwitch.js:19
-msgid "An error occurred while updating your insider preference."
-msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'initié."
+msgid "An error occurred while updating your inside user preference."
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'utilisateur interne."
+
+#: src/user/InsideUserSwitch.js:19
+#~ msgid "An error occurred while updating your insider preference."
+#~ msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'initié."
 
 #: src/user/EditableUserLanguage.js:20
 msgid "An error occurred while updating your language."
@@ -377,7 +381,7 @@ msgstr "Par défaut, nos analyseurs vérifient les domaines se terminant par «�
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
-#: src/admin/SuperAdminUserList.js:432
+#: src/admin/SuperAdminUserList.js:434
 #: src/user/UserPage.js:289
 msgid "Cancel"
 msgstr "Annuler"
@@ -423,7 +427,7 @@ msgstr "Changements requis pour la mise en conformité ITPIN"
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
-#: src/domains/DomainCard.js:127
+#: src/domains/DomainCard.js:147
 #: src/domains/DomainsPage.js:179
 #: src/guidance/WebGuidance.js:69
 #: src/organizationDetails/OrganizationDomains.js:122
@@ -461,8 +465,8 @@ msgstr "Dégager"
 msgid "Close"
 msgstr "Fermer"
 
-#: src/admin/SuperAdminUserList.js:369
-#: src/admin/SuperAdminUserList.js:402
+#: src/admin/SuperAdminUserList.js:371
+#: src/admin/SuperAdminUserList.js:404
 #: src/user/UserPage.js:229
 #: src/user/UserPage.js:260
 msgid "Close Account"
@@ -485,7 +489,7 @@ msgstr "Conforme"
 #: src/admin/AdminDomains.js:361
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
-#: src/admin/SuperAdminUserList.js:441
+#: src/admin/SuperAdminUserList.js:443
 #: src/admin/UserListModal.js:299
 #: src/user/EditableUserDisplayName.js:168
 #: src/user/EditableUserEmail.js:168
@@ -602,7 +606,7 @@ msgstr "Mot de passe actuel:"
 msgid "Current Phone Number:"
 msgstr "Numéro de téléphone actuel:"
 
-#: src/domains/DomainCard.js:128
+#: src/domains/DomainCard.js:148
 #: src/domains/DomainsPage.js:183
 #: src/guidance/WebGuidance.js:87
 #: src/organizationDetails/OrganizationDomains.js:126
@@ -696,7 +700,7 @@ msgid "DMARC Phases"
 msgstr "Phases DMARC"
 
 #: src/dmarc/DmarcReportPage.js:92
-#: src/domains/DomainCard.js:185
+#: src/domains/DomainCard.js:186
 #: src/guidance/GuidancePage.js:106
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
@@ -853,7 +857,7 @@ msgstr "Le champ de l'url du domaine ne doit pas être vide"
 
 #: src/admin/AdminDomainCard.js:29
 #: src/admin/WebCheckPage.js:147
-#: src/domains/DomainCard.js:119
+#: src/domains/DomainCard.js:118
 #: src/domains/ScanDomain.js:220
 msgid "Domain:"
 msgstr "Domaine:"
@@ -982,7 +986,7 @@ msgid "English"
 msgstr "Anglais"
 
 #: src/admin/OrganizationInformation.js:501
-#: src/admin/SuperAdminUserList.js:413
+#: src/admin/SuperAdminUserList.js:415
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -1047,7 +1051,7 @@ msgstr "Échec du SPF %"
 msgid "Fake email domain blocks (reject + quarantine):"
 msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 
-#: src/domains/DomainCard.js:49
+#: src/domains/DomainCard.js:48
 msgid "Favourited Domain"
 msgstr "Domaine favori"
 
@@ -1167,7 +1171,7 @@ msgstr "Employés du gouvernement du Canada"
 #: src/app/ReadGuidancePage.js:28
 #: src/dmarc/DmarcReportPage.js:193
 #: src/dmarc/DmarcReportPage.js:576
-#: src/domains/DomainCard.js:174
+#: src/domains/DomainCard.js:175
 msgid "Guidance"
 msgstr "Orientation"
 
@@ -1180,7 +1184,7 @@ msgstr "Étiquettes d'orientation"
 msgid "Guidance:"
 msgstr "Orientation:"
 
-#: src/domains/DomainCard.js:126
+#: src/domains/DomainCard.js:146
 #: src/domains/DomainsPage.js:187
 #: src/organizationDetails/OrganizationDomains.js:130
 msgid "HSTS"
@@ -1199,7 +1203,7 @@ msgstr "Statut HSTS"
 #~ msgid "HSTS Status:"
 #~ msgstr "Statut HSTS:"
 
-#: src/domains/DomainCard.js:125
+#: src/domains/DomainCard.js:145
 #: src/domains/DomainsPage.js:191
 #: src/guidance/WebGuidance.js:54
 #: src/organizationDetails/OrganizationDomains.js:134
@@ -1461,18 +1465,23 @@ msgstr "Les renseignements partagés avec le SCT ou acquis par l'entremise de sy
 msgid "Initiated By"
 msgstr "Initiée par"
 
-#: src/user/InsideUserSwitch.js:83
-#~ msgid "Inside User"
-#~ msgstr "Utilisateur interne"
+#: src/admin/SuperAdminUserList.js:151
+#: src/admin/SuperAdminUserList.js:351
+msgid "Inside User"
+msgstr "Utilisateur interne"
+
+#: src/user/InsideUserSwitch.js:31
+msgid "Inside user status changed"
+msgstr "Changement du statut d'utilisateur interne"
 
 #: src/admin/SuperAdminUserList.js:151
 #: src/admin/SuperAdminUserList.js:350
-msgid "Insider"
-msgstr "Insider"
+#~ msgid "Insider"
+#~ msgstr "Insider"
 
 #: src/user/InsideUserSwitch.js:31
-msgid "Insider status changed"
-msgstr "Changement de statut d'initié"
+#~ msgid "Insider status changed"
+#~ msgstr "Changement de statut d'initié"
 
 #: src/termsConditions/TermsConditionsPage.js:131
 msgid "Intellectual Property, Copyright and Trademarks"
@@ -1636,7 +1645,7 @@ msgstr "Nom (EN)"
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
-#: src/admin/AuditLogTable.js:167
+#: src/admin/AuditLogTable.js:171
 msgid "Name:"
 msgstr "Nom:"
 
@@ -1676,7 +1685,7 @@ msgstr "Nouveau mot de passe:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
-#: src/admin/AuditLogTable.js:173
+#: src/admin/AuditLogTable.js:177
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
 
@@ -1822,7 +1831,7 @@ msgstr "Obtenir une orientation en matière de configuration pour les points ter
 msgid "October"
 msgstr "Octobre"
 
-#: src/admin/AuditLogTable.js:170
+#: src/admin/AuditLogTable.js:174
 msgid "Old Value:"
 msgstr "Ancienne valeur :"
 
@@ -2028,7 +2037,7 @@ msgstr "Loi sur la protection de la vie privée."
 msgid "Privacy Notice Statement"
 msgstr "Déclaration de confidentialité"
 
-#: src/domains/DomainCard.js:129
+#: src/domains/DomainCard.js:149
 #: src/domains/DomainsPage.js:195
 #: src/organizationDetails/OrganizationDomains.js:138
 msgid "Protocols"
@@ -2150,7 +2159,7 @@ msgstr "Nom de la ressource"
 msgid "Resource Type"
 msgstr "Type de ressource"
 
-#: src/admin/AuditLogTable.js:216
+#: src/admin/AuditLogTable.js:220
 msgid "Resource:"
 msgstr "Ressource :"
 
@@ -2281,7 +2290,7 @@ msgstr "Rechercher les éléments défaillants du SPF"
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
-#: src/admin/AuditLogTable.js:210
+#: src/admin/AuditLogTable.js:214
 msgid "Search by initiated by, resource name"
 msgstr "Recherche par initié par, nom de la ressource"
 
@@ -2296,7 +2305,7 @@ msgstr "Rechercher un domaine"
 msgid "Search for a tagged organization"
 msgstr "Recherche d'une organisation étiquetée"
 
-#: src/admin/SuperAdminUserList.js:471
+#: src/admin/SuperAdminUserList.js:473
 msgid "Search for a user (email)"
 msgstr "Recherche d'un utilisateur (email)"
 
@@ -2638,7 +2647,7 @@ msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr "Les présentes conditions générales sont régies et interprétées en vertu des lois du Canada, sans égard aux règles de droit applicables. Les tribunaux du Canada auront la compétence exclusive sur toutes les questions relatives à ces conditions générales."
 
-#: src/admin/SuperAdminUserList.js:406
+#: src/admin/SuperAdminUserList.js:408
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {0} ?"
 
@@ -2655,12 +2664,12 @@ msgid "This could be due to improper configuration, or could be the result of a 
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
 #: src/admin/AdminDomains.js:345
-#: src/admin/AuditLogTable.js:147
+#: src/admin/AuditLogTable.js:151
 msgid "This domain does not belong to this organization"
 msgstr "Ce domaine n'appartient pas à cette organisation"
 
 #: src/admin/AdminDomains.js:342
-#: src/admin/AuditLogTable.js:144
+#: src/admin/AuditLogTable.js:148
 msgid "This domain no longer exists"
 msgstr "Ce domaine n'existe plus"
 
@@ -2839,8 +2848,12 @@ msgid "Unable to update to your display name, please try again."
 msgstr "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer."
 
 #: src/user/InsideUserSwitch.js:46
-msgid "Unable to update to your insider status, please try again."
-msgstr "Impossible de mettre à jour votre statut d'initié, veuillez réessayer."
+msgid "Unable to update to your inside user status, please try again."
+msgstr "Impossible de mettre à jour votre statut d'utilisateur interne, veuillez réessayer."
+
+#: src/user/InsideUserSwitch.js:46
+#~ msgid "Unable to update to your insider status, please try again."
+#~ msgstr "Impossible de mettre à jour votre statut d'initié, veuillez réessayer."
 
 #: src/user/EditableUserLanguage.js:42
 msgid "Unable to update to your preferred language, please try again."
@@ -2866,7 +2879,7 @@ msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez rée
 msgid "Unable to verify your phone number, please try again."
 msgstr "Impossible de vérifier votre numéro de téléphone, veuillez réessayer."
 
-#: src/domains/DomainCard.js:76
+#: src/domains/DomainCard.js:75
 msgid "Unfavourited Domain"
 msgstr "Domaine non favorisé"
 
@@ -2920,7 +2933,7 @@ msgstr "Utilisateur"
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
-#: src/admin/SuperAdminUserList.js:421
+#: src/admin/SuperAdminUserList.js:423
 #: src/user/UserPage.js:278
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
@@ -3110,7 +3123,7 @@ msgstr "Vous acceptez de protéger toute information qui vous est divulguée par
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "Vous acceptez d'utiliser notre site Web, nos produits et nos services uniquement à des fins légales et de manière à ne pas enfreindre les droits d'un tiers, ni à restreindre ou à empêcher l'utilisation et la jouissance du site Web, des produits ou des services par un tiers. En outre, vous ne devez pas abuser, compromettre ou interférer avec nos services, ni introduire dans nos services des éléments malveillants ou technologiquement dangereux. Vous ne devez pas tenter d'obtenir un accès non autorisé à notre site Web, à nos produits ou services, au(x) serveur(s) sur le(s)quel(s) ils sont stockés, ou à tout serveur, ordinateur ou base de données connecté à notre site Web, à nos produits ou à nos services, ni les altérer, les désosser ou les modifier. Nous pouvons suspendre ou cesser de vous fournir nos produits ou services si vous ne respectez pas nos conditions ou politiques ou si nous enquêtons sur une suspicion de mauvaise conduite. Tout soupçon d'utilisation illégale de notre site web, de nos produits ou de nos services peut être signalé aux autorités compétentes chargées de l'application de la loi et, si nécessaire, nous coopérerons avec ces autorités en leur divulguant votre identité."
 
-#: src/domains/DomainCard.js:50
+#: src/domains/DomainCard.js:49
 msgid "You have successfully added {url} to myTracker."
 msgstr "Vous avez ajouté avec succès {url} à monSuivi."
 
@@ -3128,7 +3141,7 @@ msgstr "Vous avez été déconnecté avec succès."
 msgid "You have successfully removed {0}."
 msgstr "Vous avez retiré {0} avec succès."
 
-#: src/domains/DomainCard.js:77
+#: src/domains/DomainCard.js:76
 msgid "You have successfully removed {url} from myTracker."
 msgstr "Vous avez réussi à supprimer {url} de monSuivi."
 
@@ -3149,8 +3162,12 @@ msgid "You have successfully updated your email."
 msgstr "Vous avez mis à jour votre courriel avec succès."
 
 #: src/user/InsideUserSwitch.js:32
-msgid "You have successfully updated your insider preference."
-msgstr "Vous avez réussi à mettre à jour vos préférences d'initié."
+msgid "You have successfully updated your inside user preference."
+msgstr "Vous avez réussi à mettre à jour vos préférences d'utilisateur interne."
+
+#: src/user/InsideUserSwitch.js:32
+#~ msgid "You have successfully updated your insider preference."
+#~ msgstr "Vous avez réussi à mettre à jour vos préférences d'initié."
 
 #: src/user/EditableUserPassword.js:55
 msgid "You have successfully updated your password."
