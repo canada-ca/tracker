@@ -30,7 +30,7 @@ export function AuditLogTable({ orgId = null }) {
   const [orderField, setOrderField] = useState('TIMESTAMP')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [logsPerPage, setLogsPerPage] = useState(20)
+  const [logsPerPage, setLogsPerPage] = useState(10)
   const [activeResourceFilters, setActiveResourceFilters] = useState([])
   const [activeActionFilters, setActiveActionFilters] = useState([])
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
