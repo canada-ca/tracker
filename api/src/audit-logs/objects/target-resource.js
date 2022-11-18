@@ -58,9 +58,14 @@ export const targetResourceType = new GraphQLObjectType({
             oldValue: {
               type: GraphQLString,
               description: 'Old value of updated property.',
-              resolve: ({ oldValue }) => {
-                if (Array.isArray(oldValue)) {
+              resolve: ({ name, oldValue }, _, { language }) => {
+                if (name === 'selectors') {
                   return JSON.stringify(oldValue)
+                } else if (name === 'tags') {
+                  const translatedTags = oldValue.map((x) => {
+                    return x[`${language}`]
+                  })
+                  return JSON.stringify(translatedTags)
                 }
                 return oldValue
               },
@@ -68,10 +73,16 @@ export const targetResourceType = new GraphQLObjectType({
             newValue: {
               type: GraphQLString,
               description: 'New value of updated property.',
-              resolve: ({ newValue }) => {
-                if (Array.isArray(newValue)) {
+              resolve: ({ name, newValue }, _, { language }) => {
+                if (name === 'selectors') {
                   return JSON.stringify(newValue)
-                } else return newValue
+                } else if (name === 'tags') {
+                  const translatedTags = newValue.map((x) => {
+                    return x[`${language}`]
+                  })
+                  return JSON.stringify(translatedTags)
+                }
+                return newValue
               },
             },
           }),
