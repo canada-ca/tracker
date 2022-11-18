@@ -100,7 +100,7 @@ describe('<InsideUserSwitch />', () => {
       )
       const betaSwitch = getByLabelText(/Inside User/i)
       userEvent.click(betaSwitch)
-      await waitFor(() => expect(getByText(/Insider status changed/i)))
+      await waitFor(() => expect(getByText(/Inside user status changed/i)))
     })
     it("fails when changing the user's status", async () => {
       const mocks = [
@@ -151,7 +151,7 @@ describe('<InsideUserSwitch />', () => {
       await waitFor(() =>
         expect(
           getByText(
-            /Unable to update to your insider status, please try again./i,
+            /Unable to update to your inside user status, please try again./i,
           ),
         ),
       )
