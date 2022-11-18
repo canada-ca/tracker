@@ -81,9 +81,9 @@ describe('<AuditLogTable />', () => {
       await waitFor(() => {
         expect(queryByText(/Updated Properties/i)).toBeInTheDocument()
       })
-      const userTimestamp = getByText('timestamp1')
-      const domainTimestamp = getByText('timestamp2')
-      const orgTimestamp = getByText('timestamp3')
+      const userTimestamp = getByText('2022-10-12, 17:56')
+      const domainTimestamp = getByText('2022-11-12, 17:56')
+      const orgTimestamp = getByText('2022-15-12, 17:56')
 
       await waitFor(() => {
         expect(userTimestamp).toBeInTheDocument()
@@ -128,9 +128,9 @@ describe('<AuditLogTable />', () => {
       await waitFor(() => {
         expect(queryByText(/Updated Properties/i)).toBeInTheDocument()
       })
-      const userTimestamp = getByText('timestamp1')
-      const domainTimestamp = getByText('timestamp2')
-      const orgTimestamp = getByText('timestamp3')
+      const userTimestamp = getByText('2022-10-12, 17:56')
+      const domainTimestamp = getByText('2022-11-12, 17:56')
+      const orgTimestamp = getByText('2022-15-12, 17:56')
 
       await waitFor(() => {
         expect(userTimestamp).toBeInTheDocument()
@@ -176,9 +176,9 @@ describe('<AuditLogTable />', () => {
       await waitFor(() => {
         expect(queryByText(/Updated Properties/i)).toBeInTheDocument()
       })
-      const userTimestamp = getByText('timestamp1')
-      const domainTimestamp = getByText('timestamp2')
-      const orgTimestamp = getByText('timestamp3')
+      const userTimestamp = getByText('2022-10-12, 17:56')
+      const domainTimestamp = getByText('2022-11-12, 17:56')
+      const orgTimestamp = getByText('2022-15-12, 17:56')
 
       await waitFor(() => {
         expect(userTimestamp).toBeInTheDocument()
@@ -209,7 +209,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 20,
+          first: 10,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',
@@ -226,7 +226,7 @@ function mocks() {
               {
                 node: {
                   id: '3358872e-fbfa-4c73-b266-df96397f58c3',
-                  timestamp: 'timestamp1',
+                  timestamp: '2022-10-12T17:56:46.306Z',
                   initiatedBy: {
                     id: 'fb311e39-6404-4778-a4eb-9afc5a699920',
                     userName: 'super@user1',
@@ -248,7 +248,7 @@ function mocks() {
               {
                 node: {
                   id: '2e266fe9-34de-4443-a249-baad8bdbe341',
-                  timestamp: 'timestamp2',
+                  timestamp: '2022-11-12T17:56:46.306Z',
                   initiatedBy: {
                     id: '265d950a-2758-44ae-8752-b5db5aae4276',
                     userName: 'super@user2',
@@ -270,7 +270,7 @@ function mocks() {
               {
                 node: {
                   id: '2e266fe9-34de-4443-a249-baad8bdbe3',
-                  timestamp: 'timestamp3',
+                  timestamp: '2022-15-12T17:56:46.306Z',
                   initiatedBy: {
                     id: '265d950a-2758-44ae-8752-b5db5aae4276',
                     userName: 'super@user3',
@@ -310,7 +310,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 20,
+          first: 10,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',
@@ -327,7 +327,7 @@ function mocks() {
               {
                 node: {
                   id: '2e266fe9-34de-4443-a249-baad8bdbe',
-                  timestamp: 'timestamp2',
+                  timestamp: '2022-11-12T17:56:46.306Z',
                   initiatedBy: {
                     id: '265d950a-2758-44ae-8752-b5db5aae4276',
                     userName: 'super@user2',
@@ -361,7 +361,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 20,
+          first: 10,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',
@@ -378,7 +378,7 @@ function mocks() {
               {
                 node: {
                   id: '3358872e-fbfa-4c73-b266-df96397f58c3',
-                  timestamp: 'timestamp1',
+                  timestamp: '2022-10-12T17:56:46.306Z',
                   initiatedBy: {
                     id: 'fb311e39-6404-4778-a4eb-9afc5a699920',
                     userName: 'super@user1',
@@ -412,7 +412,7 @@ function mocks() {
       request: {
         query: AUDIT_LOGS,
         variables: {
-          first: 20,
+          first: 10,
           orderBy: {
             field: 'TIMESTAMP',
             direction: 'DESC',
@@ -429,7 +429,7 @@ function mocks() {
               {
                 node: {
                   id: '2e266fe9-34de-4443-a249-baad8bdbe34',
-                  timestamp: 'timestamp3',
+                  timestamp: '2022-15-12T17:56:46.306Z',
                   initiatedBy: {
                     id: '265d950a-2758-44ae-8752-b5db5aae4276',
                     userName: 'super@user3',
