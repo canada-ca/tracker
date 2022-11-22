@@ -132,6 +132,15 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
         https
         ssl
       }
+      organizations(first: 5, orderBy: { field: NAME, direction: ASC }) {
+        edges {
+          node {
+            name
+            acronym
+            slug
+          }
+        }
+      }
       dmarcPhase
       hasDMARCReport
       web {
