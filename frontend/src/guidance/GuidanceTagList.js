@@ -100,12 +100,13 @@ export function GuidanceTagList({
   return (
     <Box my="2">
       {selectorHeading}
-      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-        {positiveTagList?.length && (
-          <AccordionItem buttonLabel={t`Positive Tags`} buttonVariant="strong">
-            {positiveTagList}
+      <Accordion allowMultiple defaultIndex={[0]}>
+        {negativeTagList?.length && (
+          <AccordionItem buttonLabel={t`Negative Tags`} buttonVariant="weak">
+            {negativeTagList}
           </AccordionItem>
         )}
+
         {neutralTagList?.length && (
           <AccordionItem buttonLabel={t`Neutral Tags`} buttonVariant="info">
             <Box>
@@ -118,9 +119,9 @@ export function GuidanceTagList({
             {neutralTagList}
           </AccordionItem>
         )}
-        {negativeTagList?.length && (
-          <AccordionItem buttonLabel={t`Negative Tags`} buttonVariant="weak">
-            {negativeTagList}
+        {positiveTagList?.length && (
+          <AccordionItem buttonLabel={t`Positive Tags`} buttonVariant="strong">
+            {positiveTagList}
           </AccordionItem>
         )}
       </Accordion>

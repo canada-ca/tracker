@@ -14,6 +14,17 @@
         "curves": "PASS",
         "spf": "PASS"
       },
+      "organizations": {
+        "edges": [
+          {
+            "node": {
+              "name": "Employment and Social Development Canada",
+              "acronym": "ESDC",
+              "slug": "employment-and-social-development-canada"
+            }
+          }
+        ]
+      },
       "dmarcPhase": "deploy",
       "hasDMARCReport": true,
       "web": {
