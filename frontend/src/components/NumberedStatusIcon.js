@@ -2,7 +2,7 @@ import { Box, Text } from '@chakra-ui/react'
 import { number, string } from 'prop-types'
 import React from 'react'
 
-export function AlertIcon({ number, status, ...props }) {
+export function NumberedStatusIcon({ number, status, ...props }) {
   let mutedColor = 'infoMuted'
   let color = 'info'
   switch (status) {
@@ -31,7 +31,7 @@ export function AlertIcon({ number, status, ...props }) {
     </Box>
   )
 }
-AlertIcon.propTypes = {
+NumberedStatusIcon.propTypes = {
   status: string,
   number: number,
 }

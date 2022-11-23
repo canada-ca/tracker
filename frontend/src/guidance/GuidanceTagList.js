@@ -1,10 +1,9 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import { Accordion, Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
+import { Accordion, Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { WarningTwoIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
-import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
 
 export function GuidanceTagList({
   negativeTags,
@@ -31,21 +30,13 @@ export function GuidanceTagList({
                 ? 'strongMuted'
                 : 'infoMuted'
             }
-            pb="1"
+            mb="1"
+            rounded="md"
           >
-            {guidanceTag.node ? (
-              <GuidanceTagDetails
-                guidanceTag={guidanceTag.node}
-                tagType={tagType}
-              />
-            ) : (
-              <GuidanceTagDetails guidanceTag={guidanceTag} tagType={tagType} />
-            )}
-
-            {
-              // Add divider if next entry exists
-              tagList[index + 1] && <Divider borderColor="gray.700" />
-            }
+            <GuidanceTagDetails
+              guidanceTag={guidanceTag.node || guidanceTag}
+              tagType={tagType}
+            />
           </Box>
         )
       })
@@ -55,7 +46,7 @@ export function GuidanceTagList({
 
   const negativeTagList = setTagList(negativeTags, 'negative')
   const positiveTagList = setTagList(positiveTags, 'positive')
-  const neutralTagList = setTagList(neutralTags, 'neutral')
+  const neutralTagList = setTagList(neutralTags, 'informative')
 
   const noTags = (
     <Stack isInline align="center" bg="moderateMuted" px="2">
@@ -98,33 +89,12 @@ export function GuidanceTagList({
   )
 
   return (
-    <Box my="2">
+    <Box>
       {selectorHeading}
-      <Accordion allowMultiple defaultIndex={[0]}>
-        {negativeTagList?.length && (
-          <AccordionItem buttonLabel={t`Negative Tags`} buttonVariant="weak">
-            {negativeTagList}
-          </AccordionItem>
-        )}
+      {negativeTagList?.length && negativeTagList}
+      {neutralTagList?.length && neutralTagList}
+      {positiveTagList?.length && positiveTagList}
 
-        {neutralTagList?.length && (
-          <AccordionItem buttonLabel={t`Neutral Tags`} buttonVariant="info">
-            <Box>
-              <Trans>
-                Neutral tags highlight relevant configuration details, but are
-                not addressed within policy requirements and have no impact on
-                scoring.
-              </Trans>
-            </Box>
-            {neutralTagList}
-          </AccordionItem>
-        )}
-        {positiveTagList?.length && (
-          <AccordionItem buttonLabel={t`Positive Tags`} buttonVariant="strong">
-            {positiveTagList}
-          </AccordionItem>
-        )}
-      </Accordion>
       {!positiveTagList?.length &&
         !neutralTagList?.length &&
         !negativeTagList?.length &&

@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { ArrowLeftIcon } from '@chakra-ui/icons'
 import {
   Accordion,
@@ -12,7 +13,6 @@ import {
   Heading,
   IconButton,
   Select,
-  SimpleGrid,
   Tab,
   TabList,
   TabPanel,
@@ -21,12 +21,12 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+
 import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink } from 'react-router-dom'
 import { GuidanceTagList } from '../guidance/GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
-import { AlertIcon } from '../components/AlertIcon'
+import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
 import { StatusBadge } from '../domains/StatusBadge'
 const { data } = require('./new_scan_results.json')
 
@@ -73,7 +73,7 @@ function NewGuidancePage() {
   let totalWebFail = 0
 
   const endPointSummary = (
-    <Accordion allowMultiple>
+    <Accordion allowMultiple defaultIndex={[0]}>
       <AccordionItem>
         <Flex align="center" as={AccordionButton}>
           <Text fontSize="2xl">Endpoint Summary</Text>
@@ -85,9 +85,9 @@ function NewGuidancePage() {
             bg="gray.100"
             borderColor="gray.300"
             rounded="md"
-            mx="1"
+            ml="auto"
           >
-            <AlertIcon number={4} status="FAIL" />
+            <NumberedStatusIcon number={4} status="FAIL" />
             <Text px="1" fontWeight="bold" color="weak">
               Negative
             </Text>
@@ -102,11 +102,11 @@ function NewGuidancePage() {
             rounded="md"
             mx="1"
           >
-            <AlertIcon number={1} status="INFO" />
+            <NumberedStatusIcon number={1} status="INFO" />
             <Text px="1" fontWeight="bold" color="info">
               Informative
             </Text>
-          </Flex>{' '}
+          </Flex>
           <Flex
             py="1"
             px="2"
@@ -115,9 +115,9 @@ function NewGuidancePage() {
             bg="gray.100"
             borderColor="gray.300"
             rounded="md"
-            mx="1"
+            mr="1"
           >
-            <AlertIcon number={3} status="PASS" />
+            <NumberedStatusIcon number={3} status="PASS" />
             <Text px="1" fontWeight="bold" color="strong">
               Positive
             </Text>
@@ -147,8 +147,8 @@ function NewGuidancePage() {
 
             return (
               <Flex key={idx} align="center" py="1">
-                <Text fontSize="xl" fontWeight="bold" pr="2">
-                  {ipAddress}:
+                <Text fontSize="xl" pr="2">
+                  {ipAddress}
                 </Text>
                 <Flex
                   py="1"
@@ -158,9 +158,9 @@ function NewGuidancePage() {
                   bg="gray.100"
                   borderColor="gray.300"
                   rounded="md"
-                  mx="1"
+                  ml="auto"
                 >
-                  <AlertIcon number={endpointFail} status="FAIL" />
+                  <NumberedStatusIcon number={endpointFail} status="FAIL" />
                   <Text px="1" fontWeight="bold" color="weak">
                     Negative
                   </Text>
@@ -175,7 +175,7 @@ function NewGuidancePage() {
                   rounded="md"
                   mx="1"
                 >
-                  <AlertIcon number={endpointInfo} status="INFO" />
+                  <NumberedStatusIcon number={endpointInfo} status="INFO" />
                   <Text px="1" fontWeight="bold" color="info">
                     Informative
                   </Text>
@@ -188,9 +188,9 @@ function NewGuidancePage() {
                   bg="gray.100"
                   borderColor="gray.300"
                   rounded="md"
-                  mx="1"
+                  mr="1.5rem"
                 >
-                  <AlertIcon number={endpointPass} status="PASS" />
+                  <NumberedStatusIcon number={endpointPass} status="PASS" />
                   <Text px="1" fontWeight="bold" color="strong">
                     Positive
                   </Text>
@@ -204,7 +204,7 @@ function NewGuidancePage() {
   )
 
   const endpointSelect = (
-    <Flex align="center" py="2">
+    <Flex align="center" py="2" ml="3">
       <Text fontWeight="bold" mr="2" fontSize="xl">
         Endpoint:
       </Text>
@@ -383,40 +383,36 @@ function NewGuidancePage() {
   )
 
   const connectionGuidance = (
-    <Accordion allowMultiple>
+    <Accordion
+      allowMultiple
+      defaultIndex={connectionResults.negativeTags.length > 0 ? [0] : []}
+    >
       <AccordionItem>
         <Flex as={AccordionButton}>
-          <StatusIcon status="PASS" boxSize="icons.lg" />
+          {connectionResults.negativeTags.length > 0 ? (
+            <NumberedStatusIcon
+              number={connectionResults.negativeTags.length}
+              status="FAIL"
+            />
+          ) : (
+            <StatusIcon status="PASS" boxSize="icons.lg" />
+          )}
           <Text fontSize="2xl" ml="2">
             Connection Results
           </Text>{' '}
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          <StatusBadge
-            text="HTTPS"
-            status={status.https}
-            flexDirection="row"
-            justifyContent=""
-            spacing={2}
-            align="center"
-            fontSize="lg"
-          />
-          <StatusBadge
-            text="HSTS"
-            status={status.hsts}
-            flexDirection="row"
-            justifyContent=""
-            spacing={2}
-            align="center"
-            fontSize="lg"
-          />
+          <Flex mb="2">
+            <StatusBadge text="HTTPS" status={status.https} />
+            <StatusBadge text="HSTS" status={status.hsts} />
+          </Flex>
           <GuidanceTagList
             positiveTags={connectionResults.positiveTags}
             neutralTags={connectionResults.neutralTags}
             negativeTags={connectionResults.negativeTags}
           />
-          <Accordion allowMultiple>
+          <Accordion allowMultiple defaultIndex={[]}>
             <AccordionItem>
               <Flex as={AccordionButton}>
                 <Text fontSize="xl">Scan Results</Text>{' '}
@@ -439,13 +435,25 @@ function NewGuidancePage() {
       <Accordion allowMultiple defaultIndex={[0]}>
         <AccordionItem>
           <Flex as={AccordionButton}>
-            <AlertIcon number={tlsResult.negativeTags.length} status="FAIL" />
+            {tlsResult.negativeTags.length > 0 ? (
+              <NumberedStatusIcon
+                number={tlsResult.negativeTags.length}
+                status="FAIL"
+              />
+            ) : (
+              <StatusIcon status="PASS" />
+            )}
             <Text fontSize="2xl" ml="2">
               TLS Results
             </Text>{' '}
             <AccordionIcon boxSize="icons.xl" />
           </Flex>
           <AccordionPanel>
+            <Flex mb="2">
+              <StatusBadge text="Protocols" status={status.protocols} />
+              <StatusBadge text="Ciphers" status={status.ciphers} />
+              <StatusBadge text="Curves" status={status.curves} />
+            </Flex>
             <GuidanceTagList
               positiveTags={tlsResult.positiveTags}
               neutralTags={tlsResult.neutralTags}
@@ -510,7 +518,7 @@ function NewGuidancePage() {
       {orgCards}
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="4">
-          <Tab borderTopWidth="0.25">Web Guidance</Tab>
+          <Tab borderTopWidth="0.25">WWW Guidance</Tab>
           <Tab borderTopWidth="0.25">Email Guidance</Tab>
         </TabList>
         <TabPanels>
