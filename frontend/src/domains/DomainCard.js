@@ -141,18 +141,29 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
           </ABTestingWrapper>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
-        <Flex {...statusGroupingProps} px="1">
-          <StatusBadge text={t`HTTPS`} status={status.https} />
-          <StatusBadge text={t`HSTS`} status={status.hsts} />
-          <StatusBadge text={t`Ciphers`} status={status.ciphers} />
-          <StatusBadge text={t`Curves`} status={status.curves} />
-          <StatusBadge text={t`Protocols`} status={status.protocols} />
-        </Flex>
-        <Flex {...statusGroupingProps} px="1">
-          <StatusBadge text="SPF" status={status.spf} />
-          <StatusBadge text="DKIM" status={status.dkim} />
-          <StatusBadge text="DMARC" status={status.dmarc} />
-        </Flex>
+
+        <Box {...statusGroupingProps} px="1">
+          <Text textAlign="center" color="gray.500">
+            WWW (HTTPS/TLS)
+          </Text>
+          <Flex>
+            <StatusBadge text={t`HTTPS`} status={status.https} />
+            <StatusBadge text={t`HSTS`} status={status.hsts} />
+            <StatusBadge text={t`Protocols`} status={status.protocols} />
+            <StatusBadge text={t`Ciphers`} status={status.ciphers} />
+            <StatusBadge text={t`Curves`} status={status.curves} />
+          </Flex>
+        </Box>
+        <Box {...statusGroupingProps} px="1">
+          <Text textAlign="center" color="gray.500">
+            Email
+          </Text>
+          <Flex>
+            <StatusBadge text="SPF" status={status.spf} />
+            <StatusBadge text="DKIM" status={status.dkim} />
+            <StatusBadge text="DMARC" status={status.dmarc} />
+          </Flex>
+        </Box>
         <Divider variant="card" display={{ md: 'none' }} />
 
         <Stack
@@ -172,7 +183,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
             px="10"
           >
             <Text whiteSpace="noWrap">
-              <Trans>Guidance</Trans>
+              <Trans>View Results</Trans>
             </Text>
           </Button>
 

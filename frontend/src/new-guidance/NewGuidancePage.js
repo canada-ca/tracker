@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ArrowLeftIcon } from '@chakra-ui/icons'
+import { ArrowLeftIcon, ArrowUpIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import {
   Accordion,
   AccordionButton,
@@ -382,6 +382,18 @@ function NewGuidancePage() {
     </Box>
   )
 
+  const {
+    httpLive,
+    httpsLive,
+    httpImmediatelyUpgrades,
+    httpEventuallyUpgrades,
+    httpsImmediatelyDowngrades,
+    httpsEventuallyDowngrades,
+    hstsParsed,
+    httpChainResult,
+    httpsChainResult,
+  } = connectionResults
+
   const connectionGuidance = (
     <Accordion
       allowMultiple
@@ -415,13 +427,158 @@ function NewGuidancePage() {
           <Accordion allowMultiple defaultIndex={[]}>
             <AccordionItem>
               <Flex as={AccordionButton}>
-                <Text fontSize="xl">Scan Results</Text>{' '}
+                <Text fontSize="xl">HTTP (80)</Text>{' '}
                 <AccordionIcon boxSize="icons.lg" />
               </Flex>
               <AccordionPanel>
-                <Code>
-                  {JSON.stringify(connectionResults.httpsChainResult)}
-                </Code>
+                <Box maxW="50%" fontSize="lg">
+                  <Flex align="center">
+                    <StatusIcon status="INFO" />
+                    <Text px="1">HTTP Live</Text>
+                    <Text ml="auto">{httpLive ? 'Yes' : 'No'}</Text>
+                  </Flex>
+                  <Flex align="center">
+                    <StatusIcon
+                      status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'}
+                    />
+                    <Text px="1">HTTP Upgrades</Text>
+                    <Text ml="auto">
+                      {httpImmediatelyUpgrades
+                        ? 'Immediately'
+                        : httpEventuallyUpgrades
+                        ? 'Eventually'
+                        : 'Never'}
+                    </Text>
+                  </Flex>
+                  {hstsParsed && (
+                    <Flex align="center">
+                      <StatusIcon status="INFO" />
+                      <Text px="1">HSTS Parsed</Text>
+                      <Text ml="auto">{hstsParsed ? 'Yes' : 'No'}</Text>
+                    </Flex>
+                  )}
+                </Box>
+                <Text mt="2" fontWeight="bold">
+                  URL: {httpChainResult.uri}
+                </Text>
+                {httpChainResult.connections.map(
+                  ({ uri, connection, error }, idx) => {
+                    const { statusCode, headers, blockedCategory, HSTS } =
+                      connection
+                    return (
+                      <Box
+                        key={idx}
+                        px="2"
+                        my="2"
+                        borderWidth="1px"
+                        bg="gray.100"
+                        borderColor="gray.300"
+                      >
+                        <Text>
+                          {idx + 1}. {uri}
+                        </Text>
+                        {error ? (
+                          <Text>{error}</Text>
+                        ) : (
+                          <>
+                            <Text>Status: {statusCode}</Text>
+                            <Text>{blockedCategory}</Text>
+                            <Text>{HSTS}</Text>
+                            <Code>
+                              {Object.keys(headers).map((key, idx) => {
+                                return (
+                                  <Text key={idx}>
+                                    {key}: {headers[key]}
+                                  </Text>
+                                )
+                              })}
+                            </Code>
+                          </>
+                        )}
+                      </Box>
+                    )
+                  },
+                )}
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <Flex as={AccordionButton}>
+                <Text fontSize="xl">HTTPS (443)</Text>{' '}
+                <AccordionIcon boxSize="icons.lg" />
+              </Flex>
+              <AccordionPanel>
+                <Box maxW="50%" fontSize="lg">
+                  <Flex align="center">
+                    <StatusIcon status={httpsLive ? 'PASS' : 'FAIL'} />
+                    <Text px="1">HTTPS Live</Text>
+                    <Text ml="auto">{httpsLive ? 'Yes' : 'No'}</Text>
+                  </Flex>
+                  <Flex align="center">
+                    <StatusIcon
+                      status={
+                        httpsImmediatelyDowngrades || httpsEventuallyDowngrades
+                          ? 'FAIL'
+                          : 'PASS'
+                      }
+                    />
+                    <Text px="1">HTTPS Downgrades</Text>
+                    <Text ml="auto">
+                      {httpsImmediatelyDowngrades
+                        ? 'Immediately'
+                        : httpsEventuallyDowngrades
+                        ? 'Eventually'
+                        : 'Never'}
+                    </Text>
+                  </Flex>
+                  {hstsParsed && (
+                    <Flex align="center">
+                      <StatusIcon status="INFO" />
+                      <Text px="1">HSTS Parsed</Text>
+                      <Text ml="auto">{hstsParsed ? 'Yes' : 'No'}</Text>
+                    </Flex>
+                  )}
+                </Box>
+                <Text mt="2" fontWeight="bold">
+                  URL: {httpsChainResult.uri}
+                </Text>
+                {httpsChainResult.connections.map(
+                  ({ uri, connection, error }, idx) => {
+                    const { statusCode, headers, blockedCategory, HSTS } =
+                      connection
+                    return (
+                      <Box
+                        key={idx}
+                        px="2"
+                        my="2"
+                        borderWidth="1px"
+                        bg="gray.100"
+                        borderColor="gray.300"
+                      >
+                        <Text>
+                          {idx + 1}. {uri}
+                        </Text>
+                        {error ? (
+                          <Text>{error}</Text>
+                        ) : (
+                          <>
+                            <Text>Status: {statusCode}</Text>
+                            <Text>{blockedCategory}</Text>
+                            <Text>{HSTS}</Text>
+                            <Code>
+                              {Object.keys(headers).map((key, idx) => {
+                                return (
+                                  <Text key={idx}>
+                                    {key}: {headers[key]}
+                                  </Text>
+                                )
+                              })}
+                            </Code>
+                          </>
+                        )}
+                      </Box>
+                    )
+                  },
+                )}
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
@@ -429,6 +586,17 @@ function NewGuidancePage() {
       </AccordionItem>
     </Accordion>
   )
+
+  const {
+    badHostname,
+    mustHaveStaple,
+    leafCertificateIsEv,
+    receivedChainContainsAnchorCertificate,
+    receivedChainHasValidOrder,
+    verifiedChainHasSha1Signature,
+    verifiedChainHasLegacySymantecAnchor,
+    certificateInfoChain,
+  } = tlsResult.certificateChainInfo
 
   const tlsGuidance = (
     <Box py="2">
@@ -460,20 +628,181 @@ function NewGuidancePage() {
               negativeTags={tlsResult.negativeTags}
             />
 
-            <Accordion allowMultiple>
+            <Accordion allowMultiple defaultIndex={[3]}>
               <AccordionItem>{tlsProtocols}</AccordionItem>
               <AccordionItem>{tlsCiphers}</AccordionItem>
               <AccordionItem>{tlsCurves}</AccordionItem>
 
               <AccordionItem>
                 <Flex as={AccordionButton}>
-                  <Text fontSize="xl">Certificate Chain Info</Text>{' '}
+                  <Text fontSize="xl">Certificate Chain</Text>
                   <AccordionIcon boxSize="icons.xl" />
                 </Flex>
                 <AccordionPanel>
-                  <Code maxW="100%">
-                    {JSON.stringify(tlsResult.certificateChainInfo)}
-                  </Code>
+                  <Box maxW="50%" fontSize="lg">
+                    <Flex align="center">
+                      <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
+                      <Text px="1">Good Hostname</Text>
+                      <Text ml="auto">{badHostname ? 'No' : 'Yes'}</Text>
+                    </Flex>
+                    <Flex align="center">
+                      <StatusIcon status="INFO" />
+                      <Text px="1">Must Staple</Text>
+                      <Text ml="auto">{mustHaveStaple ? 'Yes' : 'No'}</Text>
+                    </Flex>
+                    <Flex align="center">
+                      <StatusIcon
+                        status={leafCertificateIsEv ? 'PASS' : 'INFO'}
+                      />
+                      <Text px="1">Leaf Certificate is EV</Text>
+                      <Text ml="auto">
+                        {leafCertificateIsEv ? 'Yes' : 'No'}
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <StatusIcon status="INFO" />
+                      <Text px="1">
+                        Received Chain Contains Anchor Certificate
+                      </Text>
+                      <Text ml="auto">
+                        {receivedChainContainsAnchorCertificate ? 'Yes' : 'No'}
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <StatusIcon
+                        status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'}
+                      />
+                      <Text px="1">Received Chain Has Valid Order</Text>
+                      <Text ml="auto">
+                        {receivedChainHasValidOrder ? 'Yes' : 'No'}
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <StatusIcon
+                        status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'}
+                      />
+                      <Text px="1">Verified Chain Free of SHA1 Signature</Text>
+                      <Text ml="auto">
+                        {verifiedChainHasSha1Signature ? 'No' : 'Yes'}
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <StatusIcon
+                        status={
+                          verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'
+                        }
+                      />
+                      <Text px="1">
+                        Verified Chain Free of Legacy Symantec Anchor
+                      </Text>
+                      <Text ml="auto">
+                        {verifiedChainHasLegacySymantecAnchor ? 'No' : 'Yes'}
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Accordion allowMultiple>
+                    {certificateInfoChain.map(
+                      (
+                        {
+                          notValidBefore,
+                          notValidAfter,
+                          issuer,
+                          subject,
+                          expiredCert,
+                          selfSignedCert,
+                          certRevoked,
+                          certRevokedStatus,
+                          commonNames,
+                          serialNumber,
+                          signatureHashAlgorithm,
+                          sanList,
+                        },
+                        idx,
+                      ) => {
+                        return (
+                          <AccordionItem key={idx}>
+                            <Box
+                              rounded="md"
+                              px="2"
+                              my="2"
+                              borderWidth="1px"
+                              bg={
+                                expiredCert ||
+                                certRevoked ||
+                                signatureHashAlgorithm !== 'sha256'
+                                  ? 'weakMuted'
+                                  : 'gray.100'
+                              }
+                              borderColor={
+                                expiredCert ||
+                                certRevoked ||
+                                signatureHashAlgorithm !== 'sha256'
+                                  ? 'weak'
+                                  : 'gray.300'
+                              }
+                            >
+                              <Text fontWeight="bold">
+                                {idx + 1}. {commonNames[0]}
+                              </Text>
+                              <Flex align="center">
+                                <Text mr="1">Not After:</Text>
+                                <Text color={expiredCert && 'weak'}>
+                                  {notValidAfter} UTC
+                                </Text>
+                              </Flex>
+                              <Text>
+                                Siganture Hash:{' '}
+                                {signatureHashAlgorithm.toUpperCase()}
+                              </Text>
+                              <AccordionButton color="blue.500" variant="link">
+                                <PlusSquareIcon mr="1" />
+                                More details
+                              </AccordionButton>
+                              <AccordionPanel>
+                                <Text>Names: {commonNames}</Text>
+                                <Text>Subject: {subject}</Text>
+                                <Text>Serial: {serialNumber}</Text>
+                                <Text>Not Before: {notValidBefore}</Text>
+                                <Text>Not After: {notValidAfter}</Text>
+                                <Text
+                                  fontWeight={expiredCert ? 'bold' : ''}
+                                  color={expiredCert ? 'weak' : 'black'}
+                                >
+                                  Expired: {expiredCert ? 'Yes' : 'No'}
+                                </Text>
+                                <Text>Issuer: {issuer}</Text>
+                                <Text>
+                                  Self-signed: {selfSignedCert ? 'Yes' : 'No'}
+                                </Text>
+                                <Text
+                                  fontWeight={certRevoked ? 'bold' : ''}
+                                  color={certRevoked ? 'weak' : 'black'}
+                                >
+                                  Revoked: {certRevoked ? 'Yes' : 'No'} (
+                                  {certRevokedStatus})
+                                </Text>
+                                <Text>
+                                  Hash Algorithm:{' '}
+                                  {signatureHashAlgorithm.toUpperCase()}
+                                </Text>
+                                <Flex>
+                                  <Text mr="1">SAN List:</Text>
+                                  {sanList.map((san, idx) => {
+                                    return (
+                                      <>
+                                        {san}
+                                        {idx < sanList.length - 1 && ', '}
+                                      </>
+                                    )
+                                  })}
+                                </Flex>
+                              </AccordionPanel>
+                            </Box>
+                          </AccordionItem>
+                        )
+                      },
+                    )}
+                  </Accordion>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -515,7 +844,6 @@ function NewGuidancePage() {
           </Button>
         )}
       </Flex>
-      {orgCards}
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="4">
           <Tab borderTopWidth="0.25">WWW Guidance</Tab>
