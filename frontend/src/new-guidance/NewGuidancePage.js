@@ -12,6 +12,8 @@ import {
   Flex,
   Heading,
   IconButton,
+  ListItem,
+  OrderedList,
   Select,
   Tab,
   TabList,
@@ -20,7 +22,7 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink } from 'react-router-dom'
@@ -36,7 +38,6 @@ function NewGuidancePage() {
     web: webScan,
     dnsScan,
     status,
-    organizations,
     dmarcPhase,
   } = data.findDomainByDomain
 
@@ -44,21 +45,6 @@ function NewGuidancePage() {
   const { node: dnsResults } = dnsScan.edges[0]
   const [selectedEndpoint, setSelectedEndpoint] = useState(
     webResults[0].ipAddress,
-  )
-
-  const orgCards = (
-    <Flex mb="2">
-      <Text fontWeight="bold" mr="2">
-        Owner(s):{' '}
-      </Text>
-      {organizations.edges.map(({ node }, idx) => {
-        return (
-          <Box key={idx}>
-            {node.name} ({node.acronym})
-          </Box>
-        )
-      })}
-    </Flex>
   )
 
   const weakProtocolNames = {
@@ -122,7 +108,7 @@ function NewGuidancePage() {
               Positive
             </Text>
           </Flex>
-          <AccordionIcon />
+          <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
           {webResults.map(({ ipAddress, results }, idx) => {
@@ -188,7 +174,7 @@ function NewGuidancePage() {
                   bg="gray.100"
                   borderColor="gray.300"
                   rounded="md"
-                  mr="1.5rem"
+                  mr="2.25rem"
                 >
                   <NumberedStatusIcon number={endpointPass} status="PASS" />
                   <Text px="1" fontWeight="bold" color="strong">
@@ -812,6 +798,189 @@ function NewGuidancePage() {
     </Box>
   )
 
+  let dmarcSteps
+
+  switch (dmarcPhase) {
+    case 'assess':
+      dmarcSteps = [
+        t`Identify all domains and subdomains used to send mail;`,
+        t`Assess current state;`,
+        t`Deploy initial DMARC records with policy of none; and`,
+        t`Collect and analyze DMARC reports.`,
+      ]
+      break
+    case 'deploy':
+      dmarcSteps = [
+        t`Identify all authorized senders;`,
+        t`Deploy SPF records for all domains;`,
+        t`Deploy DKIM records and keys for all domains and senders; and`,
+        t`Monitor DMARC reports and correct misconfigurations.`,
+      ]
+      break
+    case 'enforce':
+      dmarcSteps = [
+        t`Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;`,
+        t`Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and`,
+        t`Reject all messages from non-mail domains.`,
+      ]
+      break
+    case 'maintain':
+      dmarcSteps = [
+        t`Monitor DMARC reports;`,
+        t`Correct misconfigurations and update records as required; and`,
+        t`Rotate DKIM keys annually.`,
+      ]
+      break
+    default:
+      dmarcSteps = undefined
+      break
+  }
+
+  const dmarcStepList = !dmarcSteps
+    ? undefined
+    : dmarcSteps.map((step, idx) => {
+        return <ListItem key={idx}>{step}</ListItem>
+      })
+
+  const { dkim, dmarc, spf } = dnsResults
+  let negativeDkimCount = 0
+  dkim.selectors.forEach(({ negativeTags }) => {
+    negativeDkimCount += negativeTags.length
+  })
+
+  const emailSummary = (
+    <Accordion allowMultiple defaultIndex={[0]}>
+      <AccordionItem>
+        <Flex align="center" as={AccordionButton}>
+          <Text fontSize="2xl">DNS Result Summary</Text>
+          <Flex
+            py="1"
+            px="2"
+            align="center"
+            borderWidth="2px"
+            bg="gray.100"
+            borderColor="gray.300"
+            rounded="md"
+            ml="auto"
+          >
+            <NumberedStatusIcon number={0} status="FAIL" />
+            <Text px="1" fontWeight="bold" color="weak">
+              Negative
+            </Text>
+          </Flex>
+          <Flex
+            py="1"
+            px="2"
+            align="center"
+            borderWidth="2px"
+            bg="gray.100"
+            borderColor="gray.300"
+            rounded="md"
+            mx="1"
+          >
+            <NumberedStatusIcon number={7} status="INFO" />
+            <Text px="1" fontWeight="bold" color="info">
+              Informative
+            </Text>
+          </Flex>
+          <Flex
+            py="1"
+            px="2"
+            align="center"
+            borderWidth="2px"
+            bg="gray.100"
+            borderColor="gray.300"
+            rounded="md"
+            mr="1"
+          >
+            <NumberedStatusIcon number={3} status="PASS" />
+            <Text px="1" fontWeight="bold" color="strong">
+              Positive
+            </Text>
+          </Flex>
+          <AccordionIcon boxSize="icons.xl" />
+        </Flex>
+        <AccordionPanel>
+          {Object.keys(dnsResults).map((key, idx) => {
+            let passCount = 0
+            let infoCount = 0
+            let failCount = 0
+
+            if (key === 'dmarc' || key === 'spf') {
+              const { positiveTags, neutralTags, negativeTags } =
+                dnsResults[key]
+              passCount = positiveTags.length
+              infoCount = neutralTags.length
+              failCount = negativeTags.length
+            } else if (key === 'dkim') {
+              dnsResults.dkim.selectors.forEach(
+                ({ positiveTags, neutralTags, negativeTags }) => {
+                  passCount += positiveTags.length
+                  infoCount += neutralTags.length
+                  failCount += negativeTags.length
+                },
+              )
+            } else {
+              return
+            }
+            return (
+              <Flex key={idx} align="center" py="1">
+                <Text fontSize="xl" pr="2">
+                  {key.toUpperCase()}
+                </Text>
+                <Flex
+                  py="1"
+                  px="2"
+                  align="center"
+                  borderWidth="2px"
+                  bg="gray.100"
+                  borderColor="gray.300"
+                  rounded="md"
+                  ml="auto"
+                >
+                  <NumberedStatusIcon number={failCount} status="FAIL" />
+                  <Text px="1" fontWeight="bold" color="weak">
+                    Negative
+                  </Text>
+                </Flex>
+                <Flex
+                  py="1"
+                  px="2"
+                  align="center"
+                  borderWidth="2px"
+                  bg="gray.100"
+                  borderColor="gray.300"
+                  rounded="md"
+                  mx="1"
+                >
+                  <NumberedStatusIcon number={infoCount} status="INFO" />
+                  <Text px="1" fontWeight="bold" color="info">
+                    Informative
+                  </Text>
+                </Flex>
+                <Flex
+                  py="1"
+                  px="2"
+                  align="center"
+                  borderWidth="2px"
+                  bg="gray.100"
+                  borderColor="gray.300"
+                  rounded="md"
+                  mr="2.25rem"
+                >
+                  <NumberedStatusIcon number={passCount} status="PASS" />
+                  <Text px="1" fontWeight="bold" color="strong">
+                    Positive
+                  </Text>
+                </Flex>
+              </Flex>
+            )
+          })}
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
+  )
+
   return (
     <Flex flexDirection="column" width="100%">
       <Flex
@@ -861,7 +1030,135 @@ function NewGuidancePage() {
           </TabPanel>
           <TabPanel>
             {/* email guidance */}
-            {JSON.stringify(dnsResults)}
+            <Box>
+              {emailSummary}
+              <Box mb={4} ml="4">
+                <Text fontWeight="bold" fontSize="2xl">
+                  <Trans>
+                    DMARC Implementation Phase: {dmarcPhase.toUpperCase()}
+                  </Trans>
+                </Text>
+                {/* <OrderedList>{dmarcStepList}</OrderedList> */}
+                {dmarcSteps && (
+                  <Box
+                    bg="gray.100"
+                    px="2"
+                    py="1"
+                    borderWidth="1px"
+                    borderColor="gray.300"
+                    rounded="md"
+                  >
+                    <OrderedList>{dmarcStepList}</OrderedList>
+                  </Box>
+                )}
+              </Box>
+              <Accordion allowMultiple>
+                <AccordionItem>
+                  <Flex as={AccordionButton}>
+                    {dmarc.negativeTags.length > 0 ? (
+                      <NumberedStatusIcon
+                        number={dmarc.negativeTags.length}
+                        status="FAIL"
+                      />
+                    ) : (
+                      <StatusIcon boxSize="icons.lg" status="PASS" />
+                    )}
+                    <Text fontSize="2xl" ml="2">
+                      DMARC
+                    </Text>
+                    <AccordionIcon boxSize="icons.xl" />
+                  </Flex>
+                  <AccordionPanel>
+                    <Box>
+                      <Text>{dmarc.record}</Text>
+                      <Text>{dmarc.pPolicy}</Text>
+                      <Text>{dmarc.spPolicy}</Text>
+                      <Text>{dmarc.pct}</Text>
+                    </Box>
+                    <GuidanceTagList
+                      positiveTags={dmarc.positiveTags}
+                      neutralTags={dmarc.neutralTags}
+                      negativeTags={dmarc.negativeTags}
+                    />
+                  </AccordionPanel>
+                </AccordionItem>
+                <AccordionItem>
+                  <Flex as={AccordionButton}>
+                    {spf.negativeTags.length > 0 ? (
+                      <NumberedStatusIcon
+                        number={spf.negativeTags.length}
+                        status="FAIL"
+                      />
+                    ) : (
+                      <StatusIcon boxSize="icons.lg" status="PASS" />
+                    )}
+                    <Text fontSize="2xl" ml="2">
+                      SPF
+                    </Text>
+                    <AccordionIcon boxSize="icons.xl" />
+                  </Flex>
+                  <AccordionPanel>
+                    <Box>
+                      <Text>{spf.record}</Text>
+                      <Text>{spf.lookups}</Text>
+                      <Text>{spf.spfDefault}</Text>
+                    </Box>
+                    <GuidanceTagList
+                      positiveTags={spf.positiveTags}
+                      neutralTags={spf.neutralTags}
+                      negativeTags={spf.negativeTags}
+                    />
+                  </AccordionPanel>
+                </AccordionItem>
+                <AccordionItem>
+                  <Flex as={AccordionButton}>
+                    {dmarc.negativeTags.length > 0 ? (
+                      <NumberedStatusIcon
+                        number={negativeDkimCount}
+                        status="FAIL"
+                      />
+                    ) : (
+                      <StatusIcon boxSize="icons.lg" status="PASS" />
+                    )}
+                    <Text fontSize="2xl" ml="2">
+                      DKIM
+                    </Text>
+                    <AccordionIcon boxSize="icons.xl" />
+                  </Flex>
+                  <AccordionPanel>
+                    {dkim.selectors.length > 0 ? (
+                      dkim.selectors.map(
+                        ({
+                          selector,
+                          positiveTags,
+                          neutralTags,
+                          negativeTags,
+                        }) => {
+                          return (
+                            <>
+                              <Text fontWeight="bold" fontSize="xl">
+                                {selector}
+                              </Text>
+                              <GuidanceTagList
+                                positiveTags={positiveTags}
+                                neutralTags={neutralTags}
+                                negativeTags={negativeTags}
+                              />
+                            </>
+                          )
+                        },
+                      )
+                    ) : (
+                      <Text>
+                        No DKIM selectors are currently attached to this domain.
+                        Please contact an admin of the affiliated organization
+                        to add selectors.
+                      </Text>
+                    )}
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </Box>
           </TabPanel>
         </TabPanels>
       </Tabs>
