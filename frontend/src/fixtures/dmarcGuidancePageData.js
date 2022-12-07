@@ -8,6 +8,17 @@ export const rawDmarcGuidancePageData = {
       ssl: 'PASS',
       __typename: 'DomainStatus',
     },
+    organizations: {
+      edges: [
+        {
+          node: {
+            name: 'org1',
+            acronym: 'O1',
+            slug: 'org1',
+          },
+        },
+      ],
+    },
     hasDMARCReport: true,
     dmarcPhase: 'deploy',
     web: {
