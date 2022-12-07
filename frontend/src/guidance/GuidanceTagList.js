@@ -1,8 +1,8 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import { Accordion, Box, Heading, Stack, Text } from '@chakra-ui/react'
-import { WarningTwoIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { Box, Heading, Text, Flex, Link } from '@chakra-ui/react'
+import { ExternalLinkIcon, WarningTwoIcon } from '@chakra-ui/icons'
+import { Trans } from '@lingui/macro'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 
 export function GuidanceTagList({
@@ -49,43 +49,40 @@ export function GuidanceTagList({
   const neutralTagList = setTagList(neutralTags, 'informative')
 
   const noTags = (
-    <Stack isInline align="center" bg="moderateMuted" px="2">
-      <WarningTwoIcon
-        color="moderate"
-        display={{ base: 'none', md: 'initial' }}
-      />
+    <Box bg="moderateMuted" px="2" py="1" rounded="md">
+      <Flex align="center" mb="2" fontSize="lg" fontWeight="bold">
+        <WarningTwoIcon
+          mr="2"
+          color="moderate"
+          display={{ base: 'none', md: 'initial' }}
+        />
+
+        <Text>
+          <Trans>No guidance found for this category</Trans>
+        </Text>
+      </Flex>
       <Box>
-        <Stack isInline align="center">
-          <WarningTwoIcon
-            color="moderate"
-            display={{ base: 'initial', md: 'none' }}
-          />
-          <Text fontWeight="bold">
-            <Trans>Result:</Trans>
-          </Text>
-          <Text>
-            <Trans>No guidance tags were found for this scan category</Trans>
-          </Text>
-        </Stack>
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>Guidance:</Trans>
-          </Text>
-          <Text>
-            <Trans>
-              This could be due to improper configuration, or could be the
-              result of a scan error
-            </Trans>
-          </Text>
-        </Stack>
-        <Text fontWeight="bold">
+        <Text>
           <Trans>
-            If you believe this was caused by a problem with Tracker, please use
-            the "Report an Issue" link below
+            This could be due to improper configuration, or could be the result
+            of a scan error
+          </Trans>
+        </Text>
+
+        <Text>
+          <Trans>
+            If you believe this was caused by a problem with Tracker, please{' '}
+            <Link
+              color="blue.700"
+              href="https://github.com/canada-ca/tracker/issues"
+              isExternal
+            >
+              Report an Issue <ExternalLinkIcon />
+            </Link>
           </Trans>
         </Text>
       </Box>
-    </Stack>
+    </Box>
   )
 
   return (

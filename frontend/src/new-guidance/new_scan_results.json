@@ -367,7 +367,16 @@
                             "strength": "weak"
                           }
                         ],
-                        "tls1-3CipherSuites": []
+                        "tls1-3CipherSuites": [
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                            "strength": "strong"
+                          }
+                        ]
                       },
                       "acceptedEllipticCurves": [
                         {

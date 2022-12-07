@@ -115,9 +115,9 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
             {tagType === 'informative' && (
               <Text mt="2">
                 <Trans>
-                  Neutral tags highlight relevant configuration details, but are
-                  not addressed within policy requirements and have no impact on
-                  scoring.
+                  Informative tags highlight relevant configuration details, but
+                  are not addressed within policy requirements and have no
+                  impact on scoring.
                 </Trans>
               </Text>
             )}
