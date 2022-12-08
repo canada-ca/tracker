@@ -14,7 +14,7 @@ import {
 import { object } from 'prop-types'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
-import { GuidanceTagList } from '../guidance/GuidanceTagList'
+import { NewGuidanceTagList } from './NewGuidanceTagList'
 import { Trans, t } from '@lingui/macro'
 
 export function WebConnectionResults({ connectionResults }) {
@@ -96,7 +96,7 @@ export function WebConnectionResults({ connectionResults }) {
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        <GuidanceTagList
+        <NewGuidanceTagList
           positiveTags={connectionResults.positiveTags}
           neutralTags={connectionResults.neutralTags}
           negativeTags={connectionResults.negativeTags}

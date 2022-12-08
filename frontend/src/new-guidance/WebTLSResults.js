@@ -13,7 +13,7 @@ import {
 import { object } from 'prop-types'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
-import { GuidanceTagList } from '../guidance/GuidanceTagList'
+import { NewGuidanceTagList } from './NewGuidanceTagList'
 import { Trans, t } from '@lingui/macro'
 
 export function WebTLSResults({ tlsResult }) {
@@ -217,7 +217,7 @@ export function WebTLSResults({ tlsResult }) {
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        <GuidanceTagList
+        <NewGuidanceTagList
           positiveTags={tlsResult.positiveTags}
           neutralTags={tlsResult.neutralTags}
           negativeTags={tlsResult.negativeTags}

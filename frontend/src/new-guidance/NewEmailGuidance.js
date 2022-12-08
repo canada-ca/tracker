@@ -14,7 +14,7 @@ import {
 import { t, Trans } from '@lingui/macro'
 import { object, string } from 'prop-types'
 import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
-import { GuidanceTagList } from '../guidance/GuidanceTagList'
+import { NewGuidanceTagList } from './NewGuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
 import { InfoIcon } from '@chakra-ui/icons'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
@@ -198,7 +198,7 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
                 {spf.spfDefault}
               </Flex>
             </Box>
-            <GuidanceTagList
+            <NewGuidanceTagList
               positiveTags={spf.positiveTags}
               neutralTags={spf.neutralTags}
               negativeTags={spf.negativeTags}
@@ -226,7 +226,7 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
                       <Text fontWeight="bold" fontSize="xl">
                         {selector}
                       </Text>
-                      <GuidanceTagList
+                      <NewGuidanceTagList
                         positiveTags={positiveTags}
                         neutralTags={neutralTags}
                         negativeTags={negativeTags}
@@ -299,7 +299,7 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
                 {dmarc.pct}
               </Flex>
             </Box>
-            <GuidanceTagList
+            <NewGuidanceTagList
               positiveTags={dmarc.positiveTags}
               neutralTags={dmarc.neutralTags}
               negativeTags={dmarc.negativeTags}

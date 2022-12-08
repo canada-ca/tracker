@@ -1,6 +1,16 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Link, Stack, Text } from '@chakra-ui/react'
+import {
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Flex,
+  Link,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import {
   CheckCircleIcon,
   ExternalLinkIcon,
@@ -9,13 +19,13 @@ import {
 } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
 
-export function GuidanceTagDetails({ guidanceTag, tagType }) {
+export function NewGuidanceTagDetails({ guidanceTag, tagType }) {
   const cccsGuidance =
     guidanceTag.refLinks[0]?.description !== null &&
     guidanceTag.refLinks.length !== 0 ? (
       <Stack isInline={guidanceTag.refLinks.length <= 1}>
         <Text fontWeight="bold">
-          <Trans>For in-depth implementation guidance:</Trans>
+          <Trans>Policy guidance:</Trans>
         </Text>
         {guidanceTag.refLinks.map((node, index) => (
           <Link
@@ -40,7 +50,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
     guidanceTag.refLinksTech[0]?.description !== null ? (
       <Stack isInline={guidanceTag.refLinksTech.length <= 1}>
         <Text fontWeight="bold">
-          <Trans>For technical implementation guidance:</Trans>
+          <Trans>Technical implementation guidance:</Trans>
         </Text>
         {guidanceTag.refLinksTech.map((node, index) => (
           <Link
@@ -63,7 +73,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
   const tagIcon = (props) => {
     if (tagType === 'negative')
       return <WarningIcon color="weak" {...props} aria-label="negative tag" />
-    else if (tagType === 'neutral')
+    else if (tagType === 'informative')
       return <InfoIcon color="info" {...props} aria-label="neutral tag" />
     else if (tagType === 'positive')
       return (
@@ -72,30 +82,50 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
   }
 
   return (
-    <Stack isInline align="center" px="2" pt="2">
-      {tagIcon({ display: { base: 'none', md: 'inherit' } })}
-      <Box>
-        <Stack isInline align="center">
-          {tagIcon({ display: { base: 'inherit', md: 'none' } })}
-          <Text fontWeight="bold" ml={{ base: 2, md: 0 }}>
-            <Trans>Result:</Trans>
+    <AccordionItem>
+      <Flex
+        align="center"
+        color={
+          tagType === 'negative'
+            ? 'weak'
+            : tagType === 'positive'
+            ? 'strong'
+            : 'info'
+        }
+        fontWeight="bold"
+        as={AccordionButton}
+        fontSize="lg"
+      >
+        {tagIcon()}
+        <Text mx="2">{guidanceTag.tagName}</Text>
+        <Text ml="auto">{tagType.toUpperCase()}</Text>
+        <AccordionIcon />
+      </Flex>
+      <AccordionPanel>
+        <Box>
+          <Text fontSize="lg" fontWeight="bold">
+            {guidanceTag.guidance}
           </Text>
-          <Text>{guidanceTag.tagName}</Text>
-        </Stack>
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>Guidance:</Trans>
-          </Text>
-          <Text>{guidanceTag.guidance}</Text>
-        </Stack>
-        {cccsGuidance}
-        {technicalGuidance}
-      </Box>
-    </Stack>
+
+          {cccsGuidance}
+          {technicalGuidance}
+
+          {tagType === 'informative' && (
+            <Text mt="2">
+              <Trans>
+                Informative tags highlight relevant configuration details, but
+                are not addressed within policy requirements and have no impact
+                on scoring.
+              </Trans>
+            </Text>
+          )}
+        </Box>
+      </AccordionPanel>
+    </AccordionItem>
   )
 }
 
-GuidanceTagDetails.propTypes = {
+NewGuidanceTagDetails.propTypes = {
   guidanceTag: object,
   tagType: string,
 }
