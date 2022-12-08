@@ -12,7 +12,7 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink } from 'react-router-dom'
@@ -25,7 +25,7 @@ function NewGuidancePage() {
     domain: domainName,
     web: webScan,
     dnsScan,
-    status,
+    // status,
     dmarcPhase,
   } = data.findDomainByDomain
 
@@ -66,8 +66,12 @@ function NewGuidancePage() {
       </Flex>
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="4">
-          <Tab borderTopWidth="0.25">WWW Guidance</Tab>
-          <Tab borderTopWidth="0.25">Email Guidance</Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>WWW Guidance</Trans>
+          </Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>Email Guidance</Trans>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>

@@ -17,6 +17,7 @@ import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
 import { GuidanceTagList } from '../guidance/GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
 import { InfoIcon } from '@chakra-ui/icons'
+import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
 
 export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
   let dmarcSteps
@@ -90,52 +91,15 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
     <Accordion allowMultiple defaultIndex={[0]}>
       <AccordionItem>
         <Flex align="center" as={AccordionButton}>
-          <Text fontSize="2xl">DNS Result Summary</Text>
-          <Flex
-            py="1"
-            px="2"
-            align="center"
-            borderWidth="2px"
-            bg="gray.100"
-            borderColor="gray.300"
-            rounded="md"
-            ml="auto"
-          >
-            <NumberedStatusIcon number={emailFailCount} status="FAIL" />
-            <Text px="1" fontWeight="bold" color="weak">
-              Negative
-            </Text>
-          </Flex>
-          <Flex
-            py="1"
-            px="2"
-            align="center"
-            borderWidth="2px"
-            bg="gray.100"
-            borderColor="gray.300"
-            rounded="md"
-            mx="1"
-          >
-            <NumberedStatusIcon number={emailInfoCount} status="INFO" />
-            <Text px="1" fontWeight="bold" color="info">
-              Informative
-            </Text>
-          </Flex>
-          <Flex
-            py="1"
-            px="2"
-            align="center"
-            borderWidth="2px"
-            bg="gray.100"
-            borderColor="gray.300"
-            rounded="md"
+          <Text fontSize="2xl">
+            <Trans>DNS Result Summary</Trans>
+          </Text>
+          <GuidanceSummaryCategories
+            passCount={emailPassCount}
+            infoCount={emailInfoCount}
+            failCount={emailFailCount}
             mr="1"
-          >
-            <NumberedStatusIcon number={emailPassCount} status="PASS" />
-            <Text px="1" fontWeight="bold" color="strong">
-              Positive
-            </Text>
-          </Flex>
+          />
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
@@ -164,51 +128,12 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
                 <Text fontSize="xl" pr="2">
                   {key.toUpperCase()}
                 </Text>
-                <Flex
-                  py="1"
-                  px="2"
-                  align="center"
-                  borderWidth="2px"
-                  bg="gray.100"
-                  borderColor="gray.300"
-                  rounded="md"
-                  ml="auto"
-                >
-                  <NumberedStatusIcon number={failCount} status="FAIL" />
-                  <Text px="1" fontWeight="bold" color="weak">
-                    Negative
-                  </Text>
-                </Flex>
-                <Flex
-                  py="1"
-                  px="2"
-                  align="center"
-                  borderWidth="2px"
-                  bg="gray.100"
-                  borderColor="gray.300"
-                  rounded="md"
-                  mx="1"
-                >
-                  <NumberedStatusIcon number={infoCount} status="INFO" />
-                  <Text px="1" fontWeight="bold" color="info">
-                    Informative
-                  </Text>
-                </Flex>
-                <Flex
-                  py="1"
-                  px="2"
-                  align="center"
-                  borderWidth="2px"
-                  bg="gray.100"
-                  borderColor="gray.300"
-                  rounded="md"
+                <GuidanceSummaryCategories
+                  passCount={passCount}
+                  infoCount={infoCount}
+                  failCount={failCount}
                   mr="2.25rem"
-                >
-                  <NumberedStatusIcon number={passCount} status="PASS" />
-                  <Text px="1" fontWeight="bold" color="strong">
-                    Positive
-                  </Text>
-                </Flex>
+                />
               </Flex>
             )
           })}
@@ -236,7 +161,7 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
           </Box>
         )}
       </Box>
-      <Accordion allowMultiple defaultIndex={[]}>
+      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
         <AccordionItem>
           <Flex as={AccordionButton}>
             {spf.negativeTags.length > 0 ? (
@@ -256,19 +181,19 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
             <Box>
               <Flex mb="1">
                 <Text fontWeight="bold" mr="1">
-                  Record:
+                  <Trans>Record:</Trans>
                 </Text>
                 {spf.record}
               </Flex>
               <Flex mb="1">
                 <Text fontWeight="bold" mr="1">
-                  Lookups:
+                  <Trans>Lookups:</Trans>
                 </Text>
                 {spf.lookups}
               </Flex>
               <Flex mb="1">
                 <Text fontWeight="bold" mr="1">
-                  Default:
+                  <Trans>Default:</Trans>
                 </Text>
                 {spf.spfDefault}
               </Flex>
@@ -322,9 +247,11 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
               >
                 <InfoIcon color="info" mr="2" />
                 <Text fontWeight="bold">
-                  No DKIM selectors are currently attached to this domain.
-                  Please contact an admin of an affiliated organization to add
-                  selectors.
+                  <Trans>
+                    No DKIM selectors are currently attached to this domain.
+                    Please contact an admin of an affiliated organization to add
+                    selectors.
+                  </Trans>
                 </Text>
               </Flex>
             )}
@@ -349,25 +276,25 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
             <Box>
               <Flex mb="1">
                 <Text fontWeight="bold" mr="1">
-                  Record:
+                  <Trans>Record:</Trans>
                 </Text>
                 {dmarc.record}
               </Flex>
               <Flex mb="1">
                 <Text fontWeight="bold" mr="1">
-                  pPolicy:
+                  <Trans>pPolicy:</Trans>
                 </Text>
                 {dmarc.pPolicy}
               </Flex>
               <Flex mb="1">
                 <Text fontWeight="bold" mr="1">
-                  spPolicy:
+                  <Trans>spPolicy:</Trans>
                 </Text>
                 {dmarc.spPolicy}
               </Flex>
               <Flex mb="1">
                 <Text fontWeight="bold" mr="1">
-                  pct:
+                  <Trans>pct:</Trans>
                 </Text>
                 {dmarc.pct}
               </Flex>
