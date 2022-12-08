@@ -22,7 +22,7 @@ export function GuidanceSummaryCategories({
   return (
     <>
       <Flex {...summaryCategoryStyleProps} ml="auto">
-        <NumberedStatusIcon number={passCount} status="FAIL" />
+        <NumberedStatusIcon number={failCount} status="FAIL" />
         <Text px="1" fontWeight="bold" color="weak">
           <Trans>Negative</Trans>
         </Text>
@@ -34,7 +34,7 @@ export function GuidanceSummaryCategories({
         </Text>
       </Flex>
       <Flex {...summaryCategoryStyleProps} mr={mr}>
-        <NumberedStatusIcon number={failCount} status="PASS" />
+        <NumberedStatusIcon number={passCount} status="PASS" />
         <Text px="1" fontWeight="bold" color="strong">
           <Trans>Positive</Trans>
         </Text>

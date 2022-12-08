@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   IconButton,
+  Link,
   Tab,
   TabList,
   TabPanel,
@@ -25,6 +26,7 @@ function NewGuidancePage() {
     domain: domainName,
     web: webScan,
     dnsScan,
+    organizations,
     // status,
     dmarcPhase,
   } = data.findDomainByDomain
@@ -64,10 +66,33 @@ function NewGuidancePage() {
           </Button>
         )}
       </Flex>
+      <Flex
+        maxW="auto"
+        mb="2"
+        bg="gray.100"
+        px="2"
+        py="1"
+        borderWidth="1px"
+        borderColor="gray.300"
+      >
+        <Text fontWeight="bold" mr="2">
+          <Trans>Organization(s):</Trans>
+        </Text>
+        {organizations.edges.map(({ node }, idx) => {
+          return (
+            <>
+              <Link as={RouteLink} to={`/organizations/${node.slug}`} key={idx}>
+                {node.name} ({node.acronym})
+              </Link>
+              {idx !== organizations.edges.length - 1 && <Text mr="1">,</Text>}
+            </>
+          )
+        })}
+      </Flex>
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="4">
           <Tab borderTopWidth="0.25">
-            <Trans>WWW Guidance</Trans>
+            <Trans>Web Guidance</Trans>
           </Tab>
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
