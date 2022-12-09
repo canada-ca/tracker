@@ -45,54 +45,50 @@ export function NewWebGuidance({ webResults }) {
   })
 
   const endPointSummary = (
-    <Accordion allowMultiple defaultIndex={[0]}>
-      <AccordionItem>
-        <Flex align="center" as={AccordionButton}>
-          <Text fontSize="2xl">
-            <Trans>Endpoint Summary</Trans>
-          </Text>
-          <GuidanceSummaryCategories
-            passCount={totalWebPass}
-            infoCount={totalWebInfo}
-            failCount={totalWebFail}
-            mr="1"
-          />
+    <AccordionItem>
+      <Flex align="center" as={AccordionButton}>
+        <Text fontSize="2xl">
+          <Trans>Endpoint Summary</Trans>
           <AccordionIcon boxSize="icons.xl" />
-        </Flex>
-        <AccordionPanel>
-          {webResults.map(({ ipAddress, results }, idx) => {
-            const {
-              positiveTags: tlsPass,
-              neutralTags: tlsInfo,
-              negativeTags: tlsFail,
-            } = results.tlsResult
-            const {
-              positiveTags: httpsPass,
-              neutralTags: httpsInfo,
-              negativeTags: httpsFail,
-            } = results.connectionResults
+        </Text>
+        <GuidanceSummaryCategories
+          passCount={totalWebPass}
+          infoCount={totalWebInfo}
+          failCount={totalWebFail}
+        />
+      </Flex>
+      <AccordionPanel>
+        {webResults.map(({ ipAddress, results }, idx) => {
+          const {
+            positiveTags: tlsPass,
+            neutralTags: tlsInfo,
+            negativeTags: tlsFail,
+          } = results.tlsResult
+          const {
+            positiveTags: httpsPass,
+            neutralTags: httpsInfo,
+            negativeTags: httpsFail,
+          } = results.connectionResults
 
-            const endpointPass = tlsPass.length + httpsPass.length
-            const endpointInfo = tlsInfo.length + httpsInfo.length
-            const endpointFail = tlsFail.length + httpsFail.length
+          const endpointPass = tlsPass.length + httpsPass.length
+          const endpointInfo = tlsInfo.length + httpsInfo.length
+          const endpointFail = tlsFail.length + httpsFail.length
 
-            return (
-              <Flex key={idx} align="center" py="1">
-                <Text fontSize="xl" pr="2">
-                  {ipAddress}
-                </Text>
-                <GuidanceSummaryCategories
-                  passCount={endpointPass}
-                  infoCount={endpointInfo}
-                  failCount={endpointFail}
-                  mr="2.25rem"
-                />
-              </Flex>
-            )
-          })}
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
+          return (
+            <Flex key={idx} align="center" py="1">
+              <Text fontSize="xl" pr="2">
+                {ipAddress}
+              </Text>
+              <GuidanceSummaryCategories
+                passCount={endpointPass}
+                infoCount={endpointInfo}
+                failCount={endpointFail}
+              />
+            </Flex>
+          )
+        })}
+      </AccordionPanel>
+    </AccordionItem>
   )
 
   const endpointSelect = (
@@ -123,9 +119,9 @@ export function NewWebGuidance({ webResults }) {
 
   return (
     <>
-      {endPointSummary}
-      {endpointSelect}
-      <Accordion allowMultiple defaultIndex={[0, 1]}>
+      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        {endPointSummary}
+        {endpointSelect}
         <WebConnectionResults connectionResults={connectionResults} />
         <WebTLSResults tlsResult={tlsResult} />
       </Accordion>

@@ -17,9 +17,15 @@ import {
   InfoIcon,
   WarningIcon,
 } from '@chakra-ui/icons'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
 export function NewGuidanceTagDetails({ guidanceTag, tagType }) {
+  const tagTypeList = {
+    positive: t`Positive`,
+    informative: t`Informative`,
+    negative: t`Negative`,
+  }
+
   const cccsGuidance =
     guidanceTag.refLinks[0]?.description !== null &&
     guidanceTag.refLinks.length !== 0 ? (
@@ -97,9 +103,9 @@ export function NewGuidanceTagDetails({ guidanceTag, tagType }) {
         fontSize="lg"
       >
         {tagIcon()}
-        <Text mx="2">{guidanceTag.tagName}</Text>
-        <Text ml="auto">{tagType.toUpperCase()}</Text>
+        <Text ml="2">{guidanceTag.tagName}</Text>
         <AccordionIcon />
+        <Text ml="auto">{tagTypeList[tagType].toUpperCase()}</Text>
       </Flex>
       <AccordionPanel>
         <Box>

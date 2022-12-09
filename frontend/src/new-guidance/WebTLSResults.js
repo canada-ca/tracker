@@ -24,6 +24,12 @@ export function WebTLSResults({ tlsResult }) {
     'tls1-1CipherSuites': 'TLS 1.1',
   }
 
+  const cipherStrengths = {
+    weak: t`weak`,
+    acceptable: t`acceptable`,
+    strong: t`strong`,
+  }
+
   const {
     'tls1-2CipherSuites': tls1_2,
     'tls1-3CipherSuites': tls1_3,
@@ -45,25 +51,40 @@ export function WebTLSResults({ tlsResult }) {
       </Flex>
       <AccordionPanel>
         {weakProtocols.length > 0 ? (
-          weakProtocols.map((protocol) => {
-            return (
-              <>
-                <Text fontSize="xl" fontWeight="bold" as="u">
-                  {weakProtocolNames[protocol]}
-                </Text>
-                {rest[protocol].map(({ name }, idx) => {
-                  return (
-                    <Text key={idx} color="weak" fontWeight="bold">
-                      {name}
-                    </Text>
-                  )
-                })}
-              </>
-            )
-          })
+          <>
+            <Text fontSize="lg" mb="1">
+              <Trans>
+                The following ciphers are from known weak protocols and must be
+                disabled:
+              </Trans>
+            </Text>
+            {weakProtocols.map((protocol) => {
+              return (
+                <>
+                  {rest[protocol].map(({ name }, idx) => {
+                    return (
+                      <Flex
+                        key={idx}
+                        borderBottomWidth="1px"
+                        borderBottomColor="gray.300"
+                        mb="1"
+                      >
+                        <Text color="weak" fontWeight="bold">
+                          {name}
+                        </Text>
+                        <Text ml="auto" color="weak" fontWeight="bold">
+                          {weakProtocolNames[protocol]}
+                        </Text>
+                      </Flex>
+                    )
+                  })}
+                </>
+              )
+            })}
+          </>
         ) : (
           <Box bg="strongMuted">
-            <Text px="2" py="1">
+            <Text px="2" py="1" fontSize="lg">
               <Trans>No known weak protocols used.</Trans>
             </Text>
           </Box>
@@ -97,26 +118,23 @@ export function WebTLSResults({ tlsResult }) {
                 TLS 1.2
               </Text>
 
-              <Flex>
-                <Box>
-                  {tls1_2.map(({ name, strength }, idx) => {
-                    return (
-                      <Text key={idx} fontWeight="bold" color={strength}>
-                        {name}
-                      </Text>
-                    )
-                  })}
-                </Box>
-                <Box ml="2rem">
-                  {tls1_2.map(({ strength }, idx) => {
-                    return (
-                      <Text key={idx} fontWeight="bold" color={strength}>
-                        {strength.toUpperCase()}
-                      </Text>
-                    )
-                  })}
-                </Box>
-              </Flex>
+              {tls1_2.map(({ name, strength }, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    borderBottomWidth="1px"
+                    borderBottomColor="gray.300"
+                    mb="1"
+                  >
+                    <Text fontWeight="bold" color={strength}>
+                      {name}
+                    </Text>
+                    <Text ml="auto" fontWeight="bold" color={strength}>
+                      {cipherStrengths[strength].toUpperCase()}
+                    </Text>
+                  </Flex>
+                )
+              })}
             </>
           )}
           {tls1_3.length > 0 && (
@@ -124,26 +142,23 @@ export function WebTLSResults({ tlsResult }) {
               <Text fontSize="xl" as="u" fontWeight="bold">
                 TLS 1.3
               </Text>
-              <Flex>
-                <Box>
-                  {tls1_3.map(({ name, strength }, idx) => {
-                    return (
-                      <Text key={idx} fontWeight="bold" color={strength}>
-                        {name}
-                      </Text>
-                    )
-                  })}
-                </Box>
-                <Box ml="2rem">
-                  {tls1_3.map(({ strength }, idx) => {
-                    return (
-                      <Text key={idx} fontWeight="bold" color={strength}>
-                        {strength.toUpperCase()}
-                      </Text>
-                    )
-                  })}
-                </Box>
-              </Flex>
+              {tls1_3.map(({ name, strength }, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    borderBottomWidth="1px"
+                    borderBottomColor="gray.300"
+                    mb="1"
+                  >
+                    <Text fontWeight="bold" color={strength}>
+                      {name}
+                    </Text>
+                    <Text ml="auto" fontWeight="bold" color={strength}>
+                      {cipherStrengths[strength].toUpperCase()}
+                    </Text>
+                  </Flex>
+                )
+              })}
             </>
           )}
         </>
@@ -165,26 +180,23 @@ export function WebTLSResults({ tlsResult }) {
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        <Flex>
-          <Box>
-            {tlsResult.acceptedEllipticCurves.map(({ name, strength }, idx) => {
-              return (
-                <Text key={idx} fontWeight="bold" color={strength}>
-                  {name}
-                </Text>
-              )
-            })}
-          </Box>
-          <Box ml="2rem">
-            {tlsResult.acceptedEllipticCurves.map(({ strength }, idx) => {
-              return (
-                <Text key={idx} fontWeight="bold" color={strength}>
-                  {strength.toUpperCase()}
-                </Text>
-              )
-            })}
-          </Box>
-        </Flex>
+        {tlsResult.acceptedEllipticCurves.map(({ name, strength }, idx) => {
+          return (
+            <Flex
+              key={idx}
+              borderBottomWidth="1px"
+              borderBottomColor="gray.300"
+              mb="1"
+            >
+              <Text fontWeight="bold" color={strength}>
+                {name}
+              </Text>
+              <Text ml="auto" fontWeight="bold" color={strength}>
+                {cipherStrengths[strength].toUpperCase()}
+              </Text>
+            </Flex>
+          )
+        })}
       </AccordionPanel>
     </Box>
   )
@@ -236,29 +248,49 @@ export function WebTLSResults({ tlsResult }) {
               <AccordionIcon boxSize="icons.xl" />
             </Flex>
             <AccordionPanel>
-              <Box maxW="50%" fontSize="lg">
-                <Flex align="center">
+              <Box fontSize="lg">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
                   <Text px="1">
                     <Trans>Good Hostname</Trans>
                   </Text>
                   <Text ml="auto">{badHostname ? t`No` : t`Yes`}</Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>Must Staple</Trans>
                   </Text>
                   <Text ml="auto">{mustHaveStaple ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon status={leafCertificateIsEv ? 'PASS' : 'INFO'} />
                   <Text px="1">
                     <Trans>Leaf Certificate is EV</Trans>
                   </Text>
                   <Text ml="auto">{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>Received Chain Contains Anchor Certificate</Trans>
@@ -267,7 +299,12 @@ export function WebTLSResults({ tlsResult }) {
                     {receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}
                   </Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon
                     status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'}
                   />
@@ -278,7 +315,12 @@ export function WebTLSResults({ tlsResult }) {
                     {receivedChainHasValidOrder ? t`Yes` : t`No`}
                   </Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon
                     status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'}
                   />
@@ -289,7 +331,12 @@ export function WebTLSResults({ tlsResult }) {
                     {verifiedChainHasSha1Signature ? t`No` : t`Yes`}
                   </Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon
                     status={
                       verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'
@@ -356,7 +403,7 @@ export function WebTLSResults({ tlsResult }) {
                             </Text>
                           </Flex>
                           <Text>
-                            <Trans>Siganture Hash: </Trans>
+                            <Trans>Siganture Hash:</Trans>{' '}
                             {signatureHashAlgorithm.toUpperCase()}
                           </Text>
                           <AccordionButton color="blue.500" variant="link">
@@ -365,45 +412,39 @@ export function WebTLSResults({ tlsResult }) {
                           </AccordionButton>
                           <AccordionPanel>
                             <Text>
-                              <Trans>Names: </Trans>
-                              {commonNames}
+                              <Trans>Names:</Trans> {commonNames}
                             </Text>
                             <Text>
-                              <Trans>Subject: </Trans>
-                              {subject}
+                              <Trans>Subject:</Trans> {subject}
                             </Text>
                             <Text>
-                              <Trans>Serial: </Trans>
-                              {serialNumber}
+                              <Trans>Serial:</Trans> {serialNumber}
                             </Text>
                             <Text>
-                              <Trans>Not Before: </Trans>
-                              {notValidBefore}
+                              <Trans>Not Before:</Trans> {notValidBefore}
                             </Text>
                             <Text>
-                              <Trans>Not After: </Trans>
-                              {notValidAfter}
+                              <Trans>Not After:</Trans> {notValidAfter}
                             </Text>
                             <Text
                               fontWeight={expiredCert ? 'bold' : ''}
                               color={expiredCert ? 'weak' : 'black'}
                             >
-                              <Trans>Expired: </Trans>
+                              <Trans>Expired:</Trans>{' '}
                               {expiredCert ? t`Yes` : t`No`}
                             </Text>
                             <Text>
-                              <Trans>Issuer: </Trans>
-                              {issuer}
+                              <Trans>Issuer:</Trans> {issuer}
                             </Text>
                             <Text>
-                              <Trans>Self-signed: </Trans>
+                              <Trans>Self-signed:</Trans>{' '}
                               {selfSignedCert ? t`Yes` : t`No`}
                             </Text>
                             <Text
                               fontWeight={certRevoked ? 'bold' : ''}
                               color={certRevoked ? 'weak' : 'black'}
                             >
-                              <Trans>Revoked: </Trans>
+                              <Trans>Revoked:</Trans>{' '}
                               {certRevoked ? t`Yes` : t`No`} (
                               {certRevokedStatus})
                             </Text>

@@ -50,8 +50,7 @@ export function WebConnectionResults({ connectionResults }) {
             ) : (
               <>
                 <Text>
-                  <Trans>Status: </Trans>
-                  {statusCode}
+                  <Trans>Status:</Trans> {statusCode}
                 </Text>
 
                 <Text>{blockedCategory}</Text>
@@ -110,15 +109,25 @@ export function WebConnectionResults({ connectionResults }) {
               <AccordionIcon boxSize="icons.lg" />
             </Flex>
             <AccordionPanel>
-              <Box maxW="50%" fontSize="lg">
-                <Flex align="center">
+              <Box fontSize="lg">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>HTTP Live</Trans>
                   </Text>
                   <Text ml="auto">{httpLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon
                     status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'}
                   />
@@ -134,7 +143,12 @@ export function WebConnectionResults({ connectionResults }) {
                   </Text>
                 </Flex>
                 {hstsParsed && (
-                  <Flex align="center">
+                  <Flex
+                    align="center"
+                    borderBottomWidth="1px"
+                    borderBottomColor="gray.300"
+                    mb="1"
+                  >
                     <StatusIcon status="INFO" />
                     <Text px="1">
                       <Trans>HSTS Parsed</Trans>
@@ -144,9 +158,8 @@ export function WebConnectionResults({ connectionResults }) {
                 )}
               </Box>
               <Text mt="2" fontWeight="bold">
-                <Trans>URL: </Trans>
-                {httpChainResult.uri}
-              </Text>{' '}
+                <Trans>URL:</Trans> {httpChainResult.uri}
+              </Text>
               <Accordion allowMultiple defaultIndex={[]}>
                 {connChainResult(httpChainResult)}
               </Accordion>
@@ -156,19 +169,29 @@ export function WebConnectionResults({ connectionResults }) {
             <Flex as={AccordionButton}>
               <Text fontSize="xl">
                 <Trans>HTTPS (443) Chain</Trans>
-              </Text>{' '}
+              </Text>
               <AccordionIcon boxSize="icons.lg" />
             </Flex>
             <AccordionPanel>
-              <Box maxW="50%" fontSize="lg">
-                <Flex align="center">
+              <Box fontSize="lg">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon status={httpsLive ? 'PASS' : 'FAIL'} />
                   <Text px="1">
                     <Trans>HTTPS Live</Trans>
                   </Text>
                   <Text ml="auto">{httpsLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex align="center">
+                <Flex
+                  align="center"
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.300"
+                  mb="1"
+                >
                   <StatusIcon
                     status={
                       httpsImmediatelyDowngrades || httpsEventuallyDowngrades
@@ -198,8 +221,7 @@ export function WebConnectionResults({ connectionResults }) {
                 )}
               </Box>
               <Text mt="2" fontWeight="bold">
-                <Trans>URL: </Trans>
-                {httpsChainResult.uri}
+                <Trans>URL: </Trans> {httpsChainResult.uri}
               </Text>
               <Accordion allowMultiple defaultIndex={[]}>
                 {connChainResult(httpsChainResult)}

@@ -1,15 +1,10 @@
 import React from 'react'
 import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
 import { Flex, Text } from '@chakra-ui/react'
-import { number, string } from 'prop-types'
+import { number } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
-export function GuidanceSummaryCategories({
-  passCount,
-  infoCount,
-  failCount,
-  mr,
-}) {
+export function GuidanceSummaryCategories({ passCount, infoCount, failCount }) {
   const summaryCategoryStyleProps = {
     py: '1',
     px: '2',
@@ -33,7 +28,7 @@ export function GuidanceSummaryCategories({
           <Trans>Informative</Trans>
         </Text>
       </Flex>
-      <Flex {...summaryCategoryStyleProps} mr={mr}>
+      <Flex {...summaryCategoryStyleProps} mr="1">
         <NumberedStatusIcon number={passCount} status="PASS" />
         <Text px="1" fontWeight="bold" color="strong">
           <Trans>Positive</Trans>
@@ -47,5 +42,4 @@ GuidanceSummaryCategories.propTypes = {
   passCount: number,
   infoCount: number,
   failCount: number,
-  mr: string,
 }

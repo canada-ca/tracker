@@ -13,12 +13,12 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { NewWebGuidance } from './NewWebGuidance'
 import { NewEmailGuidance } from './NewEmailGuidance'
+import { Trans } from '@lingui/macro'
 const { data } = require('./new_scan_results.json')
 
 function NewGuidancePage() {
@@ -30,6 +30,10 @@ function NewGuidancePage() {
     // status,
     dmarcPhase,
   } = data.findDomainByDomain
+
+  const history = useHistory()
+  const location = useLocation()
+  const { from } = location.state || { from: { pathname: '/domains' } }
 
   const { results: webResults } = webScan.edges[0].node
   const { node: dnsResults } = dnsScan.edges[0]
@@ -43,7 +47,7 @@ function NewGuidancePage() {
       >
         <IconButton
           icon={<ArrowLeftIcon />}
-          //   onClick={() => history.push(from)}
+          onClick={() => history.push(from)}
           color="gray.900"
           fontSize="2xl"
           aria-label="back"
