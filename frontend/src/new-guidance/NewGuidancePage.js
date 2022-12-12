@@ -1,6 +1,7 @@
 import React from 'react'
 import { ArrowLeftIcon } from '@chakra-ui/icons'
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -18,7 +19,8 @@ import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { NewWebGuidance } from './NewWebGuidance'
 import { NewEmailGuidance } from './NewEmailGuidance'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
+import { StatusBadge } from '../domains/StatusBadge'
 const { data } = require('./new_scan_results.json')
 
 function NewGuidancePage() {
@@ -27,7 +29,7 @@ function NewGuidancePage() {
     web: webScan,
     dnsScan,
     organizations,
-    // status,
+    status,
     dmarcPhase,
   } = data.findDomainByDomain
 
@@ -37,6 +39,18 @@ function NewGuidancePage() {
 
   const { results: webResults } = webScan.edges[0].node
   const { node: dnsResults } = dnsScan.edges[0]
+
+  const statusGroupingProps = {
+    flexDirection: { base: 'column', md: 'row' },
+    border: '1px solid',
+    borderColor: 'gray.300',
+    borderRadius: 'md',
+    px: { base: 2, md: 0 },
+    py: { base: 1, md: 2 },
+    mx: { base: 0, md: 1 },
+    my: { base: 2, md: 0 },
+    bg: 'gray.100',
+  }
 
   return (
     <Flex flexDirection="column" width="100%">
@@ -78,6 +92,7 @@ function NewGuidancePage() {
         py="1"
         borderWidth="1px"
         borderColor="gray.300"
+        rounded="md"
       >
         <Text fontWeight="bold" mr="2">
           <Trans>Organization(s):</Trans>
@@ -92,6 +107,30 @@ function NewGuidancePage() {
             </>
           )
         })}
+      </Flex>
+      <Flex mb="4">
+        <Box {...statusGroupingProps} px="1">
+          <Text textAlign="center" color="gray.500">
+            Web (HTTPS/TLS)
+          </Text>
+          <Flex>
+            <StatusBadge text={t`HTTPS`} status={status.https} />
+            <StatusBadge text={t`HSTS`} status={status.hsts} />
+            <StatusBadge text={t`Protocols`} status={status.protocols} />
+            <StatusBadge text={t`Ciphers`} status={status.ciphers} />
+            <StatusBadge text={t`Curves`} status={status.curves} />
+          </Flex>
+        </Box>
+        <Box {...statusGroupingProps} px="1">
+          <Text textAlign="center" color="gray.500">
+            Email
+          </Text>
+          <Flex>
+            <StatusBadge text="SPF" status={status.spf} />
+            <StatusBadge text="DKIM" status={status.dkim} />
+            <StatusBadge text="DMARC" status={status.dmarc} />
+          </Flex>
+        </Box>
       </Flex>
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="4">

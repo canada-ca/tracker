@@ -144,7 +144,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
 
         <Box {...statusGroupingProps} px="1">
           <Text textAlign="center" color="gray.500">
-            WWW (HTTPS/TLS)
+            Web (HTTPS/TLS)
           </Text>
           <Flex>
             <StatusBadge text={t`HTTPS`} status={status.https} />

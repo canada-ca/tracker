@@ -2523,7 +2523,7 @@ msgid "Sector:"
 msgstr "Secteur:"
 
 #: src/new-guidance/WebConnectionResults.js:61
-msgid "See Headers"
+msgid "See headers"
 msgstr "Voir les en-têtes"
 
 #: src/auth/LanguageSelect.js:22

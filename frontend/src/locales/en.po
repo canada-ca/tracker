@@ -2555,8 +2555,8 @@ msgid "Sector:"
 msgstr "Sector:"
 
 #: src/new-guidance/WebConnectionResults.js:61
-msgid "See Headers"
-msgstr "See Headers"
+msgid "See headers"
+msgstr "See headers"
 
 #: src/auth/LanguageSelect.js:22
 msgid "Select Preferred Language"

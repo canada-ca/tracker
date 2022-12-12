@@ -58,7 +58,7 @@ export function WebConnectionResults({ connectionResults }) {
 
                 <AccordionButton color="blue.500" variant="link">
                   <PlusSquareIcon mr="1" />
-                  <Trans>See Headers</Trans>
+                  <Trans>See headers</Trans>
                 </AccordionButton>
                 <AccordionPanel>
                   <Code>
