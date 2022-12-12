@@ -3305,6 +3305,10 @@ msgstr "Vulnerability Scan Dashboard"
 #~ msgid "WEB"
 #~ msgstr "WEB"
 
+#: src/new-guidance/NewGuidancePage.js:114
+msgid "Web (HTTPS/TLS)"
+msgstr "Web (HTTPS/TLS)"
+
 #: src/termsConditions/TermsConditionsPage.js:366
 msgid "We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change."
 msgstr "We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change."

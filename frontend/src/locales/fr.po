@@ -3257,6 +3257,10 @@ msgstr "Tableau de bord de l'analyse des vulnérabilités"
 #~ msgid "WEB"
 #~ msgstr "WEB"
 
+#: src/new-guidance/NewGuidancePage.js:114
+msgid "Web (HTTPS/TLS)"
+msgstr "Web (HTTPS/TLS)"
+
 #: src/termsConditions/TermsConditionsPage.js:366
 msgid "We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change."
 msgstr "Nous nous réservons le droit de modifier la présentation et le contenu de notre site Web, nos politiques, nos produits, nos services et les présentes conditions générales à tout moment et sans préavis. Veuillez consulter régulièrement les présentes conditions générales, car l'utilisation continue de nos services après qu'une modification a été apportée sera considérée comme une acceptation de cette modification."

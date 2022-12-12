@@ -144,7 +144,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
 
         <Box {...statusGroupingProps} px="1">
           <Text textAlign="center" color="gray.500">
-            Web (HTTPS/TLS)
+            <Trans>Web (HTTPS/TLS)</Trans>
           </Text>
           <Flex>
             <StatusBadge text={t`HTTPS`} status={status.https} />
@@ -156,7 +156,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
         </Box>
         <Box {...statusGroupingProps} px="1">
           <Text textAlign="center" color="gray.500">
-            Email
+            <Trans>Email</Trans>
           </Text>
           <Flex>
             <StatusBadge text="SPF" status={status.spf} />
