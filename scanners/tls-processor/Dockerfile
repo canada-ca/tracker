@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1

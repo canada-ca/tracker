@@ -10,6 +10,7 @@ import {
   IconButton,
   Heading,
   Link,
+  Text,
 } from '@chakra-ui/react'
 
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
@@ -60,6 +61,7 @@ const GuidancePage = () => {
     web: webScan,
     email: emailScan,
     status: webStatus,
+    organizations,
     dmarcPhase,
   } = data.findDomainByDomain
 
@@ -107,6 +109,29 @@ const GuidancePage = () => {
             <LinkIcon ml="4px" aria-hidden="true" />
           </Link>
         )}
+      </Flex>
+      <Flex
+        maxW="auto"
+        mb="2"
+        bg="gray.100"
+        px="2"
+        py="1"
+        borderWidth="1px"
+        borderColor="gray.300"
+      >
+        <Text fontWeight="bold" mr="2">
+          <Trans>Organization(s):</Trans>
+        </Text>
+        {organizations.edges.map(({ node }, idx) => {
+          return (
+            <>
+              <Link as={RouteLink} to={`/organizations/${node.slug}`} key={idx}>
+                {node.name} ({node.acronym})
+              </Link>
+              {idx !== organizations.edges.length - 1 && <Text mr="1">,</Text>}
+            </>
+          )
+        })}
       </Flex>
       <Tabs
         isFitted

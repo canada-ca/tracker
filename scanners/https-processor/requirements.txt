@@ -7,7 +7,7 @@
 
 -i https://pypi.org/simple
 asyncio-nats-client==0.11.4
-certifi==2021.5.30
+certifi==2022.12.7
 charset-normalizer==2.0.4; python_version >= '3'
 emoji==1.4.2
 gql==2.0.0
