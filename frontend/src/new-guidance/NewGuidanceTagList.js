@@ -74,7 +74,7 @@ export function NewGuidanceTagList({
           <Trans>
             If you believe this was caused by a problem with Tracker, please{' '}
             <Link
-              color="blue.700"
+              color="blue.600"
               href="https://github.com/canada-ca/tracker/issues"
               isExternal
             >
