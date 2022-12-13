@@ -30,6 +30,14 @@ export function WebConnectionResults({ connectionResults }) {
     httpsChainResult,
   } = connectionResults
 
+  const columnInfoStyleProps = {
+    align: 'center',
+    borderBottomWidth: '1px',
+    borderBottomColor: 'gray.300',
+    mb: '1',
+    mr: { base: '0', md: '50%' },
+  }
+
   const connChainResult = (chainResult) =>
     chainResult.connections.map(({ uri, connection, error }, idx) => {
       const { statusCode, headers, blockedCategory, HSTS } = connection
@@ -37,7 +45,7 @@ export function WebConnectionResults({ connectionResults }) {
         <AccordionItem key={idx}>
           <Box
             px="2"
-            my="2"
+            m="2"
             borderWidth="1px"
             bg="gray.100"
             borderColor="gray.300"
@@ -109,25 +117,15 @@ export function WebConnectionResults({ connectionResults }) {
               <AccordionIcon boxSize="icons.lg" />
             </Flex>
             <AccordionPanel>
-              <Box fontSize="lg">
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+              <Box fontSize="lg" px="2">
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>HTTP Live</Trans>
                   </Text>
                   <Text ml="auto">{httpLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon
                     status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'}
                   />
@@ -143,12 +141,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </Text>
                 </Flex>
                 {hstsParsed && (
-                  <Flex
-                    align="center"
-                    borderBottomWidth="1px"
-                    borderBottomColor="gray.300"
-                    mb="1"
-                  >
+                  <Flex {...columnInfoStyleProps}>
                     <StatusIcon status="INFO" />
                     <Text px="1">
                       <Trans>HSTS Parsed</Trans>
@@ -157,7 +150,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </Flex>
                 )}
               </Box>
-              <Text mt="2" fontWeight="bold">
+              <Text mt="2" fontWeight="bold" mx="2">
                 <Trans>URL:</Trans> {httpChainResult.uri}
               </Text>
               <Accordion allowMultiple defaultIndex={[]}>
@@ -173,25 +166,15 @@ export function WebConnectionResults({ connectionResults }) {
               <AccordionIcon boxSize="icons.lg" />
             </Flex>
             <AccordionPanel>
-              <Box fontSize="lg">
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+              <Box fontSize="lg" px="2">
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon status={httpsLive ? 'PASS' : 'FAIL'} />
                   <Text px="1">
                     <Trans>HTTPS Live</Trans>
                   </Text>
                   <Text ml="auto">{httpsLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon
                     status={
                       httpsImmediatelyDowngrades || httpsEventuallyDowngrades
@@ -211,7 +194,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </Text>
                 </Flex>
                 {hstsParsed && (
-                  <Flex align="center">
+                  <Flex {...columnInfoStyleProps}>
                     <StatusIcon status="INFO" />
                     <Text px="1">
                       <Trans>HSTS Parsed</Trans>
@@ -220,7 +203,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </Flex>
                 )}
               </Box>
-              <Text mt="2" fontWeight="bold">
+              <Text mt="2" fontWeight="bold" mx="2">
                 <Trans>URL: </Trans> {httpsChainResult.uri}
               </Text>
               <Accordion allowMultiple defaultIndex={[]}>

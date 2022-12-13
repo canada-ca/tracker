@@ -40,6 +40,14 @@ export function WebTLSResults({ tlsResult }) {
     return rest[protocol].length > 0
   })
 
+  const columnInfoStyleProps = {
+    align: 'center',
+    borderBottomWidth: '1px',
+    borderBottomColor: 'gray.300',
+    mb: '1',
+    mr: { base: '0', md: '50%' },
+  }
+
   const tlsProtocols = (
     <Box>
       <Flex as={AccordionButton}>
@@ -51,7 +59,7 @@ export function WebTLSResults({ tlsResult }) {
       </Flex>
       <AccordionPanel>
         {weakProtocols.length > 0 ? (
-          <>
+          <Box px="2">
             <Text fontSize="lg" mb="1">
               <Trans>
                 The following ciphers are from known weak protocols and must be
@@ -63,12 +71,7 @@ export function WebTLSResults({ tlsResult }) {
                 <>
                   {rest[protocol].map(({ name }, idx) => {
                     return (
-                      <Flex
-                        key={idx}
-                        borderBottomWidth="1px"
-                        borderBottomColor="gray.300"
-                        mb="1"
-                      >
+                      <Flex key={idx} {...columnInfoStyleProps}>
                         <Text color="weak" fontWeight="bold">
                           {name}
                         </Text>
@@ -81,7 +84,7 @@ export function WebTLSResults({ tlsResult }) {
                 </>
               )
             })}
-          </>
+          </Box>
         ) : (
           <Box bg="strongMuted">
             <Text px="2" py="1" fontSize="lg">
@@ -111,22 +114,19 @@ export function WebTLSResults({ tlsResult }) {
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        <>
+        <Box px="2">
           {tls1_2.length > 0 && (
             <>
-              <Text fontSize="xl" fontWeight="bold" as="u">
+              <Text fontSize="xl" fontWeight="bold" as="u" pb="2">
                 TLS 1.2
               </Text>
-
               {tls1_2.map(({ name, strength }, idx) => {
                 return (
-                  <Flex
-                    key={idx}
-                    borderBottomWidth="1px"
-                    borderBottomColor="gray.300"
-                    mb="1"
-                  >
-                    <Text fontWeight="bold" color={strength}>
+                  <Flex key={idx} {...columnInfoStyleProps}>
+                    <Text
+                      fontWeight="bold"
+                      color={strength === 'weak' ? 'weak' : 'black'}
+                    >
                       {name}
                     </Text>
                     <Text ml="auto" fontWeight="bold" color={strength}>
@@ -139,18 +139,16 @@ export function WebTLSResults({ tlsResult }) {
           )}
           {tls1_3.length > 0 && (
             <>
-              <Text fontSize="xl" as="u" fontWeight="bold">
+              <Text fontSize="xl" as="u" fontWeight="bold" pb="2">
                 TLS 1.3
               </Text>
               {tls1_3.map(({ name, strength }, idx) => {
                 return (
-                  <Flex
-                    key={idx}
-                    borderBottomWidth="1px"
-                    borderBottomColor="gray.300"
-                    mb="1"
-                  >
-                    <Text fontWeight="bold" color={strength}>
+                  <Flex key={idx} {...columnInfoStyleProps}>
+                    <Text
+                      fontWeight="bold"
+                      color={strength === 'weak' ? 'weak' : 'black'}
+                    >
                       {name}
                     </Text>
                     <Text ml="auto" fontWeight="bold" color={strength}>
@@ -161,13 +159,13 @@ export function WebTLSResults({ tlsResult }) {
               })}
             </>
           )}
-        </>
+        </Box>
       </AccordionPanel>
     </Box>
   )
 
   const tlsCurves = (
-    <Box>
+    <>
       <Flex as={AccordionButton}>
         <StatusIcon
           status={
@@ -180,25 +178,25 @@ export function WebTLSResults({ tlsResult }) {
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        {tlsResult.acceptedEllipticCurves.map(({ name, strength }, idx) => {
-          return (
-            <Flex
-              key={idx}
-              borderBottomWidth="1px"
-              borderBottomColor="gray.300"
-              mb="1"
-            >
-              <Text fontWeight="bold" color={strength}>
-                {name}
-              </Text>
-              <Text ml="auto" fontWeight="bold" color={strength}>
-                {cipherStrengths[strength].toUpperCase()}
-              </Text>
-            </Flex>
-          )
-        })}
+        <Box px="2">
+          {tlsResult.acceptedEllipticCurves.map(({ name, strength }, idx) => {
+            return (
+              <Flex key={idx} {...columnInfoStyleProps}>
+                <Text
+                  fontWeight="bold"
+                  color={strength === 'weak' ? 'weak' : 'black'}
+                >
+                  {name}
+                </Text>
+                <Text ml="auto" fontWeight="bold" color={strength}>
+                  {cipherStrengths[strength].toUpperCase()}
+                </Text>
+              </Flex>
+            )
+          })}
+        </Box>
       </AccordionPanel>
-    </Box>
+    </>
   )
 
   const {
@@ -248,49 +246,29 @@ export function WebTLSResults({ tlsResult }) {
               <AccordionIcon boxSize="icons.xl" />
             </Flex>
             <AccordionPanel>
-              <Box fontSize="lg">
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+              <Box fontSize="lg" px="2">
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
                   <Text px="1">
                     <Trans>Good Hostname</Trans>
                   </Text>
                   <Text ml="auto">{badHostname ? t`No` : t`Yes`}</Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>Must Staple</Trans>
                   </Text>
                   <Text ml="auto">{mustHaveStaple ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon status={leafCertificateIsEv ? 'PASS' : 'INFO'} />
                   <Text px="1">
                     <Trans>Leaf Certificate is EV</Trans>
                   </Text>
                   <Text ml="auto">{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>Received Chain Contains Anchor Certificate</Trans>
@@ -299,12 +277,7 @@ export function WebTLSResults({ tlsResult }) {
                     {receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}
                   </Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon
                     status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'}
                   />
@@ -315,12 +288,7 @@ export function WebTLSResults({ tlsResult }) {
                     {receivedChainHasValidOrder ? t`Yes` : t`No`}
                   </Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon
                     status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'}
                   />
@@ -331,12 +299,7 @@ export function WebTLSResults({ tlsResult }) {
                     {verifiedChainHasSha1Signature ? t`No` : t`Yes`}
                   </Text>
                 </Flex>
-                <Flex
-                  align="center"
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.300"
-                  mb="1"
-                >
+                <Flex {...columnInfoStyleProps}>
                   <StatusIcon
                     status={
                       verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'

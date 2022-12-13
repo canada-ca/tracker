@@ -32,6 +32,7 @@ export function NewGuidanceTagList({
             }
             mb="1"
             rounded="md"
+            mx="2"
           >
             <NewGuidanceTagDetails
               guidanceTag={guidanceTag.node || guidanceTag}

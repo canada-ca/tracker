@@ -75,7 +75,15 @@ export function NewWebGuidance({ webResults }) {
           const endpointFail = tlsFail.length + httpsFail.length
 
           return (
-            <Flex key={idx} align="center" py="1">
+            <Flex
+              key={idx}
+              align="center"
+              py="1"
+              borderTopColor={idx === 0 ? 'gray.300' : ''}
+              borderTopWidth={idx === 0 ? '1px' : ''}
+              borderBottomWidth="1px"
+              borderBottomColor="gray.300"
+            >
               <Text fontSize="xl" pr="2">
                 {ipAddress}
               </Text>
