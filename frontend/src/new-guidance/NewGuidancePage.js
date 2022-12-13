@@ -69,16 +69,7 @@ function NewGuidancePage() {
           </Button>
         )}
       </Flex>
-      <Flex
-        maxW="auto"
-        mb="2"
-        bg="gray.100"
-        px="2"
-        py="1"
-        borderWidth="1px"
-        borderColor="gray.300"
-        rounded="md"
-      >
+      <Flex maxW="auto" mb="2" px="2" py="1">
         <Text fontWeight="bold" mr="2">
           <Trans>Organization(s):</Trans>
         </Text>
