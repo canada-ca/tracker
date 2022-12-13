@@ -327,6 +327,7 @@ export function WebTLSResults({ tlsResult }) {
                       <AccordionItem key={idx}>
                         <Box
                           rounded="md"
+                          mx="2"
                           px="2"
                           my="2"
                           borderWidth="1px"

@@ -176,19 +176,19 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
         </Flex>
         <AccordionPanel>
           <Box px="2">
-            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+            <Flex mb="1" px="2">
               <Text mr="1" minW="7%">
                 <Trans>Record:</Trans>
               </Text>
               {spf.record}
             </Flex>
-            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+            <Flex mb="1" px="2" bg="gray.200">
               <Text mr="1" minW="7%">
                 <Trans>Lookups:</Trans>
               </Text>
               {spf.lookups}
             </Flex>
-            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+            <Flex mb="1" px="2">
               <Text mr="1" minW="7%">
                 <Trans>Default:</Trans>
               </Text>
@@ -271,25 +271,25 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
         </Flex>
         <AccordionPanel>
           <Box px="2">
-            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+            <Flex mb="1" px="2">
               <Text mr="1" minW="7%">
                 <Trans>Record:</Trans>
               </Text>
               {dmarc.record}
             </Flex>
-            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+            <Flex mb="1" bg="gray.200" px="2">
               <Text mr="1" minW="7%">
                 <Trans>p:</Trans>
               </Text>
               {dmarc.pPolicy}
             </Flex>
-            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+            <Flex mb="1" px="2">
               <Text mr="1" minW="7%">
                 <Trans>sp:</Trans>
               </Text>
               {dmarc.spPolicy}
             </Flex>
-            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+            <Flex mb="1" bg="gray.200" px="2">
               <Text mr="1" minW="7%">
                 <Trans>pct:</Trans>
               </Text>
