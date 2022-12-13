@@ -131,7 +131,7 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
               borderBottomWidth="1px"
               borderBottomColor="gray.300"
             >
-              <Text fontSize="xl" pr="2">
+              <Text fontSize="xl" pl="2">
                 {key.toUpperCase()}
               </Text>
               <GuidanceSummaryCategories

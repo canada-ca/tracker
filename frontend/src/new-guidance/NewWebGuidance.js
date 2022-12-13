@@ -84,7 +84,7 @@ export function NewWebGuidance({ webResults }) {
               borderBottomWidth="1px"
               borderBottomColor="gray.300"
             >
-              <Text fontSize="xl" pr="2">
+              <Text fontSize="xl" pl="2">
                 {ipAddress}
               </Text>
               <GuidanceSummaryCategories
