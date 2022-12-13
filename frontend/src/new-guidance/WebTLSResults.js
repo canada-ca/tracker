@@ -42,8 +42,9 @@ export function WebTLSResults({ tlsResult }) {
 
   const columnInfoStyleProps = {
     align: 'center',
-    borderBottomWidth: '1px',
-    borderBottomColor: 'gray.300',
+    // borderBottomWidth: '1px',
+    // borderBottomColor: 'gray.300',
+    px: '1',
     mb: '1',
     mr: { base: '0', md: '50%' },
   }
@@ -254,7 +255,7 @@ export function WebTLSResults({ tlsResult }) {
                   </Text>
                   <Text ml="auto">{badHostname ? t`No` : t`Yes`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex {...columnInfoStyleProps} bg="gray.200">
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>Must Staple</Trans>
@@ -268,7 +269,7 @@ export function WebTLSResults({ tlsResult }) {
                   </Text>
                   <Text ml="auto">{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex {...columnInfoStyleProps} bg="gray.200">
                   <StatusIcon status="INFO" />
                   <Text px="1">
                     <Trans>Received Chain Contains Anchor Certificate</Trans>
@@ -288,7 +289,7 @@ export function WebTLSResults({ tlsResult }) {
                     {receivedChainHasValidOrder ? t`Yes` : t`No`}
                   </Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex {...columnInfoStyleProps} bg="gray.200">
                   <StatusIcon
                     status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'}
                   />
@@ -340,18 +341,12 @@ export function WebTLSResults({ tlsResult }) {
                           my="2"
                           borderWidth="1px"
                           bg={
-                            expiredCert ||
-                            certRevoked ||
-                            signatureHashAlgorithm !== 'sha256'
+                            expiredCert || certRevoked
                               ? 'weakMuted'
                               : 'gray.100'
                           }
                           borderColor={
-                            expiredCert ||
-                            certRevoked ||
-                            signatureHashAlgorithm !== 'sha256'
-                              ? 'weak'
-                              : 'gray.300'
+                            expiredCert || certRevoked ? 'weak' : 'gray.300'
                           }
                         >
                           <Text fontWeight="bold">
