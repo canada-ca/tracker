@@ -11,13 +11,45 @@ guidance = json.load(guidance_file)
 
 
 def process_dkim(dkim_results):
+    def get_dkim_tag_status(selector_tag_list):
+        processed_dkim = {}
+
+        # get dkim statuses
+        dkim_statuses = []
+
+        for dkim_selector, tags in selector_tag_list.items():
+            processed_dkim[dkim_selector] = {
+                "status": "fail",
+                "positive_tags": [],
+                "negative_tags": [],
+                "neutral_tags": []
+            }
+
+            for tag in tags:
+                if tag in guidance["dkim"]["pass"]:
+                    processed_dkim[dkim_selector]["positive_tags"].append(tag)
+                if tag in guidance["dkim"]["fail"]:
+                    processed_dkim[dkim_selector]["negative_tags"].append(tag)
+                if tag in guidance["dkim"]["info"]:
+                    processed_dkim[dkim_selector]["neutral_tags"].append(tag)
+
+            if len(processed_dkim[dkim_selector]["negative_tags"]) > 0:
+                dkim_statuses.append("fail")
+                processed_dkim[dkim_selector]["status"] = "fail"
+            else:
+                dkim_statuses.append("pass")
+                processed_dkim[dkim_selector]["status"] = "pass"
+
+        dkim_status = "pass" if all([False if status == "fail" else True for status in dkim_statuses]) and len(
+            processed_dkim) > 0 else "fail"
+
+        return processed_dkim, dkim_status
+
     dkim_err = dkim_results.get("error")
     dkim_tags = {}
 
     if dkim_err:
-        return
-
-    processed_dkim = {}
+        return get_dkim_tag_status(dkim_tags)
 
     for selector in dkim_results.keys():
         dkim_tags[selector] = []
@@ -58,42 +90,30 @@ def process_dkim(dkim_results):
         if t_enabled.lower() == "y":
             dkim_tags[selector].append("dkim13")
 
-        processed_dkim[selector] = {
-            "status": "fail",
+    return get_dkim_tag_status(dkim_tags)
+
+
+def process_spf(spf_results):
+    def get_spf_tag_status(tags):
+        processed_spf = {
             "positive_tags": [],
             "negative_tags": [],
             "neutral_tags": []
         }
-        for tag in dkim_tags[selector]:
-            if tag in guidance["dkim"]["pass"]:
-                processed_dkim[selector]["positive_tags"].append(tag)
-            if tag in guidance["dkim"]["fail"]:
-                processed_dkim[selector]["negative_tags"].append(tag)
-            if tag in guidance["dkim"]["info"]:
-                processed_dkim[selector]["neutral_tags"].append(tag)
+        for tag in tags:
+            if tag in guidance["spf"]["pass"]:
+                processed_spf["positive_tags"].append(tag)
+            if tag in guidance["spf"]["fail"]:
+                processed_spf["negative_tags"].append(tag)
+            if tag in guidance["spf"]["info"]:
+                processed_spf["neutral_tags"].append(tag)
 
-    # get dkim statuses
-    dkim_statuses = []
-
-    for selector in processed_dkim.keys():
-        if len(processed_dkim[selector]["negative_tags"]) > 0:
-            dkim_statuses.append("fail")
-            processed_dkim[selector]["status"] = "fail"
+        if "spf12" in processed_spf["positive_tags"] and len(processed_spf["negative_tags"]) == 0:
+            spf_status = "pass"
         else:
-            dkim_statuses.append("pass")
-            processed_dkim[selector]["status"] = "pass"
+            spf_status = "fail"
 
-    dkim_status = "pass" if all([False if status == "fail" else True for status in dkim_statuses]) and len(
-        processed_dkim) > 0 else "fail"
-
-    return processed_dkim, dkim_status
-
-
-def process_spf(spf_results):
-    spf_err = spf_results.get("error")
-
-    if spf_err:
-        return
+        return processed_spf, spf_status
 
     spf_tags = []
 
@@ -101,7 +121,7 @@ def process_spf(spf_results):
         spf_results.get("record", "null") == "null"
     ):
         spf_tags.append("spf2")
-        return spf_tags
+        return get_spf_tag_status(spf_tags)
 
     # "valid": true,
     if spf_results["valid"]:
@@ -136,38 +156,38 @@ def process_spf(spf_results):
     if dns_lookups > 10:
         spf_tags.append("spf11")
 
-    processed_spf = {
-        "positive_tags": [],
-        "negative_tags": [],
-        "neutral_tags": []
-    }
-
-    for tag in spf_tags:
-        if tag in guidance["spf"]["pass"]:
-            processed_spf["positive_tags"].append(tag)
-        if tag in guidance["spf"]["fail"]:
-            processed_spf["negative_tags"].append(tag)
-        if tag in guidance["spf"]["info"]:
-            processed_spf["neutral_tags"].append(tag)
-
-    spf_status = "fail"
-    if "spf12" in processed_spf["positive_tags"] and len(processed_spf["negative_tags"]) == 0:
-        spf_status = "pass"
-
-    return processed_spf, spf_status
+    return get_spf_tag_status(spf_tags)
 
 
 def process_dmarc(dmarc_results):
-    dmarc_err = dmarc_results.get("error")
+    def get_dmarc_tag_status(tags):
+        processed_dmarc = {
+            "positive_tags": [],
+            "negative_tags": [],
+            "neutral_tags": []
+        }
 
-    if dmarc_err:
-        return
+        for tag in tags:
+            if tag in guidance["dmarc"]["pass"]:
+                processed_dmarc["positive_tags"].append(tag)
+            if tag in guidance["dmarc"]["fail"]:
+                processed_dmarc["negative_tags"].append(tag)
+            if tag in guidance["dmarc"]["info"]:
+                processed_dmarc["neutral_tags"].append(tag)
+
+        if "dmarc10" in processed_dmarc["positive_tags"] and "dmarc23" in processed_dmarc["positive_tags"] and len(
+            processed_dmarc["negative_tags"]) == 0:
+            dmarc_status = "pass"
+        else:
+            dmarc_status = "fail"
+
+        return processed_dmarc, dmarc_status
 
     dmarc_tags = []
 
     if dmarc_results.get("error") == "missing":
         dmarc_tags.append("dmarc2")
-        return dmarc_tags
+        return get_dmarc_tag_status(dmarc_tags)
 
     # "valid": true,
     if dmarc_results["valid"]:
@@ -307,26 +327,7 @@ def process_dmarc(dmarc_results):
         elif sp_tag == "reject":
             dmarc_tags.append("dmarc19")
 
-    processed_dmarc = {
-        "positive_tags": [],
-        "negative_tags": [],
-        "neutral_tags": []
-    }
-
-    for tag in dmarc_tags:
-        if tag in guidance["dmarc"]["pass"]:
-            processed_dmarc["positive_tags"].append(tag)
-        if tag in guidance["dmarc"]["fail"]:
-            processed_dmarc["negative_tags"].append(tag)
-        if tag in guidance["dmarc"]["info"]:
-            processed_dmarc["neutral_tags"].append(tag)
-
-    dmarc_status = "fail"
-    if "dmarc10" in processed_dmarc["positive_tags"] and "dmarc23" in processed_dmarc["positive_tags"] and len(
-        processed_dmarc["negative_tags"]) == 0:
-        dmarc_status = "pass"
-
-    return processed_dmarc, dmarc_status
+    return get_dmarc_tag_status(dmarc_tags)
 
 
 def process_results(results):
