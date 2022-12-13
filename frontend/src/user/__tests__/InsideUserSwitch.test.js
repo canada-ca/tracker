@@ -98,7 +98,7 @@ describe('<InsideUserSwitch />', () => {
       await waitFor(() =>
         expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
       )
-      const betaSwitch = getByLabelText(/Inside User/i)
+      const betaSwitch = getByLabelText(/Feature Preview/i)
       userEvent.click(betaSwitch)
       await waitFor(() => expect(getByText(/Inside user status changed/i)))
     })
@@ -146,7 +146,7 @@ describe('<InsideUserSwitch />', () => {
       await waitFor(() =>
         expect(getByText(/Feature Preview/i)).toBeInTheDocument(),
       )
-      const betaSwitch = getByLabelText(/Inside User/i)
+      const betaSwitch = getByLabelText(/Feature Preview/i)
       userEvent.click(betaSwitch)
       await waitFor(() =>
         expect(

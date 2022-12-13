@@ -25,7 +25,6 @@ export function InsideUserSwitch({ insideUser }) {
         })
       },
       onCompleted({ updateUserProfile }) {
-        console.log(updateUserProfile)
         if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
           toast({
             title: t`Inside user status changed`,
@@ -75,7 +74,7 @@ export function InsideUserSwitch({ insideUser }) {
         isFocusable={true}
         id="Inside User"
         name="Inside User"
-        aria-label="Inside User"
+        aria-label="Feature Preview"
         mx="2"
         defaultChecked={insideUser}
         onChange={async (e) =>
