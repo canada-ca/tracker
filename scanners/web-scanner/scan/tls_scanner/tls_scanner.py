@@ -98,7 +98,7 @@ class CertificateChainInfo:
     received_chain_has_valid_order: bool = None
     verified_chain_has_sha1_signature: bool = None
     verified_chain_has_legacy_symantec_anchor: bool = None
-    certificate_info_chain: list[CertificateInfo] = None
+    certificate_chain: list[CertificateInfo] = None
 
     def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult):
         cert_chain = cert_deployment.received_certificate_chain
@@ -109,7 +109,7 @@ class CertificateChainInfo:
         self.received_chain_has_valid_order = cert_deployment.received_chain_has_valid_order
         self.verified_chain_has_sha1_signature = cert_deployment.verified_chain_has_sha1_signature
         self.verified_chain_has_legacy_symantec_anchor = cert_deployment.verified_chain_has_legacy_symantec_anchor
-        self.certificate_info_chain = [CertificateInfo(cert) for cert in cert_chain]
+        self.certificate_chain = [CertificateInfo(cert) for cert in cert_chain]
         self.path_validation_results = self.get_path_validation_result_info(cert_deployment.path_validation_results)
 
 

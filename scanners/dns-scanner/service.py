@@ -28,7 +28,9 @@ def to_json(msg):
     print(json.dumps(msg, indent=2))
 
 
-async def run(loop):
+async def run():
+    loop = asyncio.get_running_loop()
+
     async def error_cb(error):
         logger.error(f"MY ERROR: {error}")
 
@@ -118,17 +120,8 @@ async def run(loop):
             getattr(signal, signal_name),
             functools.partial(ask_exit, signal_name))
 
-    await nc.subscribe(SUBSCRIBE_TO, QUEUE_GROUP, subscribe_handler)
-
-
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+    await asyncio.Future()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())

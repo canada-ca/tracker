@@ -178,7 +178,10 @@ def process_connection_results(connection_results):
         # check HSTS header
         hsts = None
         try:
-            hsts = https_connections[0]["connection"]["headers"]["strict-transport-security"]
+            for header, value in https_connections[0]["connection"]["headers"].items():
+                if header.lower() == "strict-transport-security":
+                    hsts = value
+                    break
         except KeyError:
             pass
 
