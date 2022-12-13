@@ -4,6 +4,7 @@ import os
 from dataclasses import dataclass, asdict as dataclass_asdict
 
 import logging
+from typing import List
 
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
@@ -13,7 +14,7 @@ from sslyze.plugins.certificate_info._certificate_utils import get_common_names,
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze import Scanner, ServerScanRequest, ServerScanResultAsJson, \
     CipherSuiteAcceptedByServer, CipherSuiteRejectedByServer, TlsResumptionSupportEnum, \
-    CertificateDeploymentAnalysisResult
+    CertificateDeploymentAnalysisResult, PathValidationResult
 from sslyze.scanner.models import CipherSuitesScanAttempt, ServerScanResult
 from sslyze.server_setting import (
     ServerNetworkLocation, ServerNetworkConfiguration,
@@ -73,8 +74,23 @@ class CertificateInfo:
             )
 
 
+
+@dataclass
+class TrustStoreInfo:
+    name: str
+    version: str
+
+
+@dataclass
+class PathValidationResultInfo:
+    openssl_error_string: str | None
+    was_validation_successful: bool
+    trust_store: TrustStoreInfo
+
+
 @dataclass
 class CertificateChainInfo:
+    path_validation_results: list[PathValidationResultInfo] = None
     bad_hostname: bool = None
     must_have_staple: bool = None
     leaf_certificate_is_ev: bool = None
@@ -94,6 +110,18 @@ class CertificateChainInfo:
         self.verified_chain_has_sha1_signature = cert_deployment.verified_chain_has_sha1_signature
         self.verified_chain_has_legacy_symantec_anchor = cert_deployment.verified_chain_has_legacy_symantec_anchor
         self.certificate_info_chain = [CertificateInfo(cert) for cert in cert_chain]
+        self.path_validation_results = self.get_path_validation_result_info(cert_deployment.path_validation_results)
+
+
+    @staticmethod
+    def get_path_validation_result_info(path_validation_results: list[PathValidationResult]) -> list[PathValidationResultInfo]:
+        results = []
+        for validation_result in path_validation_results:
+            results.append(PathValidationResultInfo(openssl_error_string=validation_result.openssl_error_string,
+                                                    was_validation_successful=validation_result.was_validation_successful,
+                                                    trust_store=TrustStoreInfo(name=validation_result.trust_store.name,
+                                                                               version=validation_result.trust_store.version)))
+        return results
 
 
 @dataclass
@@ -166,7 +194,8 @@ class TLSResult:
             self.error = f"Server hostname could not be resolved for domain '{domain}'"
             return
         except BaseException as e:
-            logger.error(f"Unknown server side error when requesting scan for domain '{domain}' at IP '{ip_address}': "f"{str(e)}")
+            logger.error(
+                f"Unknown server side error when requesting scan for domain '{domain}' at IP '{ip_address}': "f"{str(e)}")
             self.error = f"Unknown server side error when requesting scan for domain '{domain}' at IP '{ip_address}'"
             return
 
@@ -193,7 +222,8 @@ class TLSResult:
         scan_results_as_dict = json.loads(ServerScanResultAsJson.from_orm(scan_results).json())
 
         if scan_results.connectivity_error_trace:
-            logger.info(f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}': {json.dumps(scan_results_as_dict)}")
+            logger.info(
+                f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}': {json.dumps(scan_results_as_dict)}")
             self.error = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
             return
 
@@ -242,7 +272,8 @@ class TLSResult:
                     return curve
 
         try:
-            accepted_curves = [convert_to_secg(curve.name) for curve in scan_result.scan_result.elliptic_curves.result.supported_curves]
+            accepted_curves = [convert_to_secg(curve.name) for curve in
+                               scan_result.scan_result.elliptic_curves.result.supported_curves]
             return accepted_curves
         except AttributeError:
             return None
@@ -320,6 +351,7 @@ class TLSResult:
             return supports_tls_compression
         except AttributeError:
             return None
+
 
 
 def scan_tls(domain: str, ip_address: str) -> TLSResult:
