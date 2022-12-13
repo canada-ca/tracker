@@ -35,7 +35,7 @@ export function WebConnectionResults({ connectionResults }) {
     borderBottomWidth: '1px',
     borderBottomColor: 'gray.300',
     mb: '1',
-    mr: { base: '0', md: '50%' },
+    px: '2',
   }
 
   const connChainResult = (chainResult) =>
@@ -120,19 +120,19 @@ export function WebConnectionResults({ connectionResults }) {
               <Box fontSize="lg" px="2">
                 <Flex {...columnInfoStyleProps}>
                   <StatusIcon status="INFO" />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>HTTP Live</Trans>
                   </Text>
-                  <Text ml="auto">{httpLive ? t`Yes` : t`No`}</Text>
+                  <Text>{httpLive ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
                   <StatusIcon
                     status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'}
                   />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>HTTP Upgrades</Trans>
                   </Text>
-                  <Text ml="auto">
+                  <Text>
                     {httpImmediatelyUpgrades
                       ? t`Immediately`
                       : httpEventuallyUpgrades
@@ -143,10 +143,10 @@ export function WebConnectionResults({ connectionResults }) {
                 {hstsParsed && (
                   <Flex {...columnInfoStyleProps}>
                     <StatusIcon status="INFO" />
-                    <Text px="1">
+                    <Text px="1" minW="50%">
                       <Trans>HSTS Parsed</Trans>
                     </Text>
-                    <Text ml="auto">{hstsParsed ? t`Yes` : t`No`}</Text>
+                    <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
                   </Flex>
                 )}
               </Box>
@@ -169,10 +169,10 @@ export function WebConnectionResults({ connectionResults }) {
               <Box fontSize="lg" px="2">
                 <Flex {...columnInfoStyleProps}>
                   <StatusIcon status={httpsLive ? 'PASS' : 'FAIL'} />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>HTTPS Live</Trans>
                   </Text>
-                  <Text ml="auto">{httpsLive ? t`Yes` : t`No`}</Text>
+                  <Text>{httpsLive ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
                   <StatusIcon
@@ -182,10 +182,10 @@ export function WebConnectionResults({ connectionResults }) {
                         : 'PASS'
                     }
                   />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>HTTPS Downgrades</Trans>
                   </Text>
-                  <Text ml="auto">
+                  <Text>
                     {httpsImmediatelyDowngrades
                       ? t`Immediately`
                       : httpsEventuallyDowngrades
@@ -196,10 +196,10 @@ export function WebConnectionResults({ connectionResults }) {
                 {hstsParsed && (
                   <Flex {...columnInfoStyleProps}>
                     <StatusIcon status="INFO" />
-                    <Text px="1">
+                    <Text px="1" minW="50%">
                       <Trans>HSTS Parsed</Trans>
                     </Text>
-                    <Text ml="auto">{hstsParsed ? t`Yes` : t`No`}</Text>
+                    <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
                   </Flex>
                 )}
               </Box>

@@ -42,11 +42,10 @@ export function WebTLSResults({ tlsResult }) {
 
   const columnInfoStyleProps = {
     align: 'center',
-    // borderBottomWidth: '1px',
-    // borderBottomColor: 'gray.300',
-    px: '1',
+    borderBottomWidth: '1px',
+    borderBottomColor: 'gray.300',
     mb: '1',
-    mr: { base: '0', md: '50%' },
+    px: { base: '2', md: '4' },
   }
 
   const tlsProtocols = (
@@ -73,12 +72,10 @@ export function WebTLSResults({ tlsResult }) {
                   {rest[protocol].map(({ name }, idx) => {
                     return (
                       <Flex key={idx} {...columnInfoStyleProps}>
-                        <Text color="weak" fontWeight="bold">
+                        <Text color="weak" minW="50%">
                           {name}
                         </Text>
-                        <Text ml="auto" color="weak" fontWeight="bold">
-                          {weakProtocolNames[protocol]}
-                        </Text>
+                        <Text color="weak">{weakProtocolNames[protocol]}</Text>
                       </Flex>
                     )
                   })}
@@ -125,12 +122,12 @@ export function WebTLSResults({ tlsResult }) {
                 return (
                   <Flex key={idx} {...columnInfoStyleProps}>
                     <Text
-                      fontWeight="bold"
                       color={strength === 'weak' ? 'weak' : 'black'}
+                      minW="50%"
                     >
                       {name}
                     </Text>
-                    <Text ml="auto" fontWeight="bold" color={strength}>
+                    <Text color={strength === 'weak' ? 'weak' : 'black'}>
                       {cipherStrengths[strength].toUpperCase()}
                     </Text>
                   </Flex>
@@ -147,12 +144,12 @@ export function WebTLSResults({ tlsResult }) {
                 return (
                   <Flex key={idx} {...columnInfoStyleProps}>
                     <Text
-                      fontWeight="bold"
                       color={strength === 'weak' ? 'weak' : 'black'}
+                      minW="50%"
                     >
                       {name}
                     </Text>
-                    <Text ml="auto" fontWeight="bold" color={strength}>
+                    <Text color={strength === 'weak' ? 'weak' : 'black'}>
                       {cipherStrengths[strength].toUpperCase()}
                     </Text>
                   </Flex>
@@ -183,13 +180,10 @@ export function WebTLSResults({ tlsResult }) {
           {tlsResult.acceptedEllipticCurves.map(({ name, strength }, idx) => {
             return (
               <Flex key={idx} {...columnInfoStyleProps}>
-                <Text
-                  fontWeight="bold"
-                  color={strength === 'weak' ? 'weak' : 'black'}
-                >
+                <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
                   {name}
                 </Text>
-                <Text ml="auto" fontWeight="bold" color={strength}>
+                <Text color={strength === 'weak' ? 'weak' : 'black'}>
                   {cipherStrengths[strength].toUpperCase()}
                 </Text>
               </Flex>
@@ -248,68 +242,64 @@ export function WebTLSResults({ tlsResult }) {
             </Flex>
             <AccordionPanel>
               <Box fontSize="lg" px="2">
-                <Flex {...columnInfoStyleProps}>
+                <Flex align="center" mb="1" px="2">
                   <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>Good Hostname</Trans>
                   </Text>
-                  <Text ml="auto">{badHostname ? t`No` : t`Yes`}</Text>
+                  <Text>{badHostname ? t`No` : t`Yes`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps} bg="gray.200">
+                <Flex align="center" mb="1" px="2" bg="gray.200">
                   <StatusIcon status="INFO" />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>Must Staple</Trans>
                   </Text>
-                  <Text ml="auto">{mustHaveStaple ? t`Yes` : t`No`}</Text>
+                  <Text>{mustHaveStaple ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex align="center" mb="1" px="2">
                   <StatusIcon status={leafCertificateIsEv ? 'PASS' : 'INFO'} />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>Leaf Certificate is EV</Trans>
                   </Text>
-                  <Text ml="auto">{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
+                  <Text>{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps} bg="gray.200">
+                <Flex align="center" mb="1" px="2" bg="gray.200">
                   <StatusIcon status="INFO" />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>Received Chain Contains Anchor Certificate</Trans>
                   </Text>
-                  <Text ml="auto">
+                  <Text>
                     {receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}
                   </Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex align="center" mb="1" px="2">
                   <StatusIcon
                     status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'}
                   />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>Received Chain Has Valid Order</Trans>
                   </Text>
-                  <Text ml="auto">
-                    {receivedChainHasValidOrder ? t`Yes` : t`No`}
-                  </Text>
+                  <Text>{receivedChainHasValidOrder ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps} bg="gray.200">
+                <Flex align="center" mb="1" px="2" bg="gray.200">
                   <StatusIcon
                     status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'}
                   />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>Verified Chain Free of SHA1 Signature</Trans>
                   </Text>
-                  <Text ml="auto">
-                    {verifiedChainHasSha1Signature ? t`No` : t`Yes`}
-                  </Text>
+                  <Text>{verifiedChainHasSha1Signature ? t`No` : t`Yes`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex align="center" mb="1" px="2">
                   <StatusIcon
                     status={
                       verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'
                     }
                   />
-                  <Text px="1">
+                  <Text px="1" minW="50%">
                     <Trans>Verified Chain Free of Legacy Symantec Anchor</Trans>
                   </Text>
-                  <Text ml="auto">
+                  <Text>
                     {verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}
                   </Text>
                 </Flex>

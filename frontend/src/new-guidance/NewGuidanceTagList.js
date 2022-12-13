@@ -50,7 +50,7 @@ export function NewGuidanceTagList({
   const neutralTagList = setTagList(neutralTags, 'informative')
 
   const noTags = (
-    <Box bg="moderateMuted" px="2" py="1" rounded="md">
+    <Box bg="moderateMuted" px="2" py="1" rounded="md" mx="2">
       <Flex align="center" mb="2" fontSize="lg" fontWeight="bold">
         <WarningTwoIcon
           mr="2"

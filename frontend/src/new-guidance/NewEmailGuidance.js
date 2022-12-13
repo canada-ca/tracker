@@ -154,14 +154,7 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
           <Trans>DMARC Implementation Phase: {dmarcPhase.toUpperCase()}</Trans>
         </Text>
         {dmarcSteps && (
-          <Box
-            bg="gray.100"
-            px="2"
-            py="1"
-            borderWidth="1px"
-            borderColor="gray.300"
-            rounded="md"
-          >
+          <Box px="2" py="1">
             <OrderedList>{dmarcStepList}</OrderedList>
           </Box>
         )}
@@ -182,21 +175,21 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          <Box>
-            <Flex mb="1">
-              <Text fontWeight="bold" mr="1">
+          <Box px="2">
+            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+              <Text mr="1" minW="7%">
                 <Trans>Record:</Trans>
               </Text>
               {spf.record}
             </Flex>
-            <Flex mb="1">
-              <Text fontWeight="bold" mr="1">
+            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+              <Text mr="1" minW="7%">
                 <Trans>Lookups:</Trans>
               </Text>
               {spf.lookups}
             </Flex>
-            <Flex mb="1">
-              <Text fontWeight="bold" mr="1">
+            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+              <Text mr="1" minW="7%">
                 <Trans>Default:</Trans>
               </Text>
               {spf.spfDefault}
@@ -277,27 +270,27 @@ export function NewEmailGuidance({ dnsResults, dmarcPhase }) {
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          <Box>
-            <Flex mb="1">
-              <Text fontWeight="bold" mr="1">
+          <Box px="2">
+            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+              <Text mr="1" minW="7%">
                 <Trans>Record:</Trans>
               </Text>
               {dmarc.record}
             </Flex>
-            <Flex mb="1">
-              <Text fontWeight="bold" mr="1">
-                <Trans>pPolicy:</Trans>
+            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+              <Text mr="1" minW="7%">
+                <Trans>p:</Trans>
               </Text>
               {dmarc.pPolicy}
             </Flex>
-            <Flex mb="1">
-              <Text fontWeight="bold" mr="1">
-                <Trans>spPolicy:</Trans>
+            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+              <Text mr="1" minW="7%">
+                <Trans>sp:</Trans>
               </Text>
               {dmarc.spPolicy}
             </Flex>
-            <Flex mb="1">
-              <Text fontWeight="bold" mr="1">
+            <Flex mb="1" borderBottomWidth="1px" borderBottomColor="gray.300">
+              <Text mr="1" minW="7%">
                 <Trans>pct:</Trans>
               </Text>
               {dmarc.pct}
