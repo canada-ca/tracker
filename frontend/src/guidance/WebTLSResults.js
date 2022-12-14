@@ -13,7 +13,7 @@ import {
 import { object } from 'prop-types'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
-import { NewGuidanceTagList } from './NewGuidanceTagList'
+import { GuidanceTagList } from './GuidanceTagList'
 import { Trans, t } from '@lingui/macro'
 
 export function WebTLSResults({ tlsResult }) {
@@ -30,11 +30,7 @@ export function WebTLSResults({ tlsResult }) {
     strong: t`strong`,
   }
 
-  const {
-    'tls1-2CipherSuites': tls1_2,
-    'tls1-3CipherSuites': tls1_3,
-    ...rest
-  } = tlsResult.acceptedCipherSuites
+  const { 'tls1-2CipherSuites': tls1_2, 'tls1-3CipherSuites': tls1_3, ...rest } = tlsResult.acceptedCipherSuites
 
   const weakProtocols = Object.keys(rest).filter((protocol) => {
     return rest[protocol].length > 0
@@ -61,10 +57,7 @@ export function WebTLSResults({ tlsResult }) {
         {weakProtocols.length > 0 ? (
           <Box px="2">
             <Text fontSize="lg" mb="1">
-              <Trans>
-                The following ciphers are from known weak protocols and must be
-                disabled:
-              </Trans>
+              <Trans>The following ciphers are from known weak protocols and must be disabled:</Trans>
             </Text>
             {weakProtocols.map((protocol) => {
               return (
@@ -103,9 +96,7 @@ export function WebTLSResults({ tlsResult }) {
   const tlsCiphers = (
     <Box>
       <Flex as={AccordionButton}>
-        <StatusIcon
-          status={weakCiphers(tls1_2) || weakCiphers(tls1_3) ? 'FAIL' : 'PASS'}
-        />
+        <StatusIcon status={weakCiphers(tls1_2) || weakCiphers(tls1_3) ? 'FAIL' : 'PASS'} />
         <Text ml="2" mr="1" fontSize="xl">
           <Trans>Ciphers</Trans>
         </Text>
@@ -121,10 +112,7 @@ export function WebTLSResults({ tlsResult }) {
               {tls1_2.map(({ name, strength }, idx) => {
                 return (
                   <Flex key={idx} {...columnInfoStyleProps}>
-                    <Text
-                      color={strength === 'weak' ? 'weak' : 'black'}
-                      minW="50%"
-                    >
+                    <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
                       {name}
                     </Text>
                     <Text color={strength === 'weak' ? 'weak' : 'black'}>
@@ -143,10 +131,7 @@ export function WebTLSResults({ tlsResult }) {
               {tls1_3.map(({ name, strength }, idx) => {
                 return (
                   <Flex key={idx} {...columnInfoStyleProps}>
-                    <Text
-                      color={strength === 'weak' ? 'weak' : 'black'}
-                      minW="50%"
-                    >
+                    <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
                       {name}
                     </Text>
                     <Text color={strength === 'weak' ? 'weak' : 'black'}>
@@ -165,11 +150,7 @@ export function WebTLSResults({ tlsResult }) {
   const tlsCurves = (
     <>
       <Flex as={AccordionButton}>
-        <StatusIcon
-          status={
-            weakCiphers(tlsResult.acceptedEllipticCurves) ? 'FAIL' : 'PASS'
-          }
-        />
+        <StatusIcon status={weakCiphers(tlsResult.acceptedEllipticCurves) ? 'FAIL' : 'PASS'} />
         <Text ml="2" mr="1" fontSize="xl">
           <Trans>Curves</Trans>
         </Text>
@@ -183,9 +164,7 @@ export function WebTLSResults({ tlsResult }) {
                 <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
                   {name}
                 </Text>
-                <Text color={strength === 'weak' ? 'weak' : 'black'}>
-                  {cipherStrengths[strength].toUpperCase()}
-                </Text>
+                <Text color={strength === 'weak' ? 'weak' : 'black'}>{cipherStrengths[strength].toUpperCase()}</Text>
               </Flex>
             )
           })}
@@ -209,10 +188,7 @@ export function WebTLSResults({ tlsResult }) {
     <AccordionItem>
       <Flex as={AccordionButton}>
         {tlsResult.negativeTags.length > 0 ? (
-          <NumberedStatusIcon
-            number={tlsResult.negativeTags.length}
-            status="FAIL"
-          />
+          <NumberedStatusIcon number={tlsResult.negativeTags.length} status="FAIL" />
         ) : (
           <StatusIcon status="PASS" />
         )}
@@ -222,7 +198,7 @@ export function WebTLSResults({ tlsResult }) {
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        <NewGuidanceTagList
+        <GuidanceTagList
           positiveTags={tlsResult.positiveTags}
           neutralTags={tlsResult.neutralTags}
           negativeTags={tlsResult.negativeTags}
@@ -268,40 +244,28 @@ export function WebTLSResults({ tlsResult }) {
                   <Text px="1" minW="50%">
                     <Trans>Received Chain Contains Anchor Certificate</Trans>
                   </Text>
-                  <Text>
-                    {receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}
-                  </Text>
+                  <Text>{receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex align="center" mb="1" px="2">
-                  <StatusIcon
-                    status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'}
-                  />
+                  <StatusIcon status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'} />
                   <Text px="1" minW="50%">
                     <Trans>Received Chain Has Valid Order</Trans>
                   </Text>
                   <Text>{receivedChainHasValidOrder ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex align="center" mb="1" px="2" bg="gray.200">
-                  <StatusIcon
-                    status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'}
-                  />
+                  <StatusIcon status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'} />
                   <Text px="1" minW="50%">
                     <Trans>Verified Chain Free of SHA1 Signature</Trans>
                   </Text>
                   <Text>{verifiedChainHasSha1Signature ? t`No` : t`Yes`}</Text>
                 </Flex>
                 <Flex align="center" mb="1" px="2">
-                  <StatusIcon
-                    status={
-                      verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'
-                    }
-                  />
+                  <StatusIcon status={verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'} />
                   <Text px="1" minW="50%">
                     <Trans>Verified Chain Free of Legacy Symantec Anchor</Trans>
                   </Text>
-                  <Text>
-                    {verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}
-                  </Text>
+                  <Text>{verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}</Text>
                 </Flex>
               </Box>
               <Accordion allowMultiple defaultIndex={[]}>
@@ -331,14 +295,8 @@ export function WebTLSResults({ tlsResult }) {
                           px="2"
                           my="2"
                           borderWidth="1px"
-                          bg={
-                            expiredCert || certRevoked
-                              ? 'weakMuted'
-                              : 'gray.100'
-                          }
-                          borderColor={
-                            expiredCert || certRevoked ? 'weak' : 'gray.300'
-                          }
+                          bg={expiredCert || certRevoked ? 'weakMuted' : 'gray.100'}
+                          borderColor={expiredCert || certRevoked ? 'weak' : 'gray.300'}
                         >
                           <Text fontWeight="bold">
                             {idx + 1}. {commonNames[0]}
@@ -347,13 +305,10 @@ export function WebTLSResults({ tlsResult }) {
                             <Text mr="1">
                               <Trans>Not After:</Trans>
                             </Text>
-                            <Text color={expiredCert && 'weak'}>
-                              {notValidAfter} UTC
-                            </Text>
+                            <Text color={expiredCert && 'weak'}>{notValidAfter} UTC</Text>
                           </Flex>
                           <Text>
-                            <Trans>Siganture Hash:</Trans>{' '}
-                            {signatureHashAlgorithm.toUpperCase()}
+                            <Trans>Siganture Hash:</Trans> {signatureHashAlgorithm.toUpperCase()}
                           </Text>
                           <AccordionButton color="blue.500" variant="link">
                             <PlusSquareIcon mr="1" />
@@ -375,31 +330,20 @@ export function WebTLSResults({ tlsResult }) {
                             <Text>
                               <Trans>Not After:</Trans> {notValidAfter}
                             </Text>
-                            <Text
-                              fontWeight={expiredCert ? 'bold' : ''}
-                              color={expiredCert ? 'weak' : 'black'}
-                            >
-                              <Trans>Expired:</Trans>{' '}
-                              {expiredCert ? t`Yes` : t`No`}
+                            <Text fontWeight={expiredCert ? 'bold' : ''} color={expiredCert ? 'weak' : 'black'}>
+                              <Trans>Expired:</Trans> {expiredCert ? t`Yes` : t`No`}
                             </Text>
                             <Text>
                               <Trans>Issuer:</Trans> {issuer}
                             </Text>
                             <Text>
-                              <Trans>Self-signed:</Trans>{' '}
-                              {selfSignedCert ? t`Yes` : t`No`}
+                              <Trans>Self-signed:</Trans> {selfSignedCert ? t`Yes` : t`No`}
                             </Text>
-                            <Text
-                              fontWeight={certRevoked ? 'bold' : ''}
-                              color={certRevoked ? 'weak' : 'black'}
-                            >
-                              <Trans>Revoked:</Trans>{' '}
-                              {certRevoked ? t`Yes` : t`No`} (
-                              {certRevokedStatus})
+                            <Text fontWeight={certRevoked ? 'bold' : ''} color={certRevoked ? 'weak' : 'black'}>
+                              <Trans>Revoked:</Trans> {certRevoked ? t`Yes` : t`No`} ({certRevokedStatus})
                             </Text>
                             <Text>
-                              <Trans>Hash Algorithm:</Trans>{' '}
-                              {signatureHashAlgorithm.toUpperCase()}
+                              <Trans>Hash Algorithm:</Trans> {signatureHashAlgorithm.toUpperCase()}
                             </Text>
                             <Flex>
                               <Text mr="1">

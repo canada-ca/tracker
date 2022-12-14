@@ -9,7 +9,7 @@ import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import DmarcGuidancePage from '../GuidancePage'
+import GuidancePage from '../GuidancePage'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
@@ -55,22 +55,17 @@ const mocks = [
   },
 ]
 
-describe('<DmarcGuidancePage />', () => {
+describe('<GuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
-    const { getByText } = render(
+    const { getByRole } = render(
       <MockedProvider mocks={mocks}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/domains/forces.gc.ca']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
                 <Route path="/domains/:domainSlug">
-                  <DmarcGuidancePage />
+                  <GuidancePage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -80,7 +75,7 @@ describe('<DmarcGuidancePage />', () => {
     )
 
     await waitFor(() => {
-      expect(getByText(/canada.ca/i)).toBeInTheDocument()
+      expect(getByRole('link', { name: /DMARC Report/i })).toBeInTheDocument()
     })
   })
 })

@@ -1,10 +1,9 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import { Accordion, Box, Divider, Heading, Stack, Text } from '@chakra-ui/react'
-import { WarningTwoIcon } from '@chakra-ui/icons'
-import { t, Trans } from '@lingui/macro'
+import { Box, Heading, Text, Flex, Link, Accordion } from '@chakra-ui/react'
+import { ExternalLinkIcon, WarningTwoIcon } from '@chakra-ui/icons'
+import { Trans } from '@lingui/macro'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
-import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
 
 export function GuidanceTagList({ negativeTags, positiveTags, neutralTags, selector }) {
   const selectorHeading = (
@@ -20,18 +19,11 @@ export function GuidanceTagList({ negativeTags, positiveTags, neutralTags, selec
           <Box
             key={guidanceTag + index}
             bg={tagType === 'negative' ? 'weakMuted' : tagType === 'positive' ? 'strongMuted' : 'infoMuted'}
-            pb="1"
+            mb="1"
+            rounded="md"
+            mx="2"
           >
-            {guidanceTag?.node ? (
-              <GuidanceTagDetails guidanceTag={guidanceTag.node} tagType={tagType} />
-            ) : (
-              <GuidanceTagDetails guidanceTag={guidanceTag} tagType={tagType} />
-            )}
-
-            {
-              // Add divider if next entry exists
-              tagList[index + 1] && <Divider borderColor="gray.700" />
-            }
+            <GuidanceTagDetails guidanceTag={guidanceTag.node || guidanceTag} tagType={tagType} />
           </Box>
         )
       })
@@ -41,66 +33,43 @@ export function GuidanceTagList({ negativeTags, positiveTags, neutralTags, selec
 
   const negativeTagList = setTagList(negativeTags, 'negative')
   const positiveTagList = setTagList(positiveTags, 'positive')
-  const neutralTagList = setTagList(neutralTags, 'neutral')
+  const neutralTagList = setTagList(neutralTags, 'informative')
 
   const noTags = (
-    <Stack isInline align="center" bg="moderateMuted" px="2">
-      <WarningTwoIcon color="moderate" display={{ base: 'none', md: 'initial' }} />
+    <Box bg="moderateMuted" px="2" py="1" rounded="md" mx="2">
+      <Flex align="center" mb="2" fontSize="lg" fontWeight="bold">
+        <WarningTwoIcon mr="2" color="moderate" display={{ base: 'none', md: 'initial' }} />
+
+        <Text>
+          <Trans>No guidance found for this category</Trans>
+        </Text>
+      </Flex>
       <Box>
-        <Stack isInline align="center">
-          <WarningTwoIcon color="moderate" display={{ base: 'initial', md: 'none' }} />
-          <Text fontWeight="bold">
-            <Trans>Result:</Trans>
-          </Text>
-          <Text>
-            <Trans>No guidance tags were found for this scan category</Trans>
-          </Text>
-        </Stack>
-        <Stack isInline>
-          <Text fontWeight="bold">
-            <Trans>Guidance:</Trans>
-          </Text>
-          <Text>
-            <Trans>This could be due to improper configuration, or could be the result of a scan error</Trans>
-          </Text>
-        </Stack>
-        <Text fontWeight="bold">
+        <Text>
+          <Trans>This could be due to improper configuration, or could be the result of a scan error</Trans>
+        </Text>
+
+        <Text>
           <Trans>
-            If you believe this was caused by a problem with Tracker, please use the "Report an Issue" link below
+            If you believe this was caused by a problem with Tracker, please{' '}
+            <Link color="blue.600" href="https://github.com/canada-ca/tracker/issues" isExternal>
+              Report an Issue <ExternalLinkIcon />
+            </Link>
           </Trans>
         </Text>
       </Box>
-    </Stack>
+    </Box>
   )
 
   return (
-    <Box my="2">
+    <Accordion allowMultiple defaultIndex={[]}>
       {selectorHeading}
-      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-        {positiveTagList?.length && (
-          <AccordionItem buttonLabel={t`Positive Tags`} buttonVariant="strong">
-            {positiveTagList}
-          </AccordionItem>
-        )}
-        {neutralTagList?.length && (
-          <AccordionItem buttonLabel={t`Neutral Tags`} buttonVariant="info">
-            <Box>
-              <Trans>
-                Neutral tags highlight relevant configuration details, but are not addressed within policy requirements
-                and have no impact on scoring.
-              </Trans>
-            </Box>
-            {neutralTagList}
-          </AccordionItem>
-        )}
-        {negativeTagList?.length && (
-          <AccordionItem buttonLabel={t`Negative Tags`} buttonVariant="weak">
-            {negativeTagList}
-          </AccordionItem>
-        )}
-      </Accordion>
+      {negativeTagList?.length && negativeTagList}
+      {neutralTagList?.length && neutralTagList}
+      {positiveTagList?.length && positiveTagList}
+
       {!positiveTagList?.length && !neutralTagList?.length && !negativeTagList?.length && noTags}
-    </Box>
+    </Accordion>
   )
 }
 

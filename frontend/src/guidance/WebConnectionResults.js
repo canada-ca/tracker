@@ -14,7 +14,7 @@ import {
 import { object } from 'prop-types'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
-import { NewGuidanceTagList } from './NewGuidanceTagList'
+import { GuidanceTagList } from './GuidanceTagList'
 import { Trans, t } from '@lingui/macro'
 
 export function WebConnectionResults({ connectionResults }) {
@@ -43,13 +43,7 @@ export function WebConnectionResults({ connectionResults }) {
       const { statusCode, headers, blockedCategory, HSTS } = connection
       return (
         <AccordionItem key={idx}>
-          <Box
-            px="2"
-            m="2"
-            borderWidth="1px"
-            bg="gray.100"
-            borderColor="gray.300"
-          >
+          <Box px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
             <Text>
               {idx + 1}. {uri}
             </Text>
@@ -90,10 +84,7 @@ export function WebConnectionResults({ connectionResults }) {
     <AccordionItem>
       <Flex as={AccordionButton}>
         {connectionResults.negativeTags.length > 0 ? (
-          <NumberedStatusIcon
-            number={connectionResults.negativeTags.length}
-            status="FAIL"
-          />
+          <NumberedStatusIcon number={connectionResults.negativeTags.length} status="FAIL" />
         ) : (
           <StatusIcon status="PASS" boxSize="icons.lg" />
         )}
@@ -103,7 +94,7 @@ export function WebConnectionResults({ connectionResults }) {
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        <NewGuidanceTagList
+        <GuidanceTagList
           positiveTags={connectionResults.positiveTags}
           neutralTags={connectionResults.neutralTags}
           negativeTags={connectionResults.negativeTags}
@@ -126,18 +117,12 @@ export function WebConnectionResults({ connectionResults }) {
                   <Text>{httpLive ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
-                  <StatusIcon
-                    status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'}
-                  />
+                  <StatusIcon status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />
                   <Text px="1" minW="50%">
                     <Trans>HTTP Upgrades</Trans>
                   </Text>
                   <Text>
-                    {httpImmediatelyUpgrades
-                      ? t`Immediately`
-                      : httpEventuallyUpgrades
-                      ? t`Eventually`
-                      : t`Never`}
+                    {httpImmediatelyUpgrades ? t`Immediately` : httpEventuallyUpgrades ? t`Eventually` : t`Never`}
                   </Text>
                 </Flex>
                 {hstsParsed && (
@@ -175,22 +160,12 @@ export function WebConnectionResults({ connectionResults }) {
                   <Text>{httpsLive ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
-                  <StatusIcon
-                    status={
-                      httpsImmediatelyDowngrades || httpsEventuallyDowngrades
-                        ? 'FAIL'
-                        : 'PASS'
-                    }
-                  />
+                  <StatusIcon status={httpsImmediatelyDowngrades || httpsEventuallyDowngrades ? 'FAIL' : 'PASS'} />
                   <Text px="1" minW="50%">
                     <Trans>HTTPS Downgrades</Trans>
                   </Text>
                   <Text>
-                    {httpsImmediatelyDowngrades
-                      ? t`Immediately`
-                      : httpsEventuallyDowngrades
-                      ? t`Eventually`
-                      : t`Never`}
+                    {httpsImmediatelyDowngrades ? t`Immediately` : httpsEventuallyDowngrades ? t`Eventually` : t`Never`}
                   </Text>
                 </Flex>
                 {hstsParsed && (
