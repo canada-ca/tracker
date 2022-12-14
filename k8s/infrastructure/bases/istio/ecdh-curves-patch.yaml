@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: ecdh-curves
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+  - applyTo: FILTER_CHAIN
+    match:
+      context: GATEWAY
+      listener:
+        name: "0.0.0.0_8443"
+    patch:
+      operation: MERGE
+      value:
+        transport_socket:
+          name: envoy.transport_sockets.tls
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+            common_tls_context:
+              tls_params:
+                ecdh_curves:
+                  - P-256

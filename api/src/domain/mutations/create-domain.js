@@ -46,6 +46,7 @@ export const createDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
+      publish,
       auth: {
         checkPermission,
         saltedHash,
@@ -299,6 +300,27 @@ export const createDomain = new mutationWithClientMutationId({
     console.info(
       `User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
     )
+
+    const updatedProperties = []
+    if (
+      typeof insertDomain.selectors !== 'undefined' &&
+      insertDomain.selectors.length > 0
+    ) {
+      updatedProperties.push({
+        name: 'selectors',
+        oldValue: [],
+        newValue: insertDomain.selectors,
+      })
+    }
+
+    if (typeof tags !== 'undefined' && tags.length > 0) {
+      updatedProperties.push({
+        name: 'tags',
+        oldValue: [],
+        newValue: tags,
+      })
+    }
+
     await logActivity({
       transaction,
       collections,
@@ -311,11 +333,24 @@ export const createDomain = new mutationWithClientMutationId({
       action: 'add',
       target: {
         resource: insertDomain.domain,
+        updatedProperties,
         organization: {
           id: org._key,
           name: org.name,
         }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
+      },
+    })
+
+    await publish({
+      channel: `domains.${returnDomain._key}`,
+      msg: {
+        domain: returnDomain.domain,
+        domain_key: returnDomain._key,
+        selectors: returnDomain.selectors ? returnDomain.selectors : [],
+        hash: returnDomain.hash,
+        user_key: null, // only used for One Time Scans
+        shared_id: null, // only used for One Time Scans
       },
     })
 

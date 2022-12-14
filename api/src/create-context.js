@@ -43,6 +43,7 @@ export async function createContext({
   req: request,
   res: response,
   i18n,
+  language,
   loginRequiredBool,
   salt,
 }) {
@@ -67,6 +68,7 @@ export async function createContext({
     request,
     response,
     userKey,
+    language,
     moment,
     fetch,
     uuidv4,

@@ -139,11 +139,11 @@ msgstr "Les acronymes ne peuvent utiliser que des lettres majuscules et des cara
 msgid "Acronyms must be at most 50 characters"
 msgstr "Les acronymes doivent comporter au maximum 50 caractères."
 
-#: src/admin/AuditLogTable.js:118
+#: src/admin/AuditLogTable.js:114
 msgid "Action"
 msgstr "Action"
 
-#: src/admin/AuditLogTable.js:274
+#: src/admin/AuditLogTable.js:264
 msgid "Action:"
 msgstr "Action :"
 
@@ -151,7 +151,7 @@ msgstr "Action :"
 msgid "Activity"
 msgstr "Activité"
 
-#: src/admin/AuditLogTable.js:86
+#: src/admin/AuditLogTable.js:82
 msgid "Add"
 msgstr "Ajouter"
 
@@ -318,7 +318,7 @@ msgid "Assess current state;"
 msgstr "Évaluer l’état actuel."
 
 #: src/admin/AdminPage.js:191
-#: src/admin/AuditLogTable.js:96
+#: src/admin/AuditLogTable.js:92
 msgid "Audit Logs"
 msgstr "Journaux d'audit"
 
@@ -426,12 +426,12 @@ msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé
 #: src/domains/DomainCard.js:127
 #: src/domains/DomainsPage.js:179
 #: src/guidance/WebGuidance.js:69
-#: src/organizationDetails/OrganizationDomains.js:121
+#: src/organizationDetails/OrganizationDomains.js:122
 msgid "Ciphers"
 msgstr "Ciphers"
 
 #: src/domains/DomainsPage.js:91
-#: src/organizationDetails/OrganizationDomains.js:76
+#: src/organizationDetails/OrganizationDomains.js:77
 msgid "Ciphers Status"
 msgstr "État du chiffrement"
 
@@ -558,7 +558,7 @@ msgstr "Pays (FR)"
 msgid "Country:"
 msgstr "Pays:"
 
-#: src/admin/AuditLogTable.js:85
+#: src/admin/AuditLogTable.js:81
 msgid "Create"
 msgstr "Créer"
 
@@ -605,17 +605,17 @@ msgstr "Numéro de téléphone actuel:"
 #: src/domains/DomainCard.js:128
 #: src/domains/DomainsPage.js:183
 #: src/guidance/WebGuidance.js:87
-#: src/organizationDetails/OrganizationDomains.js:125
+#: src/organizationDetails/OrganizationDomains.js:126
 msgid "Curves"
 msgstr "Courbes"
 
 #: src/domains/DomainsPage.js:92
-#: src/organizationDetails/OrganizationDomains.js:77
+#: src/organizationDetails/OrganizationDomains.js:78
 msgid "Curves Status"
 msgstr "État des courbes"
 
 #: src/domains/DomainsPage.js:203
-#: src/organizationDetails/OrganizationDomains.js:145
+#: src/organizationDetails/OrganizationDomains.js:146
 msgid "DKIM"
 msgstr "DKIM"
 
@@ -654,12 +654,12 @@ msgid "DKIM Selectors:"
 msgstr "Sélecteurs DKIM:"
 
 #: src/domains/DomainsPage.js:95
-#: src/organizationDetails/OrganizationDomains.js:80
+#: src/organizationDetails/OrganizationDomains.js:81
 msgid "DKIM Status"
 msgstr "Statut DKIM"
 
 #: src/domains/DomainsPage.js:207
-#: src/organizationDetails/OrganizationDomains.js:149
+#: src/organizationDetails/OrganizationDomains.js:150
 msgid "DMARC"
 msgstr "DMARC"
 
@@ -706,7 +706,7 @@ msgid "DMARC Report for {domainSlug}"
 msgstr "Rapport DMARC pour {domainSlug}"
 
 #: src/domains/DomainsPage.js:96
-#: src/organizationDetails/OrganizationDomains.js:81
+#: src/organizationDetails/OrganizationDomains.js:82
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
@@ -751,7 +751,7 @@ msgstr "Sécurité et utilisation des données"
 msgid "December"
 msgstr "Décembre"
 
-#: src/admin/AuditLogTable.js:89
+#: src/admin/AuditLogTable.js:85
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -804,13 +804,13 @@ msgstr "Affiche le nom de l'organisation, son acronyme et une coche bleue s'il s
 msgid "Disposition"
 msgstr "Disposition"
 
-#: src/admin/AuditLogTable.js:80
+#: src/admin/AuditLogTable.js:76
 #: src/dmarc/DmarcByDomainPage.js:124
 #: src/dmarc/DmarcByDomainPage.js:312
 #: src/domains/DomainsPage.js:88
 #: src/domains/DomainsPage.js:177
-#: src/organizationDetails/OrganizationDomains.js:73
-#: src/organizationDetails/OrganizationDomains.js:119
+#: src/organizationDetails/OrganizationDomains.js:74
+#: src/organizationDetails/OrganizationDomains.js:120
 msgid "Domain"
 msgstr "Domaine"
 
@@ -865,7 +865,7 @@ msgstr "Domaine:"
 #: src/domains/DomainsPage.js:101
 #: src/domains/DomainsPage.js:139
 #: src/organizationDetails/OrganizationDetails.js:139
-#: src/organizationDetails/OrganizationDomains.js:86
+#: src/organizationDetails/OrganizationDomains.js:87
 #: src/summaries/Doughnut.js:50
 #: src/summaries/Doughnut.js:75
 #: src/user/MyTrackerPage.js:99
@@ -1061,8 +1061,8 @@ msgid "February"
 msgstr "Février"
 
 #: src/admin/AuditLogTable.js:221
-msgid "Filters"
-msgstr "Filtres"
+#~ msgid "Filters"
+#~ msgstr "Filtres"
 
 #: src/app/ReadGuidancePage.js:198
 #~ msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
@@ -1182,7 +1182,7 @@ msgstr "Orientation:"
 
 #: src/domains/DomainCard.js:126
 #: src/domains/DomainsPage.js:187
-#: src/organizationDetails/OrganizationDomains.js:129
+#: src/organizationDetails/OrganizationDomains.js:130
 msgid "HSTS"
 msgstr "HSTS"
 
@@ -1191,7 +1191,7 @@ msgstr "HSTS"
 #~ msgstr "Âge du HSTS:"
 
 #: src/domains/DomainsPage.js:90
-#: src/organizationDetails/OrganizationDomains.js:75
+#: src/organizationDetails/OrganizationDomains.js:76
 msgid "HSTS Status"
 msgstr "Statut HSTS"
 
@@ -1202,7 +1202,7 @@ msgstr "Statut HSTS"
 #: src/domains/DomainCard.js:125
 #: src/domains/DomainsPage.js:191
 #: src/guidance/WebGuidance.js:54
-#: src/organizationDetails/OrganizationDomains.js:133
+#: src/organizationDetails/OrganizationDomains.js:134
 msgid "HTTPS"
 msgstr "HTTPS"
 
@@ -1220,7 +1220,7 @@ msgid "HTTPS Scan Complete"
 msgstr "Scan HTTPS terminé"
 
 #: src/domains/DomainsPage.js:89
-#: src/organizationDetails/OrganizationDomains.js:74
+#: src/organizationDetails/OrganizationDomains.js:75
 msgid "HTTPS Status"
 msgstr "Statut HTTPS"
 
@@ -1456,8 +1456,8 @@ msgstr "L'information contenue dans ce site, à l'exception des éléments de pr
 msgid "Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the"
 msgstr "Les renseignements partagés avec le SCT ou acquis par l'entremise de systèmes hébergés par le SCT peuvent faire l'objet d'une divulgation publique en vertu de la Loi sur la protection des renseignements personnels."
 
-#: src/admin/AuditLogTable.js:75
-#: src/admin/AuditLogTable.js:115
+#: src/admin/AuditLogTable.js:71
+#: src/admin/AuditLogTable.js:111
 msgid "Initiated By"
 msgstr "Initiée par"
 
@@ -1636,7 +1636,7 @@ msgstr "Nom (EN)"
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
-#: src/admin/AuditLogTable.js:171
+#: src/admin/AuditLogTable.js:167
 msgid "Name:"
 msgstr "Nom:"
 
@@ -1676,7 +1676,7 @@ msgstr "Nouveau mot de passe:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
-#: src/admin/AuditLogTable.js:177
+#: src/admin/AuditLogTable.js:173
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
 
@@ -1696,7 +1696,7 @@ msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organi
 
 #: src/admin/AdminDomains.js:152
 #: src/domains/DomainsPage.js:108
-#: src/organizationDetails/OrganizationDomains.js:93
+#: src/organizationDetails/OrganizationDomains.js:94
 msgid "No Domains"
 msgstr "Aucun domaine"
 
@@ -1713,7 +1713,7 @@ msgstr "Aucune organisation"
 msgid "No Users"
 msgstr "Pas d'utilisateurs"
 
-#: src/admin/AuditLogTable.js:102
+#: src/admin/AuditLogTable.js:98
 msgid "No activity logs"
 msgstr "Aucun journal d'activité"
 
@@ -1822,7 +1822,7 @@ msgstr "Obtenir une orientation en matière de configuration pour les points ter
 msgid "October"
 msgstr "Octobre"
 
-#: src/admin/AuditLogTable.js:174
+#: src/admin/AuditLogTable.js:170
 msgid "Old Value:"
 msgstr "Ancienne valeur :"
 
@@ -1830,8 +1830,8 @@ msgstr "Ancienne valeur :"
 msgid "Options include contacting the <0>SSC WebSSL services team</0> and/or using <1>Let's Encrypt</1>. For more information, please refer to the guidance on <2>Recommendations for TLS Server Certificates</2>."
 msgstr "Vous pouvez notamment communiquer avec l’<0>équipe responsable des services WebSSL de SPC</0> ou utiliser <1>Let’sEncrypt</1>. Pour en apprendre davantage, veuillez vous reporter aux <2>Recommandations pour les certificats de serveur TLS</2>."
 
-#: src/admin/AuditLogTable.js:82
-#: src/admin/AuditLogTable.js:127
+#: src/admin/AuditLogTable.js:78
+#: src/admin/AuditLogTable.js:123
 msgid "Organization"
 msgstr "Organisation"
 
@@ -2030,12 +2030,12 @@ msgstr "Déclaration de confidentialité"
 
 #: src/domains/DomainCard.js:129
 #: src/domains/DomainsPage.js:195
-#: src/organizationDetails/OrganizationDomains.js:137
+#: src/organizationDetails/OrganizationDomains.js:138
 msgid "Protocols"
 msgstr "Protocoles"
 
 #: src/domains/DomainsPage.js:93
-#: src/organizationDetails/OrganizationDomains.js:78
+#: src/organizationDetails/OrganizationDomains.js:79
 msgid "Protocols Status"
 msgstr "Statut des protocoles"
 
@@ -2073,7 +2073,7 @@ msgid "Read guidance"
 msgstr "Conseils de lecture"
 
 #: src/admin/AdminDomains.js:327
-#: src/admin/AuditLogTable.js:133
+#: src/admin/AuditLogTable.js:129
 msgid "Reason"
 msgstr "Raison"
 
@@ -2094,7 +2094,7 @@ msgstr "Rejeter tous les messages provenant de domaines autres que les domaines 
 msgid "Remember me"
 msgstr "Rappelle-toi de moi"
 
-#: src/admin/AuditLogTable.js:88
+#: src/admin/AuditLogTable.js:84
 msgid "Remove"
 msgstr "Retirer"
 
@@ -2141,16 +2141,16 @@ msgstr "Réinitialiser le mot de passe"
 #~ msgid "Resource"
 #~ msgstr "Ressources"
 
-#: src/admin/AuditLogTable.js:76
-#: src/admin/AuditLogTable.js:124
+#: src/admin/AuditLogTable.js:72
+#: src/admin/AuditLogTable.js:120
 msgid "Resource Name"
 msgstr "Nom de la ressource"
 
-#: src/admin/AuditLogTable.js:121
+#: src/admin/AuditLogTable.js:117
 msgid "Resource Type"
 msgstr "Type de ressource"
 
-#: src/admin/AuditLogTable.js:226
+#: src/admin/AuditLogTable.js:216
 msgid "Resource:"
 msgstr "Ressource :"
 
@@ -2188,7 +2188,7 @@ msgid "Rotate DKIM keys annually."
 msgstr "Effectuer la rotation des clés DKIM annuellement."
 
 #: src/domains/DomainsPage.js:199
-#: src/organizationDetails/OrganizationDomains.js:141
+#: src/organizationDetails/OrganizationDomains.js:142
 msgid "SPF"
 msgstr "SPF"
 
@@ -2215,7 +2215,7 @@ msgid "SPF Results"
 msgstr "Résultats du SPF"
 
 #: src/domains/DomainsPage.js:94
-#: src/organizationDetails/OrganizationDomains.js:79
+#: src/organizationDetails/OrganizationDomains.js:80
 msgid "SPF Status"
 msgstr "Statut SPF"
 
@@ -2281,14 +2281,14 @@ msgstr "Rechercher les éléments défaillants du SPF"
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
-#: src/admin/AuditLogTable.js:214
+#: src/admin/AuditLogTable.js:210
 msgid "Search by initiated by, resource name"
 msgstr "Recherche par initié par, nom de la ressource"
 
 #: src/dmarc/DmarcByDomainPage.js:221
 #: src/dmarc/DmarcByDomainPage.js:287
 #: src/domains/DomainsPage.js:227
-#: src/organizationDetails/OrganizationDomains.js:168
+#: src/organizationDetails/OrganizationDomains.js:169
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
@@ -2340,9 +2340,13 @@ msgstr "Sélectionnez une organisation pour voir les options d'administration"
 msgid "Selector cannot be empty"
 msgstr "Le sélecteur ne peut pas être vide"
 
+#: src/utilities/fieldRequirements.js:57
+msgid "Selector must be either a string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters, or an asterisk"
+msgstr "Le sélecteur doit être soit une chaîne contenant des caractères alphanumériques et des points, commençant et se terminant uniquement par des caractères alphanumériques, soit un astérisque"
+
 #: src/utilities/fieldRequirements.js:56
-msgid "Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters"
-msgstr "Le sélecteur doit être une chaîne contenant des caractères alphanumériques et des points, commençant et se terminant uniquement par des caractères alphanumériques."
+#~ msgid "Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters"
+#~ msgstr "Le sélecteur doit être une chaîne contenant des caractères alphanumériques et des points, commençant et se terminant uniquement par des caractères alphanumériques."
 
 #: src/utilities/fieldRequirements.js:56
 #~ msgid "Selector must be string ending in '._domainkey'"
@@ -2387,42 +2391,42 @@ msgstr "Affichage des données pour la période:"
 #~ msgstr "Indique si le domaine est conforme à la politique."
 
 #: src/domains/DomainsPage.js:204
-#: src/organizationDetails/OrganizationDomains.js:146
+#: src/organizationDetails/OrganizationDomains.js:147
 msgid "Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
 msgstr "Indique si le domaine répond aux exigences de DomainKeys Identified Mail (DKIM)."
 
 #: src/domains/DomainsPage.js:188
-#: src/organizationDetails/OrganizationDomains.js:130
+#: src/organizationDetails/OrganizationDomains.js:131
 msgid "Shows if the domain meets the HSTS requirements."
 msgstr "Indique si le domaine répond aux exigences du HSTS."
 
 #: src/domains/DomainsPage.js:192
-#: src/organizationDetails/OrganizationDomains.js:134
+#: src/organizationDetails/OrganizationDomains.js:135
 msgid "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements."
 msgstr "Indique si le domaine répond aux exigences du protocole de transfert hypertexte sécurisé (HTTPS)."
 
 #: src/domains/DomainsPage.js:208
-#: src/organizationDetails/OrganizationDomains.js:150
+#: src/organizationDetails/OrganizationDomains.js:151
 msgid "Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
 msgstr "Indique si le domaine répond aux exigences de Message Authentication, Reporting, and Conformance (DMARC)."
 
 #: src/domains/DomainsPage.js:200
-#: src/organizationDetails/OrganizationDomains.js:142
+#: src/organizationDetails/OrganizationDomains.js:143
 msgid "Shows if the domain meets the Sender Policy Framework (SPF) requirements."
 msgstr "Indique si le domaine répond aux exigences du Sender Policy Framework (SPF)."
 
 #: src/domains/DomainsPage.js:196
-#: src/organizationDetails/OrganizationDomains.js:138
+#: src/organizationDetails/OrganizationDomains.js:139
 msgid "Shows if the domain uses acceptable protocols."
 msgstr "Indique si le domaine utilise des protocoles acceptables."
 
 #: src/domains/DomainsPage.js:180
-#: src/organizationDetails/OrganizationDomains.js:122
+#: src/organizationDetails/OrganizationDomains.js:123
 msgid "Shows if the domain uses only ciphers that are strong or acceptable."
 msgstr "Indique si le domaine utilise uniquement des ciphers forts ou acceptables."
 
 #: src/domains/DomainsPage.js:184
-#: src/organizationDetails/OrganizationDomains.js:126
+#: src/organizationDetails/OrganizationDomains.js:127
 msgid "Shows if the domain uses only curves that are strong or acceptable."
 msgstr "Indique si le domaine utilise uniquement des courbes fortes ou acceptables"
 
@@ -2606,7 +2610,7 @@ msgstr "Les conseils, orientations ou services qui vous sont fournis par le SCT 
 
 #: src/dmarc/DmarcByDomainPage.js:312
 #: src/domains/DomainsPage.js:177
-#: src/organizationDetails/OrganizationDomains.js:119
+#: src/organizationDetails/OrganizationDomains.js:120
 msgid "The domain address."
 msgstr "L'adresse du domaine."
 
@@ -2651,12 +2655,12 @@ msgid "This could be due to improper configuration, or could be the result of a 
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
 #: src/admin/AdminDomains.js:345
-#: src/admin/AuditLogTable.js:151
+#: src/admin/AuditLogTable.js:147
 msgid "This domain does not belong to this organization"
 msgstr "Ce domaine n'appartient pas à cette organisation"
 
 #: src/admin/AdminDomains.js:342
-#: src/admin/AuditLogTable.js:148
+#: src/admin/AuditLogTable.js:144
 msgid "This domain no longer exists"
 msgstr "Ce domaine n'existe plus"
 
@@ -2673,10 +2677,13 @@ msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
 
-#: src/admin/AuditLogTable.js:74
-#: src/admin/AuditLogTable.js:112
+#: src/admin/AuditLogTable.js:70
 msgid "Time Generated"
 msgstr "Temps généré"
+
+#: src/admin/AuditLogTable.js:108
+msgid "Time Generated (UTC)"
+msgstr "Heure générée (UTC)"
 
 #: src/app/App.js:140
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
@@ -2869,7 +2876,7 @@ msgstr "Domaine non favorisé"
 msgid "Unscanned"
 msgstr "Non balayé"
 
-#: src/admin/AuditLogTable.js:87
+#: src/admin/AuditLogTable.js:83
 msgid "Update"
 msgstr "Mise à jour"
 
@@ -2877,7 +2884,7 @@ msgstr "Mise à jour"
 msgid "Updated Organization"
 msgstr "Organisation mise à jour"
 
-#: src/admin/AuditLogTable.js:130
+#: src/admin/AuditLogTable.js:126
 msgid "Updated Properties"
 msgstr "Propriétés actualisées"
 
@@ -2905,7 +2912,7 @@ msgstr "Utiliser Tracker et <0>l’orientation du protocole de sécurité de la 
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 msgstr "L'utilisation de la propriété intellectuelle en violation du présent accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Suivi."
 
-#: src/admin/AuditLogTable.js:81
+#: src/admin/AuditLogTable.js:77
 msgid "User"
 msgstr "Utilisateur"
 

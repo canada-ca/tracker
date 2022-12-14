@@ -158,6 +158,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -311,6 +312,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -441,6 +443,7 @@ describe('create a domain', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            publish: jest.fn(),
             auth: {
               checkPermission: checkPermission({userKey: user._key, query}),
               saltedHash: saltedHash(HASHING_SECRET),
@@ -570,6 +573,7 @@ describe('create a domain', () => {
             collections: collectionNames,
             transaction,
             userKey: user._key,
+            publish: jest.fn(),
             auth: {
               checkPermission: checkPermission({userKey: user._key, query}),
               saltedHash: saltedHash(HASHING_SECRET),
@@ -742,6 +746,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -888,6 +893,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -1034,6 +1040,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -1185,6 +1192,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -1331,6 +1339,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              publish: jest.fn(),
               auth: {
                 checkPermission: checkPermission({userKey: user._key, query}),
                 saltedHash: saltedHash(HASHING_SECRET),
@@ -1479,6 +1488,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              publish: jest.fn(),
               auth: {
                 checkPermission: jest.fn(),
                 saltedHash: jest.fn(),
@@ -1573,6 +1583,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              publish: jest.fn(),
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
@@ -1671,6 +1682,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              publish: jest.fn(),
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -1770,6 +1782,7 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -1864,6 +1877,7 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -1960,6 +1974,7 @@ describe('create a domain', () => {
                   }),
                 }),
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -2057,6 +2072,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -2154,6 +2170,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -2250,6 +2267,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -2350,6 +2368,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -2453,6 +2472,7 @@ describe('create a domain', () => {
                     .mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -2563,6 +2583,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              publish: jest.fn(),
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
@@ -2657,6 +2678,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              publish: jest.fn(),
               auth: {
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
@@ -2755,6 +2777,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: 123,
+              publish: jest.fn(),
               auth: {
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
@@ -2854,6 +2877,7 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -2950,6 +2974,7 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -3048,6 +3073,7 @@ describe('create a domain', () => {
                   }),
                 }),
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
@@ -3147,6 +3173,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -3246,6 +3273,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -3344,6 +3372,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -3446,6 +3475,7 @@ describe('create a domain', () => {
                       .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
+                  publish: jest.fn(),
                   auth: {
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
@@ -3551,6 +3581,7 @@ describe('create a domain', () => {
                     .mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
+                publish: jest.fn(),
                 auth: {
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),

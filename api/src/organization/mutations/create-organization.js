@@ -249,7 +249,10 @@ export const createOrganization = new mutationWithClientMutationId({
       },
       action: 'create',
       target: {
-        resource: nameEN, // name of resource being acted upon
+        resource: {
+          en: organizationDetails.orgDetails.en.name,
+          fr: organizationDetails.orgDetails.fr.name,
+        }, // name of resource being acted upon
         resourceType: 'organization', // user, org, domain
       },
     })

@@ -25,6 +25,8 @@ def process_dkim(dkim_results):
                 "neutral_tags": []
             }
 
+
+
             for tag in tags:
                 if tag in guidance["dkim"]["pass"]:
                     processed_dkim[dkim_selector]["positive_tags"].append(tag)
@@ -79,11 +81,6 @@ def process_dkim(dkim_results):
         # Check if v and p exist in txt_record
         v_tag = dkim_results[selector].get("parsed", {}).get("v", None)
         p_tag = dkim_results[selector].get("parsed", {}).get("p", None)
-
-        if v_tag is None and p_tag is None:
-            dkim_tags[selector].append("dkim2")
-        elif v_tag is None or p_tag is None:
-            dkim_tags[selector].append("dkim12")
 
         # Testing Enabled
         t_enabled = dkim_results[selector].get("parsed", {}).get("t", "")

@@ -1,6 +1,17 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, IconButton, Heading, Link } from '@chakra-ui/react'
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Flex,
+  IconButton,
+  Heading,
+  Link,
+  Text,
+} from '@chakra-ui/react'
 
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -40,7 +51,8 @@ const GuidancePage = () => {
     )
   if (error) return <ErrorFallbackMessage error={error} />
 
-  const { domain: domainName, web: webScan, dnsScan: dnsScan, status: webStatus, dmarcPhase } = data.findDomainByDomain
+  const { domain: domainName, web: webScan, dnsScan: dnsScan, status: webStatus,organizations,
+    dmarcPhase } = data.findDomainByDomain
 
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
@@ -77,6 +89,29 @@ const GuidancePage = () => {
             <LinkIcon ml="4px" aria-hidden="true" />
           </Link>
         )}
+      </Flex>
+      <Flex
+        maxW="auto"
+        mb="2"
+        bg="gray.100"
+        px="2"
+        py="1"
+        borderWidth="1px"
+        borderColor="gray.300"
+      >
+        <Text fontWeight="bold" mr="2">
+          <Trans>Organization(s):</Trans>
+        </Text>
+        {organizations.edges.map(({ node }, idx) => {
+          return (
+            <>
+              <Link as={RouteLink} to={`/organizations/${node.slug}`} key={idx}>
+                {node.name} ({node.acronym})
+              </Link>
+              {idx !== organizations.edges.length - 1 && <Text mr="1">,</Text>}
+            </>
+          )
+        })}
       </Flex>
       <Tabs
         isFitted
