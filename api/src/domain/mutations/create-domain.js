@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLList, GraphQLID } from 'graphql'
+import { GraphQLNonNull, GraphQLList, GraphQLID, GraphQLBoolean } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
@@ -27,6 +27,16 @@ export const createDomain = new mutationWithClientMutationId({
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
+    },
+    hidden: {
+      description:
+        "Value that determines if the domain is excluded from an organization's score.",
+      type: GraphQLBoolean,
+    },
+    archived: {
+      description:
+        'Value that determines if the domain is excluded from the scanning process.',
+      type: GraphQLBoolean,
     },
   }),
   outputFields: () => ({
@@ -82,6 +92,20 @@ export const createDomain = new mutationWithClientMutationId({
       tags = []
     }
 
+    let archived
+    if (typeof args.hidden !== 'undefined') {
+      archived = args.hidden
+    } else {
+      archived = false
+    }
+
+    let hidden
+    if (typeof args.archived !== 'undefined') {
+      hidden = args.archived
+    } else {
+      hidden = false
+    }
+
     // Check to see if org exists
     const org = await loadOrgByKey.load(orgId)
 
@@ -130,6 +154,7 @@ export const createDomain = new mutationWithClientMutationId({
         spf: null,
         ssl: null,
       },
+      archived: archived,
     }
 
     // Check to see if domain already belongs to same org
@@ -223,7 +248,8 @@ export const createDomain = new mutationWithClientMutationId({
             INSERT {
               _from: ${org._id},
               _to: ${insertedDomain._id},
-              tags: ${tags}
+              tags: ${tags},
+              hidden: ${hidden}
             } INTO claims
           `,
         )
@@ -272,7 +298,8 @@ export const createDomain = new mutationWithClientMutationId({
             INSERT {
               _from: ${org._id},
               _to: ${checkDomain._id},
-              tags: ${tags}
+              tags: ${tags},
+              hidden: ${hidden}
             } INTO claims
           `,
         )
