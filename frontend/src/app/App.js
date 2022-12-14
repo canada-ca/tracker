@@ -65,6 +65,9 @@ const CreateOrganizationPage = lazyWithRetry(() =>
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
 const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
+const NewGuidancePage = lazyWithRetry(() =>
+  import('../new-guidance/NewGuidancePage'),
+)
 
 export function App() {
   // Hooks to be used with this functional component
@@ -206,6 +209,12 @@ export function App() {
               path="/forgot-password"
               component={ForgotPasswordPage}
               title={t`Forgot Password`}
+            />
+
+            <Page
+              path="/new-guidance"
+              component={NewGuidancePage}
+              title="New Guidance"
             />
 
             <Page
