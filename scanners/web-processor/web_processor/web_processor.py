@@ -75,7 +75,7 @@ def process_tls_results(tls_results):
         accepted_elliptic_curves.append({"name": curve, "strength": strength})
 
     try:
-        signature_algorithm = tls_results["certificate_chain_info"]["certificate_info_chain"][0][
+        signature_algorithm = tls_results["certificate_chain_info"]["certificate_chain"][0][
             "signature_hash_algorithm"]
     except ValueError:
         signature_algorithm = None
