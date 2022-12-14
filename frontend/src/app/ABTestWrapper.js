@@ -1,12 +1,15 @@
 import React from 'react'
 import { any, string } from 'prop-types'
 import { useUserVar } from '../utilities/userState'
+import { IS_USER_SUPER_ADMIN } from '../graphql/queries'
+import { useQuery } from '@apollo/client'
 
-const isInsiderUser = ({ userName, insideUser }) => {
-  return userName.endsWith('@tbs-sct.gc.ca') || insideUser
+const isInsiderUser = ({ isUserSuperAdmin, insideUser }) => {
+  return insideUser || isUserSuperAdmin
 }
 
 export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
+  const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const { currentUser } = useUserVar()
   let childIndex = 0
 
@@ -14,7 +17,7 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
   if (!children.length) {
     if (
       isInsiderUser({
-        userName: currentUser?.userName || '',
+        isUserSuperAdmin: data?.isUserSuperAdmin || false,
         insideUser: currentUser?.insideUser || false,
       })
     ) {
@@ -28,7 +31,7 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
   // A + B variants
   if (
     isInsiderUser({
-      userName: currentUser?.userName || '',
+      isUserSuperAdmin: data?.isUserSuperAdmin || false,
       insideUser: currentUser?.insideUser || false,
     })
   ) {
