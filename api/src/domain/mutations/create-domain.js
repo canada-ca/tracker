@@ -260,7 +260,7 @@ export const createDomain = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
     } else {
-      const { selectors: selectorList, status, lastRan } = checkDomain
+      const { selectors: selectorList, status, lastRan, archived } = checkDomain
 
       selectors.forEach((selector) => {
         if (!checkDomain.selectors.includes(selector)) {
@@ -271,6 +271,7 @@ export const createDomain = new mutationWithClientMutationId({
       insertDomain.selectors = selectorList
       insertDomain.status = status
       insertDomain.lastRan = lastRan
+      insertDomain.archived = archived
 
       try {
         await trx.step(
@@ -369,17 +370,18 @@ export const createDomain = new mutationWithClientMutationId({
       },
     })
 
-    await publish({
-      channel: `domains.${returnDomain._key}`,
-      msg: {
-        domain: returnDomain.domain,
-        domain_key: returnDomain._key,
-        selectors: returnDomain.selectors ? returnDomain.selectors : [],
-        hash: returnDomain.hash,
-        user_key: null, // only used for One Time Scans
-        shared_id: null, // only used for One Time Scans
-      },
-    })
+    if (!insertDomain.archived)
+      await publish({
+        channel: `domains.${returnDomain._key}`,
+        msg: {
+          domain: returnDomain.domain,
+          domain_key: returnDomain._key,
+          selectors: returnDomain.selectors ? returnDomain.selectors : [],
+          hash: returnDomain.hash,
+          user_key: null, // only used for One Time Scans
+          shared_id: null, // only used for One Time Scans
+        },
+      })
 
     return {
       ...returnDomain,
