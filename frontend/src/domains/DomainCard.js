@@ -30,31 +30,28 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
   const toast = useToast()
   const { isLoggedIn } = useUserVar()
 
-  const [favouriteDomain, { _loading, _error }] = useMutation(
-    FAVOURITE_DOMAIN,
-    {
-      onError: ({ message }) => {
-        toast({
-          title: t`An error occurred while favouriting a domain.`,
-          description: message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
-      onCompleted() {
-        toast({
-          title: t`Favourited Domain`,
-          description: t`You have successfully added ${url} to myTracker.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
+  const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while favouriting a domain.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
     },
-  )
+    onCompleted() {
+      toast({
+        title: t`Favourited Domain`,
+        description: t`You have successfully added ${url} to myTracker.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   const [unfavouriteDomain, { _l, _e }] = useMutation(UNFAVOURITE_DOMAIN, {
     refetchQueries: ['FindMyTracker'],
@@ -123,13 +120,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
               <Flex flexWrap="wrap">
                 {tags?.map((tag, idx) => {
                   return (
-                    <Tag
-                      key={idx}
-                      m="0.5"
-                      bg="gray.50"
-                      borderWidth="1px"
-                      borderColor="gray.900"
-                    >
+                    <Tag key={idx} m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                       <TagLabel textColor="primary" fontWeight="bold" mx="auto">
                         {tag}
                       </TagLabel>
@@ -143,7 +134,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
         <Divider variant="card" display={{ md: 'none' }} />
 
         <Box {...statusGroupingProps} px="1">
-          <Text textAlign="center" color="gray.500">
+          <Text textAlign="center" color="gray.600">
             <Trans>Web (HTTPS/TLS)</Trans>
           </Text>
           <Flex>
@@ -155,7 +146,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
           </Flex>
         </Box>
         <Box {...statusGroupingProps} px="1">
-          <Text textAlign="center" color="gray.500">
+          <Text textAlign="center" color="gray.600">
             <Trans>Email</Trans>
           </Text>
           <Flex>

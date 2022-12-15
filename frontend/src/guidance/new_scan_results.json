@@ -147,6 +147,48 @@
                         }
                       ],
                       "certificateChainInfo": {
+                        "pathValidationResults": [
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Android",
+                              "version": "13.0.0_r8"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Apple",
+                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Java",
+                              "version": "jdk-13.0.2"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Mozilla",
+                              "version": "2022-09-18"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Windows",
+                              "version": "2022-08-15"
+                            }
+                          }
+                        ],
                         "badHostname": false,
                         "mustHaveStaple": false,
                         "leafCertificateIsEv": false,
@@ -154,7 +196,7 @@
                         "receivedChainHasValidOrder": true,
                         "verifiedChainHasSha1Signature": false,
                         "verifiedChainHasLegacySymantecAnchor": false,
-                        "certificateInfoChain": [
+                        "certificateChain": [
                           {
                             "notValidBefore": "2022-08-18 17:26:56",
                             "notValidAfter": "2023-09-18 17:26:56",
@@ -167,12 +209,7 @@
                             "commonNames": ["canada.ca"],
                             "serialNumber": "160759660447903006559566537118831923092",
                             "signatureHashAlgorithm": "sha256",
-                            "sanList": [
-                              "canada.ca",
-                              "www.canada.ca",
-                              "Canada.gc.ca",
-                              "www.canada.gc.ca"
-                            ]
+                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
                           },
                           {
                             "notValidBefore": "2015-10-05 19:13:56",
@@ -183,9 +220,7 @@
                             "selfSignedCert": false,
                             "certRevoked": false,
                             "certRevokedStatus": "NotEnrolled",
-                            "commonNames": [
-                              "Entrust Certification Authority - L1K"
-                            ],
+                            "commonNames": ["Entrust Certification Authority - L1K"],
                             "serialNumber": "4614832350436832027625092997",
                             "signatureHashAlgorithm": "sha256",
                             "sanList": []
@@ -449,6 +484,48 @@
                         }
                       ],
                       "certificateChainInfo": {
+                        "pathValidationResults": [
+                          {
+                            "opensslErrorString": "Error: This is an error message. Do something about it.",
+                            "wasValidationSuccessful": false,
+                            "trustStore": {
+                              "name": "Android",
+                              "version": "13.0.0_r8"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Apple",
+                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Java",
+                              "version": "jdk-13.0.2"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Mozilla",
+                              "version": "2022-09-18"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Windows",
+                              "version": "2022-08-15"
+                            }
+                          }
+                        ],
                         "badHostname": false,
                         "mustHaveStaple": false,
                         "leafCertificateIsEv": false,
@@ -456,7 +533,7 @@
                         "receivedChainHasValidOrder": true,
                         "verifiedChainHasSha1Signature": false,
                         "verifiedChainHasLegacySymantecAnchor": false,
-                        "certificateInfoChain": [
+                        "certificateChain": [
                           {
                             "notValidBefore": "2022-08-18 17:26:56",
                             "notValidAfter": "2023-09-18 17:26:56",
@@ -469,12 +546,7 @@
                             "commonNames": ["canada.ca"],
                             "serialNumber": "160759660447903006559566537118831923092",
                             "signatureHashAlgorithm": "sha256",
-                            "sanList": [
-                              "canada.ca",
-                              "www.canada.ca",
-                              "Canada.gc.ca",
-                              "www.canada.gc.ca"
-                            ]
+                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
                           },
                           {
                             "notValidBefore": "2015-10-05 19:13:56",
@@ -485,9 +557,7 @@
                             "selfSignedCert": false,
                             "certRevoked": false,
                             "certRevokedStatus": "NotEnrolled",
-                            "commonNames": [
-                              "Entrust Certification Authority - L1K"
-                            ],
+                            "commonNames": ["Entrust Certification Authority - L1K"],
                             "serialNumber": "4614832350436832027625092997",
                             "signatureHashAlgorithm": "sha256",
                             "sanList": []

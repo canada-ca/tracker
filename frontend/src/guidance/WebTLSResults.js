@@ -181,7 +181,8 @@ export function WebTLSResults({ tlsResult }) {
     receivedChainHasValidOrder,
     verifiedChainHasSha1Signature,
     verifiedChainHasLegacySymantecAnchor,
-    certificateInfoChain,
+    certificateChain,
+    pathValidationResults,
   } = tlsResult.certificateChainInfo
 
   return (
@@ -269,7 +270,7 @@ export function WebTLSResults({ tlsResult }) {
                 </Flex>
               </Box>
               <Accordion allowMultiple defaultIndex={[]}>
-                {certificateInfoChain.map(
+                {certificateChain.map(
                   (
                     {
                       notValidBefore,
@@ -365,6 +366,22 @@ export function WebTLSResults({ tlsResult }) {
                   },
                 )}
               </Accordion>
+              <Box mx="2" mt="2">
+                <Text mb="1" fontWeight="bold" textAlign="lg">
+                  Certification Paths
+                </Text>
+                {pathValidationResults.map(({ trustStore, wasValidationSuccessful, opensslErrorString }, idx) => {
+                  return (
+                    <Flex align="center" py="1" key={idx} px="2" bg={idx % 2 !== 0 ? 'gray.200' : 'gray.50'}>
+                      <StatusIcon status={wasValidationSuccessful ? 'PASS' : 'FAIL'} />
+                      <Text mx="1">
+                        {trustStore.name} ({trustStore.version})
+                      </Text>
+                      {!wasValidationSuccessful && <Text color="weak">{opensslErrorString}</Text>}
+                    </Flex>
+                  )
+                })}
+              </Box>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
