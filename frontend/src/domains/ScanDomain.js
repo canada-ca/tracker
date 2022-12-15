@@ -27,7 +27,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { StatusBadge } from './StatusBadge'
 
-import { ScanDetails } from '../guidance/ScanDetails'
+// import { ScanDetails } from '../guidance/ScanDetails'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { StatusIcon } from '../components/StatusIcon'
 import { createValidationSchema } from '../utilities/fieldRequirements'
@@ -161,18 +161,9 @@ export function ScanDomain() {
       >
         {({ handleSubmit, isSubmitting }) => {
           return (
-            <form
-              onSubmit={handleSubmit}
-              role="form"
-              aria-label="form"
-              name="form"
-            >
+            <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
               <Box>
-                <Text
-                  fontSize="2xl"
-                  mb="2"
-                  textAlign={{ base: 'center', md: 'left' }}
-                >
+                <Text fontSize="2xl" mb="2" textAlign={{ base: 'center', md: 'left' }}>
                   <Trans>Request a domain to be scanned:</Trans>
                 </Text>
                 <DomainField name="domainUrl" mb="4" />
@@ -221,58 +212,26 @@ export function ScanDomain() {
                     </Text>
                     <Text isTruncated>{mergedScan.domain}</Text>
                   </Box>
-                  <Flex
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    flexGrow={{ base: 0, md: '1' }}
-                  >
+                  <Flex flexDirection={{ base: 'column', md: 'row' }} flexGrow={{ base: 0, md: '1' }}>
                     <Flex {...statusGroupingProps}>
                       <StatusBadge
                         text="HTTPS:"
-                        status={
-                          mergedScan.scan?.https
-                            ? mergedScan.scan.https.status
-                            : 'LOADING'
-                        }
+                        status={mergedScan.scan?.https ? mergedScan.scan.https.status : 'LOADING'}
                       />
-                      <StatusBadge
-                        text="TLS:"
-                        status={
-                          mergedScan.scan?.ssl
-                            ? mergedScan.scan.ssl.status
-                            : 'LOADING'
-                        }
-                      />
+                      <StatusBadge text="TLS:" status={mergedScan.scan?.ssl ? mergedScan.scan.ssl.status : 'LOADING'} />
                     </Flex>
                     <Flex {...statusGroupingProps}>
-                      <StatusBadge
-                        text="SPF:"
-                        status={
-                          mergedScan.scan?.spf
-                            ? mergedScan.scan.spf.status
-                            : 'LOADING'
-                        }
-                      />
+                      <StatusBadge text="SPF:" status={mergedScan.scan?.spf ? mergedScan.scan.spf.status : 'LOADING'} />
                       <StatusBadge
                         text="DKIM:"
-                        status={
-                          mergedScan.scan?.dkim
-                            ? mergedScan.scan.dkim.status
-                            : 'LOADING'
-                        }
+                        status={mergedScan.scan?.dkim ? mergedScan.scan.dkim.status : 'LOADING'}
                       />
                       <StatusBadge
                         text="DMARC:"
-                        status={
-                          mergedScan.scan?.dmarc
-                            ? mergedScan.scan.dmarc.status
-                            : 'LOADING'
-                        }
+                        status={mergedScan.scan?.dmarc ? mergedScan.scan.dmarc.status : 'LOADING'}
                       />
                     </Flex>
-                    <Divider
-                      orientation={{ base: 'horizontal', md: 'vertical' }}
-                      alignSelf="stretch"
-                    />
+                    <Divider orientation={{ base: 'horizontal', md: 'vertical' }} alignSelf="stretch" />
                   </Flex>
                 </AccordionButton>
               </h2>
@@ -288,23 +247,14 @@ export function ScanDomain() {
                   </TabList>
                   <TabPanels>
                     <TabPanel>
-                      <Box
-                        bg="white"
-                        rounded="lg"
-                        overflow="hidden"
-                        boxShadow="medium"
-                        pb="1"
-                      >
+                      <Box bg="white" rounded="lg" overflow="hidden" boxShadow="medium" pb="1">
                         <Box bg="primary" color="gray.50">
                           <Stack px="3" py="1">
                             <Heading as="h1" size="lg">
                               <Trans>Web Scan Results</Trans>
                             </Heading>
                             <Text fontSize={['md', 'lg']}>
-                              <Trans>
-                                Results for scans of web technologies (TLS,
-                                HTTPS).
-                              </Trans>
+                              <Trans>Results for scans of web technologies (TLS, HTTPS).</Trans>
                             </Text>
                           </Stack>
                         </Box>
@@ -312,8 +262,7 @@ export function ScanDomain() {
                           <Stack spacing="30px" px="1" mt="1">
                             <Box pb="1">
                               {mergedScan.scan.https && mergedScan.scan.ssl ? (
-                                mergedScan.scan.https.status === 'PASS' &&
-                                mergedScan.scan.ssl.status === 'PASS' ? (
+                                mergedScan.scan.https.status === 'PASS' && mergedScan.scan.ssl.status === 'PASS' ? (
                                   <Stack isInline align="center" px="2">
                                     <StatusIcon status="PASS" />
                                     <Text fontWeight="bold" fontSize="2xl">
@@ -322,14 +271,9 @@ export function ScanDomain() {
                                   </Stack>
                                 ) : (
                                   <Stack isInline align="center" px="2">
-                                    <WarningTwoIcon
-                                      color="moderate"
-                                      size="icons.md"
-                                    />
+                                    <WarningTwoIcon color="moderate" size="icons.md" />
                                     <Text fontWeight="bold" fontSize="2xl">
-                                      <Trans>
-                                        Changes Required for ITPIN Compliance
-                                      </Trans>
+                                      <Trans>Changes Required for ITPIN Compliance</Trans>
                                     </Text>
                                   </Stack>
                                 )
@@ -338,7 +282,7 @@ export function ScanDomain() {
                               )}
                             </Box>
                             <Accordion allowMultiple defaultIndex={[0, 1]}>
-                              {mergedScan?.scan.https && (
+                              {/* {mergedScan?.scan.https && (
                                 <ScanDetails
                                   categoryName="https"
                                   categoryData={mergedScan.scan.https}
@@ -349,7 +293,7 @@ export function ScanDomain() {
                                   categoryName="TLS"
                                   categoryData={mergedScan.scan.ssl}
                                 />
-                              )}
+                              )} */}
                             </Accordion>
                           </Stack>
                         </Box>
@@ -357,23 +301,14 @@ export function ScanDomain() {
                     </TabPanel>
 
                     <TabPanel>
-                      <Box
-                        bg="white"
-                        rounded="lg"
-                        overflow="hidden"
-                        boxShadow="medium"
-                        pb="1"
-                      >
+                      <Box bg="white" rounded="lg" overflow="hidden" boxShadow="medium" pb="1">
                         <Box bg="primary" color="gray.50">
                           <Stack px="3" py="1">
                             <Heading as="h1" size="lg">
                               <Trans>Email Scan Results</Trans>
                             </Heading>
                             <Text fontSize={['md', 'lg']}>
-                              <Trans>
-                                Results for scans of email technologies (DMARC,
-                                SPF, DKIM).
-                              </Trans>
+                              <Trans>Results for scans of email technologies (DMARC, SPF, DKIM).</Trans>
                             </Text>
                           </Stack>
                         </Box>
@@ -393,12 +328,9 @@ export function ScanDomain() {
                                     </Text>
                                   </Stack>
                                   {mergedScan.scan.dmarc.dmarcPhase &&
-                                    mergedScan.scan.dmarc.dmarcPhase !==
-                                      'not implemented' && (
+                                    mergedScan.scan.dmarc.dmarcPhase !== 'not implemented' && (
                                       <Box bg="gray.100" px="2" py="1">
-                                        {dmarcSteps[
-                                          mergedScan.scan.dmarc.dmarcPhase
-                                        ].map((step, index) => (
+                                        {dmarcSteps[mergedScan.scan.dmarc.dmarcPhase].map((step, index) => (
                                           <Text key={index}>
                                             {index + 1}. {step}
                                           </Text>
@@ -411,24 +343,15 @@ export function ScanDomain() {
                               )}
                             </Box>
                             <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-                              {mergedScan?.scan.dkim && (
-                                <ScanDetails
-                                  categoryName="dkim"
-                                  categoryData={mergedScan.scan.dkim}
-                                />
+                              {/* {mergedScan?.scan.dkim && (
+                                <ScanDetails categoryName="dkim" categoryData={mergedScan.scan.dkim} />
                               )}
                               {mergedScan?.scan.dmarc && (
-                                <ScanDetails
-                                  categoryName="dmarc"
-                                  categoryData={mergedScan.scan.dmarc}
-                                />
+                                <ScanDetails categoryName="dmarc" categoryData={mergedScan.scan.dmarc} />
                               )}
                               {mergedScan?.scan.spf && (
-                                <ScanDetails
-                                  categoryName="spf"
-                                  categoryData={mergedScan.scan.spf}
-                                />
-                              )}
+                                <ScanDetails categoryName="spf" categoryData={mergedScan.scan.spf} />
+                              )} */}
                             </Accordion>
                           </Stack>
                         </Box>
@@ -439,11 +362,7 @@ export function ScanDomain() {
               </AccordionPanel>
 
               <h2>
-                <AccordionButton
-                  justifyContent="center"
-                  bg="gray.100"
-                  _hover={{ bg: ['', 'gray.300'] }}
-                >
+                <AccordionButton justifyContent="center" bg="gray.100" _hover={{ bg: ['', 'gray.300'] }}>
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
