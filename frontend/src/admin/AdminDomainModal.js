@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Divider,
+  Flex,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -19,6 +20,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Stack,
+  Switch,
   Tag,
   TagCloseButton,
   TagLabel,
@@ -46,6 +48,9 @@ export function AdminDomainModal({
   selectorInputList,
   tagInputList,
   orgSlug,
+  archived,
+  hidden,
+  permission,
   mutation,
 }) {
   const toast = useToast()
@@ -204,6 +209,8 @@ export function AdminDomainModal({
                 return option[i18n.locale] == label
               })[0]
             }),
+            archiveDomain: archived,
+            hideDomain: hidden,
           }}
           initialTouched={{
             domainUrl: true,
@@ -212,6 +219,7 @@ export function AdminDomainModal({
           onSubmit={async (values) => {
             // Submit update detail mutation
             if (mutation === 'update') {
+              alert(JSON.stringify(values))
               await updateDomain({
                 variables: {
                   domainId: editingDomainId,
@@ -219,6 +227,8 @@ export function AdminDomainModal({
                   domain: values.domainUrl,
                   selectors: values.selectors,
                   tags: values.tags,
+                  archived: values.archiveDomain,
+                  hidden: values.hideDomain,
                 },
               })
             } else if (mutation === 'create') {
@@ -228,12 +238,21 @@ export function AdminDomainModal({
                   domain: values.domainUrl,
                   selectors: values.selectors,
                   tags: values.tags,
+                  archived: values.archiveDomain,
+                  hidden: values.hideDomain,
                 },
               })
             }
           }}
         >
-          {({ handleSubmit, isSubmitting, values, errors, touched }) => (
+          {({
+            handleSubmit,
+            handleChange,
+            isSubmitting,
+            values,
+            errors,
+            touched,
+          }) => (
             <form id="form" onSubmit={handleSubmit}>
               <ModalHeader>
                 {mutation === 'update' ? (
@@ -351,6 +370,43 @@ export function AdminDomainModal({
                       />
                     </ABTestVariant>
                   </ABTestingWrapper>
+                  <Flex align="center">
+                    <label>
+                      <Switch
+                        isFocusable={true}
+                        name="hideDomain"
+                        mx="2"
+                        defaultChecked={values.hideDomain}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <Text>
+                      <Trans>
+                        Hide domain: prevent this domain from being counted in
+                        your organization's summaries
+                      </Trans>
+                    </Text>
+                  </Flex>
+
+                  {permission === 'super_admin' && (
+                    <Flex align="center">
+                      <label>
+                        <Switch
+                          isFocusable={true}
+                          name="archiveDomain"
+                          mx="2"
+                          defaultChecked={values.hideDomain}
+                          onChange={handleChange}
+                        />
+                      </label>
+                      <Text>
+                        <Trans>
+                          Archive domain: prevent this domain from being scanned
+                          and being counted in any summaries
+                        </Trans>
+                      </Text>
+                    </Flex>
+                  )}
                 </Stack>
               </ModalBody>
 
@@ -381,6 +437,9 @@ AdminDomainModal.propTypes = {
   editingDomainUrl: string,
   selectorInputList: array,
   tagInputList: array,
+  archived: bool,
+  hidden: bool,
+  permission: string,
   orgSlug: string,
   mutation: string,
 }

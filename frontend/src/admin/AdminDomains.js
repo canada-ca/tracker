@@ -43,7 +43,7 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
 
-export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
+export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
@@ -56,6 +56,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
   const [selectorInputList, setSelectorInputList] = useState([])
   const [tagInputList, setTagInputList] = useState([])
   const [mutation, setMutation] = useState()
+  const [isArchived, setIsArchived] = useState(false)
+  const [isHidden, setIsHidden] = useState(false)
 
   const {
     isOpen: updateIsOpen,
@@ -153,7 +155,10 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </Text>
       )}
     >
-      {({ id: domainId, domain, selectors, claimTags }, index) => (
+      {(
+        { id: domainId, domain, selectors, claimTags, hidden, archived },
+        index,
+      ) => (
         <Box key={'admindomain' + index}>
           <Stack isInline align="center">
             <Stack direction="row" flexGrow="0">
@@ -179,6 +184,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                   setSelectorInputList(selectors)
                   setTagInputList(claimTags)
                   setMutation('update')
+                  setIsArchived(archived)
+                  setIsHidden(hidden)
                   updateOnOpen()
                 }}
                 icon={<EditIcon />}
@@ -188,6 +195,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <AdminDomainCard
               url={domain}
               tags={claimTags}
+              isHidden={hidden}
+              isArchived={archived}
               locale={i18n.locale}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
@@ -209,6 +218,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
           setTagInputList([])
           setEditingDomainUrl(newDomainUrl)
           setMutation('create')
+          setIsArchived(false)
+          setIsHidden(false)
           updateOnOpen()
         }}
       >
@@ -273,6 +284,9 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         editingDomainId={editingDomainId}
         editingDomainUrl={editingDomainUrl}
         mutation={mutation}
+        archived={isArchived}
+        hidden={isHidden}
+        permission={permission}
       />
 
       <Modal
@@ -374,4 +388,5 @@ AdminDomains.propTypes = {
   orgSlug: string.isRequired,
   orgId: string.isRequired,
   domainsPerPage: number,
+  permission: string,
 }
