@@ -336,6 +336,17 @@ export const loadDomainConnectionsByUserId =
           RETURN v._key
       )
       `
+    } else if (isSuperAdmin) {
+      domainKeysQuery = aql`
+      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
+      LET domainKeys = UNIQUE(FLATTEN(
+        LET keys = []
+        LET orgIds = (FOR org IN organizations RETURN org._id)
+        FOR orgId IN orgIds
+          ${ownershipOrgsOnly}
+          RETURN APPEND(keys, claimDomainKeys)
+      ))
+    `
     } else if (!loginRequiredBool) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
@@ -346,20 +357,10 @@ export const loadDomainConnectionsByUserId =
           LET claimDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND orgId claims
               OPTIONS {bfs: true}
+              FILTER v.archived != true
               RETURN v._key
           )
           RETURN APPEND(keys, claimDomainKeys)
-      ))
-    `
-    } else if (isSuperAdmin) {
-      domainKeysQuery = aql`
-      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (FOR org IN organizations RETURN org._id)
-        FOR orgId IN orgIds
-            ${ownershipOrgsOnly}
-            RETURN APPEND(keys, claimDomainKeys)
       ))
     `
     } else {
@@ -373,10 +374,15 @@ export const loadDomainConnectionsByUserId =
             RETURN e._from
         )
         FOR orgId IN orgIds
-            ${ownershipOrgsOnly}
-            RETURN APPEND(keys, claimDomainKeys)
+          ${ownershipOrgsOnly}
+          LET claimDomainKeys = (
+            FOR v, e IN 1..1 OUTBOUND orgId claims
+              OPTIONS {bfs: true}
+              FILTER v.archived != true
+              RETURN v._key
+          )
+          RETURN APPEND(keys, claimDomainKeys)
       ))
-
     `
     }
 
@@ -386,16 +392,16 @@ export const loadDomainConnectionsByUserId =
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
-      LET searchedDomains = (
-        FOR tokenItem in tokenArr
-          LET token = LOWER(tokenItem)
-          FOR domain IN domainSearch
-            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
-            FILTER domain._key IN domainKeys
-            RETURN domain
-      )
-    `
+        LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
+        LET searchedDomains = (
+          FOR tokenItem in tokenArr
+            LET token = LOWER(tokenItem)
+            FOR domain IN domainSearch
+              SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+              FILTER domain._key IN domainKeys
+              RETURN domain
+        )
+      `
       loopString = aql`FOR domain IN searchedDomains`
       totalCount = aql`LENGTH(searchedDomains)`
     }

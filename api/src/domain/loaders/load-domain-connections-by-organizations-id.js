@@ -11,7 +11,17 @@ export const loadDomainConnectionsByOrgId =
     i18n,
     auth: { loginRequiredBool },
   }) =>
-  async ({ orgId, after, before, first, last, ownership, orderBy, search }) => {
+  async ({
+    orgId,
+    permission,
+    after,
+    before,
+    first,
+    last,
+    ownership,
+    orderBy,
+    search,
+  }) => {
     const userDBId = `users/${userKey}`
 
     let ownershipOrgsOnly = aql`
@@ -343,94 +353,110 @@ export const loadDomainConnectionsByOrgId =
       totalCount = aql`LENGTH(searchedDomains)`
     }
 
+    let showArchivedDomains = aql`FILTER domain.archived != true`
+    if (permission === 'super_admin') {
+      showArchivedDomains = aql``
+    }
+    let showHiddenDomains = aql`FILTER e.hidden != true`
+    if (permission === 'admin' || permission === 'super_admin') {
+      showHiddenDomains = aql``
+    }
+
     let requestedDomainInfo
     try {
       let domainKeysQuery
       if (!loginRequiredBool) {
         domainKeysQuery = aql`
-      LET domainKeys = (
-        FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-          OPTIONS {bfs: true}
-          RETURN v._key
+        LET domainKeys = (
+          FOR v, e IN 1..1 OUTBOUND ${orgId} claims
+            OPTIONS {bfs: true}
+            ${showHiddenDomains}
+            RETURN v._key
         )`
       } else {
         domainKeysQuery = aql`
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET superAdmin = (
-          FOR v, e IN 1 INBOUND ${userDBId} affiliations
-            OPTIONS {bfs: true}
-            FILTER e.permission == "super_admin"
-            RETURN e.permission
-        )
-        LET affiliationKeys = (
-          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
-            OPTIONS {bfs: true}
-            RETURN v._key
-        )
-        LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
-        LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
-        ${ownershipOrgsOnly}
+        LET domainKeys = UNIQUE(FLATTEN(
+          LET superAdmin = (
+            FOR v, e IN 1 INBOUND ${userDBId} affiliations
+              OPTIONS {bfs: true}
+              FILTER e.permission == "super_admin"
+              RETURN e.permission
+          )
+          LET affiliationKeys = (
+            FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
+              OPTIONS {bfs: true}
+              RETURN v._key
+          )
+          LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
+          LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
+          ${ownershipOrgsOnly}
 
-        LET orgKeys = INTERSECTION(keys, claimKeys)
-        RETURN claimKeys
-      ))`
+          LET orgKeys = INTERSECTION(keys, claimKeys)
+          RETURN claimKeys
+        ))`
       }
 
       requestedDomainInfo = await query`
-    WITH affiliations, domains, organizations, users
+      WITH affiliations, domains, organizations, users
 
-    ${domainKeysQuery}
+      ${domainKeysQuery}
 
-    ${domainQuery}
+      ${domainQuery}
 
-    ${afterVar}
-    ${beforeVar}
+      ${afterVar}
+      ${beforeVar}
 
-    LET retrievedDomains = (
-      ${loopString}
-        FILTER domain._key IN domainKeys
-        LET claimTags = (
-          FOR v, e IN 1..1 ANY domain._id claims
-            FILTER e._from == ${orgId}
-            LET translatedTags = (
-              FOR tag IN e.tags || []
-                RETURN TRANSLATE(${language}, tag)
-            )
-            RETURN translatedTags
-        )[0]
-        ${afterTemplate}
-        ${beforeTemplate}
-        SORT
-        ${sortByField}
-        ${limitTemplate}
-        RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags }, domain)
-    )
+      LET retrievedDomains = (
+        ${loopString}
+          FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
+          LET hidden = (
+            FOR v, e IN 1..1 ANY domain._id claims
+              FILTER e._from == ${orgId}
+              RETURN e.hidden
+          )[0]
+          LET claimTags = (
+            FOR v, e IN 1..1 ANY domain._id claims
+              FILTER e._from == ${orgId}
+              LET translatedTags = (
+                FOR tag IN e.tags || []
+                  RETURN TRANSLATE(${language}, tag)
+              )
+              RETURN translatedTags
+          )[0]
+          ${afterTemplate}
+          ${beforeTemplate}
+          SORT
+          ${sortByField}
+          ${limitTemplate}
+          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden }, domain)
+      )
 
-    LET hasNextPage = (LENGTH(
-      ${loopString}
-        FILTER domain._key IN domainKeys
-        ${hasNextPageFilter}
-        SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
-        RETURN domain
-    ) > 0 ? true : false)
+      LET hasNextPage = (LENGTH(
+        ${loopString}
+          FILTER domain._key IN domainKeys
+          ${hasNextPageFilter}
+          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          RETURN domain
+      ) > 0 ? true : false)
 
-    LET hasPreviousPage = (LENGTH(
-      ${loopString}
-        FILTER domain._key IN domainKeys
-        ${hasPreviousPageFilter}
-        SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
-        RETURN domain
-    ) > 0 ? true : false)
+      LET hasPreviousPage = (LENGTH(
+        ${loopString}
+          FILTER domain._key IN domainKeys
+          ${hasPreviousPageFilter}
+          SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
+          RETURN domain
+      ) > 0 ? true : false)
 
-    RETURN {
-      "domains": retrievedDomains,
-      "totalCount": ${totalCount},
-      "hasNextPage": hasNextPage,
-      "hasPreviousPage": hasPreviousPage,
-      "startKey": FIRST(retrievedDomains)._key,
-      "endKey": LAST(retrievedDomains)._key
-    }
-    `
+      RETURN {
+        "domains": retrievedDomains,
+        "totalCount": ${totalCount},
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedDomains)._key,
+        "endKey": LAST(retrievedDomains)._key
+      }
+      `
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather domains in loadDomainConnectionsByOrgId, error: ${err}`,
