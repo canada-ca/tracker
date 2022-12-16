@@ -48,6 +48,8 @@ def to_camelcase(string):
     string = re.sub('_([0-9])', r'\1', string)
     # convert snakecase to camel
     string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    # replace hyper with underscore
+    string = re.sub('-', r'_', string)
     return string
 
 
