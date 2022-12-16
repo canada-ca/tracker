@@ -496,12 +496,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
-  query PaginatedOrgAffiliations(
-    $orgSlug: Slug!
-    $first: Int
-    $after: String
-    $search: String
-  ) {
+  query PaginatedOrgAffiliations($orgSlug: Slug!, $first: Int, $after: String, $search: String) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
       affiliations(first: $first, after: $after, search: $search) {
@@ -529,12 +524,7 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
 `
 
 export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
-  query PaginatedOrgDomains(
-    $orgSlug: Slug!
-    $first: Int
-    $after: String
-    $search: String
-  ) {
+  query PaginatedOrgDomains($orgSlug: Slug!, $first: Int, $after: String, $search: String) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
       name
@@ -555,6 +545,422 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
           endCursor
         }
         totalCount
+      }
+    }
+  }
+`
+
+export const DOMAIN_GUIDANCE_PAGE = gql`
+  query DomainGuidancePage($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      rcode
+      status {
+        dkim
+        dmarc
+        https
+        hsts
+        protocols
+        ciphers
+        curves
+        spf
+      }
+      organizations(first: 20) {
+        edges {
+          node {
+            name
+            acronym
+            slug
+          }
+        }
+      }
+      dmarcPhase
+      hasDMARCReport
+      dnsScan(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        edges {
+          cursor
+          node {
+            id
+            domain
+            timestamp
+            baseDomain
+            recordExists
+            cnameRecord
+            mxRecords {
+              hosts {
+                preference
+                hostname
+                addresses
+              }
+              warnings
+            }
+            nsRecords {
+              hostnames
+              warnings
+            }
+            dkim {
+              selectors {
+                selector
+                record
+                keyLength
+                keyType
+                positiveTags {
+                  id
+                  tagId
+                  tagName
+                  guidance
+                  refLinks {
+                    description
+                    refLink
+                  }
+                  refLinksTech {
+                    description
+                    refLink
+                  }
+                }
+                neutralTags {
+                  id
+                  tagId
+                  tagName
+                  guidance
+                  refLinks {
+                    description
+                    refLink
+                  }
+                  refLinksTech {
+                    description
+                    refLink
+                  }
+                }
+                negativeTags {
+                  id
+                  tagId
+                  tagName
+                  guidance
+                  refLinks {
+                    description
+                    refLink
+                  }
+                  refLinksTech {
+                    description
+                    refLink
+                  }
+                }
+              }
+            }
+            dmarc {
+              record
+              pPolicy
+              spPolicy
+              pct
+              positiveTags {
+                id
+                tagId
+                tagName
+                guidance
+                refLinks {
+                  description
+                  refLink
+                }
+                refLinksTech {
+                  description
+                  refLink
+                }
+              }
+              neutralTags {
+                id
+                tagId
+                tagName
+                guidance
+                refLinks {
+                  description
+                  refLink
+                }
+                refLinksTech {
+                  description
+                  refLink
+                }
+              }
+              negativeTags {
+                id
+                tagId
+                tagName
+                guidance
+                refLinks {
+                  description
+                  refLink
+                }
+                refLinksTech {
+                  description
+                  refLink
+                }
+              }
+            }
+            spf {
+              lookups
+              record
+              spfDefault
+              positiveTags {
+                id
+                tagId
+                tagName
+                guidance
+                refLinks {
+                  description
+                  refLink
+                }
+                refLinksTech {
+                  description
+                  refLink
+                }
+              }
+              neutralTags {
+                id
+                tagId
+                tagName
+                guidance
+                refLinks {
+                  description
+                  refLink
+                }
+                refLinksTech {
+                  description
+                  refLink
+                }
+              }
+              negativeTags {
+                id
+                tagId
+                tagName
+                guidance
+                refLinks {
+                  description
+                  refLink
+                }
+                refLinksTech {
+                  description
+                  refLink
+                }
+              }
+            }
+          }
+        }
+      }
+      web(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        edges {
+          node {
+            timestamp
+            domain
+            results {
+              ipAddress
+              status
+              results {
+                timestamp
+                tlsResult {
+                  ipAddress
+                  supportsEcdhKeyExchange
+                  heartbleedVulnerable
+                  ccsInjectionVulnerable
+                  acceptedCipherSuites {
+                    ssl2_0CipherSuites {
+                      name
+                      strength
+                    }
+                    ssl3_0CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_0CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_1CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_2CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_3CipherSuites {
+                      name
+                      strength
+                    }
+                  }
+                  acceptedEllipticCurves {
+                    name
+                    strength
+                  }
+                  positiveTags {
+                    id
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                  neutralTags {
+                    id
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                  negativeTags {
+                    id
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                  certificateChainInfo {
+                    pathValidationResults {
+                      opensslErrorString
+                      wasValidationSuccessful
+                      trustStore {
+                        name
+                        version
+                      }
+                    }
+                    badHostname
+                    mustHaveStaple
+                    leafCertificateIsEv
+                    receivedChainContainsAnchorCertificate
+                    receivedChainHasValidOrder
+                    verifiedChainHasSha1Signature
+                    verifiedChainHasLegacySymantecAnchor
+                    certificateChain {
+                      notValidBefore
+                      notValidAfter
+                      issuer
+                      subject
+                      expiredCert
+                      selfSignedCert
+                      certRevoked
+                      certRevokedStatus
+                      commonNames
+                      serialNumber
+                      signatureHashAlgorithm
+                      sanList
+                    }
+                  }
+                }
+                connectionResults {
+                  httpLive
+                  httpsStatus
+                  httpImmediatelyUpgrades
+                  httpEventuallyUpgrades
+                  httpsImmediatelyDowngrades
+                  httpsEventuallyDowngrades
+                  hstsParsed {
+                    maxAge
+                    includeSubdomains
+                    preload
+                  }
+                  positiveTags {
+                    id
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                  neutralTags {
+                    id
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                  negativeTags {
+                    id
+                    tagId
+                    tagName
+                    guidance
+                    refLinks {
+                      description
+                      refLink
+                    }
+                    refLinksTech {
+                      description
+                      refLink
+                    }
+                  }
+                  httpChainResult {
+                    scheme
+                    domain
+                    uri
+                    hasRedirectLoop
+                    connections {
+                      uri
+                      connection {
+                        statusCode
+                        redirectTo
+                        headers
+                        blockedCategory
+                        HSTS
+                      }
+                      error
+                      scheme
+                    }
+                  }
+                  httpsChainResult {
+                    scheme
+                    domain
+                    uri
+                    hasRedirectLoop
+                    connections {
+                      uri
+                      connection {
+                        statusCode
+                        redirectTo
+                        headers
+                        blockedCategory
+                        HSTS
+                      }
+                      error
+                      scheme
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -590,21 +996,10 @@ export const ORG_DETAILS_PAGE = gql`
 `
 
 export const PAGINATED_ORG_DOMAINS = gql`
-  query OrgDomainsNext(
-    $slug: Slug!
-    $first: Int
-    $after: String
-    $orderBy: DomainOrder
-    $search: String
-  ) {
+  query OrgDomainsNext($slug: Slug!, $first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
-      domains(
-        first: $first
-        after: $after
-        orderBy: $orderBy
-        search: $search
-      ) {
+      domains(first: $first, after: $after, orderBy: $orderBy, search: $search) {
         pageInfo {
           hasNextPage
           endCursor
@@ -666,18 +1061,8 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
 `
 
 export const PAGINATED_DOMAINS = gql`
-  query Domains(
-    $first: Int
-    $after: String
-    $orderBy: DomainOrder
-    $search: String
-  ) {
-    findMyDomains(
-      first: $first
-      after: $after
-      orderBy: $orderBy
-      search: $search
-    ) {
+  query Domains($first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
+    findMyDomains(first: $first, after: $after, orderBy: $orderBy, search: $search) {
       edges {
         cursor
         node {
@@ -758,13 +1143,7 @@ export const DMARC_REPORT_GRAPH = gql`
 `
 
 export const PAGINATED_DMARC_REPORT = gql`
-  query PaginatedDmarcReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $after: String
-    $first: Int
-  ) {
+  query PaginatedDmarcReport($domain: DomainScalar!, $month: PeriodEnums!, $year: Year!, $after: String, $first: Int) {
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
@@ -886,14 +1265,7 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
     $orderBy: DmarcSummaryOrder
     $search: String
   ) {
-    findMyDmarcSummaries(
-      month: $month
-      year: $year
-      first: $first
-      after: $after
-      orderBy: $orderBy
-      search: $search
-    ) {
+    findMyDmarcSummaries(month: $month, year: $year, first: $first, after: $after, orderBy: $orderBy, search: $search) {
       pageInfo {
         hasNextPage
         hasPreviousPage
@@ -991,18 +1363,8 @@ export const IS_LOGIN_REQUIRED = gql`
 `
 
 export const FIND_MY_USERS = gql`
-  query FindMyUsers(
-    $first: Int
-    $after: String
-    $orderBy: AffiliationUserOrder
-    $search: String
-  ) {
-    findMyUsers(
-      orderBy: $orderBy
-      first: $first
-      after: $after
-      search: $search
-    ) {
+  query FindMyUsers($first: Int, $after: String, $orderBy: AffiliationUserOrder, $search: String) {
+    findMyUsers(orderBy: $orderBy, first: $first, after: $after, search: $search) {
       edges {
         cursor
         node {
@@ -1039,18 +1401,8 @@ export const FIND_MY_USERS = gql`
   }
 `
 export const WEBCHECK_ORGS = gql`
-  query FindMyWebCheckOrgs(
-    $after: String
-    $first: Int!
-    $orderBy: OrganizationOrder!
-    $search: String
-  ) {
-    findMyWebCheckOrganizations(
-      first: $first
-      after: $after
-      orderBy: $orderBy
-      search: $search
-    ) {
+  query FindMyWebCheckOrgs($after: String, $first: Int!, $orderBy: OrganizationOrder!, $search: String) {
+    findMyWebCheckOrganizations(first: $first, after: $after, orderBy: $orderBy, search: $search) {
       totalCount
       edges {
         cursor
@@ -1103,14 +1455,7 @@ export const AUDIT_LOGS = gql`
     $search: String
     $filters: LogFilters
   ) {
-    findAuditLogs(
-      orgId: $orgId
-      first: $first
-      after: $after
-      orderBy: $orderBy
-      search: $search
-      filters: $filters
-    ) {
+    findAuditLogs(orgId: $orgId, first: $first, after: $after, orderBy: $orderBy, search: $search, filters: $filters) {
       edges {
         node {
           id
@@ -1174,20 +1519,9 @@ export const MY_TRACKER_SUMMARY = gql`
 `
 
 export const MY_TRACKER_DOMAINS = gql`
-  query FindMyTracker(
-    $first: Int
-    $after: String
-    $orderBy: DomainOrder
-    $search: String
-  ) {
+  query FindMyTracker($first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
     findMyTracker {
-      domains(
-        orderBy: $orderBy
-        search: $search
-        first: $first
-        after: $after
-        myTracker: true
-      ) {
+      domains(orderBy: $orderBy, search: $search, first: $first, after: $after, myTracker: true) {
         pageInfo {
           hasNextPage
           hasPreviousPage

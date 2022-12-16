@@ -15,18 +15,40 @@ import {
 } from '@chakra-ui/react'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
-import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useLocation, useParams } from 'react-router-dom'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
 import { Trans } from '@lingui/macro'
-const { data } = require('./new_scan_results.json')
+import { useQuery } from '@apollo/client'
+import { DOMAIN_GUIDANCE_PAGE, ORG_DETAILS_PAGE } from '../graphql/queries'
+import { LoadingMessage } from '../components/LoadingMessage'
+import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 
 function GuidancePage() {
-  const { domain: domainName, web: webScan, dnsScan, organizations, dmarcPhase } = data.findDomainByDomain
+  const { domainSlug: domain } = useParams()
+
+  const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
+    variables: { domain: domain },
+    // errorPolicy: 'ignore', // allow partial success
+  })
 
   const history = useHistory()
   const location = useLocation()
   const { from } = location.state || { from: { pathname: '/domains' } }
+
+  if (loading) {
+    return (
+      <LoadingMessage>
+        <Trans>Organization Details</Trans>
+      </LoadingMessage>
+    )
+  }
+
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
+  }
+
+  const { domain: domainName, web: webScan, dnsScan, organizations, dmarcPhase } = data.findDomainByDomain
 
   const { results: webResults } = webScan.edges[0].node
   const { node: dnsResults } = dnsScan.edges[0]
