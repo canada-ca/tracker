@@ -214,6 +214,8 @@ export const CREATE_DOMAIN = gql`
     $domain: DomainScalar!
     $selectors: [Selector]
     $tags: [InputTag]
+    $archived: Boolean
+    $hidden: Boolean
   ) {
     createDomain(
       input: {
@@ -221,6 +223,8 @@ export const CREATE_DOMAIN = gql`
         domain: $domain
         selectors: $selectors
         tags: $tags
+        archived: $archived
+        hidden: $hidden
       }
     ) {
       result {
@@ -300,6 +304,8 @@ export const UPDATE_DOMAIN = gql`
     $domain: DomainScalar
     $selectors: [Selector]
     $tags: [InputTag]
+    $archived: Boolean
+    $hidden: Boolean
   ) {
     updateDomain(
       input: {
@@ -308,6 +314,8 @@ export const UPDATE_DOMAIN = gql`
         domain: $domain
         selectors: $selectors
         tags: $tags
+        archived: $archived
+        hidden: $hidden
       }
     ) {
       result {
