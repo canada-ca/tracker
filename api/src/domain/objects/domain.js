@@ -1,19 +1,19 @@
-import {t} from '@lingui/macro'
-import {GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
-import {connectionArgs, globalIdField} from 'graphql-relay'
+import { t } from '@lingui/macro'
+import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql'
+import { connectionArgs, globalIdField } from 'graphql-relay'
 
-import {domainStatus} from './domain-status'
-import {PeriodEnums} from '../../enums'
-import {nodeInterface} from '../../node'
-import {Domain, Selectors, Year} from '../../scalars'
-import {dmarcSummaryType} from '../../dmarc-summaries/objects'
-import {dnsScanConnection} from '../../dns-scan/objects/dns-scan-connection'
-import {webConnection} from '../../web-scan/objects'
-import {organizationOrder} from '../../organization/inputs'
-import {organizationConnection} from '../../organization/objects'
-import {GraphQLDate} from "graphql-scalars"
-import {dnsOrder} from "../../dns-scan/inputs"
-import {webOrder} from "../../web-scan/inputs/web-order"
+import { domainStatus } from './domain-status'
+import { PeriodEnums } from '../../enums'
+import { nodeInterface } from '../../node'
+import { Domain, Selectors, Year } from '../../scalars'
+import { dmarcSummaryType } from '../../dmarc-summaries/objects'
+import { dnsScanConnection } from '../../dns-scan/objects/dns-scan-connection'
+import { webConnection } from '../../web-scan/objects'
+import { organizationOrder } from '../../organization/inputs'
+import { organizationConnection } from '../../organization/objects'
+import { GraphQLDate } from 'graphql-scalars'
+import { dnsOrder } from '../../dns-scan/inputs'
+import { webOrder } from '../../web-scan/inputs/web-order'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -22,21 +22,17 @@ export const domainType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',
-      resolve: ({domain}) => domain,
+      resolve: ({ domain }) => domain,
     },
     dmarcPhase: {
       type: GraphQLString,
       description: 'The current dmarc phase the domain is compliant to.',
-      resolve: ({phase}) => phase,
+      resolve: ({ phase }) => phase,
     },
     hasDMARCReport: {
       type: GraphQLBoolean,
       description: 'Whether or not the domain has a aggregate dmarc report.',
-      resolve: async (
-        {_id},
-        _,
-        {auth: {checkDomainOwnership, userRequired, loginRequiredBool}},
-      ) => {
+      resolve: async ({ _id }, _, { auth: { checkDomainOwnership, userRequired, loginRequiredBool } }) => {
         if (loginRequiredBool) await userRequired()
         const hasDMARCReport = await checkDomainOwnership({
           domainId: _id,
@@ -48,18 +44,21 @@ export const domainType = new GraphQLObjectType({
     lastRan: {
       type: GraphQLString,
       description: 'The last time that a scan was ran on this domain.',
-      resolve: ({lastRan}) => lastRan,
+      resolve: ({ lastRan }) => lastRan,
+    },
+    rcode: {
+      type: GraphQLString,
+      description: `The status code when performing a DNS lookup for this domain.`,
     },
     selectors: {
       type: new GraphQLList(Selectors),
-      description:
-        'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: ({selectors}) => selectors,
+      description: 'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
+      resolve: ({ selectors }) => selectors,
     },
     status: {
       type: domainStatus,
       description: 'The domains scan status, based on the latest scan data.',
-      resolve: ({status}) => status,
+      resolve: ({ status }) => status,
     },
     organizations: {
       type: organizationConnection.connectionType,
@@ -74,25 +73,16 @@ export const domainType = new GraphQLObjectType({
         },
         isAdmin: {
           type: GraphQLBoolean,
-          description:
-            'Filter orgs based off of the user being an admin of them.',
+          description: 'Filter orgs based off of the user being an admin of them.',
         },
         includeSuperAdminOrg: {
           type: GraphQLBoolean,
-          description:
-            'Filter org list to either include or exclude the super admin org.',
+          description: 'Filter org list to either include or exclude the super admin org.',
         },
         ...connectionArgs,
       },
       description: 'The organization that this domain belongs to.',
-      resolve: async (
-        {_id},
-        args,
-        {
-          auth: {checkSuperAdmin},
-          loaders: {loadOrgConnectionsByDomainId},
-        },
-      ) => {
+      resolve: async ({ _id }, args, { auth: { checkSuperAdmin }, loaders: { loadOrgConnectionsByDomainId } }) => {
         const isSuperAdmin = await checkSuperAdmin()
 
         const orgs = await loadOrgConnectionsByDomainId({
@@ -125,11 +115,7 @@ export const domainType = new GraphQLObjectType({
         ...connectionArgs,
       },
       description: `DNS scan results.`,
-      resolve: async (
-        {_id},
-        args,
-        {loaders: {loadDnsConnectionsByDomainId}},
-      ) => {
+      resolve: async ({ _id }, args, { loaders: { loadDnsConnectionsByDomainId } }) => {
         return await loadDnsConnectionsByDomainId({
           domainId: _id,
           ...args,
@@ -158,11 +144,7 @@ export const domainType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      resolve: async (
-        {_id},
-        args,
-        {loaders: {loadWebConnectionsByDomainId}},
-      ) => {
+      resolve: async ({ _id }, args, { loaders: { loadWebConnectionsByDomainId } }) => {
         return await loadWebConnectionsByDomainId({
           domainId: _id,
           ...args,
@@ -183,16 +165,13 @@ export const domainType = new GraphQLObjectType({
       },
       type: dmarcSummaryType,
       resolve: async (
-        {_id, _key, domain},
-        {month, year},
+        { _id, _key, domain },
+        { month, year },
         {
           i18n,
           userKey,
-          loaders: {
-            loadDmarcSummaryEdgeByDomainIdAndPeriod,
-            loadStartDateFromPeriod,
-          },
-          auth: {checkDomainOwnership, userRequired, loginRequiredBool},
+          loaders: { loadDmarcSummaryEdgeByDomainIdAndPeriod, loadStartDateFromPeriod },
+          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
         },
       ) => {
         if (loginRequiredBool) {
@@ -205,15 +184,11 @@ export const domainType = new GraphQLObjectType({
             console.warn(
               `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
             )
-            throw new Error(
-              i18n._(
-                t`Unable to retrieve DMARC report information for: ${domain}`,
-              ),
-            )
+            throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
           }
         }
 
-        const startDate = loadStartDateFromPeriod({period: month, year})
+        const startDate = loadStartDateFromPeriod({ period: month, year })
 
         const dmarcSummaryEdge = await loadDmarcSummaryEdgeByDomainIdAndPeriod({
           domainId: _id,
@@ -231,13 +206,13 @@ export const domainType = new GraphQLObjectType({
       description: 'Yearly summarized DMARC aggregate reports.',
       type: new GraphQLList(dmarcSummaryType),
       resolve: async (
-        {_id, _key, domain},
+        { _id, _key, domain },
         __,
         {
           i18n,
           userKey,
-          loaders: {loadDmarcYearlySumEdge},
-          auth: {checkDomainOwnership, userRequired, loginRequiredBool},
+          loaders: { loadDmarcYearlySumEdge },
+          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
         },
       ) => {
         if (loginRequiredBool) {
@@ -251,11 +226,7 @@ export const domainType = new GraphQLObjectType({
             console.warn(
               `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
             )
-            throw new Error(
-              i18n._(
-                t`Unable to retrieve DMARC report information for: ${domain}`,
-              ),
-            )
+            throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
           }
         }
 
@@ -273,8 +244,7 @@ export const domainType = new GraphQLObjectType({
       },
     },
     claimTags: {
-      description:
-        'List of labelled tags users of an organization have applied to the claimed domain.',
+      description: 'List of labelled tags users of an organization have applied to the claimed domain.',
       type: new GraphQLList(GraphQLString),
       resolve: ({ claimTags }) => claimTags,
     },

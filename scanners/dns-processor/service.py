@@ -99,6 +99,8 @@ async def run(loop):
         spf_status = processed_results.get("spf").get("status")
         dkim_status = processed_results.get("dkim").get("status")
 
+        rcode = processed_results.get("rcode", None)
+
         if user_key is None:
             try:
                 dns_entry = db.collection("dns").insert(snake_to_camel(processed_results))
@@ -153,6 +155,7 @@ async def run(loop):
                 dmarc_phase = processed_results.get("dmarc").get("phase")
 
                 domain.update({"phase": dmarc_phase})
+                domain.update({"rcode": rcode})
                 db.collection("domains").update(domain)
 
                 for ip in results["resolve_ips"]:
