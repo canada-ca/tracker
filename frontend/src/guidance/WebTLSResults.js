@@ -18,10 +18,10 @@ import { Trans, t } from '@lingui/macro'
 
 export function WebTLSResults({ tlsResult }) {
   const weakProtocolNames = {
-    'ssl2-0CipherSuites': 'SSL 2.0',
-    'ssl3-0CipherSuites': 'SSL 3.0',
-    'tls1-0CipherSuites': 'TLS 1.0',
-    'tls1-1CipherSuites': 'TLS 1.1',
+    ssl2_0CipherSuites: 'SSL 2.0',
+    ssl3_0CipherSuites: 'SSL 3.0',
+    tls1_0CipherSuites: 'TLS 1.0',
+    tls1_1CipherSuites: 'TLS 1.1',
   }
 
   const cipherStrengths = {
@@ -30,7 +30,7 @@ export function WebTLSResults({ tlsResult }) {
     strong: t`strong`,
   }
 
-  const { 'tls1-2CipherSuites': tls1_2, 'tls1-3CipherSuites': tls1_3, ...rest } = tlsResult.acceptedCipherSuites
+  const { tls1_2CipherSuites: tls1_2, tls1_3CipherSuites: tls1_3, ...rest } = tlsResult.acceptedCipherSuites
 
   const weakProtocols = Object.keys(rest).filter((protocol) => {
     return rest[protocol].length > 0

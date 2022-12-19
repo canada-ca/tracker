@@ -2,750 +2,83 @@
   "data": {
     "findDomainByDomain": {
       "domain": "canada.ca",
-      "lastRan": null,
-      "recordExists": true,
+      "lastRan": "",
+      "rcode": "NOERROR",
       "status": {
-        "dkim": "FAIL",
+        "dkim": "PASS",
         "dmarc": "PASS",
-        "https": "PASS",
-        "hsts": "FAIL",
+        "https": "FAIL",
+        "hsts": null,
         "protocols": "PASS",
         "ciphers": "FAIL",
-        "curves": "PASS",
+        "curves": "FAIL",
         "spf": "PASS"
       },
       "organizations": {
         "edges": [
           {
             "node": {
-              "name": "Employment and Social Development Canada",
-              "acronym": "ESDC",
-              "slug": "employment-and-social-development-canada"
+              "name": "Kyle Sandbox Org",
+              "acronym": "KSO",
+              "slug": "kyle-sandbox-org"
             }
           }
         ]
       },
       "dmarcPhase": "deploy",
-      "hasDMARCReport": true,
-      "web": {
-        "edges": [
-          {
-            "node": {
-              "results": [
-                {
-                  "ipAddress": "160.106.123.29",
-                  "status": "complete",
-                  "results": {
-                    "tlsResult": {
-                      "supportsEcdhKeyExchange": false,
-                      "heartbleedVulnerable": false,
-                      "ccsInjectionVulnerable": false,
-                      "acceptedCipherSuites": {
-                        "ssl2-0CipherSuites": [],
-                        "ssl3-0CipherSuites": [],
-                        "tls1-0CipherSuites": [],
-                        "tls1-1CipherSuites": [],
-                        "tls1-2CipherSuites": [
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-                            "strength": "strong"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
-                            "strength": "acceptable"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-                            "strength": "weak"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-                            "strength": "strong"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
-                            "strength": "acceptable"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-                            "strength": "weak"
-                          }
-                        ],
-                        "tls1-3CipherSuites": []
-                      },
-                      "acceptedEllipticCurves": [
-                        {
-                          "name": "X25519",
-                          "strength": "weak"
-                        },
-                        {
-                          "name": "secp256r1",
-                          "strength": "strong"
-                        },
-                        {
-                          "name": "secp384r1",
-                          "strength": "strong"
-                        }
-                      ],
-                      "positiveTags": [
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
-                          "tagId": "ssl5",
-                          "tagName": "Acceptable-certificate",
-                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
-                          "refLinks": [
-                            {
-                              "description": "1.4 Websites and services hardening",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": "See ITSP.40.062 for approved cipher list",
-                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
-                            }
-                          ]
-                        }
-                      ],
-                      "neutralTags": [],
-                      "negativeTags": [
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsMTA=",
-                          "tagId": "ssl10",
-                          "tagName": "Bad-chain",
-                          "guidance": "HTTPS certificate chain is invalid",
-                          "refLinks": [
-                            {
-                              "description": "6.1.3 Direction",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": null,
-                              "refLink": null
-                            }
-                          ]
-                        },
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsNg==",
-                          "tagId": "ssl6",
-                          "tagName": "Invalid-cipher",
-                          "guidance": "One or more ciphers in use are not compliant with guidelines",
-                          "refLinks": [
-                            {
-                              "description": "1.4/1.5/1.6 Websites and services hardening",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": "See ITSP.40.062 for approved cipher list",
-                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
-                            }
-                          ]
-                        }
-                      ],
-                      "certificateChainInfo": {
-                        "pathValidationResults": [
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Android",
-                              "version": "13.0.0_r8"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Apple",
-                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Java",
-                              "version": "jdk-13.0.2"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Mozilla",
-                              "version": "2022-09-18"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Windows",
-                              "version": "2022-08-15"
-                            }
-                          }
-                        ],
-                        "badHostname": false,
-                        "mustHaveStaple": false,
-                        "leafCertificateIsEv": false,
-                        "receivedChainContainsAnchorCertificate": false,
-                        "receivedChainHasValidOrder": true,
-                        "verifiedChainHasSha1Signature": false,
-                        "verifiedChainHasLegacySymantecAnchor": false,
-                        "certificateChain": [
-                          {
-                            "notValidBefore": "2022-08-18 17:26:56",
-                            "notValidAfter": "2023-09-18 17:26:56",
-                            "issuer": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
-                            "subject": "CN=canada.ca,O=Shared Services Canada,L=Gatineau,ST=Quebec,C=CA",
-                            "expiredCert": false,
-                            "selfSignedCert": false,
-                            "certRevoked": false,
-                            "certRevokedStatus": "NotCovered",
-                            "commonNames": ["canada.ca"],
-                            "serialNumber": "160759660447903006559566537118831923092",
-                            "signatureHashAlgorithm": "sha256",
-                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
-                          },
-                          {
-                            "notValidBefore": "2015-10-05 19:13:56",
-                            "notValidAfter": "2030-12-05 19:43:56",
-                            "issuer": "CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
-                            "subject": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
-                            "expiredCert": false,
-                            "selfSignedCert": false,
-                            "certRevoked": false,
-                            "certRevokedStatus": "NotEnrolled",
-                            "commonNames": ["Entrust Certification Authority - L1K"],
-                            "serialNumber": "4614832350436832027625092997",
-                            "signatureHashAlgorithm": "sha256",
-                            "sanList": []
-                          }
-                        ]
-                      }
-                    },
-                    "connectionResults": {
-                      "httpLive": true,
-                      "httpsLive": true,
-                      "httpImmediatelyUpgrades": true,
-                      "httpEventuallyUpgrades": true,
-                      "httpsImmediatelyDowngrades": false,
-                      "httpsEventuallyDowngrades": false,
-                      "hstsParsed": null,
-                      "positiveTags": [],
-                      "neutralTags": [],
-                      "negativeTags": [],
-                      "httpChainResult": {
-                        "scheme": "http",
-                        "domain": "canada.ca",
-                        "uri": "http://canada.ca",
-                        "hasRedirectLoop": false,
-                        "connections": [
-                          {
-                            "uri": "http://canada.ca",
-                            "connection": {
-                              "statusCode": 302,
-                              "redirectTo": "https://www.canada.ca/",
-                              "headers": {
-                                "Location": "https://www.canada.ca/",
-                                "Server": "BigIP",
-                                "Connection": "Keep-Alive",
-                                "Content-Length": "0"
-                              },
-                              "blockedCategory": null
-                            },
-                            "error": null,
-                            "scheme": "http"
-                          },
-                          {
-                            "uri": "https://www.canada.ca/",
-                            "connection": {
-                              "statusCode": 200,
-                              "redirectTo": null,
-                              "headers": {
-                                "Content-Type": "text/html;charset=utf-8",
-                                "Server": "Apache",
-                                "X-Dispatcher": "dispatcher2cacentral1",
-                                "X-Vhost": "publish",
-                                "X-Content-Type-Options": "nosniff",
-                                "Last-Modified": "Tue, 08 Nov 2022 20:02:16 GMT",
-                                "ETag": "W/\"16d3-5ecfb0447a3f7-gzip\"",
-                                "Accept-Ranges": "bytes",
-                                "Content-Encoding": "gzip",
-                                "X-Frame-Options": "SAMEORIGIN, SAMEORIGIN",
-                                "X-Akamai-Transformed": "9 - 0 pmb=mRUM,1",
-                                "Date": "Wed, 09 Nov 2022 15:13:09 GMT",
-                                "Content-Length": "3442",
-                                "Connection": "keep-alive",
-                                "Vary": "Accept-Encoding",
-                                "Set-Cookie": "aka-ca-site-token=47822c179282000085c36b63d3000000c46c0200; path=/; secure",
-                                "Server-Timing": "cdn-cache; desc=HIT, edge; dur=1006",
-                                "Access-Control-Allow-Origin": "*",
-                                "Strict-Transport-Security": "max-age=31536000"
-                              },
-                              "blockedCategory": null,
-                              "HSTS": true
-                            },
-                            "error": null,
-                            "scheme": "https"
-                          }
-                        ]
-                      },
-                      "httpsChainResult": {
-                        "scheme": "https",
-                        "domain": "canada.ca",
-                        "uri": "https://canada.ca",
-                        "hasRedirectLoop": false,
-                        "connections": [
-                          {
-                            "uri": "https://canada.ca",
-                            "connection": {
-                              "statusCode": 302,
-                              "redirectTo": "https://www.canada.ca/",
-                              "headers": {
-                                "Location": "https://www.canada.ca/",
-                                "Strict-Transport-Security": "max-age=31536000",
-                                "Server": "BigIP",
-                                "Connection": "Keep-Alive",
-                                "Content-Length": "0"
-                              },
-                              "blockedCategory": null,
-                              "HSTS": true
-                            },
-                            "error": null,
-                            "scheme": "https"
-                          },
-                          {
-                            "uri": "https://www.canada.ca/",
-                            "connection": {
-                              "statusCode": 200,
-                              "redirectTo": null,
-                              "headers": {
-                                "Content-Type": "text/html;charset=utf-8",
-                                "Server": "Apache",
-                                "X-Dispatcher": "dispatcher2cacentral1",
-                                "X-Vhost": "publish",
-                                "X-Content-Type-Options": "nosniff",
-                                "Last-Modified": "Tue, 08 Nov 2022 20:02:16 GMT",
-                                "ETag": "W/\"16d3-5ecfb0447a3f7-gzip\"",
-                                "Accept-Ranges": "bytes",
-                                "Content-Encoding": "gzip",
-                                "X-Frame-Options": "SAMEORIGIN, SAMEORIGIN",
-                                "X-Akamai-Transformed": "9 - 0 pmb=mRUM,1",
-                                "Date": "Wed, 09 Nov 2022 15:13:11 GMT",
-                                "Content-Length": "3440",
-                                "Connection": "keep-alive",
-                                "Vary": "Accept-Encoding",
-                                "Set-Cookie": "aka-ca-site-token=47822c179282000087c36b6304020000d76c0200; path=/; secure",
-                                "Server-Timing": "cdn-cache; desc=HIT, edge; dur=2000",
-                                "Access-Control-Allow-Origin": "*",
-                                "Strict-Transport-Security": "max-age=31536000"
-                              },
-                              "blockedCategory": null,
-                              "HSTS": true
-                            },
-                            "error": null,
-                            "scheme": "https"
-                          }
-                        ]
-                      }
-                    }
-                  }
-                },
-                {
-                  "ipAddress": "205.193.215.159",
-                  "status": "complete",
-                  "results": {
-                    "tlsResult": {
-                      "supportsEcdhKeyExchange": false,
-                      "heartbleedVulnerable": false,
-                      "ccsInjectionVulnerable": false,
-                      "acceptedCipherSuites": {
-                        "ssl2-0CipherSuites": [],
-                        "ssl3-0CipherSuites": [
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-                            "strength": "weak"
-                          }
-                        ],
-                        "tls1-0CipherSuites": [
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-                            "strength": "weak"
-                          }
-                        ],
-                        "tls1-1CipherSuites": [],
-                        "tls1-2CipherSuites": [
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-                            "strength": "strong"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
-                            "strength": "acceptable"
-                          },
-
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-                            "strength": "strong"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
-                            "strength": "acceptable"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-                            "strength": "weak"
-                          }
-                        ],
-                        "tls1-3CipherSuites": [
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
-                            "strength": "acceptable"
-                          },
-                          {
-                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-                            "strength": "strong"
-                          }
-                        ]
-                      },
-                      "acceptedEllipticCurves": [
-                        {
-                          "name": "secp256r1",
-                          "strength": "strong"
-                        },
-                        {
-                          "name": "secp384r1",
-                          "strength": "strong"
-                        }
-                      ],
-                      "positiveTags": [
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
-                          "tagId": "ssl5",
-                          "tagName": "Acceptable-certificate",
-                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
-                          "refLinks": [
-                            {
-                              "description": "1.4 Websites and services hardening",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": "See ITSP.40.062 for approved cipher list",
-                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
-                            }
-                          ]
-                        }
-                      ],
-                      "neutralTags": [
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
-                          "tagId": "ssl5",
-                          "tagName": "Acceptable-certificate",
-                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
-                          "refLinks": [
-                            {
-                              "description": "1.4 Websites and services hardening",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": "See ITSP.40.062 for approved cipher list",
-                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
-                            }
-                          ]
-                        }
-                      ],
-                      "negativeTags": [
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsMTA=",
-                          "tagId": "ssl10",
-                          "tagName": "Bad-chain",
-                          "guidance": "HTTPS certificate chain is invalid",
-                          "refLinks": [
-                            {
-                              "description": "6.1.3 Direction",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": null,
-                              "refLink": null
-                            }
-                          ]
-                        }
-                      ],
-                      "certificateChainInfo": {
-                        "pathValidationResults": [
-                          {
-                            "opensslErrorString": "Error: This is an error message. Do something about it.",
-                            "wasValidationSuccessful": false,
-                            "trustStore": {
-                              "name": "Android",
-                              "version": "13.0.0_r8"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Apple",
-                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Java",
-                              "version": "jdk-13.0.2"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Mozilla",
-                              "version": "2022-09-18"
-                            }
-                          },
-                          {
-                            "opensslErrorString": null,
-                            "wasValidationSuccessful": true,
-                            "trustStore": {
-                              "name": "Windows",
-                              "version": "2022-08-15"
-                            }
-                          }
-                        ],
-                        "badHostname": false,
-                        "mustHaveStaple": false,
-                        "leafCertificateIsEv": false,
-                        "receivedChainContainsAnchorCertificate": false,
-                        "receivedChainHasValidOrder": true,
-                        "verifiedChainHasSha1Signature": false,
-                        "verifiedChainHasLegacySymantecAnchor": false,
-                        "certificateChain": [
-                          {
-                            "notValidBefore": "2022-08-18 17:26:56",
-                            "notValidAfter": "2023-09-18 17:26:56",
-                            "issuer": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
-                            "subject": "CN=canada.ca,O=Shared Services Canada,L=Gatineau,ST=Quebec,C=CA",
-                            "expiredCert": false,
-                            "selfSignedCert": false,
-                            "certRevoked": false,
-                            "certRevokedStatus": "NotCovered",
-                            "commonNames": ["canada.ca"],
-                            "serialNumber": "160759660447903006559566537118831923092",
-                            "signatureHashAlgorithm": "sha256",
-                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
-                          },
-                          {
-                            "notValidBefore": "2015-10-05 19:13:56",
-                            "notValidAfter": "2030-12-05 19:43:56",
-                            "issuer": "CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
-                            "subject": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
-                            "expiredCert": false,
-                            "selfSignedCert": false,
-                            "certRevoked": false,
-                            "certRevokedStatus": "NotEnrolled",
-                            "commonNames": ["Entrust Certification Authority - L1K"],
-                            "serialNumber": "4614832350436832027625092997",
-                            "signatureHashAlgorithm": "sha256",
-                            "sanList": []
-                          }
-                        ]
-                      }
-                    },
-                    "connectionResults": {
-                      "httpLive": true,
-                      "httpsLive": true,
-                      "httpImmediatelyUpgrades": true,
-                      "httpEventuallyUpgrades": true,
-                      "httpsImmediatelyDowngrades": false,
-                      "httpsEventuallyDowngrades": false,
-                      "hstsParsed": null,
-                      "positiveTags": [
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
-                          "tagId": "ssl5",
-                          "tagName": "Acceptable-certificate",
-                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
-                          "refLinks": [
-                            {
-                              "description": "1.4 Websites and services hardening",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": "See ITSP.40.062 for approved cipher list",
-                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
-                            }
-                          ]
-                        }
-                      ],
-                      "neutralTags": [],
-                      "negativeTags": [
-                        {
-                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
-                          "tagId": "ssl5",
-                          "tagName": "Acceptable-certificate",
-                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
-                          "refLinks": [
-                            {
-                              "description": "1.4 Websites and services hardening",
-                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-                            }
-                          ],
-                          "refLinksTech": [
-                            {
-                              "description": "See ITSP.40.062 for approved cipher list",
-                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
-                            }
-                          ]
-                        }
-                      ],
-                      "httpChainResult": {
-                        "scheme": "http",
-                        "domain": "canada.ca",
-                        "uri": "http://canada.ca",
-                        "hasRedirectLoop": false,
-                        "connections": [
-                          {
-                            "uri": "http://canada.ca",
-                            "connection": {
-                              "statusCode": 302,
-                              "redirectTo": "https://www.canada.ca/",
-                              "headers": {
-                                "Location": "https://www.canada.ca/",
-                                "Server": "BigIP",
-                                "Connection": "Keep-Alive",
-                                "Content-Length": "0"
-                              },
-                              "blockedCategory": null
-                            },
-                            "error": null,
-                            "scheme": "http"
-                          },
-                          {
-                            "uri": "https://www.canada.ca/",
-                            "connection": {
-                              "statusCode": 200,
-                              "redirectTo": null,
-                              "headers": {
-                                "Content-Type": "text/html;charset=utf-8",
-                                "Server": "Apache",
-                                "X-Dispatcher": "dispatcher2cacentral1",
-                                "X-Vhost": "publish",
-                                "X-Content-Type-Options": "nosniff",
-                                "Last-Modified": "Tue, 08 Nov 2022 20:02:16 GMT",
-                                "ETag": "W/\"16d3-5ecfb0447a3f7-gzip\"",
-                                "Accept-Ranges": "bytes",
-                                "Content-Encoding": "gzip",
-                                "X-Frame-Options": "SAMEORIGIN, SAMEORIGIN",
-                                "X-Akamai-Transformed": "9 - 0 pmb=mRUM,1",
-                                "Date": "Wed, 09 Nov 2022 15:13:09 GMT",
-                                "Content-Length": "3442",
-                                "Connection": "keep-alive",
-                                "Vary": "Accept-Encoding",
-                                "Set-Cookie": "aka-ca-site-token=47822c179282000085c36b63d3000000c46c0200; path=/; secure",
-                                "Server-Timing": "cdn-cache; desc=HIT, edge; dur=1006",
-                                "Access-Control-Allow-Origin": "*",
-                                "Strict-Transport-Security": "max-age=31536000"
-                              },
-                              "blockedCategory": null,
-                              "HSTS": true
-                            },
-                            "error": null,
-                            "scheme": "https"
-                          }
-                        ]
-                      },
-                      "httpsChainResult": {
-                        "scheme": "https",
-                        "domain": "canada.ca",
-                        "uri": "https://canada.ca",
-                        "hasRedirectLoop": false,
-                        "connections": [
-                          {
-                            "uri": "https://canada.ca",
-                            "connection": {
-                              "statusCode": 302,
-                              "redirectTo": "https://www.canada.ca/",
-                              "headers": {
-                                "Location": "https://www.canada.ca/",
-                                "Strict-Transport-Security": "max-age=31536000",
-                                "Server": "BigIP",
-                                "Connection": "Keep-Alive",
-                                "Content-Length": "0"
-                              },
-                              "blockedCategory": null,
-                              "HSTS": true
-                            },
-                            "error": null,
-                            "scheme": "https"
-                          },
-                          {
-                            "uri": "https://www.canada.ca/",
-                            "connection": {
-                              "statusCode": 200,
-                              "redirectTo": null,
-                              "headers": {
-                                "Content-Type": "text/html;charset=utf-8",
-                                "Server": "Apache",
-                                "X-Dispatcher": "dispatcher2cacentral1",
-                                "X-Vhost": "publish",
-                                "X-Content-Type-Options": "nosniff",
-                                "Last-Modified": "Tue, 08 Nov 2022 20:02:16 GMT",
-                                "ETag": "W/\"16d3-5ecfb0447a3f7-gzip\"",
-                                "Accept-Ranges": "bytes",
-                                "Content-Encoding": "gzip",
-                                "X-Frame-Options": "SAMEORIGIN, SAMEORIGIN",
-                                "X-Akamai-Transformed": "9 - 0 pmb=mRUM,1",
-                                "Date": "Wed, 09 Nov 2022 15:13:11 GMT",
-                                "Content-Length": "3440",
-                                "Connection": "keep-alive",
-                                "Vary": "Accept-Encoding",
-                                "Set-Cookie": "aka-ca-site-token=47822c179282000087c36b6304020000d76c0200; path=/; secure",
-                                "Server-Timing": "cdn-cache; desc=HIT, edge; dur=2000",
-                                "Access-Control-Allow-Origin": "*",
-                                "Strict-Transport-Security": "max-age=31536000"
-                              },
-                              "blockedCategory": null,
-                              "HSTS": true
-                            },
-                            "error": null,
-                            "scheme": "https"
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      },
+      "hasDMARCReport": false,
       "dnsScan": {
         "edges": [
           {
-            "cursor": "dGltZXN0YW1wOjoyMDIyLTExLTA5IDE1OjE0OjM4LjA2MzUwM3xpZDo6Mzc3MQ==",
+            "cursor": "dGltZXN0YW1wOjoyMDIyLTEyLTE2IDEzOjU0OjU0LjEzMjcwMXxpZDo6MjA0MTQ=",
             "node": {
-              "id": "ZG5zOjM3NzE=",
+              "id": "ZG5zOjIwNDE0",
+              "domain": "canada.ca",
+              "timestamp": "2022-12-16",
+              "baseDomain": "canada.ca",
+              "recordExists": true,
+              "resolveChain": [
+                [
+                  "canada.ca. 44 IN A 167.40.79.24",
+                  "canada.ca. 44 IN A 205.193.215.159",
+                  "canada.ca. 44 IN A 205.193.117.159",
+                  "canada.ca. 44 IN A 160.106.123.29"
+                ]
+              ],
+              "cnameRecord": null,
+              "mxRecords": {
+                "hosts": [
+                  {
+                    "preference": 0,
+                    "hostname": "canada-ca.mail.protection.outlook.com",
+                    "addresses": ["104.47.75.164", "104.47.75.228"]
+                  }
+                ],
+                "warnings": ["104.47.75.228 does not have any reverse DNS (PTR) records"]
+              },
+              "nsRecords": {
+                "hostnames": [
+                  "ns2.d-zone.ca",
+                  "ns1.d-zone.ca",
+                  "dns1.nrc.ca",
+                  "dns2.nrc.ca",
+                  "xns-kedc.ssc-spc.gc.ca",
+                  "gocns-pdp.gc.ca",
+                  "xns-kedc-1.ssc-spc.gc.ca",
+                  "gocns-kedc.gc.ca"
+                ],
+                "warnings": []
+              },
               "dkim": {
                 "selectors": [
                   {
                     "selector": "selector1",
+                    "status": "pass",
+                    "record": "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzVXP6/DtkyEtuJtFKPy3fK8CRPmwbRjIbSWx0zXq/UH+reUY2aCpUelw4Vad+Op8ZdFezf2UN5GrEhYt2ass11fnkdyKDIShPCl3UHrSUyX8cL+MX3MxwWX6NwLSq61KcXY+CSYIgM/1Xddj+pGVyF7fAwmmWjkovpE1Kq6NmzoAHK4uT07D0zHWSOvji7xWlIOScQpj885NwFKyN0J/CeQFVudqSv72bmS13Xcdt0egEh838p39enB8O6x+DdVtJIkNzB+bUZ02OKTwt8pdcOiU7so0Wc/g+c+J8+NR0/nCzOTwEj0cX+wGFQibUiCsl2tFB3gKo2YqiU2VmG1UIQIDAQAB;",
+                    "keyLength": "2048",
+                    "keyType": "rsa",
+                    "publicExponent": 65537,
+                    "keyModulus": "25921168087989748680626108543609663527969483863482144624389429931506036010792783393114624356508883208612302811012459378588922664428784728520578490052858876514414062933962743226754680976435737830345589472974547075717018578444230904987156574763341317027645831552661086329203321028623215318780763032006035145138920481485581930944227445678614584636057681984083569828103674253417532269200479691165800412485832273891338174842802152039712638419115381436351189373609208996933233759561107534147576566933682980551625615544671466392843596170780783562277800852392348910735483111811769559189769503126233671341919208848164186313761",
                     "positiveTags": [],
                     "neutralTags": [
                       {
@@ -767,18 +100,6 @@
                         ]
                       }
                     ],
-                    "negativeTags": []
-                  },
-                  {
-                    "selector": "selector2",
-                    "positiveTags": [],
-                    "neutralTags": [],
-                    "negativeTags": []
-                  },
-                  {
-                    "selector": "selector3",
-                    "positiveTags": [],
-                    "neutralTags": [],
                     "negativeTags": []
                   }
                 ]
@@ -864,6 +185,24 @@
                     ]
                   },
                   {
+                    "id": "Z3VpZGFuY2VUYWc6ZG1hcmMxNQ==",
+                    "tagId": "dmarc15",
+                    "tagName": "TXT-DMARC-missing",
+                    "guidance": "Third-party report destinations invalid",
+                    "refLinks": [
+                      {
+                        "description": "3.2.3 Third Parties and DMARC",
+                        "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
+                      }
+                    ],
+                    "refLinksTech": [
+                      {
+                        "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
+                        "refLink": null
+                      }
+                    ]
+                  },
+                  {
                     "id": "Z3VpZGFuY2VUYWc6ZG1hcmMxMw==",
                     "tagId": "dmarc13",
                     "tagName": "RUF-none",
@@ -877,24 +216,6 @@
                     "refLinksTech": [
                       {
                         "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-                        "refLink": null
-                      }
-                    ]
-                  },
-                  {
-                    "id": "Z3VpZGFuY2VUYWc6ZG1hcmMxNA==",
-                    "tagId": "dmarc14",
-                    "tagName": "TXT-DMARC-enabled",
-                    "guidance": "Third-party report destinations valid",
-                    "refLinks": [
-                      {
-                        "description": "3.2.3 Third Parties and DMARC",
-                        "refLink": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a323"
-                      }
-                    ],
-                    "refLinksTech": [
-                      {
-                        "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
                         "refLink": null
                       }
                     ]
@@ -966,6 +287,1344 @@
                 ],
                 "negativeTags": []
               }
+            }
+          }
+        ]
+      },
+      "web": {
+        "edges": [
+          {
+            "node": {
+              "timestamp": "2022-12-16",
+              "domain": "canada.ca",
+              "results": [
+                {
+                  "ipAddress": "167.40.79.24",
+                  "status": "complete",
+                  "results": {
+                    "timestamp": "2022-12-16",
+                    "tlsResult": {
+                      "ipAddress": "167.40.79.24",
+                      "supportsEcdhKeyExchange": false,
+                      "heartbleedVulnerable": false,
+                      "ccsInjectionVulnerable": false,
+                      "acceptedCipherSuites": {
+                        "ssl2_0CipherSuites": [],
+                        "ssl3_0CipherSuites": [],
+                        "tls1_0CipherSuites": [],
+                        "tls1_1CipherSuites": [],
+                        "tls1_2CipherSuites": [
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+                            "strength": "weak"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+                            "strength": "weak"
+                          }
+                        ],
+                        "tls1_3CipherSuites": []
+                      },
+                      "acceptedEllipticCurves": [
+                        {
+                          "name": "X25519",
+                          "strength": "weak"
+                        },
+                        {
+                          "name": "secp256r1",
+                          "strength": "strong"
+                        },
+                        {
+                          "name": "secp384r1",
+                          "strength": "strong"
+                        }
+                      ],
+                      "positiveTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
+                          "tagId": "ssl5",
+                          "tagName": "Acceptable-certificate",
+                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
+                          "refLinks": [
+                            {
+                              "description": "1.4 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        }
+                      ],
+                      "neutralTags": [],
+                      "negativeTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNg==",
+                          "tagId": "ssl6",
+                          "tagName": "Invalid-cipher",
+                          "guidance": "One or more ciphers in use are not compliant with guidelines",
+                          "refLinks": [
+                            {
+                              "description": "1.4/1.5/1.6 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsMTA=",
+                          "tagId": "ssl10",
+                          "tagName": "Bad-chain",
+                          "guidance": "HTTPS certificate chain is invalid",
+                          "refLinks": [
+                            {
+                              "description": "6.1.3 Direction",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": null,
+                              "refLink": null
+                            }
+                          ]
+                        }
+                      ],
+                      "certificateChainInfo": {
+                        "pathValidationResults": [
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Android",
+                              "version": "13.0.0_r8"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Apple",
+                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Java",
+                              "version": "jdk-13.0.2"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Mozilla",
+                              "version": "2022-09-18"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Windows",
+                              "version": "2022-08-15"
+                            }
+                          }
+                        ],
+                        "badHostname": false,
+                        "mustHaveStaple": false,
+                        "leafCertificateIsEv": false,
+                        "receivedChainContainsAnchorCertificate": false,
+                        "receivedChainHasValidOrder": true,
+                        "verifiedChainHasSha1Signature": false,
+                        "verifiedChainHasLegacySymantecAnchor": false,
+                        "certificateChain": [
+                          {
+                            "notValidBefore": "2022-08-18 17:26:56",
+                            "notValidAfter": "2023-09-18 17:26:56",
+                            "issuer": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=canada.ca,O=Shared Services Canada,L=Gatineau,ST=Quebec,C=CA",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotCovered",
+                            "commonNames": ["canada.ca"],
+                            "serialNumber": "160759660447903006559566537118831923092",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
+                          },
+                          {
+                            "notValidBefore": "2015-10-05 19:13:56",
+                            "notValidAfter": "2030-12-05 19:43:56",
+                            "issuer": "CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotEnrolled",
+                            "commonNames": ["Entrust Certification Authority - L1K"],
+                            "serialNumber": "4614832350436832027625092997",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": []
+                          }
+                        ]
+                      }
+                    },
+                    "connectionResults": {
+                      "httpLive": true,
+                      "httpsStatus": "pass",
+                      "httpImmediatelyUpgrades": true,
+                      "httpEventuallyUpgrades": true,
+                      "httpsImmediatelyDowngrades": false,
+                      "httpsEventuallyDowngrades": false,
+                      "hstsParsed": {
+                        "maxAge": 31536000,
+                        "includeSubdomains": false,
+                        "preload": false
+                      },
+                      "positiveTags": [],
+                      "neutralTags": [],
+                      "negativeTags": [],
+                      "httpChainResult": {
+                        "scheme": "http",
+                        "domain": "canada.ca",
+                        "uri": "http://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "http://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": null
+                            },
+                            "error": null,
+                            "scheme": "http"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:06 GMT",
+                                "Content_Length": "3445",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=57403617351e0000ba789c63fc02000022a21900; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=2016",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      },
+                      "httpsChainResult": {
+                        "scheme": "https",
+                        "domain": "canada.ca",
+                        "uri": "https://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "https://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Strict_Transport_Security": "max-age=31536000",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:08 GMT",
+                                "Content_Length": "3445",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=57403617351e0000bc789c633b00000029a21900; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=1000",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "ipAddress": "205.193.215.159",
+                  "status": "complete",
+                  "results": {
+                    "timestamp": "2022-12-16",
+                    "tlsResult": {
+                      "ipAddress": "205.193.215.159",
+                      "supportsEcdhKeyExchange": false,
+                      "heartbleedVulnerable": false,
+                      "ccsInjectionVulnerable": false,
+                      "acceptedCipherSuites": {
+                        "ssl2_0CipherSuites": [],
+                        "ssl3_0CipherSuites": [],
+                        "tls1_0CipherSuites": [],
+                        "tls1_1CipherSuites": [],
+                        "tls1_2CipherSuites": [
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+                            "strength": "weak"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+                            "strength": "weak"
+                          }
+                        ],
+                        "tls1_3CipherSuites": []
+                      },
+                      "acceptedEllipticCurves": [
+                        {
+                          "name": "X25519",
+                          "strength": "weak"
+                        },
+                        {
+                          "name": "secp256r1",
+                          "strength": "strong"
+                        },
+                        {
+                          "name": "secp384r1",
+                          "strength": "strong"
+                        }
+                      ],
+                      "positiveTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
+                          "tagId": "ssl5",
+                          "tagName": "Acceptable-certificate",
+                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
+                          "refLinks": [
+                            {
+                              "description": "1.4 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        }
+                      ],
+                      "neutralTags": [],
+                      "negativeTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNg==",
+                          "tagId": "ssl6",
+                          "tagName": "Invalid-cipher",
+                          "guidance": "One or more ciphers in use are not compliant with guidelines",
+                          "refLinks": [
+                            {
+                              "description": "1.4/1.5/1.6 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsMTA=",
+                          "tagId": "ssl10",
+                          "tagName": "Bad-chain",
+                          "guidance": "HTTPS certificate chain is invalid",
+                          "refLinks": [
+                            {
+                              "description": "6.1.3 Direction",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": null,
+                              "refLink": null
+                            }
+                          ]
+                        }
+                      ],
+                      "certificateChainInfo": {
+                        "pathValidationResults": [
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Android",
+                              "version": "13.0.0_r8"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Apple",
+                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Java",
+                              "version": "jdk-13.0.2"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Mozilla",
+                              "version": "2022-09-18"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Windows",
+                              "version": "2022-08-15"
+                            }
+                          }
+                        ],
+                        "badHostname": false,
+                        "mustHaveStaple": false,
+                        "leafCertificateIsEv": false,
+                        "receivedChainContainsAnchorCertificate": false,
+                        "receivedChainHasValidOrder": true,
+                        "verifiedChainHasSha1Signature": false,
+                        "verifiedChainHasLegacySymantecAnchor": false,
+                        "certificateChain": [
+                          {
+                            "notValidBefore": "2022-08-18 17:26:56",
+                            "notValidAfter": "2023-09-18 17:26:56",
+                            "issuer": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=canada.ca,O=Shared Services Canada,L=Gatineau,ST=Quebec,C=CA",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotCovered",
+                            "commonNames": ["canada.ca"],
+                            "serialNumber": "160759660447903006559566537118831923092",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
+                          },
+                          {
+                            "notValidBefore": "2015-10-05 19:13:56",
+                            "notValidAfter": "2030-12-05 19:43:56",
+                            "issuer": "CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotEnrolled",
+                            "commonNames": ["Entrust Certification Authority - L1K"],
+                            "serialNumber": "4614832350436832027625092997",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": []
+                          }
+                        ]
+                      }
+                    },
+                    "connectionResults": {
+                      "httpLive": true,
+                      "httpsStatus": "pass",
+                      "httpImmediatelyUpgrades": true,
+                      "httpEventuallyUpgrades": true,
+                      "httpsImmediatelyDowngrades": false,
+                      "httpsEventuallyDowngrades": false,
+                      "hstsParsed": {
+                        "maxAge": 31536000,
+                        "includeSubdomains": false,
+                        "preload": false
+                      },
+                      "positiveTags": [],
+                      "neutralTags": [],
+                      "negativeTags": [],
+                      "httpChainResult": {
+                        "scheme": "http",
+                        "domain": "canada.ca",
+                        "uri": "http://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "http://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Strict_Transport_Security": "max-age=31536000",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": null
+                            },
+                            "error": null,
+                            "scheme": "http"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:21 GMT",
+                                "Content_Length": "3443",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=5840361715510000c9789c637d02000098021b00; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=3000",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      },
+                      "httpsChainResult": {
+                        "scheme": "https",
+                        "domain": "canada.ca",
+                        "uri": "https://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "https://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Strict_Transport_Security": "max-age=31536000",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:23 GMT",
+                                "Content_Length": "3444",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=5840361715510000cb789c63b1030000d7021b00; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=2001",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "ipAddress": "205.193.117.159",
+                  "status": "complete",
+                  "results": {
+                    "timestamp": "2022-12-16",
+                    "tlsResult": {
+                      "ipAddress": "205.193.117.159",
+                      "supportsEcdhKeyExchange": false,
+                      "heartbleedVulnerable": false,
+                      "ccsInjectionVulnerable": false,
+                      "acceptedCipherSuites": {
+                        "ssl2_0CipherSuites": [],
+                        "ssl3_0CipherSuites": [],
+                        "tls1_0CipherSuites": [],
+                        "tls1_1CipherSuites": [],
+                        "tls1_2CipherSuites": [
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+                            "strength": "weak"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+                            "strength": "weak"
+                          }
+                        ],
+                        "tls1_3CipherSuites": []
+                      },
+                      "acceptedEllipticCurves": [
+                        {
+                          "name": "X25519",
+                          "strength": "weak"
+                        },
+                        {
+                          "name": "secp256r1",
+                          "strength": "strong"
+                        },
+                        {
+                          "name": "secp384r1",
+                          "strength": "strong"
+                        }
+                      ],
+                      "positiveTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
+                          "tagId": "ssl5",
+                          "tagName": "Acceptable-certificate",
+                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
+                          "refLinks": [
+                            {
+                              "description": "1.4 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        }
+                      ],
+                      "neutralTags": [],
+                      "negativeTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNg==",
+                          "tagId": "ssl6",
+                          "tagName": "Invalid-cipher",
+                          "guidance": "One or more ciphers in use are not compliant with guidelines",
+                          "refLinks": [
+                            {
+                              "description": "1.4/1.5/1.6 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsMTA=",
+                          "tagId": "ssl10",
+                          "tagName": "Bad-chain",
+                          "guidance": "HTTPS certificate chain is invalid",
+                          "refLinks": [
+                            {
+                              "description": "6.1.3 Direction",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": null,
+                              "refLink": null
+                            }
+                          ]
+                        }
+                      ],
+                      "certificateChainInfo": {
+                        "pathValidationResults": [
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Android",
+                              "version": "13.0.0_r8"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Apple",
+                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Java",
+                              "version": "jdk-13.0.2"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Mozilla",
+                              "version": "2022-09-18"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Windows",
+                              "version": "2022-08-15"
+                            }
+                          }
+                        ],
+                        "badHostname": false,
+                        "mustHaveStaple": false,
+                        "leafCertificateIsEv": false,
+                        "receivedChainContainsAnchorCertificate": false,
+                        "receivedChainHasValidOrder": true,
+                        "verifiedChainHasSha1Signature": false,
+                        "verifiedChainHasLegacySymantecAnchor": false,
+                        "certificateChain": [
+                          {
+                            "notValidBefore": "2022-08-23 20:14:22",
+                            "notValidAfter": "2023-09-23 20:14:22",
+                            "issuer": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=canada.ca,O=Shared Services Canada,L=Gatineau,ST=Quebec,C=CA",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotCovered",
+                            "commonNames": ["canada.ca"],
+                            "serialNumber": "146744404786064922907555408162534965220",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
+                          },
+                          {
+                            "notValidBefore": "2015-10-05 19:13:56",
+                            "notValidAfter": "2030-12-05 19:43:56",
+                            "issuer": "CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotEnrolled",
+                            "commonNames": ["Entrust Certification Authority - L1K"],
+                            "serialNumber": "4614832350436832027625092997",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": []
+                          }
+                        ]
+                      }
+                    },
+                    "connectionResults": {
+                      "httpLive": true,
+                      "httpsStatus": "pass",
+                      "httpImmediatelyUpgrades": true,
+                      "httpEventuallyUpgrades": true,
+                      "httpsImmediatelyDowngrades": false,
+                      "httpsEventuallyDowngrades": false,
+                      "hstsParsed": {
+                        "maxAge": 31536000,
+                        "includeSubdomains": false,
+                        "preload": false
+                      },
+                      "positiveTags": [],
+                      "neutralTags": [],
+                      "negativeTags": [],
+                      "httpChainResult": {
+                        "scheme": "http",
+                        "domain": "canada.ca",
+                        "uri": "http://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "http://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Strict_Transport_Security": "max-age=31536000",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": null
+                            },
+                            "error": null,
+                            "scheme": "http"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:35 GMT",
+                                "Content_Length": "3442",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=57403617351e0000d7789c63ae000000eba21900; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=2110",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      },
+                      "httpsChainResult": {
+                        "scheme": "https",
+                        "domain": "canada.ca",
+                        "uri": "https://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "https://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Strict_Transport_Security": "max-age=31536000",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:36 GMT",
+                                "Content_Length": "3442",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=57403617351e0000d8789c63cd0100000fa31900; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=1000",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "ipAddress": "160.106.123.29",
+                  "status": "complete",
+                  "results": {
+                    "timestamp": "2022-12-16",
+                    "tlsResult": {
+                      "ipAddress": "160.106.123.29",
+                      "supportsEcdhKeyExchange": false,
+                      "heartbleedVulnerable": false,
+                      "ccsInjectionVulnerable": false,
+                      "acceptedCipherSuites": {
+                        "ssl2_0CipherSuites": [],
+                        "ssl3_0CipherSuites": [],
+                        "tls1_0CipherSuites": [],
+                        "tls1_1CipherSuites": [],
+                        "tls1_2CipherSuites": [
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+                            "strength": "weak"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                            "strength": "strong"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+                            "strength": "acceptable"
+                          },
+                          {
+                            "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+                            "strength": "weak"
+                          }
+                        ],
+                        "tls1_3CipherSuites": []
+                      },
+                      "acceptedEllipticCurves": [
+                        {
+                          "name": "X25519",
+                          "strength": "weak"
+                        },
+                        {
+                          "name": "secp256r1",
+                          "strength": "strong"
+                        },
+                        {
+                          "name": "secp384r1",
+                          "strength": "strong"
+                        }
+                      ],
+                      "positiveTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNQ==",
+                          "tagId": "ssl5",
+                          "tagName": "Acceptable-certificate",
+                          "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
+                          "refLinks": [
+                            {
+                              "description": "1.4 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        }
+                      ],
+                      "neutralTags": [],
+                      "negativeTags": [
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsNg==",
+                          "tagId": "ssl6",
+                          "tagName": "Invalid-cipher",
+                          "guidance": "One or more ciphers in use are not compliant with guidelines",
+                          "refLinks": [
+                            {
+                              "description": "1.4/1.5/1.6 Websites and services hardening",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": "See ITSP.40.062 for approved cipher list",
+                              "refLink": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062"
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Z3VpZGFuY2VUYWc6c3NsMTA=",
+                          "tagId": "ssl10",
+                          "tagName": "Bad-chain",
+                          "guidance": "HTTPS certificate chain is invalid",
+                          "refLinks": [
+                            {
+                              "description": "6.1.3 Direction",
+                              "refLink": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+                            }
+                          ],
+                          "refLinksTech": [
+                            {
+                              "description": null,
+                              "refLink": null
+                            }
+                          ]
+                        }
+                      ],
+                      "certificateChainInfo": {
+                        "pathValidationResults": [
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Android",
+                              "version": "13.0.0_r8"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Apple",
+                              "version": "iOS 15.1, iPadOS 15.1, macOS 12.1, tvOS 15.1, and watchOS 8.1"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Java",
+                              "version": "jdk-13.0.2"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Mozilla",
+                              "version": "2022-09-18"
+                            }
+                          },
+                          {
+                            "opensslErrorString": null,
+                            "wasValidationSuccessful": true,
+                            "trustStore": {
+                              "name": "Windows",
+                              "version": "2022-08-15"
+                            }
+                          }
+                        ],
+                        "badHostname": false,
+                        "mustHaveStaple": false,
+                        "leafCertificateIsEv": false,
+                        "receivedChainContainsAnchorCertificate": false,
+                        "receivedChainHasValidOrder": true,
+                        "verifiedChainHasSha1Signature": false,
+                        "verifiedChainHasLegacySymantecAnchor": false,
+                        "certificateChain": [
+                          {
+                            "notValidBefore": "2022-08-18 17:26:56",
+                            "notValidAfter": "2023-09-18 17:26:56",
+                            "issuer": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=canada.ca,O=Shared Services Canada,L=Gatineau,ST=Quebec,C=CA",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotCovered",
+                            "commonNames": ["canada.ca"],
+                            "serialNumber": "160759660447903006559566537118831923092",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": ["canada.ca", "www.canada.ca", "Canada.gc.ca", "www.canada.gc.ca"]
+                          },
+                          {
+                            "notValidBefore": "2015-10-05 19:13:56",
+                            "notValidAfter": "2030-12-05 19:43:56",
+                            "issuer": "CN=Entrust Root Certification Authority - G2,OU=(c) 2009 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "subject": "CN=Entrust Certification Authority - L1K,OU=(c) 2012 Entrust\\, Inc. - for authorized use only,OU=See www.entrust.net/legal-terms,O=Entrust\\, Inc.,C=US",
+                            "expiredCert": false,
+                            "selfSignedCert": false,
+                            "certRevoked": false,
+                            "certRevokedStatus": "NotEnrolled",
+                            "commonNames": ["Entrust Certification Authority - L1K"],
+                            "serialNumber": "4614832350436832027625092997",
+                            "signatureHashAlgorithm": "sha256",
+                            "sanList": []
+                          }
+                        ]
+                      }
+                    },
+                    "connectionResults": {
+                      "httpLive": true,
+                      "httpsStatus": "pass",
+                      "httpImmediatelyUpgrades": true,
+                      "httpEventuallyUpgrades": true,
+                      "httpsImmediatelyDowngrades": false,
+                      "httpsEventuallyDowngrades": false,
+                      "hstsParsed": {
+                        "maxAge": 31536000,
+                        "includeSubdomains": false,
+                        "preload": false
+                      },
+                      "positiveTags": [],
+                      "neutralTags": [],
+                      "negativeTags": [],
+                      "httpChainResult": {
+                        "scheme": "http",
+                        "domain": "canada.ca",
+                        "uri": "http://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "http://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": null
+                            },
+                            "error": null,
+                            "scheme": "http"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:47 GMT",
+                                "Content_Length": "3444",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=57403617351e0000e3789c63e4030000a0a31900; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=2000",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      },
+                      "httpsChainResult": {
+                        "scheme": "https",
+                        "domain": "canada.ca",
+                        "uri": "https://canada.ca",
+                        "hasRedirectLoop": false,
+                        "connections": [
+                          {
+                            "uri": "https://canada.ca",
+                            "connection": {
+                              "statusCode": 302,
+                              "redirectTo": "https://www.canada.ca/",
+                              "headers": {
+                                "Location": "https://www.canada.ca/",
+                                "Strict_Transport_Security": "max-age=31536000",
+                                "Server": "BigIP",
+                                "Connection": "Keep-Alive",
+                                "Content_Length": "0"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          },
+                          {
+                            "uri": "https://www.canada.ca/",
+                            "connection": {
+                              "statusCode": 200,
+                              "redirectTo": null,
+                              "headers": {
+                                "Content_Type": "text/html;charset=utf-8",
+                                "Server": "Apache",
+                                "X_Dispatcher": "dispatcher1cacentral1",
+                                "X_Vhost": "publish",
+                                "X_Content_Type_Options": "nosniff",
+                                "Last_Modified": "Thu, 15 Dec 2022 18:50:56 GMT",
+                                "ETag": "W/\"16d3-5efe255563038-gzip\"",
+                                "Accept_Ranges": "bytes",
+                                "X_Frame_Options": "SAMEORIGIN, SAMEORIGIN",
+                                "X_Akamai_Transformed": "9 - 0 pmb=mRUM,1",
+                                "Content_Encoding": "gzip",
+                                "Date": "Fri, 16 Dec 2022 13:55:49 GMT",
+                                "Content_Length": "3449",
+                                "Connection": "keep-alive",
+                                "Vary": "Accept-Encoding",
+                                "Set_Cookie": "aka-ca-site-token=57403617351e0000e5789c631a010000b2a31900; path=/; secure",
+                                "Server_Timing": "cdn-cache; desc=HIT, edge; dur=1006",
+                                "Access_Control_Allow_Origin": "*",
+                                "Strict_Transport_Security": "max-age=31536000"
+                              },
+                              "blockedCategory": null,
+                              "HSTS": true
+                            },
+                            "error": null,
+                            "scheme": "https"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         ]
