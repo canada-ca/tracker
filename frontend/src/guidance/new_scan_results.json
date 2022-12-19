@@ -565,6 +565,13 @@
                             },
                             "error": null,
                             "scheme": "https"
+                          },
+                          {
+                            "uri": "https://www.esdc.gc.ca/",
+                            "connection": null,
+                            "error": "CONNECTION_ERROR",
+                            "scheme": "https",
+                            "__typename": "Connection"
                           }
                         ]
                       },
