@@ -93,15 +93,15 @@ export const createDomain = new mutationWithClientMutationId({
     }
 
     let archived
-    if (typeof args.hidden !== 'undefined') {
-      archived = args.hidden
+    if (typeof args.archived !== 'undefined') {
+      archived = args.archived
     } else {
       archived = false
     }
 
     let hidden
-    if (typeof args.archived !== 'undefined') {
-      hidden = args.archived
+    if (typeof args.hidden !== 'undefined') {
+      hidden = args.hidden
     } else {
       hidden = false
     }
@@ -346,6 +346,14 @@ export const createDomain = new mutationWithClientMutationId({
         name: 'tags',
         oldValue: [],
         newValue: tags,
+      })
+    }
+
+    if (typeof hidden !== 'undefined') {
+      updatedProperties.push({
+        name: 'hidden',
+        oldValue: null,
+        newValue: hidden,
       })
     }
 

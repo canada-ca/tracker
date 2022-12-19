@@ -219,7 +219,6 @@ export function AdminDomainModal({
           onSubmit={async (values) => {
             // Submit update detail mutation
             if (mutation === 'update') {
-              alert(JSON.stringify(values))
               await updateDomain({
                 variables: {
                   domainId: editingDomainId,
@@ -388,14 +387,14 @@ export function AdminDomainModal({
                     </Text>
                   </Flex>
 
-                  {permission === 'super_admin' && (
+                  {permission === 'SUPER_ADMIN' && (
                     <Flex align="center">
                       <label>
                         <Switch
                           isFocusable={true}
                           name="archiveDomain"
                           mx="2"
-                          defaultChecked={values.hideDomain}
+                          defaultChecked={values.archiveDomain}
                           onChange={handleChange}
                         />
                       </label>

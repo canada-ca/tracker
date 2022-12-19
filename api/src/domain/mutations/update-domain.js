@@ -91,15 +91,15 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     let archived
-    if (typeof args.hidden !== 'undefined') {
-      archived = args.hidden
+    if (typeof args.archived !== 'undefined') {
+      archived = args.archived
     } else {
       archived = null
     }
 
     let hidden
-    if (typeof args.archived !== 'undefined') {
-      hidden = args.archived
+    if (typeof args.hidden !== 'undefined') {
+      hidden = args.hidden
     } else {
       hidden = null
     }
@@ -189,7 +189,7 @@ export const updateDomain = new mutationWithClientMutationId({
       domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
       lastRan: domain.lastRan,
       selectors: selectors || domain.selectors,
-      archived: archived || domain.archived,
+      archived: typeof archived !== 'undefined' ? archived : domain?.archived,
     }
 
     try {
@@ -234,7 +234,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     const claimToInsert = {
       tags: tags || claim?.tags,
-      hidden: hidden || claim?.hidden,
+      hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
     }
 
     try {
@@ -301,6 +301,14 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'tags',
         oldValue: claim.tags,
         newValue: tags,
+      })
+    }
+
+    if (typeof hidden !== 'undefined') {
+      updatedProperties.push({
+        name: 'hidden',
+        oldValue: claim?.hidden,
+        newValue: hidden,
       })
     }
 

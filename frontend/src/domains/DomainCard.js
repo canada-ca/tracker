@@ -147,24 +147,24 @@ export function DomainCard({
                 })}
                 {isHidden && (
                   <Tag
-                    m="1"
+                    m="0.5"
                     borderRadius="full"
                     borderWidth="1px"
                     borderColor="gray.900"
                   >
-                    <TagLabel mx="auto">
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
                       <Trans>Hidden</Trans>
                     </TagLabel>
                   </Tag>
                 )}
                 {isArchived && (
                   <Tag
-                    m="1"
+                    m="0.5"
                     borderRadius="full"
                     borderWidth="1px"
                     borderColor="gray.900"
                   >
-                    <TagLabel mx="auto">
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
                       <Trans>Archived</Trans>
                     </TagLabel>
                   </Tag>
