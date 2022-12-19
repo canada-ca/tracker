@@ -142,6 +142,14 @@ const mocks = {
       totalMessages: faker.datatype.number({ min: 0, max: 15000 }),
     }
   },
+  ConnectionInfo: () => {
+    return {
+      headers: {
+        'Content-Length': '62',
+        'Content-Type': 'text/html; charset=utf-8',
+      },
+    }
+  },
   Date: () => {
     // gives date in format "2020-12-31 15:30:20.262Z"
     return new Date(faker.date.between('2019-01-01', '2022-01-01')).toISOString().replace('T', ' ')
