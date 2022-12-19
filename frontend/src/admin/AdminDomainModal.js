@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import {
+  Badge,
   Box,
   Button,
   Divider,
@@ -26,9 +27,15 @@ import {
   TagLabel,
   TagRightIcon,
   Text,
+  Tooltip,
   useToast,
 } from '@chakra-ui/react'
-import { AddIcon, MinusIcon, SmallAddIcon } from '@chakra-ui/icons'
+import {
+  AddIcon,
+  MinusIcon,
+  QuestionOutlineIcon,
+  SmallAddIcon,
+} from '@chakra-ui/icons'
 import { array, bool, func, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
@@ -369,7 +376,13 @@ export function AdminDomainModal({
                       />
                     </ABTestVariant>
                   </ABTestingWrapper>
+
                   <Flex align="center">
+                    <Tooltip
+                      label={t`Prevent this domain from being counted in your organization's summaries.`}
+                    >
+                      <QuestionOutlineIcon tabIndex={0} />
+                    </Tooltip>
                     <label>
                       <Switch
                         isFocusable={true}
@@ -379,16 +392,18 @@ export function AdminDomainModal({
                         onChange={handleChange}
                       />
                     </label>
-                    <Text>
-                      <Trans>
-                        Hide domain: prevent this domain from being counted in
-                        your organization's summaries
-                      </Trans>
-                    </Text>
+                    <Badge variant="outline" color="gray.900" p="1.5">
+                      <Trans>Hide domain</Trans>
+                    </Badge>
                   </Flex>
 
                   {permission === 'SUPER_ADMIN' && (
                     <Flex align="center">
+                      <Tooltip
+                        label={t`Prevent this domain from being scanned and being counted in any summaries.`}
+                      >
+                        <QuestionOutlineIcon tabIndex={0} />
+                      </Tooltip>
                       <label>
                         <Switch
                           isFocusable={true}
@@ -398,12 +413,9 @@ export function AdminDomainModal({
                           onChange={handleChange}
                         />
                       </label>
-                      <Text>
-                        <Trans>
-                          Archive domain: prevent this domain from being scanned
-                          and being counted in any summaries
-                        </Trans>
-                      </Text>
+                      <Badge variant="outline" color="gray.900" p="1.5">
+                        <Trans>Archive domain</Trans>
+                      </Badge>
                     </Flex>
                   )}
                 </Stack>
