@@ -30,7 +30,7 @@ export function WebTLSResults({ tlsResult }) {
     strong: t`strong`,
   }
 
-  const { tls1_2CipherSuites: tls1_2, tls1_3CipherSuites: tls1_3, ...rest } = tlsResult.acceptedCipherSuites
+  const { tls1_2CipherSuites: tls1_2, tls1_3CipherSuites: tls1_3, __typename, ...rest } = tlsResult.acceptedCipherSuites
 
   const weakProtocols = Object.keys(rest).filter((protocol) => {
     return rest[protocol].length > 0

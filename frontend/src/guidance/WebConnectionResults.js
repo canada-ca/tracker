@@ -40,44 +40,50 @@ export function WebConnectionResults({ connectionResults }) {
 
   const connChainResult = (chainResult) =>
     chainResult.connections.map(({ uri, connection, error }, idx) => {
-      const { statusCode, headers, blockedCategory, HSTS } = connection
-      return (
-        <AccordionItem key={idx}>
-          <Box px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
+      if (error) {
+        return (
+          <Box color="weak" px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
             <Text>
               {idx + 1}. {uri}
             </Text>
-            {error ? (
-              <Text>{error}</Text>
-            ) : (
-              <>
-                <Text>
-                  <Trans>Status:</Trans> {statusCode}
-                </Text>
-
-                <Text>{blockedCategory}</Text>
-                <Text>{HSTS}</Text>
-
-                <AccordionButton color="blue.500" variant="link">
-                  <PlusSquareIcon mr="1" />
-                  <Trans>See headers</Trans>
-                </AccordionButton>
-                <AccordionPanel>
-                  <Code>
-                    {Object.keys(headers).map((key, idx) => {
-                      return (
-                        <Text key={idx}>
-                          {key}: {headers[key]}
-                        </Text>
-                      )
-                    })}
-                  </Code>
-                </AccordionPanel>
-              </>
-            )}
+            <Text>{error}</Text>
           </Box>
-        </AccordionItem>
-      )
+        )
+      } else {
+        const { statusCode, headers, blockedCategory, HSTS } = connection
+        return (
+          <AccordionItem key={idx}>
+            <Box px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
+              <Text>
+                {idx + 1}. {uri}
+              </Text>
+
+              <Text>
+                <Trans>Status:</Trans> {statusCode}
+              </Text>
+
+              <Text>{blockedCategory}</Text>
+              <Text>{HSTS}</Text>
+
+              <AccordionButton color="blue.500" variant="link">
+                <PlusSquareIcon mr="1" />
+                <Trans>See headers</Trans>
+              </AccordionButton>
+              <AccordionPanel>
+                <Code>
+                  {Object.keys(headers).map((key, idx) => {
+                    return (
+                      <Text key={idx}>
+                        {key}: {headers[key]}
+                      </Text>
+                    )
+                  })}
+                </Code>
+              </AccordionPanel>
+            </Box>
+          </AccordionItem>
+        )
+      }
     })
 
   return (
