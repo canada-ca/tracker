@@ -335,6 +335,27 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
+    if (typeof archived !== 'undefined') {
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission,
+        },
+        action: 'update',
+        target: {
+          resource: domain.domain,
+          resourceType: 'domain', // user, org, domain
+          updatedProperties: [
+            { name: 'archived', oldValue: domain.archived, newValue: archived },
+          ],
+        },
+      })
+    }
+
     returnDomain.id = returnDomain._key
 
     return returnDomain
