@@ -378,7 +378,6 @@ describe('given the load domain connections by user id function', () => {
             const connectionArgs = {
               first: 1,
               ownership: true,
-              // isSuperAdmin: true,
             }
             const domains = await connectionLoader({ ...connectionArgs })
 
