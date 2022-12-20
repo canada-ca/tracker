@@ -29,16 +29,16 @@ describe('given the load domain connections by user id function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -378,6 +378,7 @@ describe('given the load domain connections by user id function', () => {
             const connectionArgs = {
               first: 1,
               ownership: true,
+              // isSuperAdmin: true,
             }
             const domains = await connectionLoader({ ...connectionArgs })
 

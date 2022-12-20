@@ -24,25 +24,6 @@ export const loadDomainConnectionsByOrgId =
   }) => {
     const userDBId = `users/${userKey}`
 
-    let ownershipOrgsOnly = aql`
-      LET claimKeys = (
-        FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-          OPTIONS {bfs: true}
-          RETURN v._key
-      )
-    `
-    if (typeof ownership !== 'undefined') {
-      if (ownership) {
-        ownershipOrgsOnly = aql`
-          LET claimKeys = (
-            FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
-              OPTIONS {bfs: true}
-              RETURN v._key
-          )
-        `
-      }
-    }
-
     let afterTemplate = aql``
     let afterVar = aql``
 
@@ -362,6 +343,27 @@ export const loadDomainConnectionsByOrgId =
       showHiddenDomains = aql``
     }
 
+    let ownershipOrgsOnly = aql`
+      LET claimKeys = (
+        FOR v, e IN 1..1 OUTBOUND ${orgId} claims
+          OPTIONS {bfs: true}
+          ${showHiddenDomains}
+          RETURN v._key
+      )
+    `
+    if (typeof ownership !== 'undefined') {
+      if (ownership) {
+        ownershipOrgsOnly = aql`
+          LET claimKeys = (
+            FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
+              OPTIONS {bfs: true}
+              ${showHiddenDomains}
+              RETURN v._key
+          )
+        `
+      }
+    }
+
     let requestedDomainInfo
     try {
       let domainKeysQuery
@@ -435,6 +437,7 @@ export const loadDomainConnectionsByOrgId =
       LET hasNextPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -443,6 +446,7 @@ export const loadDomainConnectionsByOrgId =
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain

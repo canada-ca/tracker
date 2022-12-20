@@ -98,11 +98,13 @@ describe('given the load domain connection using org id function', () => {
           spf: 'pass',
           ssl: 'pass',
         },
+        archived: false,
       })
       await collections.claims.save({
         _from: org._id,
         _to: domain._id,
         tags: [],
+        hidden: false,
       })
       domainTwo = await collections.domains.save({
         domain: 'test.domain.canada.ca',
@@ -115,11 +117,13 @@ describe('given the load domain connection using org id function', () => {
           spf: 'fail',
           ssl: 'fail',
         },
+        archived: false,
       })
       await collections.claims.save({
         _from: org._id,
         _to: domainTwo._id,
         tags: [],
+        hidden: false,
       })
     })
     afterEach(async () => {
@@ -163,6 +167,7 @@ describe('given the load domain connection using org id function', () => {
               node: {
                 ...expectedDomains[1],
                 claimTags: [],
+                hidden: false,
               },
             },
           ],
@@ -213,6 +218,7 @@ describe('given the load domain connection using org id function', () => {
               node: {
                 ...expectedDomains[0],
                 claimTags: [],
+                hidden: false,
               },
             },
           ],
@@ -262,6 +268,7 @@ describe('given the load domain connection using org id function', () => {
               node: {
                 ...expectedDomains[0],
                 claimTags: [],
+                hidden: false,
               },
             },
           ],
@@ -311,6 +318,7 @@ describe('given the load domain connection using org id function', () => {
               node: {
                 ...expectedDomains[1],
                 claimTags: [],
+                hidden: false,
               },
             },
           ],
@@ -363,6 +371,7 @@ describe('given the load domain connection using org id function', () => {
               node: {
                 ...expectedDomain,
                 claimTags: [],
+                hidden: false,
               },
             },
           ],
@@ -421,6 +430,7 @@ describe('given the load domain connection using org id function', () => {
           _from: org._id,
           _to: domainThree._id,
           tags: [],
+          hidden: false,
         })
         await collections.ownership.save({
           _from: org._id,
@@ -460,6 +470,7 @@ describe('given the load domain connection using org id function', () => {
                 node: {
                   ...expectedDomains[0],
                   claimTags: [],
+                  hidden: false,
                 },
               },
             ],
@@ -508,6 +519,7 @@ describe('given the load domain connection using org id function', () => {
                 node: {
                   ...expectedDomains[0],
                   claimTags: [],
+                  hidden: false,
                 },
               },
               {
@@ -515,6 +527,7 @@ describe('given the load domain connection using org id function', () => {
                 node: {
                   ...expectedDomains[1],
                   claimTags: [],
+                  hidden: false,
                 },
               },
               {
@@ -522,6 +535,7 @@ describe('given the load domain connection using org id function', () => {
                 node: {
                   ...expectedDomains[2],
                   claimTags: [],
+                  hidden: false,
                 },
               },
             ],
@@ -579,6 +593,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -633,6 +648,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -689,6 +705,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -743,6 +760,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -799,6 +817,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -853,6 +872,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -909,6 +929,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -963,6 +984,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1019,6 +1041,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1073,6 +1096,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1131,6 +1155,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1185,6 +1210,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1241,6 +1267,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1295,6 +1322,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1351,6 +1379,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1405,6 +1434,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1461,6 +1491,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1515,6 +1546,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1571,6 +1603,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[1],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],
@@ -1625,6 +1658,7 @@ describe('given the load domain connection using org id function', () => {
                     node: {
                       ...expectedDomains[0],
                       claimTags: [],
+                      hidden: false,
                     },
                   },
                 ],

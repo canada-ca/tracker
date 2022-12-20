@@ -375,12 +375,6 @@ export const loadDomainConnectionsByUserId =
         )
         FOR orgId IN orgIds
           ${ownershipOrgsOnly}
-          LET claimDomainKeys = (
-            FOR v, e IN 1..1 OUTBOUND orgId claims
-              OPTIONS {bfs: true}
-              FILTER v.archived != true
-              RETURN v._key
-          )
           RETURN APPEND(keys, claimDomainKeys)
       ))
     `
@@ -406,6 +400,11 @@ export const loadDomainConnectionsByUserId =
       totalCount = aql`LENGTH(searchedDomains)`
     }
 
+    let showArchivedDomains = aql`FILTER domain.archived != true`
+    if (isSuperAdmin) {
+      showArchivedDomains = aql``
+    }
+
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`
@@ -419,6 +418,7 @@ export const loadDomainConnectionsByUserId =
       LET retrievedDomains = (
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${afterTemplate}
           ${beforeTemplate}
           SORT
@@ -430,6 +430,7 @@ export const loadDomainConnectionsByUserId =
       LET hasNextPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -438,6 +439,7 @@ export const loadDomainConnectionsByUserId =
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
