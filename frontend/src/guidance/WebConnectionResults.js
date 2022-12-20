@@ -42,11 +42,11 @@ export function WebConnectionResults({ connectionResults }) {
     chainResult.connections.map(({ uri, connection, error }, idx) => {
       if (error) {
         return (
-          <Box color="weak" px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
+          <Box px="2" m="2" borderWidth="1px" bg="gray.100" borderColor="gray.300">
             <Text>
               {idx + 1}. {uri}
             </Text>
-            <Text>{error}</Text>
+            <Text color="weak">{error}</Text>
           </Box>
         )
       } else {
@@ -132,13 +132,18 @@ export function WebConnectionResults({ connectionResults }) {
                   </Text>
                 </Flex>
                 {hstsParsed && (
-                  <Flex {...columnInfoStyleProps}>
-                    <StatusIcon status="INFO" />
-                    <Text px="1" minW="50%">
-                      <Trans>HSTS Parsed</Trans>
-                    </Text>
-                    <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
-                  </Flex>
+                  <Box>
+                    <Flex {...columnInfoStyleProps}>
+                      <StatusIcon status="INFO" />
+                      <Text px="1" minW="50%">
+                        <Trans>HSTS</Trans>
+                      </Text>
+                      <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
+                    </Flex>
+                    <Text>HSTS Max Age: {hstsParsed.maxAge}</Text>
+                    <Text>HSTS Preloaded: {hstsParsed.preload ? t`Yes` : t`No`}</Text>
+                    <Text>Includes subdomains: {hstsParsed.includeSubdomains ? t`Yes` : t`No`}</Text>
+                  </Box>
                 )}
               </Box>
               <Text mt="2" fontWeight="bold" mx="2">

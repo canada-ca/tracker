@@ -209,12 +209,32 @@ export function EmailGuidance({ dnsResults, dmarcPhase }) {
         </Flex>
         <AccordionPanel>
           {dkim.selectors.length > 0 ? (
-            dkim.selectors.map(({ selector, positiveTags, neutralTags, negativeTags }) => {
+            dkim.selectors.map(({ selector, record, keyLength, keyType, positiveTags, neutralTags, negativeTags }) => {
               return (
                 <>
                   <Text fontWeight="bold" fontSize="xl">
                     {selector}
                   </Text>
+                  <Box px="2">
+                    <Flex mb="1" px="2">
+                      <Text mr="1" minW="7%">
+                        <Trans>Record:</Trans>
+                      </Text>
+                      <Text isTruncated>{record}</Text>
+                    </Flex>
+                    <Flex mb="1" px="2" bg="gray.200">
+                      <Text mr="1" minW="7%">
+                        <Trans>Key type:</Trans>
+                      </Text>
+                      {keyType}
+                    </Flex>{' '}
+                    <Flex mb="1" px="2">
+                      <Text mr="1" minW="7%">
+                        <Trans>Key length:</Trans>
+                      </Text>
+                      {keyLength}
+                    </Flex>
+                  </Box>
                   <GuidanceTagList positiveTags={positiveTags} neutralTags={neutralTags} negativeTags={negativeTags} />
                 </>
               )

@@ -1,6 +1,7 @@
 import React from 'react'
 import { ArrowLeftIcon } from '@chakra-ui/icons'
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -48,7 +49,7 @@ function GuidancePage() {
     return <ErrorFallbackMessage error={error} />
   }
 
-  const { domain: domainName, web: webScan, dnsScan, organizations, dmarcPhase } = data.findDomainByDomain
+  const { domain: domainName, web: webScan, dnsScan, organizations, dmarcPhase, rcode } = data.findDomainByDomain
 
   const { results: webResults } = webScan.edges[0].node
   const { node: dnsResults } = dnsScan.edges[0]
@@ -95,24 +96,42 @@ function GuidancePage() {
         })}
       </Flex>
 
-      <Tabs isFitted variant="enclosed-colored">
-        <TabList mb="4">
-          <Tab borderTopWidth="0.25">
-            <Trans>Web Guidance</Trans>
-          </Tab>
-          <Tab borderTopWidth="0.25">
-            <Trans>Email Guidance</Trans>
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <WebGuidance webResults={webResults} />
-          </TabPanel>
-          <TabPanel>
-            <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      {rcode !== 'NOERROR' ? (
+        <Box fontSize="lg">
+          <Flex>
+            <Text mr="1">
+              <Trans>A DNS request for this service has resulted in the following error code:</Trans>
+            </Text>
+            <Text fontWeight="bold">{rcode}</Text>
+          </Flex>
+          <Text>
+            <Trans>
+              If you believe this could be the result of an issue with the scan, rescan the service using the refresh
+              button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be
+              removed from all affiliated organizations.
+            </Trans>
+          </Text>
+        </Box>
+      ) : (
+        <Tabs isFitted variant="enclosed-colored">
+          <TabList mb="4">
+            <Tab borderTopWidth="0.25">
+              <Trans>Web Guidance</Trans>
+            </Tab>
+            <Tab borderTopWidth="0.25">
+              <Trans>Email Guidance</Trans>
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <WebGuidance webResults={webResults} />
+            </TabPanel>
+            <TabPanel>
+              <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      )}
     </Flex>
   )
 }
