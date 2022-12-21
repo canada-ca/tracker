@@ -222,7 +222,7 @@ export function WebTLSResults({ tlsResult }) {
                 <Flex align="center" mb="1" px="2">
                   <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
                   <Text px="1" minW="50%">
-                    <Trans>Good Hostname</Trans>
+                    <Trans>Hostname Validated</Trans>
                   </Text>
                   <Text>{badHostname ? t`No` : t`Yes`}</Text>
                 </Flex>

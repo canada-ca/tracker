@@ -3,7 +3,7 @@
     "findDomainByDomain": {
       "domain": "canada.ca",
       "lastRan": "",
-      "rcode": "NXDOMAIN",
+      "rcode": "NOERROR",
       "status": {
         "dkim": "PASS",
         "dmarc": "PASS",

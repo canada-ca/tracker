@@ -32,8 +32,6 @@ export function WebConnectionResults({ connectionResults }) {
 
   const columnInfoStyleProps = {
     align: 'center',
-    borderBottomWidth: '1px',
-    borderBottomColor: 'gray.300',
     mb: '1',
     px: '2',
   }
@@ -122,7 +120,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </Text>
                   <Text>{httpLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex {...columnInfoStyleProps} bg="gray.200">
                   <StatusIcon status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />
                   <Text px="1" minW="50%">
                     <Trans>HTTP Upgrades</Trans>
@@ -131,20 +129,6 @@ export function WebConnectionResults({ connectionResults }) {
                     {httpImmediatelyUpgrades ? t`Immediately` : httpEventuallyUpgrades ? t`Eventually` : t`Never`}
                   </Text>
                 </Flex>
-                {hstsParsed && (
-                  <Box>
-                    <Flex {...columnInfoStyleProps}>
-                      <StatusIcon status="INFO" />
-                      <Text px="1" minW="50%">
-                        <Trans>HSTS</Trans>
-                      </Text>
-                      <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
-                    </Flex>
-                    <Text>HSTS Max Age: {hstsParsed.maxAge}</Text>
-                    <Text>HSTS Preloaded: {hstsParsed.preload ? t`Yes` : t`No`}</Text>
-                    <Text>Includes subdomains: {hstsParsed.includeSubdomains ? t`Yes` : t`No`}</Text>
-                  </Box>
-                )}
               </Box>
               <Text mt="2" fontWeight="bold" mx="2">
                 <Trans>URL:</Trans> {httpChainResult.uri}
@@ -170,7 +154,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </Text>
                   <Text>{httpsLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps}>
+                <Flex {...columnInfoStyleProps} bg="gray.200">
                   <StatusIcon status={httpsImmediatelyDowngrades || httpsEventuallyDowngrades ? 'FAIL' : 'PASS'} />
                   <Text px="1" minW="50%">
                     <Trans>HTTPS Downgrades</Trans>
@@ -179,15 +163,34 @@ export function WebConnectionResults({ connectionResults }) {
                     {httpsImmediatelyDowngrades ? t`Immediately` : httpsEventuallyDowngrades ? t`Eventually` : t`Never`}
                   </Text>
                 </Flex>
-                {hstsParsed && (
-                  <Flex {...columnInfoStyleProps}>
-                    <StatusIcon status="INFO" />
-                    <Text px="1" minW="50%">
-                      <Trans>HSTS Parsed</Trans>
-                    </Text>
-                    <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
-                  </Flex>
-                )}
+                <Flex {...columnInfoStyleProps}>
+                  <StatusIcon status={hstsParsed ? 'PASS' : 'FAIL'} />
+                  <Text px="1" minW="50%">
+                    <Trans>HSTS Parsed</Trans>
+                  </Text>
+                  <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
+                </Flex>
+                <Flex {...columnInfoStyleProps} bg="gray.200">
+                  <StatusIcon status="INFO" />
+                  <Text px="1" minW="50%">
+                    <Trans>HSTS Max Age</Trans>
+                  </Text>
+                  <Text>{hstsParsed.maxAge}</Text>
+                </Flex>
+                <Flex {...columnInfoStyleProps}>
+                  <StatusIcon status="INFO" />
+                  <Text px="1" minW="50%">
+                    <Trans>HSTS Preloaded</Trans>
+                  </Text>
+                  <Text>{hstsParsed.preload ? t`Yes` : t`No`}</Text>
+                </Flex>
+                <Flex {...columnInfoStyleProps} bg="gray.200">
+                  <StatusIcon status="INFO" />
+                  <Text px="1" minW="50%">
+                    <Trans>HSTS Includes Subdomains</Trans>
+                  </Text>
+                  <Text>{hstsParsed.includeSubdomains ? t`Yes` : t`No`}</Text>
+                </Flex>
               </Box>
               <Text mt="2" fontWeight="bold" mx="2">
                 <Trans>URL: </Trans> {httpsChainResult.uri}

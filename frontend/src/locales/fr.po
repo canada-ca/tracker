@@ -58,8 +58,8 @@ msgstr "404 - Page non trouvée"
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
 #: src/guidance/GuidancePage.js:103
-msgid "A DNS request for this service has resulted in the following error code:"
-msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
+#~ msgid "A DNS request for this service has resulted in the following error code:"
+#~ msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
 #: src/admin/AdminDomains.js:316
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
@@ -520,7 +520,7 @@ msgstr "Confirmer la suppression du domaine:"
 #~ msgid "Confirm removal of user:"
 #~ msgstr "Confirmer le retrait de l'utilisateur:"
 
-#: src/guidance/WebConnectionResults.js:98
+#: src/guidance/WebConnectionResults.js:96
 msgid "Connection Results"
 msgstr "Résultats de la connexion"
 
@@ -709,7 +709,6 @@ msgstr "Phases DMARC"
 
 #: src/dmarc/DmarcReportPage.js:92
 #: src/domains/DomainCard.js:188
-#: src/guidance/GuidancePage.js:78
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
@@ -935,7 +934,6 @@ msgid "Email"
 msgstr "Courriel"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:122
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
@@ -1039,8 +1037,8 @@ msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisate
 msgid "Envelope From"
 msgstr "Enveloppe De"
 
-#: src/guidance/WebConnectionResults.js:131
-#: src/guidance/WebConnectionResults.js:179
+#: src/guidance/WebConnectionResults.js:129
+#: src/guidance/WebConnectionResults.js:163
 msgid "Eventually"
 msgstr "Éventuellement"
 
@@ -1194,8 +1192,8 @@ msgid "Go to page:"
 msgstr "Aller à la page"
 
 #: src/guidance/WebTLSResults.js:225
-msgid "Good Hostname"
-msgstr "Bon nom d'hôte"
+#~ msgid "Good Hostname"
+#~ msgstr "Bon nom d'hôte"
 
 #: src/app/ContactUsPage.js:14
 msgid "Government of Canada Employees"
@@ -1223,7 +1221,6 @@ msgstr "Orientation"
 
 #: src/domains/DomainCard.js:142
 #: src/domains/DomainsPage.js:187
-#: src/guidance/WebConnectionResults.js:139
 #: src/organizationDetails/OrganizationDomains.js:130
 msgid "HSTS"
 msgstr "HSTS"
@@ -1232,9 +1229,21 @@ msgstr "HSTS"
 #~ msgid "HSTS Age:"
 #~ msgstr "Âge du HSTS:"
 
-#: src/guidance/WebConnectionResults.js:186
+#: src/guidance/WebConnectionResults.js:190
+msgid "HSTS Includes Subdomains"
+msgstr "HSTS inclut les sous-domaines"
+
+#: src/guidance/WebConnectionResults.js:176
+msgid "HSTS Max Age"
+msgstr "HSTS Âge maximum"
+
+#: src/guidance/WebConnectionResults.js:169
 msgid "HSTS Parsed"
 msgstr "HSTS analysé"
+
+#: src/guidance/WebConnectionResults.js:183
+msgid "HSTS Preloaded"
+msgstr "HSTS préchargé"
 
 #: src/domains/DomainsPage.js:90
 #: src/organizationDetails/OrganizationDomains.js:76
@@ -1245,15 +1254,15 @@ msgstr "Statut HSTS"
 #~ msgid "HSTS Status:"
 #~ msgstr "Statut HSTS:"
 
-#: src/guidance/WebConnectionResults.js:112
+#: src/guidance/WebConnectionResults.js:110
 msgid "HTTP (80) Chain"
 msgstr "Chaîne HTTP (80)"
 
-#: src/guidance/WebConnectionResults.js:121
+#: src/guidance/WebConnectionResults.js:119
 msgid "HTTP Live"
 msgstr "HTTP Live"
 
-#: src/guidance/WebConnectionResults.js:128
+#: src/guidance/WebConnectionResults.js:126
 msgid "HTTP Upgrades"
 msgstr "Mises à jour HTTP"
 
@@ -1263,7 +1272,7 @@ msgstr "Mises à jour HTTP"
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/guidance/WebConnectionResults.js:160
+#: src/guidance/WebConnectionResults.js:144
 msgid "HTTPS (443) Chain"
 msgstr "Chaîne HTTPS (443)"
 
@@ -1276,11 +1285,11 @@ msgstr "Résumé de la configuration HTTPS"
 msgid "HTTPS Configured"
 msgstr "HTTPS configuré"
 
-#: src/guidance/WebConnectionResults.js:176
+#: src/guidance/WebConnectionResults.js:160
 msgid "HTTPS Downgrades"
 msgstr "Déclassements HTTPS"
 
-#: src/guidance/WebConnectionResults.js:169
+#: src/guidance/WebConnectionResults.js:153
 msgid "HTTPS Live"
 msgstr "HTTPS Live"
 
@@ -1331,6 +1340,10 @@ msgstr "Accueil"
 #~ msgid "Horizontal View"
 #~ msgstr "Vue horizontale"
 
+#: src/guidance/WebTLSResults.js:225
+msgid "Hostname Validated"
+msgstr "Nom d'hôte validé"
+
 #: src/app/ReadGuidancePage.js:239
 msgid "How can I edit my domain list?"
 msgstr "Comment puis-je modifier ma liste de domaines?"
@@ -1377,8 +1390,8 @@ msgid "If at any time you or your representatives wish to adjust or cancel these
 msgstr "Si, à tout moment, vous ou vos représentants souhaitez adapter ou annuler ces services, veuillez nous contacter à l'adresse suivante"
 
 #: src/guidance/GuidancePage.js:108
-msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
-msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
+#~ msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
+#~ msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
 
 #: src/guidance/GuidanceTagList.js:53
 msgid "If you believe this was caused by a problem with Tracker, please <0>Report an Issue <1/></0>"
@@ -1388,8 +1401,8 @@ msgstr "Si vous pensez que cela a été causé par un problème avec Tracker, ve
 #~ msgid "If you believe this was caused by a problem with Tracker, please use the \"Report an Issue\" link below"
 #~ msgstr "Si vous pensez que cela est dû à un problème avec Suivi, veuillez utiliser le lien \"Signaler un problème\" ci-dessous"
 
-#: src/guidance/WebConnectionResults.js:131
-#: src/guidance/WebConnectionResults.js:179
+#: src/guidance/WebConnectionResults.js:129
+#: src/guidance/WebConnectionResults.js:163
 msgid "Immediately"
 msgstr "Immédiatement"
 
@@ -1784,8 +1797,8 @@ msgstr "Négatif"
 #~ msgid "Neutral tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 #~ msgstr "Les balises neutres mettent en évidence les détails pertinents de la configuration, mais ne sont pas traitées dans le cadre des exigences de la politique et n'ont aucun impact sur la notation."
 
-#: src/guidance/WebConnectionResults.js:131
-#: src/guidance/WebConnectionResults.js:179
+#: src/guidance/WebConnectionResults.js:129
+#: src/guidance/WebConnectionResults.js:163
 msgid "Never"
 msgstr "Jamais"
 
@@ -1821,12 +1834,11 @@ msgstr "Nouvelle valeur :"
 #~ msgid "Next"
 #~ msgstr "Suivant"
 
-#: src/guidance/WebConnectionResults.js:123
-#: src/guidance/WebConnectionResults.js:141
-#: src/guidance/WebConnectionResults.js:144
-#: src/guidance/WebConnectionResults.js:145
+#: src/guidance/WebConnectionResults.js:121
+#: src/guidance/WebConnectionResults.js:155
 #: src/guidance/WebConnectionResults.js:171
-#: src/guidance/WebConnectionResults.js:188
+#: src/guidance/WebConnectionResults.js:185
+#: src/guidance/WebConnectionResults.js:192
 #: src/guidance/WebTLSResults.js:227
 #: src/guidance/WebTLSResults.js:234
 #: src/guidance/WebTLSResults.js:241
@@ -2005,7 +2017,6 @@ msgstr "Vous pouvez notamment communiquer avec l’<0>équipe responsable des se
 msgid "Organization"
 msgstr "Organisation"
 
-#: src/guidance/GuidancePage.js:43
 #: src/organizationDetails/OrganizationDetails.js:63
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
@@ -2037,8 +2048,8 @@ msgid "Organization not updated"
 msgstr "Organisation non mise à jour"
 
 #: src/guidance/GuidancePage.js:85
-msgid "Organization(s):"
-msgstr "Organisation(s) :"
+#~ msgid "Organization(s):"
+#~ msgstr "Organisation(s) :"
 
 #: src/admin/AdminPage.js:77
 #: src/admin/AdminPage.js:93
@@ -2524,7 +2535,7 @@ msgstr "Recherche:"
 msgid "Sector:"
 msgstr "Secteur:"
 
-#: src/guidance/WebConnectionResults.js:70
+#: src/guidance/WebConnectionResults.js:68
 msgid "See headers"
 msgstr "Voir les en-têtes"
 
@@ -2729,7 +2740,7 @@ msgstr "Trier par:"
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
-#: src/guidance/WebConnectionResults.js:62
+#: src/guidance/WebConnectionResults.js:60
 msgid "Status:"
 msgstr "Statut :"
 
@@ -2982,8 +2993,8 @@ msgstr "Authentification à deux facteurs"
 msgid "Two-Factor Authentication:"
 msgstr "Authentification à deux facteurs:"
 
-#: src/guidance/WebConnectionResults.js:150
-#: src/guidance/WebConnectionResults.js:193
+#: src/guidance/WebConnectionResults.js:134
+#: src/guidance/WebConnectionResults.js:196
 msgid "URL:"
 msgstr "URL :"
 
@@ -3293,7 +3304,6 @@ msgid "Web Check"
 msgstr "Vérification du Web"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:119
 msgid "Web Guidance"
 msgstr "Conseils sur le Web"
 
@@ -3350,12 +3360,11 @@ msgstr "Même si d’autres outils sont utiles en complément de Tracker, ils ne
 msgid "Why do other tools (<0>Hardenize</0>, <1>SSL Labs</1>, etc.) show positive results for a domain while Tracker shows negative results?"
 msgstr "Pourquoi d’autres outils (<0>Hardenize</0>, <1>Laboratoires SSL</1>, etc.) affichent-ils des résultats positifs pour un domaine alors que Tracker affiche des résultats négatifs?"
 
-#: src/guidance/WebConnectionResults.js:123
-#: src/guidance/WebConnectionResults.js:141
-#: src/guidance/WebConnectionResults.js:144
-#: src/guidance/WebConnectionResults.js:145
+#: src/guidance/WebConnectionResults.js:121
+#: src/guidance/WebConnectionResults.js:155
 #: src/guidance/WebConnectionResults.js:171
-#: src/guidance/WebConnectionResults.js:188
+#: src/guidance/WebConnectionResults.js:185
+#: src/guidance/WebConnectionResults.js:192
 #: src/guidance/WebTLSResults.js:227
 #: src/guidance/WebTLSResults.js:234
 #: src/guidance/WebTLSResults.js:241
