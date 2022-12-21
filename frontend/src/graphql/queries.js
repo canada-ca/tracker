@@ -588,6 +588,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                 }
                 connectionResults {
                   httpLive
+                  httpsLive
                   httpsStatus
                   httpImmediatelyUpgrades
                   httpEventuallyUpgrades
