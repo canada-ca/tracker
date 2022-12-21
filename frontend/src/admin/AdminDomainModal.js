@@ -416,6 +416,13 @@ export function AdminDomainModal({
                           </Badge>
                         </Flex>
                       )}
+
+                      <Text>
+                        <Trans>
+                          Please allow up to 24 hours for summaries to reflect
+                          any changes.
+                        </Trans>
+                      </Text>
                     </ABTestVariant>
                   </ABTestingWrapper>
                 </Stack>

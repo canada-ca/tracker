@@ -300,7 +300,7 @@ msgstr "Application Portfolio Management (APM) systems; and"
 msgid "April"
 msgstr "April"
 
-#: src/admin/AdminDomainModal.js:419
+#: src/admin/AdminDomainModal.js:415
 msgid "Archive domain"
 msgstr "Archive domain"
 
@@ -490,7 +490,7 @@ msgstr "Collect and analyze DMARC reports."
 msgid "Compliant"
 msgstr "Compliant"
 
-#: src/admin/AdminDomainModal.js:433
+#: src/admin/AdminDomainModal.js:438
 #: src/admin/AdminDomains.js:375
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
@@ -526,7 +526,7 @@ msgid "Contact"
 msgstr "Contact"
 
 #: src/app/App.js:226
-#: src/app/App.js:403
+#: src/app/App.js:405
 #: src/app/ContactUsPage.js:39
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -578,7 +578,7 @@ msgid "Create Account"
 msgstr "Create Account"
 
 #: src/admin/AdminPage.js:130
-#: src/app/App.js:357
+#: src/app/App.js:359
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Create Organization"
@@ -720,7 +720,7 @@ msgid "DMARC Status"
 msgstr "DMARC Status"
 
 #: src/app/App.js:108
-#: src/app/App.js:315
+#: src/app/App.js:317
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:181
 #: src/dmarc/DmarcByDomainPage.js:241
@@ -869,7 +869,7 @@ msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:28
 #: src/app/App.js:105
-#: src/app/App.js:276
+#: src/app/App.js:278
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:101
 #: src/domains/DomainsPage.js:140
@@ -947,7 +947,7 @@ msgstr "Email Sent"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:353
+#: src/app/App.js:355
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -1196,7 +1196,7 @@ msgstr "Government of Canada Employees"
 #~ msgid "Graph direction:"
 #~ msgstr "Graph direction:"
 
-#: src/app/App.js:407
+#: src/app/App.js:409
 #: src/app/ReadGuidancePage.js:28
 #: src/dmarc/DmarcReportPage.js:193
 #: src/dmarc/DmarcReportPage.js:576
@@ -1286,7 +1286,7 @@ msgstr "Header From"
 msgid "Hidden"
 msgstr "Hidden"
 
-#: src/admin/AdminDomainModal.js:397
+#: src/admin/AdminDomainModal.js:394
 msgid "Hide domain"
 msgstr "Hide domain"
 
@@ -2021,6 +2021,10 @@ msgstr "Phone number field must not be empty"
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Phone number must be a valid phone number that is 10-15 digits long"
 
+#: src/admin/AdminDomainModal.js:421
+msgid "Please allow up to 24 hours for summaries to reflect any changes."
+msgstr "Please allow up to 24 hours for summaries to reflect any changes."
+
 #: src/utilities/fieldRequirements.js:30
 msgid "Please choose your preferred language"
 msgstr "Please choose your preferred language"
@@ -2059,11 +2063,11 @@ msgstr "Positive Tags"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Preloaded Status:"
 
-#: src/admin/AdminDomainModal.js:382
+#: src/admin/AdminDomainModal.js:380
 msgid "Prevent this domain from being counted in your organization's summaries."
 msgstr "Prevent this domain from being counted in your organization's summaries."
 
-#: src/admin/AdminDomainModal.js:404
+#: src/admin/AdminDomainModal.js:401
 msgid "Prevent this domain from being scanned and being counted in any summaries."
 msgstr "Prevent this domain from being scanned and being counted in any summaries."
 
@@ -2071,7 +2075,7 @@ msgstr "Prevent this domain from being scanned and being counted in any summarie
 #~ msgid "Previous"
 #~ msgstr "Previous"
 
-#: src/app/App.js:387
+#: src/app/App.js:389
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:40
@@ -2173,7 +2177,7 @@ msgstr "Remove User"
 msgid "Removed Organization"
 msgstr "Removed Organization"
 
-#: src/app/App.js:399
+#: src/app/App.js:401
 #: src/app/FloatingMenu.js:230
 #: src/app/SlideMessage.js:99
 msgid "Report an Issue"
@@ -2644,7 +2648,7 @@ msgstr "Termination"
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/app/App.js:391
+#: src/app/App.js:393
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
@@ -3254,7 +3258,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:325
+#: src/app/App.js:327
 msgid "Your Account"
 msgstr "Your Account"
 
@@ -3283,7 +3287,7 @@ msgid "https://https-everywhere.canada.ca/en/help/"
 msgstr "https://https-everywhere.canada.ca/en/help/"
 
 #: src/app/App.js:118
-#: src/app/App.js:337
+#: src/app/App.js:339
 #: src/user/MyTrackerPage.js:43
 #: src/user/MyTrackerPage.js:74
 msgid "myTracker"
