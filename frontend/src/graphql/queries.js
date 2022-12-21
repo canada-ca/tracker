@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { Guidance } from './fragments'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations(
@@ -159,17 +160,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -177,17 +168,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -195,17 +176,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -231,17 +202,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -249,17 +210,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -267,17 +218,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -301,17 +242,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                       edges {
                         cursor
                         node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
+                          ...RequiredGuidanceTagFields
                         }
                       }
                     }
@@ -319,17 +250,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                       edges {
                         cursor
                         node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
+                          ...RequiredGuidanceTagFields
                         }
                       }
                     }
@@ -337,17 +258,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                       edges {
                         cursor
                         node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
+                          ...RequiredGuidanceTagFields
                         }
                       }
                     }
@@ -371,17 +282,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -389,17 +290,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -407,17 +298,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -437,17 +318,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -455,17 +326,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -473,17 +334,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
                 edges {
                   cursor
                   node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                 }
               }
@@ -493,6 +344,7 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
       }
     }
   }
+  ${Guidance.fragments.requiredFields}
 `
 
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
@@ -606,46 +458,13 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                 keyLength
                 keyType
                 positiveTags {
-                  id
-                  tagId
-                  tagName
-                  guidance
-                  refLinks {
-                    description
-                    refLink
-                  }
-                  refLinksTech {
-                    description
-                    refLink
-                  }
+                  ...RequiredGuidanceTagFields
                 }
                 neutralTags {
-                  id
-                  tagId
-                  tagName
-                  guidance
-                  refLinks {
-                    description
-                    refLink
-                  }
-                  refLinksTech {
-                    description
-                    refLink
-                  }
+                  ...RequiredGuidanceTagFields
                 }
                 negativeTags {
-                  id
-                  tagId
-                  tagName
-                  guidance
-                  refLinks {
-                    description
-                    refLink
-                  }
-                  refLinksTech {
-                    description
-                    refLink
-                  }
+                  ...RequiredGuidanceTagFields
                 }
               }
             }
@@ -655,46 +474,13 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
               spPolicy
               pct
               positiveTags {
-                id
-                tagId
-                tagName
-                guidance
-                refLinks {
-                  description
-                  refLink
-                }
-                refLinksTech {
-                  description
-                  refLink
-                }
+                ...RequiredGuidanceTagFields
               }
               neutralTags {
-                id
-                tagId
-                tagName
-                guidance
-                refLinks {
-                  description
-                  refLink
-                }
-                refLinksTech {
-                  description
-                  refLink
-                }
+                ...RequiredGuidanceTagFields
               }
               negativeTags {
-                id
-                tagId
-                tagName
-                guidance
-                refLinks {
-                  description
-                  refLink
-                }
-                refLinksTech {
-                  description
-                  refLink
-                }
+                ...RequiredGuidanceTagFields
               }
             }
             spf {
@@ -702,46 +488,13 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
               record
               spfDefault
               positiveTags {
-                id
-                tagId
-                tagName
-                guidance
-                refLinks {
-                  description
-                  refLink
-                }
-                refLinksTech {
-                  description
-                  refLink
-                }
+                ...RequiredGuidanceTagFields
               }
               neutralTags {
-                id
-                tagId
-                tagName
-                guidance
-                refLinks {
-                  description
-                  refLink
-                }
-                refLinksTech {
-                  description
-                  refLink
-                }
+                ...RequiredGuidanceTagFields
               }
               negativeTags {
-                id
-                tagId
-                tagName
-                guidance
-                refLinks {
-                  description
-                  refLink
-                }
-                refLinksTech {
-                  description
-                  refLink
-                }
+                ...RequiredGuidanceTagFields
               }
             }
           }
@@ -793,46 +546,13 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     strength
                   }
                   positiveTags {
-                    id
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                   neutralTags {
-                    id
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                   negativeTags {
-                    id
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                   certificateChainInfo {
                     pathValidationResults {
@@ -879,46 +599,13 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     preload
                   }
                   positiveTags {
-                    id
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                   neutralTags {
-                    id
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                   negativeTags {
-                    id
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
+                    ...RequiredGuidanceTagFields
                   }
                   httpChainResult {
                     scheme
@@ -964,6 +651,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       }
     }
   }
+  ${Guidance.fragments.requiredFields}
 `
 
 export const ORG_DETAILS_PAGE = gql`
