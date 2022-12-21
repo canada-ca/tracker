@@ -287,6 +287,6 @@ def process_results(results):
 
     processed_connection_results = process_connection_results(results["chain_result"])
 
-    timestamp = str(datetime.datetime.utcnow())
+    timestamp = results.get("timestamp")
 
     return {"tls_result": tls_result, "connection_results": processed_connection_results, "timestamp": timestamp}

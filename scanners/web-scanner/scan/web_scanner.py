@@ -1,4 +1,4 @@
-import json
+import datetime
 from dataclasses import asdict
 
 from scan.tls_scanner.tls_scanner import scan_tls
@@ -6,6 +6,7 @@ from scan.endpoint_chain_scanner.endpoint_chain_scanner import scan_chain
 
 
 def scan_web(domain, ip_address=None):
+    timestamp = str(datetime.datetime.utcnow())
     tls_result = scan_tls(domain=domain, ip_address=ip_address)
     if not ip_address and getattr(tls_result, "server_location", None) and getattr(tls_result.server_location, "ip_address", None):
         # set ip address to use same ip for tls scan and resolve chain
@@ -14,5 +15,6 @@ def scan_web(domain, ip_address=None):
 
     return {
         "tls_result": asdict(tls_result),
-        "chain_result": asdict(chain_result)
+        "chain_result": asdict(chain_result),
+        "timestamp": timestamp
     }
