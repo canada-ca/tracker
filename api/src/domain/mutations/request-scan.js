@@ -58,17 +58,6 @@ export const requestScan = new mutationWithClientMutationId({
       )
     }
 
-    if (domain.archived) {
-      console.warn(
-        `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however this domain has been archived from scans.`,
-      )
-      throw new Error(
-        i18n._(
-          t`Permission Denied: Please contact super admin for help with scanning this domain.`,
-        ),
-      )
-    }
-
     if (loginRequiredBool) {
       // Check to see if user has access to domain
       const permission = await checkDomainPermission({ domainId: domain._id })

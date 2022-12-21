@@ -378,18 +378,17 @@ export const createDomain = new mutationWithClientMutationId({
       },
     })
 
-    if (!insertDomain.archived)
-      await publish({
-        channel: `domains.${returnDomain._key}`,
-        msg: {
-          domain: returnDomain.domain,
-          domain_key: returnDomain._key,
-          selectors: returnDomain.selectors ? returnDomain.selectors : [],
-          hash: returnDomain.hash,
-          user_key: null, // only used for One Time Scans
-          shared_id: null, // only used for One Time Scans
-        },
-      })
+    await publish({
+      channel: `domains.${returnDomain._key}`,
+      msg: {
+        domain: returnDomain.domain,
+        domain_key: returnDomain._key,
+        selectors: returnDomain.selectors ? returnDomain.selectors : [],
+        hash: returnDomain.hash,
+        user_key: null, // only used for One Time Scans
+        shared_id: null, // only used for One Time Scans
+      },
+    })
 
     return {
       ...returnDomain,
