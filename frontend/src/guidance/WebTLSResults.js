@@ -191,7 +191,7 @@ export function WebTLSResults({ tlsResult }) {
         {tlsResult.negativeTags.length > 0 ? (
           <NumberedStatusIcon number={tlsResult.negativeTags.length} status="FAIL" />
         ) : (
-          <StatusIcon status="PASS" />
+          <StatusIcon status="PASS" boxSize="icons.lg" />
         )}
         <Text fontSize="2xl" ml="2">
           <Trans>TLS Results</Trans>
