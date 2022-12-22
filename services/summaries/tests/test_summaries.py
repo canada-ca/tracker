@@ -110,7 +110,7 @@ claims.insert({"_from": org["_id"], "_to": domain3["_id"]})
 
 
 def test_update_scan_summaries():
-    update_scan_summaries(host="testdb", name="test", user="", password="", port=8529)
+    update_scan_summaries(host="testdb", name="test", user="", password="")
 
     httpsScanSummary = db.collection("scanSummaries").get({"_key": "https"})
     assert httpsScanSummary == {
@@ -164,7 +164,7 @@ def test_update_scan_summaries():
 
 
 def test_update_chart_summaries():
-    update_chart_summaries(host="testdb", name="test", user="", password="", port=8529)
+    update_chart_summaries(host="testdb", name="test", user="", password="")
 
     httpsSummary = db.collection("chartSummaries").get({"_key": "https"})
     assert httpsSummary == {
@@ -211,7 +211,7 @@ def test_update_chart_summaries():
 
 
 def test_update_org_summaries():
-    update_org_summaries(host="testdb", name="test", user="", password="", port=8529)
+    update_org_summaries(host="testdb", name="test", user="", password="")
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
