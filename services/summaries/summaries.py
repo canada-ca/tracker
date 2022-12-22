@@ -28,8 +28,7 @@ def update_scan_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
     logging.info(f"Updating scan summaries...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for scan_type in SCAN_TYPES:
@@ -153,8 +152,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
     logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for chart_type, scan_types in CHARTS.items():
@@ -205,8 +203,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
