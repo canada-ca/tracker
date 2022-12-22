@@ -23,8 +23,7 @@ const i18n = setupI18n({
   },
 })
 
-const spfResult =
-  rawDmarcGuidancePageData.data.findDomainByDomain.dnsScan.edges[0].node.spf
+const spfResult = rawDmarcGuidancePageData.data.findDomainByDomain.dnsScan.edges[0].node.spf
 const negativeTags = spfResult.negativeTags
 const neutralTags = spfResult.neutralTags
 const positiveTags = spfResult.positiveTags
@@ -41,9 +40,7 @@ describe('<GuidanceTagList />', () => {
   it('renders guidance tags', async () => {
     const { getAllByText } = render(
       <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -59,11 +56,7 @@ describe('<GuidanceTagList />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() =>
-      getAllByText(/SPF record is properly formed/i),
-    )
-    await waitFor(() =>
-      getAllByText(/Record terminated with "-all"/i),
-    )
+    await waitFor(() => getAllByText(/TAG-short-age/i))
+    await waitFor(() => getAllByText(/Hello World/i))
   })
 })

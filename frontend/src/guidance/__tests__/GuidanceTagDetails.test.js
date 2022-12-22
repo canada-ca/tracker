@@ -49,6 +49,6 @@ describe('<GuidanceTagDetails />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => getAllByText(/SPF record is properly formed/i))
+    await waitFor(() => getAllByText(/TAG-short-age/i))
   })
 })

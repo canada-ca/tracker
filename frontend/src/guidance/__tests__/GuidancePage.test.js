@@ -13,7 +13,7 @@ import GuidancePage from '../GuidancePage'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
-import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../../graphql/queries'
+import { DOMAIN_GUIDANCE_PAGE } from '../../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -46,7 +46,7 @@ window.resizeTo = function resizeTo(width, height) {
 const mocks = [
   {
     request: {
-      query: GET_GUIDANCE_TAGS_OF_DOMAIN,
+      query: DOMAIN_GUIDANCE_PAGE,
       variables: { domain: 'forces.gc.ca' },
     },
     result: {
@@ -58,7 +58,7 @@ const mocks = [
 describe('<GuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
-    const { getByRole } = render(
+    const { getByText } = render(
       <MockedProvider mocks={mocks}>
         <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
@@ -75,7 +75,7 @@ describe('<GuidancePage />', () => {
     )
 
     await waitFor(() => {
-      expect(getByRole('link', { name: /DMARC Report/i })).toBeInTheDocument()
+      expect(getByText(/amie.info/i)).toBeInTheDocument()
     })
   })
 })
