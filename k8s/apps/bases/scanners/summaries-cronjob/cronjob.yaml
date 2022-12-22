@@ -25,13 +25,11 @@ spec:
                     secretKeyRef:
                       name: scanners
                       key: DB_PASS
-                - name: DB_HOST
+                - name: DB_URL
                   valueFrom:
                     secretKeyRef:
                       name: scanners
-                      key: DB_HOST
-                - name: DB_PORT
-                  value: "8529"
+                      key: DB_URL
                 - name: DB_NAME
                   valueFrom:
                     secretKeyRef:
