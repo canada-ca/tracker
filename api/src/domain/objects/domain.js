@@ -142,6 +142,10 @@ export const domainType = new GraphQLObjectType({
           type: GraphQLInt,
           description: 'Number of web scans to retrieve.',
         },
+        excludePending: {
+          type: GraphQLBoolean,
+          description: `Exclude web scans which have pending status.`,
+        },
         ...connectionArgs,
       },
       resolve: async ({ _id }, args, { loaders: { loadWebConnectionsByDomainId } }) => {
