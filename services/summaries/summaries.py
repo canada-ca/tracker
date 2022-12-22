@@ -5,7 +5,6 @@ import time
 import json
 import logging
 import traceback
-import emoji
 import random
 import datetime
 from arango import ArangoClient
@@ -317,7 +316,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
 
 if __name__ == "__main__":
     load_dotenv()
-    logging.info(emoji.emojize("Summary service started :rocket:"))
+    logging.info("Summary service started")
     update_scan_summaries()
     update_chart_summaries()
     update_org_summaries()
