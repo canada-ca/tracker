@@ -1,10 +1,11 @@
-import {GraphQLString} from 'graphql'
+import { GraphQLString } from 'graphql'
 
-import {t} from "@lingui/macro"
+import { t } from '@lingui/macro'
 
 export const getAllOrganizationDomainStatuses = {
   type: GraphQLString,
-  description: 'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
+  description:
+    'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
   resolve: async (
     _,
     _args,
@@ -17,12 +18,12 @@ export const getAllOrganizationDomainStatuses = {
         verifiedRequired,
         loginRequiredBool,
       },
-      loaders: {loadAllOrganizationDomainStatuses},
+      loaders: { loadAllOrganizationDomainStatuses },
     },
   ) => {
     if (loginRequiredBool) {
       const user = await userRequired()
-      verifiedRequired({user})
+      verifiedRequired({ user })
 
       const isSuperAdmin = await checkSuperAdmin()
 
@@ -36,19 +37,33 @@ export const getAllOrganizationDomainStatuses = {
           ),
         )
       }
-
     }
 
     const domainStatuses = await loadAllOrganizationDomainStatuses()
 
     console.info(`User ${userKey} successfully retrieved all domain statuses.`)
 
-    if(domainStatuses === undefined) return domainStatuses
+    if (domainStatuses === undefined) return domainStatuses
 
-    const headers = ["Organization name (English)", "Nom de l'organisation (Français)", "Domain", "ITPIN", "HTTPS", "HSTS", "Ciphers", "Curves", "Protocols", "SPF", "DKIM", "DMARC"]
+    const headers = [
+      'Organization name (English)',
+      "Nom de l'organisation (Français)",
+      'Domain',
+      'ITPIN',
+      'HTTPS',
+      'HSTS',
+      'Ciphers',
+      'Curves',
+      'Protocols',
+      'SPF',
+      'DKIM',
+      'DMARC',
+    ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
-      const csvLine = headers.map((header) => domainStatus[header]).join(',')
+      const csvLine = headers
+        .map((header) => `"${domainStatus[header]}"`)
+        .join(',')
       csvOutput += `\n${csvLine}`
     })
 
