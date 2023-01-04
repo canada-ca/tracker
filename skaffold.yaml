@@ -198,8 +198,8 @@ portForward:
     namespace: pubsub
     port: 4222
     localPort: 4222
-  - resourceType: service
-    resourceName: kiali
-    namespace: istio-system
-    port: 20001
-    localPort: 20001
+#  - resourceType: service
+#    resourceName: kiali
+#    namespace: istio-system
+#    port: 20001
+#    localPort: 20001
