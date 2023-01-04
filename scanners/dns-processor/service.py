@@ -158,7 +158,7 @@ async def run(loop):
                 domain.update({"rcode": rcode})
                 db.collection("domains").update(domain)
 
-                for ip in results["resolve_ips"]:
+                for ip in results.get("resolve_ips", None) or []:
                     web_scan = db.collection("webScan").insert({
                         "status": "pending",
                         "ipAddress": ip

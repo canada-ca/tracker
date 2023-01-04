@@ -25,8 +25,6 @@ def process_dkim(dkim_results):
                 "neutral_tags": []
             }
 
-
-
             for tag in tags:
                 if tag in guidance["dkim"]["pass"]:
                     processed_dkim[dkim_selector]["positive_tags"].append(tag)
@@ -328,11 +326,25 @@ def process_dmarc(dmarc_results):
 
 
 def process_results(results):
-    dkim_tags, dkim_status = process_dkim(results["dkim"])
+    rcode = results.get("rcode")
+    dmarc = results.get("dmarc") or {}
+    dkim = results.get("dkim") or {}
+    spf = results.get("spf") or {}
 
-    dmarc_tags, dmarc_status = process_dmarc(results["dmarc"])
+    dkim_tags, dkim_status = ({}, "info") if (rcode is "NXDOMAIN" or results["dkim"] is None) else process_dkim(
+        results["dkim"])
 
-    spf_tags, spf_status = process_spf(results["spf"])
+    dmarc_tags, dmarc_status = ({
+        "positive_tags": [],
+        "negative_tags": [],
+        "neutral_tags": []
+    }, "info") if (rcode is "NXDOMAIN" or results["dmarc"] is None) else process_dmarc(results["dmarc"])
+
+    spf_tags, spf_status = ({
+        "positive_tags": [],
+        "negative_tags": [],
+        "neutral_tags": []
+    }, "info") if (rcode is "NXDOMAIN" or results["spf"] is None) else process_spf(results["spf"])
 
     if dmarc_tags:
         all_dmarc_tags = dmarc_tags["negative_tags"] + dmarc_tags["neutral_tags"] + dmarc_tags["positive_tags"]
@@ -342,7 +354,7 @@ def process_results(results):
     # Check DMARC phase (https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna)
     phase = "not implemented"
 
-    rua_addresses = results["dmarc"].get("tags", {}).get("rua", {}).get("value", [])
+    rua_addresses = dmarc.get("tags", {}).get("rua", {}).get("value", [])
     if any(tag in all_dmarc_tags for tag in ["dmarc4", "dmarc5", "dmarc6"]) and len(rua_addresses) > 0:
         phase = "assess"
 
@@ -354,22 +366,22 @@ def process_results(results):
 
     dmarc_results = {
         "status": dmarc_status,
-        "record": results["dmarc"].get("record", None),
-        "p_policy": results["dmarc"].get("tags", {}).get("p", {}).get("value", None),
-        "sp_policy": results["dmarc"].get("tags", {}).get("sp", {}).get("value", None),
-        "pct": results["dmarc"].get("tags", {}).get("pct", {}).get("value", None),
+        "record": dmarc.get("record", None),
+        "p_policy": dmarc.get("tags", {}).get("p", {}).get("value", None),
+        "sp_policy": dmarc.get("tags", {}).get("sp", {}).get("value", None),
+        "pct": dmarc.get("tags", {}).get("pct", {}).get("value", None),
         "phase": phase,
         "neutral_tags": dmarc_tags["neutral_tags"],
         "positive_tags": dmarc_tags["positive_tags"],
         "negative_tags": dmarc_tags["negative_tags"],
     }
 
-    spf_record = results["spf"].get("record", None)
+    spf_record = spf.get("record", None)
     spf_results = {
         "status": spf_status,
         "record": spf_record,
-        "lookups": results["spf"].get("dns_lookups", None),
-        "spf_default": results["spf"].get("parsed", {}).get("all", None),
+        "lookups": spf.get("dns_lookups", None),
+        "spf_default": spf.get("parsed", {}).get("all", None),
         "neutral_tags": spf_tags["neutral_tags"],
         "positive_tags": spf_tags["positive_tags"],
         "negative_tags": spf_tags["negative_tags"],
@@ -379,9 +391,9 @@ def process_results(results):
         "status": dkim_status,
         "selectors": {}
     }
-    if not results["dkim"].get("error"):
-        for selector in results["dkim"].keys():
-            if results["dkim"][selector].get("error", None):
+    if not dkim.get("error", None):
+        for selector in dkim.keys():
+            if dkim.get(selector, {}).get("error", None):
                 dkim_results["selectors"][selector] = results["dkim"][selector]
                 continue
 
@@ -407,14 +419,14 @@ def process_results(results):
     return {
         "timestamp": timestamp,
         "domain": results["domain"],
-        "base_domain": results["base_domain"],
+        "base_domain": results.get("base_domain", None),
         "record_exists": results["record_exists"],
         "rcode": results["rcode"],
-        "resolve_chain": results["resolve_chain"],
-        "resolve_ips": results["resolve_ips"],
-        "cname_record": results["cname_record"],
-        "mx_records": results["mx_records"],
-        "ns_records": results["ns_records"],
+        "resolve_chain": results.get("resolve_chain", None),
+        "resolve_ips": results.get("resolve_ips", None),
+        "cname_record": results.get("cname_record", None),
+        "mx_records": results.get("mx_records", None),
+        "ns_records": results.get("ns_records", None),
         "dmarc": dmarc_results,
         "spf": spf_results,
         "dkim": dkim_results
