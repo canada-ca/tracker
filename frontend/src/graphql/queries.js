@@ -214,7 +214,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             timestamp
             baseDomain
             recordExists
-            cnameRecord
+            # cnameRecord
             mxRecords {
               hosts {
                 preference
