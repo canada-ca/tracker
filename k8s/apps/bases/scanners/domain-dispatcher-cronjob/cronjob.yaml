@@ -28,11 +28,16 @@ spec:
                     secretKeyRef:
                       name: scanners
                       key: DB_USER
-                - name: DB_URL
+                - name: DB_HOST
                   valueFrom:
                     secretKeyRef:
                       name: scanners
-                      key: DB_URL
+                      key: DB_HOST
+                - name: DB_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_PORT
                 - name: DB_NAME
                   value: track_dmarc
                 - name: DB_COLLECTION
