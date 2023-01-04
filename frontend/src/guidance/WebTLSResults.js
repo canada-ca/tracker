@@ -296,8 +296,8 @@ export function WebTLSResults({ tlsResult }) {
                           px="2"
                           my="2"
                           borderWidth="1px"
-                          bg={expiredCert || certRevoked ? 'weakMuted' : 'gray.100'}
-                          borderColor={expiredCert || certRevoked ? 'weak' : 'gray.300'}
+                          bg={expiredCert || certRevoked || selfSignedCert ? 'weakMuted' : 'gray.100'}
+                          borderColor={expiredCert || certRevoked || selfSignedCert ? 'weak' : 'gray.300'}
                         >
                           <Text fontWeight="bold">
                             {idx + 1}. {commonNames[0]}
@@ -337,7 +337,7 @@ export function WebTLSResults({ tlsResult }) {
                             <Text>
                               <Trans>Issuer:</Trans> {issuer}
                             </Text>
-                            <Text>
+                            <Text fontWeight={selfSignedCert ? 'bold' : ''} color={selfSignedCert ? 'weak' : 'black'}>
                               <Trans>Self-signed:</Trans> {selfSignedCert ? t`Yes` : t`No`}
                             </Text>
                             <Text fontWeight={certRevoked ? 'bold' : ''} color={certRevoked ? 'weak' : 'black'}>
