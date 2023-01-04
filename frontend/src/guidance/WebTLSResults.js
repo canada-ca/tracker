@@ -219,12 +219,12 @@ export function WebTLSResults({ tlsResult }) {
             </Flex>
             <AccordionPanel>
               <Box fontSize="lg" px="2">
-                <Flex align="center" mb="1" px="2">
+                <Flex align="center" mb="1" px="2" bg={badHostname ? 'weakMuted' : ''}>
                   <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
-                  <Text px="1" minW="50%">
-                    <Trans>Hostname Validated</Trans>
+                  <Text px="1" minW="50%" fontWeight={badHostname ? 'bold' : ''}>
+                    <Trans>Hostname Matches</Trans>
                   </Text>
-                  <Text>{badHostname ? t`No` : t`Yes`}</Text>
+                  <Text fontWeight={badHostname ? 'bold' : ''}>{badHostname ? t`No` : t`Yes`}</Text>
                 </Flex>
                 <Flex align="center" mb="1" px="2" bg="gray.200">
                   <StatusIcon status="INFO" />
