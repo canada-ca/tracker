@@ -54,7 +54,7 @@ class CertificateInfo:
 
     def __init__(self, cert: Certificate):
         self.expired_cert = True if cert.not_valid_after < datetime.datetime.now() else False
-        self.self_signed_cert = True if cert.issuer is cert.subject else False
+        self.self_signed_cert = True if cert.issuer == cert.subject else False
         self.not_valid_before = str(cert.not_valid_before)
         self.not_valid_after = str(cert.not_valid_after)
         self.issuer = cert.issuer.rfc4514_string()
