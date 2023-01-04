@@ -119,6 +119,7 @@ export const loadWebConnectionsByDomainId =
 
     const removeExtraSliceTemplate = aql`SLICE(websPlusOne, 0, ${limit})`
     const webQuery = aql`
+      WITH web, webScan
       LET websPlusOne = (
         FOR web, e IN 1 OUTBOUND ${domainId} domainsWeb
           ${startDateFilter}
