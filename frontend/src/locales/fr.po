@@ -58,8 +58,8 @@ msgstr "404 - Page non trouvée"
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
 #: src/guidance/GuidancePage.js:103
-#~ msgid "A DNS request for this service has resulted in the following error code:"
-#~ msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
+msgid "A DNS request for this service has resulted in the following error code:"
+msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
 #: src/admin/AdminDomains.js:316
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
@@ -709,6 +709,7 @@ msgstr "Phases DMARC"
 
 #: src/dmarc/DmarcReportPage.js:92
 #: src/domains/DomainCard.js:188
+#: src/guidance/GuidancePage.js:78
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
@@ -934,6 +935,7 @@ msgid "Email"
 msgstr "Courriel"
 
 #: src/domains/ScanDomain.js:245
+#: src/guidance/GuidancePage.js:122
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
@@ -1341,8 +1343,12 @@ msgstr "Accueil"
 #~ msgstr "Vue horizontale"
 
 #: src/guidance/WebTLSResults.js:225
-msgid "Hostname Validated"
-msgstr "Nom d'hôte validé"
+msgid "Hostname Matches"
+msgstr "Correspondance des noms d'hôtes"
+
+#: src/guidance/WebTLSResults.js:225
+#~ msgid "Hostname Validated"
+#~ msgstr "Nom d'hôte validé"
 
 #: src/app/ReadGuidancePage.js:239
 msgid "How can I edit my domain list?"
@@ -1390,8 +1396,8 @@ msgid "If at any time you or your representatives wish to adjust or cancel these
 msgstr "Si, à tout moment, vous ou vos représentants souhaitez adapter ou annuler ces services, veuillez nous contacter à l'adresse suivante"
 
 #: src/guidance/GuidancePage.js:108
-#~ msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
-#~ msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
+msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
+msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
 
 #: src/guidance/GuidanceTagList.js:53
 msgid "If you believe this was caused by a problem with Tracker, please <0>Report an Issue <1/></0>"
@@ -2017,6 +2023,7 @@ msgstr "Vous pouvez notamment communiquer avec l’<0>équipe responsable des se
 msgid "Organization"
 msgstr "Organisation"
 
+#: src/guidance/GuidancePage.js:43
 #: src/organizationDetails/OrganizationDetails.js:63
 msgid "Organization Details"
 msgstr "Détails de l'organisation"
@@ -2048,8 +2055,8 @@ msgid "Organization not updated"
 msgstr "Organisation non mise à jour"
 
 #: src/guidance/GuidancePage.js:85
-#~ msgid "Organization(s):"
-#~ msgstr "Organisation(s) :"
+msgid "Organization(s):"
+msgstr "Organisation(s) :"
 
 #: src/admin/AdminPage.js:77
 #: src/admin/AdminPage.js:93
@@ -3304,6 +3311,7 @@ msgid "Web Check"
 msgstr "Vérification du Web"
 
 #: src/domains/ScanDomain.js:242
+#: src/guidance/GuidancePage.js:119
 msgid "Web Guidance"
 msgstr "Conseils sur le Web"
 
