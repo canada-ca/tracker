@@ -75,7 +75,7 @@ def scan_domain(domain, dkim_selectors=None):
         pass
 
     if cname_record is not None:
-        scan_result.cname_record = [str(answer) for answer in cname_record.response.answer]
+        scan_result.cname_record = str(cname_record.response.answer[0])
 
     # Run DMARC scan
     dmarc_start_time = time.monotonic()
