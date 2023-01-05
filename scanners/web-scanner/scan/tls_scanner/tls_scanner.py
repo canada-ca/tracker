@@ -276,7 +276,9 @@ class TLSResult:
                                scan_result.scan_result.elliptic_curves.result.supported_curves]
             return accepted_curves
         except AttributeError:
-            return None
+            return []
+        except TypeError:
+            return []
 
     @staticmethod
     def get_certificate_chain_info(scan_result: ServerScanResult) -> CertificateChainInfo | None:
