@@ -28,11 +28,11 @@
       },
       "ssl2": {
         "en": {
-          "tagName": "Missing",
+          "tagName": "TLS Certificate Missing",
           "guidance": "Follow implementation guide",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
@@ -44,11 +44,11 @@
           ]
         },
         "fr": {
-          "tagName": "Missing",
+          "tagName": "Certificat TLS manquant",
           "guidance": "Suivre le guide de mise en œuvre",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -63,7 +63,7 @@
       "ssl3": {
         "en": {
           "tagName": "RC4",
-          "guidance": "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18.01",
+          "guidance": "Cipher list contains RC4 stream cipher",
           "refLinksGuide": [
             {
               "description": "1.6 Websites and services hardening",
@@ -79,7 +79,7 @@
         },
         "fr": {
           "tagName": "RC4",
-          "guidance": "La liste de chiffrement acceptée contient le chiffrement de flux RC4, interdit par le BOD 18.01",
+          "guidance": "La liste de chiffrement contient le chiffrement de flux RC4.",
           "refLinksGuide": [
             {
               "description": "1.6 Renforcement de la sécurité des sites Web et des services",
@@ -97,7 +97,7 @@
       "ssl4": {
         "en": {
           "tagName": "3DES",
-          "guidance": "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01",
+          "guidance": "Cipher list contains 3DES symmetric-key block cipher",
           "refLinksGuide": [
             {
               "description": "1.6 Websites and services hardening",
@@ -113,7 +113,7 @@
         },
         "fr": {
           "tagName": "3DES",
-          "guidance": "La liste de chiffrement acceptée contient le chiffrement par blocs à clé symétrique 3DES, interdit par le BOD 18-01",
+          "guidance": "La liste de chiffrement acceptée contient le chiffrement par blocs à clé symétrique 3DES",
           "refLinksGuide": [
             {
               "description": "1.6 Renforcement de la sécurité des sites Web et des services",
@@ -130,11 +130,11 @@
       },
       "ssl5": {
         "en": {
-          "tagName": "Acceptable-certificate",
+          "tagName": "Acceptable Certificate",
           "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3/1.4 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
@@ -146,11 +146,11 @@
           ]
         },
         "fr": {
-          "tagName": "Acceptable-certificate",
+          "tagName": "Certificat acceptable",
           "guidance": "Chaîne de certificats signée en utilisant SHA-256/SHA-384/AEAD",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3/1.4 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -164,7 +164,7 @@
       },
       "ssl6": {
         "en": {
-          "tagName": "Invalid-cipher",
+          "tagName": "Invalid Cipher",
           "guidance": "One or more ciphers in use are not compliant with guidelines",
           "refLinksGuide": [
             {
@@ -180,7 +180,7 @@
           ]
         },
         "fr": {
-          "tagName": "Invalid-cipher",
+          "tagName": "Cipher invalide",
           "guidance": "Un ou plusieurs chiffrements utilisés ne sont pas conformes aux directives",
           "refLinksGuide": [
             {
@@ -198,7 +198,7 @@
       },
       "ssl7": {
         "en": {
-          "tagName": "Vulnerability-heartbleed",
+          "tagName": "Heartbleed Vulnerability",
           "guidance": "Vulnerable to heartbleed bug",
           "refLinksGuide": [
             {
@@ -214,7 +214,7 @@
           ]
         },
         "fr": {
-          "tagName": "Vulnerability-heartbleed",
+          "tagName": "Vulnérabilité Heartbleed",
           "guidance": "Vulnérable au bogue Heartbleed",
           "refLinksGuide": [
             {
@@ -232,7 +232,7 @@
       },
       "ssl8": {
         "en": {
-          "tagName": "Vulnerability-ccs-injection",
+          "tagName": "CCS Injection Vulnerability",
           "guidance": "Vulnerable to OpenSSL CCS Injection",
           "refLinksGuide": [
             {
@@ -243,7 +243,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Vulnerability-ccs-injection",
+          "tagName": "Vulnérabilité d'injection de CCS",
           "guidance": "Vulnérable à l'injection CCS d'OpenSSL",
           "refLinksGuide": [
             {
@@ -267,7 +267,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Unreachable",
+          "tagName": "Inaccessible",
           "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
           "refLinksGuide": [
             {
@@ -277,175 +277,7 @@
           ],
           "refLinksTechnical": [""]
         }
-      },
-      "ssl10": {
-        "en": {
-          "tagName": "Bad-chain",
-          "guidance": "HTTPS certificate chain is invalid",
-          "refLinksGuide": [
-            {
-              "description": "6.1.3 Direction",
-              "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-            }
-          ],
-          "refLinksTechnical": [
-            ""
-          ]
-        },
-        "fr": {
-          "tagName": "Bad-chain",
-          "guidance": "La chaîne de certificats HTTPS n'est pas valide",
-          "refLinksGuide": [
-            {
-              "description": "6.1.3 Direction",
-              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
-            }
-          ],
-          "refLinksTechnical": [
-            ""
-          ]
-        }
-      },
-      "ssl11": {
-        "en": {
-          "tagName": "Bad-hostname",
-          "guidance": "HTTPS endpoint failed hostname validation",
-          "refLinksGuide": [
-            {
-              "description": "6.1.1 Direction",
-              "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-            }
-          ],
-          "refLinksTechnical": [
-            ""
-          ]
-        },
-        "fr": {
-          "tagName": "Bad-hostname",
-          "guidance": "La validation du nom d'hôte du point de terminaison HTTPS a échoué",
-          "refLinksGuide": [
-            {
-              "description": "6.1.1 Direction",
-              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
-            }
-          ],
-          "refLinksTechnical": [
-            ""
-          ]
-        }
-      },
-      "ssl12": {
-        "en": {
-            "tagName": "Certificate-expired",
-            "guidance": "HTTPS certificate is expired",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        },
-        "fr": {
-            "tagName": "Certificate-expired",
-            "guidance": "Le certificat HTTPS a expiré",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
-    },
-    "ssl13": {
-        "en": {
-            "tagName": "Certificate-self-signed",
-            "guidance": "HTTPS certificate is self-signed",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        },
-        "fr": {
-            "tagName": "Certificate-self-signed",
-            "guidance": "Le certificat HTTPS est auto-signé",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
-    },
-    "ssl14": {
-        "en": {
-            "tagName": "Certificate-revoked",
-            "guidance": "HTTPS certificate has been revoked",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        },
-        "fr": {
-            "tagName": "Certificate-revoked",
-            "guidance": "Le certificat HTTPS a été révoqué",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
-    },
-    "ssl15": {
-        "en": {
-            "tagName": "Certificate-revocation-unknown",
-            "guidance": "Revocation status of HTTPS certificate could not be checked",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        },
-        "fr": {
-            "tagName": "Certificate-revocation-unknown",
-            "guidance": "L'état de révocation du certificat HTTPS n'a pas pu être vérifié",
-            "refLinksGuide": [
-                {
-                    "description": "6.1.3 Direction",
-                    "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/technologiques-modernes-nouveaux/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html#toc6"
-                }
-            ],
-            "refLinksTechnical": [
-                ""
-            ]
-        }
-    }
+      }
     }
   },
   {
@@ -879,22 +711,22 @@
       },
       "https2": {
         "en": {
-          "tagName": "Missing",
+          "tagName": "HTTPS Missing",
           "guidance": "Follow implementation guide",
           "refLinksGuide": [
             {
-              "description": "1. Websites and services hardening",
+              "description": "1.1 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Missing",
+          "tagName": "HTTPS manquant",
           "guidance": "Suivre le guide de mise en œuvre",
           "refLinksGuide": [
             {
-              "description": "1. Renforcement de la sécurité des sites Web et des services",
+              "description": "1.1 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -903,7 +735,7 @@
       },
       "https3": {
         "en": {
-          "tagName": "Downgraded",
+          "tagName": "HTTPS Downgraded",
           "guidance": "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.",
           "refLinksGuide": [
             {
@@ -914,7 +746,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Downgraded",
+          "tagName": "HTTPS rétrogradé",
           "guidance": "Le point de terminaison HTTPS canonique redirige en interne vers HTTP. Suivez les instructions.",
           "refLinksGuide": [
             {
@@ -927,22 +759,22 @@
       },
       "https4": {
         "en": {
-          "tagName": "Bad-chain",
+          "tagName": "Bad Chain",
           "guidance": "HTTPS certificate chain is invalid",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Bad-chain",
+          "tagName": "Mauvaise chaîne",
           "guidance": "La chaîne de certificats HTTPS n'est pas valide",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -951,7 +783,7 @@
       },
       "https5": {
         "en": {
-          "tagName": "Bad-hostname",
+          "tagName": "Bad Hostname",
           "guidance": "HTTPS endpoint failed hostname validation",
           "refLinksGuide": [
             {
@@ -962,7 +794,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Bad-hostname",
+          "tagName": "Mauvais nom d'hôte",
           "guidance": "La validation du nom d'hôte du point de terminaison HTTPS a échoué",
           "refLinksGuide": [
             {
@@ -975,7 +807,7 @@
       },
       "https6": {
         "en": {
-          "tagName": "Not-enforced",
+          "tagName": "Not Enforced",
           "guidance": "Domain does not enforce HTTPS",
           "refLinksGuide": [
             {
@@ -986,7 +818,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Not-enforced",
+          "tagName": "Non appliqué",
           "guidance": "Le domaine n'applique pas le protocole HTTPS",
           "refLinksGuide": [
             {
@@ -999,7 +831,7 @@
       },
       "https7": {
         "en": {
-          "tagName": "Weakly-enforced",
+          "tagName": "Weakly Enforced",
           "guidance": "Domain does not default to HTTPS",
           "refLinksGuide": [
             {
@@ -1010,7 +842,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Weakly-enforced",
+          "tagName": "Faiblement appliqué",
           "guidance": "Le domaine ne fonctionne pas par défaut en HTTPS",
           "refLinksGuide": [
             {
@@ -1023,7 +855,7 @@
       },
       "https8": {
         "en": {
-          "tagName": "Moderately-enforced",
+          "tagName": "Moderately Enforced",
           "guidance": "Domain defaults to HTTPS, but eventually redirects to HTTP",
           "refLinksGuide": [
             {
@@ -1034,7 +866,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Moderately-enforced",
+          "tagName": "Modérément appliqué",
           "guidance": "Le domaine passe par défaut en HTTPS, mais finit par être redirigé en HTTP",
           "refLinksGuide": [
             {
@@ -1047,7 +879,7 @@
       },
       "https9": {
         "en": {
-          "tagName": "HSTS-missing",
+          "tagName": "HSTS Missing",
           "guidance": "HTTP Strict Transport Security (HSTS) not implemented",
           "refLinksGuide": [
             {
@@ -1058,7 +890,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-missing",
+          "tagName": "HSTS manquant",
           "guidance": "HTTP Strict Transport Security (HSTS) non implémenté",
           "refLinksGuide": [
             {
@@ -1071,7 +903,7 @@
       },
       "https10": {
         "en": {
-          "tagName": "HSTS-short-age",
+          "tagName": "HSTS Short Age",
           "guidance": "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year",
           "refLinksGuide": [
             {
@@ -1082,7 +914,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-short-age",
+          "tagName": "HSTS âge court",
           "guidance": "L'âge maximum de la politique HTTP Strict Transport Security (HSTS) est inférieur à un an.",
           "refLinksGuide": [
             {
@@ -1095,7 +927,7 @@
       },
       "https11": {
         "en": {
-          "tagName": "HSTS-preload-ready",
+          "tagName": "HSTS Preload Ready",
           "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
           "refLinksGuide": [
             {
@@ -1106,7 +938,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-preload-ready",
+          "tagName": "HSTS précharge prête",
           "guidance": "Domaine non préchargé par HSTS, mais prêt à l'être",
           "refLinksGuide": [
             {
@@ -1119,7 +951,7 @@
       },
       "https12": {
         "en": {
-          "tagName": "HSTS-not-preloaded",
+          "tagName": "HSTS Not Preloaded",
           "guidance": "Domain not pre-loaded by HSTS",
           "refLinksGuide": [
             {
@@ -1130,7 +962,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-not-preloaded",
+          "tagName": "HSTS non préchargé",
           "guidance": "Domaine non préchargé par HSTS",
           "refLinksGuide": [
             {
@@ -1143,22 +975,22 @@
       },
       "https13": {
         "en": {
-          "tagName": "Certificate-expired",
+          "tagName": "Certificate Expired",
           "guidance": "HTTPS certificate is expired",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Certificate-expired",
+          "tagName": "Certificat expiré",
           "guidance": "Le certificat HTTPS a expiré",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -1167,22 +999,22 @@
       },
       "https14": {
         "en": {
-          "tagName": "Certificate-self-signed",
+          "tagName": "Certificate Self-signed",
           "guidance": "HTTPS certificate is self-signed",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Certificate-self-signed",
+          "tagName": "certificat auto-signé",
           "guidance": "Le certificat HTTPS est auto-signé",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -1191,22 +1023,22 @@
       },
       "https15": {
         "en": {
-          "tagName": "Certificate-revoked",
+          "tagName": "Certificate Revoked",
           "guidance": "HTTPS certificate has been revoked",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Certificate-revoked",
+          "tagName": "Certificat révoqué",
           "guidance": "Le certificat HTTPS a été révoqué",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -1215,22 +1047,22 @@
       },
       "https16": {
         "en": {
-          "tagName": "Certificate-revocation-unknown",
+          "tagName": "Certificate Revocation Unknown",
           "guidance": "Revocation status of HTTPS certificate could not be checked",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Certificate-revocation-unknown",
+          "tagName": "Révocation de certificat inconnue",
           "guidance": "L'état de révocation du certificat HTTPS n'a pas pu être vérifié",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -1250,7 +1082,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Unreachable",
+          "tagName": "Inaccessible",
           "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
           "refLinksGuide": [
             {
@@ -2515,16 +2347,7 @@
       },
       "dkimScanSummaryCriteria": {
         "pass": ["dkim7", "dkim8"],
-        "fail": [
-          "dkim2",
-          "dkim3",
-          "dkim4",
-          "dkim5",
-          "dkim6",
-          "dkim9",
-          "dkim11",
-          "dkim12"
-        ],
+        "fail": ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"],
         "warning": ["dkim10", "dkim13"],
         "info": ["dkim1"]
       },
