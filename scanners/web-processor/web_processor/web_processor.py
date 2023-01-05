@@ -267,7 +267,7 @@ def process_connection_results(connection_results):
     if https_eventually_downgrades or https_immediately_downgrades:
         negative_tags.append("https3")
 
-    if not https_live:
+    if http_live and not https_live:
         negative_tags.append("https6")
 
     if https_live and http_live and not (http_immediately_upgrades or http_eventually_upgrades):
@@ -287,7 +287,7 @@ def process_connection_results(connection_results):
         # no live endpoints, give info status
         https_status = "info"
     else:
-        fail_tags = ["https3", "https4", "https6", "https7", "https8"]
+        fail_tags = ["https3", "https6", "https7", "https8"]
         if any(tag in negative_tags for tag in fail_tags):
             https_status = "fail"
         else:
