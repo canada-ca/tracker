@@ -168,34 +168,32 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
               </Text>
             </Flex>
           ) : (
-            <>
-              <Box px="2">
-                <Flex mb="1" px="2">
-                  <Text mr="1" minW="7%">
-                    <Trans>Record:</Trans>
-                  </Text>
-                  {spf.record}
-                </Flex>
-                <Flex mb="1" px="2" bg="gray.200">
-                  <Text mr="1" minW="7%">
-                    <Trans>Lookups:</Trans>
-                  </Text>
-                  {spf.lookups}
-                </Flex>
-                <Flex mb="1" px="2">
-                  <Text mr="1" minW="7%">
-                    <Trans>Default:</Trans>
-                  </Text>
-                  {spf.spfDefault}
-                </Flex>
-              </Box>
-              <GuidanceTagList
-                positiveTags={spf.positiveTags}
-                neutralTags={spf.neutralTags}
-                negativeTags={spf.negativeTags}
-              />
-            </>
+            <Box px="2">
+              <Flex mb="1" px="2">
+                <Text mr="1" minW="7%">
+                  <Trans>Record:</Trans>
+                </Text>
+                {spf.record}
+              </Flex>
+              <Flex mb="1" px="2" bg="gray.200">
+                <Text mr="1" minW="7%">
+                  <Trans>Lookups:</Trans>
+                </Text>
+                {spf.lookups}
+              </Flex>
+              <Flex mb="1" px="2">
+                <Text mr="1" minW="7%">
+                  <Trans>Default:</Trans>
+                </Text>
+                {spf.spfDefault}
+              </Flex>
+            </Box>
           )}
+          <GuidanceTagList
+            positiveTags={spf.positiveTags}
+            neutralTags={spf.neutralTags}
+            negativeTags={spf.negativeTags}
+          />
         </AccordionPanel>
       </AccordionItem>
       <AccordionItem>
@@ -214,26 +212,34 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
                   <Text fontWeight="bold" fontSize="xl">
                     {selector}
                   </Text>
-                  <Box px="2">
-                    <Flex mb="1" px="2">
-                      <Text mr="1" minW="7%">
-                        <Trans>Record:</Trans>
+                  {record === null ? (
+                    <Flex borderWidth="1px" borderColor="black" px="2" py="1" rounded="md">
+                      <Text fontSize="lg">
+                        <Trans>DKIM record could not be found for this selector.</Trans>
                       </Text>
-                      <Text isTruncated>{record}</Text>
                     </Flex>
-                    <Flex mb="1" px="2" bg="gray.200">
-                      <Text mr="1" minW="7%">
-                        <Trans>Key type:</Trans>
-                      </Text>
-                      {keyType}
-                    </Flex>{' '}
-                    <Flex mb="1" px="2">
-                      <Text mr="1" minW="7%">
-                        <Trans>Key length:</Trans>
-                      </Text>
-                      {keyLength}
-                    </Flex>
-                  </Box>
+                  ) : (
+                    <Box px="2">
+                      <Flex mb="1" px="2">
+                        <Text mr="1" minW="7%">
+                          <Trans>Record:</Trans>
+                        </Text>
+                        <Text isTruncated>{record}</Text>
+                      </Flex>
+                      <Flex mb="1" px="2" bg="gray.200">
+                        <Text mr="1" minW="7%">
+                          <Trans>Key type:</Trans>
+                        </Text>
+                        {keyType}
+                      </Flex>{' '}
+                      <Flex mb="1" px="2">
+                        <Text mr="1" minW="7%">
+                          <Trans>Key length:</Trans>
+                        </Text>
+                        {keyLength}
+                      </Flex>
+                    </Box>
+                  )}
                   <GuidanceTagList positiveTags={positiveTags} neutralTags={neutralTags} negativeTags={negativeTags} />
                 </>
               )
@@ -250,7 +256,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
             </Flex>
           )}
         </AccordionPanel>
-      </AccordionItem>{' '}
+      </AccordionItem>
       <AccordionItem>
         <Flex as={AccordionButton}>
           <StatusIcon boxSize="icons.lg" status={status.dmarc} />
@@ -267,41 +273,38 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
               </Text>
             </Flex>
           ) : (
-            <>
-              {' '}
-              <Box px="2">
-                <Flex mb="1" px="2">
-                  <Text mr="1" minW="7%">
-                    <Trans>Record:</Trans>
-                  </Text>
-                  {dmarc.record}
-                </Flex>
-                <Flex mb="1" bg="gray.200" px="2">
-                  <Text mr="1" minW="7%">
-                    <Trans>p:</Trans>
-                  </Text>
-                  {dmarc.pPolicy}
-                </Flex>
-                <Flex mb="1" px="2">
-                  <Text mr="1" minW="7%">
-                    <Trans>sp:</Trans>
-                  </Text>
-                  {dmarc.spPolicy}
-                </Flex>
-                <Flex mb="1" bg="gray.200" px="2">
-                  <Text mr="1" minW="7%">
-                    <Trans>pct:</Trans>
-                  </Text>
-                  {dmarc.pct}
-                </Flex>
-              </Box>
-              <GuidanceTagList
-                positiveTags={dmarc.positiveTags}
-                neutralTags={dmarc.neutralTags}
-                negativeTags={dmarc.negativeTags}
-              />
-            </>
+            <Box px="2">
+              <Flex mb="1" px="2">
+                <Text mr="1" minW="7%">
+                  <Trans>Record:</Trans>
+                </Text>
+                {dmarc.record}
+              </Flex>
+              <Flex mb="1" bg="gray.200" px="2">
+                <Text mr="1" minW="7%">
+                  <Trans>p:</Trans>
+                </Text>
+                {dmarc.pPolicy}
+              </Flex>
+              <Flex mb="1" px="2">
+                <Text mr="1" minW="7%">
+                  <Trans>sp:</Trans>
+                </Text>
+                {dmarc.spPolicy}
+              </Flex>
+              <Flex mb="1" bg="gray.200" px="2">
+                <Text mr="1" minW="7%">
+                  <Trans>pct:</Trans>
+                </Text>
+                {dmarc.pct}
+              </Flex>
+            </Box>
           )}
+          <GuidanceTagList
+            positiveTags={dmarc.positiveTags}
+            neutralTags={dmarc.neutralTags}
+            negativeTags={dmarc.negativeTags}
+          />
         </AccordionPanel>
       </AccordionItem>
     </Accordion>

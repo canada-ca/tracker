@@ -57,7 +57,7 @@ msgstr "404 - Page non trouvée"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
-#: src/guidance/GuidancePage.js:103
+#: src/guidance/GuidancePage.js:111
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
@@ -317,7 +317,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer définitivement l'organisation \"{0
 #~ msgstr "Êtes-vous sûr de vouloir quitter {orgName}? Vous devrez être réinvité pour y accéder."
 
 #: src/domains/ScanDomain.js:115
-#: src/guidance/EmailGuidance.js:28
+#: src/guidance/EmailGuidance.js:27
 msgid "Assess current state;"
 msgstr "Évaluer l’état actuel."
 
@@ -485,7 +485,7 @@ msgid "Code field must not be empty"
 msgstr "Le champ de code ne doit pas être vide"
 
 #: src/domains/ScanDomain.js:117
-#: src/guidance/EmailGuidance.js:30
+#: src/guidance/EmailGuidance.js:29
 msgid "Collect and analyze DMARC reports."
 msgstr "Recueillir et analyser les rapports DMARC."
 
@@ -553,7 +553,7 @@ msgid "Copyright Act"
 msgstr "Loi sur le droit d'auteur"
 
 #: src/domains/ScanDomain.js:132
-#: src/guidance/EmailGuidance.js:51
+#: src/guidance/EmailGuidance.js:50
 msgid "Correct misconfigurations and update records as required; and"
 msgstr "Corriger les erreurs de configuration et mettre à jour les enregistrements, au besoin."
 
@@ -674,6 +674,10 @@ msgstr "Sélecteurs DKIM:"
 msgid "DKIM Status"
 msgstr "Statut DKIM"
 
+#: src/guidance/EmailGuidance.js:218
+msgid "DKIM record could not be found for this selector."
+msgstr "Un enregistrement DKIM n'a pas pu être trouvé pour ce sélecteur."
+
 #: src/domains/DomainsPage.js:158
 #: src/organizationDetails/OrganizationDomains.js:109
 msgid "DMARC"
@@ -702,7 +706,7 @@ msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
 #: src/domains/ScanDomain.js:322
-#: src/guidance/EmailGuidance.js:150
+#: src/guidance/EmailGuidance.js:147
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
@@ -713,7 +717,7 @@ msgstr "Phases DMARC"
 
 #: src/dmarc/DmarcReportPage.js:92
 #: src/domains/DomainCard.js:188
-#: src/guidance/GuidancePage.js:78
+#: src/guidance/GuidancePage.js:86
 msgid "DMARC Report"
 msgstr "Rapport DMARC "
 
@@ -738,11 +742,15 @@ msgstr "Résumés DMARC"
 #~ msgid "DMARC phase summary"
 #~ msgstr "Résumé de la phase DMARC"
 
+#: src/guidance/EmailGuidance.js:272
+msgid "DMARC record could not be found during the scan."
+msgstr "L'enregistrement DMARC n'a pas pu être trouvé pendant le scan."
+
 #: src/dmarc/DmarcReportPage.js:182
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
-#: src/guidance/EmailGuidance.js:92
+#: src/guidance/EmailGuidance.js:89
 msgid "DNS Result Summary"
 msgstr "Résumé des résultats du DNS"
 
@@ -784,17 +792,17 @@ msgstr "Supprimer"
 #~ msgstr "Unités opérationnelles départementales"
 
 #: src/domains/ScanDomain.js:122
-#: src/guidance/EmailGuidance.js:37
+#: src/guidance/EmailGuidance.js:36
 msgid "Deploy DKIM records and keys for all domains and senders; and"
 msgstr "Déployer les enregistrements DKIM et les clés pour tous les domaines et expéditeurs."
 
 #: src/domains/ScanDomain.js:121
-#: src/guidance/EmailGuidance.js:36
+#: src/guidance/EmailGuidance.js:35
 msgid "Deploy SPF records for all domains;"
 msgstr "Déployer les enregistrements SPF pour tous les domaines."
 
 #: src/domains/ScanDomain.js:116
-#: src/guidance/EmailGuidance.js:29
+#: src/guidance/EmailGuidance.js:28
 msgid "Deploy initial DMARC records with policy of none; and"
 msgstr "Déployer les enregistrements DMARC initiaux en utilisant la stratégie Aucune (None)"
 
@@ -939,7 +947,7 @@ msgid "Email"
 msgstr "Courriel"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:122
+#: src/guidance/GuidancePage.js:130
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
@@ -1382,12 +1390,12 @@ msgstr "Conforme à l'ITPIN"
 #~ msgstr "Statut de l'ITPIN"
 
 #: src/domains/ScanDomain.js:120
-#: src/guidance/EmailGuidance.js:35
+#: src/guidance/EmailGuidance.js:34
 msgid "Identify all authorized senders;"
 msgstr "Déterminer tous les expéditeurs autorisés."
 
 #: src/domains/ScanDomain.js:114
-#: src/guidance/EmailGuidance.js:27
+#: src/guidance/EmailGuidance.js:26
 msgid "Identify all domains and subdomains used to send mail;"
 msgstr "Déterminer tous les domaines et sous-domaines utilisés pour envoyer des courriels."
 
@@ -1403,7 +1411,7 @@ msgstr "Déterminer les ressources nécessaires qui agiront en tant que point de
 msgid "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
 msgstr "Si, à tout moment, vous ou vos représentants souhaitez adapter ou annuler ces services, veuillez nous contacter à l'adresse suivante"
 
-#: src/guidance/GuidancePage.js:108
+#: src/guidance/GuidancePage.js:116
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
 
@@ -1661,11 +1669,11 @@ msgstr "Juin"
 msgid "Jurisdiction"
 msgstr "Compétence"
 
-#: src/guidance/EmailGuidance.js:235
+#: src/guidance/EmailGuidance.js:237
 msgid "Key length:"
 msgstr "Longueur des clés :"
 
-#: src/guidance/EmailGuidance.js:229
+#: src/guidance/EmailGuidance.js:231
 msgid "Key type:"
 msgstr "Type de clé :"
 
@@ -1750,12 +1758,12 @@ msgstr "Menu"
 #~ msgstr "Menu :"
 
 #: src/domains/ScanDomain.js:123
-#: src/guidance/EmailGuidance.js:38
+#: src/guidance/EmailGuidance.js:37
 msgid "Monitor DMARC reports and correct misconfigurations."
 msgstr "Surveiller les rapports DMARC et corriger les erreurs de configuration."
 
 #: src/domains/ScanDomain.js:131
-#: src/guidance/EmailGuidance.js:50
+#: src/guidance/EmailGuidance.js:49
 msgid "Monitor DMARC reports;"
 msgstr "Surveiller les rapports DMARC."
 
@@ -1866,7 +1874,7 @@ msgstr "Nouvelle valeur :"
 msgid "No"
 msgstr "Non"
 
-#: src/guidance/EmailGuidance.js:248
+#: src/guidance/EmailGuidance.js:251
 msgid "No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated organization to add selectors."
 msgstr "Aucun sélecteur DKIM n'est actuellement associé à ce domaine. Veuillez contacter un administrateur d'une organisation affiliée pour ajouter des sélecteurs."
 
@@ -2061,7 +2069,7 @@ msgstr "Le nom de l'organisation ne correspond pas."
 msgid "Organization not updated"
 msgstr "Organisation non mise à jour"
 
-#: src/guidance/GuidancePage.js:85
+#: src/guidance/GuidancePage.js:93
 msgid "Organization(s):"
 msgstr "Organisation(s) :"
 
@@ -2296,8 +2304,8 @@ msgid "Received Chain Has Valid Order"
 msgstr "La chaîne reçue a un ordre valide"
 
 #: src/guidance/EmailGuidance.js:174
-#: src/guidance/EmailGuidance.js:223
-#: src/guidance/EmailGuidance.js:273
+#: src/guidance/EmailGuidance.js:225
+#: src/guidance/EmailGuidance.js:279
 msgid "Record:"
 msgstr "Record :"
 
@@ -2310,7 +2318,7 @@ msgid "Register"
 msgstr "Registre"
 
 #: src/domains/ScanDomain.js:128
-#: src/guidance/EmailGuidance.js:45
+#: src/guidance/EmailGuidance.js:44
 msgid "Reject all messages from non-mail domains."
 msgstr "Rejeter tous les messages provenant de domaines autres que les domaines de courrier."
 
@@ -2409,7 +2417,7 @@ msgid "Role:"
 msgstr "Fonction:"
 
 #: src/domains/ScanDomain.js:133
-#: src/guidance/EmailGuidance.js:52
+#: src/guidance/EmailGuidance.js:51
 msgid "Rotate DKIM keys annually."
 msgstr "Effectuer la rotation des clés DKIM annuellement."
 
@@ -2448,6 +2456,10 @@ msgstr "Résultats du SPF"
 #: src/organizationDetails/OrganizationDomains.js:64
 msgid "SPF Status"
 msgstr "Statut SPF"
+
+#: src/guidance/EmailGuidance.js:167
+msgid "SPF record could not be found during the scan."
+msgstr "L'enregistrement SPF n'a pas pu être trouvé pendant l'analyse."
 
 #: src/app/RequestScanNotificationHandler.js:72
 #~ msgid "SSL Scan Complete"
@@ -3163,11 +3175,11 @@ msgstr "Propriétés actualisées"
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
 msgstr "Faire passer la stratégie DMARC à Mettre en quarantaine (Quarantine) (l’appliquer progressivement pour passer de 25 % à 100 %)."
 
-#: src/guidance/EmailGuidance.js:43
+#: src/guidance/EmailGuidance.js:42
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;"
 msgstr "Mettez la politique DMARC en quarantaine (augmentez progressivement l'application de 25% à 100%) ;"
 
-#: src/guidance/EmailGuidance.js:44
+#: src/guidance/EmailGuidance.js:43
 msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and"
 msgstr "Mettre à niveau la politique DMARC pour qu'elle rejette (augmentation progressive de l'application de 25 % à 100 %)"
 
@@ -3318,7 +3330,7 @@ msgid "Web Check"
 msgstr "Vérification du Web"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:119
+#: src/guidance/GuidancePage.js:127
 msgid "Web Guidance"
 msgstr "Conseils sur le Web"
 
@@ -3518,7 +3530,7 @@ msgstr "monSuivi"
 msgid "our Terms and Conditions on the TBS website"
 msgstr "nos conditions générales sur le site Web du SCT"
 
-#: src/guidance/EmailGuidance.js:279
+#: src/guidance/EmailGuidance.js:285
 msgid "p:"
 msgstr "p:"
 
@@ -3526,11 +3538,11 @@ msgstr "p:"
 #~ msgid "pPolicy:"
 #~ msgstr "pPolicy:"
 
-#: src/guidance/EmailGuidance.js:291
+#: src/guidance/EmailGuidance.js:297
 msgid "pct:"
 msgstr "pct:"
 
-#: src/guidance/EmailGuidance.js:285
+#: src/guidance/EmailGuidance.js:291
 msgid "sp:"
 msgstr "sp:"
 
