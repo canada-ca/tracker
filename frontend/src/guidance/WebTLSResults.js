@@ -183,7 +183,7 @@ export function WebTLSResults({ tlsResult }) {
     verifiedChainHasLegacySymantecAnchor,
     certificateChain,
     pathValidationResults,
-  } = tlsResult?.certificateChainInfo
+  } = tlsResult?.certificateChainInfo || {}
 
   return (
     <AccordionItem>
