@@ -61,6 +61,7 @@ def process_tls_results(tls_results):
 
             accepted_cipher_suites[protocol].append({"name": cipher_suite, "strength": strength})
 
+    weak_curve = False
     for curve in tls_results["accepted_elliptic_curves"]:
         if curve.lower() in guidance["curves"]["recommended"]:
             strength = "strong"
@@ -68,6 +69,7 @@ def process_tls_results(tls_results):
             strength = "acceptable"
         else:
             strength = "weak"
+            weak_curve = True
             # negative_tags.append("ssl10")
 
         accepted_elliptic_curves.append({"name": curve, "strength": strength})
@@ -154,7 +156,8 @@ def process_tls_results(tls_results):
     cipher_status = "fail" if "ssl6" in negative_tags else "pass"
 
     # get curve status
-    curve_status = "fail" if "ssl10" in negative_tags else "pass"
+    # curve_status = "fail" if "ssl11" in negative_tags else "pass"
+    curve_status = "fail" if weak_curve else "pass"
 
     processed_tags = {
         "neutral_tags": neutral_tags,
