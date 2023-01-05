@@ -21,7 +21,7 @@ import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
 import { Trans } from '@lingui/macro'
 import { useQuery } from '@apollo/client'
-import { DOMAIN_GUIDANCE_PAGE, ORG_DETAILS_PAGE } from '../graphql/queries'
+import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 
