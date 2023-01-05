@@ -239,8 +239,9 @@ def process_connection_results(connection_results):
             # check if HTTP connection eventually is upgraded (redirected) to HTTPS
             if first_https_index >= 1:
                 http_eventually_upgrades = True
-
         except IndexError:
+            pass
+        except ValueError:
             pass
 
     http_down_or_redirect = not http_live or http_immediately_upgrades
