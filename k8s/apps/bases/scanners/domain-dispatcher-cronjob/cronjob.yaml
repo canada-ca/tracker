@@ -29,15 +29,9 @@ spec:
                       name: scanners
                       key: DB_USER
                 - name: DB_HOST
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: DB_HOST
+                  value: arangodb.db
                 - name: DB_PORT
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: DB_PORT
+                  value: "8529"
                 - name: DB_NAME
                   value: track_dmarc
                 - name: DB_COLLECTION
