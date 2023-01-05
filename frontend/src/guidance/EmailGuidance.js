@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Divider,
   Flex,
   ListItem,
   OrderedList,
@@ -161,13 +162,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          {spf.record === null ? (
-            <Flex borderWidth="1px" borderColor="black" px="2" py="1" rounded="md">
-              <Text fontSize="lg">
-                <Trans>SPF record could not be found during the scan.</Trans>
-              </Text>
-            </Flex>
-          ) : (
+          {spf.record && (
             <Box px="2">
               <Flex mb="1" px="2">
                 <Text mr="1" minW="7%">
@@ -206,44 +201,45 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
         </Flex>
         <AccordionPanel>
           {dkim.selectors.length > 0 ? (
-            dkim.selectors.map(({ selector, record, keyLength, keyType, positiveTags, neutralTags, negativeTags }) => {
-              return (
-                <>
-                  <Text fontWeight="bold" fontSize="xl">
-                    {selector}
-                  </Text>
-                  {record === null ? (
-                    <Flex borderWidth="1px" borderColor="black" px="2" py="1" rounded="md">
-                      <Text fontSize="lg">
-                        <Trans>DKIM record could not be found for this selector.</Trans>
-                      </Text>
-                    </Flex>
-                  ) : (
-                    <Box px="2">
-                      <Flex mb="1" px="2">
-                        <Text mr="1" minW="7%">
-                          <Trans>Record:</Trans>
-                        </Text>
-                        <Text isTruncated>{record}</Text>
-                      </Flex>
-                      <Flex mb="1" px="2" bg="gray.200">
-                        <Text mr="1" minW="7%">
-                          <Trans>Key type:</Trans>
-                        </Text>
-                        {keyType}
-                      </Flex>{' '}
-                      <Flex mb="1" px="2">
-                        <Text mr="1" minW="7%">
-                          <Trans>Key length:</Trans>
-                        </Text>
-                        {keyLength}
-                      </Flex>
-                    </Box>
-                  )}
-                  <GuidanceTagList positiveTags={positiveTags} neutralTags={neutralTags} negativeTags={negativeTags} />
-                </>
-              )
-            })
+            dkim.selectors.map(
+              ({ selector, record, keyLength, keyType, positiveTags, neutralTags, negativeTags }, idx) => {
+                return (
+                  <>
+                    <Text fontWeight="bold" fontSize="xl">
+                      Selector: {selector}
+                    </Text>
+                    {record && (
+                      <Box px="2">
+                        <Flex mb="1" px="2">
+                          <Text mr="1" minW="7%">
+                            <Trans>Record:</Trans>
+                          </Text>
+                          <Text isTruncated>{record}</Text>
+                        </Flex>
+                        <Flex mb="1" px="2" bg="gray.200">
+                          <Text mr="1" minW="7%">
+                            <Trans>Key type:</Trans>
+                          </Text>
+                          {keyType}
+                        </Flex>{' '}
+                        <Flex mb="1" px="2">
+                          <Text mr="1" minW="7%">
+                            <Trans>Key length:</Trans>
+                          </Text>
+                          {keyLength}
+                        </Flex>
+                      </Box>
+                    )}
+                    <GuidanceTagList
+                      positiveTags={positiveTags}
+                      neutralTags={neutralTags}
+                      negativeTags={negativeTags}
+                    />
+                    {idx < dkim.selectors.length && <Divider py="1" borderBottomColor="gray.900" />}
+                  </>
+                )
+              },
+            )
           ) : (
             <Flex px="2" py="1" bg="infoMuted" borderWidth="1px" borderColor="info" rounded="md" align="center">
               <InfoIcon color="info" mr="2" />
@@ -266,13 +262,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          {dmarc.record === null ? (
-            <Flex borderWidth="1px" borderColor="black" px="2" py="1" rounded="md">
-              <Text fontSize="lg">
-                <Trans>DMARC record could not be found during the scan.</Trans>
-              </Text>
-            </Flex>
-          ) : (
+          {dmarc.record && (
             <Box px="2">
               <Flex mb="1" px="2">
                 <Text mr="1" minW="7%">
