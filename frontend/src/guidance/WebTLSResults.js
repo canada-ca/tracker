@@ -33,7 +33,7 @@ export function WebTLSResults({ tlsResult }) {
   const { tls1_2CipherSuites: tls1_2, tls1_3CipherSuites: tls1_3, __typename, ...rest } = tlsResult.acceptedCipherSuites
 
   const weakProtocols = Object.keys(rest).filter((protocol) => {
-    return rest[protocol].length > 0
+    return rest[protocol]?.length > 0
   })
 
   const columnInfoStyleProps = {
@@ -47,22 +47,22 @@ export function WebTLSResults({ tlsResult }) {
   const tlsProtocols = (
     <Box>
       <Flex as={AccordionButton}>
-        <StatusIcon status={weakProtocols.length > 0 ? 'FAIL' : 'PASS'} />
+        <StatusIcon status={weakProtocols?.length > 0 ? 'FAIL' : 'PASS'} />
         <Text ml="2" mr="1" fontSize="xl">
           <Trans>Protocols</Trans>
         </Text>
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
       <AccordionPanel>
-        {weakProtocols.length > 0 ? (
+        {weakProtocols?.length > 0 ? (
           <Box px="2">
             <Text fontSize="lg" mb="1">
               <Trans>The following ciphers are from known weak protocols and must be disabled:</Trans>
             </Text>
-            {weakProtocols.map((protocol) => {
+            {weakProtocols?.map((protocol) => {
               return (
                 <>
-                  {rest[protocol].map(({ name }, idx) => {
+                  {rest[protocol]?.map(({ name }, idx) => {
                     return (
                       <Flex key={idx} {...columnInfoStyleProps}>
                         <Text color="weak" minW="50%">
@@ -88,7 +88,7 @@ export function WebTLSResults({ tlsResult }) {
   )
 
   const weakCiphers = (suite) => {
-    const weakIndex = suite.findIndex(({ strength }) => strength === 'weak')
+    const weakIndex = suite?.findIndex(({ strength }) => strength === 'weak')
     if (weakIndex === -1) return false
     return true
   }
@@ -104,12 +104,12 @@ export function WebTLSResults({ tlsResult }) {
       </Flex>
       <AccordionPanel>
         <Box px="2">
-          {tls1_2.length > 0 && (
+          {tls1_2?.length > 0 && (
             <>
               <Text fontSize="xl" fontWeight="bold" as="u" pb="2">
                 TLS 1.2
               </Text>
-              {tls1_2.map(({ name, strength }, idx) => {
+              {tls1_2?.map(({ name, strength }, idx) => {
                 return (
                   <Flex key={idx} {...columnInfoStyleProps}>
                     <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
@@ -123,12 +123,12 @@ export function WebTLSResults({ tlsResult }) {
               })}
             </>
           )}
-          {tls1_3.length > 0 && (
+          {tls1_3?.length > 0 && (
             <>
               <Text fontSize="xl" as="u" fontWeight="bold" pb="2">
                 TLS 1.3
               </Text>
-              {tls1_3.map(({ name, strength }, idx) => {
+              {tls1_3?.map(({ name, strength }, idx) => {
                 return (
                   <Flex key={idx} {...columnInfoStyleProps}>
                     <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
@@ -158,7 +158,7 @@ export function WebTLSResults({ tlsResult }) {
       </Flex>
       <AccordionPanel>
         <Box px="2">
-          {tlsResult.acceptedEllipticCurves.map(({ name, strength }, idx) => {
+          {tlsResult.acceptedEllipticCurves?.map(({ name, strength }, idx) => {
             return (
               <Flex key={idx} {...columnInfoStyleProps}>
                 <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
