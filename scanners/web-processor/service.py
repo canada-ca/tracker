@@ -134,6 +134,9 @@ async def processor_service(loop):
                         }
                     )
 
+                domain["status"]["https"] = processed_results["connection_results"]["https_status"]
+                domain["status"]["hsts"] = processed_results["connection_results"]["hsts_status"]
+
                 domain["status"]["ssl"] = processed_results["tls_result"]["ssl_status"]
                 domain["status"]["protocols"] = processed_results["tls_result"]["protocol_status"]
                 domain["status"]["ciphers"] = processed_results["tls_result"]["cipher_status"]
