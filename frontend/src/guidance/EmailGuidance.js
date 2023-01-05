@@ -13,13 +13,12 @@ import {
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { object, string } from 'prop-types'
-import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
 import { InfoIcon } from '@chakra-ui/icons'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
 
-export function EmailGuidance({ dnsResults, dmarcPhase }) {
+export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
   let dmarcSteps
   switch (dmarcPhase) {
     case 'assess':
@@ -65,7 +64,6 @@ export function EmailGuidance({ dnsResults, dmarcPhase }) {
 
   const { dkim, dmarc, spf } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
-  let negativeDkimCount = 0
   let emailPassCount = 0
   let emailInfoCount = 0
   let emailFailCount = 0
@@ -75,7 +73,6 @@ export function EmailGuidance({ dnsResults, dmarcPhase }) {
         emailPassCount += positiveTags.length
         emailInfoCount += neutralTags.length
         emailFailCount += negativeTags.length
-        negativeDkimCount += negativeTags.length
       })
     } else {
       const { positiveTags, neutralTags, negativeTags } = dnsResults[key]
@@ -157,53 +154,53 @@ export function EmailGuidance({ dnsResults, dmarcPhase }) {
       </Box>
       <AccordionItem>
         <Flex as={AccordionButton}>
-          {spf.negativeTags.length > 0 ? (
-            <NumberedStatusIcon number={spf.negativeTags.length} status="FAIL" />
-          ) : (
-            <StatusIcon boxSize="icons.lg" status="PASS" />
-          )}
+          <StatusIcon boxSize="icons.lg" status={status.spf} />
           <Text fontSize="2xl" ml="2">
             SPF
           </Text>
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          <Box px="2">
-            <Flex mb="1" px="2">
-              <Text mr="1" minW="7%">
-                <Trans>Record:</Trans>
+          {spf.record === null ? (
+            <Flex borderWidth="1px" borderColor="black" px="2" py="1" rounded="md">
+              <Text fontSize="lg">
+                <Trans>SPF record could not be found during the scan.</Trans>
               </Text>
-              {spf.record}
             </Flex>
-            <Flex mb="1" px="2" bg="gray.200">
-              <Text mr="1" minW="7%">
-                <Trans>Lookups:</Trans>
-              </Text>
-              {spf.lookups}
-            </Flex>
-            <Flex mb="1" px="2">
-              <Text mr="1" minW="7%">
-                <Trans>Default:</Trans>
-              </Text>
-              {spf.spfDefault}
-            </Flex>
-          </Box>
-          <GuidanceTagList
-            positiveTags={spf.positiveTags}
-            neutralTags={spf.neutralTags}
-            negativeTags={spf.negativeTags}
-          />
+          ) : (
+            <>
+              <Box px="2">
+                <Flex mb="1" px="2">
+                  <Text mr="1" minW="7%">
+                    <Trans>Record:</Trans>
+                  </Text>
+                  {spf.record}
+                </Flex>
+                <Flex mb="1" px="2" bg="gray.200">
+                  <Text mr="1" minW="7%">
+                    <Trans>Lookups:</Trans>
+                  </Text>
+                  {spf.lookups}
+                </Flex>
+                <Flex mb="1" px="2">
+                  <Text mr="1" minW="7%">
+                    <Trans>Default:</Trans>
+                  </Text>
+                  {spf.spfDefault}
+                </Flex>
+              </Box>
+              <GuidanceTagList
+                positiveTags={spf.positiveTags}
+                neutralTags={spf.neutralTags}
+                negativeTags={spf.negativeTags}
+              />
+            </>
+          )}
         </AccordionPanel>
       </AccordionItem>
       <AccordionItem>
         <Flex as={AccordionButton}>
-          {negativeDkimCount > 0 ? (
-            <NumberedStatusIcon number={negativeDkimCount} status="FAIL" />
-          ) : dkim.selectors.length < 1 ? (
-            <StatusIcon boxSize="icons.lg" status="FAIL" />
-          ) : (
-            <StatusIcon boxSize="icons.lg" status="PASS" />
-          )}
+          <StatusIcon boxSize="icons.lg" status={status.dkim} />
           <Text fontSize="2xl" ml="2">
             DKIM
           </Text>
@@ -256,48 +253,55 @@ export function EmailGuidance({ dnsResults, dmarcPhase }) {
       </AccordionItem>{' '}
       <AccordionItem>
         <Flex as={AccordionButton}>
-          {dmarc.negativeTags.length > 0 ? (
-            <NumberedStatusIcon number={dmarc.negativeTags.length} status="FAIL" />
-          ) : (
-            <StatusIcon boxSize="icons.lg" status="PASS" />
-          )}
+          <StatusIcon boxSize="icons.lg" status={status.dmarc} />
           <Text fontSize="2xl" ml="2">
             DMARC
           </Text>
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          <Box px="2">
-            <Flex mb="1" px="2">
-              <Text mr="1" minW="7%">
-                <Trans>Record:</Trans>
+          {dmarc.record === null ? (
+            <Flex borderWidth="1px" borderColor="black" px="2" py="1" rounded="md">
+              <Text fontSize="lg">
+                <Trans>DMARC record could not be found during the scan.</Trans>
               </Text>
-              {dmarc.record}
             </Flex>
-            <Flex mb="1" bg="gray.200" px="2">
-              <Text mr="1" minW="7%">
-                <Trans>p:</Trans>
-              </Text>
-              {dmarc.pPolicy}
-            </Flex>
-            <Flex mb="1" px="2">
-              <Text mr="1" minW="7%">
-                <Trans>sp:</Trans>
-              </Text>
-              {dmarc.spPolicy}
-            </Flex>
-            <Flex mb="1" bg="gray.200" px="2">
-              <Text mr="1" minW="7%">
-                <Trans>pct:</Trans>
-              </Text>
-              {dmarc.pct}
-            </Flex>
-          </Box>
-          <GuidanceTagList
-            positiveTags={dmarc.positiveTags}
-            neutralTags={dmarc.neutralTags}
-            negativeTags={dmarc.negativeTags}
-          />
+          ) : (
+            <>
+              {' '}
+              <Box px="2">
+                <Flex mb="1" px="2">
+                  <Text mr="1" minW="7%">
+                    <Trans>Record:</Trans>
+                  </Text>
+                  {dmarc.record}
+                </Flex>
+                <Flex mb="1" bg="gray.200" px="2">
+                  <Text mr="1" minW="7%">
+                    <Trans>p:</Trans>
+                  </Text>
+                  {dmarc.pPolicy}
+                </Flex>
+                <Flex mb="1" px="2">
+                  <Text mr="1" minW="7%">
+                    <Trans>sp:</Trans>
+                  </Text>
+                  {dmarc.spPolicy}
+                </Flex>
+                <Flex mb="1" bg="gray.200" px="2">
+                  <Text mr="1" minW="7%">
+                    <Trans>pct:</Trans>
+                  </Text>
+                  {dmarc.pct}
+                </Flex>
+              </Box>
+              <GuidanceTagList
+                positiveTags={dmarc.positiveTags}
+                neutralTags={dmarc.neutralTags}
+                negativeTags={dmarc.negativeTags}
+              />
+            </>
+          )}
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
@@ -307,4 +311,5 @@ export function EmailGuidance({ dnsResults, dmarcPhase }) {
 EmailGuidance.propTypes = {
   dnsResults: object,
   dmarcPhase: string,
+  status: object,
 }

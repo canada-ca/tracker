@@ -219,8 +219,8 @@ export function WebTLSResults({ tlsResult }) {
             </Flex>
             <AccordionPanel>
               {tlsResult?.certificateChainInfo === null ? (
-                <Flex borderWidth="1px" borderColor="black" px="2" py="1">
-                  <Text fontSize="lg" fontWeight="bold">
+                <Flex borderWidth="1px" borderColor="black" px="2" py="1" rounded="md">
+                  <Text fontSize="lg">
                     <Trans>Certificate chain info could not be found during the scan.</Trans>
                   </Text>
                 </Flex>

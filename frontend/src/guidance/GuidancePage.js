@@ -49,7 +49,15 @@ function GuidancePage() {
     return <ErrorFallbackMessage error={error} />
   }
 
-  const { domain: domainName, web: webScan, dnsScan, organizations, dmarcPhase, rcode } = data.findDomainByDomain
+  const {
+    domain: domainName,
+    web: webScan,
+    dnsScan,
+    organizations,
+    dmarcPhase,
+    rcode,
+    status,
+  } = data.findDomainByDomain
 
   const { results: webResults } = webScan?.edges[0]?.node
   const { node: dnsResults } = dnsScan?.edges[0]
@@ -127,7 +135,7 @@ function GuidancePage() {
               <WebGuidance webResults={webResults} />
             </TabPanel>
             <TabPanel>
-              <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} />
+              <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} status={status} />
             </TabPanel>
           </TabPanels>
         </Tabs>
