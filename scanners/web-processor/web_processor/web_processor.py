@@ -22,8 +22,6 @@ def process_tls_results(tls_results):
     curve_status = "info"
 
     if tls_results.get("error"):
-        neutral_tags.append("ssl9")
-
         processed_tags = {
             "neutral_tags": neutral_tags,
             "positive_tags": positive_tags,
@@ -70,7 +68,7 @@ def process_tls_results(tls_results):
             strength = "acceptable"
         else:
             strength = "weak"
-            negative_tags.append("ssl10")
+            # negative_tags.append("ssl10")
 
         accepted_elliptic_curves.append({"name": curve, "strength": strength})
 
@@ -79,19 +77,38 @@ def process_tls_results(tls_results):
             "signature_hash_algorithm"]
     except ValueError:
         signature_algorithm = None
+    except TypeError:
+        signature_algorithm = None
 
-    if tls_results["certificate_chain_info"]["certificate_chain"][0]["expired_cert"]:
-        negative_tags.append("https13")
+    try:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0]["expired_cert"]:
+            negative_tags.append("ssl9")
+    except TypeError:
+        pass
 
-    if tls_results["certificate_chain_info"]["certificate_chain"][0]["self_signed_cert"]:
-        negative_tags.append("https14")
+    try:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0]["self_signed_cert"]:
+            negative_tags.append("ssl10")
+    except TypeError:
+        pass
 
-    if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked"]:
-        negative_tags.append("https15")
+    try:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked"]:
+            negative_tags.append("ssl11")
+    except TypeError:
+        pass
 
-    if tls_results["certificate_chain_info"]["bad_hostname"]:
-        negative_tags.append("https5")
+    try:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked_status"] is None:
+            negative_tags.append("ssl12")
+    except TypeError:
+        pass
 
+    try:
+        if tls_results["certificate_chain_info"]["bad_hostname"]:
+            negative_tags.append("ssl13")
+    except TypeError:
+        pass
 
     if signature_algorithm is not None:
         for algorithm in (
