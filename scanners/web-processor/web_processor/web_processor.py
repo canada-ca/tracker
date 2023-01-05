@@ -80,6 +80,19 @@ def process_tls_results(tls_results):
     except ValueError:
         signature_algorithm = None
 
+    if tls_results["certificate_chain_info"]["certificate_chain"][0]["expired_cert"]:
+        negative_tags.append("https13")
+
+    if tls_results["certificate_chain_info"]["certificate_chain"][0]["self_signed_cert"]:
+        negative_tags.append("https14")
+
+    if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked"]:
+        negative_tags.append("https15")
+
+    if tls_results["certificate_chain_info"]["bad_hostname"]:
+        negative_tags.append("https5")
+
+
     if signature_algorithm is not None:
         for algorithm in (
             guidance["signature_algorithms"]["recommended"]
@@ -160,6 +173,7 @@ def process_connection_results(connection_results):
     https_immediately_downgrades = None
     https_eventually_downgrades = None
     hsts_parsed = None
+    hsts = None
 
     def check_https_downgrades(connections):
         for connection in connections:
@@ -176,7 +190,6 @@ def process_connection_results(connection_results):
         https_eventually_downgrades = check_https_downgrades(https_connections)
 
         # check HSTS header
-        hsts = None
         try:
             for header, value in https_connections[0]["connection"]["headers"].items():
                 if header.lower() == "strict-transport-security":
@@ -229,19 +242,35 @@ def process_connection_results(connection_results):
 
     http_down_or_redirect = not http_live or http_immediately_upgrades
 
+    # process tags
+    if https_eventually_downgrades or https_immediately_downgrades:
+        negative_tags.append("https3")
+
+    if not https_live:
+        negative_tags.append("https6")
+
+    if https_live and not (http_immediately_upgrades or http_eventually_upgrades):
+        negative_tags.append("https7")
+
+    if https_live and not http_immediately_upgrades and http_eventually_upgrades:
+        negative_tags.append("https8")
+
+    if not hsts:
+        negative_tags.append("https9")
+
+    if not http_live and not http_live:
+       neutral_tags.append("https17")
+
+    # calculate status
     if not http_live and not https_live:
         # no live endpoints, give info status
         https_status = "info"
     else:
-        # live endpoints exist, check for upgrades/downgrades
-        if http_down_or_redirect and https_live and not https_eventually_downgrades:
-            https_status = "pass"
-        else:
+        fail_tags = ["https3", "https4", "https6", "https7", "https8"]
+        if any(tag in negative_tags for tag in fail_tags):
             https_status = "fail"
-
-    # process tags
-    if https_eventually_downgrades or https_immediately_downgrades:
-        negative_tags.append("https3")
+        else:
+            https_status = "pass"
 
     # merge results
     processed_connection_results = {
