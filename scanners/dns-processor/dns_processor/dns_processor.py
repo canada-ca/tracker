@@ -53,6 +53,11 @@ def process_dkim(dkim_results):
 
     for selector in dkim_results.keys():
         dkim_tags[selector] = []
+
+        if dkim_results[selector].get("record", None) is None:
+            dkim_tags[selector].append("dkim2")
+            continue
+
         key_size = dkim_results[selector].get("key_size", None)
         key_type = dkim_results[selector].get("key_type", None)
 
@@ -180,7 +185,7 @@ def process_dmarc(dmarc_results):
 
     dmarc_tags = []
 
-    if dmarc_results.get("error") == "missing":
+    if dmarc_results.get("error") == "missing" or dmarc_results.get("record", None) is None:
         dmarc_tags.append("dmarc2")
         return get_dmarc_tag_status(dmarc_tags)
 
@@ -331,20 +336,20 @@ def process_results(results):
     dkim = results.get("dkim") or {}
     spf = results.get("spf") or {}
 
-    dkim_tags, dkim_status = ({}, "info") if (rcode is "NXDOMAIN" or results["dkim"] is None) else process_dkim(
+    dkim_tags, dkim_status = ({}, "info") if (rcode == "NXDOMAIN" or results["dkim"] is None) else process_dkim(
         results["dkim"])
 
     dmarc_tags, dmarc_status = ({
         "positive_tags": [],
         "negative_tags": [],
         "neutral_tags": []
-    }, "info") if (rcode is "NXDOMAIN" or results["dmarc"] is None) else process_dmarc(results["dmarc"])
+    }, "info") if (rcode == "NXDOMAIN" or results["dmarc"] is None) else process_dmarc(results["dmarc"])
 
     spf_tags, spf_status = ({
         "positive_tags": [],
         "negative_tags": [],
         "neutral_tags": []
-    }, "info") if (rcode is "NXDOMAIN" or results["spf"] is None) else process_spf(results["spf"])
+    }, "info") if (rcode == "NXDOMAIN" or results["spf"] is None) else process_spf(results["spf"])
 
     if dmarc_tags:
         all_dmarc_tags = dmarc_tags["negative_tags"] + dmarc_tags["neutral_tags"] + dmarc_tags["positive_tags"]
@@ -393,10 +398,6 @@ def process_results(results):
     }
     if not dkim.get("error", None):
         for selector in dkim.keys():
-            if dkim.get(selector, {}).get("error", None):
-                dkim_results["selectors"][selector] = results["dkim"][selector]
-                continue
-
             dkim_results["selectors"][selector] = {
                 "status": dkim_tags[selector].get("status", None),
                 "record": results["dkim"][selector].get("record", None),
