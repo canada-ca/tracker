@@ -198,6 +198,9 @@ def process_connection_results(connection_results):
         except KeyError:
             pass
 
+        # HTTPS is live, HSTS is required. Default to false
+        hsts = False
+
         if hsts:
             max_age = None
             include_subdomains = False
@@ -249,10 +252,10 @@ def process_connection_results(connection_results):
     if not https_live:
         negative_tags.append("https6")
 
-    if https_live and not (http_immediately_upgrades or http_eventually_upgrades):
+    if https_live and http_live and not (http_immediately_upgrades or http_eventually_upgrades):
         negative_tags.append("https7")
 
-    if https_live and not http_immediately_upgrades and http_eventually_upgrades:
+    if https_live and http_live and not http_immediately_upgrades and http_eventually_upgrades:
         negative_tags.append("https8")
 
     if not hsts:
