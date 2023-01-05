@@ -40,7 +40,7 @@ function GuidancePage() {
   if (loading) {
     return (
       <LoadingMessage>
-        <Trans>Organization Details</Trans>
+        <Trans>Guidance results</Trans>
       </LoadingMessage>
     )
   }
