@@ -218,170 +218,183 @@ export function WebTLSResults({ tlsResult }) {
               <AccordionIcon boxSize="icons.xl" />
             </Flex>
             <AccordionPanel>
-              <Box fontSize="lg" px="2">
-                <Flex align="center" mb="1" px="2" bg={badHostname ? 'weakMuted' : ''}>
-                  <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
-                  <Text px="1" minW="50%" fontWeight={badHostname ? 'bold' : ''}>
-                    <Trans>Hostname Matches</Trans>
+              {tlsResult?.certificateChainInfo === null ? (
+                <Flex borderWidth="1px" borderColor="black" px="2" py="1">
+                  <Text fontSize="lg" fontWeight="bold">
+                    <Trans>Certificate chain info could not be found during the scan.</Trans>
                   </Text>
-                  <Text fontWeight={badHostname ? 'bold' : ''}>{badHostname ? t`No` : t`Yes`}</Text>
                 </Flex>
-                <Flex align="center" mb="1" px="2" bg="gray.200">
-                  <StatusIcon status="INFO" />
-                  <Text px="1" minW="50%">
-                    <Trans>Must Staple</Trans>
-                  </Text>
-                  <Text>{mustHaveStaple ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex align="center" mb="1" px="2">
-                  <StatusIcon status={leafCertificateIsEv ? 'PASS' : 'INFO'} />
-                  <Text px="1" minW="50%">
-                    <Trans>Leaf Certificate is EV</Trans>
-                  </Text>
-                  <Text>{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex align="center" mb="1" px="2" bg="gray.200">
-                  <StatusIcon status="INFO" />
-                  <Text px="1" minW="50%">
-                    <Trans>Received Chain Contains Anchor Certificate</Trans>
-                  </Text>
-                  <Text>{receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex align="center" mb="1" px="2">
-                  <StatusIcon status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'} />
-                  <Text px="1" minW="50%">
-                    <Trans>Received Chain Has Valid Order</Trans>
-                  </Text>
-                  <Text>{receivedChainHasValidOrder ? t`Yes` : t`No`}</Text>
-                </Flex>
-                <Flex align="center" mb="1" px="2" bg="gray.200">
-                  <StatusIcon status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'} />
-                  <Text px="1" minW="50%">
-                    <Trans>Verified Chain Free of SHA1 Signature</Trans>
-                  </Text>
-                  <Text>{verifiedChainHasSha1Signature ? t`No` : t`Yes`}</Text>
-                </Flex>
-                <Flex align="center" mb="1" px="2">
-                  <StatusIcon status={verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'} />
-                  <Text px="1" minW="50%">
-                    <Trans>Verified Chain Free of Legacy Symantec Anchor</Trans>
-                  </Text>
-                  <Text>{verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}</Text>
-                </Flex>
-              </Box>
-              <Accordion allowMultiple defaultIndex={[]}>
-                {certificateChain.map(
-                  (
-                    {
-                      notValidBefore,
-                      notValidAfter,
-                      issuer,
-                      subject,
-                      expiredCert,
-                      selfSignedCert,
-                      certRevoked,
-                      certRevokedStatus,
-                      commonNames,
-                      serialNumber,
-                      signatureHashAlgorithm,
-                      sanList,
-                    },
-                    idx,
-                  ) => {
-                    return (
-                      <AccordionItem key={idx}>
-                        <Box
-                          rounded="md"
-                          mx="2"
-                          px="2"
-                          my="2"
-                          borderWidth="1px"
-                          bg={expiredCert || certRevoked || selfSignedCert ? 'weakMuted' : 'gray.100'}
-                          borderColor={expiredCert || certRevoked || selfSignedCert ? 'weak' : 'gray.300'}
-                        >
-                          <Text fontWeight="bold">
-                            {idx + 1}. {commonNames[0]}
-                          </Text>
-                          <Flex align="center">
-                            <Text mr="1">
-                              <Trans>Not After:</Trans>
-                            </Text>
-                            <Text color={expiredCert && 'weak'}>{notValidAfter} UTC</Text>
-                          </Flex>
-                          <Text>
-                            <Trans>Siganture Hash:</Trans> {signatureHashAlgorithm.toUpperCase()}
-                          </Text>
-                          <AccordionButton color="blue.500" variant="link">
-                            <PlusSquareIcon mr="1" />
-                            <Trans>More details</Trans>
-                          </AccordionButton>
-                          <AccordionPanel>
-                            <Text>
-                              <Trans>Names:</Trans> {commonNames}
-                            </Text>
-                            <Text>
-                              <Trans>Subject:</Trans> {subject}
-                            </Text>
-                            <Text>
-                              <Trans>Serial:</Trans> {serialNumber}
-                            </Text>
-                            <Text>
-                              <Trans>Not Before:</Trans> {notValidBefore}
-                            </Text>
-                            <Text>
-                              <Trans>Not After:</Trans> {notValidAfter}
-                            </Text>
-                            <Text fontWeight={expiredCert ? 'bold' : ''} color={expiredCert ? 'weak' : 'black'}>
-                              <Trans>Expired:</Trans> {expiredCert ? t`Yes` : t`No`}
-                            </Text>
-                            <Text>
-                              <Trans>Issuer:</Trans> {issuer}
-                            </Text>
-                            <Text fontWeight={selfSignedCert ? 'bold' : ''} color={selfSignedCert ? 'weak' : 'black'}>
-                              <Trans>Self-signed:</Trans> {selfSignedCert ? t`Yes` : t`No`}
-                            </Text>
-                            <Text fontWeight={certRevoked ? 'bold' : ''} color={certRevoked ? 'weak' : 'black'}>
-                              <Trans>Revoked:</Trans> {certRevoked ? t`Yes` : t`No`} ({certRevokedStatus})
-                            </Text>
-                            <Text>
-                              <Trans>Hash Algorithm:</Trans> {signatureHashAlgorithm.toUpperCase()}
-                            </Text>
-                            <Flex>
-                              <Text mr="1">
-                                <Trans>SAN List:</Trans>
-                              </Text>
-                              {sanList.map((san, idx) => {
-                                return (
-                                  <>
-                                    {san}
-                                    {idx < sanList.length - 1 && ', '}
-                                  </>
-                                )
-                              })}
-                            </Flex>
-                          </AccordionPanel>
-                        </Box>
-                      </AccordionItem>
-                    )
-                  },
-                )}
-              </Accordion>
-              <Box mx="2" mt="2">
-                <Text mb="1" fontWeight="bold" textAlign="lg">
-                  Certification Paths
-                </Text>
-                {pathValidationResults.map(({ trustStore, wasValidationSuccessful, opensslErrorString }, idx) => {
-                  return (
-                    <Flex align="center" py="1" key={idx} px="2" bg={idx % 2 !== 0 ? 'gray.200' : 'gray.50'}>
-                      <StatusIcon status={wasValidationSuccessful ? 'PASS' : 'FAIL'} />
-                      <Text mx="1">
-                        {trustStore.name} ({trustStore.version})
+              ) : (
+                <>
+                  <Box fontSize="lg" px="2">
+                    <Flex align="center" mb="1" px="2" bg={badHostname ? 'weakMuted' : ''}>
+                      <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
+                      <Text px="1" minW="50%" fontWeight={badHostname ? 'bold' : ''}>
+                        <Trans>Hostname Matches</Trans>
                       </Text>
-                      {!wasValidationSuccessful && <Text color="weak">{opensslErrorString}</Text>}
+                      <Text fontWeight={badHostname ? 'bold' : ''}>{badHostname ? t`No` : t`Yes`}</Text>
                     </Flex>
-                  )
-                })}
-              </Box>
+                    <Flex align="center" mb="1" px="2" bg="gray.200">
+                      <StatusIcon status="INFO" />
+                      <Text px="1" minW="50%">
+                        <Trans>Must Staple</Trans>
+                      </Text>
+                      <Text>{mustHaveStaple ? t`Yes` : t`No`}</Text>
+                    </Flex>
+                    <Flex align="center" mb="1" px="2">
+                      <StatusIcon status={leafCertificateIsEv ? 'PASS' : 'INFO'} />
+                      <Text px="1" minW="50%">
+                        <Trans>Leaf Certificate is EV</Trans>
+                      </Text>
+                      <Text>{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
+                    </Flex>
+                    <Flex align="center" mb="1" px="2" bg="gray.200">
+                      <StatusIcon status="INFO" />
+                      <Text px="1" minW="50%">
+                        <Trans>Received Chain Contains Anchor Certificate</Trans>
+                      </Text>
+                      <Text>{receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}</Text>
+                    </Flex>
+                    <Flex align="center" mb="1" px="2">
+                      <StatusIcon status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'} />
+                      <Text px="1" minW="50%">
+                        <Trans>Received Chain Has Valid Order</Trans>
+                      </Text>
+                      <Text>{receivedChainHasValidOrder ? t`Yes` : t`No`}</Text>
+                    </Flex>
+                    <Flex align="center" mb="1" px="2" bg="gray.200">
+                      <StatusIcon status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'} />
+                      <Text px="1" minW="50%">
+                        <Trans>Verified Chain Free of SHA1 Signature</Trans>
+                      </Text>
+                      <Text>{verifiedChainHasSha1Signature ? t`No` : t`Yes`}</Text>
+                    </Flex>
+                    <Flex align="center" mb="1" px="2">
+                      <StatusIcon status={verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'} />
+                      <Text px="1" minW="50%">
+                        <Trans>Verified Chain Free of Legacy Symantec Anchor</Trans>
+                      </Text>
+                      <Text>{verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}</Text>
+                    </Flex>
+                  </Box>
+                  <Accordion allowMultiple defaultIndex={[]}>
+                    {certificateChain.map(
+                      (
+                        {
+                          notValidBefore,
+                          notValidAfter,
+                          issuer,
+                          subject,
+                          expiredCert,
+                          selfSignedCert,
+                          certRevoked,
+                          certRevokedStatus,
+                          commonNames,
+                          serialNumber,
+                          signatureHashAlgorithm,
+                          sanList,
+                        },
+                        idx,
+                      ) => {
+                        return (
+                          <AccordionItem key={idx}>
+                            <Box
+                              rounded="md"
+                              mx="2"
+                              px="2"
+                              my="2"
+                              borderWidth="1px"
+                              bg={expiredCert || certRevoked || selfSignedCert ? 'weakMuted' : 'gray.100'}
+                              borderColor={expiredCert || certRevoked || selfSignedCert ? 'weak' : 'gray.300'}
+                            >
+                              <Text fontWeight="bold">
+                                {idx + 1}. {commonNames[0]}
+                              </Text>
+                              <Flex align="center">
+                                <Text mr="1">
+                                  <Trans>Not After:</Trans>
+                                </Text>
+                                <Text color={expiredCert && 'weak'}>{notValidAfter} UTC</Text>
+                              </Flex>
+                              <Text>
+                                <Trans>Siganture Hash:</Trans> {signatureHashAlgorithm.toUpperCase()}
+                              </Text>
+                              <AccordionButton color="blue.500" variant="link">
+                                <PlusSquareIcon mr="1" />
+                                <Trans>More details</Trans>
+                              </AccordionButton>
+                              <AccordionPanel>
+                                <Text>
+                                  <Trans>Names:</Trans> {commonNames}
+                                </Text>
+                                <Text>
+                                  <Trans>Subject:</Trans> {subject}
+                                </Text>
+                                <Text>
+                                  <Trans>Serial:</Trans> {serialNumber}
+                                </Text>
+                                <Text>
+                                  <Trans>Not Before:</Trans> {notValidBefore}
+                                </Text>
+                                <Text>
+                                  <Trans>Not After:</Trans> {notValidAfter}
+                                </Text>
+                                <Text fontWeight={expiredCert ? 'bold' : ''} color={expiredCert ? 'weak' : 'black'}>
+                                  <Trans>Expired:</Trans> {expiredCert ? t`Yes` : t`No`}
+                                </Text>
+                                <Text>
+                                  <Trans>Issuer:</Trans> {issuer}
+                                </Text>
+                                <Text
+                                  fontWeight={selfSignedCert ? 'bold' : ''}
+                                  color={selfSignedCert ? 'weak' : 'black'}
+                                >
+                                  <Trans>Self-signed:</Trans> {selfSignedCert ? t`Yes` : t`No`}
+                                </Text>
+                                <Text fontWeight={certRevoked ? 'bold' : ''} color={certRevoked ? 'weak' : 'black'}>
+                                  <Trans>Revoked:</Trans> {certRevoked ? t`Yes` : t`No`} ({certRevokedStatus})
+                                </Text>
+                                <Text>
+                                  <Trans>Hash Algorithm:</Trans> {signatureHashAlgorithm.toUpperCase()}
+                                </Text>
+                                <Flex>
+                                  <Text mr="1">
+                                    <Trans>SAN List:</Trans>
+                                  </Text>
+                                  {sanList.map((san, idx) => {
+                                    return (
+                                      <>
+                                        {san}
+                                        {idx < sanList.length - 1 && ', '}
+                                      </>
+                                    )
+                                  })}
+                                </Flex>
+                              </AccordionPanel>
+                            </Box>
+                          </AccordionItem>
+                        )
+                      },
+                    )}
+                  </Accordion>
+                  <Box mx="2" mt="2">
+                    <Text mb="1" fontWeight="bold" textAlign="lg">
+                      Certification Paths
+                    </Text>
+                    {pathValidationResults.map(({ trustStore, wasValidationSuccessful, opensslErrorString }, idx) => {
+                      return (
+                        <Flex align="center" py="1" key={idx} px="2" bg={idx % 2 !== 0 ? 'gray.200' : 'gray.50'}>
+                          <StatusIcon status={wasValidationSuccessful ? 'PASS' : 'FAIL'} />
+                          <Text mx="1">
+                            {trustStore.name} ({trustStore.version})
+                          </Text>
+                          {!wasValidationSuccessful && <Text color="weak">{opensslErrorString}</Text>}
+                        </Flex>
+                      )
+                    })}
+                  </Box>
+                </>
+              )}
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

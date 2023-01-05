@@ -197,8 +197,10 @@ export function EmailGuidance({ dnsResults, dmarcPhase }) {
       </AccordionItem>
       <AccordionItem>
         <Flex as={AccordionButton}>
-          {dmarc.negativeTags.length > 0 ? (
+          {negativeDkimCount > 0 ? (
             <NumberedStatusIcon number={negativeDkimCount} status="FAIL" />
+          ) : dkim.selectors.length < 1 ? (
+            <StatusIcon boxSize="icons.lg" status="FAIL" />
           ) : (
             <StatusIcon boxSize="icons.lg" status="PASS" />
           )}
