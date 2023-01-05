@@ -533,6 +533,7 @@ export const PAGINATED_DOMAINS = gql`
         node {
           id
           domain
+          rcode
           status {
             ciphers
             curves

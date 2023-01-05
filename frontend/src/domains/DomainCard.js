@@ -1,6 +1,7 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
+  Badge,
   Box,
   Button,
   Divider,
@@ -25,7 +26,7 @@ import { useUserVar } from '../utilities/userState'
 import { ABTestingWrapper } from '../app/ABTestWrapper'
 import { ABTestVariant } from '../app/ABTestVariant'
 
-export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
+export function DomainCard({ id, url, status, hasDMARCReport, tags, rcode, ...rest }) {
   const location = useLocation()
   const toast = useToast()
   const { isLoggedIn } = useUserVar()
@@ -111,9 +112,16 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
           flexShrink={{ md: '0.5' }}
           minWidth={{ md: '3em' }}
         >
-          <Text fontWeight="semibold">
-            <Trans>Domain:</Trans>
-          </Text>
+          <Flex flexDirection="row">
+            <Text fontWeight="semibold" mr="6">
+              <Trans>Domain:</Trans>
+            </Text>
+            {rcode === 'NXDOMAIN' && (
+              <Badge colorScheme="red" mr="auto">
+                NXDOMAIN
+              </Badge>
+            )}
+          </Flex>
           <Text isTruncated>{url}</Text>
           <ABTestingWrapper insiderVariantName="B">
             <ABTestVariant name="B">
@@ -225,6 +233,7 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, ...rest }) {
 DomainCard.propTypes = {
   id: string,
   url: string.isRequired,
+  rcode: string,
   status: object,
   hasDMARCReport: bool,
   tags: array,
