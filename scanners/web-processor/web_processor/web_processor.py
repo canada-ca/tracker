@@ -199,7 +199,7 @@ def process_connection_results(connection_results):
             pass
 
         # HTTPS is live, HSTS is required. Default to false
-        hsts_status = False
+        hsts_status = "fail"
 
         if hsts:
             max_age = None
