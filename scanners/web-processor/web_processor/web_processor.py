@@ -280,7 +280,7 @@ def process_connection_results(connection_results):
         negative_tags.append("https9")
 
     if not http_live and not http_live:
-       neutral_tags.append("https17")
+       neutral_tags.append("https13")
 
     # calculate status
     if not http_live and not https_live:
