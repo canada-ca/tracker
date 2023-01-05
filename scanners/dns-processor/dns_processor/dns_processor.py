@@ -113,7 +113,7 @@ def process_spf(spf_results):
     spf_tags = []
 
     if (spf_results.get("error") == "missing") or (
-        spf_results.get("record", "null") == "null"
+        spf_results.get("record", None) is None
     ):
         spf_tags.append("spf2")
         return get_spf_tag_status(spf_tags)
