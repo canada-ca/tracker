@@ -51,8 +51,8 @@ function GuidancePage() {
 
   const { domain: domainName, web: webScan, dnsScan, organizations, dmarcPhase, rcode } = data.findDomainByDomain
 
-  const { results: webResults } = webScan.edges[0].node
-  const { node: dnsResults } = dnsScan.edges[0]
+  const { results: webResults } = webScan?.edges[0]?.node
+  const { node: dnsResults } = dnsScan?.edges[0]
 
   return (
     <Flex flexDirection="column" width="100%">
