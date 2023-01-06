@@ -30,7 +30,6 @@ function GuidancePage() {
 
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
-    // errorPolicy: 'ignore', // allow partial success
   })
 
   const history = useHistory()
@@ -59,8 +58,63 @@ function GuidancePage() {
     status,
   } = data.findDomainByDomain
 
-  const { results: webResults } = webScan?.edges[0]?.node
-  const { node: dnsResults } = dnsScan?.edges[0]
+  let guidanceResults
+  if (rcode !== 'NOERROR') {
+    guidanceResults = (
+      <Box fontSize="lg">
+        <Flex>
+          <Text mr="1">
+            <Trans>A DNS request for this service has resulted in the following error code:</Trans>
+          </Text>
+          <Text fontWeight="bold">{rcode}</Text>
+        </Flex>
+        <Text>
+          <Trans>
+            If you believe this could be the result of an issue with the scan, rescan the service using the refresh
+            button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be
+            removed from all affiliated organizations.
+          </Trans>
+        </Text>
+      </Box>
+    )
+  } else {
+    const { results: webResults } = webScan?.edges[0]?.node
+    const { node: dnsResults } = dnsScan?.edges[0]
+
+    const noScanData = (
+      <Flex fontSize="xl" fontWeight="bold" textAlign="center" px="2" py="1">
+        <Text>
+          <Trans>
+            No scan data is currently available for this service. You may request a scan using the refresh button, or
+            wait up to 24 hours for data to refresh.
+          </Trans>
+        </Text>
+      </Flex>
+    )
+
+    guidanceResults = (
+      <Tabs isFitted variant="enclosed-colored">
+        <TabList mb="4">
+          <Tab borderTopWidth="0.25">
+            <Trans>Web Guidance</Trans>
+          </Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>Email Guidance</Trans>
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>{webScan.edges.length === 0 ? noScanData : <WebGuidance webResults={webResults} />}</TabPanel>
+          <TabPanel>
+            {dnsScan.edges.length === 0 ? (
+              noScanData
+            ) : (
+              <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} status={status} />
+            )}
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    )
+  }
 
   return (
     <Flex flexDirection="column" width="100%">
@@ -103,43 +157,7 @@ function GuidancePage() {
           )
         })}
       </Flex>
-
-      {rcode !== 'NOERROR' ? (
-        <Box fontSize="lg">
-          <Flex>
-            <Text mr="1">
-              <Trans>A DNS request for this service has resulted in the following error code:</Trans>
-            </Text>
-            <Text fontWeight="bold">{rcode}</Text>
-          </Flex>
-          <Text>
-            <Trans>
-              If you believe this could be the result of an issue with the scan, rescan the service using the refresh
-              button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be
-              removed from all affiliated organizations.
-            </Trans>
-          </Text>
-        </Box>
-      ) : (
-        <Tabs isFitted variant="enclosed-colored">
-          <TabList mb="4">
-            <Tab borderTopWidth="0.25">
-              <Trans>Web Guidance</Trans>
-            </Tab>
-            <Tab borderTopWidth="0.25">
-              <Trans>Email Guidance</Trans>
-            </Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <WebGuidance webResults={webResults} />
-            </TabPanel>
-            <TabPanel>
-              <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} status={status} />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      )}
+      {guidanceResults}
     </Flex>
   )
 }
