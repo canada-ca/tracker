@@ -110,29 +110,35 @@ export function WebGuidance({ webResults }) {
     return ipAddress === selectedEndpoint
   }).results
 
-  if (!isWebHosting) {
-    return (
-      <Flex fontSize="xl" fontWeight="bold" px="2" py="1" textAlign="center">
-        <Text>
-          <Trans>
-            This service is not web-hosting and does not require compliance with the Web Sites and Services Management
-            Configuration Requirements.
-          </Trans>
-        </Text>
-      </Flex>
-    )
-  } else {
-    return (
-      <>
-        <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-          {endPointSummary}
-          {endpointSelect}
-          <WebConnectionResults connectionResults={connectionResults} />
-          <WebTLSResults tlsResult={tlsResult} />
-        </Accordion>
-      </>
-    )
-  }
+  return (
+    <>
+      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        {!isWebHosting && (
+          <Flex
+            fontSize="lg"
+            fontWeight="bold"
+            px="2"
+            py="1"
+            textAlign="center"
+            borderWidth="1px"
+            borderColor="black"
+            rounded="md"
+          >
+            <Text>
+              <Trans>
+                This service is not web-hosting and does not require compliance with the Web Sites and Services
+                Management Configuration Requirements.
+              </Trans>
+            </Text>
+          </Flex>
+        )}
+        {endPointSummary}
+        {endpointSelect}
+        <WebConnectionResults connectionResults={connectionResults} />
+        <WebTLSResults tlsResult={tlsResult} />
+      </Accordion>
+    </>
+  )
 }
 
 WebGuidance.propTypes = {
