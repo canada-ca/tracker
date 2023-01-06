@@ -195,6 +195,14 @@ def process_connection_results(connection_results):
     hsts_parsed = None
     hsts = None
 
+    # set hsts status defaults
+    if http_live or https_live:
+        # default "fail" if either endpoint alive
+        hsts_status = "fail"
+    elif not http_live and not https_live:
+        # status should be "info" if neither endpoint live
+        hsts_status = "info"
+
     def check_https_downgrades(connections):
         for connection in connections:
             if connection["scheme"] == "http":
@@ -217,9 +225,6 @@ def process_connection_results(connection_results):
                     break
         except KeyError:
             pass
-
-        # HTTPS is live, HSTS is required. Default to false
-        hsts_status = "fail"
 
         if hsts:
             max_age = None
