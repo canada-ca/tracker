@@ -5,6 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 module.exports = (env) => {
   return {
     mode: env.production ? 'production' : 'development',
+    devtool: env.production ? false : 'inline-source-map',
     entry: {
       main: './src/index.js',
     },
@@ -27,13 +28,6 @@ module.exports = (env) => {
         template: './src/html.js',
       }),
     ],
-    devServer: {
-      port: 3000,
-      host: '0.0.0.0',
-      devMiddleware: { publicPath: '/' },
-      hot: true,
-      historyApiFallback: { disableDotRule: true },
-    },
     module: {
       rules: [
         {
