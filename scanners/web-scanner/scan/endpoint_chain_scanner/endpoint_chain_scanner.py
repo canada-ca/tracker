@@ -6,7 +6,6 @@ import logging
 import requests
 from requests.adapters import HTTPAdapter
 from requests import Response, PreparedRequest
-from requests_toolbelt.adapters import host_header_ssl
 from dataclasses import dataclass, field, asdict
 
 logger = logging.getLogger(__name__)
