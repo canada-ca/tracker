@@ -9,7 +9,7 @@ pycparser==2.21
 pydantic==1.9.2
 python-dotenv==0.21.0
 requests==2.28.1
-requests-toolbelt==0.9.1
+requests-toolbelt==0.10.1
 sslyze==5.0.6
 tls-parser==2.0.0
 typing_extensions==4.3.0

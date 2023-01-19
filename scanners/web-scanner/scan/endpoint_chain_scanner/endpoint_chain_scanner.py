@@ -4,8 +4,8 @@ from urllib.parse import urlsplit
 
 import logging
 import requests
+from requests.adapters import HTTPAdapter
 from requests import Response, PreparedRequest
-from requests.exceptions import ConnectTimeout, ConnectionError
 from requests_toolbelt.adapters import host_header_ssl
 from dataclasses import dataclass, field, asdict
 
@@ -72,6 +72,30 @@ class HTTPSConnectionRequest(HTTPConnectionRequest):
     scheme: str = "https"
 
 
+class HostHeaderSSLAdapter(HTTPAdapter):
+    # Copied from https://github.com/requests/toolbelt/blob/9f6209553bbf8f31caccaf8efe15c89ec74dd147/requests_toolbelt/adapters/host_header_ssl.py
+
+    def send(self, request, **kwargs):
+        # HTTP headers are case-insensitive (RFC 7230)
+        host_header = None
+        for header in request.headers:
+            if header.lower() == "host":
+                host_header = request.headers[header]
+                break
+
+        connection_pool_kwargs = self.poolmanager.connection_pool_kw
+
+        if host_header:
+            connection_pool_kwargs["assert_hostname"] = host_header
+            connection_pool_kwargs["server_hostname"] = host_header
+        elif "assert_hostname" in connection_pool_kwargs:
+            # an assert_hostname from a previous request may have been left
+            connection_pool_kwargs.pop("assert_hostname", None)
+            connection_pool_kwargs.pop("server_hostname", None)
+
+        return super(HostHeaderSSLAdapter, self).send(request, **kwargs)
+
+
 def request_connection(uri: Optional[str] = None,
                        ip_address: Optional[str] = None,
                        prepared_request: Optional[PreparedRequest] = None):
@@ -89,7 +113,7 @@ def request_connection(uri: Optional[str] = None,
                 req = prepared_request
             else:
                 if scheme.lower() == "https":
-                    session.mount("https://", host_header_ssl.HostHeaderSSLAdapter())
+                    session.mount("https://", HostHeaderSSLAdapter())
 
                 if ip_address:
                     req = session.prepare_request(requests.Request("GET", f"{scheme.lower()}://{ip_address}",
