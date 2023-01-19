@@ -21,9 +21,20 @@ export function WebGuidance({ webResults }) {
   let totalWebPass = 0
   let totalWebInfo = 0
   let totalWebFail = 0
+  let isWebHosting = false
   webResults.forEach(({ results }) => {
     const { positiveTags: tlsPass, neutralTags: tlsInfo, negativeTags: tlsFail } = results.tlsResult
-    const { positiveTags: httpsPass, neutralTags: httpsInfo, negativeTags: httpsFail } = results.connectionResults
+    const {
+      positiveTags: httpsPass,
+      neutralTags: httpsInfo,
+      negativeTags: httpsFail,
+      httpLive,
+      httpsLive,
+    } = results.connectionResults
+
+    if (!isWebHosting && (httpLive || httpsLive)) {
+      isWebHosting = true
+    }
 
     const endpointPass = tlsPass.length + httpsPass.length
     const endpointInfo = tlsInfo.length + httpsInfo.length
@@ -102,6 +113,25 @@ export function WebGuidance({ webResults }) {
   return (
     <>
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        {!isWebHosting && (
+          <Flex
+            fontSize="lg"
+            fontWeight="bold"
+            px="2"
+            py="1"
+            textAlign="center"
+            borderWidth="1px"
+            borderColor="black"
+            rounded="md"
+          >
+            <Text>
+              <Trans>
+                This service is not web-hosting and does not require compliance with the Web Sites and Services
+                Management Configuration Requirements.
+              </Trans>
+            </Text>
+          </Flex>
+        )}
         {endPointSummary}
         {endpointSelect}
         <WebConnectionResults connectionResults={connectionResults} />
