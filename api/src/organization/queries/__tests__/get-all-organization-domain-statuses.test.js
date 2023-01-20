@@ -5,9 +5,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
-import {
-  loadAllOrganizationDomainStatuses,
-} from '../../loaders'
+import { loadAllOrganizationDomainStatuses } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
@@ -242,9 +240,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         )
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,ITPIN,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-Definitely Treasury Board of Canada Secretariat,Définitivement Secrétariat du Conseil du Trésor du Canada,domain.one,fail,fail,pass,pass,pass,pass,pass,pass,pass
-Not Treasury Board of Canada Secretariat,Ne Pas Secrétariat du Conseil Trésor du Canada,domain.two,fail,pass,fail,fail,pass,fail,pass,pass,fail`,
+            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
+"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
+"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
           },
         }
         expect(response).toEqual(expectedResponse)
@@ -302,13 +300,15 @@ Not Treasury Board of Canada Secretariat,Ne Pas Secrétariat du Conseil Trésor 
             },
           },
         )
+
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,ITPIN,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-Definitely Treasury Board of Canada Secretariat,Définitivement Secrétariat du Conseil du Trésor du Canada,domain.one,fail,fail,pass,pass,pass,pass,pass,pass,pass
-Not Treasury Board of Canada Secretariat,Ne Pas Secrétariat du Conseil Trésor du Canada,domain.two,fail,pass,fail,fail,pass,fail,pass,pass,fail`,
+            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
+"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
+"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
           },
         }
+
         expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([
           `User ${user._key} successfully retrieved all domain statuses.`,
@@ -316,7 +316,7 @@ Not Treasury Board of Canada Secretariat,Ne Pas Secrétariat du Conseil Trésor 
       })
     })
   })
-    describe('login is required', () => {
+  describe('login is required', () => {
     beforeEach(async () => {
       loginRequiredBool = true
     })
@@ -361,16 +361,16 @@ Not Treasury Board of Canada Secretariat,Ne Pas Secrétariat du Conseil Trésor 
             },
           },
         )
-                  const error = [
-            new GraphQLError(
-              "Permissions error. You do not have sufficient permissions to access this data.",
-            ),
-          ]
+        const error = [
+          new GraphQLError(
+            'Permissions error. You do not have sufficient permissions to access this data.',
+          ),
+        ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to load all organization statuses but login is required and they are not a super admin.`,
-          ])
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} attempted to load all organization statuses but login is required and they are not a super admin.`,
+        ])
       })
     })
     describe('the user is a super admin', () => {
@@ -424,9 +424,9 @@ Not Treasury Board of Canada Secretariat,Ne Pas Secrétariat du Conseil Trésor 
         )
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,ITPIN,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-Definitely Treasury Board of Canada Secretariat,Définitivement Secrétariat du Conseil du Trésor du Canada,domain.one,fail,fail,pass,pass,pass,pass,pass,pass,pass
-Not Treasury Board of Canada Secretariat,Ne Pas Secrétariat du Conseil Trésor du Canada,domain.two,fail,pass,fail,fail,pass,fail,pass,pass,fail`,
+            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
+"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
+"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
           },
         }
         expect(response).toEqual(expectedResponse)

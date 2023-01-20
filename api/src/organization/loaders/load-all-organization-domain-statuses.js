@@ -2,7 +2,6 @@ import { t } from '@lingui/macro'
 
 export const loadAllOrganizationDomainStatuses =
   ({ query, userKey, i18n }) =>
-
   async () => {
     let statuses
 
@@ -17,7 +16,6 @@ export const loadAllOrganizationDomainStatuses =
                       "Organization name (English)": org.orgDetails.en.name,
                       "Nom de l'organisation (Français)": org.orgDetails.fr.name,
                       "Domain": domain.domain,
-                      "ITPIN": [domain.status.https,domain.status.hsts,domain.status.ciphers,domain.status.curves,domain.status.protocols] ANY == "fail" ? "fail" : "pass",
                       "HTTPS": domain.status.https,
                       "HSTS": domain.status.hsts,
                       "Ciphers": domain.status.ciphers,
