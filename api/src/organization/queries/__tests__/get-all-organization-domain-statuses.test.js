@@ -240,9 +240,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         )
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,ITPIN,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","fail","pass","pass","pass","pass","pass","pass","pass"
-"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","fail","pass","fail","fail","pass","fail","pass","pass","fail"`,
+            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
+"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
+"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
           },
         }
         expect(response).toEqual(expectedResponse)
@@ -303,9 +303,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,ITPIN,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","fail","pass","pass","pass","pass","pass","pass","pass"
-"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","fail","pass","fail","fail","pass","fail","pass","pass","fail"`,
+            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
+"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
+"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
           },
         }
 
@@ -424,9 +424,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         )
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,ITPIN,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","fail","pass","pass","pass","pass","pass","pass","pass"
-"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","fail","pass","fail","fail","pass","fail","pass","pass","fail"`,
+            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
+"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
+"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
           },
         }
         expect(response).toEqual(expectedResponse)
