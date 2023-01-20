@@ -49,7 +49,6 @@ export const getAllOrganizationDomainStatuses = {
       'Organization name (English)',
       "Nom de l'organisation (Français)",
       'Domain',
-      'ITPIN',
       'HTTPS',
       'HSTS',
       'Ciphers',
