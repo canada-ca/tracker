@@ -84,31 +84,39 @@ def process_tls_results(tls_results):
 
     try:
         if tls_results["certificate_chain_info"]["certificate_chain"][0]["expired_cert"]:
-            negative_tags.append("ssl9")
-    except TypeError:
-        pass
-
-    try:
-        if tls_results["certificate_chain_info"]["certificate_chain"][0]["self_signed_cert"]:
             negative_tags.append("ssl10")
     except TypeError:
         pass
 
     try:
-        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked"]:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0]["self_signed_cert"]:
             negative_tags.append("ssl11")
     except TypeError:
         pass
 
     try:
-        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked_status"] is None:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked"]:
             negative_tags.append("ssl12")
     except TypeError:
         pass
 
     try:
-        if tls_results["certificate_chain_info"]["bad_hostname"]:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked_status"] is None:
             negative_tags.append("ssl13")
+    except TypeError:
+        pass
+
+
+    try:
+        if tls_results["certificate_chain_info"]["bad_hostname"]:
+            negative_tags.append("ssl15")
+    except TypeError:
+        pass
+
+    try:
+        if len(
+            [res for res in tls_results["certificate_chain_info"]["path_validation_results"] if res is False]) > 0:
+            negative_tags.append("ssl16")
     except TypeError:
         pass
 
@@ -286,6 +294,13 @@ def process_connection_results(connection_results):
 
     if not hsts:
         negative_tags.append("https9")
+
+    try :
+        if hsts_parsed["preload"]:
+            positive_tags.append("https11")
+    except TypeError:
+        pass
+
 
     if not http_live and not http_live:
        neutral_tags.append("https13")

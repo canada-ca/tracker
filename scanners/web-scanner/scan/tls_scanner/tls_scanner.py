@@ -74,7 +74,6 @@ class CertificateInfo:
             )
 
 
-
 @dataclass
 class TrustStoreInfo:
     name: str

@@ -456,6 +456,34 @@
               ""
             ]
           }
+        },
+        "ssl16": {
+          "en": {
+            "tagName": "Failed Validation",
+            "guidance": "Certificate bundle failed validation.",
+            "refLinksGuide": [
+              {
+                "description": "1.3 Websites and services hardening",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+              }
+            ],
+            "refLinksTechnical": [
+              ""
+            ]
+          },
+          "fr": {
+            "tagName": "Mauvais nom d'hôte",
+            "guidance": "La validation de la liasse de certificats a échoué.",
+            "refLinksGuide": [
+              {
+                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+              }
+            ],
+            "refLinksTechnical": [
+              ""
+            ]
+          }
         }
       }
     }
@@ -1040,7 +1068,7 @@
       "https8": {
         "en": {
           "tagName": "Moderately Enforced",
-          "guidance": "Domain defaults to HTTPS, but eventually redirects to HTTP",
+          "guidance": "Domain does not redirect to HTTPS on first redirect, but eventually does redirect to HTTPS.",
           "refLinksGuide": [
             {
               "description": "1.1 Websites and services hardening",
@@ -1053,7 +1081,7 @@
         },
         "fr": {
           "tagName": "Modérément appliqué",
-          "guidance": "Le domaine passe par défaut en HTTPS, mais finit par être redirigé en HTTP",
+          "guidance": "Le domaine ne redirige pas vers HTTPS lors de la première redirection, mais finit par rediriger vers HTTPS.",
           "refLinksGuide": [
             {
               "description": "1.1 Renforcement de la sécurité des sites Web et des services",
