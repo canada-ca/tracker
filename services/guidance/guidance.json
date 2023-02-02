@@ -891,6 +891,40 @@
             }
           ]
         }
+      },
+      "spf13": {
+        "en": {
+          "tagName": "Invalid",
+          "guidance": "SPF record is not properly formed",
+          "refLinksGuide": [
+            {
+              "description": "Implementation Guidance: Email Domain Protection",
+              "ref_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7208 (SPF), 3 SPF Records",
+              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "L'enregistrement SPF est correctement formé",
+          "guidance": "L'enregistrement SPF n'est pas correctement formé",
+          "refLinksGuide": [
+            {
+              "description": "Directives de mise en œuvre - protection du domaine de courrier",
+              "ref_link": "https://www.cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
+              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+            }
+          ]
+        }
       }
     }
   },
@@ -2471,6 +2505,40 @@
           ],
           "refLinksTechnical": [
             ""
+          ]
+        }
+      },
+      "dkim15": {
+        "en": {
+          "tagName": "P-empty",
+          "guidance": "Public key is empty",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 DKIM Records",
+              "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "P-empty",
+          "guidance": "La clé publique est vide",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 Enregistrements DKIM",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
+              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
           ]
         }
       }

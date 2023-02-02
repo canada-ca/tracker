@@ -85,6 +85,10 @@ def process_dkim(dkim_results):
         v_tag = dkim_results[selector].get("parsed", {}).get("v", None)
         p_tag = dkim_results[selector].get("parsed", {}).get("p", None)
 
+        if p_tag is None:
+            dkim_tags[selector].append("dkim15")
+
+
         # Testing Enabled
         t_enabled = dkim_results[selector].get("parsed", {}).get("t", "")
         if t_enabled.lower() == "y":
@@ -123,9 +127,6 @@ def process_spf(spf_results):
         spf_tags.append("spf2")
         return get_spf_tag_status(spf_tags)
 
-    # "valid": true,
-    if spf_results["valid"]:
-        spf_tags.append("spf12")
 
     # Check all tag
     # "all": "neutral"
@@ -139,22 +140,37 @@ def process_spf(spf_results):
 
             # "record": "v=spf1 mx:canada.ca mx:mx.ssan.seg-egs.gc.ca ip4:205.193.86.223 ip4:205.193.117.44 ?all",
             match all_tag:
+                case None:
+                    spf_tags.append("spf4")
                 case "pass":
                     spf_tags.append("spf5")
                 case "neutral":
                     spf_tags.append("spf6")
-                case "fail":
-                    spf_tags.append("spf8")
                 case "softfail":
                     spf_tags.append("spf7")
+                case "fail":
+                    spf_tags.append("spf8")
                 case _:
                     raise ValueError(f"Unexpected 'all' tag state: {all_tag}")
+
+
+    # Check redirect tag
+    redirect_tag = spf_results.get("parsed", {}).get("redirect", None)
+    if redirect_tag is None:
+        spf_tags.append("spf9")
 
     # Look up limit check
     # "dns_lookups": 3,
     dns_lookups = spf_results.get("dns_lookups", 0)
     if dns_lookups > 10:
         spf_tags.append("spf11")
+
+
+    # "valid": true,
+    if spf_results["valid"]:
+        spf_tags.append("spf12")
+    else:
+        spf_tags.append("spf13")
 
     return get_spf_tag_status(spf_tags)
 
