@@ -297,7 +297,7 @@ def process_connection_results(connection_results):
 
     try :
         if hsts_parsed["preload"]:
-            positive_tags.append("https11")
+            pass
     except TypeError:
         pass
 
