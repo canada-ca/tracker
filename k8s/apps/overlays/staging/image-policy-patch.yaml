@@ -1,0 +1,180 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tracker-api
+  name: tracker-api
+  namespace: api
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          image: gcr.io/track-compliance/api-js:staging
+          imagePullPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tracker-frontend
+  namespace: frontend
+spec:
+  template:
+    spec:
+      containers:
+        - name: frontend
+          image: gcr.io/track-compliance/frontend:staging
+          imagePullPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tracker-api
+  name: tracker-api
+  namespace: api
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          image: gcr.io/track-compliance/api-js:staging
+          imagePullPolicy: Always
+
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: dmarc-report
+  namespace: scanners
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: dmarc-report
+              image: gcr.io/track-compliance/dmarc-report:staging
+              imagePullPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dns-processor
+  name: dns-processor
+  namespace: scanners
+spec:
+  template:
+    spec:
+      containers:
+        - name: dns-processor
+          image: gcr.io/track-compliance/dns-processor:staging
+          imagePullPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dns-scanner
+  name: dns-scanner
+  namespace: scanners
+spec:
+  template:
+    spec:
+      containers:
+        - name: dns-scanner
+          image: gcr.io/track-compliance/dns-scanner:staging
+          imagePullPolicy: Always
+
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: domain-dispatcher
+  namespace: scanners
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: domain-dispatcher
+              image: gcr.io/track-compliance/domain-dispatcher:staging
+              imagePullPolicy: Always
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: guidance
+  namespace: scanners
+spec:
+  template:
+    spec:
+      containers:
+        - name: guidance
+          image: gcr.io/track-compliance/services/guidance:staging
+          imagePullPolicy: Always
+
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: summaries
+  namespace: scanners
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: summaries
+              image: gcr.io/track-compliance/services/summaries:staging
+              imagePullPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web-processor
+  name: web-processor
+  namespace: scanners
+spec:
+  template:
+    spec:
+      containers:
+        - name: web-processor
+          image: gcr.io/track-compliance/web-processor:staging
+          imagePullPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web-scanner
+  name: web-scanner
+  namespace: scanners
+spec:
+  template:
+    spec:
+      containers:
+        - name: web-scanner
+          image: gcr.io/track-compliance/web-scanner:staging
+          imagePullPolicy: Always
