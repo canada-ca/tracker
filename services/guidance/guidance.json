@@ -484,6 +484,40 @@
               ""
             ]
           }
+        },
+       "ssl17": {
+          "en": {
+            "tagName": "Invalid Curve",
+            "guidance": "The server supports an invalid curve.",
+             "refLinksGuide": [
+            {
+              "description": "1.4 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "See ITSP.40.062 for approved curve list",
+              "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#tab4"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "Courbe invalide",
+          "guidance": "Le serveur prend en charge une courbe invalide.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "Voir ITSP.40.062 pour la liste des courbes approuvées.",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062#tab4"
+            }
+          ]
+        }
         }
       }
     }

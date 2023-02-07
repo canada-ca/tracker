@@ -70,7 +70,7 @@ def process_tls_results(tls_results):
         else:
             strength = "weak"
             weak_curve = True
-            # negative_tags.append("ssl10")
+            negative_tags.append("ssl17")
 
         accepted_elliptic_curves.append({"name": curve, "strength": strength})
 
