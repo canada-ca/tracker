@@ -30,23 +30,6 @@ spec:
 
 ---
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: tracker-api
-  name: tracker-api
-  namespace: api
-spec:
-  template:
-    spec:
-      containers:
-        - name: api
-          image: gcr.io/track-compliance/api-js:staging
-          imagePullPolicy: Always
-
----
-
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
