@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLDate, GraphQLJSON } from 'graphql-scalars'
+import { GraphQLDateTime, GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -22,7 +22,7 @@ export const httpsType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
       resolve: ({ timestamp }) => new Date(timestamp),
     },

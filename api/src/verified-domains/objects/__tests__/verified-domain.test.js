@@ -1,6 +1,6 @@
 import { GraphQLNonNull, GraphQLID } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 
 import { verifiedOrganizationConnection } from '../../../verified-organizations/objects'
 import { verifiedDomainType } from '../index'
@@ -25,7 +25,7 @@ describe('given the verified domains object', () => {
       const demoType = verifiedDomainType.getFields()
 
       expect(demoType).toHaveProperty('lastRan')
-      expect(demoType.lastRan.type).toMatchObject(GraphQLDate)
+      expect(demoType.lastRan.type).toMatchObject(GraphQLDateTime)
     })
     it('has a status field', () => {
       const demoType = verifiedDomainType.getFields()
