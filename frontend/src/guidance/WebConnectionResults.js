@@ -87,11 +87,7 @@ export function WebConnectionResults({ connectionResults }) {
   return (
     <AccordionItem>
       <Flex as={AccordionButton}>
-        {connectionResults.negativeTags.length > 0 ? (
-          <NumberedStatusIcon number={connectionResults.negativeTags.length} status="FAIL" />
-        ) : (
-          <StatusIcon status="PASS" boxSize="icons.lg" />
-        )}
+        <StatusIcon status={connectionResults.httpsStatus} boxSize="icons.lg" />
         <Text fontSize="2xl" ml="2">
           <Trans>Connection Results</Trans>
         </Text>

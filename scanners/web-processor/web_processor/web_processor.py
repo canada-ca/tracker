@@ -164,7 +164,6 @@ def process_tls_results(tls_results):
     cipher_status = "fail" if "ssl6" in negative_tags else "pass"
 
     # get curve status
-    # curve_status = "fail" if "ssl11" in negative_tags else "pass"
     curve_status = "fail" if weak_curve else "pass"
 
     processed_tags = {

@@ -47,7 +47,7 @@ export function WebTLSResults({ tlsResult }) {
   const tlsProtocols = (
     <Box>
       <Flex as={AccordionButton}>
-        <StatusIcon status={weakProtocols?.length > 0 ? 'FAIL' : 'PASS'} />
+        <StatusIcon status={tlsResult.protocolStatus} />
         <Text ml="2" mr="1" fontSize="xl">
           <Trans>Protocols</Trans>
         </Text>
@@ -96,7 +96,7 @@ export function WebTLSResults({ tlsResult }) {
   const tlsCiphers = (
     <Box>
       <Flex as={AccordionButton}>
-        <StatusIcon status={weakCiphers(tls1_2) || weakCiphers(tls1_3) ? 'FAIL' : 'PASS'} />
+        <StatusIcon status={tlsResult.cipherStatus} />
         <Text ml="2" mr="1" fontSize="xl">
           <Trans>Ciphers</Trans>
         </Text>
@@ -150,7 +150,7 @@ export function WebTLSResults({ tlsResult }) {
   const tlsCurves = (
     <>
       <Flex as={AccordionButton}>
-        <StatusIcon status={weakCiphers(tlsResult.acceptedEllipticCurves) ? 'FAIL' : 'PASS'} />
+        <StatusIcon status={tlsResult.curveStatus} />
         <Text ml="2" mr="1" fontSize="xl">
           <Trans>Curves</Trans>
         </Text>
@@ -188,11 +188,7 @@ export function WebTLSResults({ tlsResult }) {
   return (
     <AccordionItem>
       <Flex as={AccordionButton}>
-        {tlsResult.negativeTags.length > 0 ? (
-          <NumberedStatusIcon number={tlsResult.negativeTags.length} status="FAIL" />
-        ) : (
-          <StatusIcon status="PASS" boxSize="icons.lg" />
-        )}
+        <StatusIcon status={tlsResult.sslStatus} boxSize="icons.lg" />
         <Text fontSize="2xl" ml="2">
           <Trans>TLS Results</Trans>
         </Text>
@@ -317,7 +313,7 @@ export function WebTLSResults({ tlsResult }) {
                                 <Text color={expiredCert && 'weak'}>{notValidAfter} UTC</Text>
                               </Flex>
                               <Text>
-                                <Trans>Siganture Hash:</Trans> {signatureHashAlgorithm.toUpperCase()}
+                                <Trans>Signature Hash:</Trans> {signatureHashAlgorithm.toUpperCase()}
                               </Text>
                               <AccordionButton color="blue.500" variant="link">
                                 <PlusSquareIcon mr="1" />

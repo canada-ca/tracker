@@ -103,7 +103,9 @@ function GuidancePage() {
           </Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>{webResults.length === 0 ? noScanData : <WebGuidance webResults={webResults} />}</TabPanel>
+          <TabPanel>
+            {webResults.length === 0 ? noScanData : <WebGuidance webResults={webResults} status={status} />}
+          </TabPanel>
           <TabPanel>
             {dnsScan.edges.length === 0 ? (
               noScanData

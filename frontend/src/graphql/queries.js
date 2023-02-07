@@ -288,6 +288,10 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                 timestamp
                 tlsResult {
                   ipAddress
+                  sslStatus
+                  protocolStatus
+                  cipherStatus
+                  curveStatus
                   supportsEcdhKeyExchange
                   heartbleedVulnerable
                   ccsInjectionVulnerable
