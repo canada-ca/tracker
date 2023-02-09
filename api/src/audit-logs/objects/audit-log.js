@@ -1,10 +1,11 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLObjectType } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 import { DomainRemovalReasonEnum } from '../../enums'
 import { UserActionEnums } from '../../enums/user-action'
 import { nodeInterface } from '../../node'
 import { initiatedByType } from './initiated-by'
 import { targetResourceType } from './target-resource'
+import { GraphQLDateTime } from 'graphql-scalars'
 
 export const auditLogType = new GraphQLObjectType({
   name: 'AuditLog',
@@ -13,8 +14,8 @@ export const auditLogType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('auditLog'),
     timestamp: {
-      type: GraphQLString,
-      description: 'Datetime string the activity occured.',
+      type: GraphQLDateTime,
+      description: 'Datetime string the activity occurred.',
       resolve: ({ timestamp }) => timestamp,
     },
     initiatedBy: {

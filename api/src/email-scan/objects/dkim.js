@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 
 import { dkimResultConnection } from './dkim-result-connection'
 import { dkimResultOrder } from '../inputs'
@@ -22,7 +22,7 @@ export const dkimType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => new Date(timestamp),
     },

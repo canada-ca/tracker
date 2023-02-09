@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 
 import { dkimOrder, dmarcOrder, spfOrder } from '../inputs'
 import { dkimConnection } from './dkim-connection'
@@ -24,11 +24,11 @@ export const emailScanType = new GraphQLObjectType({
       type: dkimConnection.connectionType,
       args: {
         startDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },
         endDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'End date for date filter.',
         },
         orderBy: {
@@ -54,11 +54,11 @@ export const emailScanType = new GraphQLObjectType({
       type: dmarcConnection.connectionType,
       args: {
         startDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },
         endDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'End date for date filter.',
         },
         orderBy: {
@@ -84,11 +84,11 @@ export const emailScanType = new GraphQLObjectType({
       type: spfConnection.connectionType,
       args: {
         startDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },
         endDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'End date for date filter.',
         },
         orderBy: {
