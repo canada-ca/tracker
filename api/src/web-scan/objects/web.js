@@ -1,9 +1,9 @@
-import {GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql'
-import {globalIdField} from 'graphql-relay'
+import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { globalIdField } from 'graphql-relay'
 
-import {nodeInterface} from "../../node"
-import {GraphQLDate} from "graphql-scalars"
-import {webScanType} from "./web-scan"
+import { nodeInterface } from '../../node'
+import { GraphQLDateTime } from 'graphql-scalars'
+import { webScanType } from './web-scan'
 
 export const webType = new GraphQLObjectType({
   name: 'Web',
@@ -14,18 +14,14 @@ export const webType = new GraphQLObjectType({
       description: `The domain string the scan was ran on.`,
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
-      resolve: ({timestamp}) => new Date(timestamp),
+      resolve: ({ timestamp }) => new Date(timestamp),
     },
     results: {
       type: GraphQLList(webScanType),
       description: `Results of the web scan at each IP address.`,
-      resolve: async (
-        {_id},
-        args,
-        {loaders: {loadWebScansByWebId}},
-      ) => {
+      resolve: async ({ _id }, args, { loaders: { loadWebScansByWebId } }) => {
         return await loadWebScansByWebId({
           webId: _id,
           ...args,

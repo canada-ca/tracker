@@ -11,7 +11,7 @@ import { dnsScanConnection } from '../../dns-scan/objects/dns-scan-connection'
 import { webConnection } from '../../web-scan/objects'
 import { organizationOrder } from '../../organization/inputs'
 import { organizationConnection } from '../../organization/objects'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
 
@@ -97,11 +97,11 @@ export const domainType = new GraphQLObjectType({
       type: dnsScanConnection.connectionType,
       args: {
         startDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },
         endDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'End date for date filter.',
         },
         orderBy: {
@@ -127,11 +127,11 @@ export const domainType = new GraphQLObjectType({
       description: 'HTTPS, and TLS scan results.',
       args: {
         startDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'Start date for date filter.',
         },
         endDate: {
-          type: GraphQLDate,
+          type: GraphQLDateTime,
           description: 'End date for date filter.',
         },
         orderBy: {

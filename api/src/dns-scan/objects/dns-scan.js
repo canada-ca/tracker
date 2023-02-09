@@ -1,6 +1,6 @@
 import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 import { globalIdField } from 'graphql-relay'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 
 import { nodeInterface } from '../../node'
 import { dmarcType } from './dmarc'
@@ -17,7 +17,7 @@ export const dnsScanType = new GraphQLObjectType({
       resolve: async ({ domain }) => domain,
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => new Date(timestamp),
     },

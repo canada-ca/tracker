@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 
 import { domainStatus } from '../../domain/objects'
 import { Domain } from '../../scalars'
@@ -18,7 +18,7 @@ export const verifiedDomainType = new GraphQLObjectType({
       resolve: ({ domain }) => domain,
     },
     lastRan: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
       resolve: ({ lastRan }) => lastRan,
     },
@@ -32,17 +32,12 @@ export const verifiedDomainType = new GraphQLObjectType({
       args: {
         orderBy: {
           type: verifiedOrganizationOrder,
-          description:
-            'Ordering options for verified organization connections.',
+          description: 'Ordering options for verified organization connections.',
         },
         ...connectionArgs,
       },
       description: 'The organization that this domain belongs to.',
-      resolve: async (
-        { _id },
-        args,
-        { loaders: { loadVerifiedOrgConnectionsByDomainId } },
-      ) => {
+      resolve: async ({ _id }, args, { loaders: { loadVerifiedOrgConnectionsByDomainId } }) => {
         const orgs = await loadVerifiedOrgConnectionsByDomainId({
           domainId: _id,
           ...args,
