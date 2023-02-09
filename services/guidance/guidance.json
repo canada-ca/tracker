@@ -260,236 +260,237 @@
           "refLinksTechnical": [
             ""
           ]
+        }
+      },
+      "ssl9": {
+        "en": {
+          "tagName": "TLS-unreachable",
+          "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
+          "refLinksGuide": [
+            {
+              "description": "1.1 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl9": {
-          "en": {
-            "tagName": "TLS-unreachable",
-            "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
-            "refLinksGuide": [
-              {
-                "description": "1.1 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "Vulnérabilité d'injection de CCS",
-            "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
-            "refLinksGuide": [
-              {
-                "description": "1.1 Durcissement des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
+        "fr": {
+          "tagName": "Vulnérabilité d'injection de CCS",
+          "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
+          "refLinksGuide": [
+            {
+              "description": "1.1 Durcissement des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl10": {
+        "en": {
+          "tagName": "Certificate Expired",
+          "guidance": "TLS certificate is expired",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl10": {
-          "en": {
-            "tagName": "Certificate Expired",
-            "guidance": "TLS certificate is expired",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "Certificat expiré",
-            "guidance": "Le certificat TLS a expiré",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
+        "fr": {
+          "tagName": "Certificat expiré",
+          "guidance": "Le certificat TLS a expiré",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl11": {
+        "en": {
+          "tagName": "Certificate Self-signed",
+          "guidance": "TLS certificate is self-signed",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl11": {
-          "en": {
-            "tagName": "Certificate Self-signed",
-            "guidance": "TLS certificate is self-signed",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "certificat auto-signé",
-            "guidance": "Le certificat TLS est auto-signé",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
+        "fr": {
+          "tagName": "certificat auto-signé",
+          "guidance": "Le certificat TLS est auto-signé",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl12": {
+        "en": {
+          "tagName": "Certificate Revoked",
+          "guidance": "TLS certificate has been revoked",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl12": {
-          "en": {
-            "tagName": "Certificate Revoked",
-            "guidance": "TLS certificate has been revoked",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "Certificat révoqué",
-            "guidance": "Le certificat TLS a été révoqué",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
+        "fr": {
+          "tagName": "Certificat révoqué",
+          "guidance": "Le certificat TLS a été révoqué",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl13": {
+        "en": {
+          "tagName": "Certificate Revocation Unknown",
+          "guidance": "Revocation status of TLS certificate could not be checked",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl13": {
-          "en": {
-            "tagName": "Certificate Revocation Unknown",
-            "guidance": "Revocation status of TLS certificate could not be checked",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "Révocation de certificat inconnue",
-            "guidance": "L'état de révocation du certificat TLS n'a pas pu être vérifié",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
+        "fr": {
+          "tagName": "Révocation de certificat inconnue",
+          "guidance": "L'état de révocation du certificat TLS n'a pas pu être vérifié",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl14": {
+        "en": {
+          "tagName": "Bad Chain",
+          "guidance": "TLS certificate chain is invalid",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl14": {
-          "en": {
-            "tagName": "Bad Chain",
-            "guidance": "TLS certificate chain is invalid",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "Mauvaise chaîne",
-            "guidance": "La chaîne de certificats TLS n'est pas valide",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
+        "fr": {
+          "tagName": "Mauvaise chaîne",
+          "guidance": "La chaîne de certificats TLS n'est pas valide",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl15": {
+        "en": {
+          "tagName": "Bad Hostname",
+          "guidance": "Hostname does not match certificate",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl15": {
-          "en": {
-            "tagName": "Bad Hostname",
-            "guidance": "Hostname does not match certificate",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "Mauvais nom d'hôte",
-            "guidance": "La validation du nom d'hôte du point de terminaison HTTPS a échoué",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
+        "fr": {
+          "tagName": "Mauvais nom d'hôte",
+          "guidance": "La validation du nom d'hôte du point de terminaison HTTPS a échoué",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl16": {
+        "en": {
+          "tagName": "Failed Validation",
+          "guidance": "Certificate bundle failed validation.",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
         },
-        "ssl16": {
-          "en": {
-            "tagName": "Failed Validation",
-            "guidance": "Certificate bundle failed validation.",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Websites and services hardening",
-                "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          },
-          "fr": {
-            "tagName": "Mauvais nom d'hôte",
-            "guidance": "La validation de la liasse de certificats a échoué.",
-            "refLinksGuide": [
-              {
-                "description": "1.3 Renforcement de la sécurité des sites Web et des services",
-                "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
-              }
-            ],
-            "refLinksTechnical": [
-              ""
-            ]
-          }
-        },
-       "ssl17": {
-          "en": {
-            "tagName": "Invalid Curve",
-            "guidance": "The server supports an invalid curve.",
-             "refLinksGuide": [
+        "fr": {
+          "tagName": "Mauvais nom d'hôte",
+          "guidance": "La validation de la liasse de certificats a échoué.",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
+      },
+      "ssl17": {
+        "en": {
+          "tagName": "Invalid Curve",
+          "guidance": "The server supports an invalid curve.",
+          "refLinksGuide": [
             {
               "description": "1.4 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
@@ -517,7 +518,6 @@
               "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062#tab4"
             }
           ]
-        }
         }
       }
     }
