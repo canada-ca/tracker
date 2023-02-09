@@ -217,7 +217,12 @@ export default function CreateUserPage() {
               >
                 <Trans>
                   I agree to all{' '}
-                  <Link as={RouteLink} isExternal to="/terms-and-conditions">
+                  <Link
+                    color="blue.600"
+                    as={RouteLink}
+                    isExternal
+                    to="/terms-and-conditions"
+                  >
                     Terms, Privacy Policy & Code of Conduct Guidelines{' '}
                     <ExternalLinkIcon />
                   </Link>
