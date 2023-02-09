@@ -14,7 +14,11 @@ import { useMutation } from '@apollo/client'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { ArrowForwardIcon, CheckCircleIcon } from '@chakra-ui/icons'
+import {
+  ArrowForwardIcon,
+  CheckCircleIcon,
+  ExternalLinkIcon,
+} from '@chakra-ui/icons'
 
 import { LanguageSelect } from './LanguageSelect'
 
@@ -204,15 +208,28 @@ export default function CreateUserPage() {
             <LanguageSelect name="lang" w={{ lg: '25%', md: '50%' }} mb="6" />
 
             <Box ml={{ lg: '12', md: '0' }} mb="4">
+              {/* <Flex align="center"> */}
               <Checkbox
                 colorScheme="orange"
                 isRequired
                 mb="4"
                 borderColor="black"
               >
-                I agree to all Terms, Privacy Policy & Code of Conduct
-                Guidelines
+                <Trans>
+                  I agree to all{' '}
+                  <Link
+                    color="blue.600"
+                    as={RouteLink}
+                    isExternal
+                    to="/terms-and-conditions"
+                  >
+                    Terms, Privacy Policy & Code of Conduct Guidelines{' '}
+                    <ExternalLinkIcon />
+                  </Link>
+                </Trans>
               </Checkbox>
+
+              {/* </Flex> */}
 
               <Box>
                 <Button
