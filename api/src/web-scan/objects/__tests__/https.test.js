@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLDate, GraphQLJSON } from 'graphql-scalars'
+import { GraphQLDateTime, GraphQLJSON } from 'graphql-scalars'
 
 import { domainType } from '../../../domain/objects'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
@@ -24,7 +24,7 @@ describe('given the https gql object', () => {
       const demoType = httpsType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
     it('has a implementation field', () => {
       const demoType = httpsType.getFields()

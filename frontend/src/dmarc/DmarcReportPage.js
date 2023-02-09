@@ -214,6 +214,24 @@ export default function DmarcReportPage() {
     accessor: 'disposition',
   }
 
+  const dataToCsv = (columns, data) => {
+    let csvOutput = columns.map((column) => column.Header).join(',')
+    data.forEach((entry) => {
+      const csvLine = columns
+        .map((column) => {
+          let cell = entry[column.accessor]
+          if (column.accessor === 'guidanceTag') {
+            cell = entry[column.accessor].guidance
+          }
+          return `"${cell}"`
+        })
+        .join(',')
+      csvOutput += `\n${csvLine}`
+    })
+
+    return csvOutput
+  }
+
   // Initial sorting category for detail tables
   const initialSort = [{ id: 'totalMessages', desc: true }]
 
@@ -275,6 +293,9 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search DKIM Failing Items`}
           fileName={fileName}
+          exportDataFunction={() =>
+            dataToCsv(dkimFailureColumns[0].columns, dkimFailureNodes)
+          }
         />
       </ErrorBoundary>
     )
@@ -347,6 +368,9 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search Fully Aligned Items`}
           fileName={fileName}
+          exportDataFunction={() =>
+            dataToCsv(fullPassColumns[0].columns, fullPassNodes)
+          }
         />
       </ErrorBoundary>
     )
@@ -418,6 +442,9 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search SPF Failing Items`}
           fileName={fileName}
+          exportDataFunction={() =>
+            dataToCsv(spfFailureColumns[0].columns, spfFailureNodes)
+          }
         />
       </ErrorBoundary>
     )
@@ -500,6 +527,9 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search DMARC Failing Items`}
           fileName={fileName}
+          exportDataFunction={() =>
+            dataToCsv(dmarcFailureColumns[0].columns, dmarcFailureNodes)
+          }
         />
       </ErrorBoundary>
     )

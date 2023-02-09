@@ -25,3 +25,5 @@ replicas:
     count: 7
   - name: https-scanner
     count: 13
+patchesStrategicMerge:
+  - domain-dispatcher-suspend-patch.yaml

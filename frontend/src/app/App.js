@@ -1,5 +1,10 @@
 import React, { Suspense, useEffect } from 'react'
-import { Switch, Link as RouteLink, Redirect } from 'react-router-dom'
+import {
+  Switch,
+  Link as RouteLink,
+  Redirect,
+  useLocation,
+} from 'react-router-dom'
 import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -72,6 +77,7 @@ export function App() {
     useUserVar()
   const { i18n } = useLingui()
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
+  const location = useLocation()
 
   // Close websocket on user jwt change (refresh/logout)
   // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
@@ -267,6 +273,7 @@ export function App() {
                 <Redirect
                   to={{
                     pathname: '/sign-in',
+                    state: { from: location },
                   }}
                 />
               )}
@@ -331,6 +338,7 @@ export function App() {
                 <Redirect
                   to={{
                     pathname: '/sign-in',
+                    state: { from: location },
                   }}
                 />
               )}
@@ -347,6 +355,7 @@ export function App() {
                 <Redirect
                   to={{
                     pathname: '/sign-in',
+                    state: { from: location },
                   }}
                 />
               )}
@@ -365,6 +374,7 @@ export function App() {
                 <Redirect
                   to={{
                     pathname: '/sign-in',
+                    state: { from: location },
                   }}
                 />
               )}
