@@ -1,6 +1,6 @@
 import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLInt } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
 
 import { domainType } from '../../../domain/objects'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
@@ -24,7 +24,7 @@ describe('given the dmarcType object', () => {
       const demoType = dmarcType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
     it('has a record field', () => {
       const demoType = dmarcType.getFields()

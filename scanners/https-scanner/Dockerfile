@@ -1,3 +1,9 @@
+FROM rust:1.62.1 AS crlite-builder
+RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev b19e5aa
+
+#===============================================================================================
+#===============================================================================================
+
 FROM ubuntu:20.04
 
 # Copy local code to the container image.
@@ -20,9 +26,13 @@ COPY . ./
 
 RUN pip3 install -r requirements.txt
 
-# Get the Mozilla CRLite DB for revocation checks
-RUN moz_crlite_query --force-update
+# Copy rust-query-crlite
+COPY --from=crlite-builder /usr/local/cargo/bin/rust-query-crlite /usr/local/bin/rust-query-crlite
+
+# Update Mozilla CRLite DB for revocation checks
+RUN rust-query-crlite -vvv --update prod x509
 
 USER scanner
+
 # Run the web service on container startup. Using uvicorn, in this case.
 CMD ["python3", "tls.py"]

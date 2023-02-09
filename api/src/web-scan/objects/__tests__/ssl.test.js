@@ -6,7 +6,7 @@ import {
   GraphQLBoolean,
 } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
-import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
 
 import { domainType } from '../../../domain/objects'
 import { guidanceTagConnection } from '../../../guidance-tag/objects'
@@ -88,7 +88,7 @@ describe('given the ssl gql object', () => {
       const demoType = sslType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
     it('has a weakCiphers field', () => {
       const demoType = sslType.getFields()

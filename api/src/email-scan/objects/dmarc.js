@@ -1,6 +1,6 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLJSON, GraphQLDate } from 'graphql-scalars'
+import { GraphQLJSON, GraphQLDateTime } from 'graphql-scalars'
 
 import { domainType } from '../../domain/objects'
 import { nodeInterface } from '../../node'
@@ -22,7 +22,7 @@ export const dmarcType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
       resolve: ({ timestamp }) => new Date(timestamp),
     },

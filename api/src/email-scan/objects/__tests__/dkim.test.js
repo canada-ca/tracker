@@ -1,5 +1,5 @@
 import { GraphQLNonNull, GraphQLID } from 'graphql'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 import { toGlobalId } from 'graphql-relay'
 
 import { domainType } from '../../../domain/objects'
@@ -24,7 +24,7 @@ describe('given the dkimType object', () => {
       const demoType = dkimType.getFields()
 
       expect(demoType).toHaveProperty('timestamp')
-      expect(demoType.timestamp.type).toMatchObject(GraphQLDate)
+      expect(demoType.timestamp.type).toMatchObject(GraphQLDateTime)
     })
     it('has a results field', () => {
       const demoType = dkimType.getFields()

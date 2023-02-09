@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
-import { GraphQLDate } from 'graphql-scalars'
+import { GraphQLDateTime } from 'graphql-scalars'
 
 import { domainStatus } from '../../domain/objects'
 import { Domain } from '../../scalars'
@@ -18,7 +18,7 @@ export const verifiedDomainType = new GraphQLObjectType({
       resolve: ({ domain }) => domain,
     },
     lastRan: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
       resolve: ({ lastRan }) => lastRan,
     },

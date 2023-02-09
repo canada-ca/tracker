@@ -1,32 +1,43 @@
 import logging
 import subprocess
+import re
 
 
 def query_crlite(pem_cert: bytes) -> bool:
-    """Checks if a PEM encoded certificate has been revoked with Mozilla's CRLite.
+    filename = "/tmp/temp.pem"
+    f = open(filename, "w")
+    f.write(pem_cert.decode("ascii"))
+    f.close()
 
-    Uses https://github.com/mozilla/moz_crlite_query and will raise an error if it is not installed.
-    Will download a DB of revocations to ~/.crlite_db and update it when needed.
+    find_query_crlite = subprocess.check_output(["which", "rust-query-crlite"])
 
-    :param bytes pem_cert: A PEM encoded X.509 certificate.
-    :return: True if cert is revoked, else False.
-    :rtype: bool
-    :raises ValueError: if revocation status can't be checked
-    """
+    query_crlite_path = find_query_crlite.decode("ascii").splitlines()[0]
+    if not query_crlite_path:
+        FileNotFoundError("rust-query-crlite not found")
+
     completed = subprocess.run(
-        ["moz_crlite_query", "-"],
-        input=pem_cert.decode("ascii"),
+        [query_crlite_path, "-vv", "x509", filename],
         capture_output=True,
-        text=True,
     )
-    # moz_crlite_query prints everything but results to stderr
-    # Logging at debug level for now to monitor updates to DB
-    logging.debug(completed.stderr)
-    if "Revoked" in completed.stdout:
-        return True
-    elif "Valid" in completed.stdout:
+
+    pattern = r'^(?:INFO|WARN|ERROR) - (\S*) (Good|Expired|NotCovered|NotEnrolled|Revoked)$'
+
+    search_result = re.search(pattern, completed.stderr.decode("ascii"))
+
+    if not search_result:
+        raise ValueError(f"Certificate revocation status not found in rust_query_crlite output: {completed.stderr.decode('ascii')}")
+
+    status = search_result.group(2)
+
+    if status == "Good":
         return False
-    elif "Not Enrolled" in completed.stdout:
+    elif status == "Expired":
+        return False
+    elif status == "NotCovered":
+        raise ValueError("Cert issuer not covered by CRLite")
+    elif status == "NotEnrolled":
         raise ValueError("Cert issuer not enrolled in CRLite")
+    elif status == "Revoked":
+        return True
     else:
         raise ValueError("Cert revocation status could not be checked")

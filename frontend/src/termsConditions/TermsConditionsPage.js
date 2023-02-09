@@ -3,6 +3,7 @@ import { Box, Divider, Heading, Link, List, ListItem } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { Link as RouteLink } from 'react-router-dom'
 
 export default function TermsConditionsPage() {
   const { i18n } = useLingui()
@@ -10,7 +11,7 @@ export default function TermsConditionsPage() {
   const linkIcon = <LinkIcon ml={1} aria-hidden="true" />
 
   return (
-    <Box mb={20} fontSize="sm">
+    <Box mb={20}>
       <Heading as="h2" textAlign="center" fontSize="4xl">
         <Trans>Terms and Conditions</Trans>
       </Heading>
@@ -390,19 +391,11 @@ export default function TermsConditionsPage() {
           <ListItem>
             <Trans>
               If at any time you or your representatives wish to adjust or
-              cancel these services, please contact us at
+              cancel these services, please
             </Trans>
             <span> </span>
-            <Link
-              textDecoration="underline"
-              isExternal={true}
-              href={
-                i18n.locale === 'en'
-                  ? 'https://https-everywhere.canada.ca/en/help/'
-                  : 'https://https-everywhere.canada.ca/fr/aide/'
-              }
-            >
-              <Trans>https://https-everywhere.canada.ca/en/help/</Trans>
+            <Link as={RouteLink} to="/contact-us">
+              <Trans>contact us</Trans>
               {linkIcon}
             </Link>
           </ListItem>
