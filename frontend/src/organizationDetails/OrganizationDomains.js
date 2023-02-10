@@ -1,6 +1,16 @@
 import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Text, useDisclosure } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Select,
+  Tag,
+  TagCloseButton,
+  TagLabel,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { number, string } from 'prop-types'
 
@@ -18,6 +28,8 @@ import {
 } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { SubdomainWarning } from '../domains/SubdomainWarning'
+import { Formik } from 'formik'
+import { createValidationSchema } from '../utilities/fieldRequirements'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -25,6 +37,7 @@ export function OrganizationDomains({ orgSlug }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [filters, setFilters] = useState([])
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -42,6 +55,7 @@ export function OrganizationDomains({ orgSlug }) {
           slug: orgSlug,
           orderBy: { field: orderField, direction: orderDirection },
           search: debouncedSearchTerm,
+          filters,
         }
 
   const {
@@ -71,7 +85,6 @@ export function OrganizationDomains({ orgSlug }) {
   if (error) return <ErrorFallbackMessage error={error} />
 
   const orderByOptions = [
-    { value: 'DOMAIN', text: t`Domain` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
@@ -80,6 +93,17 @@ export function OrganizationDomains({ orgSlug }) {
     { value: 'SPF_STATUS', text: t`SPF Status` },
     { value: 'DKIM_STATUS', text: t`DKIM Status` },
     { value: 'DMARC_STATUS', text: t`DMARC Status` },
+  ]
+
+  const filterTagOptions = [
+    { value: 'NEW', text: t`New` },
+    { value: 'PROD', text: t`Prod` },
+    { value: 'STAGING', text: t`Staging` },
+    { value: 'TEST', text: t`Test` },
+    { value: 'WEB', text: t`Web` },
+    { value: 'INACTIVE', text: t`Inactive` },
+    { value: 'HIDDEN', text: t`Hidden` },
+    { value: 'ARCHIVED', text: t`Archived` },
   ]
 
   const domainList = loading ? (
@@ -165,9 +189,135 @@ export function OrganizationDomains({ orgSlug }) {
         setOrderField={setOrderField}
         setOrderDirection={setOrderDirection}
         resetToFirstPage={resetToFirstPage}
-        orderByOptions={orderByOptions}
+        orderByOptions={[
+          { value: 'DOMAIN', text: t`Domain` },
+          ...orderByOptions,
+        ]}
         placeholder={t`Search for a domain`}
       />
+      <Box px="2" py="2">
+        <Formik
+          // validationSchema={createValidationSchema([
+          //   'firstVal',
+          //   'comparison',
+          //   'secondVal',
+          // ])}
+          initialValues={{
+            firstVal: '',
+            comparison: '',
+            secondVal: '',
+          }}
+          onSubmit={(values) => {
+            setFilters([...filters, values])
+          }}
+        >
+          {({ handleChange, handleSubmit, values }) => {
+            return (
+              <form
+                onSubmit={handleSubmit}
+                role="form"
+                aria-label="form"
+                name="form"
+              >
+                <Flex align="center" mb="2">
+                  {filters.map(({ firstVal, comparison, secondVal }, idx) => {
+                    return (
+                      <Tag key={idx} mx="1">
+                        <TagLabel>
+                          {firstVal} {comparison} {secondVal}
+                        </TagLabel>
+                        <TagCloseButton
+                          onClick={() =>
+                            setFilters(filters.filter((_, i) => i !== idx))
+                          }
+                        />
+                      </Tag>
+                    )
+                  })}
+                </Flex>
+                <Flex align="center">
+                  <Text fontWeight="bold" mr="2">
+                    <Trans>Filters:</Trans>
+                  </Text>
+                  <Select
+                    name="firstVal"
+                    maxW="20%"
+                    borderColor="black"
+                    mx="1"
+                    onChange={handleChange}
+                  >
+                    <option hidden value="">
+                      <Trans>Value</Trans>
+                    </option>
+                    {orderByOptions.map(({ value, text }, idx) => {
+                      return (
+                        <option key={idx} value={value}>
+                          {text}
+                        </option>
+                      )
+                    })}
+                    <option value="TAG">
+                      <Trans>Tag</Trans>
+                    </option>
+                  </Select>
+                  <Select
+                    name="comparison"
+                    maxW="20%"
+                    borderColor="black"
+                    mx="1"
+                    onChange={handleChange}
+                  >
+                    <option hidden value="">
+                      <Trans>Comparison</Trans>
+                    </option>
+                    <option value="EQUAL">
+                      <Trans>EQUALS</Trans>
+                    </option>
+                    <option value="NOT_EQUAL">
+                      <Trans>DOES NOT EQUAL</Trans>
+                    </option>
+                  </Select>
+                  <Select
+                    name="secondVal"
+                    maxW="20%"
+                    borderColor="black"
+                    mx="1"
+                    onChange={handleChange}
+                  >
+                    <option hidden value="">
+                      <Trans>Status or tag</Trans>
+                    </option>
+                    {values.firstVal === 'TAG' ? (
+                      filterTagOptions.map(({ value, text }, idx) => {
+                        return (
+                          <option key={idx} value={value}>
+                            {text}
+                          </option>
+                        )
+                      })
+                    ) : (
+                      <>
+                        <option value="PASS">
+                          <Trans>Pass</Trans>
+                        </option>
+                        <option value="INFO">
+                          <Trans>Info</Trans>
+                        </option>
+                        <option value="FAIL">
+                          <Trans>Fail</Trans>
+                        </option>
+                      </>
+                    )}
+                  </Select>
+                  <Button ml="auto" variant="primary" type="submit">
+                    <Trans>Apply</Trans>
+                  </Button>
+                </Flex>
+              </form>
+            )
+          }}
+        </Formik>
+      </Box>
 
       <SubdomainWarning mb="4" />
 
