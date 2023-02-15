@@ -40,18 +40,10 @@ install-arango-operator:
 update-flux:
 		flux install --components=source-controller,kustomize-controller,notification-controller,image-reflector-controller,image-automation-controller --export > deploy/bases/flux.yaml
 
-# This regenerates the istio manifests while using yq to remove the CRD for the
-# operator so it doesn't clash with the istio operator which also includes the
-# CRD
 .PHONY: update-istio
 update-istio:
-		istioctl manifest generate --dry-run | yq 'select(.metadata.name != "istiooperators.install.istio.io" or .kind != "CustomResourceDefinition") | select (.!=null)' > platform/components/istio/istio-manifests.yaml
-
-# This regenerates the istio operator manifests, which include the IstioOperator
-# CRD that we omitted above
-.PHONY: update-istio-operator
-update-istio-operator:
-		istioctl operator dump --dry-run > platform/components/istio/operator.yaml
+		istioctl manifest generate --dry-run > k8s/infrastructure/bases/istio/platform
+		istioctl operator dump --dry-run > k8s/infrastructure/bases/istio/istio-operator-deployment.yaml
 
 .PHONY: print-arango-deployment
 print-arango-deployment:
