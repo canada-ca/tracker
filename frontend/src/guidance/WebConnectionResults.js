@@ -1,5 +1,4 @@
 import React from 'react'
-import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
 import {
   Accordion,
   AccordionButton,
@@ -84,10 +83,16 @@ export function WebConnectionResults({ connectionResults }) {
       }
     })
 
+  const connectionResultsStatus = [connectionResults.httpsStatus, connectionResults.hstsStatus].every(
+    (status) => status.toUpperCase() === 'PASS',
+  )
+    ? 'PASS'
+    : 'FAIL'
+
   return (
     <AccordionItem>
       <Flex as={AccordionButton}>
-        <StatusIcon status={connectionResults.httpsStatus} boxSize="icons.lg" />
+        <StatusIcon status={connectionResultsStatus} boxSize="icons.lg" />
         <Text fontSize="2xl" ml="2">
           <Trans>Connection Results</Trans>
         </Text>

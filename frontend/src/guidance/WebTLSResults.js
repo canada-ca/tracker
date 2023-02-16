@@ -1,5 +1,4 @@
 import React from 'react'
-import { NumberedStatusIcon } from '../components/NumberedStatusIcon'
 import {
   Accordion,
   AccordionButton,

@@ -370,6 +370,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                   httpLive
                   httpsLive
                   httpsStatus
+                  hstsStatus
                   httpImmediatelyUpgrades
                   httpEventuallyUpgrades
                   httpsImmediatelyDowngrades
