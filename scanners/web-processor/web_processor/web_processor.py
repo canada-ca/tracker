@@ -300,7 +300,7 @@ def process_connection_results(connection_results):
     except TypeError:
         pass
 
-    if not http_live and not http_live:
+    if not http_live and not https_live:
        neutral_tags.append("https13")
 
     # calculate status
