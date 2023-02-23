@@ -80,6 +80,9 @@ profiles:
       kustomize:
         paths:
           - k8s/apps/overlays/minikube
+          - k8s/apps/bases/api/creds
+          - k8s/apps/bases/scanners/dmarc-report-cronjob/creds
+          - k8s/apps/bases/scanners/scanner-platform/creds
   - name: production
     deploy:
       kustomize:
@@ -164,6 +167,7 @@ profiles:
           delete: [ "-l app!=arangodb" ]
         paths:
           - k8s/infrastructure/overlays/minikube
+          - k8s/infrastructure/bases/arangodb/creds
   - name: production
     deploy:
       kustomize:

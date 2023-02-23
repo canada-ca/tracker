@@ -17,7 +17,7 @@ spec:
         app: nats
     spec:
       containers:
-      - image: nats:2-scratch
+      - image: nats:2.9.11-scratch
         name: nats
         args: ["-js", "--debug"]
         ports:

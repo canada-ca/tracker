@@ -16,7 +16,7 @@ endef
 
 .PHONY: cluster
 cluster:
-		gcloud beta container --project "$(project)" clusters create "$(name)" --region "$(region)" --no-enable-basic-auth --release-channel "rapid" --cluster-version "1.24.6-gke.1500" --machine-type "n2d-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-standard" --disk-size "50" --metadata disable-legacy-endpoints=true --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com" --num-nodes "2" --logging=SYSTEM,WORKLOAD --enable-ip-alias --network "projects/track-compliance/global/networks/default" --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --workload-pool "track-compliance.svc.id.goog" --enable-shielded-nodes --enable-dataplane-v2 --shielded-secure-boot --shielded-integrity-monitoring
+		gcloud beta container --project "$(project)" clusters create "$(name)" --region "$(region)" --no-enable-basic-auth --release-channel "rapid" --cluster-version "1.24.8-gke.2000" --machine-type "n2d-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-standard" --disk-size "50" --metadata disable-legacy-endpoints=true --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com" --num-nodes "2" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/track-compliance/global/networks/default" --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --workload-pool "track-compliance.svc.id.goog" --enable-shielded-nodes --enable-dataplane-v2 --shielded-secure-boot --shielded-integrity-monitoring
 
 .PHONY: secrets
 secrets:
@@ -40,18 +40,10 @@ install-arango-operator:
 update-flux:
 		flux install --components=source-controller,kustomize-controller,notification-controller,image-reflector-controller,image-automation-controller --export > deploy/bases/flux.yaml
 
-# This regenerates the istio manifests while using yq to remove the CRD for the
-# operator so it doesn't clash with the istio operator which also includes the
-# CRD
 .PHONY: update-istio
 update-istio:
-		istioctl manifest generate --dry-run | yq 'select(.metadata.name != "istiooperators.install.istio.io" or .kind != "CustomResourceDefinition") | select (.!=null)' > platform/components/istio/istio-manifests.yaml
-
-# This regenerates the istio operator manifests, which include the IstioOperator
-# CRD that we omitted above
-.PHONY: update-istio-operator
-update-istio-operator:
-		istioctl operator dump --dry-run > platform/components/istio/operator.yaml
+		istioctl manifest generate --dry-run > k8s/infrastructure/bases/istio/platform/crds.yaml
+		istioctl operator dump --dry-run > k8s/infrastructure/bases/istio/istio-operator-deployment.yaml
 
 .PHONY: print-arango-deployment
 print-arango-deployment:
@@ -59,7 +51,7 @@ print-arango-deployment:
 
 .PHONY: print-istio-operator
 print-istio-operator:
-		kustomize build platform/$(env) | yq -y '. | select(.kind == "IstioOperator" and .metadata.name == "istio-controlplane")'
+		kustomize build platform/$(env) | yq -y '. | select(.kind == "IstioOperator" and .metadata.name == "istio-operator")'
 
 .PHONY: platform
 platform:
