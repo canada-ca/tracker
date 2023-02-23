@@ -1,13 +1,12 @@
-import {t} from '@lingui/macro'
-import {GraphQLString} from 'graphql'
-import {mutationWithClientMutationId} from 'graphql-relay'
+import { t } from '@lingui/macro'
+import { GraphQLString } from 'graphql'
+import { mutationWithClientMutationId } from 'graphql-relay'
 
-import {Domain} from '../../scalars'
+import { Domain } from '../../scalars'
 
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
-  description:
-    'This mutation is used to step a manual scan on a requested domain.',
+  description: 'This mutation is used to step a manual scan on a requested domain.',
   inputFields: () => ({
     domain: {
       type: Domain,
@@ -18,7 +17,7 @@ export const requestScan = new mutationWithClientMutationId({
     status: {
       type: GraphQLString,
       description: 'Informs the user if the scan was dispatched successfully.',
-      resolve: ({status}) => status,
+      resolve: ({ status }) => status,
     },
   }),
   mutateAndGetPayload: async (
@@ -27,20 +26,15 @@ export const requestScan = new mutationWithClientMutationId({
       i18n,
       userKey,
       publish,
-      auth: {
-        checkDomainPermission,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
-      loaders: {loadDomainByDomain},
-      validators: {cleanseInput},
+      auth: { checkDomainPermission, userRequired, verifiedRequired, loginRequiredBool },
+      loaders: { loadDomainByDomain, loadWebConnectionsByDomainId },
+      validators: { cleanseInput },
     },
   ) => {
     if (loginRequiredBool) {
       // Get User
       const user = await userRequired()
-      verifiedRequired({user})
+      verifiedRequired({ user })
     }
 
     // Cleanse input
@@ -53,25 +47,48 @@ export const requestScan = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to step a one time scan on: ${domainInput} however domain cannot be found.`,
       )
-      throw new Error(
-        i18n._(t`Unable to request a one time scan on an unknown domain.`),
-      )
+      throw new Error(i18n._(t`Unable to request a one time scan on an unknown domain.`))
     }
 
     if (loginRequiredBool) {
       // Check to see if user has access to domain
-      const permission = await checkDomainPermission({domainId: domain._id})
+      const permission = await checkDomainPermission({ domainId: domain._id })
 
       if (!permission) {
         console.warn(
           `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however they do not have permission to do so.`,
         )
         throw new Error(
-          i18n._(
-            t`Permission Denied: Please contact organization user for help with scanning this domain.`,
-          ),
+          i18n._(t`Permission Denied: Please contact organization user for help with scanning this domain.`),
         )
       }
+    }
+
+    // Check to see if a scan is already pending
+    try {
+      const webConnections = await loadWebConnectionsByDomainId({
+        domainId: domain._id,
+        limit: 1,
+        orderBy: { field: 'timestamp', direction: 'DESC' },
+        excludePending: false,
+      })
+      if (webConnections.edges.length > 0) {
+        const webConnection = webConnections.edges[0].node
+        webConnection.results.forEach((result) => {
+          const timeDifferenceInMinutes = (Date.now() - result.timestamp) / 1000 / 60
+          if (result.status === 'PENDING' && timeDifferenceInMinutes < 30) {
+            console.warn(
+              `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however a scan is already pending.`,
+            )
+            throw new Error(i18n._(t`Unable to request a one time scan on a domain that already has a pending scan.`))
+          }
+        })
+      }
+    } catch (err) {
+      console.error(
+        `Error occurred when user: ${userKey} attempted to step a one time scan on: ${domain.domain}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to request a one time scan. Please try again.`))
     }
 
     await publish({
@@ -86,9 +103,7 @@ export const requestScan = new mutationWithClientMutationId({
       },
     })
 
-    console.info(
-      `User: ${userKey} successfully dispatched a one time scan on domain: ${domain.domain}.`,
-    )
+    console.info(`User: ${userKey} successfully dispatched a one time scan on domain: ${domain.domain}.`)
 
     return {
       status: i18n._(t`Successfully dispatched one time scan.`),
