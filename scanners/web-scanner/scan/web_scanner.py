@@ -6,7 +6,7 @@ from scan.endpoint_chain_scanner.endpoint_chain_scanner import scan_chain
 
 
 def scan_web(domain, ip_address=None):
-    timestamp = str(datetime.datetime.utcnow())
+    timestamp = str(datetime.datetime.now().astimezone())
     tls_result = scan_tls(domain=domain, ip_address=ip_address)
     if not ip_address and getattr(tls_result, "server_location", None) and getattr(tls_result.server_location, "ip_address", None):
         # set ip address to use same ip for tls scan and resolve chain

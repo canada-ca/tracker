@@ -431,7 +431,7 @@ def process_results(results):
             if key_modulus:
                 dkim_results["selectors"][selector]["key_modulus"] = str(key_modulus)
 
-    timestamp = str(datetime.datetime.utcnow())
+    timestamp = str(datetime.datetime.now().astimezone())
 
     return {
         "timestamp": timestamp,

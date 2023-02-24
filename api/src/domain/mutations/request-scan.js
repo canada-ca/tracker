@@ -27,7 +27,7 @@ export const requestScan = new mutationWithClientMutationId({
       userKey,
       publish,
       auth: { checkDomainPermission, userRequired, verifiedRequired, loginRequiredBool },
-      loaders: { loadDomainByDomain, loadWebConnectionsByDomainId },
+      loaders: { loadDomainByDomain, loadWebConnectionsByDomainId, loadWebScansByWebId },
       validators: { cleanseInput },
     },
   ) => {
@@ -74,9 +74,10 @@ export const requestScan = new mutationWithClientMutationId({
       })
       if (webConnections.edges.length > 0) {
         const webConnection = webConnections.edges[0].node
-        webConnection.results.forEach((result) => {
-          const timeDifferenceInMinutes = (Date.now() - result.timestamp) / 1000 / 60
-          if (result.status === 'PENDING' && timeDifferenceInMinutes < 30) {
+        const webScans = await loadWebScansByWebId({ webId: webConnection._id })
+        webScans.forEach((result) => {
+          const timeDifferenceInMinutes = (Date.now() - new Date(webConnection.timestamp).getTime()) / 1000 / 60
+          if (result.status.toUpperCase() === 'PENDING' && timeDifferenceInMinutes < 30) {
             console.warn(
               `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however a scan is already pending.`,
             )

@@ -115,7 +115,7 @@ async def run(loop):
                 )
 
                 web_entry = db.collection("web").insert({
-                    "timestamp": str(datetime.datetime.utcnow()),
+                    "timestamp": str(datetime.datetime.now().astimezone()),
                     "domain": processed_results["domain"]
                 })
                 db.collection("domainsWeb").insert(
