@@ -10,7 +10,7 @@ export const loadDomainConnectionsByOrgId =
     let ownershipOrgsOnly = aql`
       LET claimKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
     `
@@ -19,7 +19,7 @@ export const loadDomainConnectionsByOrgId =
         ownershipOrgsOnly = aql`
           LET claimKeys = (
             FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
-              OPTIONS {bfs: true}
+              OPTIONS {order: "bfs"}
               RETURN v._key
           )
         `
@@ -331,7 +331,7 @@ export const loadDomainConnectionsByOrgId =
         domainKeysQuery = aql`
       LET domainKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
         )`
       } else {
@@ -339,13 +339,13 @@ export const loadDomainConnectionsByOrgId =
       LET domainKeys = UNIQUE(FLATTEN(
         LET superAdmin = (
           FOR v, e IN 1 INBOUND ${userDBId} affiliations
-            OPTIONS {bfs: true}
+            OPTIONS {order: "bfs"}
             FILTER e.permission == "super_admin"
             RETURN e.permission
         )
         LET affiliationKeys = (
           FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
-            OPTIONS {bfs: true}
+            OPTIONS {order: "bfs"}
             RETURN v._key
         )
         LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
