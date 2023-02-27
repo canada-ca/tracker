@@ -245,13 +245,13 @@ export const loadUserConnectionsByUserId =
         LET keys = []
         LET orgIds = (
           FOR v, e IN 1..1 ANY ${userDBId} affiliations
-            OPTIONS {bfs: true}
+            OPTIONS {order: "bfs"}
             RETURN e._from
         )
         FOR orgId IN orgIds
           LET affiliationUserKeys = (
             FOR v, e IN 1..1 OUTBOUND orgId affiliations
-              OPTIONS {bfs: true}
+              OPTIONS {order: "bfs"}
               return v._key
           )
           RETURN APPEND(keys, affiliationUserKeys)

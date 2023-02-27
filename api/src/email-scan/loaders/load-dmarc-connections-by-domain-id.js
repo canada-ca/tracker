@@ -94,7 +94,7 @@ export const loadDmarcConnectionsByDomainId =
 
         beforeTemplate = aql`
         FILTER ${dmarcField} ${beforeTemplateDirection} ${documentField}
-        OR (${dmarcField} == ${documentField} 
+        OR (${dmarcField} == ${documentField}
         AND TO_NUMBER(dmarcScan._key) < TO_NUMBER(${beforeId}))
       `
       }
@@ -106,7 +106,7 @@ export const loadDmarcConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(dmarcScan.timestamp),
         "%y-%m-%d"
-      ) >= 
+      ) >=
       DATE_FORMAT(
         DATE_TIMESTAMP(${startDate}),
         "%y-%m-%d"
@@ -120,7 +120,7 @@ export const loadDmarcConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(dmarcScan.timestamp),
         "%y-%m-%d"
-      ) <= 
+      ) <=
       DATE_FORMAT(
         DATE_TIMESTAMP(${endDate}),
         "%y-%m-%d"
@@ -266,7 +266,7 @@ export const loadDmarcConnectionsByDomainId =
       WITH dmarc, domains, domainsDMARC
       LET dmarcKeys = (
         FOR v, e IN 1 OUTBOUND ${domainId} domainsDMARC
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
 
@@ -302,13 +302,13 @@ export const loadDmarcConnectionsByDomainId =
           RETURN dmarcScan
       ) > 0 ? true : false)
 
-      RETURN { 
+      RETURN {
         "dmarcScans": retrievedDmarcScans,
         "totalCount": LENGTH(dmarcKeys),
-        "hasNextPage": hasNextPage, 
-        "hasPreviousPage": hasPreviousPage, 
-        "startKey": FIRST(retrievedDmarcScans)._key, 
-        "endKey": LAST(retrievedDmarcScans)._key 
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedDmarcScans)._key,
+        "endKey": LAST(retrievedDmarcScans)._key
       }
     `
     } catch (err) {

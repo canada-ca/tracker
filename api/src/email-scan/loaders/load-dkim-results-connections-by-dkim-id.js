@@ -206,7 +206,7 @@ export const loadDkimResultConnectionsByDkimId =
       WITH dkim, dkimResults, dkimToDkimResults
       LET dkimResultKeys = (
         FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
 
@@ -232,7 +232,7 @@ export const loadDkimResultConnectionsByDkimId =
           SORT ${sortByField} TO_NUMBER(dkimResult._key) ${sortString} LIMIT 1
           RETURN dkimResult
       ) > 0 ? true : false)
-      
+
       LET hasPreviousPage = (LENGTH(
         FOR dkimResult IN dkimResults
           FILTER dkimResult._key IN dkimResultKeys
@@ -241,13 +241,13 @@ export const loadDkimResultConnectionsByDkimId =
           RETURN dkimResult
       ) > 0 ? true : false)
 
-      RETURN { 
+      RETURN {
         "dkimResults": retrievedDkimResults,
         "totalCount": LENGTH(dkimResultKeys),
-        "hasNextPage": hasNextPage, 
-        "hasPreviousPage": hasPreviousPage, 
-        "startKey": FIRST(retrievedDkimResults)._key, 
-        "endKey": LAST(retrievedDkimResults)._key 
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedDkimResults)._key,
+        "endKey": LAST(retrievedDkimResults)._key
       }
     `
     } catch (err) {

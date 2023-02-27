@@ -101,7 +101,7 @@ export const loadSpfConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(spfScan.timestamp),
         "%y-%m-%d"
-      ) >= 
+      ) >=
       DATE_FORMAT(
         DATE_TIMESTAMP(${startDate}),
         "%y-%m-%d"
@@ -115,7 +115,7 @@ export const loadSpfConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(spfScan.timestamp),
         "%y-%m-%d"
-      ) <= 
+      ) <=
       DATE_FORMAT(
         DATE_TIMESTAMP(${endDate}),
         "%y-%m-%d"
@@ -253,8 +253,8 @@ export const loadSpfConnectionsByDomainId =
       spfScanInfoCursor = await query`
       WITH domains, domainsSPF, spf
       LET spfKeys = (
-        FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF 
-          OPTIONS {bfs: true}
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsSPF
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
 
@@ -281,7 +281,7 @@ export const loadSpfConnectionsByDomainId =
           SORT ${sortByField} TO_NUMBER(spfScan._key) ${sortString} LIMIT 1
           RETURN spfScan
       ) > 0 ? true : false)
-      
+
       LET hasPreviousPage = (LENGTH(
         FOR spfScan IN spf
           FILTER spfScan._key IN spfKeys
@@ -290,13 +290,13 @@ export const loadSpfConnectionsByDomainId =
           RETURN spfScan
       ) > 0 ? true : false)
 
-      RETURN { 
+      RETURN {
         "spfScans": retrievedSpfScans,
         "totalCount": LENGTH(spfKeys),
-        "hasNextPage": hasNextPage, 
-        "hasPreviousPage": hasPreviousPage, 
-        "startKey": FIRST(retrievedSpfScans)._key, 
-        "endKey": LAST(retrievedSpfScans)._key 
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedSpfScans)._key,
+        "endKey": LAST(retrievedSpfScans)._key
       }
     `
     } catch (err) {
