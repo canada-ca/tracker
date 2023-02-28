@@ -19,7 +19,7 @@ spec:
       initContainers: # This field to be patched in overlay
       containers:
         - name: restore
-          image: arangodb:3.7.11
+          image: arangodb:3.9.9
           volumeMounts:
             - mountPath: /tmp/dump
               name:
