@@ -48,7 +48,7 @@ spec:
                     secretKeyRef:
                       key: password
                       name: arangodb
-              image: arangodb:3.7.11
+              image: arangodb:3.9.9
               name: dump
               volumeMounts:
                 - mountPath: /tmp/dump
