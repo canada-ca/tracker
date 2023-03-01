@@ -6,7 +6,7 @@ metadata:
   labels:
     app: 'arangodb'
 spec:
-  image: arangodb/arangodb:3.9.9
+  image: arangodb/arangodb:3.10.4
   environment: Production
   mode: Cluster
   tls:
