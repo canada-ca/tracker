@@ -4030,7 +4030,13 @@ describe('removing a domain', () => {
                 i18n,
                 query: jest
                   .fn()
-                  .mockReturnValueOnce({})
+                  .mockReturnValueOnce({
+                    all: jest
+                      .fn()
+                      .mockReturnValueOnce([
+                        { _id: toGlobalId('organization', 456) },
+                      ]),
+                  })
                   .mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
                 transaction,
@@ -4045,11 +4051,13 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
+                      _id: toGlobalId('domains', 123),
                       domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({
+                      _id: toGlobalId('organization', 456),
                       verified: false,
                       slug: 'temp-org',
                     }),
@@ -4106,7 +4114,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organization', 456) },
+                      ]),
+                    count: 1,
+                  }),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -4120,11 +4135,13 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('domains', 123),
                         domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organization', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -4181,7 +4198,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organization', 456) },
+                      ]),
+                  }),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -4195,11 +4219,13 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('domains', 123),
                         domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organization', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -4260,7 +4286,14 @@ describe('removing a domain', () => {
                 i18n,
                 query: jest
                   .fn()
-                  .mockReturnValueOnce({ count: 0 })
+                  .mockReturnValueOnce({
+                    count: 0,
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organization', 456) },
+                      ]),
+                  })
                   .mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
@@ -4275,11 +4308,13 @@ describe('removing a domain', () => {
                 loaders: {
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({
+                      _id: toGlobalId('domains', 123),
                       domain: 'domain.gc.ca',
                     }),
                   },
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({
+                      _id: toGlobalId('organization', 456),
                       verified: false,
                       slug: 'temp-org',
                     }),
@@ -4343,7 +4378,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organizations', 456) },
+                      ]),
+                  }),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -4357,11 +4399,13 @@ describe('removing a domain', () => {
                   loaders: {
                     loadDomainByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('domains', 123),
                         domain: 'domain.gc.ca',
                       }),
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organizations', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -4382,11 +4426,12 @@ describe('removing a domain', () => {
           })
           describe('domain has more than one edge', () => {
             it('returns an error', async () => {
-              const cursor = {
+              const mockedQuery = jest.fn().mockReturnValue({
                 count: 2,
-              }
-
-              const mockedQuery = jest.fn().mockReturnValue(cursor)
+                all: jest
+                  .fn()
+                  .mockReturnValue([{ _id: toGlobalId('organizations', 456) }]),
+              })
 
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest.fn().mockRejectedValue(new Error('Step error')),
@@ -4440,6 +4485,7 @@ describe('removing a domain', () => {
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organizations', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -4498,7 +4544,12 @@ describe('removing a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 2 }),
+              query: jest.fn().mockReturnValue({
+                count: 2,
+                all: jest
+                  .fn()
+                  .mockReturnValue([{ _id: toGlobalId('organizations', 456) }]),
+              }),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
@@ -4517,6 +4568,7 @@ describe('removing a domain', () => {
                 },
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({
+                    _id: toGlobalId('organizations', 456),
                     verified: false,
                     slug: 'temp-org',
                   }),
@@ -5180,7 +5232,13 @@ describe('removing a domain', () => {
                 i18n,
                 query: jest
                   .fn()
-                  .mockReturnValueOnce({})
+                  .mockReturnValueOnce({
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organizations', 456) },
+                      ]),
+                  })
                   .mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
                 transaction,
@@ -5200,6 +5258,7 @@ describe('removing a domain', () => {
                   },
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({
+                      _id: toGlobalId('organizations', 456),
                       verified: false,
                       slug: 'temp-org',
                     }),
@@ -5258,7 +5317,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organizations', 456) },
+                      ]),
+                  }),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -5277,6 +5343,7 @@ describe('removing a domain', () => {
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organizations', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -5335,7 +5402,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organizations', 456) },
+                      ]),
+                  }),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -5354,6 +5428,7 @@ describe('removing a domain', () => {
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organizations', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -5416,7 +5491,14 @@ describe('removing a domain', () => {
                 i18n,
                 query: jest
                   .fn()
-                  .mockReturnValueOnce({ count: 0 })
+                  .mockReturnValueOnce({
+                    count: 0,
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organizations', 456) },
+                      ]),
+                  })
                   .mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
@@ -5436,6 +5518,7 @@ describe('removing a domain', () => {
                   },
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({
+                      _id: toGlobalId('organizations', 456),
                       verified: false,
                       slug: 'temp-org',
                     }),
@@ -5501,7 +5584,14 @@ describe('removing a domain', () => {
                 null,
                 {
                   i18n,
-                  query: jest.fn().mockReturnValue({ count: 1 }),
+                  query: jest.fn().mockReturnValue({
+                    count: 1,
+                    all: jest
+                      .fn()
+                      .mockReturnValue([
+                        { _id: toGlobalId('organizations', 456) },
+                      ]),
+                  }),
                   collections: collectionNames,
                   transaction: mockedTransaction,
                   userKey: 123,
@@ -5520,6 +5610,7 @@ describe('removing a domain', () => {
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organizations', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -5544,6 +5635,9 @@ describe('removing a domain', () => {
             it('returns an error', async () => {
               const cursor = {
                 count: 2,
+                all: jest
+                  .fn()
+                  .mockReturnValue([{ _id: toGlobalId('organizations', 456) }]),
               }
 
               const mockedQuery = jest.fn().mockReturnValue(cursor)
@@ -5600,6 +5694,7 @@ describe('removing a domain', () => {
                     },
                     loadOrgByKey: {
                       load: jest.fn().mockReturnValue({
+                        _id: toGlobalId('organizations', 456),
                         verified: false,
                         slug: 'temp-org',
                       }),
@@ -5660,7 +5755,12 @@ describe('removing a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 2 }),
+              query: jest.fn().mockReturnValue({
+                count: 2,
+                all: jest
+                  .fn()
+                  .mockReturnValue([{ _id: toGlobalId('organizations', 456) }]),
+              }),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: 123,
@@ -5679,6 +5779,7 @@ describe('removing a domain', () => {
                 },
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({
+                    _id: toGlobalId('organizations', 456),
                     verified: false,
                     slug: 'temp-org',
                   }),

@@ -221,8 +221,6 @@ export const removeDomain = new mutationWithClientMutationId({
     if (countCursor.count <= 1) {
       // Remove scan data
 
-      console.log(domain._id)
-
       try {
         // Remove DKIM data
         await trx.step(async () => {
