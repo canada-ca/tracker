@@ -258,7 +258,7 @@ export const loadWebCheckConnectionsByUserId =
             ${filterString}
             LET domainKeys = (
                     FOR v, e IN 1..1 OUTBOUND org._id claims
-                      OPTIONS {bfs: true}
+                      OPTIONS {order: "bfs"}
                       RETURN v._key
                  )
             LET vulnDomains = (

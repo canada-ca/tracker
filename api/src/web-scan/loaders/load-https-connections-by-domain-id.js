@@ -115,7 +115,7 @@ export const loadHttpsConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(httpsScan.timestamp),
         "%y-%m-%d"
-      ) >= 
+      ) >=
       DATE_FORMAT(
         DATE_TIMESTAMP(${startDate}),
         "%y-%m-%d"
@@ -129,7 +129,7 @@ export const loadHttpsConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(httpsScan.timestamp),
         "%y-%m-%d"
-      ) <= 
+      ) <=
       DATE_FORMAT(
         DATE_TIMESTAMP(${endDate}),
         "%y-%m-%d"
@@ -280,7 +280,7 @@ export const loadHttpsConnectionsByDomainId =
       WITH domains, domainsHTTPS, https
       LET httpsKeys = (
         FOR v, e IN 1 OUTBOUND ${domainId} domainsHTTPS
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
 
@@ -307,7 +307,7 @@ export const loadHttpsConnectionsByDomainId =
           SORT ${sortByField} TO_NUMBER(httpsScan._key) ${sortString} LIMIT 1
           RETURN httpsScan
       ) > 0 ? true : false)
-      
+
       LET hasPreviousPage = (LENGTH(
         FOR httpsScan IN https
           FILTER httpsScan._key IN httpsKeys
@@ -316,13 +316,13 @@ export const loadHttpsConnectionsByDomainId =
           RETURN httpsScan
       ) > 0 ? true : false)
 
-      RETURN { 
+      RETURN {
         "httpsScans": retrievedHttps,
         "totalCount": LENGTH(httpsKeys),
-        "hasNextPage": hasNextPage, 
-        "hasPreviousPage": hasPreviousPage, 
-        "startKey": FIRST(retrievedHttps)._key, 
-        "endKey": LAST(retrievedHttps)._key 
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedHttps)._key,
+        "endKey": LAST(retrievedHttps)._key
       }
     `
     } catch (err) {

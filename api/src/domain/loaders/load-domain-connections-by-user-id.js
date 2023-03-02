@@ -20,7 +20,7 @@ export const loadDomainConnectionsByUserId =
     let ownershipOrgsOnly = aql`
       LET claimDomainKeys = (
         FOR v, e IN 1..1 OUTBOUND orgId claims
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
     `
@@ -29,7 +29,7 @@ export const loadDomainConnectionsByUserId =
         ownershipOrgsOnly = aql`
           LET claimDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND orgId ownership
-              OPTIONS {bfs: true}
+              OPTIONS {order: "bfs"}
               RETURN v._key
           )
         `
@@ -332,7 +332,7 @@ export const loadDomainConnectionsByUserId =
       WITH favourites
       LET domainKeys = (
         FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
       `
@@ -356,7 +356,7 @@ export const loadDomainConnectionsByUserId =
         FOR orgId IN orgIds
           LET claimDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND orgId claims
-              OPTIONS {bfs: true}
+              OPTIONS {order: "bfs"} 
               FILTER v.archived != true
               RETURN v._key
           )
@@ -370,7 +370,7 @@ export const loadDomainConnectionsByUserId =
         LET keys = []
         LET orgIds = (
           FOR v, e IN 1..1 ANY ${userDBId} affiliations
-            OPTIONS {bfs: true}
+            OPTIONS {order: "bfs"}
             RETURN e._from
         )
         FOR orgId IN orgIds
