@@ -57,7 +57,7 @@ msgstr "404 - Page non trouvée"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
-#: src/admin/AdminDomains.js:330
+#: src/admin/AdminDomains.js:341
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "Un domaine ne peut être supprimé que pour l'une des raisons ci-dessous. Pour qu'un domaine n'existe plus, il doit être supprimé du DNS. Si vous devez supprimer ce domaine pour une autre raison, veuillez contacter TBS Cyber Security."
 
@@ -155,11 +155,11 @@ msgstr "Activité"
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/admin/AdminDomains.js:260
+#: src/admin/AdminDomains.js:277
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
-#: src/admin/AdminDomainModal.js:267
+#: src/admin/AdminDomainModal.js:271
 msgid "Add Domain Details"
 msgstr "Ajouter les détails du domaine"
 
@@ -268,9 +268,9 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 msgid "An error occurred while verifying your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
-#: src/admin/AdminDomainModal.js:71
-#: src/admin/AdminDomainModal.js:120
-#: src/admin/AdminDomains.js:101
+#: src/admin/AdminDomainModal.js:75
+#: src/admin/AdminDomainModal.js:124
+#: src/admin/AdminDomains.js:103
 #: src/admin/UserListModal.js:53
 #: src/admin/UserListModal.js:151
 #: src/auth/TwoFactorAuthenticatePage.js:29
@@ -300,7 +300,7 @@ msgstr "les systèmes de gestion du portefeuille d’applications (GPA);"
 msgid "April"
 msgstr "Avril"
 
-#: src/admin/AdminDomainModal.js:415
+#: src/admin/AdminDomainModal.js:421
 msgid "Archive domain"
 msgstr "Archiver ce domaine"
 
@@ -490,8 +490,8 @@ msgstr "Recueillir et analyser les rapports DMARC."
 msgid "Compliant"
 msgstr "Conforme"
 
-#: src/admin/AdminDomainModal.js:438
-#: src/admin/AdminDomains.js:375
+#: src/admin/AdminDomainModal.js:459
+#: src/admin/AdminDomains.js:386
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
 #: src/admin/SuperAdminUserList.js:441
@@ -513,7 +513,7 @@ msgstr "Confirmer le nouveau mot de passe:"
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe:"
 
-#: src/admin/AdminDomains.js:325
+#: src/admin/AdminDomains.js:336
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine:"
 
@@ -650,7 +650,7 @@ msgstr "Défaillances DKIM par adresse IP"
 msgid "DKIM Results"
 msgstr "Résultats DKIM"
 
-#: src/admin/AdminDomainModal.js:321
+#: src/admin/AdminDomainModal.js:325
 msgid "DKIM Selector"
 msgstr "Sélecteur DKIM"
 
@@ -658,7 +658,7 @@ msgstr "Sélecteur DKIM"
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
-#: src/admin/AdminDomainModal.js:284
+#: src/admin/AdminDomainModal.js:288
 msgid "DKIM Selectors:"
 msgstr "Sélecteurs DKIM:"
 
@@ -823,7 +823,7 @@ msgstr "Disposition"
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/admin/AdminDomains.js:147
+#: src/admin/AdminDomains.js:149
 msgid "Domain List"
 msgstr "Liste des domaines"
 
@@ -831,7 +831,7 @@ msgstr "Liste des domaines"
 msgid "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
 msgstr "Exigences de configuration pour la gestion des sites Web et des services"
 
-#: src/admin/AdminDomains.js:248
+#: src/admin/AdminDomains.js:265
 #: src/components/fields/DomainField.js:38
 msgid "Domain URL"
 msgstr "URL du domaine"
@@ -840,19 +840,19 @@ msgstr "URL du domaine"
 msgid "Domain URL:"
 msgstr "URL du domaine:"
 
-#: src/admin/AdminDomainModal.js:82
+#: src/admin/AdminDomainModal.js:86
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
-#: src/admin/AdminDomains.js:113
+#: src/admin/AdminDomains.js:115
 msgid "Domain removed"
 msgstr "Domaine supprimé"
 
-#: src/admin/AdminDomains.js:114
+#: src/admin/AdminDomains.js:116
 msgid "Domain removed from {orgSlug}"
 msgstr "Domaine supprimé de {orgSlug}"
 
-#: src/admin/AdminDomainModal.js:131
+#: src/admin/AdminDomainModal.js:135
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
@@ -896,7 +896,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/admin/AdminDomainModal.js:265
+#: src/admin/AdminDomainModal.js:269
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -1262,7 +1262,7 @@ msgstr "En-tête De"
 msgid "Hidden"
 msgstr "Caché"
 
-#: src/admin/AdminDomainModal.js:394
+#: src/admin/AdminDomainModal.js:398
 msgid "Hide domain"
 msgstr "Cacher ce domaine"
 
@@ -1358,7 +1358,7 @@ msgstr "Incorrect authenticate.result typename."
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
-#: src/admin/AdminDomainModal.js:104
+#: src/admin/AdminDomainModal.js:108
 msgid "Incorrect createDomain.result typename."
 msgstr "Incorrect createDomain.result typename."
 
@@ -1375,7 +1375,7 @@ msgstr "Incorrect inviteUserToOrg.result typename."
 #~ msgid "Incorrect leaveOrganization.result typename."
 #~ msgstr "Incorrect leaveOrganization.result typename."
 
-#: src/admin/AdminDomains.js:132
+#: src/admin/AdminDomains.js:134
 msgid "Incorrect removeDomain.result typename."
 msgstr "Incorrect removeDomain.result typename."
 
@@ -1387,9 +1387,9 @@ msgstr "Incorrect removeOrganization.result typename."
 msgid "Incorrect resetPassword.result typename."
 msgstr "Incorrect resetPassword.result typename."
 
-#: src/admin/AdminDomainModal.js:103
-#: src/admin/AdminDomainModal.js:152
-#: src/admin/AdminDomains.js:131
+#: src/admin/AdminDomainModal.js:107
+#: src/admin/AdminDomainModal.js:156
+#: src/admin/AdminDomains.js:133
 #: src/admin/SuperAdminUserList.js:110
 #: src/admin/UserListModal.js:83
 #: src/admin/UserListModal.js:132
@@ -1430,7 +1430,7 @@ msgstr "Incorrect typename received."
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
 
-#: src/admin/AdminDomainModal.js:153
+#: src/admin/AdminDomainModal.js:157
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
 
@@ -1682,11 +1682,11 @@ msgstr "Les balises neutres mettent en évidence les détails pertinents de la c
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage:"
 
-#: src/admin/AdminDomainModal.js:276
+#: src/admin/AdminDomainModal.js:280
 msgid "New Domain URL"
 msgstr "Nouvelle URL de domaine"
 
-#: src/admin/AdminDomainModal.js:275
+#: src/admin/AdminDomainModal.js:279
 msgid "New Domain URL:"
 msgstr "Nouvelle URL de domaine:"
 
@@ -1720,7 +1720,7 @@ msgstr "Nouvelle valeur :"
 msgid "No DMARC phase information available for this organization."
 msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organisation."
 
-#: src/admin/AdminDomains.js:154
+#: src/admin/AdminDomains.js:156
 #: src/domains/DomainsPage.js:108
 #: src/organizationDetails/OrganizationDomains.js:94
 msgid "No Domains"
@@ -1813,6 +1813,14 @@ msgstr "Non mis en œuvre"
 #: src/app/ContactUsPage.js:24
 msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 msgstr "Notez que les données de conformité ne sont pas automatiquement actualisées. La mise à jour des modifications apportées aux domaines peut prendre 24 heures."
+
+#: src/admin/AdminDomainModal.js:432
+msgid "Note: This could affect results for multiple organizations"
+msgstr "Note : Cela pourrait affecter les résultats de plusieurs organisations"
+
+#: src/admin/AdminDomainModal.js:427
+msgid "Note: This will affect results for {orgCount} organizations"
+msgstr "Note : Ceci affectera les résultats pour les organisations {orgCount}."
 
 #: src/termsConditions/TermsConditionsPage.js:21
 msgid "Notice of Agreement"
@@ -2001,7 +2009,7 @@ msgstr "Le champ du numéro de téléphone ne doit pas être vide"
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Le numéro de téléphone doit être un numéro de téléphone valide de 10 à 15 chiffres."
 
-#: src/admin/AdminDomainModal.js:421
+#: src/admin/AdminDomainModal.js:442
 msgid "Please allow up to 24 hours for summaries to reflect any changes."
 msgstr "Veuillez prévoir jusqu'à 24 heures pour que les résumés reflètent les changements éventuels."
 
@@ -2043,7 +2051,7 @@ msgstr "Étiquettes positives"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Statut préchargé:"
 
-#: src/admin/AdminDomainModal.js:380
+#: src/admin/AdminDomainModal.js:384
 msgid "Prevent this domain from being counted in your organization's summaries."
 msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre organisation."
 
@@ -2051,7 +2059,7 @@ msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre o
 #~ msgid "Prevent this domain from being scanned and being counted in any summaries."
 #~ msgstr "Empêchez ce domaine d'être scanné et d'être compté dans les résumés."
 
-#: src/admin/AdminDomainModal.js:401
+#: src/admin/AdminDomainModal.js:406
 msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
 msgstr "Empêchez ce domaine d'être visible, d'être scanné et d'être compté dans les résumés."
 
@@ -2118,7 +2126,7 @@ msgstr "Conseils de lecture"
 msgid "Read guidance"
 msgstr "Conseils de lecture"
 
-#: src/admin/AdminDomains.js:341
+#: src/admin/AdminDomains.js:352
 #: src/admin/AuditLogTable.js:129
 msgid "Reason"
 msgstr "Raison"
@@ -2144,7 +2152,7 @@ msgstr "Rappelle-toi de moi"
 msgid "Remove"
 msgstr "Retirer"
 
-#: src/admin/AdminDomains.js:319
+#: src/admin/AdminDomains.js:330
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -2323,7 +2331,7 @@ msgstr "Recherche d'éléments entièrement alignés"
 msgid "Search SPF Failing Items"
 msgstr "Rechercher les éléments défaillants du SPF"
 
-#: src/admin/AdminDomains.js:249
+#: src/admin/AdminDomains.js:266
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
@@ -2354,7 +2362,7 @@ msgstr "Recherche d'un utilisateur (email)"
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
-#: src/admin/AdminDomains.js:235
+#: src/admin/AdminDomains.js:252
 #: src/admin/UserList.js:149
 #: src/components/ReactTableGlobalFilter.js:36
 #: src/components/SearchBox.js:65
@@ -2369,7 +2377,7 @@ msgstr "Secteur:"
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
-#: src/admin/AdminDomains.js:351
+#: src/admin/AdminDomains.js:362
 msgid "Select a reason for removing this domain"
 msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 
@@ -2700,12 +2708,12 @@ msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la 
 msgid "This could be due to improper configuration, or could be the result of a scan error"
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
-#: src/admin/AdminDomains.js:359
+#: src/admin/AdminDomains.js:370
 #: src/admin/AuditLogTable.js:151
 msgid "This domain does not belong to this organization"
 msgstr "Ce domaine n'appartient pas à cette organisation"
 
-#: src/admin/AdminDomains.js:356
+#: src/admin/AdminDomains.js:367
 #: src/admin/AuditLogTable.js:148
 msgid "This domain no longer exists"
 msgstr "Ce domaine n'existe plus"
@@ -2808,7 +2816,7 @@ msgstr "Impossible de fermer ce compte."
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:94
+#: src/admin/AdminDomainModal.js:98
 msgid "Unable to create new domain."
 msgstr "Impossible de créer un nouveau domaine."
 
@@ -2829,7 +2837,7 @@ msgstr "Impossible d'inviter un utilisateur."
 #~ msgid "Unable to leave organization."
 #~ msgstr "Impossible de quitter l'organisation."
 
-#: src/admin/AdminDomains.js:122
+#: src/admin/AdminDomains.js:124
 msgid "Unable to remove domain."
 msgstr "Impossible de supprimer le domaine."
 
@@ -2864,7 +2872,7 @@ msgstr "Impossible d'envoyer l'e-mail de vérification"
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:143
+#: src/admin/AdminDomainModal.js:147
 msgid "Unable to update domain."
 msgstr "Impossible de mettre à jour le domaine."
 
@@ -3269,7 +3277,7 @@ msgstr "nos conditions générales sur le site Web du SCT"
 msgid "user email"
 msgstr "e-mail de l'utilisateur"
 
-#: src/admin/AdminDomainModal.js:84
+#: src/admin/AdminDomainModal.js:88
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
 
@@ -3289,7 +3297,7 @@ msgstr "{count} enregistrements..."
 msgid "{domainSlug} does not support aggregate data"
 msgstr "{domainSlug} ne supporte pas les données agrégées"
 
-#: src/admin/AdminDomainModal.js:133
+#: src/admin/AdminDomainModal.js:137
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 

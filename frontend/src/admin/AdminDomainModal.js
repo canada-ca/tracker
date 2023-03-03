@@ -36,7 +36,7 @@ import {
   QuestionOutlineIcon,
   SmallAddIcon,
 } from '@chakra-ui/icons'
-import { array, bool, func, object, string } from 'prop-types'
+import { array, bool, func, number, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
@@ -50,16 +50,20 @@ export function AdminDomainModal({
   onClose,
   validationSchema,
   orgId,
-  editingDomainId,
-  editingDomainUrl,
-  selectorInputList,
-  tagInputList,
-  orgSlug,
-  archived,
-  hidden,
-  permission,
-  mutation,
+  ...props
 }) {
+  const {
+    editingDomainId,
+    editingDomainUrl,
+    selectorInputList,
+    tagInputList,
+    orgSlug,
+    archived,
+    hidden,
+    permission,
+    mutation,
+    orgCount,
+  } = props
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -396,25 +400,42 @@ export function AdminDomainModal({
                       </Flex>
 
                       {permission === 'SUPER_ADMIN' && (
-                        <Flex align="center">
-                          <Tooltip
-                            label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
-                          >
-                            <QuestionOutlineIcon tabIndex={0} />
-                          </Tooltip>
-                          <label>
-                            <Switch
-                              isFocusable={true}
-                              name="archiveDomain"
-                              mx="2"
-                              defaultChecked={values.archiveDomain}
-                              onChange={handleChange}
-                            />
-                          </label>
-                          <Badge variant="outline" color="gray.900" p="1.5">
-                            <Trans>Archive domain</Trans>
-                          </Badge>
-                        </Flex>
+                        <Box>
+                          <Flex align="center">
+                            <Tooltip
+                              label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
+                            >
+                              <QuestionOutlineIcon tabIndex={0} />
+                            </Tooltip>
+                            <label>
+                              <Switch
+                                colorScheme="red"
+                                isFocusable={true}
+                                name="archiveDomain"
+                                mx="2"
+                                defaultChecked={values.archiveDomain}
+                                onChange={handleChange}
+                              />
+                            </label>
+                            <Badge variant="outline" color="gray.900" p="1.5">
+                              <Trans>Archive domain</Trans>
+                            </Badge>
+                          </Flex>
+
+                          <Text fontSize="sm">
+                            {orgCount > 0 ? (
+                              <Trans>
+                                Note: This will affect results for {orgCount}{' '}
+                                organizations
+                              </Trans>
+                            ) : (
+                              <Trans>
+                                Note: This could affect results for multiple
+                                organizations
+                              </Trans>
+                            )}
+                          </Text>
+                        </Box>
                       )}
 
                       <Text>
@@ -460,4 +481,5 @@ AdminDomainModal.propTypes = {
   permission: string,
   orgSlug: string,
   mutation: string,
+  orgCount: number,
 }

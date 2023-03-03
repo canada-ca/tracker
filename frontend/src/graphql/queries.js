@@ -549,6 +549,9 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             claimTags
             hidden
             archived
+            organizations(first: 1) {
+              totalCount
+            }
           }
         }
         pageInfo {

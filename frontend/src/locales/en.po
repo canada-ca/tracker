@@ -57,7 +57,7 @@ msgstr "404 - Page Not Found"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 
-#: src/admin/AdminDomains.js:330
+#: src/admin/AdminDomains.js:341
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 
@@ -155,11 +155,11 @@ msgstr "Activity"
 msgid "Add"
 msgstr "Add"
 
-#: src/admin/AdminDomains.js:260
+#: src/admin/AdminDomains.js:277
 msgid "Add Domain"
 msgstr "Add Domain"
 
-#: src/admin/AdminDomainModal.js:267
+#: src/admin/AdminDomainModal.js:271
 msgid "Add Domain Details"
 msgstr "Add Domain Details"
 
@@ -268,9 +268,9 @@ msgstr "An error occurred while updating your phone number."
 msgid "An error occurred while verifying your phone number."
 msgstr "An error occurred while verifying your phone number."
 
-#: src/admin/AdminDomainModal.js:71
-#: src/admin/AdminDomainModal.js:120
-#: src/admin/AdminDomains.js:101
+#: src/admin/AdminDomainModal.js:75
+#: src/admin/AdminDomainModal.js:124
+#: src/admin/AdminDomains.js:103
 #: src/admin/UserListModal.js:53
 #: src/admin/UserListModal.js:151
 #: src/auth/TwoFactorAuthenticatePage.js:29
@@ -300,7 +300,7 @@ msgstr "Application Portfolio Management (APM) systems; and"
 msgid "April"
 msgstr "April"
 
-#: src/admin/AdminDomainModal.js:415
+#: src/admin/AdminDomainModal.js:421
 msgid "Archive domain"
 msgstr "Archive domain"
 
@@ -490,8 +490,8 @@ msgstr "Collect and analyze DMARC reports."
 msgid "Compliant"
 msgstr "Compliant"
 
-#: src/admin/AdminDomainModal.js:438
-#: src/admin/AdminDomains.js:375
+#: src/admin/AdminDomainModal.js:459
+#: src/admin/AdminDomains.js:386
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
 #: src/admin/SuperAdminUserList.js:441
@@ -513,7 +513,7 @@ msgstr "Confirm New Password:"
 msgid "Confirm Password:"
 msgstr "Confirm Password:"
 
-#: src/admin/AdminDomains.js:325
+#: src/admin/AdminDomains.js:336
 msgid "Confirm removal of domain:"
 msgstr "Confirm removal of domain:"
 
@@ -650,7 +650,7 @@ msgstr "DKIM Failures by IP Address"
 msgid "DKIM Results"
 msgstr "DKIM Results"
 
-#: src/admin/AdminDomainModal.js:321
+#: src/admin/AdminDomainModal.js:325
 msgid "DKIM Selector"
 msgstr "DKIM Selector"
 
@@ -658,7 +658,7 @@ msgstr "DKIM Selector"
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
 
-#: src/admin/AdminDomainModal.js:284
+#: src/admin/AdminDomainModal.js:288
 msgid "DKIM Selectors:"
 msgstr "DKIM Selectors:"
 
@@ -823,7 +823,7 @@ msgstr "Disposition"
 msgid "Domain"
 msgstr "Domain"
 
-#: src/admin/AdminDomains.js:147
+#: src/admin/AdminDomains.js:149
 msgid "Domain List"
 msgstr "Domain List"
 
@@ -831,7 +831,7 @@ msgstr "Domain List"
 msgid "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
 msgstr "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
 
-#: src/admin/AdminDomains.js:248
+#: src/admin/AdminDomains.js:265
 #: src/components/fields/DomainField.js:38
 msgid "Domain URL"
 msgstr "Domain URL"
@@ -840,19 +840,19 @@ msgstr "Domain URL"
 msgid "Domain URL:"
 msgstr "Domain URL:"
 
-#: src/admin/AdminDomainModal.js:82
+#: src/admin/AdminDomainModal.js:86
 msgid "Domain added"
 msgstr "Domain added"
 
-#: src/admin/AdminDomains.js:113
+#: src/admin/AdminDomains.js:115
 msgid "Domain removed"
 msgstr "Domain removed"
 
-#: src/admin/AdminDomains.js:114
+#: src/admin/AdminDomains.js:116
 msgid "Domain removed from {orgSlug}"
 msgstr "Domain removed from {orgSlug}"
 
-#: src/admin/AdminDomainModal.js:131
+#: src/admin/AdminDomainModal.js:135
 msgid "Domain updated"
 msgstr "Domain updated"
 
@@ -900,7 +900,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Edit Display Name"
 
-#: src/admin/AdminDomainModal.js:265
+#: src/admin/AdminDomainModal.js:269
 msgid "Edit Domain Details"
 msgstr "Edit Domain Details"
 
@@ -1286,7 +1286,7 @@ msgstr "Header From"
 msgid "Hidden"
 msgstr "Hidden"
 
-#: src/admin/AdminDomainModal.js:394
+#: src/admin/AdminDomainModal.js:398
 msgid "Hide domain"
 msgstr "Hide domain"
 
@@ -1382,7 +1382,7 @@ msgstr "Incorrect authenticate.result typename."
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
-#: src/admin/AdminDomainModal.js:104
+#: src/admin/AdminDomainModal.js:108
 msgid "Incorrect createDomain.result typename."
 msgstr "Incorrect createDomain.result typename."
 
@@ -1399,7 +1399,7 @@ msgstr "Incorrect inviteUserToOrg.result typename."
 #~ msgid "Incorrect leaveOrganization.result typename."
 #~ msgstr "Incorrect leaveOrganization.result typename."
 
-#: src/admin/AdminDomains.js:132
+#: src/admin/AdminDomains.js:134
 msgid "Incorrect removeDomain.result typename."
 msgstr "Incorrect removeDomain.result typename."
 
@@ -1411,9 +1411,9 @@ msgstr "Incorrect removeOrganization.result typename."
 msgid "Incorrect resetPassword.result typename."
 msgstr "Incorrect resetPassword.result typename."
 
-#: src/admin/AdminDomainModal.js:103
-#: src/admin/AdminDomainModal.js:152
-#: src/admin/AdminDomains.js:131
+#: src/admin/AdminDomainModal.js:107
+#: src/admin/AdminDomainModal.js:156
+#: src/admin/AdminDomains.js:133
 #: src/admin/SuperAdminUserList.js:110
 #: src/admin/UserListModal.js:83
 #: src/admin/UserListModal.js:132
@@ -1454,7 +1454,7 @@ msgstr "Incorrect typename received."
 msgid "Incorrect update method received."
 msgstr "Incorrect update method received."
 
-#: src/admin/AdminDomainModal.js:153
+#: src/admin/AdminDomainModal.js:157
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
 
@@ -1710,11 +1710,11 @@ msgstr "Neutral tags highlight relevant configuration details, but are not addre
 msgid "New Display Name:"
 msgstr "New Display Name:"
 
-#: src/admin/AdminDomainModal.js:276
+#: src/admin/AdminDomainModal.js:280
 msgid "New Domain URL"
 msgstr "New Domain URL"
 
-#: src/admin/AdminDomainModal.js:275
+#: src/admin/AdminDomainModal.js:279
 msgid "New Domain URL:"
 msgstr "New Domain URL:"
 
@@ -1748,7 +1748,7 @@ msgstr "New Value:"
 msgid "No DMARC phase information available for this organization."
 msgstr "No DMARC phase information available for this organization."
 
-#: src/admin/AdminDomains.js:154
+#: src/admin/AdminDomains.js:156
 #: src/domains/DomainsPage.js:108
 #: src/organizationDetails/OrganizationDomains.js:94
 msgid "No Domains"
@@ -1841,6 +1841,14 @@ msgstr "Not Implemented"
 #: src/app/ContactUsPage.js:24
 msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 msgstr "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
+
+#: src/admin/AdminDomainModal.js:432
+msgid "Note: This could affect results for multiple organizations"
+msgstr "Note: This could affect results for multiple organizations"
+
+#: src/admin/AdminDomainModal.js:427
+msgid "Note: This will affect results for {orgCount} organizations"
+msgstr "Note: This will affect results for {orgCount} organizations"
 
 #: src/termsConditions/TermsConditionsPage.js:21
 msgid "Notice of Agreement"
@@ -2029,7 +2037,7 @@ msgstr "Phone number field must not be empty"
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Phone number must be a valid phone number that is 10-15 digits long"
 
-#: src/admin/AdminDomainModal.js:421
+#: src/admin/AdminDomainModal.js:442
 msgid "Please allow up to 24 hours for summaries to reflect any changes."
 msgstr "Please allow up to 24 hours for summaries to reflect any changes."
 
@@ -2071,7 +2079,7 @@ msgstr "Positive Tags"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Preloaded Status:"
 
-#: src/admin/AdminDomainModal.js:380
+#: src/admin/AdminDomainModal.js:384
 msgid "Prevent this domain from being counted in your organization's summaries."
 msgstr "Prevent this domain from being counted in your organization's summaries."
 
@@ -2079,7 +2087,7 @@ msgstr "Prevent this domain from being counted in your organization's summaries.
 #~ msgid "Prevent this domain from being scanned and being counted in any summaries."
 #~ msgstr "Prevent this domain from being scanned and being counted in any summaries."
 
-#: src/admin/AdminDomainModal.js:401
+#: src/admin/AdminDomainModal.js:406
 msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
 msgstr "Prevent this domain from being visible, scanned, and being counted in any summaries."
 
@@ -2146,7 +2154,7 @@ msgstr "Read Guidance"
 msgid "Read guidance"
 msgstr "Read guidance"
 
-#: src/admin/AdminDomains.js:341
+#: src/admin/AdminDomains.js:352
 #: src/admin/AuditLogTable.js:129
 msgid "Reason"
 msgstr "Reason"
@@ -2172,7 +2180,7 @@ msgstr "Remember me"
 msgid "Remove"
 msgstr "Remove"
 
-#: src/admin/AdminDomains.js:319
+#: src/admin/AdminDomains.js:330
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
@@ -2351,7 +2359,7 @@ msgstr "Search Fully Aligned Items"
 msgid "Search SPF Failing Items"
 msgstr "Search SPF Failing Items"
 
-#: src/admin/AdminDomains.js:249
+#: src/admin/AdminDomains.js:266
 msgid "Search by Domain URL"
 msgstr "Search by Domain URL"
 
@@ -2382,7 +2390,7 @@ msgstr "Search for a user (email)"
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
-#: src/admin/AdminDomains.js:235
+#: src/admin/AdminDomains.js:252
 #: src/admin/UserList.js:149
 #: src/components/ReactTableGlobalFilter.js:36
 #: src/components/SearchBox.js:65
@@ -2397,7 +2405,7 @@ msgstr "Sector:"
 msgid "Select Preferred Language"
 msgstr "Select Preferred Language"
 
-#: src/admin/AdminDomains.js:351
+#: src/admin/AdminDomains.js:362
 msgid "Select a reason for removing this domain"
 msgstr "Select a reason for removing this domain"
 
@@ -2732,12 +2740,12 @@ msgstr "This component is currently unavailable. Try reloading the page."
 msgid "This could be due to improper configuration, or could be the result of a scan error"
 msgstr "This could be due to improper configuration, or could be the result of a scan error"
 
-#: src/admin/AdminDomains.js:359
+#: src/admin/AdminDomains.js:370
 #: src/admin/AuditLogTable.js:151
 msgid "This domain does not belong to this organization"
 msgstr "This domain does not belong to this organization"
 
-#: src/admin/AdminDomains.js:356
+#: src/admin/AdminDomains.js:367
 #: src/admin/AuditLogTable.js:148
 msgid "This domain no longer exists"
 msgstr "This domain no longer exists"
@@ -2848,7 +2856,7 @@ msgstr "Unable to close this account."
 msgid "Unable to create account, please try again."
 msgstr "Unable to create account, please try again."
 
-#: src/admin/AdminDomainModal.js:94
+#: src/admin/AdminDomainModal.js:98
 msgid "Unable to create new domain."
 msgstr "Unable to create new domain."
 
@@ -2869,7 +2877,7 @@ msgstr "Unable to invite user."
 #~ msgid "Unable to leave organization."
 #~ msgstr "Unable to leave organization."
 
-#: src/admin/AdminDomains.js:122
+#: src/admin/AdminDomains.js:124
 msgid "Unable to remove domain."
 msgstr "Unable to remove domain."
 
@@ -2904,7 +2912,7 @@ msgstr "Unable to send verification email"
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
 
-#: src/admin/AdminDomainModal.js:143
+#: src/admin/AdminDomainModal.js:147
 msgid "Unable to update domain."
 msgstr "Unable to update domain."
 
@@ -3317,7 +3325,7 @@ msgstr "our Terms and Conditions on the TBS website"
 msgid "user email"
 msgstr "user email"
 
-#: src/admin/AdminDomainModal.js:84
+#: src/admin/AdminDomainModal.js:88
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} was added to {orgSlug}"
 
@@ -3337,7 +3345,7 @@ msgstr "{count} records..."
 msgid "{domainSlug} does not support aggregate data"
 msgstr "{domainSlug} does not support aggregate data"
 
-#: src/admin/AdminDomainModal.js:133
+#: src/admin/AdminDomainModal.js:137
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 
