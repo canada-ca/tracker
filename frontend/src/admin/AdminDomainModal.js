@@ -398,7 +398,7 @@ export function AdminDomainModal({
                       {permission === 'SUPER_ADMIN' && (
                         <Flex align="center">
                           <Tooltip
-                            label={t`Prevent this domain from being scanned and being counted in any summaries.`}
+                            label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
                           >
                             <QuestionOutlineIcon tabIndex={0} />
                           </Tooltip>

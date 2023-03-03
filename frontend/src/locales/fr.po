@@ -102,7 +102,7 @@ msgstr "Compte"
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
-#: src/app/App.js:123
+#: src/app/App.js:129
 #: src/app/FloatingMenu.js:177
 #: src/user/UserPage.js:150
 msgid "Account Settings"
@@ -167,7 +167,7 @@ msgstr "Ajouter les détails du domaine"
 msgid "Add User"
 msgstr "Ajouter un utilisateur"
 
-#: src/app/App.js:261
+#: src/app/App.js:267
 msgid "Admin"
 msgstr "Administrateur"
 
@@ -175,7 +175,7 @@ msgstr "Administrateur"
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/app/App.js:131
+#: src/app/App.js:137
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
@@ -336,7 +336,7 @@ msgstr "Journaux d'audit"
 msgid "August"
 msgstr "Août"
 
-#: src/app/App.js:202
+#: src/app/App.js:208
 msgid "Authenticate"
 msgstr "Authentifier"
 
@@ -525,8 +525,8 @@ msgstr "Confirmer la suppression du domaine:"
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:226
-#: src/app/App.js:405
+#: src/app/App.js:232
+#: src/app/App.js:413
 #: src/app/ContactUsPage.js:39
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -573,17 +573,17 @@ msgstr "Créer"
 
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:143
-#: src/auth/CreateUserPage.js:238
+#: src/auth/CreateUserPage.js:243
 msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/admin/AdminPage.js:130
-#: src/app/App.js:359
+#: src/app/App.js:366
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Créer une organisation"
 
-#: src/app/App.js:178
+#: src/app/App.js:184
 msgid "Create an Account"
 msgstr "Créer un compte"
 
@@ -636,13 +636,13 @@ msgstr "DKIM Aligné"
 msgid "DKIM Domains"
 msgstr "Domaines DKIM"
 
-#: src/dmarc/DmarcReportPage.js:227
+#: src/dmarc/DmarcReportPage.js:245
 msgid "DKIM Failure Table"
 msgstr "Tableau des échecs DKIM"
 
-#: src/dmarc/DmarcReportPage.js:238
-#: src/dmarc/DmarcReportPage.js:273
-#: src/dmarc/DmarcReportPage.js:530
+#: src/dmarc/DmarcReportPage.js:256
+#: src/dmarc/DmarcReportPage.js:291
+#: src/dmarc/DmarcReportPage.js:560
 msgid "DKIM Failures by IP Address"
 msgstr "Défaillances DKIM par adresse IP"
 
@@ -684,13 +684,13 @@ msgstr "Résumé de la configuration DMARC"
 msgid "DMARC Configured"
 msgstr "DMARC configuré"
 
-#: src/dmarc/DmarcReportPage.js:450
+#: src/dmarc/DmarcReportPage.js:477
 msgid "DMARC Failure Table"
 msgstr "Tableau des échecs de la DMARC"
 
-#: src/dmarc/DmarcReportPage.js:461
-#: src/dmarc/DmarcReportPage.js:498
-#: src/dmarc/DmarcReportPage.js:536
+#: src/dmarc/DmarcReportPage.js:488
+#: src/dmarc/DmarcReportPage.js:525
+#: src/dmarc/DmarcReportPage.js:566
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
@@ -719,8 +719,8 @@ msgstr "Rapport DMARC pour {domainSlug}"
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/app/App.js:108
-#: src/app/App.js:317
+#: src/app/App.js:114
+#: src/app/App.js:322
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:181
 #: src/dmarc/DmarcByDomainPage.js:241
@@ -868,8 +868,8 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/admin/AdminPanel.js:28
-#: src/app/App.js:105
-#: src/app/App.js:278
+#: src/app/App.js:111
+#: src/app/App.js:283
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:101
 #: src/domains/DomainsPage.js:140
@@ -943,7 +943,7 @@ msgstr "Courriel envoyé"
 msgid "Email Validated"
 msgstr "Courriel validé"
 
-#: src/app/App.js:355
+#: src/app/App.js:362
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
@@ -1052,7 +1052,7 @@ msgstr "Échec du SPF"
 msgid "Fail SPF %"
 msgstr "Échec du SPF %"
 
-#: src/dmarc/DmarcReportPage.js:541
+#: src/dmarc/DmarcReportPage.js:571
 msgid "Fake email domain blocks (reject + quarantine):"
 msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 
@@ -1101,7 +1101,7 @@ msgstr "Pour des conseils de mise en œuvre technique:"
 msgid "For users interested in using new features that are still in progress."
 msgstr "Pour les utilisateurs intéressés par l'utilisation de nouvelles fonctionnalités qui sont encore en cours de développement."
 
-#: src/app/App.js:208
+#: src/app/App.js:214
 #: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
@@ -1132,13 +1132,13 @@ msgstr "Échec total %"
 msgid "Full Pass %"
 msgstr "Passage complet %"
 
-#: src/dmarc/DmarcReportPage.js:302
+#: src/dmarc/DmarcReportPage.js:323
 msgid "Fully Aligned Table"
 msgstr "Tableau entièrement aligné"
 
-#: src/dmarc/DmarcReportPage.js:313
-#: src/dmarc/DmarcReportPage.js:345
-#: src/dmarc/DmarcReportPage.js:527
+#: src/dmarc/DmarcReportPage.js:334
+#: src/dmarc/DmarcReportPage.js:366
+#: src/dmarc/DmarcReportPage.js:557
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
@@ -1160,7 +1160,7 @@ msgstr "Obtenir les statuts des domaines"
 #~ msgid "Glossary"
 #~ msgstr "Glossaire"
 
-#: src/components/TrackerTable.js:243
+#: src/components/TrackerTable.js:215
 msgid "Go to page:"
 msgstr "Aller à la page"
 
@@ -1172,10 +1172,10 @@ msgstr "Employés du gouvernement du Canada"
 #~ msgid "Graph direction:"
 #~ msgstr "Direction du graphique :"
 
-#: src/app/App.js:409
+#: src/app/App.js:417
 #: src/app/ReadGuidancePage.js:28
 #: src/dmarc/DmarcReportPage.js:193
-#: src/dmarc/DmarcReportPage.js:576
+#: src/dmarc/DmarcReportPage.js:606
 #: src/domains/DomainCard.js:208
 msgid "Guidance"
 msgstr "Orientation"
@@ -1266,8 +1266,8 @@ msgstr "Caché"
 msgid "Hide domain"
 msgstr "Cacher ce domaine"
 
-#: src/app/App.js:96
-#: src/app/App.js:169
+#: src/app/App.js:102
+#: src/app/App.js:175
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Accueil"
@@ -1538,7 +1538,7 @@ msgid "It is recommended that Shared Service Canada (SSC) partners contact their
 msgstr "On recommande aux partenaires de Services partagés Canada (SPC) de communiquer avec leur gestionnaire de prestation de services de SPC pour discuter des plans d’action et des étapes requises afin de soumettre une demande de changement."
 
 #: src/components/RelayPaginationControls.js:33
-#: src/components/TrackerTable.js:271
+#: src/components/TrackerTable.js:243
 msgid "Items per page:"
 msgstr "Objets par page:"
 
@@ -1747,11 +1747,11 @@ msgstr "Aucun journal d'activité"
 msgid "No current phone number"
 msgstr "Pas de numéro de téléphone actuel"
 
-#: src/dmarc/DmarcReportPage.js:290
+#: src/dmarc/DmarcReportPage.js:311
 msgid "No data for the DKIM Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances DKIM par adresse IP"
 
-#: src/dmarc/DmarcReportPage.js:515
+#: src/dmarc/DmarcReportPage.js:545
 msgid "No data for the DMARC Failures by IP Address table"
 msgstr "Pas de données pour le tableau des défaillances DMARC par adresse IP"
 
@@ -1759,11 +1759,11 @@ msgstr "Pas de données pour le tableau des défaillances DMARC par adresse IP"
 msgid "No data for the DMARC yearly report graph"
 msgstr "Pas de données pour le graphique du rapport annuel de la DMARC"
 
-#: src/dmarc/DmarcReportPage.js:362
+#: src/dmarc/DmarcReportPage.js:386
 msgid "No data for the Fully Aligned by IP Address table"
 msgstr "Pas de données pour le tableau Entièrement aligné par adresse IP"
 
-#: src/dmarc/DmarcReportPage.js:433
+#: src/dmarc/DmarcReportPage.js:460
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 
@@ -1902,8 +1902,8 @@ msgid "Organization:"
 msgstr "Organisation:"
 
 #: src/admin/AdminPage.js:189
-#: src/app/App.js:102
-#: src/app/App.js:238
+#: src/app/App.js:108
+#: src/app/App.js:244
 #: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:72
 #: src/organizations/Organizations.js:109
@@ -1914,7 +1914,7 @@ msgstr "Organisations"
 #~ msgid "PROD"
 #~ msgstr "PROD"
 
-#: src/components/TrackerTable.js:259
+#: src/components/TrackerTable.js:231
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
@@ -2048,14 +2048,18 @@ msgid "Prevent this domain from being counted in your organization's summaries."
 msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre organisation."
 
 #: src/admin/AdminDomainModal.js:401
-msgid "Prevent this domain from being scanned and being counted in any summaries."
-msgstr "Empêchez ce domaine d'être scanné et d'être compté dans les résumés."
+#~ msgid "Prevent this domain from being scanned and being counted in any summaries."
+#~ msgstr "Empêchez ce domaine d'être scanné et d'être compté dans les résumés."
+
+#: src/admin/AdminDomainModal.js:401
+msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
+msgstr "Empêchez ce domaine d'être visible, d'être scanné et d'être compté dans les résumés."
 
 #: src/components/RelayPaginationControls.js:63
 #~ msgid "Previous"
 #~ msgstr "Précédent"
 
-#: src/app/App.js:389
+#: src/app/App.js:397
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:41
@@ -2110,7 +2114,7 @@ msgstr "Province:"
 msgid "Read Guidance"
 msgstr "Conseils de lecture"
 
-#: src/app/App.js:232
+#: src/app/App.js:238
 msgid "Read guidance"
 msgstr "Conseils de lecture"
 
@@ -2157,7 +2161,7 @@ msgstr "Supprimer l'utilisateur"
 msgid "Removed Organization"
 msgstr "Organisation supprimée"
 
-#: src/app/App.js:401
+#: src/app/App.js:409
 #: src/app/FloatingMenu.js:230
 #: src/app/SlideMessage.js:99
 msgid "Report an Issue"
@@ -2175,7 +2179,7 @@ msgstr "La requête a été envoyée avec succès pour obtenir les statuts de to
 msgid "Requested Scan"
 msgstr "Numérisation demandée"
 
-#: src/app/App.js:214
+#: src/app/App.js:220
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -2242,13 +2246,13 @@ msgstr "Alignement du SPF"
 msgid "SPF Domains"
 msgstr "Domaine SPF"
 
-#: src/dmarc/DmarcReportPage.js:374
+#: src/dmarc/DmarcReportPage.js:398
 msgid "SPF Failure Table"
 msgstr "Tableau des échecs du SPF"
 
-#: src/dmarc/DmarcReportPage.js:385
-#: src/dmarc/DmarcReportPage.js:416
-#: src/dmarc/DmarcReportPage.js:533
+#: src/dmarc/DmarcReportPage.js:409
+#: src/dmarc/DmarcReportPage.js:440
+#: src/dmarc/DmarcReportPage.js:563
 msgid "SPF Failures by IP Address"
 msgstr "Défaillances du SPF par adresse IP"
 
@@ -2303,19 +2307,19 @@ msgstr "Demande de numérisation"
 msgid "Scan of domain successfully requested"
 msgstr "Scan du domaine demandé avec succès"
 
-#: src/dmarc/DmarcReportPage.js:276
+#: src/dmarc/DmarcReportPage.js:294
 msgid "Search DKIM Failing Items"
 msgstr "Rechercher les éléments en échec de DKIM"
 
-#: src/dmarc/DmarcReportPage.js:501
+#: src/dmarc/DmarcReportPage.js:528
 msgid "Search DMARC Failing Items"
 msgstr "Recherche d'éléments défaillants DMARC"
 
-#: src/dmarc/DmarcReportPage.js:348
+#: src/dmarc/DmarcReportPage.js:369
 msgid "Search Fully Aligned Items"
 msgstr "Recherche d'éléments entièrement alignés"
 
-#: src/dmarc/DmarcReportPage.js:419
+#: src/dmarc/DmarcReportPage.js:443
 msgid "Search SPF Failing Items"
 msgstr "Rechercher les éléments défaillants du SPF"
 
@@ -2408,12 +2412,12 @@ msgstr "Services"
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
-#: src/components/TrackerTable.js:284
+#: src/components/TrackerTable.js:256
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/dmarc/DmarcByDomainPage.js:252
-#: src/dmarc/DmarcReportPage.js:592
+#: src/dmarc/DmarcReportPage.js:622
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période:"
 
@@ -2508,7 +2512,7 @@ msgstr "Indique le pourcentage d'e-mails du domaine qui ont passé les exigences
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine pendant la période sélectionnée."
 
-#: src/app/App.js:185
+#: src/app/App.js:191
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:134
 #: src/auth/SignInPage.js:189
@@ -2534,7 +2538,7 @@ msgstr "Déconnexion."
 #~ msgid "Sign in with your username and password."
 #~ msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/app/App.js:90
+#: src/app/App.js:96
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -2620,11 +2624,11 @@ msgstr "Le scan TLS pour le domaine \"{0}\" est terminé."
 msgid "Termination"
 msgstr "Terminaison"
 
-#: src/app/App.js:220
+#: src/app/App.js:226
 msgid "Terms & Conditions"
 msgstr "Termes et conditions"
 
-#: src/app/App.js:393
+#: src/app/App.js:401
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
@@ -2727,11 +2731,11 @@ msgstr "Temps généré"
 msgid "Time Generated (UTC)"
 msgstr "Heure générée (UTC)"
 
-#: src/app/App.js:140
+#: src/app/App.js:146
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "Pour activer toutes les fonctionnalités de l'application et maximiser la sécurité de votre compte, <0>vous devez vérifier votre compte</0>."
 
-#: src/app/App.js:155
+#: src/app/App.js:161
 msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 msgstr "Pour maximiser la sécurité de votre compte, <0>vous devez activer une option d'authentification multifactorielle</0>."
 
@@ -3024,7 +3028,7 @@ msgstr "Vérifier le compte"
 msgid "View Details"
 msgstr "Voir les détails"
 
-#: src/dmarc/DmarcReportPage.js:547
+#: src/dmarc/DmarcReportPage.js:577
 msgid "Volume of messages spoofing domain (reject + quarantine + none):"
 msgstr "Volume de messages usurpant domaine (rejet + quarantaine + aucun) :"
 
@@ -3218,7 +3222,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "Vous aurez besoin d'un compte Suivi pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
-#: src/app/App.js:327
+#: src/app/App.js:332
 msgid "Your Account"
 msgstr "Votre compte"
 
@@ -3250,8 +3254,8 @@ msgstr "contactez-nous"
 #~ msgid "https://https-everywhere.canada.ca/en/help/"
 #~ msgstr "https://https-everywhere.canada.ca/en/help/"
 
-#: src/app/App.js:118
-#: src/app/App.js:339
+#: src/app/App.js:124
+#: src/app/App.js:345
 #: src/user/MyTrackerPage.js:43
 #: src/user/MyTrackerPage.js:74
 msgid "myTracker"
