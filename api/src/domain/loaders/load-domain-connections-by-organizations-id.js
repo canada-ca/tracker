@@ -346,7 +346,7 @@ export const loadDomainConnectionsByOrgId =
     let ownershipOrgsOnly = aql`
       LET claimKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           ${showHiddenDomains}
           RETURN v._key
       )
@@ -356,7 +356,7 @@ export const loadDomainConnectionsByOrgId =
         ownershipOrgsOnly = aql`
           LET claimKeys = (
             FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
-              OPTIONS {bfs: true}
+              OPTIONS {order: "bfs"}
               ${showHiddenDomains}
               RETURN v._key
           )
