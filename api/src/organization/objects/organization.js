@@ -131,10 +131,17 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         args,
-        { loaders: { loadDomainConnectionsByOrgId } },
+
+        {
+          auth: { checkPermission },
+          loaders: { loadDomainConnectionsByOrgId },
+        },
       ) => {
+        // Check to see requesting users permission to the org is
+        const permission = await checkPermission({ orgId: _id })
         const connections = await loadDomainConnectionsByOrgId({
           orgId: _id,
+          permission,
           ...args,
         })
         return connections

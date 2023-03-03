@@ -110,7 +110,7 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, status, hasDMARCReport }, index) => (
+      {({ id, domain, status, hasDMARCReport, archived }, index) => (
         <ErrorBoundary
           key={`${id}:${index}`}
           FallbackComponent={ErrorFallbackMessage}
@@ -120,6 +120,7 @@ export default function DomainsPage() {
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}
+            isArchived={archived}
             mb="3"
           />
         </ErrorBoundary>

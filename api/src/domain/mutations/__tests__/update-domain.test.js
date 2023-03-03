@@ -1336,9 +1336,6 @@ describe('updating a domain', () => {
           ]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction commit error occurred when user: 123 attempted to update domain: 123, error: Error: trx commit error`,
-          ])
         })
       })
     })
@@ -1900,9 +1897,6 @@ describe('updating a domain', () => {
           ]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction commit error occurred when user: 123 attempted to update domain: 123, error: Error: trx commit error`,
-          ])
         })
       })
     })

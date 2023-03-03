@@ -73,6 +73,7 @@ domain1 = domains.insert(
             "spf": "pass",
             "dkim": "fail",
         },
+        "archived": False,
     }
 )
 domain2 = domains.insert(
@@ -87,6 +88,7 @@ domain2 = domains.insert(
             "spf": "pass",
             "dkim": "pass",
         },
+        "archived": False,
     }
 )
 domain3 = domains.insert(
@@ -101,12 +103,13 @@ domain3 = domains.insert(
             "spf": "fail",
             "dkim": "fail",
         },
+        "archived": False,
     }
 )
 
-claims.insert({"_from": org["_id"], "_to": domain1["_id"]})
-claims.insert({"_from": org["_id"], "_to": domain2["_id"]})
-claims.insert({"_from": org["_id"], "_to": domain3["_id"]})
+claims.insert({"_from": org["_id"], "_to": domain1["_id"], "hidden": False})
+claims.insert({"_from": org["_id"], "_to": domain2["_id"], "hidden": False})
+claims.insert({"_from": org["_id"], "_to": domain3["_id"], "hidden": False})
 
 
 def test_update_scan_summaries():
