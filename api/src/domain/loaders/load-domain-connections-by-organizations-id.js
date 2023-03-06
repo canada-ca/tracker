@@ -431,7 +431,7 @@ export const loadDomainConnectionsByOrgId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden }, domain)
+          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden }, DOCUMENT(domain._id))
       )
 
       LET hasNextPage = (LENGTH(
