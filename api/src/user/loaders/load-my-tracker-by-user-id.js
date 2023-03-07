@@ -8,6 +8,7 @@ export const loadMyTrackerByUserId =
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`
+        WITH users
         LET favDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
                 OPTIONS {order: "bfs"}

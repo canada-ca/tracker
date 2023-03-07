@@ -328,14 +328,25 @@ export const loadDomainConnectionsByUserId =
       let domainKeysQuery
       if (myTracker) {
       domainKeysQuery = aql`
-      WITH favourites
+      WITH favourites, users
       LET domainKeys = (
         FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
           OPTIONS {order: "bfs"}
           RETURN v._key
       )
       `
-    } else if (!loginRequiredBool) {
+    } else if (isSuperAdmin) {
+        domainKeysQuery = aql`
+      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
+      LET domainKeys = UNIQUE(FLATTEN(
+        LET keys = []
+        LET orgIds = (FOR org IN organizations RETURN org._id)
+        FOR orgId IN orgIds
+          ${ownershipOrgsOnly}
+          RETURN APPEND(keys, claimDomainKeys)
+      ))
+    `
+      } else if (!loginRequiredBool) {
         domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET domainKeys = UNIQUE(FLATTEN(
@@ -345,20 +356,10 @@ export const loadDomainConnectionsByUserId =
           LET claimDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND orgId claims
               OPTIONS {order: "bfs"}
+              FILTER v.archived != true
               RETURN v._key
           )
           RETURN APPEND(keys, claimDomainKeys)
-      ))
-    `
-      } else if (isSuperAdmin) {
-        domainKeysQuery = aql`
-      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (FOR org IN organizations RETURN org._id)
-        FOR orgId IN orgIds
-            ${ownershipOrgsOnly}
-            RETURN APPEND(keys, claimDomainKeys)
       ))
     `
       } else {
@@ -372,10 +373,9 @@ export const loadDomainConnectionsByUserId =
             RETURN e._from
         )
         FOR orgId IN orgIds
-            ${ownershipOrgsOnly}
-            RETURN APPEND(keys, claimDomainKeys)
+          ${ownershipOrgsOnly}
+          RETURN APPEND(keys, claimDomainKeys)
       ))
-
     `
       }
 
@@ -385,21 +385,24 @@ export const loadDomainConnectionsByUserId =
       if (typeof search !== 'undefined' && search !== '') {
         search = cleanseInput(search)
         domainQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
-      LET searchedDomains = (
-        FOR tokenItem in tokenArr
-          LET token = LOWER(tokenItem)
-          FOR domain IN domainSearch
-            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
-            FILTER domain._key IN domainKeys
-            RETURN domain
-      )
-    `
+        LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
+        LET searchedDomains = (
+          FOR tokenItem in tokenArr
+            LET token = LOWER(tokenItem)
+            FOR domain IN domainSearch
+              SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+              FILTER domain._key IN domainKeys
+              RETURN domain
+        )
+      `
         loopString = aql`FOR domain IN searchedDomains`
         totalCount = aql`LENGTH(searchedDomains)`
       }
 
-      let requestedDomainInfo
+      let showArchivedDomains = aql`FILTER domain.archived != true`
+    if (isSuperAdmin) {
+      showArchivedDomains = aql``
+    }let requestedDomainInfo
       try {
         requestedDomainInfo = await query`
       ${domainKeysQuery}
@@ -412,6 +415,7 @@ export const loadDomainConnectionsByUserId =
       LET retrievedDomains = (
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${afterTemplate}
           ${beforeTemplate}
           SORT
@@ -423,6 +427,7 @@ export const loadDomainConnectionsByUserId =
       LET hasNextPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -431,6 +436,7 @@ export const loadDomainConnectionsByUserId =
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           FILTER domain._key IN domainKeys
+          ${showArchivedDomains}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain

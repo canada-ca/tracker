@@ -60,6 +60,12 @@ export const domainType = new GraphQLObjectType({
       description: 'The domains scan status, based on the latest scan data.',
       resolve: ({ status }) => status,
     },
+    archived: {
+      description:
+        'Value that determines if a domain is excluded from any results and scans.',
+      type: GraphQLBoolean,
+      resolve: ({ archived }) => archived,
+    },
     organizations: {
       type: organizationConnection.connectionType,
       args: {
@@ -251,6 +257,12 @@ export const domainType = new GraphQLObjectType({
       description: 'List of labelled tags users of an organization have applied to the claimed domain.',
       type: new GraphQLList(GraphQLString),
       resolve: ({ claimTags }) => claimTags,
+    },
+    hidden: {
+      description:
+        "Value that determines if a domain is excluded from an organization's results.",
+      type: GraphQLBoolean,
+      resolve: ({ hidden }) => hidden,
     },
   }),
   interfaces: [nodeInterface],

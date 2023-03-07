@@ -61,7 +61,7 @@ msgstr "404 - Page non trouvée"
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant :"
 
-#: src/admin/AdminDomains.js:316
+#: src/admin/AdminDomains.js:341
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "Un domaine ne peut être supprimé que pour l'une des raisons ci-dessous. Pour qu'un domaine n'existe plus, il doit être supprimé du DNS. Si vous devez supprimer ce domaine pour une autre raison, veuillez contacter TBS Cyber Security."
 
@@ -159,11 +159,11 @@ msgstr "Activité"
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/admin/AdminDomains.js:249
+#: src/admin/AdminDomains.js:277
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
-#: src/admin/AdminDomainModal.js:242
+#: src/admin/AdminDomainModal.js:271
 msgid "Add Domain Details"
 msgstr "Ajouter les détails du domaine"
 
@@ -272,9 +272,9 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 msgid "An error occurred while verifying your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
-#: src/admin/AdminDomainModal.js:59
-#: src/admin/AdminDomainModal.js:108
-#: src/admin/AdminDomains.js:99
+#: src/admin/AdminDomainModal.js:75
+#: src/admin/AdminDomainModal.js:124
+#: src/admin/AdminDomains.js:103
 #: src/admin/UserListModal.js:53
 #: src/admin/UserListModal.js:151
 #: src/auth/TwoFactorAuthenticatePage.js:29
@@ -303,6 +303,15 @@ msgstr "les systèmes de gestion du portefeuille d’applications (GPA);"
 #: src/utilities/months.js:7
 msgid "April"
 msgstr "Avril"
+
+#: src/admin/AdminDomainModal.js:421
+msgid "Archive domain"
+msgstr "Archiver ce domaine"
+
+#: src/admin/AdminDomainCard.js:80
+#: src/domains/DomainCard.js:168
+msgid "Archived"
+msgstr "Archivé"
 
 #: src/admin/OrganizationInformation.js:492
 msgid "Are you sure you want to permanently remove the organization \"{0}\"?"
@@ -493,8 +502,8 @@ msgstr "Recueillir et analyser les rapports DMARC."
 msgid "Compliant"
 msgstr "Conforme"
 
-#: src/admin/AdminDomainModal.js:364
-#: src/admin/AdminDomains.js:361
+#: src/admin/AdminDomainModal.js:459
+#: src/admin/AdminDomains.js:386
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
 #: src/admin/SuperAdminUserList.js:441
@@ -516,7 +525,7 @@ msgstr "Confirmer le nouveau mot de passe:"
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe:"
 
-#: src/admin/AdminDomains.js:311
+#: src/admin/AdminDomains.js:336
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine:"
 
@@ -580,7 +589,7 @@ msgstr "Créer"
 
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:143
-#: src/auth/CreateUserPage.js:238
+#: src/auth/CreateUserPage.js:243
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -643,13 +652,13 @@ msgstr "DKIM Aligné"
 msgid "DKIM Domains"
 msgstr "Domaines DKIM"
 
-#: src/dmarc/DmarcReportPage.js:227
+#: src/dmarc/DmarcReportPage.js:245
 msgid "DKIM Failure Table"
 msgstr "Tableau des échecs DKIM"
 
-#: src/dmarc/DmarcReportPage.js:238
-#: src/dmarc/DmarcReportPage.js:273
-#: src/dmarc/DmarcReportPage.js:530
+#: src/dmarc/DmarcReportPage.js:256
+#: src/dmarc/DmarcReportPage.js:291
+#: src/dmarc/DmarcReportPage.js:560
 msgid "DKIM Failures by IP Address"
 msgstr "Défaillances DKIM par adresse IP"
 
@@ -657,7 +666,7 @@ msgstr "Défaillances DKIM par adresse IP"
 msgid "DKIM Results"
 msgstr "Résultats DKIM"
 
-#: src/admin/AdminDomainModal.js:296
+#: src/admin/AdminDomainModal.js:325
 msgid "DKIM Selector"
 msgstr "Sélecteur DKIM"
 
@@ -665,7 +674,7 @@ msgstr "Sélecteur DKIM"
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
-#: src/admin/AdminDomainModal.js:259
+#: src/admin/AdminDomainModal.js:288
 msgid "DKIM Selectors:"
 msgstr "Sélecteurs DKIM:"
 
@@ -695,13 +704,13 @@ msgstr "Résumé de la configuration DMARC"
 msgid "DMARC Configured"
 msgstr "DMARC configuré"
 
-#: src/dmarc/DmarcReportPage.js:450
+#: src/dmarc/DmarcReportPage.js:477
 msgid "DMARC Failure Table"
 msgstr "Tableau des échecs de la DMARC"
 
-#: src/dmarc/DmarcReportPage.js:461
-#: src/dmarc/DmarcReportPage.js:498
-#: src/dmarc/DmarcReportPage.js:536
+#: src/dmarc/DmarcReportPage.js:488
+#: src/dmarc/DmarcReportPage.js:525
+#: src/dmarc/DmarcReportPage.js:566
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
@@ -846,7 +855,7 @@ msgstr "Disposition"
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/admin/AdminDomains.js:145
+#: src/admin/AdminDomains.js:149
 msgid "Domain List"
 msgstr "Liste des domaines"
 
@@ -854,7 +863,7 @@ msgstr "Liste des domaines"
 msgid "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
 msgstr "Exigences de configuration pour la gestion des sites Web et des services"
 
-#: src/admin/AdminDomains.js:237
+#: src/admin/AdminDomains.js:265
 #: src/components/fields/DomainField.js:38
 msgid "Domain URL"
 msgstr "URL du domaine"
@@ -863,19 +872,19 @@ msgstr "URL du domaine"
 msgid "Domain URL:"
 msgstr "URL du domaine:"
 
-#: src/admin/AdminDomainModal.js:70
+#: src/admin/AdminDomainModal.js:86
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
-#: src/admin/AdminDomains.js:111
+#: src/admin/AdminDomains.js:115
 msgid "Domain removed"
 msgstr "Domaine supprimé"
 
-#: src/admin/AdminDomains.js:112
+#: src/admin/AdminDomains.js:116
 msgid "Domain removed from {orgSlug}"
 msgstr "Domaine supprimé de {orgSlug}"
 
-#: src/admin/AdminDomainModal.js:119
+#: src/admin/AdminDomainModal.js:135
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
@@ -919,7 +928,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/admin/AdminDomainModal.js:240
+#: src/admin/AdminDomainModal.js:269
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -1093,7 +1102,7 @@ msgstr "Échec du SPF"
 msgid "Fail SPF %"
 msgstr "Échec du SPF %"
 
-#: src/dmarc/DmarcReportPage.js:541
+#: src/dmarc/DmarcReportPage.js:571
 msgid "Fake email domain blocks (reject + quarantine):"
 msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 
@@ -1173,13 +1182,13 @@ msgstr "Échec total %"
 msgid "Full Pass %"
 msgstr "Passage complet %"
 
-#: src/dmarc/DmarcReportPage.js:302
+#: src/dmarc/DmarcReportPage.js:323
 msgid "Fully Aligned Table"
 msgstr "Tableau entièrement aligné"
 
-#: src/dmarc/DmarcReportPage.js:313
-#: src/dmarc/DmarcReportPage.js:345
-#: src/dmarc/DmarcReportPage.js:527
+#: src/dmarc/DmarcReportPage.js:334
+#: src/dmarc/DmarcReportPage.js:366
+#: src/dmarc/DmarcReportPage.js:557
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
@@ -1201,7 +1210,7 @@ msgstr "Obtenir les statuts des domaines"
 #~ msgid "Glossary"
 #~ msgstr "Glossaire"
 
-#: src/components/TrackerTable.js:243
+#: src/components/TrackerTable.js:215
 msgid "Go to page:"
 msgstr "Aller à la page"
 
@@ -1461,7 +1470,7 @@ msgstr "Incorrect authenticate.result typename."
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
-#: src/admin/AdminDomainModal.js:92
+#: src/admin/AdminDomainModal.js:108
 msgid "Incorrect createDomain.result typename."
 msgstr "Incorrect createDomain.result typename."
 
@@ -1478,7 +1487,7 @@ msgstr "Incorrect inviteUserToOrg.result typename."
 #~ msgid "Incorrect leaveOrganization.result typename."
 #~ msgstr "Incorrect leaveOrganization.result typename."
 
-#: src/admin/AdminDomains.js:130
+#: src/admin/AdminDomains.js:134
 msgid "Incorrect removeDomain.result typename."
 msgstr "Incorrect removeDomain.result typename."
 
@@ -1490,9 +1499,9 @@ msgstr "Incorrect removeOrganization.result typename."
 msgid "Incorrect resetPassword.result typename."
 msgstr "Incorrect resetPassword.result typename."
 
-#: src/admin/AdminDomainModal.js:91
-#: src/admin/AdminDomainModal.js:140
-#: src/admin/AdminDomains.js:129
+#: src/admin/AdminDomainModal.js:107
+#: src/admin/AdminDomainModal.js:156
+#: src/admin/AdminDomains.js:133
 #: src/admin/SuperAdminUserList.js:110
 #: src/admin/UserListModal.js:83
 #: src/admin/UserListModal.js:132
@@ -1533,7 +1542,7 @@ msgstr "Incorrect typename received."
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
 
-#: src/admin/AdminDomainModal.js:141
+#: src/admin/AdminDomainModal.js:157
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
 
@@ -1654,7 +1663,7 @@ msgid "It is recommended that Shared Service Canada (SSC) partners contact their
 msgstr "On recommande aux partenaires de Services partagés Canada (SPC) de communiquer avec leur gestionnaire de prestation de services de SPC pour discuter des plans d’action et des étapes requises afin de soumettre une demande de changement."
 
 #: src/components/RelayPaginationControls.js:33
-#: src/components/TrackerTable.js:271
+#: src/components/TrackerTable.js:243
 msgid "Items per page:"
 msgstr "Objets par page:"
 
@@ -1836,11 +1845,11 @@ msgstr "Jamais"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage:"
 
-#: src/admin/AdminDomainModal.js:251
+#: src/admin/AdminDomainModal.js:280
 msgid "New Domain URL"
 msgstr "Nouvelle URL de domaine"
 
-#: src/admin/AdminDomainModal.js:250
+#: src/admin/AdminDomainModal.js:279
 msgid "New Domain URL:"
 msgstr "Nouvelle URL de domaine:"
 
@@ -1890,7 +1899,7 @@ msgstr "Aucun sélecteur DKIM n'est actuellement associé à ce domaine. Veuille
 msgid "No DMARC phase information available for this organization."
 msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organisation."
 
-#: src/admin/AdminDomains.js:152
+#: src/admin/AdminDomains.js:156
 #: src/domains/DomainsPage.js:88
 #: src/organizationDetails/OrganizationDomains.js:78
 msgid "No Domains"
@@ -1917,11 +1926,11 @@ msgstr "Aucun journal d'activité"
 msgid "No current phone number"
 msgstr "Pas de numéro de téléphone actuel"
 
-#: src/dmarc/DmarcReportPage.js:290
+#: src/dmarc/DmarcReportPage.js:311
 msgid "No data for the DKIM Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances DKIM par adresse IP"
 
-#: src/dmarc/DmarcReportPage.js:515
+#: src/dmarc/DmarcReportPage.js:545
 msgid "No data for the DMARC Failures by IP Address table"
 msgstr "Pas de données pour le tableau des défaillances DMARC par adresse IP"
 
@@ -1929,11 +1938,11 @@ msgstr "Pas de données pour le tableau des défaillances DMARC par adresse IP"
 msgid "No data for the DMARC yearly report graph"
 msgstr "Pas de données pour le graphique du rapport annuel de la DMARC"
 
-#: src/dmarc/DmarcReportPage.js:362
+#: src/dmarc/DmarcReportPage.js:386
 msgid "No data for the Fully Aligned by IP Address table"
 msgstr "Pas de données pour le tableau Entièrement aligné par adresse IP"
 
-#: src/dmarc/DmarcReportPage.js:433
+#: src/dmarc/DmarcReportPage.js:460
 msgid "No data for the SPF Failures by IP Address table"
 msgstr "Aucune donnée pour le tableau des défaillances du SPF par adresse IP"
 
@@ -2003,6 +2012,14 @@ msgstr "Non mis en œuvre"
 #: src/app/ContactUsPage.js:24
 msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 msgstr "Notez que les données de conformité ne sont pas automatiquement actualisées. La mise à jour des modifications apportées aux domaines peut prendre 24 heures."
+
+#: src/admin/AdminDomainModal.js:432
+msgid "Note: This could affect results for multiple organizations"
+msgstr "Note : Cela pourrait affecter les résultats de plusieurs organisations"
+
+#: src/admin/AdminDomainModal.js:427
+msgid "Note: This will affect results for {orgCount} organizations"
+msgstr "Note : Ceci affectera les résultats pour les organisations {orgCount}."
 
 #: src/termsConditions/TermsConditionsPage.js:21
 msgid "Notice of Agreement"
@@ -2104,7 +2121,7 @@ msgstr "Organisations"
 #~ msgid "PROD"
 #~ msgstr "PROD"
 
-#: src/components/TrackerTable.js:259
+#: src/components/TrackerTable.js:231
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
@@ -2191,6 +2208,10 @@ msgstr "Le champ du numéro de téléphone ne doit pas être vide"
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Le numéro de téléphone doit être un numéro de téléphone valide de 10 à 15 chiffres."
 
+#: src/admin/AdminDomainModal.js:442
+msgid "Please allow up to 24 hours for summaries to reflect any changes."
+msgstr "Veuillez prévoir jusqu'à 24 heures pour que les résumés reflètent les changements éventuels."
+
 #: src/utilities/fieldRequirements.js:30
 msgid "Please choose your preferred language"
 msgstr "Veuillez choisir votre langue préférée"
@@ -2237,6 +2258,18 @@ msgstr "Positif"
 #: src/guidance/ScanDetails.js:93
 #~ msgid "Preloaded Status:"
 #~ msgstr "Statut préchargé:"
+
+#: src/admin/AdminDomainModal.js:384
+msgid "Prevent this domain from being counted in your organization's summaries."
+msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre organisation."
+
+#: src/admin/AdminDomainModal.js:401
+#~ msgid "Prevent this domain from being scanned and being counted in any summaries."
+#~ msgstr "Empêchez ce domaine d'être scanné et d'être compté dans les résumés."
+
+#: src/admin/AdminDomainModal.js:406
+msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
+msgstr "Empêchez ce domaine d'être visible, d'être scanné et d'être compté dans les résumés."
 
 #: src/components/RelayPaginationControls.js:63
 #~ msgid "Previous"
@@ -2302,7 +2335,7 @@ msgstr "Conseils de lecture"
 msgid "Read guidance"
 msgstr "Conseils de lecture"
 
-#: src/admin/AdminDomains.js:327
+#: src/admin/AdminDomains.js:352
 #: src/admin/AuditLogTable.js:129
 msgid "Reason"
 msgstr "Raison"
@@ -2342,7 +2375,7 @@ msgstr "Rappelle-toi de moi"
 msgid "Remove"
 msgstr "Retirer"
 
-#: src/admin/AdminDomains.js:305
+#: src/admin/AdminDomains.js:330
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -2450,13 +2483,13 @@ msgstr "Alignement du SPF"
 msgid "SPF Domains"
 msgstr "Domaine SPF"
 
-#: src/dmarc/DmarcReportPage.js:374
+#: src/dmarc/DmarcReportPage.js:398
 msgid "SPF Failure Table"
 msgstr "Tableau des échecs du SPF"
 
-#: src/dmarc/DmarcReportPage.js:385
-#: src/dmarc/DmarcReportPage.js:416
-#: src/dmarc/DmarcReportPage.js:533
+#: src/dmarc/DmarcReportPage.js:409
+#: src/dmarc/DmarcReportPage.js:440
+#: src/dmarc/DmarcReportPage.js:563
 msgid "SPF Failures by IP Address"
 msgstr "Défaillances du SPF par adresse IP"
 
@@ -2515,23 +2548,23 @@ msgstr "Demande de numérisation"
 msgid "Scan of domain successfully requested"
 msgstr "Scan du domaine demandé avec succès"
 
-#: src/dmarc/DmarcReportPage.js:276
+#: src/dmarc/DmarcReportPage.js:294
 msgid "Search DKIM Failing Items"
 msgstr "Rechercher les éléments en échec de DKIM"
 
-#: src/dmarc/DmarcReportPage.js:501
+#: src/dmarc/DmarcReportPage.js:528
 msgid "Search DMARC Failing Items"
 msgstr "Recherche d'éléments défaillants DMARC"
 
-#: src/dmarc/DmarcReportPage.js:348
+#: src/dmarc/DmarcReportPage.js:369
 msgid "Search Fully Aligned Items"
 msgstr "Recherche d'éléments entièrement alignés"
 
-#: src/dmarc/DmarcReportPage.js:419
+#: src/dmarc/DmarcReportPage.js:443
 msgid "Search SPF Failing Items"
 msgstr "Rechercher les éléments défaillants du SPF"
 
-#: src/admin/AdminDomains.js:238
+#: src/admin/AdminDomains.js:266
 msgid "Search by Domain URL"
 msgstr "Recherche par URL de domaine"
 
@@ -2562,7 +2595,7 @@ msgstr "Recherche d'un utilisateur (email)"
 msgid "Search for an organization"
 msgstr "Rechercher une organisation"
 
-#: src/admin/AdminDomains.js:224
+#: src/admin/AdminDomains.js:252
 #: src/admin/UserList.js:149
 #: src/components/ReactTableGlobalFilter.js:36
 #: src/components/SearchBox.js:65
@@ -2581,7 +2614,7 @@ msgstr "Voir les en-têtes"
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
-#: src/admin/AdminDomains.js:337
+#: src/admin/AdminDomains.js:362
 msgid "Select a reason for removing this domain"
 msgstr "Sélectionnez une raison pour la suppression de ce domaine"
 
@@ -2632,12 +2665,12 @@ msgstr "Services"
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
-#: src/components/TrackerTable.js:284
+#: src/components/TrackerTable.js:256
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/dmarc/DmarcByDomainPage.js:252
-#: src/dmarc/DmarcReportPage.js:592
+#: src/dmarc/DmarcReportPage.js:622
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période:"
 
@@ -2944,12 +2977,12 @@ msgstr "Ce composant n'est pas disponible actuellement. Essayez de recharger la 
 msgid "This could be due to improper configuration, or could be the result of a scan error"
 msgstr "Cela peut être dû à une mauvaise configuration ou à une erreur d'analyse"
 
-#: src/admin/AdminDomains.js:345
+#: src/admin/AdminDomains.js:370
 #: src/admin/AuditLogTable.js:151
 msgid "This domain does not belong to this organization"
 msgstr "Ce domaine n'appartient pas à cette organisation"
 
-#: src/admin/AdminDomains.js:342
+#: src/admin/AdminDomains.js:367
 #: src/admin/AuditLogTable.js:148
 msgid "This domain no longer exists"
 msgstr "Ce domaine n'existe plus"
@@ -3061,7 +3094,7 @@ msgstr "Impossible de fermer ce compte."
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:82
+#: src/admin/AdminDomainModal.js:98
 msgid "Unable to create new domain."
 msgstr "Impossible de créer un nouveau domaine."
 
@@ -3082,7 +3115,7 @@ msgstr "Impossible d'inviter un utilisateur."
 #~ msgid "Unable to leave organization."
 #~ msgstr "Impossible de quitter l'organisation."
 
-#: src/admin/AdminDomains.js:120
+#: src/admin/AdminDomains.js:124
 msgid "Unable to remove domain."
 msgstr "Impossible de supprimer le domaine."
 
@@ -3117,7 +3150,7 @@ msgstr "Impossible d'envoyer l'e-mail de vérification"
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:131
+#: src/admin/AdminDomainModal.js:147
 msgid "Unable to update domain."
 msgstr "Impossible de mettre à jour le domaine."
 
@@ -3293,7 +3326,7 @@ msgstr "Voir les détails"
 msgid "View Results"
 msgstr "Voir les résultats"
 
-#: src/dmarc/DmarcReportPage.js:547
+#: src/dmarc/DmarcReportPage.js:577
 msgid "Volume of messages spoofing domain (reject + quarantine + none):"
 msgstr "Volume de messages usurpant domaine (rejet + quarantaine + aucun) :"
 
@@ -3582,7 +3615,7 @@ msgstr "e-mail de l'utilisateur"
 msgid "weak"
 msgstr "faible"
 
-#: src/admin/AdminDomainModal.js:72
+#: src/admin/AdminDomainModal.js:88
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
 
@@ -3602,7 +3635,7 @@ msgstr "{count} enregistrements..."
 msgid "{domainSlug} does not support aggregate data"
 msgstr "{domainSlug} ne supporte pas les données agrégées"
 
-#: src/admin/AdminDomainModal.js:121
+#: src/admin/AdminDomainModal.js:137
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 

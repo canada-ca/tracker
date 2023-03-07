@@ -164,6 +164,11 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             lastRan
             selectors
             claimTags
+            hidden
+            archived
+            organizations(first: 1) {
+              totalCount
+            }
           }
         }
         pageInfo {
@@ -495,6 +500,8 @@ export const PAGINATED_ORG_DOMAINS = gql`
             }
             hasDMARCReport
             claimTags
+            hidden
+            archived
           }
         }
       }
@@ -550,6 +557,7 @@ export const PAGINATED_DOMAINS = gql`
             protocols
             spf
           }
+          archived
           hasDMARCReport
           __typename
         }
@@ -1017,6 +1025,7 @@ export const MY_TRACKER_DOMAINS = gql`
               spf
               ssl
             }
+            archived
           }
           cursor
         }

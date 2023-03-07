@@ -133,6 +133,8 @@ describe('<AdminDomains />', () => {
               domain: 'test-domain.gc.ca',
               selectors: [],
               tags: [],
+              hidden: false,
+              archived: false,
             },
           },
           result: {
@@ -217,6 +219,8 @@ describe('<AdminDomains />', () => {
               domain: 'test-domain.gc.ca',
               selectors: [],
               tags: [],
+              hidden: false,
+              archived: false,
             },
           },
           result: {
@@ -307,6 +311,8 @@ describe('<AdminDomains />', () => {
               domain: 'test.domain.gc.ca',
               selectors: [],
               tags: [],
+              hidden: false,
+              archived: false,
             },
           },
           result: {
@@ -388,6 +394,8 @@ describe('<AdminDomains />', () => {
               domain: 'test.domain.gc.ca',
               selectors: ['selector1'],
               tags: [],
+              hidden: false,
+              archived: false,
             },
           },
           result: {
@@ -571,6 +579,8 @@ describe('<AdminDomains />', () => {
               domain: 'test.domain.ca',
               selectors: [],
               tags: [],
+              hidden: false,
+              archived: false,
             },
           },
           result: {

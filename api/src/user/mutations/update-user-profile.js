@@ -89,6 +89,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       let userAdmin
       try {
         userAdmin = await query`
+        WITH users, affiliations
         FOR v, e IN 1..1 INBOUND ${user._id} affiliations
         FILTER e.permission == "admin" || e.permission == "super_admin"
         LIMIT 1

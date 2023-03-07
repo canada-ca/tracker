@@ -35,15 +35,17 @@ def update_scan_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         scan_fail = 0
         scan_total = 0
         for domain in db.collection("domains"):
-            # We don't want to count domains not passing or failing
-            # (i.e unreachable or unscanned) towards the total.
-            if domain.get("status", {}).get(scan_type) == "fail":
-                scan_total = scan_total + 1
-                scan_fail = scan_fail + 1
+            archived = domain.get("archived")
+            if archived == False:
+                # We don't want to count domains not passing or failing
+                # (i.e unreachable or unscanned) towards the total.
+                if domain.get("status", {}).get(scan_type) == "fail":
+                    scan_total = scan_total + 1
+                    scan_fail = scan_fail + 1
 
-            elif domain.get("status", {}).get(scan_type):
-                scan_total = scan_total + 1
-                scan_pass = scan_pass + 1
+                elif domain.get("status", {}).get(scan_type):
+                    scan_total = scan_total + 1
+                    scan_pass = scan_pass + 1
 
         current_summary = db.collection("scanSummaries").get(
             {"_key": scan_type})
@@ -92,24 +94,25 @@ def update_dmarc_phase_chart_summaries(db):
     domain_total = 0
 
     for domain in db.collection("domains"):
+        archived = domain.get("archived")
+        if archived == False:
+            phase = domain.get("phase")
 
-        phase = domain.get("phase")
+            if phase is None:
+                logging.info(
+                    f"Property \"phase\" does not exist for domain \"{domain['domain']}\".")
+                continue
 
-        if phase is None:
-            logging.info(
-                f"Property \"phase\" does not exist for domain \"{domain['domain']}\".")
-            continue
-
-        if phase == "not implemented":
-            not_implemented_count = not_implemented_count + 1
-        elif phase == "assess":
-            assess_count = assess_count + 1
-        elif phase == "deploy":
-            deploy_count = deploy_count + 1
-        elif phase == "enforce":
-            enforce_count = enforce_count + 1
-        elif phase == "maintain":
-            maintain_count = maintain_count + 1
+            if phase == "not implemented":
+                not_implemented_count = not_implemented_count + 1
+            elif phase == "assess":
+                assess_count = assess_count + 1
+            elif phase == "deploy":
+                deploy_count = deploy_count + 1
+            elif phase == "enforce":
+                enforce_count = enforce_count + 1
+            elif phase == "maintain":
+                maintain_count = maintain_count + 1
 
     domain_total = not_implemented_count + assess_count + deploy_count + \
                    enforce_count + maintain_count
@@ -159,14 +162,23 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         fail_count = 0
         domain_total = 0
         for domain in db.collection("domains"):
-            category_status = []
-            for scan_type in scan_types:
-                category_status.append(domain.get("status", {}).get(scan_type))
+            hiddenByAll = True
+            claims = db.collection("claims").find({"_to": domain["_id"]})
+            for claim in claims:
+                hidden = claim.get("hidden")
+                if hidden == False:
+                    hiddenByAll = False
+                    break
+            archived = domain.get("archived")
+            if archived == False and hiddenByAll == False:
+                category_status = []
+                for scan_type in scan_types:
+                    category_status.append(domain.get("status", {}).get(scan_type))
 
-            if "fail" in category_status:
-                fail_count = fail_count + 1
-            elif "info" not in category_status:
-                pass_count = pass_count + 1
+                if "fail" in category_status:
+                    fail_count = fail_count + 1
+                elif "info" not in category_status:
+                    pass_count = pass_count + 1
 
         domain_total = pass_count + fail_count
         current_summary = db.collection("chartSummaries").get(
@@ -220,58 +232,61 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         dmarc_phase_enforce = 0
         dmarc_phase_maintain = 0
         domain_total = 0
+
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
-            domain_total = domain_total + 1
+            archived = domain.get("archived")
+            hidden = claim.get("hidden")
+            if hidden == False and archived == False:
+                domain_total = domain_total + 1
+                if domain.get("status", {}).get("dmarc") == "pass":
+                    dmarc_pass = dmarc_pass + 1
+                else:
+                    dmarc_fail = dmarc_fail + 1
 
-            if domain.get("status", {}).get("dmarc") == "pass":
-                dmarc_pass = dmarc_pass + 1
-            else:
-                dmarc_fail = dmarc_fail + 1
+                if (
+                    domain.get("status", {}).get("ssl") == "pass"
+                    and domain.get("status", {}).get("https") == "pass"
+                ):
+                    web_pass = web_pass + 1
+                elif (
+                    domain.get("status", {}).get("ssl") == "fail"
+                    or domain.get("status", {}).get("https") == "fail"
+                ):
+                    web_fail = web_fail + 1
 
-            if (
-                domain.get("status", {}).get("ssl") == "pass"
-                and domain.get("status", {}).get("https") == "pass"
-            ):
-                web_pass = web_pass + 1
-            elif (
-                domain.get("status", {}).get("ssl") == "fail"
-                or domain.get("status", {}).get("https") == "fail"
-            ):
-                web_fail = web_fail + 1
+                if domain.get("status", {}).get("https") == "pass":
+                    https_pass = https_pass + 1
+                if domain.get("status", {}).get("https") == "fail":
+                    https_fail = https_fail + 1
 
-            if domain.get("status", {}).get("https") == "pass":
-                https_pass = https_pass + 1
-            if domain.get("status", {}).get("https") == "fail":
-                https_fail = https_fail + 1
+                if (
+                    domain.get("status", {}).get("dmarc") == "pass"
+                    and domain.get("status", {}).get("spf") == "pass"
+                    and domain.get("status", {}).get("dkim") == "pass"
+                ):
+                    mail_pass = mail_pass + 1
+                else:
+                    mail_fail = mail_fail + 1
 
-            if (
-                domain.get("status", {}).get("dmarc") == "pass"
-                and domain.get("status", {}).get("spf") == "pass"
-                and domain.get("status", {}).get("dkim") == "pass"
-            ):
-                mail_pass = mail_pass + 1
-            else:
-                mail_fail = mail_fail + 1
+                phase = domain.get("phase")
 
-            phase = domain.get("phase")
+                if phase is None:
+                    logging.info(
+                        f"Property \"phase\" does not exist for domain \"${domain['domain']}\".")
+                    continue
 
-            if phase is None:
-                logging.info(
-                    f"Property \"phase\" does not exist for domain \"${domain['domain']}\".")
-                continue
-
-            if phase == "not implemented":
-                dmarc_phase_not_implemented = dmarc_phase_not_implemented + 1
-            elif phase == "assess":
-                dmarc_phase_assess = dmarc_phase_assess + 1
-            elif phase == "deploy":
-                dmarc_phase_deploy = dmarc_phase_deploy + 1
-            elif phase == "enforce":
-                dmarc_phase_enforce = dmarc_phase_enforce + 1
-            elif phase == "maintain":
-                dmarc_phase_maintain = dmarc_phase_maintain + 1
+                if phase == "not implemented":
+                    dmarc_phase_not_implemented = dmarc_phase_not_implemented + 1
+                elif phase == "assess":
+                    dmarc_phase_assess = dmarc_phase_assess + 1
+                elif phase == "deploy":
+                    dmarc_phase_deploy = dmarc_phase_deploy + 1
+                elif phase == "enforce":
+                    dmarc_phase_enforce = dmarc_phase_enforce + 1
+                elif phase == "maintain":
+                    dmarc_phase_maintain = dmarc_phase_maintain + 1
 
         summary_data = {
             "summaries": {
