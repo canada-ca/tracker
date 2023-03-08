@@ -100,7 +100,7 @@ def update_dmarc_phase_chart_summaries(db):
 
     for domain in db.collection("domains"):
         archived = domain.get("archived")
-        if archived == False:
+        if archived != True:
             phase = domain.get("phase")
 
             if phase is None:
@@ -176,7 +176,7 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
                     hiddenByAll = False
                     break
             archived = domain.get("archived")
-            if archived == False and hiddenByAll == False:
+            if archived != True and hiddenByAll == False:
                 category_status = []
                 for scan_type in scan_types:
                     category_status.append(domain.get("status", {}).get(scan_type))
@@ -245,7 +245,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
             domain = db.collection("domains").get({"_id": claim["_to"]})
             archived = domain.get("archived")
             hidden = claim.get("hidden")
-            if hidden == False and archived == False:
+            if hidden == False and archived != True:
                 domain_total = domain_total + 1
                 if domain.get("status", {}).get("dmarc") == "pass":
                     dmarc_pass = dmarc_pass + 1
