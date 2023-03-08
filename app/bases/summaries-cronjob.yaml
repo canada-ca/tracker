@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: summaries
-              image: gcr.io/track-compliance/services/summaries:master-ec4fd12-1677873864 # {"$imagepolicy": "flux-system:summaries"}
+              image: gcr.io/track-compliance/services/summaries:master-5a40317-1678292075 # {"$imagepolicy": "flux-system:summaries"}
               env:
                 - name: DB_USER
                   valueFrom:
