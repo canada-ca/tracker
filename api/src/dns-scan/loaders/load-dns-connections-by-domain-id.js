@@ -107,7 +107,7 @@ export const loadDnsConnectionsByDomainId =
 
     const removeExtraSliceTemplate = aql`SLICE(dnsScansPlusOne, 0, ${limit})`
     const dnsScanQuery = aql`
-      WITH dns
+      WITH dns, domains
       LET dnsScansPlusOne = (
         FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
           ${startDateFilter}

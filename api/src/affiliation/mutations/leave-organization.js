@@ -1,8 +1,8 @@
-import {t} from '@lingui/macro'
-import {GraphQLID, GraphQLNonNull} from 'graphql'
-import {fromGlobalId, mutationWithClientMutationId} from 'graphql-relay'
+import { t } from '@lingui/macro'
+import { GraphQLID, GraphQLNonNull } from 'graphql'
+import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 
-import {leaveOrganizationUnion} from '../unions'
+import { leaveOrganizationUnion } from '../unions'
 
 export const leaveOrganization = new mutationWithClientMutationId({
   name: 'LeaveOrganization',
@@ -16,8 +16,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: leaveOrganizationUnion,
-      description:
-        '`LeaveOrganizationUnion` resolving to either a `LeaveOrganizationResult` or `AffiliationError`.',
+      description: '`LeaveOrganizationUnion` resolving to either a `LeaveOrganizationResult` or `AffiliationError`.',
       resolve: (payload) => payload,
     },
   }),
@@ -28,23 +27,21 @@ export const leaveOrganization = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: {checkOrgOwner, userRequired, verifiedRequired},
-      loaders: {loadOrgByKey},
-      validators: {cleanseInput},
+      auth: { checkOrgOwner, userRequired, verifiedRequired },
+      loaders: { loadOrgByKey },
+      validators: { cleanseInput },
     },
   ) => {
-    const {id: orgKey} = fromGlobalId(cleanseInput(args.orgId))
+    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
 
     const user = await userRequired()
 
-    verifiedRequired({user})
+    verifiedRequired({ user })
 
     const org = await loadOrgByKey.load(orgKey)
 
     if (typeof org === 'undefined') {
-      console.warn(
-        `User ${user._key} attempted to leave undefined organization: ${orgKey}`,
-      )
+      console.warn(`User ${user._key} attempted to leave undefined organization: ${orgKey}`)
       return {
         _type: 'error',
         code: 400,
@@ -53,7 +50,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
     }
 
     // check to see if org owner
-    const owner = await checkOrgOwner({orgId: org._id})
+    const owner = await checkOrgOwner({ orgId: org._id })
 
     // Setup Trans action
     const trx = await transaction(collections)
@@ -111,9 +108,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while attempting to remove dmarc summaries for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable leave organization. Please try again.`),
-          )
+          throw new Error(i18n._(t`Unable leave organization. Please try again.`))
         }
 
         try {
@@ -128,9 +123,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while attempting to remove ownership for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable leave organization. Please try again.`),
-          )
+          throw new Error(i18n._(t`Unable leave organization. Please try again.`))
         }
       }
 
@@ -179,7 +172,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
             // Remove web data
             await trx.step(async () => {
               await query`
-                WITH web, webScan
+                WITH web, webScan, domains
                 FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
                   FOR webScanV, webToWebScansV In 1..1 ANY webV._id webToWebScans
                     REMOVE webScanV IN webScan
@@ -201,7 +194,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
             // Remove DNS data
             await trx.step(async () => {
               await query`
-            WITH dns
+            WITH dns, domains
             FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
               REMOVE dnsV IN dns
               REMOVE domainsDNSEdge IN domainsDNS
@@ -243,9 +236,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred while attempting to remove domains for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
             )
-            throw new Error(
-              i18n._(t`Unable leave organization. Please try again.`),
-            )
+            throw new Error(i18n._(t`Unable leave organization. Please try again.`))
           }
         }
       }
@@ -306,9 +297,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred when user: ${user._key} attempted to leave org: ${org._key}: ${err}`,
-      )
+      console.error(`Trx commit error occurred when user: ${user._key} attempted to leave org: ${org._key}: ${err}`)
       throw new Error(i18n._(t`Unable leave organization. Please try again.`))
     }
 

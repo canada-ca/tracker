@@ -1,8 +1,8 @@
-import {GraphQLNonNull, GraphQLID} from 'graphql'
-import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
-import {t} from '@lingui/macro'
+import { GraphQLNonNull, GraphQLID } from 'graphql'
+import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
+import { t } from '@lingui/macro'
 
-import {removeDomainUnion} from '../unions'
+import { removeDomainUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { DomainRemovalReasonEnum } from '../../enums'
 
@@ -20,15 +20,13 @@ export const removeDomain = new mutationWithClientMutationId({
     },
     reason: {
       type: GraphQLNonNull(DomainRemovalReasonEnum),
-      description:
-        'The reason given for why this domain is being removed from the organization.',
+      description: 'The reason given for why this domain is being removed from the organization.',
     },
   }),
   outputFields: () => ({
     result: {
       type: GraphQLNonNull(removeDomainUnion),
-      description:
-        '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
+      description: '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -40,31 +38,27 @@ export const removeDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: {checkPermission, userRequired, verifiedRequired, tfaRequired},
-      validators: {cleanseInput},
-      loaders: {loadDomainByKey, loadOrgByKey},
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
+      validators: { cleanseInput },
+      loaders: { loadDomainByKey, loadOrgByKey },
     },
   ) => {
     // Get User
     const user = await userRequired()
 
-    verifiedRequired({user})
-    tfaRequired({user})
+    verifiedRequired({ user })
+    tfaRequired({ user })
 
     // Cleanse Input
-    const {type: _domainType, id: domainId} = fromGlobalId(
-      cleanseInput(args.domainId),
-    )
-    const {type: _orgType, id: orgId} = fromGlobalId(cleanseInput(args.orgId))
+    const { type: _domainType, id: domainId } = fromGlobalId(cleanseInput(args.domainId))
+    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get domain from db
     const domain = await loadDomainByKey.load(domainId)
 
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`,
-      )
+      console.warn(`User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`)
       return {
         _type: 'error',
         code: 400,
@@ -83,14 +77,12 @@ export const removeDomain = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to remove domain from unknown organization.`,
-        ),
+        description: i18n._(t`Unable to remove domain from unknown organization.`),
       }
     }
 
     // Get permission
-    const permission = await checkPermission({orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
     // Check to see if domain belongs to verified check org
     if (org.verified && permission !== 'super_admin') {
@@ -100,9 +92,7 @@ export const removeDomain = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact super admin for help with removing domain.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact super admin for help with removing domain.`),
       }
     }
 
@@ -113,9 +103,7 @@ export const removeDomain = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact organization admin for help with removing domain.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with removing domain.`),
       }
     }
 
@@ -144,9 +132,7 @@ export const removeDomain = new mutationWithClientMutationId({
       console.error(
         `Error occurred for user: ${userKey}, when attempting to remove domain "${domain.domain}" from organization with slug "${org.slug}". Organization does not have claim for domain.`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove domain. Domain is not part of organization.`),
-      )
+      throw new Error(i18n._(t`Unable to remove domain. Domain is not part of organization.`))
     }
 
     // check to see if org removing domain has ownership
@@ -247,7 +233,7 @@ export const removeDomain = new mutationWithClientMutationId({
         // Remove DNS data
         await trx.step(async () => {
           await query`
-            WITH dns
+            WITH dns, domains
             FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
               REMOVE dnsV IN dns
               REMOVE domainsDNSEdge IN domainsDNS
@@ -312,9 +298,7 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
-    console.info(
-      `User: ${userKey} successfully removed domain: ${domain.domain} from org: ${org.slug}.`,
-    )
+    console.info(`User: ${userKey} successfully removed domain: ${domain.domain} from org: ${org.slug}.`)
     await logActivity({
       transaction,
       collections,
@@ -338,9 +322,7 @@ export const removeDomain = new mutationWithClientMutationId({
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully removed domain: ${domain.domain} from ${org.slug}.`,
-      ),
+      status: i18n._(t`Successfully removed domain: ${domain.domain} from ${org.slug}.`),
       domain,
     }
   },
