@@ -41,7 +41,7 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
         scan_total = 0
         for domain in db.collection("domains"):
             archived = domain.get("archived")
-            if archived == False:
+            if archived != True:
                 # We don't want to count domains not passing or failing
                 # (i.e unreachable or unscanned) towards the total.
                 if domain.get("status", {}).get(scan_type) == "fail":
