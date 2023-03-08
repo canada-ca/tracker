@@ -168,15 +168,8 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
         fail_count = 0
         domain_total = 0
         for domain in db.collection("domains"):
-            hiddenByAll = True
-            claims = db.collection("claims").find({"_to": domain["_id"]})
-            for claim in claims:
-                hidden = claim.get("hidden")
-                if hidden == False:
-                    hiddenByAll = False
-                    break
             archived = domain.get("archived")
-            if archived != True and hiddenByAll == False:
+            if archived != True:
                 category_status = []
                 for scan_type in scan_types:
                     category_status.append(domain.get("status", {}).get(scan_type))
@@ -245,7 +238,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
             domain = db.collection("domains").get({"_id": claim["_to"]})
             archived = domain.get("archived")
             hidden = claim.get("hidden")
-            if hidden == False and archived != True:
+            if hidden != True and archived != True:
                 domain_total = domain_total + 1
                 if domain.get("status", {}).get("dmarc") == "pass":
                     dmarc_pass = dmarc_pass + 1
