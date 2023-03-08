@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { array, string } from 'prop-types'
+import { array, bool, string } from 'prop-types'
 import {
   Flex,
   Grid,
@@ -17,7 +17,7 @@ import { sanitizeUrl } from '../utilities/sanitizeUrl'
 import { ABTestingWrapper } from '../app/ABTestWrapper'
 import { ABTestVariant } from '../app/ABTestVariant'
 
-export function AdminDomainCard({ url, tags, ...rest }) {
+export function AdminDomainCard({ url, tags, isHidden, isArchived, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -57,6 +57,30 @@ export function AdminDomainCard({ url, tags, ...rest }) {
                   </Tag>
                 )
               })}
+              {isHidden && (
+                <Tag
+                  m="1"
+                  borderRadius="full"
+                  borderWidth="1px"
+                  borderColor="gray.900"
+                >
+                  <TagLabel mx="auto">
+                    <Trans>Hidden</Trans>
+                  </TagLabel>
+                </Tag>
+              )}
+              {isArchived && (
+                <Tag
+                  m="1"
+                  borderRadius="full"
+                  borderWidth="1px"
+                  borderColor="gray.900"
+                >
+                  <TagLabel mx="auto">
+                    <Trans>Archived</Trans>
+                  </TagLabel>
+                </Tag>
+              )}
             </Flex>
           </ABTestVariant>
         </ABTestingWrapper>
@@ -64,4 +88,9 @@ export function AdminDomainCard({ url, tags, ...rest }) {
     </ListItem>
   )
 }
-AdminDomainCard.propTypes = { url: string, tags: array }
+AdminDomainCard.propTypes = {
+  url: string,
+  tags: array,
+  isHidden: bool,
+  isArchived: bool,
+}

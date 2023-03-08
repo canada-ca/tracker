@@ -231,6 +231,7 @@ describe('given the organization object', () => {
     describe('testing the domains resolver', () => {
       it('returns the resolved value', async () => {
         const demoType = organizationType.getFields()
+        const checkPermission = jest.fn().mockReturnValue('user')
 
         const expectedResult = {
           edges: [
@@ -260,6 +261,7 @@ describe('given the organization object', () => {
             { _id: 'organizations/1' },
             { first: 1 },
             {
+              auth: { checkPermission },
               loaders: {
                 loadDomainConnectionsByOrgId: jest
                   .fn()

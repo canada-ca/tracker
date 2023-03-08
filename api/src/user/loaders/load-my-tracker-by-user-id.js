@@ -8,18 +8,19 @@ export const loadMyTrackerByUserId =
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`
+        WITH users
         LET favDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
-                OPTIONS {bfs: true}
+                OPTIONS {order: "bfs"}
                 RETURN v._key
         )
         LET favDomains = (
             FOR domain IN domains
                 FILTER domain._key IN favDomainKeys
-                RETURN { 
-                    id: domain._key, 
-                    _type: "domain", 
-                    "phase": domain.phase, 
+                RETURN {
+                    id: domain._key,
+                    _type: "domain",
+                    "phase": domain.phase,
                     "httpsStatus": domain.status.https
                 }
         )

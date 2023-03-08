@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull, GraphQLList } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
@@ -33,6 +33,16 @@ export const updateDomain = new mutationWithClientMutationId({
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
+    },
+    hidden: {
+      description:
+        "Value that determines if the domain is excluded from an organization's score.",
+      type: GraphQLBoolean,
+    },
+    archived: {
+      description:
+        'Value that determines if the domain is excluded from the scanning process.',
+      type: GraphQLBoolean,
     },
   }),
   outputFields: () => ({
@@ -78,6 +88,20 @@ export const updateDomain = new mutationWithClientMutationId({
       tags = args.tags
     } else {
       tags = null
+    }
+
+    let archived
+    if (typeof args.archived !== 'undefined') {
+      archived = args.archived
+    } else {
+      archived = null
+    }
+
+    let hidden
+    if (typeof args.hidden !== 'undefined') {
+      hidden = args.hidden
+    } else {
+      hidden = null
     }
 
     // Check to see if domain exists
@@ -165,6 +189,7 @@ export const updateDomain = new mutationWithClientMutationId({
       domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
       lastRan: domain.lastRan,
       selectors: selectors || domain.selectors,
+      archived: typeof archived !== 'undefined' ? archived : domain?.archived,
     }
 
     try {
@@ -186,47 +211,50 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     let claimCursor
-    let currentTags = ''
-    if (tags) {
-      try {
-        claimCursor = await query`
+    try {
+      claimCursor = await query`
         WITH claims
         FOR claim IN claims
           FILTER claim._from == ${org._id} && claim._to == ${domain._id}
           RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
       `
-      } catch (err) {
-        console.error(
-          `Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
-        )
-      }
-      try {
-        currentTags = await claimCursor.next()
-      } catch (err) {
-        console.error(
-          `Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
-        )
-      }
+    } catch (err) {
+      console.error(
+        `Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
+      )
+    }
+    let claim
+    try {
+      claim = await claimCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
+      )
+    }
 
-      try {
-        await trx.step(
-          async () =>
-            await query`
+    const claimToInsert = {
+      tags: tags || claim?.tags,
+      hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
+    }
+
+    try {
+      await trx.step(
+        async () =>
+          await query`
           WITH claims
           UPSERT { _from: ${org._id}, _to: ${domain._id} }
-            INSERT { tags: ${tags} }
-            UPDATE { tags: ${tags} }
+            INSERT ${claimToInsert}
+            UPDATE ${claimToInsert}
             IN claims
       `,
-        )
-      } catch (err) {
-        console.error(
-          `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
-        )
-        throw new Error(
-          i18n._(t`Unable to update domain edge. Please try again.`),
-        )
-      }
+      )
+    } catch (err) {
+      console.error(
+        `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to update domain edge. Please try again.`),
+      )
     }
 
     // Commit transaction
@@ -267,12 +295,20 @@ export const updateDomain = new mutationWithClientMutationId({
 
     if (
       typeof tags !== 'undefined' &&
-      JSON.stringify(currentTags.tags) !== JSON.stringify(tags)
+      JSON.stringify(claim.tags) !== JSON.stringify(tags)
     ) {
       updatedProperties.push({
         name: 'tags',
-        oldValue: currentTags.tags,
+        oldValue: claim.tags,
         newValue: tags,
+      })
+    }
+
+    if (typeof hidden !== 'undefined') {
+      updatedProperties.push({
+        name: 'hidden',
+        oldValue: claim?.hidden,
+        newValue: hidden,
       })
     }
 
@@ -295,6 +331,27 @@ export const updateDomain = new mutationWithClientMutationId({
           }, // name of resource being acted upon
           resourceType: 'domain', // user, org, domain
           updatedProperties,
+        },
+      })
+    }
+
+    if (typeof archived !== 'undefined') {
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission,
+        },
+        action: 'update',
+        target: {
+          resource: domain.domain,
+          resourceType: 'domain', // user, org, domain
+          updatedProperties: [
+            { name: 'archived', oldValue: domain.archived, newValue: archived },
+          ],
         },
       })
     }

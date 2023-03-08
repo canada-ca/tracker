@@ -6,9 +6,10 @@ export const loadDomainTagsByOrgId =
     let requestedTagsInfo
     try {
       requestedTagsInfo = await query`
+      WITH organizations
       LET domainKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
       LET orgTags = UNIQUE(
