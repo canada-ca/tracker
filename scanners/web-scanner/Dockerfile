@@ -1,4 +1,4 @@
-FROM rust:1.62.1 AS crlite-builder
+FROM rust:1.67.1 AS crlite-builder
 RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev b19e5aa
 
 #===============================================================================================
