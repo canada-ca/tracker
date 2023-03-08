@@ -156,7 +156,7 @@ def process_spf(spf_results):
 
     # Check redirect tag
     redirect_tag = spf_results.get("parsed", {}).get("redirect", None)
-    if redirect_tag is None:
+    if redirect_tag is not None:
         spf_tags.append("spf9")
 
     # Look up limit check
