@@ -11,6 +11,8 @@ import datetime
 from arango import ArangoClient
 from dotenv import load_dotenv
 
+load_dotenv()
+
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
@@ -335,7 +337,6 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
 
 
 if __name__ == "__main__":
-    load_dotenv()
     logging.info(emoji.emojize("Summary service started :rocket:"))
     update_scan_summaries()
     update_chart_summaries()
