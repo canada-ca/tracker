@@ -10,7 +10,7 @@ export const loadWebScansByWebId =
     }
 
     const webScanQuery = aql`
-      WITH webScan
+      WITH webScan, web
       FOR webScan, e IN 1 OUTBOUND ${webId} webToWebScans
         RETURN webScan
     `
