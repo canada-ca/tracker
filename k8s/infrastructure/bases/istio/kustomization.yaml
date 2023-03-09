@@ -5,4 +5,5 @@ resources:
 - ecdh-curves-patch.yaml
 - envoy-security-headers-filter.yaml
 - istio-operator.yaml
+- istio-operator-deployment.yaml
 - ingress-gateway.yaml

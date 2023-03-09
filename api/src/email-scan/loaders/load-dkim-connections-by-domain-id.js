@@ -70,7 +70,7 @@ export const loadDkimConnectionsByDomainId =
 
         beforeTemplate = aql`
         FILTER ${dkimField} ${beforeTemplateDirection} ${documentField}
-        OR (${dkimField} == ${documentField} 
+        OR (${dkimField} == ${documentField}
         AND TO_NUMBER(dkimScan._key) < TO_NUMBER(${beforeId}))
       `
       }
@@ -82,7 +82,7 @@ export const loadDkimConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(dkimScan.timestamp),
         "%y-%m-%d"
-      ) >= 
+      ) >=
       DATE_FORMAT(
         DATE_TIMESTAMP(${startDate}),
         "%y-%m-%d"
@@ -96,7 +96,7 @@ export const loadDkimConnectionsByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(dkimScan.timestamp),
         "%y-%m-%d"
-      ) <= 
+      ) <=
       DATE_FORMAT(
         DATE_TIMESTAMP(${endDate}),
         "%y-%m-%d"
@@ -226,13 +226,13 @@ export const loadDkimConnectionsByDomainId =
       WITH dkim, domains, domainsDKIM
       LET dkimKeys = (
         FOR v, e IN 1 OUTBOUND ${domainId} domainsDKIM
-          OPTIONS {bfs: true}
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
 
       ${afterVar}
       ${beforeVar}
-      
+
       LET retrievedDkim = (
         FOR dkimScan IN dkim
           FILTER dkimScan._key IN dkimKeys
@@ -254,7 +254,7 @@ export const loadDkimConnectionsByDomainId =
           SORT ${sortByField} TO_NUMBER(dkimScan._key) ${sortString} LIMIT 1
           RETURN dkimScan
       ) > 0 ? true : false)
-      
+
       LET hasPreviousPage = (LENGTH(
         FOR dkimScan IN dkim
           FILTER dkimScan._key IN dkimKeys
@@ -263,13 +263,13 @@ export const loadDkimConnectionsByDomainId =
           RETURN dkimScan
       ) > 0 ? true : false)
 
-      RETURN { 
+      RETURN {
         "dkimScans": retrievedDkim,
         "totalCount": LENGTH(dkimKeys),
-        "hasNextPage": hasNextPage, 
-        "hasPreviousPage": hasPreviousPage, 
-        "startKey": FIRST(retrievedDkim)._key, 
-        "endKey": LAST(retrievedDkim)._key 
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedDkim)._key,
+        "endKey": LAST(retrievedDkim)._key
       }
     `
     } catch (err) {

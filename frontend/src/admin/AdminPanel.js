@@ -43,6 +43,7 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <AdminDomains
+                permission={permission}
                 orgSlug={orgSlug}
                 domainsPerPage={10}
                 orgId={orgId}

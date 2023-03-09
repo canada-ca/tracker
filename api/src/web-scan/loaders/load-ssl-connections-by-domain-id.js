@@ -139,7 +139,7 @@ export const loadSslConnectionByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(sslScan.timestamp),
         "%y-%m-%d"
-      ) >= 
+      ) >=
       DATE_FORMAT(
         DATE_TIMESTAMP(${startDate}),
         "%y-%m-%d"
@@ -153,7 +153,7 @@ export const loadSslConnectionByDomainId =
       FILTER DATE_FORMAT(
         DATE_TIMESTAMP(sslScan.timestamp),
         "%y-%m-%d"
-      ) <= 
+      ) <=
       DATE_FORMAT(
         DATE_TIMESTAMP(${endDate}),
         "%y-%m-%d"
@@ -327,14 +327,14 @@ export const loadSslConnectionByDomainId =
       requestedSslInfo = await query`
       WITH domains, domainsSSL, ssl
       LET sslKeys = (
-        FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL 
-          OPTIONS {bfs: true}
+        FOR v, e IN 1 OUTBOUND ${domainId} domainsSSL
+          OPTIONS {order: "bfs"}
           RETURN v._key
       )
 
       ${afterVar}
       ${beforeVar}
-      
+
       LET retrievedSsl = (
         FOR sslScan IN ssl
           FILTER sslScan._key IN sslKeys
@@ -355,7 +355,7 @@ export const loadSslConnectionByDomainId =
           SORT ${sortByField} TO_NUMBER(sslScan._key) ${sortString} LIMIT 1
           RETURN sslScan
       ) > 0 ? true : false)
-      
+
       LET hasPreviousPage = (LENGTH(
         FOR sslScan IN ssl
           FILTER sslScan._key IN sslKeys
@@ -364,13 +364,13 @@ export const loadSslConnectionByDomainId =
           RETURN sslScan
       ) > 0 ? true : false)
 
-      RETURN { 
+      RETURN {
         "sslScans": retrievedSsl,
         "totalCount": LENGTH(sslKeys),
-        "hasNextPage": hasNextPage, 
-        "hasPreviousPage": hasPreviousPage, 
-        "startKey": FIRST(retrievedSsl)._key, 
-        "endKey": LAST(retrievedSsl)._key 
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "startKey": FIRST(retrievedSsl)._key,
+        "endKey": LAST(retrievedSsl)._key
       }
     `
     } catch (err) {

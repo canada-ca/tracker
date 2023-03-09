@@ -43,19 +43,23 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
 
-export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
+export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
-  const [editingDomainUrl, setEditingDomainUrl] = useState()
-  const [editingDomainId, setEditingDomainId] = useState()
   const [selectedRemoveDomainUrl, setSelectedRemoveDomainUrl] = useState()
   const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [selectorInputList, setSelectorInputList] = useState([])
-  const [tagInputList, setTagInputList] = useState([])
-  const [mutation, setMutation] = useState()
+  const [modalProps, setModalProps] = useState({
+    hidden: false,
+    archived: false,
+    mutation: '',
+    tagInputList: [],
+    selectorInputList: [],
+    editingDomainId: '',
+    editingDomainUrl: '',
+  })
 
   const {
     isOpen: updateIsOpen,
@@ -153,7 +157,18 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         </Text>
       )}
     >
-      {({ id: domainId, domain, selectors, claimTags }, index) => (
+      {(
+        {
+          id: domainId,
+          domain,
+          selectors,
+          claimTags,
+          hidden,
+          archived,
+          organizations,
+        },
+        index,
+      ) => (
         <Box key={'admindomain' + index}>
           <Stack isInline align="center">
             <Stack direction="row" flexGrow="0">
@@ -174,11 +189,16 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
                 variant="primary"
                 px="2"
                 onClick={() => {
-                  setEditingDomainUrl(domain)
-                  setEditingDomainId(domainId)
-                  setSelectorInputList(selectors)
-                  setTagInputList(claimTags)
-                  setMutation('update')
+                  setModalProps({
+                    hidden,
+                    archived,
+                    mutation: 'update',
+                    tagInputList: claimTags,
+                    selectorInputList: selectors,
+                    editingDomainId: domainId,
+                    editingDomainUrl: domain,
+                    orgCount: organizations.totalCount,
+                  })
                   updateOnOpen()
                 }}
                 icon={<EditIcon />}
@@ -188,6 +208,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
             <AdminDomainCard
               url={domain}
               tags={claimTags}
+              isHidden={hidden}
+              isArchived={archived}
               locale={i18n.locale}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
@@ -205,10 +227,16 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         id="form"
         onSubmit={async (e) => {
           e.preventDefault() // prevents page from refreshing
-          setSelectorInputList([])
-          setTagInputList([])
-          setEditingDomainUrl(newDomainUrl)
-          setMutation('create')
+          setModalProps({
+            hidden: false,
+            archived: false,
+            mutation: 'create',
+            tagInputList: [],
+            selectorInputList: [],
+            editingDomainId: '',
+            editingDomainUrl: newDomainUrl,
+            orgCount: 0,
+          })
           updateOnOpen()
         }}
       >
@@ -268,11 +296,8 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId }) {
         validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
         orgId={orgId}
         orgSlug={orgSlug}
-        selectorInputList={selectorInputList}
-        tagInputList={tagInputList}
-        editingDomainId={editingDomainId}
-        editingDomainUrl={editingDomainUrl}
-        mutation={mutation}
+        {...modalProps}
+        permission={permission}
       />
 
       <Modal
@@ -374,4 +399,5 @@ AdminDomains.propTypes = {
   orgSlug: string.isRequired,
   orgId: string.isRequired,
   domainsPerPage: number,
+  permission: string,
 }

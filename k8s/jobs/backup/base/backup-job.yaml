@@ -11,7 +11,7 @@ spec:
       serviceAccountName: backup-service
       initContainers:
         - name: dump
-          image: "arangodb:3.7.11"
+          image: "arangodb:3.9.9"
           env:
           - name: DB_USER
             valueFrom:

@@ -2,9 +2,11 @@ import React, { useRef } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import {
+  Badge,
   Box,
   Button,
   Divider,
+  Flex,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -19,15 +21,22 @@ import {
   ModalOverlay,
   SimpleGrid,
   Stack,
+  Switch,
   Tag,
   TagCloseButton,
   TagLabel,
   TagRightIcon,
   Text,
+  Tooltip,
   useToast,
 } from '@chakra-ui/react'
-import { AddIcon, MinusIcon, SmallAddIcon } from '@chakra-ui/icons'
-import { array, bool, func, object, string } from 'prop-types'
+import {
+  AddIcon,
+  MinusIcon,
+  QuestionOutlineIcon,
+  SmallAddIcon,
+} from '@chakra-ui/icons'
+import { array, bool, func, number, object, string } from 'prop-types'
 import { Field, FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
@@ -41,13 +50,20 @@ export function AdminDomainModal({
   onClose,
   validationSchema,
   orgId,
-  editingDomainId,
-  editingDomainUrl,
-  selectorInputList,
-  tagInputList,
-  orgSlug,
-  mutation,
+  ...props
 }) {
+  const {
+    editingDomainId,
+    editingDomainUrl,
+    selectorInputList,
+    tagInputList,
+    orgSlug,
+    archived,
+    hidden,
+    permission,
+    mutation,
+    orgCount,
+  } = props
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -204,6 +220,8 @@ export function AdminDomainModal({
                 return option[i18n.locale] == label
               })[0]
             }),
+            archiveDomain: archived,
+            hideDomain: hidden,
           }}
           initialTouched={{
             domainUrl: true,
@@ -219,6 +237,8 @@ export function AdminDomainModal({
                   domain: values.domainUrl,
                   selectors: values.selectors,
                   tags: values.tags,
+                  archived: values.archiveDomain,
+                  hidden: values.hideDomain,
                 },
               })
             } else if (mutation === 'create') {
@@ -228,12 +248,21 @@ export function AdminDomainModal({
                   domain: values.domainUrl,
                   selectors: values.selectors,
                   tags: values.tags,
+                  archived: values.archiveDomain,
+                  hidden: values.hideDomain,
                 },
               })
             }
           }}
         >
-          {({ handleSubmit, isSubmitting, values, errors, touched }) => (
+          {({
+            handleSubmit,
+            handleChange,
+            isSubmitting,
+            values,
+            errors,
+            touched,
+          }) => (
             <form id="form" onSubmit={handleSubmit}>
               <ModalHeader>
                 {mutation === 'update' ? (
@@ -349,6 +378,72 @@ export function AdminDomainModal({
                           </Box>
                         )}
                       />
+
+                      <Flex align="center">
+                        <Tooltip
+                          label={t`Prevent this domain from being counted in your organization's summaries.`}
+                        >
+                          <QuestionOutlineIcon tabIndex={0} />
+                        </Tooltip>
+                        <label>
+                          <Switch
+                            isFocusable={true}
+                            name="hideDomain"
+                            mx="2"
+                            defaultChecked={values.hideDomain}
+                            onChange={handleChange}
+                          />
+                        </label>
+                        <Badge variant="outline" color="gray.900" p="1.5">
+                          <Trans>Hide domain</Trans>
+                        </Badge>
+                      </Flex>
+
+                      {permission === 'SUPER_ADMIN' && (
+                        <Box>
+                          <Flex align="center">
+                            <Tooltip
+                              label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
+                            >
+                              <QuestionOutlineIcon tabIndex={0} />
+                            </Tooltip>
+                            <label>
+                              <Switch
+                                colorScheme="red"
+                                isFocusable={true}
+                                name="archiveDomain"
+                                mx="2"
+                                defaultChecked={values.archiveDomain}
+                                onChange={handleChange}
+                              />
+                            </label>
+                            <Badge variant="outline" color="gray.900" p="1.5">
+                              <Trans>Archive domain</Trans>
+                            </Badge>
+                          </Flex>
+
+                          <Text fontSize="sm">
+                            {orgCount > 0 ? (
+                              <Trans>
+                                Note: This will affect results for {orgCount}{' '}
+                                organizations
+                              </Trans>
+                            ) : (
+                              <Trans>
+                                Note: This could affect results for multiple
+                                organizations
+                              </Trans>
+                            )}
+                          </Text>
+                        </Box>
+                      )}
+
+                      <Text>
+                        <Trans>
+                          Please allow up to 24 hours for summaries to reflect
+                          any changes.
+                        </Trans>
+                      </Text>
                     </ABTestVariant>
                   </ABTestingWrapper>
                 </Stack>
@@ -381,6 +476,10 @@ AdminDomainModal.propTypes = {
   editingDomainUrl: string,
   selectorInputList: array,
   tagInputList: array,
+  archived: bool,
+  hidden: bool,
+  permission: string,
   orgSlug: string,
   mutation: string,
+  orgCount: number,
 }

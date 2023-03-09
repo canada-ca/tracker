@@ -124,7 +124,8 @@ export const removeDomain = new mutationWithClientMutationId({
     try {
       countCursor = await query`
         WITH claims, domains, organizations
-        FOR v, e IN 1..1 ANY ${domain._id} claims RETURN true
+        FOR v, e IN 1..1 ANY ${domain._id} claims
+          RETURN v
       `
     } catch (err) {
       console.error(
@@ -133,12 +134,29 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
+    // check if org has claim to domain
+    const orgsClaimingDomain = await countCursor.all()
+    const orgHasDomainClaim = orgsClaimingDomain.some((orgVertex) => {
+      return orgVertex._id === org._id
+    })
+
+    if (!orgHasDomainClaim) {
+      console.error(
+        `Error occurred for user: ${userKey}, when attempting to remove domain "${domain.domain}" from organization with slug "${org.slug}". Organization does not have claim for domain.`,
+      )
+      throw new Error(
+        i18n._(t`Unable to remove domain. Domain is not part of organization.`),
+      )
+    }
+
     // check to see if org removing domain has ownership
     let dmarcCountCursor
     try {
       dmarcCountCursor = await query`
         WITH domains, organizations, ownership
-        FOR v IN 1..1 OUTBOUND ${org._id} ownership RETURN true
+          FOR v IN 1..1 OUTBOUND ${org._id} ownership
+            FILTER v._id == ${domain._id}
+            RETURN true
       `
     } catch (err) {
       console.error(
@@ -147,7 +165,7 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
-    // Setup Trans action
+    // Setup Transaction
     const trx = await transaction(collections)
 
     if (dmarcCountCursor.count === 1) {
@@ -207,7 +225,7 @@ export const removeDomain = new mutationWithClientMutationId({
         // Remove DKIM data
         await trx.step(async () => {
           await query`
-            WITH dkim, dkimResults
+            WITH dkim, dkimResults, domains
             FOR dkimV, domainsDkimEdge IN 1..1 OUTBOUND ${domain._id} domainsDKIM
               FOR dkimResult, dkimToDkimResultsEdge In 1..1 OUTBOUND dkimV._id dkimToDkimResults
                 REMOVE dkimResult IN dkimResults
@@ -229,11 +247,10 @@ export const removeDomain = new mutationWithClientMutationId({
         // Remove DMARC data
         await trx.step(async () => {
           await query`
-            WITH dmarc
+            WITH dmarc, domains
             FOR dmarcV, domainsDmarcEdge IN 1..1 OUTBOUND ${domain._id} domainsDMARC
               REMOVE dmarcV IN dmarc
               REMOVE domainsDmarcEdge IN domainsDMARC
-              OPTIONS { waitForSync: true }
           `
         })
       } catch (err) {
@@ -247,7 +264,7 @@ export const removeDomain = new mutationWithClientMutationId({
         // Remove HTTPS data
         await trx.step(async () => {
           await query`
-            WITH https
+            WITH https, domains
             FOR httpsV, domainsHttpsEdge IN 1..1 OUTBOUND ${domain._id} domainsHTTPS
               REMOVE httpsV IN https
               REMOVE domainsHttpsEdge IN domainsHTTPS
@@ -265,7 +282,7 @@ export const removeDomain = new mutationWithClientMutationId({
         // Remove SPF data
         await trx.step(async () => {
           await query`
-            WITH spf
+            WITH spf, domains
             FOR spfV, domainsSpfEdge IN 1..1 OUTBOUND ${domain._id} domainsSPF
               REMOVE spfV IN spf
               REMOVE domainsSpfEdge IN domainsSPF
@@ -283,7 +300,7 @@ export const removeDomain = new mutationWithClientMutationId({
         // Remove SSL data
         await trx.step(async () => {
           await query`
-            WITH ssl
+            WITH ssl, domains
             FOR sslV, domainsSslEdge IN 1..1 OUTBOUND ${domain._id} domainsSSL
               REMOVE sslV IN ssl
               REMOVE domainsSslEdge IN domainsSSL
