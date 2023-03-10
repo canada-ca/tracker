@@ -12,7 +12,7 @@
   "author": "nsdeschenes",
   "license": "MIT",
   "dependencies": {
-    "arangojs": "^7.6.1",
+    "arangojs": "^8.0.0",
     "dotenv-safe": "^8.2.0"
   },
   "devDependencies": {

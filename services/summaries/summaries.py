@@ -10,6 +10,8 @@ import datetime
 from arango import ArangoClient
 from dotenv import load_dotenv
 
+load_dotenv()
+
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
@@ -36,7 +38,7 @@ def update_scan_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         scan_total = 0
         for domain in db.collection("domains"):
             archived = domain.get("archived")
-            if archived == False:
+            if archived != True:
                 # We don't want to count domains not passing or failing
                 # (i.e unreachable or unscanned) towards the total.
                 if domain.get("status", {}).get(scan_type) == "fail":
@@ -95,7 +97,7 @@ def update_dmarc_phase_chart_summaries(db):
 
     for domain in db.collection("domains"):
         archived = domain.get("archived")
-        if archived == False:
+        if archived != True:
             phase = domain.get("phase")
 
             if phase is None:
@@ -162,15 +164,8 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         fail_count = 0
         domain_total = 0
         for domain in db.collection("domains"):
-            hiddenByAll = True
-            claims = db.collection("claims").find({"_to": domain["_id"]})
-            for claim in claims:
-                hidden = claim.get("hidden")
-                if hidden == False:
-                    hiddenByAll = False
-                    break
             archived = domain.get("archived")
-            if archived == False and hiddenByAll == False:
+            if archived != True:
                 category_status = []
                 for scan_type in scan_types:
                     category_status.append(domain.get("status", {}).get(scan_type))
@@ -238,7 +233,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
             domain = db.collection("domains").get({"_id": claim["_to"]})
             archived = domain.get("archived")
             hidden = claim.get("hidden")
-            if hidden == False and archived == False:
+            if hidden != True and archived != True:
                 domain_total = domain_total + 1
                 if domain.get("status", {}).get("dmarc") == "pass":
                     dmarc_pass = dmarc_pass + 1
@@ -330,7 +325,6 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
 
 
 if __name__ == "__main__":
-    load_dotenv()
     logging.info("Summary service started")
     update_scan_summaries()
     update_chart_summaries()
