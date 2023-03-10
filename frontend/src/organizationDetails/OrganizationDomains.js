@@ -80,12 +80,19 @@ export function OrganizationDomains({ orgSlug }) {
       )}
       mb="4"
     >
-      {(
-        { id, domain, status, hasDMARCReport, claimTags, hidden, archived },
-        index,
-      ) => (  <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
-          <DomainCard id={id} url={domain} status={status} hasDMARCReport={hasDMARCReport} tags={claimTags}isHidden={hidden}
-            isArchived={archived} mb="3" />
+      {({ id, domain, status, hasDMARCReport, claimTags, hidden, archived, rcode }, index) => (
+        <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+          <DomainCard
+            id={id}
+            url={domain}
+            status={status}
+            hasDMARCReport={hasDMARCReport}
+            tags={claimTags}
+            isHidden={hidden}
+            rcode={rcode}
+            isArchived={archived}
+            mb="3"
+          />
         </ErrorBoundary>
       )}
     </ListOf>
