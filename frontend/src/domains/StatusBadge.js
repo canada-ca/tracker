@@ -28,5 +28,5 @@ export function StatusBadge({ text, status }) {
 
 StatusBadge.propTypes = {
   text: string.isRequired,
-  status: string.isRequired,
+  status: string,
 }

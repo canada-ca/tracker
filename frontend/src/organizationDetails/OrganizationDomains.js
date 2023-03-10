@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Flex,
+  // FormErrorMessage,
   Select,
   Tag,
   TagCloseButton,
@@ -29,7 +30,10 @@ import {
 import { SearchBox } from '../components/SearchBox'
 import { SubdomainWarning } from '../domains/SubdomainWarning'
 import { Formik } from 'formik'
-import { createValidationSchema } from '../utilities/fieldRequirements'
+import {
+  getRequirement,
+  schemaToValidation,
+} from '../utilities/fieldRequirements'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -44,6 +48,12 @@ export function OrganizationDomains({ orgSlug }) {
   }, [searchTerm])
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
+
+  const validationSchema = schemaToValidation({
+    firstVal: getRequirement('field'),
+    comparison: getRequirement('field'),
+    secondVal: getRequirement('field'),
+  })
 
   const queryVariables =
     orgSlug === 'my-tracker'
@@ -103,7 +113,7 @@ export function OrganizationDomains({ orgSlug }) {
     { value: 'WEB', text: t`Web` },
     { value: 'INACTIVE', text: t`Inactive` },
     { value: 'HIDDEN', text: t`Hidden` },
-    { value: 'ARCHIVED', text: t`Archived` },
+    // { value: 'ARCHIVED', text: t`Archived` },
   ]
 
   const domainList = loading ? (
@@ -161,7 +171,7 @@ export function OrganizationDomains({ orgSlug }) {
         />
         <InfoBox
           title={t`HTTPS`}
-          info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
+          info={t`Shows if the domain meets the Hypertext Transfer ol Secure (HTTPS) requirements.`}
         />
         <InfoBox
           title={t`Protocols`}
@@ -202,21 +212,25 @@ export function OrganizationDomains({ orgSlug }) {
       />
       <Box px="2" py="2">
         <Formik
-          // validationSchema={createValidationSchema([
-          //   'firstVal',
-          //   'comparison',
-          //   'secondVal',
-          // ])}
+          validationSchema={validationSchema}
           initialValues={{
             firstVal: '',
             comparison: '',
             secondVal: '',
           }}
           onSubmit={(values) => {
-            setFilters([...filters, values])
+            setFilters([
+              ...new Map(
+                [...filters, values].map((item) => {
+                  if (item['firstVal'] !== 'TAG')
+                    return [item['firstVal'], item]
+                  else return [item['secondVal'], item]
+                }),
+              ).values(),
+            ])
           }}
         >
-          {({ handleChange, handleSubmit, values }) => {
+          {({ handleChange, handleSubmit, values, errors }) => {
             return (
               <form
                 onSubmit={handleSubmit}
@@ -244,76 +258,94 @@ export function OrganizationDomains({ orgSlug }) {
                   <Text fontWeight="bold" mr="2">
                     <Trans>Filters:</Trans>
                   </Text>
-                  <Select
-                    name="firstVal"
-                    maxW="20%"
-                    borderColor="black"
-                    mx="1"
-                    onChange={handleChange}
-                  >
-                    <option hidden value="">
-                      <Trans>Value</Trans>
-                    </option>
-                    {orderByOptions.map(({ value, text }, idx) => {
-                      return (
-                        <option key={idx} value={value}>
-                          {text}
-                        </option>
-                      )
-                    })}
-                    <option value="TAG">
-                      <Trans>Tag</Trans>
-                    </option>
-                  </Select>
-                  <Select
-                    name="comparison"
-                    maxW="20%"
-                    borderColor="black"
-                    mx="1"
-                    onChange={handleChange}
-                  >
-                    <option hidden value="">
-                      <Trans>Comparison</Trans>
-                    </option>
-                    <option value="EQUAL">
-                      <Trans>EQUALS</Trans>
-                    </option>
-                    <option value="NOT_EQUAL">
-                      <Trans>DOES NOT EQUAL</Trans>
-                    </option>
-                  </Select>
-                  <Select
-                    name="secondVal"
-                    maxW="20%"
-                    borderColor="black"
-                    mx="1"
-                    onChange={handleChange}
-                  >
-                    <option hidden value="">
-                      <Trans>Status or tag</Trans>
-                    </option>
-                    {values.firstVal === 'TAG' ? (
-                      filterTagOptions.map(({ value, text }, idx) => {
+                  <Box maxW="25%" mx="1">
+                    <Select
+                      name="firstVal"
+                      borderColor="black"
+                      onChange={handleChange}
+                    >
+                      <option hidden value="">
+                        <Trans>Value</Trans>
+                      </option>
+                      {orderByOptions.map(({ value, text }, idx) => {
                         return (
                           <option key={idx} value={value}>
                             {text}
                           </option>
                         )
-                      })
-                    ) : (
-                      <>
-                        <option value="PASS">
-                          <Trans>Pass</Trans>
-                        </option>
-                        <option value="INFO">
-                          <Trans>Info</Trans>
-                        </option>
-                        <option value="FAIL">
-                          <Trans>Fail</Trans>
-                        </option>
-                      </>
-                    )}
-                  </Select>
+                      })}
+                      <option value="TAG">
+                        <Trans>Tag</Trans>
+                      </option>
+                    </Select>
+                    {/* <FormErrorMessage mt={0}>
+                      {errors.firstVal}
+                    </FormErrorMessage> */}
+                    <Text color="red.500" mt={0}>
+                      {errors.firstVal}
+                    </Text>
+                  </Box>
+                  <Box maxW="25%" mx="1">
+                    <Select
+                      name="comparison"
+                      borderColor="black"
+                      onChange={handleChange}
+                    >
+                      <option hidden value="">
+                        <Trans>Comparison</Trans>
+                      </option>
+                      <option value="EQUAL">
+                        <Trans>EQUALS</Trans>
+                      </option>
+                      <option value="NOT_EQUAL">
+                        <Trans>DOES NOT EQUAL</Trans>
+                      </option>
+                    </Select>{' '}
+                    {/* <FormErrorMessage mt={0}>
+                      {errors.comparison}
+                    </FormErrorMessage> */}
+                    <Text color="red.500" mt={0}>
+                      {errors.comparison}
+                    </Text>
+                  </Box>
+                  <Box maxW="25%" mx="1">
+                    <Select
+                      name="secondVal"
+                      borderColor="black"
+                      onChange={handleChange}
+                    >
+                      <option hidden value="">
+                        <Trans>Status or tag</Trans>
+                      </option>
+                      {values.firstVal === 'TAG' ? (
+                        filterTagOptions.map(({ value, text }, idx) => {
+                          return (
+                            <option key={idx} value={value}>
+                              {text}
+                            </option>
+                          )
+                        })
+                      ) : (
+                        <>
+                          <option value="PASS">
+                            <Trans>Pass</Trans>
+                          </option>
+                          <option value="INFO">
+                            <Trans>Info</Trans>
+                          </option>
+                          <option value="FAIL">
+                            <Trans>Fail</Trans>
+                          </option>
+                        </>
+                      )}
+                    </Select>{' '}
+                    {/* <FormErrorMessage mt={0}>
+                      {errors.secondVal}
+                    </FormErrorMessage> */}
+                    <Text color="red.500" mt={0}>
+                      {errors.secondVal}
+                    </Text>
+                  </Box>
                   <Button ml="auto" variant="primary" type="submit">
                     <Trans>Apply</Trans>
                   </Button>

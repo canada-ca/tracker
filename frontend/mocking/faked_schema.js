@@ -559,6 +559,12 @@ export const getTypeNames = () => gql`
 
     # List of labelled tags users of an organization have applied to the claimed domain.
     claimTags: [String]
+
+    # Value that determines if a domain is excluded from an organization's results.
+    hidden: Boolean
+
+    # Value that determines if a domain is excluded from any results and scans.
+    archived: Boolean
   }
 
   # String that conforms to a domain structure.
