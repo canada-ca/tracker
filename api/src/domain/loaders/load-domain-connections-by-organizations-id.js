@@ -24,7 +24,6 @@ export const loadDomainConnectionsByOrgId =
     filters = [],
   }) => {
     const userDBId = `users/${userKey}`
-    console.info(JSON.stringify({ filters }))
     let afterTemplate = aql``
     let afterVar = aql``
 
@@ -388,8 +387,6 @@ export const loadDomainConnectionsByOrgId =
         }
       })
     }
-
-    console.log('domainFilters', domainFilters)
 
     let domainQuery = aql``
     let loopString = aql`FOR domain IN domains`
