@@ -106,14 +106,14 @@ export function OrganizationDomains({ orgSlug }) {
   ]
 
   const filterTagOptions = [
-    { value: 'NEW', text: t`New` },
-    { value: 'PROD', text: t`Prod` },
-    { value: 'STAGING', text: t`Staging` },
-    { value: 'TEST', text: t`Test` },
-    { value: 'WEB', text: t`Web` },
-    { value: 'INACTIVE', text: t`Inactive` },
-    { value: 'HIDDEN', text: t`Hidden` },
-    // { value: 'ARCHIVED', text: t`Archived` },
+    { value: t`NEW`, text: t`New` },
+    { value: t`PROD`, text: t`Prod` },
+    { value: t`STAGING`, text: t`Staging` },
+    { value: t`TEST`, text: t`Test` },
+    { value: t`WEB`, text: t`Web` },
+    { value: t`INACTIVE`, text: t`Inactive` },
+    { value: `HIDDEN`, text: t`Hidden` },
+    { value: `ARCHIVED`, text: t`Archived` },
   ]
 
   const domainList = loading ? (

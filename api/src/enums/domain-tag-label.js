@@ -42,11 +42,11 @@ export const DomainTagLabel = new GraphQLEnumType({
       description: 'French label for tagging domains that are not active.',
     },
     HIDDEN: {
-      value: 'HIDDEN',
+      value: 'hidden',
       description: 'English label for tagging domains that are hidden.',
     },
     ARCHIVED: {
-      value: 'ARCHIVED',
+      value: 'archived',
       description: 'English label for tagging domains that are archived.',
     },
   },

@@ -369,9 +369,22 @@ export const loadDomainConnectionsByOrgId =
           FILTER domain.status.protocols ${comparison} ${secondVal}
         `
         } else if (firstVal === 'tags') {
-          domainFilters = aql`
-          ${domainFilters}
+          if (secondVal === 'hidden') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER hidden ${comparison} true
           `
+          } else if (secondVal === 'archived') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.archived ${comparison} true
+          `
+          } else {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER POSITION( claimTags, ${secondVal}) ${comparison} true
+          `
+          }
         }
       })
     }
