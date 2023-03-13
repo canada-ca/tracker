@@ -1300,6 +1300,34 @@
             ""
           ]
         }
+      },
+      "https14": {
+        "en": {
+          "tagName": "HTTP Does Not Redirect to Same Host",
+          "guidance": "HTTP requests should redirect to HTTPS on the same host, this ensures that HSTS is applied to the domain.",
+          "refLinksGuide": [
+            {
+              "description": "1.1/1.2 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        },
+        "fr": {
+          "tagName": "HTTP ne redirige pas vers le même hôte",
+          "guidance": "Les requêtes HTTP doivent être redirigées vers HTTPS sur le même hôte, ce qui garantit que HSTS est appliqué au domaine.",
+          "refLinksGuide": [
+            {
+              "description": "1.1/1.2 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            ""
+          ]
+        }
       }
     }
   },

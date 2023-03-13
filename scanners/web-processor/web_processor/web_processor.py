@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+from urllib.parse import urlparse
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # Opening JSON file from:
@@ -105,7 +106,6 @@ def process_tls_results(tls_results):
             negative_tags.append("ssl13")
     except TypeError:
         pass
-
 
     try:
         if tls_results["certificate_chain_info"]["bad_hostname"]:
@@ -216,6 +216,35 @@ def process_connection_results(connection_results):
                 return True
         return False
 
+    # check HTTP properties
+    if http_live:
+        http_immediately_upgrades = None
+        http_eventually_upgrades = None
+        try:
+            # find index of first https upgrade
+            first_https_index = list(conn["scheme"] == "https" for conn in http_connections).index(True)
+
+            # check if HTTP connection is immediately upgraded (redirected) to HTTPS
+            if first_https_index == 1:
+                http_immediately_upgrades = True
+            # check if HTTP connection eventually is upgraded (redirected) to HTTPS
+            if first_https_index >= 1:
+                http_eventually_upgrades = True
+
+        except IndexError:
+            pass
+        except ValueError:
+            pass
+
+        # check redirect is for same hostname (to ensure HSTS)
+        redirect_url = https_connections[0]["connection"]["redirect_to"]
+        if redirect_url is not None:
+            redirect_hostname = urlparse(redirect_url).hostname
+            if redirect_hostname != connection_results["domain"]:
+                negative_tags.append("https14")
+        else:
+            negative_tags.append("https14")
+
     # check HTTPS properties
     if https_live:
         # check if https chain immediately downgrades connection
@@ -255,26 +284,7 @@ def process_connection_results(connection_results):
                 "preload": preload
             }
 
-            hsts_status = "pass" if hsts and max_age > 0 else "fail"
-
-    # check HTTP properties
-    if http_live:
-        http_immediately_upgrades = None
-        http_eventually_upgrades = None
-        try:
-            # find index of first https upgrade
-            first_https_index = list(conn["scheme"] == "https" for conn in http_connections).index(True)
-
-            # check if HTTP connection is immediately upgraded (redirected) to HTTPS
-            if first_https_index == 1:
-                http_immediately_upgrades = True
-            # check if HTTP connection eventually is upgraded (redirected) to HTTPS
-            if first_https_index >= 1:
-                http_eventually_upgrades = True
-        except IndexError:
-            pass
-        except ValueError:
-            pass
+            hsts_status = "pass" if hsts and max_age > 0 and "https14" not in negative_tags else "fail"
 
     http_down_or_redirect = not http_live or http_immediately_upgrades
 
@@ -294,14 +304,14 @@ def process_connection_results(connection_results):
     if not hsts:
         negative_tags.append("https9")
 
-    try :
+    try:
         if hsts_parsed["preload"]:
             pass
     except TypeError:
         pass
 
     if not http_live and not https_live:
-       neutral_tags.append("https13")
+        neutral_tags.append("https13")
 
     # calculate status
     fail_tags = ["https3", "https6", "https7", "https8"]
@@ -309,31 +319,30 @@ def process_connection_results(connection_results):
         # no live endpoints, give info status
         https_status = "info"
     elif any(tag in negative_tags for tag in fail_tags):
-            https_status = "fail"
+        https_status = "fail"
     else:
-            https_status = "pass"
+        https_status = "pass"
 
     # merge results
     processed_connection_results = {
-        "neutral_tags": neutral_tags,
-        "positive_tags": positive_tags,
-        "negative_tags": negative_tags,
-        "hsts_status": hsts_status,
-        "https_status": https_status,
-        "http_live": http_live,
-        "https_live": https_live,
-        "http_immediately_upgrades": http_immediately_upgrades,
-        "http_eventually_upgrades": http_eventually_upgrades,
-        "https_immediately_downgrades": https_immediately_downgrades,
-        "https_eventually_downgrades": https_eventually_downgrades,
-        "hsts_parsed": hsts_parsed
-    } | connection_results
+                                       "neutral_tags": neutral_tags,
+                                       "positive_tags": positive_tags,
+                                       "negative_tags": negative_tags,
+                                       "hsts_status": hsts_status,
+                                       "https_status": https_status,
+                                       "http_live": http_live,
+                                       "https_live": https_live,
+                                       "http_immediately_upgrades": http_immediately_upgrades,
+                                       "http_eventually_upgrades": http_eventually_upgrades,
+                                       "https_immediately_downgrades": https_immediately_downgrades,
+                                       "https_eventually_downgrades": https_eventually_downgrades,
+                                       "hsts_parsed": hsts_parsed
+                                   } | connection_results
 
     return processed_connection_results
 
 
 def process_results(results):
-
     processed_tls_results = process_tls_results(results["tls_result"])
 
     tls_result = {
