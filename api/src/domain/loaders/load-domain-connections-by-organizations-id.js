@@ -21,9 +21,10 @@ export const loadDomainConnectionsByOrgId =
     ownership,
     orderBy,
     search,
+    filters = [],
   }) => {
     const userDBId = `users/${userKey}`
-
+    console.info(JSON.stringify({ filters }))
     let afterTemplate = aql``
     let afterVar = aql``
 
@@ -314,6 +315,69 @@ export const loadDomainConnectionsByOrgId =
       sortString = aql`ASC`
     }
 
+    let domainFilters = aql``
+    if (typeof filters !== 'undefined') {
+      filters.forEach(({ firstVal, comparison, secondVal }) => {
+        if (comparison === '==') {
+          comparison = aql`==`
+        } else {
+          comparison = aql`!=`
+        }
+        if (firstVal === 'dmarc-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dmarc ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'dkim-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dkim ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'https-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.https ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'spf-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.spf ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'ciphers-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.ciphers ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'curves-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.curves ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'hsts-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.hsts ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'policy-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.policy ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'protocols-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.protocols ${comparison} ${secondVal}
+        `
+        } else if (firstVal === 'tags') {
+          domainFilters = aql`
+          ${domainFilters}
+          `
+        }
+      })
+    }
+
+    console.log('domainFilters', domainFilters)
+
     let domainQuery = aql``
     let loopString = aql`FOR domain IN domains`
     let totalCount = aql`LENGTH(domainKeys)`
@@ -426,6 +490,9 @@ export const loadDomainConnectionsByOrgId =
               )
               RETURN translatedTags
           )[0]
+
+          ${domainFilters}
+
           ${afterTemplate}
           ${beforeTemplate}
           SORT

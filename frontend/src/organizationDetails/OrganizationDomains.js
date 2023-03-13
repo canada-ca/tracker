@@ -222,7 +222,7 @@ export function OrganizationDomains({ orgSlug }) {
             setFilters([
               ...new Map(
                 [...filters, values].map((item) => {
-                  if (item['firstVal'] !== 'TAG')
+                  if (item['firstVal'] !== 'TAGS')
                     return [item['firstVal'], item]
                   else return [item['secondVal'], item]
                 }),
@@ -274,7 +274,7 @@ export function OrganizationDomains({ orgSlug }) {
                           </option>
                         )
                       })}
-                      <option value="TAG">
+                      <option value="TAGS">
                         <Trans>Tag</Trans>
                       </option>
                     </Select>
@@ -317,7 +317,7 @@ export function OrganizationDomains({ orgSlug }) {
                       <option hidden value="">
                         <Trans>Status or tag</Trans>
                       </option>
-                      {values.firstVal === 'TAG' ? (
+                      {values.firstVal === 'TAGS' ? (
                         filterTagOptions.map(({ value, text }, idx) => {
                           return (
                             <option key={idx} value={value}>
