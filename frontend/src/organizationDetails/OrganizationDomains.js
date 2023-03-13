@@ -9,6 +9,8 @@ import {
   Tag,
   TagCloseButton,
   TagLabel,
+  TagLeftIcon,
+  TagRightIcon,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -34,6 +36,12 @@ import {
   getRequirement,
   schemaToValidation,
 } from '../utilities/fieldRequirements'
+import {
+  CheckCircleIcon,
+  InfoIcon,
+  SmallCloseIcon,
+  WarningIcon,
+} from '@chakra-ui/icons'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -240,11 +248,60 @@ export function OrganizationDomains({ orgSlug }) {
               >
                 <Flex align="center" mb="2">
                   {filters.map(({ firstVal, comparison, secondVal }, idx) => {
+                    const statuses = {
+                      HTTPS_STATUS: `HTTPS`,
+                      HSTS_STATUS: `HSTS`,
+                      CIPHERS_STATUS: `Ciphers`,
+                      CURVES_STATUS: t`Curves`,
+                      PROTOCOLS_STATUS: t`Protocols`,
+                      SPF_STATUS: `SPF`,
+                      DKIM_STATUS: `DKIM`,
+                      DMARC_STATUS: `DMARC`,
+                    }
                     return (
-                      <Tag key={idx} mx="1">
-                        <TagLabel>
-                          {firstVal} {comparison} {secondVal}
-                        </TagLabel>
+                      <Tag
+                        borderWidth="1px"
+                        borderColor="gray.300"
+                        key={idx}
+                        mx="1"
+                        bg={
+                          secondVal === 'PASS'
+                            ? 'strongMuted'
+                            : secondVal === 'FAIL'
+                            ? 'weakMuted'
+                            : secondVal === 'INFO'
+                            ? 'infoMuted'
+                            : 'gray.100'
+                        }
+                      >
+                        {/* {comparison === 'NOT_EQUAL' && (
+                          <TagLeftIcon as={SmallCloseIcon} />
+                        )} */}
+                        {comparison === 'NOT_EQUAL' && '!'}
+                        {firstVal === 'TAGS' ? (
+                          <TagLabel>{secondVal}</TagLabel>
+                        ) : (
+                          <>
+                            <TagLabel>{statuses[firstVal]}</TagLabel>
+                            <TagRightIcon
+                              color={
+                                secondVal === 'PASS'
+                                  ? 'strong'
+                                  : secondVal === 'FAIL'
+                                  ? 'weak'
+                                  : 'info'
+                              }
+                              as={
+                                secondVal === 'PASS'
+                                  ? CheckCircleIcon
+                                  : secondVal === 'FAIL'
+                                  ? WarningIcon
+                                  : InfoIcon
+                              }
+                            />
+                          </>
+                        )}
+
                         <TagCloseButton
                           onClick={() =>
                             setFilters(filters.filter((_, i) => i !== idx))
