@@ -86,7 +86,7 @@ export function WebTLSResults({ tlsResult }) {
     </Box>
   )
 
-  const weakCiphers = (suite) => {
+  const _weakCiphers = (suite) => {
     const weakIndex = suite?.findIndex(({ strength }) => strength === 'weak')
     if (weakIndex === -1) return false
     return true
