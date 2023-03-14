@@ -32,7 +32,7 @@ class HTTPConnection:
         self.headers = dict(http_response.headers)
         if http_response.status_code == 403:
             content = http_response.text
-            category_search = re.search("Category: (.*)", content)
+            category_search = re.search("ATTENTION: Access Denied(?:.|\n)*Category: (.*)(?:.|\n)*Access to this Web page is blocked in accordance with the Treasury Board of Canada Secretariat", content)
             if category_search:
                 self.blocked_category = category_search.group(1)
 
