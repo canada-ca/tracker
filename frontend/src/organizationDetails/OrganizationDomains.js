@@ -4,12 +4,10 @@ import {
   Box,
   Button,
   Flex,
-  // FormErrorMessage,
   Select,
   Tag,
   TagCloseButton,
   TagLabel,
-  TagLeftIcon,
   TagRightIcon,
   Text,
   useDisclosure,
@@ -36,12 +34,9 @@ import {
   getRequirement,
   schemaToValidation,
 } from '../utilities/fieldRequirements'
-import {
-  CheckCircleIcon,
-  InfoIcon,
-  SmallCloseIcon,
-  WarningIcon,
-} from '@chakra-ui/icons'
+import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -218,200 +213,200 @@ export function OrganizationDomains({ orgSlug }) {
         ]}
         placeholder={t`Search for a domain`}
       />
-      <Box px="2" py="2">
-        <Formik
-          validationSchema={validationSchema}
-          initialValues={{
-            firstVal: '',
-            comparison: '',
-            secondVal: '',
-          }}
-          onSubmit={(values) => {
-            setFilters([
-              ...new Map(
-                [...filters, values].map((item) => {
-                  if (item['firstVal'] !== 'TAGS')
-                    return [item['firstVal'], item]
-                  else return [item['secondVal'], item]
-                }),
-              ).values(),
-            ])
-          }}
-        >
-          {({ handleChange, handleSubmit, values, errors }) => {
-            return (
-              <form
-                onSubmit={handleSubmit}
-                role="form"
-                aria-label="form"
-                name="form"
-              >
-                <Flex align="center" mb="2">
-                  {filters.map(({ firstVal, comparison, secondVal }, idx) => {
-                    const statuses = {
-                      HTTPS_STATUS: `HTTPS`,
-                      HSTS_STATUS: `HSTS`,
-                      CIPHERS_STATUS: `Ciphers`,
-                      CURVES_STATUS: t`Curves`,
-                      PROTOCOLS_STATUS: t`Protocols`,
-                      SPF_STATUS: `SPF`,
-                      DKIM_STATUS: `DKIM`,
-                      DMARC_STATUS: `DMARC`,
-                    }
-                    return (
-                      <Tag
-                        borderWidth="1px"
-                        borderColor="gray.300"
-                        key={idx}
-                        mx="1"
-                        bg={
-                          secondVal === 'PASS'
-                            ? 'strongMuted'
-                            : secondVal === 'FAIL'
-                            ? 'weakMuted'
-                            : secondVal === 'INFO'
-                            ? 'infoMuted'
-                            : 'gray.100'
-                        }
-                      >
-                        {/* {comparison === 'NOT_EQUAL' && (
-                          <TagLeftIcon as={SmallCloseIcon} />
-                        )} */}
-                        {comparison === 'NOT_EQUAL' && '!'}
-                        {firstVal === 'TAGS' ? (
-                          <TagLabel>{secondVal}</TagLabel>
-                        ) : (
-                          <>
-                            <TagLabel>{statuses[firstVal]}</TagLabel>
-                            <TagRightIcon
-                              color={
-                                secondVal === 'PASS'
-                                  ? 'strong'
-                                  : secondVal === 'FAIL'
-                                  ? 'weak'
-                                  : 'info'
-                              }
-                              as={
-                                secondVal === 'PASS'
-                                  ? CheckCircleIcon
-                                  : secondVal === 'FAIL'
-                                  ? WarningIcon
-                                  : InfoIcon
-                              }
-                            />
-                          </>
-                        )}
-
-                        <TagCloseButton
-                          onClick={() =>
-                            setFilters(filters.filter((_, i) => i !== idx))
+      <ABTestingWrapper insiderVariantName="B">
+        <ABTestVariant name="B">
+          <Box px="2" py="2">
+            <Formik
+              validationSchema={validationSchema}
+              initialValues={{
+                firstVal: '',
+                comparison: '',
+                secondVal: '',
+              }}
+              onSubmit={(values) => {
+                setFilters([
+                  ...new Map(
+                    [...filters, values].map((item) => {
+                      if (item['firstVal'] !== 'TAGS')
+                        return [item['firstVal'], item]
+                      else return [item['secondVal'], item]
+                    }),
+                  ).values(),
+                ])
+              }}
+            >
+              {({ handleChange, handleSubmit, values, errors }) => {
+                return (
+                  <form
+                    onSubmit={handleSubmit}
+                    role="form"
+                    aria-label="form"
+                    name="form"
+                  >
+                    <Flex align="center" mb="2">
+                      {filters.map(
+                        ({ firstVal, comparison, secondVal }, idx) => {
+                          const statuses = {
+                            HTTPS_STATUS: `HTTPS`,
+                            HSTS_STATUS: `HSTS`,
+                            CIPHERS_STATUS: `Ciphers`,
+                            CURVES_STATUS: t`Curves`,
+                            PROTOCOLS_STATUS: t`Protocols`,
+                            SPF_STATUS: `SPF`,
+                            DKIM_STATUS: `DKIM`,
+                            DMARC_STATUS: `DMARC`,
                           }
-                        />
-                      </Tag>
-                    )
-                  })}
-                </Flex>
-                <Flex align="center">
-                  <Text fontWeight="bold" mr="2">
-                    <Trans>Filters:</Trans>
-                  </Text>
-                  <Box maxW="25%" mx="1">
-                    <Select
-                      name="firstVal"
-                      borderColor="black"
-                      onChange={handleChange}
-                    >
-                      <option hidden value="">
-                        <Trans>Value</Trans>
-                      </option>
-                      {orderByOptions.map(({ value, text }, idx) => {
-                        return (
-                          <option key={idx} value={value}>
-                            {text}
-                          </option>
-                        )
-                      })}
-                      <option value="TAGS">
-                        <Trans>Tag</Trans>
-                      </option>
-                    </Select>
-                    {/* <FormErrorMessage mt={0}>
-                      {errors.firstVal}
-                    </FormErrorMessage> */}
-                    <Text color="red.500" mt={0}>
-                      {errors.firstVal}
-                    </Text>
-                  </Box>
-                  <Box maxW="25%" mx="1">
-                    <Select
-                      name="comparison"
-                      borderColor="black"
-                      onChange={handleChange}
-                    >
-                      <option hidden value="">
-                        <Trans>Comparison</Trans>
-                      </option>
-                      <option value="EQUAL">
-                        <Trans>EQUALS</Trans>
-                      </option>
-                      <option value="NOT_EQUAL">
-                        <Trans>DOES NOT EQUAL</Trans>
-                      </option>
-                    </Select>{' '}
-                    {/* <FormErrorMessage mt={0}>
-                      {errors.comparison}
-                    </FormErrorMessage> */}
-                    <Text color="red.500" mt={0}>
-                      {errors.comparison}
-                    </Text>
-                  </Box>
-                  <Box maxW="25%" mx="1">
-                    <Select
-                      name="secondVal"
-                      borderColor="black"
-                      onChange={handleChange}
-                    >
-                      <option hidden value="">
-                        <Trans>Status or tag</Trans>
-                      </option>
-                      {values.firstVal === 'TAGS' ? (
-                        filterTagOptions.map(({ value, text }, idx) => {
                           return (
-                            <option key={idx} value={value}>
-                              {text}
-                            </option>
+                            <Tag
+                              fontSize="lg"
+                              borderWidth="1px"
+                              borderColor="gray.300"
+                              key={idx}
+                              mx="1"
+                              my="1"
+                              bg={
+                                secondVal === 'PASS'
+                                  ? 'strongMuted'
+                                  : secondVal === 'FAIL'
+                                  ? 'weakMuted'
+                                  : secondVal === 'INFO'
+                                  ? 'infoMuted'
+                                  : 'gray.100'
+                              }
+                            >
+                              {comparison === 'NOT_EQUAL' && (
+                                <Text mr="1">!</Text>
+                              )}
+                              {firstVal === 'TAGS' ? (
+                                <TagLabel>{secondVal}</TagLabel>
+                              ) : (
+                                <>
+                                  <TagLabel>{statuses[firstVal]}</TagLabel>
+                                  <TagRightIcon
+                                    color={
+                                      secondVal === 'PASS'
+                                        ? 'strong'
+                                        : secondVal === 'FAIL'
+                                        ? 'weak'
+                                        : 'info'
+                                    }
+                                    as={
+                                      secondVal === 'PASS'
+                                        ? CheckCircleIcon
+                                        : secondVal === 'FAIL'
+                                        ? WarningIcon
+                                        : InfoIcon
+                                    }
+                                  />
+                                </>
+                              )}
+
+                              <TagCloseButton
+                                onClick={() =>
+                                  setFilters(
+                                    filters.filter((_, i) => i !== idx),
+                                  )
+                                }
+                              />
+                            </Tag>
                           )
-                        })
-                      ) : (
-                        <>
-                          <option value="PASS">
-                            <Trans>Pass</Trans>
-                          </option>
-                          <option value="INFO">
-                            <Trans>Info</Trans>
-                          </option>
-                          <option value="FAIL">
-                            <Trans>Fail</Trans>
-                          </option>
-                        </>
+                        },
                       )}
-                    </Select>{' '}
-                    {/* <FormErrorMessage mt={0}>
-                      {errors.secondVal}
-                    </FormErrorMessage> */}
-                    <Text color="red.500" mt={0}>
-                      {errors.secondVal}
-                    </Text>
-                  </Box>
-                  <Button ml="auto" variant="primary" type="submit">
-                    <Trans>Apply</Trans>
-                  </Button>
-                </Flex>
-              </form>
-            )
-          }}
-        </Formik>
-      </Box>
+                    </Flex>
+                    <Flex align="center">
+                      <Text fontWeight="bold" mr="2">
+                        <Trans>Filters:</Trans>
+                      </Text>
+                      <Box maxW="25%" mx="1">
+                        <Select
+                          name="firstVal"
+                          borderColor="black"
+                          onChange={handleChange}
+                        >
+                          <option hidden value="">
+                            <Trans>Value</Trans>
+                          </option>
+                          {orderByOptions.map(({ value, text }, idx) => {
+                            return (
+                              <option key={idx} value={value}>
+                                {text}
+                              </option>
+                            )
+                          })}
+                          <option value="TAGS">
+                            <Trans>Tag</Trans>
+                          </option>
+                        </Select>
+                        <Text color="red.500" mt={0}>
+                          {errors.firstVal}
+                        </Text>
+                      </Box>
+                      <Box maxW="25%" mx="1">
+                        <Select
+                          name="comparison"
+                          borderColor="black"
+                          onChange={handleChange}
+                        >
+                          <option hidden value="">
+                            <Trans>Comparison</Trans>
+                          </option>
+                          <option value="EQUAL">
+                            <Trans>EQUALS</Trans>
+                          </option>
+                          <option value="NOT_EQUAL">
+                            <Trans>DOES NOT EQUAL</Trans>
+                          </option>
+                        </Select>
+                        <Text color="red.500" mt={0}>
+                          {errors.comparison}
+                        </Text>
+                      </Box>
+                      <Box maxW="25%" mx="1">
+                        <Select
+                          name="secondVal"
+                          borderColor="black"
+                          onChange={handleChange}
+                        >
+                          <option hidden value="">
+                            <Trans>Status or tag</Trans>
+                          </option>
+                          {values.firstVal === 'TAGS' ? (
+                            filterTagOptions.map(({ value, text }, idx) => {
+                              return (
+                                <option key={idx} value={value}>
+                                  {text}
+                                </option>
+                              )
+                            })
+                          ) : (
+                            <>
+                              <option value="PASS">
+                                <Trans>Pass</Trans>
+                              </option>
+                              <option value="INFO">
+                                <Trans>Info</Trans>
+                              </option>
+                              <option value="FAIL">
+                                <Trans>Fail</Trans>
+                              </option>
+                            </>
+                          )}
+                        </Select>
+                        <Text color="red.500" mt={0}>
+                          {errors.secondVal}
+                        </Text>
+                      </Box>
+                      <Button ml="auto" variant="primary" type="submit">
+                        <Trans>Apply</Trans>
+                      </Button>
+                    </Flex>
+                  </form>
+                )
+              }}
+            </Formik>
+          </Box>
+        </ABTestVariant>
+      </ABTestingWrapper>
 
       <SubdomainWarning mb="4" />
 
