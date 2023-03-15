@@ -134,13 +134,51 @@ async def processor_service(loop):
                         }
                     )
 
-                domain["status"]["https"] = processed_results["connection_results"]["https_status"]
-                domain["status"]["hsts"] = processed_results["connection_results"]["hsts_status"]
+                all_web_scan_cursor = db.aql.execute(
+                    '''
+                    FOR webV,e IN 1 INBOUND @web_scan_key webToWebScans
+                        FILTER webV.status == "complete"
+                        RETURN {
+                            "https_status": webV.results.connectionResults.httpsStatus,
+                            "hsts_status": webV.results.connectionResults.hstsStatus,
+                            "ssl_status": webV.results.tlsResult.sslStatus,
+                            "protocol_status": webV.results.tlsResult.protocolStatus,
+                            "cipher_status": webV.results.tlsResult.cipherStatus,
+                            "curve_status": webV.results.tlsResult.curveStatus
+                        }
+                    ''',
+                    bind_vars={'web_scan_key': web_scan_key}
+                )
+                all_web_scans = [web_scan for web_scan in all_web_scan_cursor]
+                https_statuses = []
+                hsts_statuses = []
+                ssl_statuses = []
+                protocol_statuses = []
+                cipher_statuses = []
+                curve_statuses = []
+                for web_scan in all_web_scans:
+                    https_statuses.append(web_scan["https_status"])
+                    hsts_statuses.append(web_scan["hsts_status"])
+                    ssl_statuses.append(web_scan["ssl_status"])
+                    protocol_statuses.append(web_scan["protocol_status"])
+                    cipher_statuses.append(web_scan["cipher_status"])
+                    curve_statuses.append(web_scan["curve_status"])
 
-                domain["status"]["ssl"] = processed_results["tls_result"]["ssl_status"]
-                domain["status"]["protocols"] = processed_results["tls_result"]["protocol_status"]
-                domain["status"]["ciphers"] = processed_results["tls_result"]["cipher_status"]
-                domain["status"]["curves"] = processed_results["tls_result"]["curve_status"]
+                def get_status(statuses):
+                    if "fail" in statuses:
+                        return "fail"
+                    elif "pass" in statuses:
+                        return "pass"
+                    else:
+                        return "info"
+
+                domain["status"]["https"] = get_status(https_statuses)
+                domain["status"]["hsts"] = get_status(hsts_statuses)
+
+                domain["status"]["ssl"] = get_status(ssl_statuses)
+                domain["status"]["protocols"] = get_status(protocol_statuses)
+                domain["status"]["ciphers"] = get_status(cipher_statuses)
+                domain["status"]["curves"] = get_status(curve_statuses)
                 db.collection("domains").update(domain)
 
             except Exception as e:
