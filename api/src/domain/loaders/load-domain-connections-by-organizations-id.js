@@ -316,64 +316,64 @@ export const loadDomainConnectionsByOrgId =
 
     let domainFilters = aql``
     if (typeof filters !== 'undefined') {
-      filters.forEach(({ firstVal, comparison, secondVal }) => {
+      filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
           comparison = aql`==`
         } else {
           comparison = aql`!=`
         }
-        if (firstVal === 'dmarc-status') {
+        if (filterCategory === 'dmarc-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.dmarc ${comparison} ${secondVal}
+          FILTER domain.status.dmarc ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'dkim-status') {
+        } else if (filterCategory === 'dkim-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.dkim ${comparison} ${secondVal}
+          FILTER domain.status.dkim ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'https-status') {
+        } else if (filterCategory === 'https-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.https ${comparison} ${secondVal}
+          FILTER domain.status.https ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'spf-status') {
+        } else if (filterCategory === 'spf-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.spf ${comparison} ${secondVal}
+          FILTER domain.status.spf ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'ciphers-status') {
+        } else if (filterCategory === 'ciphers-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.ciphers ${comparison} ${secondVal}
+          FILTER domain.status.ciphers ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'curves-status') {
+        } else if (filterCategory === 'curves-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.curves ${comparison} ${secondVal}
+          FILTER domain.status.curves ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'hsts-status') {
+        } else if (filterCategory === 'hsts-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.hsts ${comparison} ${secondVal}
+          FILTER domain.status.hsts ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'policy-status') {
+        } else if (filterCategory === 'policy-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.policy ${comparison} ${secondVal}
+          FILTER domain.status.policy ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'protocols-status') {
+        } else if (filterCategory === 'protocols-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER domain.status.protocols ${comparison} ${secondVal}
+          FILTER domain.status.protocols ${comparison} ${filterValue}
         `
-        } else if (firstVal === 'tags') {
-          if (secondVal === 'hidden') {
+        } else if (filterCategory === 'tags') {
+          if (filterValue === 'hidden') {
             domainFilters = aql`
             ${domainFilters}
             FILTER hidden ${comparison} true
           `
-          } else if (secondVal === 'archived') {
+          } else if (filterValue === 'archived') {
             domainFilters = aql`
             ${domainFilters}
             FILTER domain.archived ${comparison} true
@@ -381,7 +381,7 @@ export const loadDomainConnectionsByOrgId =
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION( claimTags, ${secondVal}) ${comparison} true
+            FILTER POSITION( claimTags, ${filterValue}) ${comparison} true
           `
           }
         }

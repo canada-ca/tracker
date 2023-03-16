@@ -6,14 +6,14 @@ import {
   StatusEnum,
 } from '../../enums'
 
-const SecondValEnumsVals = {}
-const SecondValEnums = [
+const filterValueEnumsVals = {}
+const filterValueEnums = [
   ...StatusEnum.getValues(),
   ...DomainTagLabel.getValues(),
 ]
-SecondValEnums.forEach(
+filterValueEnums.forEach(
   ({ name, value, description }) =>
-    (SecondValEnumsVals[name] = {
+    (filterValueEnumsVals[name] = {
       value,
       description,
     }),
@@ -24,7 +24,7 @@ export const domainFilter = new GraphQLInputObjectType({
   description:
     'This object is used to provide filtering options when querying org-claimed domains.',
   fields: () => ({
-    firstVal: {
+    filterCategory: {
       type: DomainOrderField,
       description: 'Category of filter to be applied.',
     },
@@ -32,10 +32,10 @@ export const domainFilter = new GraphQLInputObjectType({
       type: ComparisonEnums,
       description: 'First value equals or does not equal second value.',
     },
-    secondVal: {
+    filterValue: {
       type: new GraphQLEnumType({
-        name: 'SecondValEnums',
-        values: SecondValEnumsVals,
+        name: 'filterValueEnums',
+        values: filterValueEnumsVals,
         description: '',
       }),
       description: 'Status type or tag label.',

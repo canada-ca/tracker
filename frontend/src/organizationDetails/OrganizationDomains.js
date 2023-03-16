@@ -53,9 +53,9 @@ export function OrganizationDomains({ orgSlug }) {
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const validationSchema = schemaToValidation({
-    firstVal: getRequirement('field'),
+    filterCategory: getRequirement('field'),
     comparison: getRequirement('field'),
-    secondVal: getRequirement('field'),
+    filterValue: getRequirement('field'),
   })
 
   const queryVariables =
@@ -219,17 +219,17 @@ export function OrganizationDomains({ orgSlug }) {
             <Formik
               validationSchema={validationSchema}
               initialValues={{
-                firstVal: '',
+                filterCategory: '',
                 comparison: '',
-                secondVal: '',
+                filterValue: '',
               }}
               onSubmit={(values) => {
                 setFilters([
                   ...new Map(
                     [...filters, values].map((item) => {
-                      if (item['firstVal'] !== 'TAGS')
-                        return [item['firstVal'], item]
-                      else return [item['secondVal'], item]
+                      if (item['filterCategory'] !== 'TAGS')
+                        return [item['filterCategory'], item]
+                      else return [item['filterValue'], item]
                     }),
                   ).values(),
                 ])
@@ -245,7 +245,7 @@ export function OrganizationDomains({ orgSlug }) {
                   >
                     <Flex align="center" mb="2">
                       {filters.map(
-                        ({ firstVal, comparison, secondVal }, idx) => {
+                        ({ filterCategory, comparison, filterValue }, idx) => {
                           const statuses = {
                             HTTPS_STATUS: `HTTPS`,
                             HSTS_STATUS: `HSTS`,
@@ -265,11 +265,11 @@ export function OrganizationDomains({ orgSlug }) {
                               mx="1"
                               my="1"
                               bg={
-                                secondVal === 'PASS'
+                                filterValue === 'PASS'
                                   ? 'strongMuted'
-                                  : secondVal === 'FAIL'
+                                  : filterValue === 'FAIL'
                                   ? 'weakMuted'
-                                  : secondVal === 'INFO'
+                                  : filterValue === 'INFO'
                                   ? 'infoMuted'
                                   : 'gray.100'
                               }
@@ -277,23 +277,25 @@ export function OrganizationDomains({ orgSlug }) {
                               {comparison === 'NOT_EQUAL' && (
                                 <Text mr="1">!</Text>
                               )}
-                              {firstVal === 'TAGS' ? (
-                                <TagLabel>{secondVal}</TagLabel>
+                              {filterCategory === 'TAGS' ? (
+                                <TagLabel>{filterValue}</TagLabel>
                               ) : (
                                 <>
-                                  <TagLabel>{statuses[firstVal]}</TagLabel>
+                                  <TagLabel>
+                                    {statuses[filterCategory]}
+                                  </TagLabel>
                                   <TagRightIcon
                                     color={
-                                      secondVal === 'PASS'
+                                      filterValue === 'PASS'
                                         ? 'strong'
-                                        : secondVal === 'FAIL'
+                                        : filterValue === 'FAIL'
                                         ? 'weak'
                                         : 'info'
                                     }
                                     as={
-                                      secondVal === 'PASS'
+                                      filterValue === 'PASS'
                                         ? CheckCircleIcon
-                                        : secondVal === 'FAIL'
+                                        : filterValue === 'FAIL'
                                         ? WarningIcon
                                         : InfoIcon
                                     }
@@ -319,7 +321,7 @@ export function OrganizationDomains({ orgSlug }) {
                       </Text>
                       <Box maxW="25%" mx="1">
                         <Select
-                          name="firstVal"
+                          name="filterCategory"
                           borderColor="black"
                           onChange={handleChange}
                         >
@@ -338,7 +340,7 @@ export function OrganizationDomains({ orgSlug }) {
                           </option>
                         </Select>
                         <Text color="red.500" mt={0}>
-                          {errors.firstVal}
+                          {errors.filterCategory}
                         </Text>
                       </Box>
                       <Box maxW="25%" mx="1">
@@ -363,14 +365,14 @@ export function OrganizationDomains({ orgSlug }) {
                       </Box>
                       <Box maxW="25%" mx="1">
                         <Select
-                          name="secondVal"
+                          name="filterValue"
                           borderColor="black"
                           onChange={handleChange}
                         >
                           <option hidden value="">
                             <Trans>Status or tag</Trans>
                           </option>
-                          {values.firstVal === 'TAGS' ? (
+                          {values.filterCategory === 'TAGS' ? (
                             filterTagOptions.map(({ value, text }, idx) => {
                               return (
                                 <option key={idx} value={value}>
@@ -393,7 +395,7 @@ export function OrganizationDomains({ orgSlug }) {
                           )}
                         </Select>
                         <Text color="red.500" mt={0}>
-                          {errors.secondVal}
+                          {errors.filterValue}
                         </Text>
                       </Box>
                       <Button ml="auto" variant="primary" type="submit">

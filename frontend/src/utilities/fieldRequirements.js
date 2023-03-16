@@ -48,9 +48,9 @@ const getSchema = (options) => {
       )
       .max(50, i18n._(t`Acronyms must be at most 50 characters`)),
     field: string().required(i18n._(t`This field cannot be empty`)),
-    firstVal: string().required(i18n._(t`This field cannot be empty`)),
+    filterCategory: string().required(i18n._(t`This field cannot be empty`)),
     comparison: string().required(i18n._(t`This field cannot be empty`)),
-    secondVal: string().required(i18n._(t`This field cannot be empty`)),
+    filterValue: string().required(i18n._(t`This field cannot be empty`)),
     selectors: array().of(
       string()
         .required(i18n._(t`Selector cannot be empty`))
