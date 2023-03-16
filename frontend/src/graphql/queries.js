@@ -189,6 +189,8 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       domain
       lastRan
       rcode
+      blocked
+      webScanPending
       status {
         dkim
         dmarc
@@ -503,6 +505,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             hidden
             archived
             blocked
+            webScanPending
           }
         }
       }
@@ -548,6 +551,7 @@ export const PAGINATED_DOMAINS = gql`
           domain
           rcode
           blocked
+          webScanPending
           status {
             ciphers
             curves
@@ -1029,6 +1033,7 @@ export const MY_TRACKER_DOMAINS = gql`
             }
             archived
             blocked
+            webScanPending
           }
           cursor
         }

@@ -5,6 +5,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Badge,
   Flex,
   Select,
   Text,
@@ -48,7 +49,7 @@ export function WebGuidance({ webResults }) {
   const endPointSummary = (
     <AccordionItem>
       <Flex align="center" as={AccordionButton}>
-        <Text fontSize="2xl">
+        <Text fontSize="2xl" mr="auto">
           <Trans>Endpoint Summary</Trans>
           <AccordionIcon boxSize="icons.xl" />
         </Text>
@@ -73,9 +74,15 @@ export function WebGuidance({ webResults }) {
               borderBottomWidth="1px"
               borderBottomColor="gray.300"
             >
-              <Text fontSize="xl" pl="2">
+              <Text fontSize="xl" pl="2" mr="auto">
                 {ipAddress}
               </Text>
+
+              {results.connectionResults?.httpsChainResult?.connections?.[0]?.connection?.blockedCategory && (
+                <Badge colorScheme="red" alignSelf="center" fontSize="md" mr="1">
+                  <Trans>Blocked</Trans>
+                </Badge>
+              )}
               <GuidanceSummaryCategories passCount={endpointPass} infoCount={endpointInfo} failCount={endpointFail} />
             </Flex>
           )

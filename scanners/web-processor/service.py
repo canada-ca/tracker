@@ -141,6 +141,7 @@ async def processor_service(loop):
                         FOR webScanV, webScanE IN 1 ANY webV._id webToWebScans
                             FILTER webScanV.status == "complete"
                             RETURN {
+                                "scan_status": webScanV.status,
                                 "https_status": webScanV.results.connectionResults.httpsStatus,
                                 "hsts_status": webScanV.results.connectionResults.hstsStatus,
                                 "ssl_status": webScanV.results.tlsResult.sslStatus,
@@ -161,7 +162,12 @@ async def processor_service(loop):
                 cipher_statuses = []
                 curve_statuses = []
                 blocked_categories = []
+                scan_pending = False
                 for web_scan in all_web_scans:
+                    # Skip incomplete scans
+                    if web_scan["scan_status"] != "complete":
+                        scan_pending = True
+                        continue
                     https_statuses.append(web_scan["https_status"])
                     hsts_statuses.append(web_scan["hsts_status"])
                     ssl_statuses.append(web_scan["ssl_status"])
@@ -186,6 +192,7 @@ async def processor_service(loop):
                 domain["status"]["ciphers"] = get_status(cipher_statuses)
                 domain["status"]["curves"] = get_status(curve_statuses)
                 domain["blocked"] = any([bool(blocked_category) for blocked_category in blocked_categories])
+                domain["webScanPending"] = scan_pending
                 db.collection("domains").update(domain)
 
             except Exception as e:

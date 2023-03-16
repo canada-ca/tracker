@@ -70,6 +70,11 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLBoolean,
       resolve: ({ blocked }) => blocked,
     },
+    webScanPending: {
+      description: 'Value that determines if a domain has a web scan pending.',
+      type: GraphQLBoolean,
+      resolve: ({ webScanPending }) => webScanPending,
+    },
     organizations: {
       type: organizationConnection.connectionType,
       args: {

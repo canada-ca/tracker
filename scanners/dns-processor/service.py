@@ -156,6 +156,26 @@ async def run(loop):
 
                 domain.update({"phase": dmarc_phase})
                 domain.update({"rcode": rcode})
+                domain.update({"webScanPending": True})
+
+                # If we have no IPs, we can't do web scans. Set all web statuses to info
+                if not results.get("resolve_ips", None):
+                    domain.update(
+                        {
+                            "status": {
+                                "https": "info",
+                                "ssl": "info",
+                                "certificates": "info",
+                                "ciphers": "info",
+                                "curves": "info",
+                                "hsts": "info",
+                                "policy": "info",
+                                "protocols": "info",
+                            },
+                            "webScanPending": False,
+                        }
+                    )
+
                 db.collection("domains").update(domain)
 
                 for ip in results.get("resolve_ips", None) or []:

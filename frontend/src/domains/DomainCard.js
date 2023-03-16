@@ -26,7 +26,19 @@ import { useUserVar } from '../utilities/userState'
 import { ABTestingWrapper } from '../app/ABTestWrapper'
 import { ABTestVariant } from '../app/ABTestVariant'
 
-export function DomainCard({ id, url, status, hasDMARCReport, tags, isHidden, isArchived, rcode, blocked, ...rest }) {
+export function DomainCard({
+  id,
+  url,
+  status,
+  hasDMARCReport,
+  tags,
+  isHidden,
+  isArchived,
+  rcode,
+  blocked,
+  webScanPending,
+  ...rest
+}) {
   const location = useLocation()
   const toast = useToast()
   const { isLoggedIn } = useUserVar()
@@ -124,6 +136,11 @@ export function DomainCard({ id, url, status, hasDMARCReport, tags, isHidden, is
             {blocked && (
               <Badge colorScheme="red" mr="auto" alignSelf="center">
                 <Trans>Blocked</Trans>
+              </Badge>
+            )}
+            {webScanPending && (
+              <Badge color="info" mr="auto" alignSelf="center">
+                <Trans>Scan Pending</Trans>
               </Badge>
             )}
           </Flex>
@@ -259,4 +276,5 @@ DomainCard.propTypes = {
   isHidden: bool,
   isArchived: bool,
   blocked: bool,
+  webScanPending: bool,
 }

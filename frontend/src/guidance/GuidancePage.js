@@ -1,6 +1,7 @@
 import React from 'react'
 import { ArrowLeftIcon } from '@chakra-ui/icons'
 import {
+  Badge,
   Box,
   Button,
   Flex,
@@ -129,8 +130,15 @@ function GuidancePage() {
           aria-label="back"
           mr="0.5rem"
         />
-        <Heading textAlign={{ base: 'center', md: 'left' }}>{domainName.toUpperCase()}</Heading>
-        <ScanDomainButton domainUrl={domainName} ml="auto" />
+        <Heading textAlign={{ base: 'center', md: 'left' }} mr="auto">
+          {domainName.toUpperCase()}
+        </Heading>
+        {data.findDomainByDomain.webScanPending && (
+          <Badge color="info" alignSelf="center" fontSize="md">
+            <Trans>Scan Pending</Trans>
+          </Badge>
+        )}
+        <ScanDomainButton domainUrl={domainName} ml="2" />
         {data.findDomainByDomain.hasDMARCReport && (
           <Button
             ml="2"
