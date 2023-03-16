@@ -136,19 +136,22 @@ async def processor_service(loop):
 
                 all_web_scan_cursor = db.aql.execute(
                     '''
-                    FOR webV,e IN 1 INBOUND @web_scan_key webToWebScans
-                        FILTER webV.status == "complete"
-                        RETURN {
-                            "https_status": webV.results.connectionResults.httpsStatus,
-                            "hsts_status": webV.results.connectionResults.hstsStatus,
-                            "ssl_status": webV.results.tlsResult.sslStatus,
-                            "protocol_status": webV.results.tlsResult.protocolStatus,
-                            "cipher_status": webV.results.tlsResult.cipherStatus,
-                            "curve_status": webV.results.tlsResult.curveStatus
-                        }
+                    WITH web, webScan
+                    FOR webV,e IN 1 ANY @web_scan_id webToWebScans
+                        FOR webScanV, webScanE IN 1 ANY webV._id webToWebScans
+                            FILTER webScanV.status == "complete"
+                            RETURN {
+                                "https_status": webScanV.results.connectionResults.httpsStatus,
+                                "hsts_status": webScanV.results.connectionResults.hstsStatus,
+                                "ssl_status": webScanV.results.tlsResult.sslStatus,
+                                "protocol_status": webScanV.results.tlsResult.protocolStatus,
+                                "cipher_status": webScanV.results.tlsResult.cipherStatus,
+                                "curve_status": webScanV.results.tlsResult.curveStatus
+                            }
                     ''',
-                    bind_vars={'web_scan_key': web_scan_key}
+                    bind_vars={'web_scan_id': f'webScan/{web_scan_key}'}
                 )
+
                 all_web_scans = [web_scan for web_scan in all_web_scan_cursor]
                 https_statuses = []
                 hsts_statuses = []
