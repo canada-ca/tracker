@@ -301,7 +301,7 @@ def process_connection_results(connection_results):
     if https_live and http_live and not http_immediately_upgrades and http_eventually_upgrades:
         negative_tags.append("https8")
 
-    if not hsts:
+    if https_live and not hsts:
         negative_tags.append("https9")
 
     try:
