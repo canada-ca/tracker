@@ -124,95 +124,7 @@ export function OrganizationDomains({ orgSlug }) {
       <Trans>Domains</Trans>
     </LoadingMessage>
   ) : (
-    <ListOf
-      elements={nodes}
-      ifEmpty={() => (
-        <Text layerStyle="loadingMessage">
-          <Trans>No Domains</Trans>
-        </Text>
-      )}
-      mb="4"
-    >
-      {(
-        { id, domain, status, hasDMARCReport, claimTags, hidden, archived },
-        index,
-      ) => (
-        <ErrorBoundary
-          key={`${id}:${index}`}
-          FallbackComponent={ErrorFallbackMessage}
-        >
-          <DomainCard
-            id={id}
-            url={domain}
-            status={status}
-            hasDMARCReport={hasDMARCReport}
-            tags={claimTags}
-            isHidden={hidden}
-            isArchived={archived}
-            mb="3"
-          />
-        </ErrorBoundary>
-      )}
-    </ListOf>
-  )
-
-  return (
     <Box>
-      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
-        <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Ciphers`}
-          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`Curves`}
-          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`HSTS`}
-          info={t`Shows if the domain meets the HSTS requirements.`}
-        />
-        <InfoBox
-          title={t`HTTPS`}
-          info={t`Shows if the domain meets the Hypertext Transfer ol Secure (HTTPS) requirements.`}
-        />
-        <InfoBox
-          title={t`Protocols`}
-          info={t`Shows if the domain uses acceptable protocols.`}
-        />
-        <InfoBox
-          title={t`SPF`}
-          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
-        />
-        <InfoBox
-          title={t`DKIM`}
-          info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
-        />
-        <InfoBox
-          title={t`DMARC`}
-          info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
-        />
-      </InfoPanel>
-
-      <SearchBox
-        selectedDisplayLimit={domainsPerPage}
-        setSelectedDisplayLimit={setDomainsPerPage}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        next={next}
-        previous={previous}
-        isLoadingMore={isLoadingMore}
-        orderDirection={orderDirection}
-        setSearchTerm={setSearchTerm}
-        setOrderField={setOrderField}
-        setOrderDirection={setOrderDirection}
-        resetToFirstPage={resetToFirstPage}
-        orderByOptions={[
-          { value: 'DOMAIN', text: t`Domain` },
-          ...orderByOptions,
-        ]}
-        placeholder={t`Search for a domain`}
-      />
       <ABTestingWrapper insiderVariantName="B">
         <ABTestVariant name="B">
           <Box px="2" py="2">
@@ -223,7 +135,7 @@ export function OrganizationDomains({ orgSlug }) {
                 comparison: '',
                 filterValue: '',
               }}
-              onSubmit={(values) => {
+              onSubmit={(values, { resetForm }) => {
                 setFilters([
                   ...new Map(
                     [...filters, values].map((item) => {
@@ -233,6 +145,7 @@ export function OrganizationDomains({ orgSlug }) {
                     }),
                   ).values(),
                 ])
+                resetForm()
               }}
             >
               {({ handleChange, handleSubmit, values, errors }) => {
@@ -243,78 +156,6 @@ export function OrganizationDomains({ orgSlug }) {
                     aria-label="form"
                     name="form"
                   >
-                    <Flex align="center" mb="2">
-                      {filters.map(
-                        ({ filterCategory, comparison, filterValue }, idx) => {
-                          const statuses = {
-                            HTTPS_STATUS: `HTTPS`,
-                            HSTS_STATUS: `HSTS`,
-                            CIPHERS_STATUS: `Ciphers`,
-                            CURVES_STATUS: t`Curves`,
-                            PROTOCOLS_STATUS: t`Protocols`,
-                            SPF_STATUS: `SPF`,
-                            DKIM_STATUS: `DKIM`,
-                            DMARC_STATUS: `DMARC`,
-                          }
-                          return (
-                            <Tag
-                              fontSize="lg"
-                              borderWidth="1px"
-                              borderColor="gray.300"
-                              key={idx}
-                              mx="1"
-                              my="1"
-                              bg={
-                                filterValue === 'PASS'
-                                  ? 'strongMuted'
-                                  : filterValue === 'FAIL'
-                                  ? 'weakMuted'
-                                  : filterValue === 'INFO'
-                                  ? 'infoMuted'
-                                  : 'gray.100'
-                              }
-                            >
-                              {comparison === 'NOT_EQUAL' && (
-                                <Text mr="1">!</Text>
-                              )}
-                              {filterCategory === 'TAGS' ? (
-                                <TagLabel>{filterValue}</TagLabel>
-                              ) : (
-                                <>
-                                  <TagLabel>
-                                    {statuses[filterCategory]}
-                                  </TagLabel>
-                                  <TagRightIcon
-                                    color={
-                                      filterValue === 'PASS'
-                                        ? 'strong'
-                                        : filterValue === 'FAIL'
-                                        ? 'weak'
-                                        : 'info'
-                                    }
-                                    as={
-                                      filterValue === 'PASS'
-                                        ? CheckCircleIcon
-                                        : filterValue === 'FAIL'
-                                        ? WarningIcon
-                                        : InfoIcon
-                                    }
-                                  />
-                                </>
-                              )}
-
-                              <TagCloseButton
-                                onClick={() =>
-                                  setFilters(
-                                    filters.filter((_, i) => i !== idx),
-                                  )
-                                }
-                              />
-                            </Tag>
-                          )
-                        },
-                      )}
-                    </Flex>
                     <Flex align="center">
                       <Text fontWeight="bold" mr="2">
                         <Trans>Filters:</Trans>
@@ -323,7 +164,17 @@ export function OrganizationDomains({ orgSlug }) {
                         <Select
                           name="filterCategory"
                           borderColor="black"
-                          onChange={handleChange}
+                          onChange={(e) => {
+                            if (
+                              (values.filterCategory === 'TAGS' &&
+                                e.target.value !== 'TAGS') ||
+                              (values.filterCategory !== 'TAGS' &&
+                                e.target.value === 'TAGS')
+                            ) {
+                              values.filterValue = ''
+                            }
+                            handleChange(e)
+                          }}
                         >
                           <option hidden value="">
                             <Trans>Value</Trans>
@@ -409,8 +260,167 @@ export function OrganizationDomains({ orgSlug }) {
           </Box>
         </ABTestVariant>
       </ABTestingWrapper>
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => (
+          <Text layerStyle="loadingMessage">
+            <Trans>No Domains</Trans>
+          </Text>
+        )}
+        mb="4"
+      >
+        {(
+          { id, domain, status, hasDMARCReport, claimTags, hidden, archived },
+          index,
+        ) => (
+          <ErrorBoundary
+            key={`${id}:${index}`}
+            FallbackComponent={ErrorFallbackMessage}
+          >
+            <DomainCard
+              id={id}
+              url={domain}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+              tags={claimTags}
+              isHidden={hidden}
+              isArchived={archived}
+              mb="3"
+            />
+          </ErrorBoundary>
+        )}
+      </ListOf>
+    </Box>
+  )
+
+  return (
+    <Box>
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+        <InfoBox title={t`Domain`} info={t`The domain address.`} />
+        <InfoBox
+          title={t`Ciphers`}
+          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
+        />
+        <InfoBox
+          title={t`Curves`}
+          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
+        />
+        <InfoBox
+          title={t`HSTS`}
+          info={t`Shows if the domain meets the HSTS requirements.`}
+        />
+        <InfoBox
+          title={t`HTTPS`}
+          info={t`Shows if the domain meets the Hypertext Transfer ol Secure (HTTPS) requirements.`}
+        />
+        <InfoBox
+          title={t`Protocols`}
+          info={t`Shows if the domain uses acceptable protocols.`}
+        />
+        <InfoBox
+          title={t`SPF`}
+          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
+        />
+        <InfoBox
+          title={t`DKIM`}
+          info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
+        />
+        <InfoBox
+          title={t`DMARC`}
+          info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
+        />
+      </InfoPanel>
+
+      <SearchBox
+        selectedDisplayLimit={domainsPerPage}
+        setSelectedDisplayLimit={setDomainsPerPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        next={next}
+        previous={previous}
+        isLoadingMore={isLoadingMore}
+        orderDirection={orderDirection}
+        setSearchTerm={setSearchTerm}
+        setOrderField={setOrderField}
+        setOrderDirection={setOrderDirection}
+        resetToFirstPage={resetToFirstPage}
+        orderByOptions={[
+          { value: 'DOMAIN', text: t`Domain` },
+          ...orderByOptions,
+        ]}
+        placeholder={t`Search for a domain`}
+      />
 
       <SubdomainWarning mb="4" />
+
+      <ABTestingWrapper insiderVariantName="B">
+        <ABTestVariant name="B">
+          <Flex align="center" mb="2">
+            {filters.map(({ filterCategory, comparison, filterValue }, idx) => {
+              const statuses = {
+                HTTPS_STATUS: `HTTPS`,
+                HSTS_STATUS: `HSTS`,
+                CIPHERS_STATUS: `Ciphers`,
+                CURVES_STATUS: t`Curves`,
+                PROTOCOLS_STATUS: t`Protocols`,
+                SPF_STATUS: `SPF`,
+                DKIM_STATUS: `DKIM`,
+                DMARC_STATUS: `DMARC`,
+              }
+              return (
+                <Tag
+                  fontSize="lg"
+                  borderWidth="1px"
+                  borderColor="gray.300"
+                  key={idx}
+                  mx="1"
+                  my="1"
+                  bg={
+                    filterValue === 'PASS'
+                      ? 'strongMuted'
+                      : filterValue === 'FAIL'
+                      ? 'weakMuted'
+                      : filterValue === 'INFO'
+                      ? 'infoMuted'
+                      : 'gray.100'
+                  }
+                >
+                  {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
+                  {filterCategory === 'TAGS' ? (
+                    <TagLabel>{filterValue}</TagLabel>
+                  ) : (
+                    <>
+                      <TagLabel>{statuses[filterCategory]}</TagLabel>
+                      <TagRightIcon
+                        color={
+                          filterValue === 'PASS'
+                            ? 'strong'
+                            : filterValue === 'FAIL'
+                            ? 'weak'
+                            : 'info'
+                        }
+                        as={
+                          filterValue === 'PASS'
+                            ? CheckCircleIcon
+                            : filterValue === 'FAIL'
+                            ? WarningIcon
+                            : InfoIcon
+                        }
+                      />
+                    </>
+                  )}
+
+                  <TagCloseButton
+                    onClick={() =>
+                      setFilters(filters.filter((_, i) => i !== idx))
+                    }
+                  />
+                </Tag>
+              )
+            })}
+          </Flex>
+        </ABTestVariant>
+      </ABTestingWrapper>
 
       {domainList}
 

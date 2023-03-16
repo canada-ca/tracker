@@ -48,9 +48,46 @@ const getSchema = (options) => {
       )
       .max(50, i18n._(t`Acronyms must be at most 50 characters`)),
     field: string().required(i18n._(t`This field cannot be empty`)),
-    filterCategory: string().required(i18n._(t`This field cannot be empty`)),
-    comparison: string().required(i18n._(t`This field cannot be empty`)),
-    filterValue: string().required(i18n._(t`This field cannot be empty`)),
+    filterCategory: string()
+      .required(i18n._(t`This field cannot be empty`))
+      .oneOf(
+        [
+          'HTTPS_STATUS',
+          'HSTS_STATUS',
+          'CIPHERS_STATUS',
+          'CURVES_STATUS',
+          'PROTOCOLS_STATUS',
+          'SPF_STATUS',
+          'DKIM_STATUS',
+          'DMARC_STATUS',
+          'TAGS',
+        ],
+        '',
+      ),
+    comparison: string()
+      .required(i18n._(t`This field cannot be empty`))
+      .oneOf(['EQUAL', 'NOT_EQUAL'], ''),
+    filterValue: string()
+      .required(i18n._(t`This field cannot be empty`))
+      .oneOf(
+        [
+          'PASS',
+          'INFO',
+          'FAIL',
+          'NEW',
+          'PROD',
+          'STAGING',
+          'TEST',
+          'WEB',
+          'INACTIVE',
+          'ARCHIVED',
+          'HIDDEN',
+          'NOUVEAU',
+          'INACTIF',
+          'DEV',
+        ],
+        '',
+      ),
     selectors: array().of(
       string()
         .required(i18n._(t`Selector cannot be empty`))
