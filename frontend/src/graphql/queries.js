@@ -502,6 +502,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             claimTags
             hidden
             archived
+            blocked
           }
         }
       }
@@ -546,6 +547,7 @@ export const PAGINATED_DOMAINS = gql`
           id
           domain
           rcode
+          blocked
           status {
             ciphers
             curves
@@ -1026,6 +1028,7 @@ export const MY_TRACKER_DOMAINS = gql`
               ssl
             }
             archived
+            blocked
           }
           cursor
         }

@@ -146,7 +146,8 @@ async def processor_service(loop):
                                 "ssl_status": webScanV.results.tlsResult.sslStatus,
                                 "protocol_status": webScanV.results.tlsResult.protocolStatus,
                                 "cipher_status": webScanV.results.tlsResult.cipherStatus,
-                                "curve_status": webScanV.results.tlsResult.curveStatus
+                                "curve_status": webScanV.results.tlsResult.curveStatus,
+                                "blocked_category": webScanV.results.connectionResults.httpsChainResult.connections[0].connection.blockedCategory,
                             }
                     ''',
                     bind_vars={'web_scan_id': f'webScan/{web_scan_key}'}
@@ -159,6 +160,7 @@ async def processor_service(loop):
                 protocol_statuses = []
                 cipher_statuses = []
                 curve_statuses = []
+                blocked_categories = []
                 for web_scan in all_web_scans:
                     https_statuses.append(web_scan["https_status"])
                     hsts_statuses.append(web_scan["hsts_status"])
@@ -166,6 +168,7 @@ async def processor_service(loop):
                     protocol_statuses.append(web_scan["protocol_status"])
                     cipher_statuses.append(web_scan["cipher_status"])
                     curve_statuses.append(web_scan["curve_status"])
+                    blocked_categories.append(web_scan["blocked_category"])
 
                 def get_status(statuses):
                     if "fail" in statuses:
@@ -182,6 +185,7 @@ async def processor_service(loop):
                 domain["status"]["protocols"] = get_status(protocol_statuses)
                 domain["status"]["ciphers"] = get_status(cipher_statuses)
                 domain["status"]["curves"] = get_status(curve_statuses)
+                domain["blocked"] = any([bool(blocked_category) for blocked_category in blocked_categories])
                 db.collection("domains").update(domain)
 
             except Exception as e:

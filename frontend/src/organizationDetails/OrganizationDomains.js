@@ -80,7 +80,7 @@ export function OrganizationDomains({ orgSlug }) {
       )}
       mb="4"
     >
-      {({ id, domain, status, hasDMARCReport, claimTags, hidden, archived, rcode }, index) => (
+      {({ id, domain, status, hasDMARCReport, claimTags, hidden, archived, rcode, blocked }, index) => (
         <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
           <DomainCard
             id={id}
@@ -91,6 +91,7 @@ export function OrganizationDomains({ orgSlug }) {
             isHidden={hidden}
             rcode={rcode}
             isArchived={archived}
+            blocked={blocked}
             mb="3"
           />
         </ErrorBoundary>

@@ -61,10 +61,14 @@ export const domainType = new GraphQLObjectType({
       resolve: ({ status }) => status,
     },
     archived: {
-      description:
-        'Value that determines if a domain is excluded from any results and scans.',
+      description: 'Value that determines if a domain is excluded from any results and scans.',
       type: GraphQLBoolean,
       resolve: ({ archived }) => archived,
+    },
+    blocked: {
+      description: 'Value that determines if a domain is possibly blocked.',
+      type: GraphQLBoolean,
+      resolve: ({ blocked }) => blocked,
     },
     organizations: {
       type: organizationConnection.connectionType,
@@ -259,8 +263,7 @@ export const domainType = new GraphQLObjectType({
       resolve: ({ claimTags }) => claimTags,
     },
     hidden: {
-      description:
-        "Value that determines if a domain is excluded from an organization's results.",
+      description: "Value that determines if a domain is excluded from an organization's results.",
       type: GraphQLBoolean,
       resolve: ({ hidden }) => hidden,
     },
