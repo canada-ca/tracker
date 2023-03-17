@@ -515,6 +515,7 @@ export const loadDomainConnectionsByOrgId =
         ${loopString}
           FILTER domain._key IN domainKeys
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -524,6 +525,7 @@ export const loadDomainConnectionsByOrgId =
         ${loopString}
           FILTER domain._key IN domainKeys
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
