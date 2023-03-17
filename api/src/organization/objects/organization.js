@@ -4,6 +4,7 @@ import {
   GraphQLInt,
   GraphQLObjectType,
   GraphQLString,
+  GraphQLList,
 } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
@@ -12,7 +13,7 @@ import { nodeInterface } from '../../node'
 import { Acronym, Slug } from '../../scalars'
 import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
-import { domainOrder } from '../../domain/inputs'
+import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 
 export const organizationType = new GraphQLObjectType({
@@ -125,6 +126,10 @@ export const organizationType = new GraphQLObjectType({
         search: {
           type: GraphQLString,
           description: 'String used to search for domains.',
+        },
+        filters: {
+          type: new GraphQLList(domainFilter),
+          description: 'Filters used to limit domains returned.',
         },
         ...connectionArgs,
       },

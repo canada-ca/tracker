@@ -602,6 +602,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
     $after: String
     $orderBy: DomainOrder
     $search: String
+    $filters: [DomainFilter]
   ) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
@@ -610,6 +611,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
         after: $after
         orderBy: $orderBy
         search: $search
+        filters: $filters
       ) {
         pageInfo {
           hasNextPage

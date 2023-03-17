@@ -21,9 +21,9 @@ export const loadDomainConnectionsByOrgId =
     ownership,
     orderBy,
     search,
+    filters = [],
   }) => {
     const userDBId = `users/${userKey}`
-
     let afterTemplate = aql``
     let afterVar = aql``
 
@@ -314,6 +314,80 @@ export const loadDomainConnectionsByOrgId =
       sortString = aql`ASC`
     }
 
+    let domainFilters = aql``
+    if (typeof filters !== 'undefined') {
+      filters.forEach(({ filterCategory, comparison, filterValue }) => {
+        if (comparison === '==') {
+          comparison = aql`==`
+        } else {
+          comparison = aql`!=`
+        }
+        if (filterCategory === 'dmarc-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dmarc ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'dkim-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dkim ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'https-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.https ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'spf-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.spf ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'ciphers-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.ciphers ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'curves-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.curves ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'hsts-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.hsts ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'policy-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.policy ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'protocols-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.protocols ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'tags') {
+          if (filterValue === 'hidden') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER hidden ${comparison} true
+          `
+          } else if (filterValue === 'archived') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.archived ${comparison} true
+          `
+          } else {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER POSITION( claimTags, ${filterValue}) ${comparison} true
+          `
+          }
+        }
+      })
+    }
+
     let domainQuery = aql``
     let loopString = aql`FOR domain IN domains`
     let totalCount = aql`LENGTH(domainKeys)`
@@ -426,6 +500,9 @@ export const loadDomainConnectionsByOrgId =
               )
               RETURN translatedTags
           )[0]
+
+          ${domainFilters}
+
           ${afterTemplate}
           ${beforeTemplate}
           SORT
