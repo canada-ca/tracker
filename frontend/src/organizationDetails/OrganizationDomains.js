@@ -311,7 +311,7 @@ export function OrganizationDomains({ orgSlug }) {
         />
         <InfoBox
           title={t`HTTPS`}
-          info={t`Shows if the domain meets the Hypertext Transfer ol Secure (HTTPS) requirements.`}
+          info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
         />
         <InfoBox
           title={t`Protocols`}
