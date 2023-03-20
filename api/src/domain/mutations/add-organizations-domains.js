@@ -109,7 +109,13 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       console.warn(
         `User: ${userKey} attempted to create a domain to an organization: ${orgId} that does not exist.`,
       )
-      return false
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(
+          t`Unable to create domain in unknown organization.`,
+        ),
+      }
     }
 
     // Check to see if user belongs to org
@@ -146,6 +152,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
     // Setup Transaction
     const trx = await transaction(collections)
+    let domainCount = 0
 
     for (const domain of domains) {
       const insertDomain = {
@@ -224,7 +231,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`,
           )
-          throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+          continue
         }
 
         let insertedDomain
@@ -234,7 +241,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Cursor error occurred for user: ${userKey} after inserting new domain and gathering its domain info: ${err}`,
           )
-          throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+          continue
         }
 
         try {
@@ -254,7 +261,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`,
           )
-          throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+          continue
         }
       } else {
         try {
@@ -274,8 +281,17 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           console.error(
             `Transaction step error occurred for user: ${userKey} when inserting domain edge: ${err}`,
           )
-          throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+          continue
         }
+      }
+
+      try {
+        await trx.commit()
+      } catch (err) {
+        console.error(
+          `Transaction commit error occurred while user: ${userKey} was creating domains: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to create domains. Please try again.`))
       }
 
       console.info(
@@ -304,36 +320,30 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           },
         })
       }
+      domainCount += 1
     }
 
-    await logActivity({
-      transaction,
-      collections,
-      query,
-      initiatedBy: {
-        id: user._key,
-        userName: user.userName,
-        role: permission,
-      },
-      action: 'add',
-      target: {
-        resource: `${domains.length} domains`,
-        updatedProperties,
-        organization: {
-          id: org._key,
-          name: org.name,
-        }, // name of resource being acted upon
-        resourceType: 'domain', // user, org, domain
-      },
-    })
-
-    try {
-      await trx.commit()
-    } catch (err) {
-      console.error(
-        `Transaction commit error occurred while user: ${userKey} was creating domain: ${err}`,
-      )
-      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+    if (!audit) {
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission,
+        },
+        action: 'add',
+        target: {
+          resource: `${domainCount} domains`,
+          updatedProperties,
+          organization: {
+            id: org._key,
+            name: org.name,
+          }, // name of resource being acted upon
+          resourceType: 'domain', // user, org, domain
+        },
+      })
     }
 
     return true
