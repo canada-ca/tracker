@@ -633,4 +633,50 @@ export const UNFAVOURITE_DOMAIN = gql`
   }
 `
 
+export const ADD_ORGANIZATIONS_DOMAINS = gql`
+  mutation AddOrganizationsDomains(
+    $orgId: ID!
+    $domains: [DomainScalar]
+    $hideNewDomains: Boolean
+    $tagNewDomains: Boolean
+    $audit: Boolean
+  ) {
+    addOrganizationsDomains(
+      input: {
+        orgId: $orgId
+        domains: $domains
+        hideNewDomains: $hideNewDomains
+        tagNewDomains: $tagNewDomains
+        audit: $audit
+      }
+    ) {
+      result {
+        __typename
+      }
+    }
+  }
+`
+
+export const REMOVE_ORGANIZATIONS_DOMAINS = gql`
+  mutation RemoveOrganizationsDomains(
+    $orgId: ID!
+    $domains: [DomainScalar]
+    $archiveDomains: Boolean
+    $audit: Boolean
+  ) {
+    removeOrganizationsDomains(
+      input: {
+        orgId: $orgId
+        domains: $domains
+        archiveDomains: $archiveDomains
+        audit: $audit
+      }
+    ) {
+      result {
+        __typename
+      }
+    }
+  }
+`
+
 export default ''
