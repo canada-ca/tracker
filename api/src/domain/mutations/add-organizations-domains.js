@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLList, GraphQLID, GraphQLBoolean } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-import { createDomainUnion } from '../unions'
+import { removeDomainUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
@@ -34,9 +34,9 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
   }),
   outputFields: () => ({
     result: {
-      type: createDomainUnion,
+      type: removeDomainUnion,
       description:
-        '`CreateDomainUnion` returning either a `Domain`, or `CreateDomainError` object.',
+        '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -346,6 +346,11 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       })
     }
 
-    return true
+    return {
+      _type: 'result',
+      status: i18n._(
+        t`Successfully added ${domainCount} domains from ${org.slug}.`,
+      ),
+    }
   },
 })

@@ -524,6 +524,11 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       }
     }
 
-    return true
+    return {
+      _type: 'result',
+      status: i18n._(
+        t`Successfully removed ${domainCount} domains from ${org.slug}.`,
+      ),
+    }
   },
 })

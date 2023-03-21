@@ -5,11 +5,11 @@ import { domainType } from './domain'
 export const domainResultType = new GraphQLObjectType({
   name: 'DomainResult',
   description:
-    'This object is used to inform the user that no errors were encountered while removing a domain.',
+    'This object is used to inform the user that no errors were encountered while mutating a domain.',
   fields: () => ({
     status: {
       type: GraphQLString,
-      description: 'Informs the user if the domain removal was successful.',
+      description: 'Informs the user if the domain mutation was successful.',
       resolve: ({ status }) => status,
     },
     domain: {
