@@ -651,7 +651,13 @@ export const ADD_ORGANIZATIONS_DOMAINS = gql`
       }
     ) {
       result {
-        __typename
+        ... on DomainResult {
+          status
+        }
+        ... on DomainError {
+          code
+          description
+        }
       }
     }
   }
@@ -673,7 +679,13 @@ export const REMOVE_ORGANIZATIONS_DOMAINS = gql`
       }
     ) {
       result {
-        __typename
+        ... on DomainResult {
+          status
+        }
+        ... on DomainError {
+          code
+          description
+        }
       }
     }
   }
