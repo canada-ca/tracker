@@ -11,7 +11,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
   description: 'This mutation allows the removal of unused domains.',
   inputFields: () => ({
     domains: {
-      type: new GraphQLList(Domain),
+      type: GraphQLNonNull(new GraphQLList(Domain)),
       description: 'Domains you wish to remove from the organization.',
     },
     orgId: {
@@ -527,7 +527,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
     return {
       _type: 'result',
       status: i18n._(
-        t`Successfully removed ${domainCount} domains from ${org.slug}.`,
+        t`Successfully removed ${domainCount} domain(s) from ${org.slug}.`,
       ),
     }
   },

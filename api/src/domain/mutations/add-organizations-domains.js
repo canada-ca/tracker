@@ -16,7 +16,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
         'The global id of the organization you wish to assign this domain to.',
     },
     domains: {
-      type: new GraphQLList(Domain),
+      type: GraphQLNonNull(new GraphQLList(Domain)),
       description: 'Url that you would like to be added to the database.',
     },
     hideNewDomains: {
@@ -106,14 +106,12 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to create a domain to an organization: ${orgId} that does not exist.`,
+        `User: ${userKey} attempted to add domains to an organization: ${orgId} that does not exist.`,
       )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to create domain in unknown organization.`,
-        ),
+        description: i18n._(t`Unable to add domains in unknown organization.`),
       }
     }
 
@@ -122,7 +120,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
     if (permission !== 'admin' && permission !== 'super_admin') {
       console.warn(
-        `User: ${userKey} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
+        `User: ${userKey} attempted to add domains in: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',
@@ -294,7 +292,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       }
 
       console.info(
-        `User: ${userKey} successfully created domains in org: ${org.slug}.`,
+        `User: ${userKey} successfully add domains to org: ${org.slug}.`,
       )
 
       if (audit) {
@@ -348,7 +346,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     return {
       _type: 'result',
       status: i18n._(
-        t`Successfully added ${domainCount} domains to ${org.slug}.`,
+        t`Successfully added ${domainCount} domain(s) to ${org.slug}.`,
       ),
     }
   },

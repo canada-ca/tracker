@@ -636,7 +636,7 @@ export const UNFAVOURITE_DOMAIN = gql`
 export const ADD_ORGANIZATIONS_DOMAINS = gql`
   mutation AddOrganizationsDomains(
     $orgId: ID!
-    $domains: [DomainScalar]
+    $domains: [DomainScalar]!
     $hideNewDomains: Boolean
     $tagNewDomains: Boolean
     $audit: Boolean
@@ -666,7 +666,7 @@ export const ADD_ORGANIZATIONS_DOMAINS = gql`
 export const REMOVE_ORGANIZATIONS_DOMAINS = gql`
   mutation RemoveOrganizationsDomains(
     $orgId: ID!
-    $domains: [DomainScalar]
+    $domains: [DomainScalar]!
     $archiveDomains: Boolean
     $audit: Boolean
   ) {
