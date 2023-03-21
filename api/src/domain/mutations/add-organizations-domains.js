@@ -49,7 +49,6 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      //   publish,
       auth: {
         checkPermission,
         saltedHash,
@@ -216,16 +215,16 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           insertedDomainCursor = await trx.step(
             () =>
               query`
-            WITH domains
-            INSERT ${insertDomain} INTO domains
-            RETURN MERGE(
-              {
-                id: NEW._key,
-                _type: "domain"
-              },
-              NEW
-            )
-          `,
+                WITH domains
+                INSERT ${insertDomain} INTO domains
+                RETURN MERGE(
+                {
+                    id: NEW._key,
+                    _type: "domain"
+                },
+                NEW
+                )
+            `,
           )
         } catch (err) {
           console.error(
@@ -349,7 +348,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     return {
       _type: 'result',
       status: i18n._(
-        t`Successfully added ${domainCount} domains from ${org.slug}.`,
+        t`Successfully added ${domainCount} domains to ${org.slug}.`,
       ),
     }
   },
