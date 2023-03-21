@@ -439,11 +439,10 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           continue
         }
 
-        console.info(
-          `User: ${userKey} successfully removed domain: ${domain} from org: ${org.slug}.`,
-        )
-
         if (audit) {
+          console.info(
+            `User: ${userKey} successfully removed domain: ${domain} from org: ${org.slug}.`,
+          )
           await logActivity({
             transaction,
             collections,
@@ -459,8 +458,8 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
               organization: {
                 id: org._key,
                 name: org.name,
-              }, // name of resource being acted upon
-              resourceType: 'domain', // user, org, domain
+              },
+              resourceType: 'domain',
             },
           })
         }
@@ -468,12 +467,11 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       domainCount += 1
     }
 
-    console.info(
-      `User: ${userKey} successfully removed domains from org: ${org.slug}.`,
-    )
-
     // Log activity
     if (!audit) {
+      console.info(
+        `User: ${userKey} successfully removed ${domainCount} domain(s) from org: ${org.slug}.`,
+      )
       if (archiveDomains) {
         await logActivity({
           transaction,
@@ -497,8 +495,8 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             organization: {
               id: org._key,
               name: org.name,
-            }, // name of resource being acted upon
-            resourceType: 'domain', // user, org, domain
+            },
+            resourceType: 'domain',
           },
         })
       } else {
@@ -517,8 +515,8 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
             organization: {
               id: org._key,
               name: org.name,
-            }, // name of resource being acted upon
-            resourceType: 'domain', // user, org, domain
+            },
+            resourceType: 'domain',
           },
         })
       }

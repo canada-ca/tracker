@@ -147,8 +147,6 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       })
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
     let domainCount = 0
 
     for (const domain of domains) {
@@ -206,6 +204,9 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
       // Check to see if domain already exists in db
       const checkDomain = await loadDomainByDomain.load(insertDomain.domain)
+
+      // Setup Transaction
+      const trx = await transaction(collections)
 
       let insertedDomainCursor
       if (typeof checkDomain === 'undefined') {
@@ -291,11 +292,10 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to create domains. Please try again.`))
       }
 
-      console.info(
-        `User: ${userKey} successfully add domains to org: ${org.slug}.`,
-      )
-
       if (audit) {
+        console.info(
+          `User: ${userKey} successfully added domain: ${insertDomain.domain} to org: ${org.slug}.`,
+        )
         await logActivity({
           transaction,
           collections,
@@ -312,8 +312,8 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
             organization: {
               id: org._key,
               name: org.name,
-            }, // name of resource being acted upon
-            resourceType: 'domain', // user, org, domain
+            },
+            resourceType: 'domain',
           },
         })
       }
@@ -321,6 +321,9 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     }
 
     if (!audit) {
+      console.info(
+        `User: ${userKey} successfully added ${domainCount} domain(s) to org: ${org.slug}.`,
+      )
       await logActivity({
         transaction,
         collections,
@@ -337,8 +340,8 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           organization: {
             id: org._key,
             name: org.name,
-          }, // name of resource being acted upon
-          resourceType: 'domain', // user, org, domain
+          },
+          resourceType: 'domain',
         },
       })
     }
