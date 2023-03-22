@@ -484,14 +484,16 @@ export const loadDomainConnectionsByOrgId =
 
       LET retrievedDomains = (
         ${loopString}
+          LET hidden = false
+          LET claimTags = []
           FILTER domain._key IN domainKeys
           ${showArchivedDomains}
-          LET hidden = (
+          hidden = (
             FOR v, e IN 1..1 ANY domain._id claims
               FILTER e._from == ${orgId}
               RETURN e.hidden
           )[0]
-          LET claimTags = (
+          claimTags = (
             FOR v, e IN 1..1 ANY domain._id claims
               FILTER e._from == ${orgId}
               LET translatedTags = (
