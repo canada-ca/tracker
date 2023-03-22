@@ -44,6 +44,11 @@ export const updateDomain = new mutationWithClientMutationId({
         'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
     },
+    vendor: {
+      description:
+        'Value that determines if the domain belongs to a third party vendor.',
+      type: GraphQLBoolean,
+    },
   }),
   outputFields: () => ({
     result: {
@@ -102,6 +107,13 @@ export const updateDomain = new mutationWithClientMutationId({
       hidden = args.hidden
     } else {
       hidden = null
+    }
+
+    let vendor
+    if (typeof args.vendor !== 'undefined') {
+      vendor = args.vendor
+    } else {
+      vendor = null
     }
 
     // Check to see if domain exists
@@ -235,6 +247,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const claimToInsert = {
       tags: tags || claim?.tags,
       hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
+      vendor: typeof vendor !== 'undefined' ? vendor : claim?.vendor,
     }
 
     try {
@@ -309,6 +322,14 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'hidden',
         oldValue: claim?.hidden,
         newValue: hidden,
+      })
+    }
+
+    if (typeof vendor !== 'undefined') {
+      updatedProperties.push({
+        name: 'vendor',
+        oldValue: claim?.vendor,
+        newValue: vendor,
       })
     }
 

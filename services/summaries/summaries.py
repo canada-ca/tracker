@@ -238,7 +238,8 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
             domain = db.collection("domains").get({"_id": claim["_to"]})
             archived = domain.get("archived")
             hidden = claim.get("hidden")
-            if hidden != True and archived != True:
+            vendor = claim.get("vendor")
+            if hidden != True and archived != True and vendor != True:
                 domain_total = domain_total + 1
                 if domain.get("status", {}).get("dmarc") == "pass":
                     dmarc_pass = dmarc_pass + 1

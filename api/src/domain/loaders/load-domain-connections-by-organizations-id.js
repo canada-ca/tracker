@@ -491,6 +491,11 @@ export const loadDomainConnectionsByOrgId =
               FILTER e._from == ${orgId}
               RETURN e.hidden
           )[0]
+          LET vendor = (
+            FOR v, e IN 1..1 ANY domain._id claims
+              FILTER e._from == ${orgId}
+              RETURN e.vendor
+          )[0]
           LET claimTags = (
             FOR v, e IN 1..1 ANY domain._id claims
               FILTER e._from == ${orgId}
@@ -508,7 +513,7 @@ export const loadDomainConnectionsByOrgId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden }, DOCUMENT(domain._id))
+          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden, "vendor": vendor }, DOCUMENT(domain._id))
       )
 
       LET hasNextPage = (LENGTH(
