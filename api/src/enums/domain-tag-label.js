@@ -49,6 +49,10 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'archived',
       description: 'English label for tagging domains that are archived.',
     },
+    VENDOR: {
+      value: 'vendor',
+      description: 'English label for tagging domains that are vendor sites.',
+    },
   },
   description: 'An enum used to assign and test user-generated domain tags',
 })

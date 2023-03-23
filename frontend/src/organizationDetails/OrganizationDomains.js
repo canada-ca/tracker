@@ -117,6 +117,7 @@ export function OrganizationDomains({ orgSlug }) {
     { value: t`INACTIVE`, text: t`Inactive` },
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: 'VENDOR', text: t`Vendor` },
   ]
 
   const domainList = loading ? (
@@ -270,7 +271,16 @@ export function OrganizationDomains({ orgSlug }) {
         mb="4"
       >
         {(
-          { id, domain, status, hasDMARCReport, claimTags, hidden, archived },
+          {
+            id,
+            domain,
+            status,
+            hasDMARCReport,
+            claimTags,
+            hidden,
+            archived,
+            vendor,
+          },
           index,
         ) => (
           <ErrorBoundary
@@ -285,6 +295,7 @@ export function OrganizationDomains({ orgSlug }) {
               tags={claimTags}
               isHidden={hidden}
               isArchived={archived}
+              isVendor={vendor}
               mb="3"
             />
           </ErrorBoundary>

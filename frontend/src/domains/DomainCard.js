@@ -33,6 +33,7 @@ export function DomainCard({
   tags,
   isHidden,
   isArchived,
+  isVendor,
   ...rest
 }) {
   const location = useLocation()
@@ -145,6 +146,18 @@ export function DomainCard({
                     </Tag>
                   )
                 })}
+                {isVendor && (
+                  <Tag
+                    m="0.5"
+                    bg="gray.50"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                  >
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>VENDOR</Trans>
+                    </TagLabel>
+                  </Tag>
+                )}
                 {isHidden && (
                   <Tag
                     m="0.5"
@@ -261,4 +274,5 @@ DomainCard.propTypes = {
   tags: array,
   isHidden: bool,
   isArchived: bool,
+  isVendor: bool,
 }
