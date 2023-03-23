@@ -236,8 +236,8 @@ def process_connection_results(connection_results):
         except ValueError:
             pass
 
-        # check redirect is for same hostname (to ensure HSTS)
-        redirect_url = https_connections[0]["connection"]["redirect_to"]
+        # check redirect is for same hostname (to ensure HSTS is applied)
+        redirect_url = http_connections[0]["connection"]["redirect_to"]
         if redirect_url is not None:
             redirect_hostname = urlparse(redirect_url).hostname
             if redirect_hostname != connection_results["domain"]:
