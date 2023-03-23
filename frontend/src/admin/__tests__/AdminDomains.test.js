@@ -135,6 +135,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              vendor: false,
             },
           },
           result: {
@@ -221,6 +222,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              vendor: false,
             },
           },
           result: {
@@ -313,6 +315,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              vendor: false,
             },
           },
           result: {
@@ -396,6 +399,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              vendor: false,
             },
           },
           result: {
@@ -581,6 +585,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              vendor: false,
             },
           },
           result: {
