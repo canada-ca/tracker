@@ -52,6 +52,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
   const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [modalProps, setModalProps] = useState({
+    vendor: false,
     hidden: false,
     archived: false,
     mutation: '',
@@ -165,6 +166,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
           claimTags,
           hidden,
           archived,
+          vendor,
           organizations,
         },
         index,
@@ -190,6 +192,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
                 px="2"
                 onClick={() => {
                   setModalProps({
+                    vendor,
                     hidden,
                     archived,
                     mutation: 'update',
@@ -210,6 +213,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
               tags={claimTags}
               isHidden={hidden}
               isArchived={archived}
+              isVendor={vendor}
               locale={i18n.locale}
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
@@ -228,6 +232,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
         onSubmit={async (e) => {
           e.preventDefault() // prevents page from refreshing
           setModalProps({
+            vendor: false,
             hidden: false,
             archived: false,
             mutation: 'create',

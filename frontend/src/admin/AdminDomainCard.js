@@ -17,7 +17,14 @@ import { sanitizeUrl } from '../utilities/sanitizeUrl'
 import { ABTestingWrapper } from '../app/ABTestWrapper'
 import { ABTestVariant } from '../app/ABTestVariant'
 
-export function AdminDomainCard({ url, tags, isHidden, isArchived, ...rest }) {
+export function AdminDomainCard({
+  url,
+  tags,
+  isHidden,
+  isArchived,
+  isVendor,
+  ...rest
+}) {
   return (
     <ListItem {...rest}>
       <Grid
@@ -57,6 +64,18 @@ export function AdminDomainCard({ url, tags, isHidden, isArchived, ...rest }) {
                   </Tag>
                 )
               })}
+              {isVendor && (
+                <Tag
+                  m="1"
+                  borderRadius="full"
+                  borderWidth="1px"
+                  borderColor="gray.900"
+                >
+                  <TagLabel mx="auto">
+                    <Trans>Vendor</Trans>
+                  </TagLabel>
+                </Tag>
+              )}
               {isHidden && (
                 <Tag
                   m="1"
@@ -93,4 +112,5 @@ AdminDomainCard.propTypes = {
   tags: array,
   isHidden: bool,
   isArchived: bool,
+  isVendor: bool,
 }

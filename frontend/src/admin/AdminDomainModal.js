@@ -60,6 +60,7 @@ export function AdminDomainModal({
     orgSlug,
     archived,
     hidden,
+    vendor,
     permission,
     mutation,
     orgCount,
@@ -222,6 +223,7 @@ export function AdminDomainModal({
             }),
             archiveDomain: archived,
             hideDomain: hidden,
+            vendorDomain: vendor,
           }}
           initialTouched={{
             domainUrl: true,
@@ -239,6 +241,7 @@ export function AdminDomainModal({
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
+                  vendor: values.vendorDomain,
                 },
               })
             } else if (mutation === 'create') {
@@ -250,6 +253,7 @@ export function AdminDomainModal({
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
+                  vendor: values.vendorDomain,
                 },
               })
             }
@@ -381,6 +385,26 @@ export function AdminDomainModal({
 
                       <Flex align="center">
                         <Tooltip
+                          label={t`Domain is managed or owned by 3rd party vendor. Track results without affecting your organization's summaries.`}
+                        >
+                          <QuestionOutlineIcon tabIndex={0} />
+                        </Tooltip>
+                        <label>
+                          <Switch
+                            isFocusable={true}
+                            name="vendorDomain"
+                            mx="2"
+                            defaultChecked={values.vendorDomain}
+                            onChange={handleChange}
+                          />
+                        </label>
+                        <Badge variant="outline" color="gray.900" p="1.5">
+                          <Trans>Vendor domain</Trans>
+                        </Badge>
+                      </Flex>
+
+                      <Flex align="center">
+                        <Tooltip
                           label={t`Prevent this domain from being counted in your organization's summaries.`}
                         >
                           <QuestionOutlineIcon tabIndex={0} />
@@ -478,6 +502,7 @@ AdminDomainModal.propTypes = {
   tagInputList: array,
   archived: bool,
   hidden: bool,
+  vendor: bool,
   permission: string,
   orgSlug: string,
   mutation: string,
