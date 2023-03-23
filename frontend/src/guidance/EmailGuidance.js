@@ -86,7 +86,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
   const emailSummary = (
     <AccordionItem>
       <Flex align="center" as={AccordionButton}>
-        <Text fontSize="2xl">
+        <Text fontSize="2xl" mr="auto">
           <Trans>DNS Result Summary</Trans>
           <AccordionIcon boxSize="icons.xl" />
         </Text>
@@ -125,7 +125,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
               borderBottomWidth="1px"
               borderBottomColor="gray.300"
             >
-              <Text fontSize="xl" pl="2">
+              <Text fontSize="xl" pl="2" mr="auto">
                 {key.toUpperCase()}
               </Text>
               <GuidanceSummaryCategories
