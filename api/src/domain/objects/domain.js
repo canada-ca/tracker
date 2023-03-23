@@ -237,9 +237,15 @@ export const domainType = new GraphQLObjectType({
     },
     hidden: {
       description:
-        "Value that determines if a domain is excluded from an organization's results.",
+        "Value that determines if a domain is excluded from an organization's results and hidden from non-affiliated users.",
       type: GraphQLBoolean,
       resolve: ({ hidden }) => hidden,
+    },
+    vendor: {
+      description:
+        "Value that determines if a domain is managed by a 3rd party. Vendor domains are excluded from an organization's results.",
+      type: GraphQLBoolean,
+      resolve: ({ vendor }) => vendor,
     },
   }),
   interfaces: [nodeInterface],
