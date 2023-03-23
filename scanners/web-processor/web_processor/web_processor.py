@@ -239,8 +239,9 @@ def process_connection_results(connection_results):
         # check redirect is for same hostname (to ensure HSTS is applied)
         redirect_url = http_connections[0]["connection"]["redirect_to"]
         if redirect_url is not None:
-            redirect_hostname = urlparse(redirect_url).hostname
-            if redirect_hostname != connection_results["domain"]:
+            parsed_url = urlparse(redirect_url)
+            redirect_url = f'{parsed_url.scheme}://{parsed_url.hostname}'
+            if redirect_url != f'https://{connection_results["domain"]}':
                 negative_tags.append("https14")
         else:
             negative_tags.append("https14")
