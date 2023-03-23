@@ -216,6 +216,7 @@ export const CREATE_DOMAIN = gql`
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
+    $vendor: Boolean
   ) {
     createDomain(
       input: {
@@ -225,6 +226,7 @@ export const CREATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         hidden: $hidden
+        vendor: $vendor
       }
     ) {
       result {
@@ -306,6 +308,7 @@ export const UPDATE_DOMAIN = gql`
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
+    $vendor: Boolean
   ) {
     updateDomain(
       input: {
@@ -316,6 +319,7 @@ export const UPDATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         hidden: $hidden
+        vendor: $vendor
       }
     ) {
       result {

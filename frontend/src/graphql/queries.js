@@ -548,6 +548,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             selectors
             claimTags
             hidden
+            vendor
             archived
             organizations(first: 1) {
               totalCount
@@ -631,7 +632,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
               dmarc
               hsts
               https
-              # policy
               protocols
               spf
               ssl
@@ -639,6 +639,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             hasDMARCReport
             claimTags
             hidden
+            vendor
             archived
           }
         }
