@@ -314,7 +314,22 @@ export const loadDomainConnectionsByOrgId =
       sortString = aql`ASC`
     }
 
-    let domainFilters = aql``
+    let domainFilters = aql`
+      LET hidden = (
+        FOR v, e IN 1..1 ANY domain._id claims
+          FILTER e._from == ${orgId}
+          RETURN e.hidden
+      )[0]
+      LET claimTags = (
+        FOR v, e IN 1..1 ANY domain._id claims
+          FILTER e._from == ${orgId}
+          LET translatedTags = (
+            FOR tag IN e.tags || []
+              RETURN TRANSLATE(${language}, tag)
+          )
+          RETURN translatedTags
+      )[0]
+      `
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -486,21 +501,6 @@ export const loadDomainConnectionsByOrgId =
         ${loopString}
           FILTER domain._key IN domainKeys
           ${showArchivedDomains}
-          LET hidden = (
-            FOR v, e IN 1..1 ANY domain._id claims
-              FILTER e._from == ${orgId}
-              RETURN e.hidden
-          )[0]
-          LET claimTags = (
-            FOR v, e IN 1..1 ANY domain._id claims
-              FILTER e._from == ${orgId}
-              LET translatedTags = (
-                FOR tag IN e.tags || []
-                  RETURN TRANSLATE(${language}, tag)
-              )
-              RETURN translatedTags
-          )[0]
-
           ${domainFilters}
 
           ${afterTemplate}

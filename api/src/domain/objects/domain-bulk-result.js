@@ -1,9 +1,7 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 
-import { domainType } from './domain'
-
-export const domainResultType = new GraphQLObjectType({
-  name: 'DomainResult',
+export const domainBulkResultType = new GraphQLObjectType({
+  name: 'DomainBulkResult',
   description:
     'This object is used to inform the user that no errors were encountered while mutating a domain.',
   fields: () => ({
@@ -11,11 +9,6 @@ export const domainResultType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Informs the user if the domain mutation was successful.',
       resolve: ({ status }) => status,
-    },
-    domain: {
-      type: domainType,
-      description: 'The domain that is being mutated.',
-      resolve: ({ domain }) => domain,
     },
   }),
 })
