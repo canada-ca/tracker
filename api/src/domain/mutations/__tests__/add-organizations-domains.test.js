@@ -132,7 +132,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               ) {
                 result {
-                  ... on DomainResult {
+                  ... on DomainBulkResult {
                     status
                   }
                   ... on DomainError {
@@ -201,7 +201,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               ) {
                 result {
-                  ... on DomainResult {
+                  ... on DomainBulkResult {
                     status
                   }
                   ... on DomainError {
@@ -347,7 +347,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               ) {
                 result {
-                  ... on DomainResult {
+                  ... on DomainBulkResult {
                     status
                   }
                   ... on DomainError {
@@ -390,7 +390,7 @@ describe('given the addOrganizationsDomains mutation', () => {
             addOrganizationsDomains: {
               result: {
                 code: 400,
-                description: `Permission Denied: Please contact organization user for help with creating domain.`,
+                description: `Permission Denied: Please contact organization user for help with creating domains.`,
               },
             },
           },

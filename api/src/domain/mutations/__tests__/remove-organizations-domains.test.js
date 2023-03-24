@@ -228,7 +228,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                   }
                 ) {
                   result {
-                    ... on DomainResult {
+                    ... on DomainBulkResult {
                       status
                     }
                     ... on DomainError {
@@ -295,7 +295,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                   }
                 ) {
                   result {
-                    ... on DomainResult {
+                    ... on DomainBulkResult {
                       status
                     }
                     ... on DomainError {
@@ -363,7 +363,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                   }
                 ) {
                   result {
-                    ... on DomainResult {
+                    ... on DomainBulkResult {
                       status
                     }
                     ... on DomainError {
@@ -562,7 +562,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               ) {
                 result {
-                  ... on DomainResult {
+                  ... on DomainBulkResult {
                     status
                   }
                   ... on DomainError {
@@ -628,7 +628,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               ) {
                 result {
-                  ... on DomainResult {
+                  ... on DomainBulkResult {
                     status
                   }
                   ... on DomainError {

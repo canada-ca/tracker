@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-import { removeDomainUnion } from '../unions'
+import { bulkModifyDomainsUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { Domain } from '../../scalars'
 
@@ -29,9 +29,9 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(removeDomainUnion),
+      type: GraphQLNonNull(bulkModifyDomainsUnion),
       description:
-        '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
+        '`BulkModifyDomainsUnion` returning either a `DomainBulkResult`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),

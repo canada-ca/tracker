@@ -2,13 +2,14 @@ import { GraphQLNonNull, GraphQLList, GraphQLID, GraphQLBoolean } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-import { removeDomainUnion } from '../unions'
+import { bulkModifyDomainsUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const addOrganizationsDomains = new mutationWithClientMutationId({
   name: 'AddOrganizationsDomains',
-  description: 'Mutation used to create a new domain for an organization.',
+  description:
+    'Mutation used to create multiple new domains for an organization.',
   inputFields: () => ({
     orgId: {
       type: GraphQLNonNull(GraphQLID),
@@ -34,9 +35,9 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
   }),
   outputFields: () => ({
     result: {
-      type: removeDomainUnion,
+      type: bulkModifyDomainsUnion,
       description:
-        '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
+        '`BulkModifyDomainsUnion` returning either a `DomainBulkResult`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -118,7 +119,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org._id })
 
-    if (permission !== 'admin' && permission !== 'super_admin') {
+    if (permission !== 'super_admin') {
       console.warn(
         `User: ${userKey} attempted to add domains in: ${org.slug}, however they do not have permission to do so.`,
       )
@@ -126,7 +127,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
         _type: 'error',
         code: 400,
         description: i18n._(
-          t`Permission Denied: Please contact organization user for help with creating domain.`,
+          t`Permission Denied: Please contact organization user for help with creating domains.`,
         ),
       }
     }

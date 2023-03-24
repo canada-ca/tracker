@@ -651,7 +651,7 @@ export const ADD_ORGANIZATIONS_DOMAINS = gql`
       }
     ) {
       result {
-        ... on DomainResult {
+        ... on DomainBulkResult {
           status
         }
         ... on DomainError {
@@ -679,7 +679,7 @@ export const REMOVE_ORGANIZATIONS_DOMAINS = gql`
       }
     ) {
       result {
-        ... on DomainResult {
+        ... on DomainBulkResult {
           status
         }
         ... on DomainError {
