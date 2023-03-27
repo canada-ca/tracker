@@ -153,6 +153,20 @@ def update_dmarc_phase_chart_summaries(db):
 
     logging.info("DMARC phase scan summary updated.")
 
+def is_domain_hidden(domain, db):
+    """Check if a domain is hidden
+
+    :param domain: domain to check
+    :param db: active arangodb connection
+    :return: True if domain is hidden, False otherwise
+    """
+
+    claims = db.collection("claims").find({"_to": domain["_id"]})
+    for claim in claims:
+        hidden = claim.get("hidden")
+        if hidden != None and hidden == True:
+            return True
+    return False
 
 def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
                            password=DB_PASS, port=DB_PORT):
@@ -169,7 +183,8 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
         domain_total = 0
         for domain in db.collection("domains"):
             archived = domain.get("archived")
-            if archived != True:
+            hidden = is_domain_hidden(domain, db)
+            if archived != True and hidden != True:
                 category_status = []
                 for scan_type in scan_types:
                     category_status.append(domain.get("status", {}).get(scan_type))
