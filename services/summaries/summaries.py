@@ -161,7 +161,7 @@ def is_domain_hidden(domain, db):
     :return: True if domain is hidden, False otherwise
     """
 
-    claims = db.collection("claims").get({"_to": domain["_id"]})
+    claims = db.collection("claims").find({"_to": domain["_id"]})
     for claim in claims:
         hidden = claim.get("hidden")
         if hidden != None and hidden == True:
