@@ -177,8 +177,6 @@ async def processor_service(loop):
                     protocol_statuses.append(web_scan["protocol_status"])
                     cipher_statuses.append(web_scan["cipher_status"])
                     curve_statuses.append(web_scan["curve_status"])
-                    print(web_scan["certificate_status"])
-                    print(json.dumps(web_scan["tls_result"]))
                     certificate_statuses.append(web_scan["certificate_status"])
                     blocked_categories.append(web_scan["blocked_category"])
 

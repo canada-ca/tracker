@@ -128,7 +128,7 @@ def process_tls_results(tls_results):
             + guidance["signature_algorithms"]["sufficient"]
         ):
             if signature_algorithm.lower() in algorithm:
-                positive_tags.append("ssl5")
+                # positive_tags.append("ssl5")
                 break
 
     if tls_results["is_vulnerable_to_heartbleed"]:
@@ -169,6 +169,8 @@ def process_tls_results(tls_results):
         if len(accepted_cipher_suites[suite_list]) > 0:
             protocol_status = "fail"
             negative_tags.append("ssl18")
+    if protocol_status == "pass":
+        positive_tags.append("ssl18")
 
     # get cipher status
     if "ssl6" in negative_tags:
@@ -176,13 +178,14 @@ def process_tls_results(tls_results):
         negative_tags.append("ssl19")
     else:
         cipher_status = "pass"
+        positive_tags.append("ssl19")
 
     # get curve status
     if weak_curve:
         curve_status = "fail"
-        negative_tags.append("ssl20")
     else:
         curve_status = "pass"
+        positive_tags.append("ssl20")
 
     processed_tags = {
         "neutral_tags": neutral_tags,
@@ -342,6 +345,10 @@ def process_connection_results(connection_results):
         https_status = "fail"
     else:
         https_status = "pass"
+        positive_tags.append("https15")
+
+    if hsts_status == "pass":
+        positive_tags.append("https16")
 
     # merge results
     processed_connection_results = {
