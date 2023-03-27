@@ -18,6 +18,7 @@ def process_tls_results(tls_results):
     accepted_elliptic_curves = []
 
     ssl_status = "info"
+    certificate_status = "info"
     protocol_status = "info"
     cipher_status = "info"
     curve_status = "info"
@@ -32,7 +33,8 @@ def process_tls_results(tls_results):
             "ssl_status": ssl_status,
             "protocol_status": protocol_status,
             "cipher_status": cipher_status,
-            "curve_status": curve_status
+            "curve_status": curve_status,
+            "certificate_status": certificate_status,
         }
 
         return processed_tags
@@ -154,17 +156,33 @@ def process_tls_results(tls_results):
     else:
         ssl_status = "pass"
 
+    # certificate status
+    if any(tag in negative_tags for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16"]):
+        certificate_status = "fail"
+    else:
+        certificate_status = "pass"
+        positive_tags.append("ssl21")
+
     # get protocol status
     protocol_status = "pass"
     for suite_list in unaccepted_tls_protocols:
         if len(accepted_cipher_suites[suite_list]) > 0:
             protocol_status = "fail"
+            negative_tags.append("ssl18")
 
     # get cipher status
-    cipher_status = "fail" if "ssl6" in negative_tags else "pass"
+    if "ssl6" in negative_tags:
+        cipher_status = "fail"
+        negative_tags.append("ssl19")
+    else:
+        cipher_status = "pass"
 
     # get curve status
-    curve_status = "fail" if weak_curve else "pass"
+    if weak_curve:
+        curve_status = "fail"
+        negative_tags.append("ssl20")
+    else:
+        curve_status = "pass"
 
     processed_tags = {
         "neutral_tags": neutral_tags,
@@ -175,7 +193,8 @@ def process_tls_results(tls_results):
         "ssl_status": ssl_status,
         "protocol_status": protocol_status,
         "cipher_status": cipher_status,
-        "curve_status": curve_status
+        "curve_status": curve_status,
+        "certificate_status": certificate_status
     }
 
     return processed_tags
@@ -360,6 +379,7 @@ def process_results(results):
         "neutral_tags": processed_tls_results["neutral_tags"],
         "negative_tags": processed_tls_results["negative_tags"],
         "ssl_status": processed_tls_results["ssl_status"],
+        "certificate_status": processed_tls_results["certificate_status"],
         "protocol_status": processed_tls_results["protocol_status"],
         "cipher_status": processed_tls_results["cipher_status"],
         "curve_status": processed_tls_results["curve_status"]

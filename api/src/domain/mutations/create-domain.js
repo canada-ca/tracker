@@ -1,9 +1,9 @@
-import {GraphQLNonNull, GraphQLList, GraphQLID, GraphQLBoolean} from 'graphql'
-import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
-import {t} from '@lingui/macro'
+import { GraphQLNonNull, GraphQLList, GraphQLID, GraphQLBoolean } from 'graphql'
+import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
+import { t } from '@lingui/macro'
 
-import {createDomainUnion} from '../unions'
-import {Domain, Selectors} from '../../scalars'
+import { createDomainUnion } from '../unions'
+import { Domain, Selectors } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 
@@ -13,8 +13,7 @@ export const createDomain = new mutationWithClientMutationId({
   inputFields: () => ({
     orgId: {
       type: GraphQLNonNull(GraphQLID),
-      description:
-        'The global id of the organization you wish to assign this domain to.',
+      description: 'The global id of the organization you wish to assign this domain to.',
     },
     domain: {
       type: GraphQLNonNull(Domain),
@@ -29,21 +28,18 @@ export const createDomain = new mutationWithClientMutationId({
       type: new GraphQLList(inputTag),
     },
     hidden: {
-      description:
-        "Value that determines if the domain is excluded from an organization's score.",
+      description: "Value that determines if the domain is excluded from an organization's score.",
       type: GraphQLBoolean,
     },
     archived: {
-      description:
-        'Value that determines if the domain is excluded from the scanning process.',
+      description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
     },
   }),
   outputFields: () => ({
     result: {
       type: createDomainUnion,
-      description:
-        '`CreateDomainUnion` returning either a `Domain`, or `CreateDomainError` object.',
+      description: '`CreateDomainUnion` returning either a `Domain`, or `CreateDomainError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -57,25 +53,19 @@ export const createDomain = new mutationWithClientMutationId({
       transaction,
       userKey,
       publish,
-      auth: {
-        checkPermission,
-        saltedHash,
-        userRequired,
-        verifiedRequired,
-        tfaRequired,
-      },
-      loaders: {loadDomainByDomain, loadOrgByKey},
-      validators: {cleanseInput},
+      auth: { checkPermission, saltedHash, userRequired, verifiedRequired, tfaRequired },
+      loaders: { loadDomainByDomain, loadOrgByKey },
+      validators: { cleanseInput },
     },
   ) => {
     // Get User
     const user = await userRequired()
 
-    verifiedRequired({user})
-    tfaRequired({user})
+    verifiedRequired({ user })
+    tfaRequired({ user })
 
     // Cleanse input
-    const {type: _orgType, id: orgId} = fromGlobalId(cleanseInput(args.orgId))
+    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const domain = cleanseInput(args.domain)
 
     let selectors
@@ -110,35 +100,25 @@ export const createDomain = new mutationWithClientMutationId({
     const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to create a domain to an organization: ${orgId} that does not exist.`,
-      )
+      console.warn(`User: ${userKey} attempted to create a domain to an organization: ${orgId} that does not exist.`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to create domain in unknown organization.`,
-        ),
+        description: i18n._(t`Unable to create domain in unknown organization.`),
       }
     }
 
     // Check to see if user belongs to org
-    const permission = await checkPermission({orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
-    if (
-      permission !== 'user' &&
-      permission !== 'admin' &&
-      permission !== 'super_admin'
-    ) {
+    if (permission !== 'user' && permission !== 'admin' && permission !== 'super_admin') {
       console.warn(
         `User: ${userKey} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Permission Denied: Please contact organization user for help with creating domain.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization user for help with creating domain.`),
       }
     }
 
@@ -148,6 +128,7 @@ export const createDomain = new mutationWithClientMutationId({
       selectors: selectors,
       hash: saltedHash(domain.toLowerCase()),
       status: {
+        certificates: null,
         dkim: null,
         dmarc: null,
         https: null,
@@ -171,9 +152,7 @@ export const createDomain = new mutationWithClientMutationId({
               RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${request.language}, org.orgDetails))
       `
     } catch (err) {
-      console.error(
-        `Database error occurred while running check to see if domain already exists in an org: ${err}`,
-      )
+      console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
@@ -181,9 +160,7 @@ export const createDomain = new mutationWithClientMutationId({
     try {
       checkOrgDomain = await checkDomainCursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred while running check to see if domain already exists in an org: ${err}`,
-      )
+      console.error(`Cursor error occurred while running check to see if domain already exists in an org: ${err}`)
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
@@ -194,9 +171,7 @@ export const createDomain = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to create domain, organization has already claimed it.`,
-        ),
+        description: i18n._(t`Unable to create domain, organization has already claimed it.`),
       }
     }
 
@@ -224,9 +199,7 @@ export const createDomain = new mutationWithClientMutationId({
           `,
         )
       } catch (err) {
-        console.error(
-          `Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`,
-        )
+        console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`)
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
 
@@ -254,13 +227,11 @@ export const createDomain = new mutationWithClientMutationId({
           `,
         )
       } catch (err) {
-        console.error(
-          `Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`,
-        )
+        console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`)
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
     } else {
-      const {selectors: selectorList, status, lastRan, archived } = checkDomain
+      const { selectors: selectorList, status, lastRan, archived } = checkDomain
 
       selectors.forEach((selector) => {
         if (!checkDomain.selectors.includes(selector)) {
@@ -285,9 +256,7 @@ export const createDomain = new mutationWithClientMutationId({
             `,
         )
       } catch (err) {
-        console.error(
-          `Transaction step error occurred for user: ${userKey} when inserting domain selectors: ${err}`,
-        )
+        console.error(`Transaction step error occurred for user: ${userKey} when inserting domain selectors: ${err}`)
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
 
@@ -305,9 +274,7 @@ export const createDomain = new mutationWithClientMutationId({
           `,
         )
       } catch (err) {
-        console.error(
-          `Transaction step error occurred for user: ${userKey} when inserting domain edge: ${err}`,
-        )
+        console.error(`Transaction step error occurred for user: ${userKey} when inserting domain edge: ${err}`)
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
     }
@@ -315,9 +282,7 @@ export const createDomain = new mutationWithClientMutationId({
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Transaction commit error occurred while user: ${userKey} was creating domain: ${err}`,
-      )
+      console.error(`Transaction commit error occurred while user: ${userKey} was creating domain: ${err}`)
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
@@ -325,15 +290,10 @@ export const createDomain = new mutationWithClientMutationId({
     await loadDomainByDomain.clear(insertDomain.domain)
     const returnDomain = await loadDomainByDomain.load(insertDomain.domain)
 
-    console.info(
-      `User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
-    )
+    console.info(`User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`)
 
     const updatedProperties = []
-    if (
-      typeof insertDomain.selectors !== 'undefined' &&
-      insertDomain.selectors.length > 0
-    ) {
+    if (typeof insertDomain.selectors !== 'undefined' && insertDomain.selectors.length > 0) {
       updatedProperties.push({
         name: 'selectors',
         oldValue: [],

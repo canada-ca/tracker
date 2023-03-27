@@ -184,6 +184,7 @@ export function DomainCard({
           <Flex>
             <StatusBadge text={t`HTTPS`} status={status.https} />
             <StatusBadge text={t`HSTS`} status={status.hsts} />
+            <StatusBadge text={t`Certificates`} status={status.certificates} />
             <StatusBadge text={t`Protocols`} status={status.protocols} />
             <StatusBadge text={t`Ciphers`} status={status.ciphers} />
             <StatusBadge text={t`Curves`} status={status.curves} />

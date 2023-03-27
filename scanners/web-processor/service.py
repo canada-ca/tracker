@@ -144,6 +144,8 @@ async def processor_service(loop):
                                 "scan_status": webScanV.status,
                                 "https_status": webScanV.results.connectionResults.httpsStatus,
                                 "hsts_status": webScanV.results.connectionResults.hstsStatus,
+                                "certificate_status": webScanV.results.tlsResult.certificateStatus,
+                                "tls_result": webScanV.results.tlsResult,
                                 "ssl_status": webScanV.results.tlsResult.sslStatus,
                                 "protocol_status": webScanV.results.tlsResult.protocolStatus,
                                 "cipher_status": webScanV.results.tlsResult.cipherStatus,
@@ -161,6 +163,7 @@ async def processor_service(loop):
                 protocol_statuses = []
                 cipher_statuses = []
                 curve_statuses = []
+                certificate_statuses = []
                 blocked_categories = []
                 scan_pending = False
                 for web_scan in all_web_scans:
@@ -174,6 +177,9 @@ async def processor_service(loop):
                     protocol_statuses.append(web_scan["protocol_status"])
                     cipher_statuses.append(web_scan["cipher_status"])
                     curve_statuses.append(web_scan["curve_status"])
+                    print(web_scan["certificate_status"])
+                    print(json.dumps(web_scan["tls_result"]))
+                    certificate_statuses.append(web_scan["certificate_status"])
                     blocked_categories.append(web_scan["blocked_category"])
 
                 def get_status(statuses):
@@ -191,6 +197,7 @@ async def processor_service(loop):
                 domain["status"]["protocols"] = get_status(protocol_statuses)
                 domain["status"]["ciphers"] = get_status(cipher_statuses)
                 domain["status"]["curves"] = get_status(curve_statuses)
+                domain["status"]["certificates"] = get_status(certificate_statuses)
                 domain["blocked"] = any([bool(blocked_category) for blocked_category in blocked_categories])
                 domain["webScanPending"] = scan_pending
                 db.collection("domains").update(domain)

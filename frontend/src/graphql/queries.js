@@ -489,6 +489,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             id
             domain
             status {
+              certificates
               ciphers
               curves
               dkim
@@ -553,6 +554,7 @@ export const PAGINATED_DOMAINS = gql`
           blocked
           webScanPending
           status {
+            certificates
             ciphers
             curves
             dkim
