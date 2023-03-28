@@ -4,17 +4,22 @@ const { HASHING_SALT } = process.env
 
 const createDomain = async ({ domain, trx, query }) => {
   console.info(`\tCreating domain: ${domain}.`)
-  
+
   const domainStruct = {
     domain: domain,
     selectors: [],
     hash: saltedHash(domain, HASHING_SALT),
     status: {
-      dkim: 'fail',
-      dmarc: 'fail',
-      https: 'fail',
-      spf: 'fail',
-      ssl: 'fail',
+      ciphers: 'info',
+      curves: 'info',
+      hsts: 'info',
+      protocols: 'info',
+      certificates: 'info',
+      dkim: 'info',
+      dmarc: 'info',
+      https: 'info',
+      spf: 'info',
+      ssl: 'info',
     },
     lastRan: '',
   }
