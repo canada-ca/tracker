@@ -428,7 +428,7 @@ export const loadDomainConnectionsByOrgId =
       showArchivedDomains = aql``
     }
     let showHiddenDomains = aql`FILTER e.hidden != true`
-    if (permission === 'admin' || permission === 'super_admin') {
+    if (permission === 'super_admin') {
       showHiddenDomains = aql``
     }
 
