@@ -9,12 +9,34 @@ import {
   Code,
   Flex,
   Text,
+  Tooltip,
 } from '@chakra-ui/react'
-import { object } from 'prop-types'
-import { PlusSquareIcon } from '@chakra-ui/icons'
+import { node, object, string } from 'prop-types'
+import { InfoOutlineIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
 import { Trans, t } from '@lingui/macro'
+
+const DetailTooltip = ({ children, label, ...props }) => {
+  return (
+    <Flex align="center" minW="50%" {...props}>
+      <Tooltip
+        hasArrow
+        label={label}
+        fontSize="1em"
+        borderWidth="1px"
+        borderSytle="solid"
+        borderColor="info"
+        arrowShadowColor="info"
+      >
+        <Flex align="center">
+          {children}
+          <InfoOutlineIcon ml="1" color="info" size="icons.sm" aria-label="More info" />
+        </Flex>
+      </Tooltip>
+    </Flex>
+  )
+}
 
 export function WebConnectionResults({ connectionResults }) {
   const {
@@ -115,17 +137,23 @@ export function WebConnectionResults({ connectionResults }) {
             <AccordionPanel>
               <Box fontSize="lg" px="2">
                 <Flex {...columnInfoStyleProps}>
-                  <StatusIcon status="INFO" />
-                  <Text px="1" minW="50%">
-                    <Trans>HTTP Live</Trans>
-                  </Text>
+                  <DetailTooltip label={t`Shows if the HTTP connection is live.`}>
+                    <StatusIcon status="INFO" />
+                    <Text px="1" minW="50%">
+                      <Trans>HTTP Live</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>{httpLive ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps} bg="gray.200">
-                  <StatusIcon status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />
-                  <Text px="1" minW="50%">
-                    <Trans>HTTP Upgrades</Trans>
-                  </Text>
+                  <DetailTooltip
+                    label={t`Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never.`}
+                  >
+                    <StatusIcon status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />
+                    <Text px="1">
+                      <Trans>HTTP Upgrades</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>
                     {httpImmediatelyUpgrades ? t`Immediately` : httpEventuallyUpgrades ? t`Eventually` : t`Never`}
                   </Text>
@@ -149,47 +177,61 @@ export function WebConnectionResults({ connectionResults }) {
             <AccordionPanel>
               <Box fontSize="lg" px="2">
                 <Flex {...columnInfoStyleProps}>
-                  <StatusIcon status={httpsLive ? 'PASS' : 'FAIL'} />
-                  <Text px="1" minW="50%">
-                    <Trans>HTTPS Live</Trans>
-                  </Text>
+                  <DetailTooltip label={t`Shows if the HTTPS connection is live.`}>
+                    <StatusIcon status={httpsLive ? 'PASS' : 'FAIL'} />
+                    <Text px="1">
+                      <Trans>HTTPS Live</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>{httpsLive ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps} bg="gray.200">
-                  <StatusIcon status={httpsImmediatelyDowngrades || httpsEventuallyDowngrades ? 'FAIL' : 'PASS'} />
-                  <Text px="1" minW="50%">
-                    <Trans>HTTPS Downgrades</Trans>
-                  </Text>
+                  <DetailTooltip
+                    label={t`Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never.`}
+                  >
+                    <StatusIcon status={httpsImmediatelyDowngrades || httpsEventuallyDowngrades ? 'FAIL' : 'PASS'} />
+                    <Text px="1">
+                      <Trans>HTTPS Downgrades</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>
                     {httpsImmediatelyDowngrades ? t`Immediately` : httpsEventuallyDowngrades ? t`Eventually` : t`Never`}
                   </Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
-                  <StatusIcon status={hstsParsed ? 'PASS' : 'FAIL'} />
-                  <Text px="1" minW="50%">
-                    <Trans>HSTS Parsed</Trans>
-                  </Text>
+                  <DetailTooltip label={t`Shows if the HSTS (HTTP Strict Transport Security) header is present.`}>
+                    <StatusIcon status={hstsParsed ? 'PASS' : 'FAIL'} />
+                    <Text px="1">
+                      <Trans>HSTS Parsed</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps} bg="gray.200">
-                  <StatusIcon status="INFO" />
-                  <Text px="1" minW="50%">
-                    <Trans>HSTS Max Age</Trans>
-                  </Text>
+                  <DetailTooltip label={t`Shows the duration of time, in seconds, that the HSTS header is valid.`}>
+                    <StatusIcon status="INFO" />
+                    <Text px="1">
+                      <Trans>HSTS Max Age</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>{hstsParsed?.maxAge}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
-                  <StatusIcon status="INFO" />
-                  <Text px="1" minW="50%">
-                    <Trans>HSTS Preloaded</Trans>
-                  </Text>
+                  <DetailTooltip label={t`Shows if the HSTS header includes the preload directive.`}>
+                    <StatusIcon status="INFO" />
+                    <Text px="1">
+                      <Trans>HSTS Preloaded</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>{hstsParsed?.preload ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps} bg="gray.200">
-                  <StatusIcon status="INFO" />
-                  <Text px="1" minW="50%">
-                    <Trans>HSTS Includes Subdomains</Trans>
-                  </Text>
+                  <DetailTooltip label={t`Shows if the HSTS header includes the includeSubdomains directive.`}>
+                    <StatusIcon status="INFO" />
+                    <Text px="1">
+                      <Trans>HSTS Includes Subdomains</Trans>
+                    </Text>
+                  </DetailTooltip>
                   <Text>{hstsParsed?.includeSubdomains ? t`Yes` : t`No`}</Text>
                 </Flex>
               </Box>
@@ -209,4 +251,9 @@ export function WebConnectionResults({ connectionResults }) {
 
 WebConnectionResults.propTypes = {
   connectionResults: object,
+}
+
+DetailTooltip.propTypes = {
+  label: string,
+  children: node,
 }
