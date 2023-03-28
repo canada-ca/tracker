@@ -184,10 +184,19 @@ export function WebTLSResults({ tlsResult }) {
     pathValidationResults,
   } = tlsResult?.certificateChainInfo || {}
 
+  const tlsStatus = [
+    tlsResult.certificateStatus,
+    tlsResult.protocolStatus,
+    tlsResult.cipherStatus,
+    tlsResult.curveStatus,
+  ].every((status) => status.toUpperCase() === 'PASS')
+    ? 'PASS'
+    : 'FAIL'
+
   return (
     <AccordionItem>
       <Flex as={AccordionButton}>
-        <StatusIcon status={tlsResult.sslStatus} boxSize="icons.lg" />
+        <StatusIcon status={tlsStatus} boxSize="icons.lg" />
         <Text fontSize="2xl" ml="2">
           <Trans>TLS Results</Trans>
         </Text>

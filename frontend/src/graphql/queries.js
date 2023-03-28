@@ -295,6 +295,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                 timestamp
                 tlsResult {
                   ipAddress
+                  certificateStatus
                   sslStatus
                   protocolStatus
                   cipherStatus

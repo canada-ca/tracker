@@ -66,6 +66,11 @@ export const tlsResultType = new GraphQLObjectType({
         return await loadSslGuidanceTagByTagId({ tags: negativeTags })
       },
     },
+    certificateStatus: {
+      type: GraphQLString,
+      description: `The compliance status of the certificate bundle for the scanned server from this scan.`,
+      resolve: async ({ certificateStatus }) => certificateStatus,
+    },
     sslStatus: {
       type: GraphQLString,
       description: `The compliance status for TLS for the scanned server from this scan.`,

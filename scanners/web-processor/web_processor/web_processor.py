@@ -105,7 +105,7 @@ def process_tls_results(tls_results):
 
     try:
         if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked_status"] is None:
-            negative_tags.append("ssl13")
+            neutral_tags.append("ssl13")
     except TypeError:
         pass
 
