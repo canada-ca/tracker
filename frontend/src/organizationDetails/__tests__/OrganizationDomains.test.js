@@ -59,6 +59,7 @@ describe('<OrganizationDomains />', () => {
               first: 10,
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
               search: '',
+              filters: [],
             },
           },
           result: {

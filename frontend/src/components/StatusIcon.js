@@ -19,5 +19,5 @@ export function StatusIcon({ status, ...props }) {
 }
 
 StatusIcon.propTypes = {
-  status: string.isRequired,
+  status: string,
 }

@@ -158,16 +158,16 @@ export function DomainCard({
                   )
                 })}
                 {isHidden && (
-                  <Tag m="0.5" borderRadius="full" borderWidth="1px" borderColor="gray.900">
+                  <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                     <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      <Trans>Hidden</Trans>
+                      <Trans>HIDDEN</Trans>
                     </TagLabel>
                   </Tag>
                 )}
                 {isArchived && (
-                  <Tag m="0.5" borderRadius="full" borderWidth="1px" borderColor="gray.900">
+                  <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                     <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      <Trans>Archived</Trans>
+                      <Trans>ARCHIVED</Trans>
                     </TagLabel>
                   </Tag>
                 )}

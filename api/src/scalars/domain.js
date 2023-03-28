@@ -8,7 +8,7 @@ const validate = (value) => {
   value = value.toLowerCase()
 
   const DOMAIN_REGEX =
-    /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/
+    /^((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$/
 
   if (!DOMAIN_REGEX.test(value)) {
     throw new TypeError(`Value is not a valid domain: ${value}`)

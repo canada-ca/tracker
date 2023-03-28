@@ -473,10 +473,12 @@ export const ORG_DETAILS_PAGE = gql`
 `
 
 export const PAGINATED_ORG_DOMAINS = gql`
-  query OrgDomainsNext($slug: Slug!, $first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
+  query OrgDomainsNext($slug: Slug!, $first: Int, $after: String, $orderBy: DomainOrder, $search: String$filters: [DomainFilter]
+  ) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
-      domains(first: $first, after: $after, orderBy: $orderBy, search: $search) {
+      domains(first: $first, after: $after, orderBy: $orderBy, search: $searchfilters: $filters
+      ) {
         pageInfo {
           hasNextPage
           endCursor
