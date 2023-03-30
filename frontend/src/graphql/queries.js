@@ -235,6 +235,15 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
               warnings
             }
             dkim {
+              positiveTags {
+                ...RequiredGuidanceTagFields
+              }
+              neutralTags {
+                ...RequiredGuidanceTagFields
+              }
+              negativeTags {
+                ...RequiredGuidanceTagFields
+              }
               selectors {
                 selector
                 record

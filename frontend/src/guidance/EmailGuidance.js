@@ -109,6 +109,9 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
               infoCount += neutralTags.length
               failCount += negativeTags.length
             })
+            passCount += dnsResults.dkim.positiveTags.length
+            infoCount += dnsResults.dkim.neutralTags.length
+            failCount += dnsResults.dkim.negativeTags.length
           } else {
             const { positiveTags, neutralTags, negativeTags } = dnsResults[key]
             passCount = positiveTags.length
@@ -241,15 +244,31 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
               },
             )
           ) : (
-            <Flex px="2" py="1" bg="infoMuted" borderWidth="1px" borderColor="info" rounded="md" align="center">
-              <InfoIcon color="info" mr="2" />
-              <Text fontWeight="bold">
-                <Trans>
-                  No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated
-                  organization to add selectors.
-                </Trans>
-              </Text>
-            </Flex>
+            <Box>
+              <Flex
+                px="2"
+                py="1"
+                bg="weakMuted"
+                borderWidth="1px"
+                borderColor="weak"
+                rounded="md"
+                align="center"
+                mb="1"
+              >
+                <InfoIcon color="weak" mr="2" />
+                <Text fontWeight="bold">
+                  <Trans>
+                    No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated
+                    organization to add selectors.
+                  </Trans>
+                </Text>
+              </Flex>
+              <GuidanceTagList
+                positiveTags={dkim.positiveTags}
+                neutralTags={dkim.neutralTags}
+                negativeTags={dkim.negativeTags}
+              />
+            </Box>
           )}
         </AccordionPanel>
       </AccordionItem>

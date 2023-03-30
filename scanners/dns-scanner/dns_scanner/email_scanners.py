@@ -183,26 +183,24 @@ class DKIMScanner:
             pub = dkim.util.parse_tag_value(s)
         except InvalidTagValueList as e:
             raise KeyFormatError(e)
-        try:
-            if pub[b"k"] == b"ed25519":
-                pk = nacl.signing.VerifyKey(pub[b"p"], encoder=nacl.encoding.Base64Encoder)
-                keysize = 256
-                ktag = b"ed25519"
-        except KeyError:
-            pub[b"k"] = b"rsa"
-        if pub[b"k"] == b"rsa":
-            if len(base64.b64decode(pub[b"p"])) == 0:
-                pk = None
-                keysize = None
-            else:
-                try:
-                    pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
-                    keysize = dkim.bitsize(pk["modulus"])
-                except KeyError:
-                    raise KeyFormatError(f"incomplete public key: {s}")
-                except (TypeError, UnparsableKeyError) as e:
-                    raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
-            ktag = b"rsa"
+
+        pk = None
+        keysize = None
+        ktag = pub.get(b"k", None)
+
+        if ktag == b"ed25519":
+            pk = nacl.signing.VerifyKey(pub[b"p"], encoder=nacl.encoding.Base64Encoder)
+            keysize = 256
+
+        if ktag == b"rsa":
+            try:
+                pk = crypto.parse_public_key(base64.b64decode(pub[b"p"]))
+                keysize = dkim.bitsize(pk["modulus"])
+            except KeyError:
+                raise KeyFormatError(f"incomplete public key: {s}")
+            except (TypeError, UnparsableKeyError) as e:
+                raise KeyFormatError(f"could not parse public key ({pub[b'p']}): {e}")
+
         return pk, keysize, ktag
 
     def run(self):

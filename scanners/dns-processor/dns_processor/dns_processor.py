@@ -12,13 +12,19 @@ guidance = json.load(guidance_file)
 
 def process_dkim(dkim_results):
     def get_dkim_tag_status(selector_tag_list):
-        processed_dkim = {}
+        selector_tags = {}
+
+        dkim_tags = {
+            "positive_tags": [],
+            "negative_tags": [],
+            "neutral_tags": []
+        }
 
         # get dkim statuses
         dkim_statuses = []
 
         for dkim_selector, tags in selector_tag_list.items():
-            processed_dkim[dkim_selector] = {
+            selector_tags[dkim_selector] = {
                 "status": "fail",
                 "positive_tags": [],
                 "negative_tags": [],
@@ -27,23 +33,26 @@ def process_dkim(dkim_results):
 
             for tag in tags:
                 if tag in guidance["dkim"]["pass"]:
-                    processed_dkim[dkim_selector]["positive_tags"].append(tag)
+                    selector_tags[dkim_selector]["positive_tags"].append(tag)
                 if tag in guidance["dkim"]["fail"]:
-                    processed_dkim[dkim_selector]["negative_tags"].append(tag)
+                    selector_tags[dkim_selector]["negative_tags"].append(tag)
                 if tag in guidance["dkim"]["info"]:
-                    processed_dkim[dkim_selector]["neutral_tags"].append(tag)
+                    selector_tags[dkim_selector]["neutral_tags"].append(tag)
 
-            if len(processed_dkim[dkim_selector]["negative_tags"]) > 0:
+            if len(selector_tags[dkim_selector]["negative_tags"]) > 0:
                 dkim_statuses.append("fail")
-                processed_dkim[dkim_selector]["status"] = "fail"
+                selector_tags[dkim_selector]["status"] = "fail"
             else:
                 dkim_statuses.append("pass")
-                processed_dkim[dkim_selector]["status"] = "pass"
+                selector_tags[dkim_selector]["status"] = "pass"
 
         dkim_status = "pass" if all([False if status == "fail" else True for status in dkim_statuses]) and len(
-            processed_dkim) > 0 else "fail"
+            selector_tags) > 0 else "fail"
 
-        return processed_dkim, dkim_status
+        if len(selector_tags) == 0:
+            dkim_tags["negative_tags"].append("dkim16")
+
+        return dkim_tags, selector_tags, dkim_status
 
     dkim_err = dkim_results.get("error")
     dkim_tags = {}
@@ -352,7 +361,7 @@ def process_results(results):
     dkim = results.get("dkim") or {}
     spf = results.get("spf") or {}
 
-    dkim_tags, dkim_status = ({}, "info") if (rcode == "NXDOMAIN" or results["dkim"] is None) else process_dkim(
+    dkim_tags, dkim_selector_tags, dkim_status = ({}, "info") if (rcode == "NXDOMAIN" or results["dkim"] is None) else process_dkim(
         results["dkim"])
 
     dmarc_tags, dmarc_status = ({
@@ -410,8 +419,12 @@ def process_results(results):
 
     dkim_results = {
         "status": dkim_status,
+        "positive_tags": dkim_tags["positive_tags"],
+        "neutral_tags": dkim_tags["neutral_tags"],
+        "negative_tags": dkim_tags["negative_tags"],
         "selectors": {}
     }
+
     if not dkim.get("error", None):
         for selector in dkim.keys():
             dkim_results["selectors"][selector] = {

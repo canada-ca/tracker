@@ -2635,6 +2635,30 @@
             }
           ]
         }
+      },
+      "dkim16": {
+        "en": {
+          "tagName": "Selectors Not Given",
+          "guidance": "Tracker is unaware of the selectors used by the domain, please have the selectors for this domain added to Tracker.",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 DKIM Records",
+              "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
+            }
+          ],
+          "refLinksTechnical": []
+        },
+        "fr": {
+          "tagName": "Sélecteurs non indiqués",
+          "guidance": "Tracker n'est pas au courant des sélecteurs utilisés par le domaine, veuillez ajouter les sélecteurs à Tracker pour ce domaine.",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 Enregistrements DKIM",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
+            }
+          ],
+          "refLinksTechnical": []
+        }
       }
     }
   },
