@@ -9,34 +9,13 @@ import {
   Code,
   Flex,
   Text,
-  Tooltip,
 } from '@chakra-ui/react'
-import { node, object, string } from 'prop-types'
-import { InfoOutlineIcon, PlusSquareIcon } from '@chakra-ui/icons'
+import { object } from 'prop-types'
+import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
-import { Trans, t } from '@lingui/macro'
-
-const DetailTooltip = ({ children, label, ...props }) => {
-  return (
-    <Flex align="center" minW="50%" {...props}>
-      <Tooltip
-        hasArrow
-        label={label}
-        fontSize="1em"
-        borderWidth="1px"
-        borderSytle="solid"
-        borderColor="info"
-        arrowShadowColor="info"
-      >
-        <Flex align="center">
-          {children}
-          <InfoOutlineIcon ml="1" color="info" size="icons.sm" aria-label="More info" />
-        </Flex>
-      </Tooltip>
-    </Flex>
-  )
-}
+import { t, Trans } from '@lingui/macro'
+import { DetailTooltip } from './DetailTooltip'
 
 export function WebConnectionResults({ connectionResults }) {
   const {
@@ -53,8 +32,9 @@ export function WebConnectionResults({ connectionResults }) {
 
   const columnInfoStyleProps = {
     align: 'center',
-    mb: '1',
+    py: '0.5',
     px: '2',
+    _even: { bg: 'gray.200' },
   }
 
   const connChainResult = (chainResult) =>
@@ -139,13 +119,13 @@ export function WebConnectionResults({ connectionResults }) {
                 <Flex {...columnInfoStyleProps}>
                   <DetailTooltip label={t`Shows if the HTTP connection is live.`}>
                     <StatusIcon status="INFO" />
-                    <Text px="1" minW="50%">
+                    <Text px="1">
                       <Trans>HTTP Live</Trans>
                     </Text>
                   </DetailTooltip>
                   <Text>{httpLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps} bg="gray.200">
+                <Flex {...columnInfoStyleProps}>
                   <DetailTooltip
                     label={t`Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never.`}
                   >
@@ -185,7 +165,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </DetailTooltip>
                   <Text>{httpsLive ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps} bg="gray.200">
+                <Flex {...columnInfoStyleProps}>
                   <DetailTooltip
                     label={t`Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never.`}
                   >
@@ -207,7 +187,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </DetailTooltip>
                   <Text>{hstsParsed ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps} bg="gray.200">
+                <Flex {...columnInfoStyleProps}>
                   <DetailTooltip label={t`Shows the duration of time, in seconds, that the HSTS header is valid.`}>
                     <StatusIcon status="INFO" />
                     <Text px="1">
@@ -225,7 +205,7 @@ export function WebConnectionResults({ connectionResults }) {
                   </DetailTooltip>
                   <Text>{hstsParsed?.preload ? t`Yes` : t`No`}</Text>
                 </Flex>
-                <Flex {...columnInfoStyleProps} bg="gray.200">
+                <Flex {...columnInfoStyleProps}>
                   <DetailTooltip label={t`Shows if the HSTS header includes the includeSubdomains directive.`}>
                     <StatusIcon status="INFO" />
                     <Text px="1">
@@ -251,9 +231,4 @@ export function WebConnectionResults({ connectionResults }) {
 
 WebConnectionResults.propTypes = {
   connectionResults: object,
-}
-
-DetailTooltip.propTypes = {
-  label: string,
-  children: node,
 }

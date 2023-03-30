@@ -14,6 +14,7 @@ import { PlusSquareIcon } from '@chakra-ui/icons'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
 import { Trans, t } from '@lingui/macro'
+import { DetailTooltip } from './DetailTooltip'
 
 export function WebTLSResults({ tlsResult }) {
   const weakProtocolNames = {
@@ -35,11 +36,11 @@ export function WebTLSResults({ tlsResult }) {
     return rest[protocol]?.length > 0
   })
 
-  const columnInfoStyleProps = {
+  const cipherStyleProps = {
     align: 'center',
     borderBottomWidth: '1px',
     borderBottomColor: 'gray.300',
-    mb: '1',
+    py: '0.5',
     px: { base: '2', md: '4' },
   }
 
@@ -63,10 +64,10 @@ export function WebTLSResults({ tlsResult }) {
                 <>
                   {rest[protocol]?.map(({ name }, idx) => {
                     return (
-                      <Flex key={idx} {...columnInfoStyleProps}>
-                        <Text color="weak" minW="50%">
-                          {name}
-                        </Text>
+                      <Flex key={idx} {...cipherStyleProps}>
+                        <Flex align="center" minW="50%">
+                          <Text color="weak">{name}</Text>
+                        </Flex>
                         <Text color="weak">{weakProtocolNames[protocol]}</Text>
                       </Flex>
                     )
@@ -104,42 +105,42 @@ export function WebTLSResults({ tlsResult }) {
       <AccordionPanel>
         <Box px="2">
           {tls1_2?.length > 0 && (
-            <>
+            <Box>
               <Text fontSize="xl" fontWeight="bold" as="u" pb="2">
                 TLS 1.2
               </Text>
               {tls1_2?.map(({ name, strength }, idx) => {
                 return (
-                  <Flex key={idx} {...columnInfoStyleProps}>
-                    <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
-                      {name}
-                    </Text>
+                  <Flex key={idx} {...cipherStyleProps}>
+                    <Flex align="center" minW="50%">
+                      <Text color={strength === 'weak' ? 'weak' : 'black'}>{name}</Text>
+                    </Flex>
                     <Text color={strength === 'weak' ? 'weak' : 'black'}>
                       {cipherStrengths[strength].toUpperCase()}
                     </Text>
                   </Flex>
                 )
               })}
-            </>
+            </Box>
           )}
           {tls1_3?.length > 0 && (
-            <>
+            <Box>
               <Text fontSize="xl" as="u" fontWeight="bold" pb="2">
                 TLS 1.3
               </Text>
               {tls1_3?.map(({ name, strength }, idx) => {
                 return (
-                  <Flex key={idx} {...columnInfoStyleProps}>
-                    <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
-                      {name}
-                    </Text>
+                  <Flex key={idx} {...cipherStyleProps}>
+                    <Flex align="center" minW="50%">
+                      <Text color={strength === 'weak' ? 'weak' : 'black'}>{name}</Text>
+                    </Flex>
                     <Text color={strength === 'weak' ? 'weak' : 'black'}>
                       {cipherStrengths[strength].toUpperCase()}
                     </Text>
                   </Flex>
                 )
               })}
-            </>
+            </Box>
           )}
         </Box>
       </AccordionPanel>
@@ -159,10 +160,10 @@ export function WebTLSResults({ tlsResult }) {
         <Box px="2">
           {tlsResult.acceptedEllipticCurves?.map(({ name, strength }, idx) => {
             return (
-              <Flex key={idx} {...columnInfoStyleProps}>
-                <Text color={strength === 'weak' ? 'weak' : 'black'} minW="50%">
-                  {name}
-                </Text>
+              <Flex key={idx} {...cipherStyleProps}>
+                <Flex align="center" minW="50%">
+                  <Text color={strength === 'weak' ? 'weak' : 'black'}>{name}</Text>
+                </Flex>
                 <Text color={strength === 'weak' ? 'weak' : 'black'}>{cipherStrengths[strength].toUpperCase()}</Text>
               </Flex>
             )
@@ -192,6 +193,12 @@ export function WebTLSResults({ tlsResult }) {
   ].every((status) => status.toUpperCase() === 'PASS')
     ? 'PASS'
     : 'FAIL'
+
+  const columnInfoStyleProps = {
+    align: 'center',
+    py: '0.5',
+    px: '2',
+  }
 
   return (
     <AccordionItem>
@@ -231,53 +238,79 @@ export function WebTLSResults({ tlsResult }) {
               ) : (
                 <>
                   <Box fontSize="lg" px="2">
-                    <Flex align="center" mb="1" px="2" bg={badHostname ? 'weakMuted' : ''}>
-                      <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
-                      <Text px="1" minW="50%" fontWeight={badHostname ? 'bold' : ''}>
-                        <Trans>Hostname Matches</Trans>
-                      </Text>
+                    <Flex {...columnInfoStyleProps} bg={badHostname ? 'weakMuted' : ''}>
+                      <DetailTooltip
+                        label={t`Shows if the hostname on the server certificate matches the the hostname from the HTTP request.`}
+                      >
+                        <StatusIcon status={badHostname ? 'FAIL' : 'PASS'} />
+                        <Text px="1" fontWeight={badHostname ? 'bold' : ''}>
+                          <Trans>Hostname Matches</Trans>
+                        </Text>
+                      </DetailTooltip>
                       <Text fontWeight={badHostname ? 'bold' : ''}>{badHostname ? t`No` : t`Yes`}</Text>
                     </Flex>
-                    <Flex align="center" mb="1" px="2" bg="gray.200">
-                      <StatusIcon status="INFO" />
-                      <Text px="1" minW="50%">
-                        <Trans>Must Staple</Trans>
-                      </Text>
+                    <Flex {...columnInfoStyleProps} bg="gray.200">
+                      <DetailTooltip
+                        label={t`Shows if the leaf certificate includes the "OCSP Must-Staple" extension.`}
+                      >
+                        <StatusIcon status="INFO" />
+                        <Text px="1">
+                          <Trans>Must Staple</Trans>
+                        </Text>
+                      </DetailTooltip>
                       <Text>{mustHaveStaple ? t`Yes` : t`No`}</Text>
                     </Flex>
-                    <Flex align="center" mb="1" px="2">
-                      <StatusIcon status={leafCertificateIsEv ? 'PASS' : 'INFO'} />
-                      <Text px="1" minW="50%">
-                        <Trans>Leaf Certificate is EV</Trans>
-                      </Text>
+                    <Flex {...columnInfoStyleProps}>
+                      <DetailTooltip label={t`Shows if the leaf certificate is an Extended Validation Certificate.`}>
+                        <StatusIcon status={leafCertificateIsEv ? 'PASS' : 'INFO'} />
+                        <Text px="1">
+                          <Trans>Leaf Certificate is EV</Trans>
+                        </Text>
+                      </DetailTooltip>
                       <Text>{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
                     </Flex>
-                    <Flex align="center" mb="1" px="2" bg="gray.200">
-                      <StatusIcon status="INFO" />
-                      <Text px="1" minW="50%">
-                        <Trans>Received Chain Contains Anchor Certificate</Trans>
-                      </Text>
+                    <Flex {...columnInfoStyleProps} bg="gray.200">
+                      <DetailTooltip
+                        label={t`Shows if the certificate bundle provided from the server included the root certificate.`}
+                      >
+                        <StatusIcon status="INFO" />
+                        <Text px="1">
+                          <Trans>Received Chain Contains Anchor Certificate</Trans>
+                        </Text>
+                      </DetailTooltip>
                       <Text>{receivedChainContainsAnchorCertificate ? t`Yes` : t`No`}</Text>
                     </Flex>
-                    <Flex align="center" mb="1" px="2">
-                      <StatusIcon status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'} />
-                      <Text px="1" minW="50%">
-                        <Trans>Received Chain Has Valid Order</Trans>
-                      </Text>
+                    <Flex {...columnInfoStyleProps}>
+                      <DetailTooltip
+                        label={t`Shows if all the certificates in the bundle provided by the server were sent in the correct order.`}
+                      >
+                        <StatusIcon status={receivedChainHasValidOrder ? 'PASS' : 'FAIL'} />
+                        <Text px="1">
+                          <Trans>Received Chain Has Valid Order</Trans>
+                        </Text>
+                      </DetailTooltip>
                       <Text>{receivedChainHasValidOrder ? t`Yes` : t`No`}</Text>
                     </Flex>
-                    <Flex align="center" mb="1" px="2" bg="gray.200">
-                      <StatusIcon status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'} />
-                      <Text px="1" minW="50%">
-                        <Trans>Verified Chain Free of SHA1 Signature</Trans>
-                      </Text>
+                    <Flex {...columnInfoStyleProps} bg="gray.200">
+                      <DetailTooltip
+                        label={t`Shows if the received certificates are free from the use of the deprecated SHA-1 algorithm.`}
+                      >
+                        <StatusIcon status={verifiedChainHasSha1Signature ? 'FAIL' : 'PASS'} />
+                        <Text px="1">
+                          <Trans>Verified Chain Free of SHA1 Signature</Trans>
+                        </Text>
+                      </DetailTooltip>
                       <Text>{verifiedChainHasSha1Signature ? t`No` : t`Yes`}</Text>
                     </Flex>
-                    <Flex align="center" mb="1" px="2">
-                      <StatusIcon status={verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'} />
-                      <Text px="1" minW="50%">
-                        <Trans>Verified Chain Free of Legacy Symantec Anchor</Trans>
-                      </Text>
+                    <Flex {...columnInfoStyleProps}>
+                      <DetailTooltip
+                        label={t`Shows if the received certificates are not relying on a distrusted Symantec root certificate.`}
+                      >
+                        <StatusIcon status={verifiedChainHasLegacySymantecAnchor ? 'FAIL' : 'PASS'} />
+                        <Text px="1">
+                          <Trans>Verified Chain Free of Legacy Symantec Anchor</Trans>
+                        </Text>
+                      </DetailTooltip>
                       <Text>{verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}</Text>
                     </Flex>
                   </Box>
