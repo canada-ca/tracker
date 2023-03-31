@@ -60,8 +60,7 @@ export function InfoButton({ onToggle, ...props }) {
       {...props}
       icon={<QuestionOutlineIcon />}
       aria-label="Open glossary"
-      color="primary"
-      bg="white"
+      variant="outline"
       mx="2"
       onClick={onToggle}
     />
