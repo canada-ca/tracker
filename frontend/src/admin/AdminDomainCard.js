@@ -14,8 +14,6 @@ import {
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminDomainCard({ url, tags, isHidden, isArchived, ...rest }) {
   return (
@@ -41,49 +39,45 @@ export function AdminDomainCard({ url, tags, isHidden, isArchived, ...rest }) {
             <ExternalLinkIcon mx="2px" aria-hidden="true" />
           </Link>
         </Stack>
-        <ABTestingWrapper insiderVariantName="B">
-          <ABTestVariant name="B">
-            <Flex>
-              {tags?.map((tag, idx) => {
-                return (
-                  <Tag
-                    key={idx}
-                    m="1"
-                    borderRadius="full"
-                    borderWidth="1px"
-                    borderColor="gray.900"
-                  >
-                    <TagLabel mx="auto">{tag}</TagLabel>
-                  </Tag>
-                )
-              })}
-              {isHidden && (
-                <Tag
-                  m="1"
-                  borderRadius="full"
-                  borderWidth="1px"
-                  borderColor="gray.900"
-                >
-                  <TagLabel mx="auto">
-                    <Trans>Hidden</Trans>
-                  </TagLabel>
-                </Tag>
-              )}
-              {isArchived && (
-                <Tag
-                  m="1"
-                  borderRadius="full"
-                  borderWidth="1px"
-                  borderColor="gray.900"
-                >
-                  <TagLabel mx="auto">
-                    <Trans>Archived</Trans>
-                  </TagLabel>
-                </Tag>
-              )}
-            </Flex>
-          </ABTestVariant>
-        </ABTestingWrapper>
+        <Flex>
+          {tags?.map((tag, idx) => {
+            return (
+              <Tag
+                key={idx}
+                m="1"
+                borderRadius="full"
+                borderWidth="1px"
+                borderColor="gray.900"
+              >
+                <TagLabel mx="auto">{tag}</TagLabel>
+              </Tag>
+            )
+          })}
+          {isHidden && (
+            <Tag
+              m="1"
+              borderRadius="full"
+              borderWidth="1px"
+              borderColor="gray.900"
+            >
+              <TagLabel mx="auto">
+                <Trans>Hidden</Trans>
+              </TagLabel>
+            </Tag>
+          )}
+          {isArchived && (
+            <Tag
+              m="1"
+              borderRadius="full"
+              borderWidth="1px"
+              borderColor="gray.900"
+            >
+              <TagLabel mx="auto">
+                <Trans>Archived</Trans>
+              </TagLabel>
+            </Tag>
+          )}
+        </Flex>
       </Grid>
     </ListItem>
   )

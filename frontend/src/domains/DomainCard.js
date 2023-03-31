@@ -127,51 +127,47 @@ export function DomainCard({
             <Trans>Domain:</Trans>
           </Text>
           <Text isTruncated>{url}</Text>
-          <ABTestingWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <Flex flexWrap="wrap">
-                {tags?.map((tag, idx) => {
-                  return (
-                    <Tag
-                      key={idx}
-                      m="0.5"
-                      bg="gray.50"
-                      borderWidth="1px"
-                      borderColor="gray.900"
-                    >
-                      <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                        {tag}
-                      </TagLabel>
-                    </Tag>
-                  )
-                })}
-                {isHidden && (
-                  <Tag
-                    m="0.5"
-                    bg="gray.50"
-                    borderWidth="1px"
-                    borderColor="gray.900"
-                  >
-                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      <Trans>HIDDEN</Trans>
-                    </TagLabel>
-                  </Tag>
-                )}
-                {isArchived && (
-                  <Tag
-                    m="0.5"
-                    bg="gray.50"
-                    borderWidth="1px"
-                    borderColor="gray.900"
-                  >
-                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      <Trans>ARCHIVED</Trans>
-                    </TagLabel>
-                  </Tag>
-                )}
-              </Flex>
-            </ABTestVariant>
-          </ABTestingWrapper>
+          <Flex flexWrap="wrap">
+            {tags?.map((tag, idx) => {
+              return (
+                <Tag
+                  key={idx}
+                  m="0.5"
+                  bg="gray.50"
+                  borderWidth="1px"
+                  borderColor="gray.900"
+                >
+                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                    {tag}
+                  </TagLabel>
+                </Tag>
+              )
+            })}
+            {isHidden && (
+              <Tag
+                m="0.5"
+                bg="gray.50"
+                borderWidth="1px"
+                borderColor="gray.900"
+              >
+                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                  <Trans>HIDDEN</Trans>
+                </TagLabel>
+              </Tag>
+            )}
+            {isArchived && (
+              <Tag
+                m="0.5"
+                bg="gray.50"
+                borderWidth="1px"
+                borderColor="gray.900"
+              >
+                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                  <Trans>ARCHIVED</Trans>
+                </TagLabel>
+              </Tag>
+            )}
+          </Flex>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
         <Flex {...statusGroupingProps} px="1">

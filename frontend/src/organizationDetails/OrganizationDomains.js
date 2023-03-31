@@ -35,8 +35,6 @@ import {
   schemaToValidation,
 } from '../utilities/fieldRequirements'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -125,141 +123,137 @@ export function OrganizationDomains({ orgSlug }) {
     </LoadingMessage>
   ) : (
     <Box>
-      <ABTestingWrapper insiderVariantName="B">
-        <ABTestVariant name="B">
-          <Box px="2" py="2">
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={{
-                filterCategory: '',
-                comparison: '',
-                filterValue: '',
-              }}
-              onSubmit={(values, { resetForm }) => {
-                setFilters([
-                  ...new Map(
-                    [...filters, values].map((item) => {
-                      if (item['filterCategory'] !== 'TAGS')
-                        return [item['filterCategory'], item]
-                      else return [item['filterValue'], item]
-                    }),
-                  ).values(),
-                ])
-                resetForm()
-              }}
-            >
-              {({ handleChange, handleSubmit, values, errors }) => {
-                return (
-                  <form
-                    onSubmit={handleSubmit}
-                    role="form"
-                    aria-label="form"
-                    name="form"
-                  >
-                    <Flex align="center">
-                      <Text fontWeight="bold" mr="2">
-                        <Trans>Filters:</Trans>
-                      </Text>
-                      <Box maxW="25%" mx="1">
-                        <Select
-                          name="filterCategory"
-                          borderColor="black"
-                          onChange={(e) => {
-                            if (
-                              (values.filterCategory === 'TAGS' &&
-                                e.target.value !== 'TAGS') ||
-                              (values.filterCategory !== 'TAGS' &&
-                                e.target.value === 'TAGS')
-                            ) {
-                              values.filterValue = ''
-                            }
-                            handleChange(e)
-                          }}
-                        >
-                          <option hidden value="">
-                            <Trans>Value</Trans>
+      <Box px="2" py="2">
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={{
+            filterCategory: '',
+            comparison: '',
+            filterValue: '',
+          }}
+          onSubmit={(values, { resetForm }) => {
+            setFilters([
+              ...new Map(
+                [...filters, values].map((item) => {
+                  if (item['filterCategory'] !== 'TAGS')
+                    return [item['filterCategory'], item]
+                  else return [item['filterValue'], item]
+                }),
+              ).values(),
+            ])
+            resetForm()
+          }}
+        >
+          {({ handleChange, handleSubmit, values, errors }) => {
+            return (
+              <form
+                onSubmit={handleSubmit}
+                role="form"
+                aria-label="form"
+                name="form"
+              >
+                <Flex align="center">
+                  <Text fontWeight="bold" mr="2">
+                    <Trans>Filters:</Trans>
+                  </Text>
+                  <Box maxW="25%" mx="1">
+                    <Select
+                      name="filterCategory"
+                      borderColor="black"
+                      onChange={(e) => {
+                        if (
+                          (values.filterCategory === 'TAGS' &&
+                            e.target.value !== 'TAGS') ||
+                          (values.filterCategory !== 'TAGS' &&
+                            e.target.value === 'TAGS')
+                        ) {
+                          values.filterValue = ''
+                        }
+                        handleChange(e)
+                      }}
+                    >
+                      <option hidden value="">
+                        <Trans>Value</Trans>
+                      </option>
+                      {orderByOptions.map(({ value, text }, idx) => {
+                        return (
+                          <option key={idx} value={value}>
+                            {text}
                           </option>
-                          {orderByOptions.map(({ value, text }, idx) => {
-                            return (
-                              <option key={idx} value={value}>
-                                {text}
-                              </option>
-                            )
-                          })}
-                          <option value="TAGS">
-                            <Trans>Tag</Trans>
+                        )
+                      })}
+                      <option value="TAGS">
+                        <Trans>Tag</Trans>
+                      </option>
+                    </Select>
+                    <Text color="red.500" mt={0}>
+                      {errors.filterCategory}
+                    </Text>
+                  </Box>
+                  <Box maxW="25%" mx="1">
+                    <Select
+                      name="comparison"
+                      borderColor="black"
+                      onChange={handleChange}
+                    >
+                      <option hidden value="">
+                        <Trans>Comparison</Trans>
+                      </option>
+                      <option value="EQUAL">
+                        <Trans>EQUALS</Trans>
+                      </option>
+                      <option value="NOT_EQUAL">
+                        <Trans>DOES NOT EQUAL</Trans>
+                      </option>
+                    </Select>
+                    <Text color="red.500" mt={0}>
+                      {errors.comparison}
+                    </Text>
+                  </Box>
+                  <Box maxW="25%" mx="1">
+                    <Select
+                      name="filterValue"
+                      borderColor="black"
+                      onChange={handleChange}
+                    >
+                      <option hidden value="">
+                        <Trans>Status or tag</Trans>
+                      </option>
+                      {values.filterCategory === 'TAGS' ? (
+                        filterTagOptions.map(({ value, text }, idx) => {
+                          return (
+                            <option key={idx} value={value}>
+                              {text}
+                            </option>
+                          )
+                        })
+                      ) : (
+                        <>
+                          <option value="PASS">
+                            <Trans>Pass</Trans>
                           </option>
-                        </Select>
-                        <Text color="red.500" mt={0}>
-                          {errors.filterCategory}
-                        </Text>
-                      </Box>
-                      <Box maxW="25%" mx="1">
-                        <Select
-                          name="comparison"
-                          borderColor="black"
-                          onChange={handleChange}
-                        >
-                          <option hidden value="">
-                            <Trans>Comparison</Trans>
+                          <option value="INFO">
+                            <Trans>Info</Trans>
                           </option>
-                          <option value="EQUAL">
-                            <Trans>EQUALS</Trans>
+                          <option value="FAIL">
+                            <Trans>Fail</Trans>
                           </option>
-                          <option value="NOT_EQUAL">
-                            <Trans>DOES NOT EQUAL</Trans>
-                          </option>
-                        </Select>
-                        <Text color="red.500" mt={0}>
-                          {errors.comparison}
-                        </Text>
-                      </Box>
-                      <Box maxW="25%" mx="1">
-                        <Select
-                          name="filterValue"
-                          borderColor="black"
-                          onChange={handleChange}
-                        >
-                          <option hidden value="">
-                            <Trans>Status or tag</Trans>
-                          </option>
-                          {values.filterCategory === 'TAGS' ? (
-                            filterTagOptions.map(({ value, text }, idx) => {
-                              return (
-                                <option key={idx} value={value}>
-                                  {text}
-                                </option>
-                              )
-                            })
-                          ) : (
-                            <>
-                              <option value="PASS">
-                                <Trans>Pass</Trans>
-                              </option>
-                              <option value="INFO">
-                                <Trans>Info</Trans>
-                              </option>
-                              <option value="FAIL">
-                                <Trans>Fail</Trans>
-                              </option>
-                            </>
-                          )}
-                        </Select>
-                        <Text color="red.500" mt={0}>
-                          {errors.filterValue}
-                        </Text>
-                      </Box>
-                      <Button ml="auto" variant="primary" type="submit">
-                        <Trans>Apply</Trans>
-                      </Button>
-                    </Flex>
-                  </form>
-                )
-              }}
-            </Formik>
-          </Box>
-        </ABTestVariant>
-      </ABTestingWrapper>
+                        </>
+                      )}
+                    </Select>
+                    <Text color="red.500" mt={0}>
+                      {errors.filterValue}
+                    </Text>
+                  </Box>
+                  <Button ml="auto" variant="primary" type="submit">
+                    <Trans>Apply</Trans>
+                  </Button>
+                </Flex>
+              </form>
+            )
+          }}
+        </Formik>
+      </Box>
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -353,74 +347,68 @@ export function OrganizationDomains({ orgSlug }) {
 
       <SubdomainWarning mb="4" />
 
-      <ABTestingWrapper insiderVariantName="B">
-        <ABTestVariant name="B">
-          <Flex align="center" mb="2">
-            {filters.map(({ filterCategory, comparison, filterValue }, idx) => {
-              const statuses = {
-                HTTPS_STATUS: `HTTPS`,
-                HSTS_STATUS: `HSTS`,
-                CIPHERS_STATUS: `Ciphers`,
-                CURVES_STATUS: t`Curves`,
-                PROTOCOLS_STATUS: t`Protocols`,
-                SPF_STATUS: `SPF`,
-                DKIM_STATUS: `DKIM`,
-                DMARC_STATUS: `DMARC`,
+      <Flex align="center" mb="2">
+        {filters.map(({ filterCategory, comparison, filterValue }, idx) => {
+          const statuses = {
+            HTTPS_STATUS: `HTTPS`,
+            HSTS_STATUS: `HSTS`,
+            CIPHERS_STATUS: `Ciphers`,
+            CURVES_STATUS: t`Curves`,
+            PROTOCOLS_STATUS: t`Protocols`,
+            SPF_STATUS: `SPF`,
+            DKIM_STATUS: `DKIM`,
+            DMARC_STATUS: `DMARC`,
+          }
+          return (
+            <Tag
+              fontSize="lg"
+              borderWidth="1px"
+              borderColor="gray.300"
+              key={idx}
+              mx="1"
+              my="1"
+              bg={
+                filterValue === 'PASS'
+                  ? 'strongMuted'
+                  : filterValue === 'FAIL'
+                  ? 'weakMuted'
+                  : filterValue === 'INFO'
+                  ? 'infoMuted'
+                  : 'gray.100'
               }
-              return (
-                <Tag
-                  fontSize="lg"
-                  borderWidth="1px"
-                  borderColor="gray.300"
-                  key={idx}
-                  mx="1"
-                  my="1"
-                  bg={
-                    filterValue === 'PASS'
-                      ? 'strongMuted'
-                      : filterValue === 'FAIL'
-                      ? 'weakMuted'
-                      : filterValue === 'INFO'
-                      ? 'infoMuted'
-                      : 'gray.100'
-                  }
-                >
-                  {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
-                  {filterCategory === 'TAGS' ? (
-                    <TagLabel>{filterValue}</TagLabel>
-                  ) : (
-                    <>
-                      <TagLabel>{statuses[filterCategory]}</TagLabel>
-                      <TagRightIcon
-                        color={
-                          filterValue === 'PASS'
-                            ? 'strong'
-                            : filterValue === 'FAIL'
-                            ? 'weak'
-                            : 'info'
-                        }
-                        as={
-                          filterValue === 'PASS'
-                            ? CheckCircleIcon
-                            : filterValue === 'FAIL'
-                            ? WarningIcon
-                            : InfoIcon
-                        }
-                      />
-                    </>
-                  )}
-
-                  <TagCloseButton
-                    onClick={() =>
-                      setFilters(filters.filter((_, i) => i !== idx))
+            >
+              {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
+              {filterCategory === 'TAGS' ? (
+                <TagLabel>{filterValue}</TagLabel>
+              ) : (
+                <>
+                  <TagLabel>{statuses[filterCategory]}</TagLabel>
+                  <TagRightIcon
+                    color={
+                      filterValue === 'PASS'
+                        ? 'strong'
+                        : filterValue === 'FAIL'
+                        ? 'weak'
+                        : 'info'
+                    }
+                    as={
+                      filterValue === 'PASS'
+                        ? CheckCircleIcon
+                        : filterValue === 'FAIL'
+                        ? WarningIcon
+                        : InfoIcon
                     }
                   />
-                </Tag>
-              )
-            })}
-          </Flex>
-        </ABTestVariant>
-      </ABTestingWrapper>
+                </>
+              )}
+
+              <TagCloseButton
+                onClick={() => setFilters(filters.filter((_, i) => i !== idx))}
+              />
+            </Tag>
+          )
+        })}
+      </Flex>
 
       {domainList}
 

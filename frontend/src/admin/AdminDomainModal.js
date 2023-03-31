@@ -42,8 +42,6 @@ import { useMutation } from '@apollo/client'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminDomainModal({
   isOpen,
@@ -348,104 +346,100 @@ export function AdminDomainModal({
                       </Box>
                     )}
                   />
-                  <ABTestingWrapper insiderVariantName="B">
-                    <ABTestVariant name="B">
-                      <FieldArray
-                        name="tags"
-                        render={(arrayHelpers) => (
-                          <Box>
-                            <Text fontWeight="bold">Tags:</Text>
-                            <SimpleGrid columns={3} spacing={2}>
-                              {values.tags?.map((label, idx) => {
-                                return (
-                                  <Tag key={idx} borderRadius="full">
-                                    <TagLabel>{label[i18n.locale]}</TagLabel>
-                                    <TagCloseButton
-                                      ml="auto"
-                                      onClick={() => arrayHelpers.remove(idx)}
-                                      aria-label={`remove-tag-${
-                                        label[i18n.locale]
-                                      }`}
-                                    />
-                                  </Tag>
-                                )
-                              })}
-                            </SimpleGrid>
-                            <Divider borderBottomColor="gray.900" />
-                            <SimpleGrid columns={3} spacing={2}>
-                              {addableTags(values.tags, arrayHelpers)}
-                            </SimpleGrid>
-                          </Box>
-                        )}
-                      />
+                  <FieldArray
+                    name="tags"
+                    render={(arrayHelpers) => (
+                      <Box>
+                        <Text fontWeight="bold">Tags:</Text>
+                        <SimpleGrid columns={3} spacing={2}>
+                          {values.tags?.map((label, idx) => {
+                            return (
+                              <Tag key={idx} borderRadius="full">
+                                <TagLabel>{label[i18n.locale]}</TagLabel>
+                                <TagCloseButton
+                                  ml="auto"
+                                  onClick={() => arrayHelpers.remove(idx)}
+                                  aria-label={`remove-tag-${
+                                    label[i18n.locale]
+                                  }`}
+                                />
+                              </Tag>
+                            )
+                          })}
+                        </SimpleGrid>
+                        <Divider borderBottomColor="gray.900" />
+                        <SimpleGrid columns={3} spacing={2}>
+                          {addableTags(values.tags, arrayHelpers)}
+                        </SimpleGrid>
+                      </Box>
+                    )}
+                  />
 
+                  <Flex align="center">
+                    <Tooltip
+                      label={t`Prevent this domain from being counted in your organization's summaries.`}
+                    >
+                      <QuestionOutlineIcon tabIndex={0} />
+                    </Tooltip>
+                    <label>
+                      <Switch
+                        isFocusable={true}
+                        name="hideDomain"
+                        mx="2"
+                        defaultChecked={values.hideDomain}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <Badge variant="outline" color="gray.900" p="1.5">
+                      <Trans>Hide domain</Trans>
+                    </Badge>
+                  </Flex>
+
+                  {permission === 'SUPER_ADMIN' && (
+                    <Box>
                       <Flex align="center">
                         <Tooltip
-                          label={t`Prevent this domain from being counted in your organization's summaries.`}
+                          label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
                         >
                           <QuestionOutlineIcon tabIndex={0} />
                         </Tooltip>
                         <label>
                           <Switch
+                            colorScheme="red"
                             isFocusable={true}
-                            name="hideDomain"
+                            name="archiveDomain"
                             mx="2"
-                            defaultChecked={values.hideDomain}
+                            defaultChecked={values.archiveDomain}
                             onChange={handleChange}
                           />
                         </label>
                         <Badge variant="outline" color="gray.900" p="1.5">
-                          <Trans>Hide domain</Trans>
+                          <Trans>Archive domain</Trans>
                         </Badge>
                       </Flex>
 
-                      {permission === 'SUPER_ADMIN' && (
-                        <Box>
-                          <Flex align="center">
-                            <Tooltip
-                              label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
-                            >
-                              <QuestionOutlineIcon tabIndex={0} />
-                            </Tooltip>
-                            <label>
-                              <Switch
-                                colorScheme="red"
-                                isFocusable={true}
-                                name="archiveDomain"
-                                mx="2"
-                                defaultChecked={values.archiveDomain}
-                                onChange={handleChange}
-                              />
-                            </label>
-                            <Badge variant="outline" color="gray.900" p="1.5">
-                              <Trans>Archive domain</Trans>
-                            </Badge>
-                          </Flex>
-
-                          <Text fontSize="sm">
-                            {orgCount > 0 ? (
-                              <Trans>
-                                Note: This will affect results for {orgCount}{' '}
-                                organizations
-                              </Trans>
-                            ) : (
-                              <Trans>
-                                Note: This could affect results for multiple
-                                organizations
-                              </Trans>
-                            )}
-                          </Text>
-                        </Box>
-                      )}
-
-                      <Text>
-                        <Trans>
-                          Please allow up to 24 hours for summaries to reflect
-                          any changes.
-                        </Trans>
+                      <Text fontSize="sm">
+                        {orgCount > 0 ? (
+                          <Trans>
+                            Note: This will affect results for {orgCount}{' '}
+                            organizations
+                          </Trans>
+                        ) : (
+                          <Trans>
+                            Note: This could affect results for multiple
+                            organizations
+                          </Trans>
+                        )}
                       </Text>
-                    </ABTestVariant>
-                  </ABTestingWrapper>
+                    </Box>
+                  )}
+
+                  <Text>
+                    <Trans>
+                      Please allow up to 24 hours for summaries to reflect any
+                      changes.
+                    </Trans>
+                  </Text>
                 </Stack>
               </ModalBody>
 
