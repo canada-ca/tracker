@@ -22,8 +22,6 @@ import { StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
 
 export function DomainCard({
   id,
@@ -219,30 +217,26 @@ export function DomainCard({
         </Stack>
         <Stack ml={4}>
           <ScanDomainButton domainUrl={url} />
-          <ABTestingWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              {isLoggedIn() &&
-                (location.pathname.match('my-tracker') ? (
-                  <IconButton
-                    onClick={async () => {
-                      await unfavouriteDomain({ variables: { domainId: id } })
-                    }}
-                    variant="primary"
-                    aria-label={`unfavourite ${url}`}
-                    icon={<StarIcon color="moderate" />}
-                  />
-                ) : (
-                  <IconButton
-                    onClick={async () => {
-                      await favouriteDomain({ variables: { domainId: id } })
-                    }}
-                    variant="primary"
-                    aria-label={`favourite ${url}`}
-                    icon={<StarIcon />}
-                  />
-                ))}
-            </ABTestVariant>
-          </ABTestingWrapper>
+          {isLoggedIn() &&
+            (location.pathname.match('my-tracker') ? (
+              <IconButton
+                onClick={async () => {
+                  await unfavouriteDomain({ variables: { domainId: id } })
+                }}
+                variant="primary"
+                aria-label={`unfavourite ${url}`}
+                icon={<StarIcon color="moderate" />}
+              />
+            ) : (
+              <IconButton
+                onClick={async () => {
+                  await favouriteDomain({ variables: { domainId: id } })
+                }}
+                variant="primary"
+                aria-label={`favourite ${url}`}
+                icon={<StarIcon />}
+              />
+            ))}
         </Stack>
       </Flex>
     </ListItem>
