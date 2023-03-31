@@ -25,22 +25,6 @@ CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"],
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-def is_domain_hidden(domain, db):
-    """Check if a domain is hidden
-
-    :param domain: domain to check
-    :param db: active arangodb connection
-    :return: True if domain is hidden, False otherwise
-    """
-
-    claims = db.collection("claims").find({"_to": domain["_id"]})
-    for claim in claims:
-        hidden = claim.get("hidden")
-        if hidden != None and hidden == True:
-            return True
-    return False
-
-
 def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
                           password=DB_PASS, port=DB_PORT):
     logging.info(f"Updating scan summaries...")
@@ -56,8 +40,7 @@ def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
         scan_total = 0
         for domain in db.collection("domains"):
             archived = domain.get("archived")
-            hidden = is_domain_hidden(domain, db)
-            if archived != True and hidden != True:
+            if archived != True:
                 # We don't want to count domains not passing or failing
                 # (i.e unreachable or unscanned) towards the total.
                 if domain.get("status", {}).get(scan_type) == "fail":
@@ -116,8 +99,7 @@ def update_dmarc_phase_chart_summaries(db):
 
     for domain in db.collection("domains"):
         archived = domain.get("archived")
-        hidden = is_domain_hidden(domain, db)
-        if archived != True and hidden != True:
+        if archived != True:
             phase = domain.get("phase")
 
             if phase is None:
@@ -186,8 +168,7 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
         domain_total = 0
         for domain in db.collection("domains"):
             archived = domain.get("archived")
-            hidden = is_domain_hidden(domain, db)
-            if archived != True and hidden != True:
+            if archived != True:
                 category_status = []
                 for scan_type in scan_types:
                     category_status.append(domain.get("status", {}).get(scan_type))
