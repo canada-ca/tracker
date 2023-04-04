@@ -223,7 +223,7 @@ class DKIMScanner:
                     parsed_txt_record[key.decode("ascii")] = val.decode("ascii")
 
                 pk, keysize, ktag = self.load_pk(lookup_url, txt_record_bytes)
-                ktag = ktag.decode("ascii")
+                ktag = ktag.decode("ascii") if ktag else None
 
                 if pk and pk.get("publicExponent"):
                     public_exponent = pk.get("publicExponent")
