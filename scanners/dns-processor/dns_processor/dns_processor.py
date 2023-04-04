@@ -428,15 +428,15 @@ def process_results(results):
     if not dkim.get("error", None):
         for selector in dkim.keys():
             dkim_results["selectors"][selector] = {
-                "status": dkim_tags[selector].get("status", None),
+                "status": dkim_selector_tags[selector].get("status", None),
                 "record": results["dkim"][selector].get("record", None),
                 "parsed": results["dkim"][selector].get("parsed", None),
                 "key_length": results["dkim"][selector].get("key_size", None),
                 "key_type": results["dkim"][selector].get("key_type", None),
                 "public_exponent": results["dkim"][selector].get("public_exponent", None),
-                "neutral_tags": dkim_tags[selector]["neutral_tags"],
-                "positive_tags": dkim_tags[selector]["positive_tags"],
-                "negative_tags": dkim_tags[selector]["negative_tags"],
+                "neutral_tags": dkim_selector_tags[selector]["neutral_tags"],
+                "positive_tags": dkim_selector_tags[selector]["positive_tags"],
+                "negative_tags": dkim_selector_tags[selector]["negative_tags"],
             }
 
             # store key_modulus as string, ArangoDB is not capable or storing numbers this size
