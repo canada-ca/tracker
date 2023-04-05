@@ -1,4 +1,4 @@
-import {Kind, GraphQLError, GraphQLScalarType} from 'graphql'
+import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
 
 const validate = (value) => {
   if (typeof value !== typeof 'string') {
@@ -7,8 +7,7 @@ const validate = (value) => {
 
   value = value.toLowerCase()
 
-  const DOMAIN_REGEX =
-    /^((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$/
+  const DOMAIN_REGEX = /^((?=[a-z0-9-_]{1,63}\.)(xn--)?[a-z0-9_]+(-[a-z0-9_]+)*\.)+[a-z]{2,63}$/
 
   if (!DOMAIN_REGEX.test(value)) {
     throw new TypeError(`Value is not a valid domain: ${value}`)
@@ -25,9 +24,7 @@ export const Domain = new GraphQLScalarType({
 
   parseLiteral(ast) {
     if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError(
-        `Can only validate strings as domains but got a: ${ast.kind}`,
-      )
+      throw new GraphQLError(`Can only validate strings as domains but got a: ${ast.kind}`)
     }
     return validate(ast.value)
   },
