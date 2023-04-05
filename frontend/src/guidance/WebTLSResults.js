@@ -185,6 +185,8 @@ export function WebTLSResults({ tlsResult }) {
     pathValidationResults,
   } = tlsResult?.certificateChainInfo || {}
 
+  const { robotVulnerable, heartbleedVulnerable } = tlsResult
+
   const tlsStatus = [
     tlsResult.certificateStatus,
     tlsResult.protocolStatus,
@@ -198,6 +200,7 @@ export function WebTLSResults({ tlsResult }) {
     align: 'center',
     py: '0.5',
     px: '2',
+    _even: { bg: 'gray.200' },
   }
 
   return (
@@ -215,6 +218,44 @@ export function WebTLSResults({ tlsResult }) {
           neutralTags={tlsResult.neutralTags}
           negativeTags={tlsResult.negativeTags}
         />
+
+        <Box fontSize="lg" px="2">
+          <Flex {...columnInfoStyleProps}>
+            <DetailTooltip label={t`Shows if the server was found to be vulnerable to the Heartbleed vulnerability.`}>
+              <StatusIcon
+                status={heartbleedVulnerable === true ? 'FAIL' : heartbleedVulnerable === false ? 'PASS' : 'INFO'}
+              />
+              <Text px="1" fontWeight={heartbleedVulnerable ? 'bold' : ''}>
+                <Trans>Heartbleed Vulnerable</Trans>
+              </Text>
+            </DetailTooltip>
+            <Text fontWeight={heartbleedVulnerable ? 'bold' : ''}>
+              {heartbleedVulnerable === true ? t`Yes` : heartbleedVulnerable === false ? t`No` : t`Unknown`}
+            </Text>
+          </Flex>
+          <Flex {...columnInfoStyleProps}>
+            <DetailTooltip label={t`Shows if the server was found to be vulnerable to the ROBOT vulnerability.`}>
+              <StatusIcon
+                status={
+                  ['VULNERABLE_WEAK_ORACLE', 'VULNERABLE_STRONG_ORACLE'].includes(robotVulnerable)
+                    ? 'FAIL'
+                    : ['NOT_VULNERABLE_NO_ORACLE', 'NOT_VULNERABLE_RSA_NOT_SUPPORTED'].includes(robotVulnerable)
+                    ? 'PASS'
+                    : 'INFO'
+                }
+              />
+              <Text
+                px="1"
+                fontWeight={
+                  ['VULNERABLE_WEAK_ORACLE', 'VULNERABLE_STRONG_ORACLE'].includes(robotVulnerable) ? 'bold' : ''
+                }
+              >
+                <Trans>ROBOT Vulnerable</Trans>
+              </Text>
+            </DetailTooltip>
+            <Text>{robotVulnerable || t`Unknown`}</Text>
+          </Flex>
+        </Box>
 
         <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
           <AccordionItem>{tlsProtocols}</AccordionItem>
@@ -249,7 +290,7 @@ export function WebTLSResults({ tlsResult }) {
                       </DetailTooltip>
                       <Text fontWeight={badHostname ? 'bold' : ''}>{badHostname ? t`No` : t`Yes`}</Text>
                     </Flex>
-                    <Flex {...columnInfoStyleProps} bg="gray.200">
+                    <Flex {...columnInfoStyleProps}>
                       <DetailTooltip
                         label={t`Shows if the leaf certificate includes the "OCSP Must-Staple" extension.`}
                       >
@@ -269,7 +310,7 @@ export function WebTLSResults({ tlsResult }) {
                       </DetailTooltip>
                       <Text>{leafCertificateIsEv ? t`Yes` : t`No`}</Text>
                     </Flex>
-                    <Flex {...columnInfoStyleProps} bg="gray.200">
+                    <Flex {...columnInfoStyleProps}>
                       <DetailTooltip
                         label={t`Shows if the certificate bundle provided from the server included the root certificate.`}
                       >
@@ -291,7 +332,7 @@ export function WebTLSResults({ tlsResult }) {
                       </DetailTooltip>
                       <Text>{receivedChainHasValidOrder ? t`Yes` : t`No`}</Text>
                     </Flex>
-                    <Flex {...columnInfoStyleProps} bg="gray.200">
+                    <Flex {...columnInfoStyleProps}>
                       <DetailTooltip
                         label={t`Shows if the received certificates are free from the use of the deprecated SHA-1 algorithm.`}
                       >

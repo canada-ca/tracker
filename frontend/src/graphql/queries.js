@@ -311,6 +311,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                   curveStatus
                   supportsEcdhKeyExchange
                   heartbleedVulnerable
+                  robotVulnerable
                   ccsInjectionVulnerable
                   acceptedCipherSuites {
                     ssl2_0CipherSuites {

@@ -30,6 +30,11 @@ export const tlsResultType = new GraphQLObjectType({
       description: `Whether or not the scanned server is vulnerable to heartbleed.`,
       resolve: async ({ heartbleedVulnerable }) => heartbleedVulnerable,
     },
+    robotVulnerable: {
+      type: GraphQLBoolean,
+      description: `Whether or not the scanned server is vulnerable to heartbleed.`,
+      resolve: async ({ robotVulnerable }) => robotVulnerable,
+    },
     ccsInjectionVulnerable: {
       type: GraphQLBoolean,
       description: `Whether or not the scanned server is vulnerable to CCS injection.`,
