@@ -253,6 +253,27 @@ export default function ReadGuidancePage() {
             </Text>
             <UnorderedList px="2">
               <ListItem>
+                <Trans>Tracker:</Trans>
+                <UnorderedList>
+                  <ListItem>
+                    <Link
+                      href="https://github.com/canada-ca/tracker/wiki"
+                      color="blue.500"
+                    >
+                      <Trans>Wiki</Trans>
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link
+                      href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+                      color="blue.500"
+                    >
+                      <Trans>List of guidance tags</Trans>
+                    </Link>
+                  </ListItem>
+                </UnorderedList>
+              </ListItem>
+              <ListItem>
                 <Text>
                   <Trans>Web Security:</Trans>
                 </Text>
