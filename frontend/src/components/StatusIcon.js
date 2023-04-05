@@ -4,7 +4,7 @@ import { Spinner } from '@chakra-ui/react'
 import { CheckCircleIcon, WarningIcon, InfoIcon } from '@chakra-ui/icons'
 
 export function StatusIcon({ status, ...props }) {
-  status = status.toUpperCase()
+  status = status?.toUpperCase()
   if (status === 'PASS') {
     return <CheckCircleIcon color="strong" size="icons.sm" aria-label="passes" {...props} />
   } else if (status === 'FAIL') {
