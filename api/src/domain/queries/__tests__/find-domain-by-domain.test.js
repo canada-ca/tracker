@@ -1,23 +1,23 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
 import {
   checkDomainPermission,
   userRequired,
   verifiedRequired,
 } from '../../../auth'
-import { loadDomainByDomain } from '../../loaders'
-import { loadUserByKey } from '../../../user/loaders'
+import {loadDomainByDomain} from '../../loaders'
+import {loadUserByKey} from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given findDomainByDomain query', () => {
   let query, drop, truncate, schema, collections, domain, org, i18n, user
@@ -42,17 +42,17 @@ describe('given findDomainByDomain query', () => {
   describe('given successful domain retrieval', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -145,7 +145,7 @@ describe('given findDomainByDomain query', () => {
               }),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               }),
               verifiedRequired: verifiedRequired({}),
             },
@@ -153,8 +153,8 @@ describe('given findDomainByDomain query', () => {
               cleanseInput,
             },
             loaders: {
-              loadDomainByDomain: loadDomainByDomain({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadDomainByDomain: loadDomainByDomain({query}),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -189,8 +189,8 @@ describe('given findDomainByDomain query', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -291,7 +291,7 @@ describe('given findDomainByDomain query', () => {
                 },
                 loaders: {
                   loadDomainByDomain: {
-                    load: jest.fn().mockReturnValue({ _id: '1' }),
+                    load: jest.fn().mockReturnValue({_id: '1'}),
                   },
                 },
               },
@@ -314,8 +314,8 @@ describe('given findDomainByDomain query', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -408,7 +408,7 @@ describe('given findDomainByDomain query', () => {
               },
               loaders: {
                 loadDomainByDomain: {
-                  load: jest.fn().mockReturnValue({ _id: '1' }),
+                  load: jest.fn().mockReturnValue({_id: '1'}),
                 },
               },
             },

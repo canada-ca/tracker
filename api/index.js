@@ -69,6 +69,7 @@ const {
       const i18n = createI18n(req.language)
       return createContext({
         query,
+        db,
         transaction,
         collections,
         publish,

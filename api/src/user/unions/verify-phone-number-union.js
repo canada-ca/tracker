@@ -1,4 +1,4 @@
-import { GraphQLUnionType } from 'graphql'
+import {GraphQLUnionType} from 'graphql'
 import {
   verifyPhoneNumberErrorType,
   verifyPhoneNumberResultType,
@@ -9,7 +9,7 @@ export const verifyPhoneNumberUnion = new GraphQLUnionType({
   description:
     'This union is used with the `verifyPhoneNumber` mutation, allowing for users to verify their phone number, and support any errors that may occur',
   types: [verifyPhoneNumberErrorType, verifyPhoneNumberResultType],
-  resolveType({ _type }) {
+  resolveType({_type}) {
     if (_type === 'success') {
       return verifyPhoneNumberResultType
     } else {

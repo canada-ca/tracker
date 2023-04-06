@@ -1,6 +1,6 @@
-import { NotifyClient } from 'notifications-node-client'
+import {NotifyClient} from 'notifications-node-client'
 
-const { NOTIFICATION_API_KEY, NOTIFICATION_API_URL } = process.env
+const {NOTIFICATION_API_KEY, NOTIFICATION_API_URL} = process.env
 
 export const notifyClient = new NotifyClient(
   NOTIFICATION_API_URL,

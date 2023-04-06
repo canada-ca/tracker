@@ -1,5 +1,5 @@
-import { GraphQLList, GraphQLInt } from 'graphql'
-import { categorizedSummaryType, summaryCategoryType } from '../index'
+import {GraphQLList, GraphQLInt} from 'graphql'
+import {categorizedSummaryType, summaryCategoryType} from '../index'
 
 describe('given the categorized summary gql object', () => {
   describe('testing the field definitions', () => {
@@ -33,7 +33,7 @@ describe('given the categorized summary gql object', () => {
           total: 1050,
         }
 
-        const expectedResults = [{ fail: 1000, pass: 50 }]
+        const expectedResults = [{fail: 1000, pass: 50}]
 
         expect(demoType.categories.resolve(summary)).toEqual(expectedResults)
       })
@@ -42,7 +42,7 @@ describe('given the categorized summary gql object', () => {
       it('returns the resolved value', () => {
         const demoType = categorizedSummaryType.getFields()
 
-        expect(demoType.total.resolve({ total: 1500 })).toEqual(1500)
+        expect(demoType.total.resolve({total: 1500})).toEqual(1500)
       })
     })
   })

@@ -1,13 +1,13 @@
-import DataLoader from 'dataloader'
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 export const loadDkimGuidanceTagByTagId = ({
-  query,
-  userKey,
-  i18n,
-  language,
-}) =>
-  new DataLoader(async (tags) => {
+                                             query,
+                                             userKey,
+                                             i18n,
+                                             language,
+                                           }) =>
+  async ({tags = []}) => {
+
     let cursor
     try {
       cursor = await query`
@@ -15,7 +15,7 @@ export const loadDkimGuidanceTagByTagId = ({
         FOR tag IN dkimGuidanceTags
           FILTER tag._key IN ${tags}
           RETURN MERGE(
-            { 
+            {
               _id: tag._id,
               _key: tag._key,
               _rev: tag._rev,
@@ -50,4 +50,4 @@ export const loadDkimGuidanceTagByTagId = ({
     }
 
     return tags.map((tag) => tagMap[tag])
-  })
+  }

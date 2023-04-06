@@ -5,19 +5,19 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { setupI18n } from '@lingui/core'
+import {toGlobalId} from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
 
-import { tokenize } from '../../../auth'
-import { organizationConnection } from '../../../organization/objects'
-import { domainStatus } from '../domain-status'
-import { dmarcSummaryType } from '../../../dmarc-summaries/objects'
-import { emailScanType } from '../../../email-scan/objects'
-import { webScanType } from '../../../web-scan/objects'
-import { domainType } from '../../index'
-import { Domain, Selectors } from '../../../scalars'
+import {tokenize} from '../../../auth'
+import {organizationConnection} from '../../../organization'
+import {domainStatus} from '../domain-status'
+import {dmarcSummaryType} from '../../../dmarc-summaries'
+import {webConnection} from '../../../web-scan'
+import {domainType} from '../../index'
+import {Domain, Selectors} from '../../../scalars'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
+import {dnsScanConnection} from "../../../dns-scan"
 
 describe('given the domain object', () => {
   describe('testing its field definitions', () => {
@@ -71,17 +71,17 @@ describe('given the domain object', () => {
         organizationConnection.connectionType,
       )
     })
-    it('has an email field', () => {
+    it('has an dnsScan field', () => {
       const demoType = domainType.getFields()
 
-      expect(demoType).toHaveProperty('email')
-      expect(demoType.email.type).toMatchObject(emailScanType)
+      expect(demoType).toHaveProperty('dnsScan')
+      expect(demoType.dnsScan.type).toMatchObject(dnsScanConnection.connectionType)
     })
     it('has a web field', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('web')
-      expect(demoType.web.type).toMatchObject(webScanType)
+      expect(demoType.web.type).toMatchObject(webConnection.connectionType)
     })
     it('has a dmarcSummaryByPeriod field', () => {
       const demoType = domainType.getFields()
@@ -113,7 +113,7 @@ describe('given the domain object', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
+        expect(demoType.id.resolve({id: '1'})).toEqual(
           toGlobalId('domain', 1),
         )
       })
@@ -122,7 +122,7 @@ describe('given the domain object', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.domain.resolve({ domain: 'test.gc.ca' })).toEqual(
+        expect(demoType.domain.resolve({domain: 'test.gc.ca'})).toEqual(
           'test.gc.ca',
         )
       })
@@ -132,7 +132,7 @@ describe('given the domain object', () => {
         const demoType = domainType.getFields()
 
         expect(
-          demoType.dmarcPhase.resolve({ phase: 'not implemented' }),
+          demoType.dmarcPhase.resolve({phase: 'not implemented'}),
         ).toEqual('not implemented')
       })
     })
@@ -146,7 +146,7 @@ describe('given the domain object', () => {
 
           await expect(
             demoType.hasDMARCReport.resolve(
-              { _id: 1 },
+              {_id: 1},
               {},
               {
                 auth: {
@@ -167,7 +167,7 @@ describe('given the domain object', () => {
 
           await expect(
             demoType.hasDMARCReport.resolve(
-              { _id: 1 },
+              {_id: 1},
               {},
               {
                 auth: {
@@ -185,7 +185,7 @@ describe('given the domain object', () => {
         const demoType = domainType.getFields()
 
         expect(
-          demoType.lastRan.resolve({ lastRan: '2020-10-02T12:43:39Z' }),
+          demoType.lastRan.resolve({lastRan: '2020-10-02T12:43:39Z'}),
         ).toEqual('2020-10-02T12:43:39Z')
       })
     })
@@ -195,7 +195,7 @@ describe('given the domain object', () => {
 
         const selectors = ['selector1', 'selector2']
 
-        expect(demoType.selectors.resolve({ selectors })).toEqual([
+        expect(demoType.selectors.resolve({selectors})).toEqual([
           'selector1',
           'selector2',
         ])
@@ -213,7 +213,7 @@ describe('given the domain object', () => {
           ssl: 'fail',
         }
 
-        expect(demoType.status.resolve({ status })).toEqual({
+        expect(demoType.status.resolve({status})).toEqual({
           dkim: 'pass',
           dmarc: 'pass',
           https: 'info',
@@ -270,10 +270,10 @@ describe('given the domain object', () => {
           },
         }
 
-        expect(
+        await expect(
           demoType.organizations.resolve(
-            { _id: '1' },
-            { first: 1 },
+            {_id: '1'},
+            {first: 1},
             {
               loaders: {
                 loadOrgConnectionsByDomainId: jest
@@ -288,21 +288,51 @@ describe('given the domain object', () => {
         ).resolves.toEqual(expectedResult)
       })
     })
-    describe('testing the email resolver', () => {
-      it('returns the resolved value', () => {
+    describe('testing the web resolver', () => {
+      it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.email.resolve({ _id: '1', _key: '1' })).toEqual({
+        const response = await demoType.web.resolve(
+            {_id: '1'},
+            {limit: 1},
+            {
+              loaders: {
+                loadWebConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue({"_id": "1", "_key": "1"}),
+              },
+              auth: {
+                checkSuperAdmin: jest.fn().mockReturnValue(false),
+              },
+            },
+          )
+
+        expect(response).toEqual({
           _id: '1',
           _key: '1',
         })
       })
     })
-    describe('testing the web resolver', () => {
-      it('returns the resolved value', () => {
+    describe('testing the DNS resolver', () => {
+      it('returns the resolved value', async () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.web.resolve({ _id: '1', _key: '1' })).toEqual({
+        const response = await demoType.dnsScan.resolve(
+            {_id: '1'},
+            {limit: 1},
+            {
+              loaders: {
+                loadDnsConnectionsByDomainId: jest
+                  .fn()
+                  .mockReturnValue({"_id": "1", "_key": "1"}),
+              },
+              auth: {
+                checkSuperAdmin: jest.fn().mockReturnValue(false),
+              },
+            },
+          )
+
+        expect(response).toEqual({
           _id: '1',
           _key: '1',
         })
@@ -358,8 +388,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -415,8 +445,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -514,8 +544,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -570,8 +600,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {

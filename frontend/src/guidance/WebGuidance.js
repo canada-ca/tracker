@@ -1,117 +1,153 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { SubdomainWarning } from '../domains/SubdomainWarning'
-import { ScanCard } from './ScanCard'
-import { t } from '@lingui/macro'
-import { ScanDetails } from './ScanDetails'
-import { GuidanceTagList } from './GuidanceTagList'
-import { StrengthCategory } from './StrengthCategory'
-import { Accordion, Box, Stack, Text } from '@chakra-ui/react'
-import { DetailList } from './DetailList'
-import { CheckCircleIcon, WarningTwoIcon } from '@chakra-ui/icons'
+import React, { useState } from 'react'
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Badge,
+  Flex,
+  Select,
+  Text,
+} from '@chakra-ui/react'
+import { array } from 'prop-types'
+import { Trans } from '@lingui/macro'
+import { WebTLSResults } from './WebTLSResults'
+import { WebConnectionResults } from './WebConnectionResults'
+import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
 
-const WebGuidance = ({ webScan, sslStatus, httpsStatus }) => {
-  const httpsScan = webScan.https.edges[0].node
-  const tlsScan = webScan.ssl.edges[0].node
+export function WebGuidance({ webResults }) {
+  const [selectedEndpoint, setSelectedEndpoint] = useState(webResults[0].ipAddress)
 
-  const httpDetailList = []
-  httpDetailList.push({
-    category: t`Implementation`,
-    description: httpsScan.implementation,
+  let totalWebPass = 0
+  let totalWebInfo = 0
+  let totalWebFail = 0
+  let isWebHosting = false
+  webResults.forEach(({ results }) => {
+    const { positiveTags: tlsPass, neutralTags: tlsInfo, negativeTags: tlsFail } = results.tlsResult
+    const {
+      positiveTags: httpsPass,
+      neutralTags: httpsInfo,
+      negativeTags: httpsFail,
+      httpLive,
+      httpsLive,
+    } = results.connectionResults
+
+    if (!isWebHosting && (httpLive || httpsLive)) {
+      isWebHosting = true
+    }
+
+    const endpointPass = tlsPass.length + httpsPass.length
+    const endpointInfo = tlsInfo.length + httpsInfo.length
+    const endpointFail = tlsFail.length + httpsFail.length
+
+    totalWebPass += endpointPass
+    totalWebInfo += endpointInfo
+    totalWebFail += endpointFail
   })
-  httpDetailList.push({
-    category: t`Enforcement`,
-    description: httpsScan.enforced,
-  })
 
-  const complianceInfo = [sslStatus, httpsStatus].every(
-    (status) => status === 'PASS',
-  ) ? (
-    <Stack isInline align="center" px="2">
-      <CheckCircleIcon color="strong" size="icons.md" />
-      <Text fontWeight="bold" fontSize="2xl">
-        Web Sites and Services Management Configuration Requirements Compliant
-      </Text>
-    </Stack>
-  ) : (
-    <Stack isInline align="center" px="2">
-      <WarningTwoIcon color="moderate" size="icons.md" />
-      <Text fontWeight="bold" fontSize="2xl">
-        Changes required for Web Sites and Services Management Configuration
-        Requirements compliance
-      </Text>
-    </Stack>
+  const endPointSummary = (
+    <AccordionItem>
+      <Flex align="center" as={AccordionButton}>
+        <Text fontSize="2xl" mr="auto">
+          <Trans>Endpoint Summary</Trans>
+          <AccordionIcon boxSize="icons.xl" />
+        </Text>
+        <GuidanceSummaryCategories passCount={totalWebPass} infoCount={totalWebInfo} failCount={totalWebFail} />
+      </Flex>
+      <AccordionPanel>
+        {webResults.map(({ ipAddress, results }, idx) => {
+          const { positiveTags: tlsPass, neutralTags: tlsInfo, negativeTags: tlsFail } = results.tlsResult
+          const { positiveTags: httpsPass, neutralTags: httpsInfo, negativeTags: httpsFail } = results.connectionResults
+
+          const endpointPass = tlsPass.length + httpsPass.length
+          const endpointInfo = tlsInfo.length + httpsInfo.length
+          const endpointFail = tlsFail.length + httpsFail.length
+
+          return (
+            <Flex
+              key={idx}
+              align="center"
+              py="1"
+              borderTopColor={idx === 0 ? 'gray.300' : ''}
+              borderTopWidth={idx === 0 ? '1px' : ''}
+              borderBottomWidth="1px"
+              borderBottomColor="gray.300"
+            >
+              <Text fontSize="xl" pl="2" mr="auto">
+                {ipAddress}
+              </Text>
+
+              {results.connectionResults?.httpsChainResult?.connections?.[0]?.connection?.blockedCategory && (
+                <Badge colorScheme="red" alignSelf="center" fontSize="md" mr="1">
+                  <Trans>Blocked</Trans>
+                </Badge>
+              )}
+              <GuidanceSummaryCategories passCount={endpointPass} infoCount={endpointInfo} failCount={endpointFail} />
+            </Flex>
+          )
+        })}
+      </AccordionPanel>
+    </AccordionItem>
   )
+
+  const endpointSelect = (
+    <Flex align="center" py="2" ml="3">
+      <Text fontWeight="bold" mr="2" fontSize="xl">
+        <Trans>Endpoint:</Trans>
+      </Text>
+      <Select
+        w="auto"
+        onChange={(e) => {
+          setSelectedEndpoint(e.target.value)
+        }}
+      >
+        {webResults.map(({ ipAddress }, idx) => {
+          return (
+            <option key={idx} value={ipAddress}>
+              {ipAddress}
+            </option>
+          )
+        })}
+      </Select>
+    </Flex>
+  )
+
+  const { connectionResults, tlsResult } = webResults.find(({ ipAddress }) => {
+    return ipAddress === selectedEndpoint
+  }).results
 
   return (
     <>
-      <SubdomainWarning mb={4} />
-      <ScanCard
-        description={t`Web Scan Results`}
-        title={t`Results for scans of web technologies (TLS, HTTPS).`}
-      >
-        <Box pb="1">{complianceInfo}</Box>
-        <ScanDetails title={t`HTTPS`}>
-          <DetailList details={httpDetailList} />
-          <GuidanceTagList
-            positiveTags={httpsScan.positiveGuidanceTags.edges}
-            neutralTags={httpsScan.neutralGuidanceTags.edges}
-            negativeTags={httpsScan.negativeGuidanceTags.edges}
-          />
-        </ScanDetails>
-        <ScanDetails title={t`TLS`}>
-          <GuidanceTagList
-            positiveTags={tlsScan.positiveGuidanceTags.edges}
-            neutralTags={tlsScan.neutralGuidanceTags.edges}
-            negativeTags={tlsScan.negativeGuidanceTags.edges}
-          />
-          <Accordion allowMultiple defaultIndex={[0, 1]}>
-            <ScanDetails title={t`Ciphers`}>
-              <StrengthCategory
-                title={t`Strong Ciphers:`}
-                strength="strong"
-                items={tlsScan.strongCiphers}
-              />
-              <StrengthCategory
-                title={t`Acceptable Ciphers:`}
-                strength="acceptable"
-                items={tlsScan.acceptableCiphers}
-              />
-              <StrengthCategory
-                title={t`Weak Ciphers:`}
-                strength="weak"
-                items={tlsScan.weakCiphers}
-              />
-            </ScanDetails>
-
-            <ScanDetails title={t`Curves`}>
-              <StrengthCategory
-                title={t`Strong Curves:`}
-                strength="strong"
-                items={tlsScan.strongCurves}
-              />
-              <StrengthCategory
-                title={t`Acceptable Curves:`}
-                strength="acceptable"
-                items={tlsScan.acceptableCurves}
-              />
-              <StrengthCategory
-                title={t`Weak Curves:`}
-                strength="weak"
-                items={tlsScan.weakCurves}
-              />
-            </ScanDetails>
-          </Accordion>
-        </ScanDetails>
-      </ScanCard>
+      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        {!isWebHosting && (
+          <Flex
+            fontSize="lg"
+            fontWeight="bold"
+            px="2"
+            py="1"
+            textAlign="center"
+            borderWidth="1px"
+            borderColor="black"
+            rounded="md"
+          >
+            <Text>
+              <Trans>
+                This service is not web-hosting and does not require compliance with the Web Sites and Services
+                Management Configuration Requirements.
+              </Trans>
+            </Text>
+          </Flex>
+        )}
+        {endPointSummary}
+        {endpointSelect}
+        <WebConnectionResults connectionResults={connectionResults} />
+        <WebTLSResults tlsResult={tlsResult} />
+      </Accordion>
     </>
   )
 }
 
 WebGuidance.propTypes = {
-  webScan: PropTypes.object.isRequired,
-  httpsStatus: PropTypes.string,
-  sslStatus: PropTypes.string,
+  webResults: array,
 }
-
-export default WebGuidance

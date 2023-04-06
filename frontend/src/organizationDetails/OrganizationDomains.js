@@ -23,12 +23,8 @@ import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import {
-  PAGINATED_ORG_DOMAINS as FORWARD,
-  MY_TRACKER_DOMAINS,
-} from '../graphql/queries'
+import { PAGINATED_ORG_DOMAINS as FORWARD, MY_TRACKER_DOMAINS } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
-import { SubdomainWarning } from '../domains/SubdomainWarning'
 import { Formik } from 'formik'
 import {
   getRequirement,
@@ -71,27 +67,15 @@ export function OrganizationDomains({ orgSlug }) {
           filters,
         }
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
-    recordsPerPage: domainsPerPage,
-    relayRoot:
-      orgSlug === 'my-tracker'
-        ? 'findMyTracker.domains'
-        : 'findOrganizationBySlug.domains',
-    variables: queryVariables,
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
+      recordsPerPage: domainsPerPage,
+      relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
+      variables: queryVariables,
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -261,30 +245,27 @@ export function OrganizationDomains({ orgSlug }) {
         </ABTestVariant>
       </ABTestingWrapper>
       <ListOf
-        elements={nodes}
-        ifEmpty={() => (
-          <Text layerStyle="loadingMessage">
-            <Trans>No Domains</Trans>
-          </Text>
-        )}
-        mb="4"
-      >
-        {(
-          { id, domain, status, hasDMARCReport, claimTags, hidden, archived },
-          index,
-        ) => (
-          <ErrorBoundary
-            key={`${id}:${index}`}
-            FallbackComponent={ErrorFallbackMessage}
-          >
+      elements={nodes}
+      ifEmpty={() => (
+        <Text layerStyle="loadingMessage">
+          <Trans>No Domains</Trans>
+        </Text>
+      )}
+      mb="4"
+    >
+      {({ id, domain, status, hasDMARCReport, claimTags, hidden, archived, rcode, blocked, webScanPending }, index) => (
+          <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <DomainCard
-              id={id}
-              url={domain}
-              status={status}
-              hasDMARCReport={hasDMARCReport}
-              tags={claimTags}
-              isHidden={hidden}
-              isArchived={archived}
+            id={id}
+            url={domain}
+            status={status}
+            hasDMARCReport={hasDMARCReport}
+            tags={claimTags}
+            isHidden={hidden}
+            rcode={rcode}
+            isArchived={archived}
+            blocked={blocked}
+            webScanPending={webScanPending}
               mb="3"
             />
           </ErrorBoundary>
@@ -297,30 +278,15 @@ export function OrganizationDomains({ orgSlug }) {
     <Box>
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Ciphers`}
-          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`Curves`}
-          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`HSTS`}
-          info={t`Shows if the domain meets the HSTS requirements.`}
-        />
+        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
+        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
+        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
         <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
         />
-        <InfoBox
-          title={t`Protocols`}
-          info={t`Shows if the domain uses acceptable protocols.`}
-        />
-        <InfoBox
-          title={t`SPF`}
-          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
-        />
+        <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
+        <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
         <InfoBox
           title={t`DKIM`}
           info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
@@ -350,8 +316,6 @@ export function OrganizationDomains({ orgSlug }) {
         ]}
         placeholder={t`Search for a domain`}
       />
-
-      <SubdomainWarning mb="4" />
 
       <ABTestingWrapper insiderVariantName="B">
         <ABTestVariant name="B">

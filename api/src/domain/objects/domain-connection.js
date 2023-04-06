@@ -1,7 +1,7 @@
-import { GraphQLInt } from 'graphql'
-import { connectionDefinitions } from 'graphql-relay'
+import {GraphQLInt} from 'graphql'
+import {connectionDefinitions} from 'graphql-relay'
 
-import { domainType } from './domain'
+import {domainType} from './domain'
 
 export const domainConnection = connectionDefinitions({
   name: 'Domain',
@@ -10,7 +10,7 @@ export const domainConnection = connectionDefinitions({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of domains the user has access to.',
-      resolve: ({ totalCount }) => totalCount,
+      resolve: ({totalCount}) => totalCount,
     },
   }),
 })

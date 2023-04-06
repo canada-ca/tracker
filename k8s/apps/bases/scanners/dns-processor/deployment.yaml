@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: dns-processor
   labels:
     app: dns-processor
-  name: dns-processor
   namespace: scanners
 spec:
   replicas: 1
@@ -39,7 +39,7 @@ spec:
             - name: SUBSCRIBE_TO
               value: domains.*.dns
             - name: QUEUE_GROUP
-              value: dnsprocessor
+              value: dns_processor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
           resources: {}

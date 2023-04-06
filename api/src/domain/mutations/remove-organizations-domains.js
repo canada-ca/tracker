@@ -30,8 +30,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: GraphQLNonNull(bulkModifyDomainsUnion),
-      description:
-        '`BulkModifyDomainsUnion` returning either a `DomainBulkResult`, or `DomainErrorType` object.',
+      description: '`BulkModifyDomainsUnion` returning either a `DomainBulkResult`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -88,9 +87,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to remove domains from unknown organization.`,
-        ),
+        description: i18n._(t`Unable to remove domains from unknown organization.`),
       }
     }
 
@@ -105,9 +102,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact super admin for help with removing domain.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact super admin for help with removing domain.`),
       }
     }
 
@@ -118,9 +113,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact organization admin for help with removing domains.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with removing domains.`),
       }
     }
 
@@ -131,9 +124,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact organization admin for help with archiving domains.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with archiving domains.`),
       }
     }
 
@@ -148,9 +139,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
 
       // Check to see if domain exists
       if (typeof checkDomain === 'undefined') {
-        console.warn(
-          `User: ${userKey} attempted to remove ${domain} however no domain is associated with that id.`,
-        )
+        console.warn(`User: ${userKey} attempted to remove ${domain} however no domain is associated with that id.`)
         continue
       }
 
@@ -296,94 +285,41 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
           // Remove scan data
 
           try {
-            // Remove DKIM data
+            // Remove web data
             await trx.step(async () => {
               await query`
-              WITH dkim, dkimResults, domains
-              FOR dkimV, domainsDkimEdge IN 1..1 OUTBOUND ${checkDomain._id} domainsDKIM
-                FOR dkimResult, dkimToDkimResultsEdge In 1..1 OUTBOUND dkimV._id dkimToDkimResults
-                  REMOVE dkimResult IN dkimResults
-                  REMOVE dkimToDkimResultsEdge IN dkimToDkimResults
-                  OPTIONS { waitForSync: true }
-                REMOVE dkimV IN dkim
-                REMOVE domainsDkimEdge IN domainsDKIM
+            WITH web, webScan, domains
+            FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
+              FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
+                REMOVE webScanV IN webScan
+                REMOVE webToWebScansV IN webToWebScans
                 OPTIONS { waitForSync: true }
-            `
+              REMOVE webV IN web
+              REMOVE domainsWebEdge IN domainsWeb
+              OPTIONS { waitForSync: true }
+          `
             })
           } catch (err) {
             console.error(
-              `Trx step error occurred while user: ${userKey} attempted to remove DKIM data for ${checkDomain.domain} in org: ${org.slug}, error: ${err}`,
+              `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
             )
             continue
           }
 
           try {
-            // Remove DMARC data
+            // Remove DNS data
             await trx.step(async () => {
               await query`
-              WITH dmarc, domains
-              FOR dmarcV, domainsDmarcEdge IN 1..1 OUTBOUND ${checkDomain._id} domainsDMARC
-                REMOVE dmarcV IN dmarc
-                REMOVE domainsDmarcEdge IN domainsDMARC
-            `
+            WITH dns, domains
+            FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
+              REMOVE dnsV IN dns
+              REMOVE domainsDNSEdge IN domainsDNS
+              OPTIONS { waitForSync: true }
+          `
             })
           } catch (err) {
             console.error(
-              `Trx step error occurred while user: ${userKey} attempted to remove DMARC data for ${checkDomain.domain} in org: ${org.slug}, error: ${err}`,
-            )
-            continue
-          }
-
-          try {
-            // Remove HTTPS data
-            await trx.step(async () => {
-              await query`
-              WITH https, domains
-              FOR httpsV, domainsHttpsEdge IN 1..1 OUTBOUND ${checkDomain._id} domainsHTTPS
-                REMOVE httpsV IN https
-                REMOVE domainsHttpsEdge IN domainsHTTPS
-                OPTIONS { waitForSync: true }
-            `
-            })
-          } catch (err) {
-            console.error(
-              `Trx step error occurred while user: ${userKey} attempted to remove HTTPS data for ${checkDomain.domain} in org: ${org.slug}, error: ${err}`,
-            )
-            continue
-          }
-
-          try {
-            // Remove SPF data
-            await trx.step(async () => {
-              await query`
-              WITH spf, domains
-              FOR spfV, domainsSpfEdge IN 1..1 OUTBOUND ${checkDomain._id} domainsSPF
-                REMOVE spfV IN spf
-                REMOVE domainsSpfEdge IN domainsSPF
-                OPTIONS { waitForSync: true }
-            `
-            })
-          } catch (err) {
-            console.error(
-              `Trx step error occurred while user: ${userKey} attempted to remove SPF data for ${checkDomain.domain} in org: ${org.slug}, error: ${err}`,
-            )
-            continue
-          }
-
-          try {
-            // Remove SSL data
-            await trx.step(async () => {
-              await query`
-              WITH ssl, domains
-              FOR sslV, domainsSslEdge IN 1..1 OUTBOUND ${checkDomain._id} domainsSSL
-                REMOVE sslV IN ssl
-                REMOVE domainsSslEdge IN domainsSSL
-                OPTIONS { waitForSync: true }
-            `
-            })
-          } catch (err) {
-            console.error(
-              `Trx step error occurred while user: ${userKey} attempted to remove SSL data for ${checkDomain.domain} in org: ${org.slug}, error: ${err}`,
+              `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
             )
             continue
           }
@@ -440,9 +376,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
         }
 
         if (audit) {
-          console.info(
-            `User: ${userKey} successfully removed domain: ${domain} from org: ${org.slug}.`,
-          )
+          console.info(`User: ${userKey} successfully removed domain: ${domain} from org: ${org.slug}.`)
           await logActivity({
             transaction,
             collections,
@@ -469,9 +403,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
 
     // Log activity
     if (!audit) {
-      console.info(
-        `User: ${userKey} successfully removed ${domainCount} domain(s) from org: ${org.slug}.`,
-      )
+      console.info(`User: ${userKey} successfully removed ${domainCount} domain(s) from org: ${org.slug}.`)
       if (archiveDomains) {
         await logActivity({
           transaction,
@@ -524,9 +456,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully removed ${domainCount} domain(s) from ${org.slug}.`,
-      ),
+      status: i18n._(t`Successfully removed ${domainCount} domain(s) from ${org.slug}.`),
     }
   },
 })

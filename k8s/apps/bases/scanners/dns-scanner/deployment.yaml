@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dns-scanner
+  labels:
+    app: dns-scanner
   namespace: scanners
 spec:
   selector:
@@ -24,7 +26,7 @@ spec:
             - name: SUBSCRIBE_TO
               value: domains.*
             - name: QUEUE_GROUP
-              value: dnsscanner
+              value: dns_scanner
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: SCAN_TIMEOUT
@@ -33,6 +35,5 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-          imagePullPolicy: Always
           resources: {}
 status: {}

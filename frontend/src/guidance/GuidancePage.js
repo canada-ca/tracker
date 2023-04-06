@@ -1,84 +1,129 @@
-import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { ArrowLeftIcon } from '@chakra-ui/icons'
 import {
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
+  Badge,
+  Box,
+  Button,
   Flex,
-  IconButton,
   Heading,
+  IconButton,
   Link,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
 } from '@chakra-ui/react'
 
-import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../graphql/queries'
-import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { useQuery } from '@apollo/client'
-import { LoadingMessage } from '../components/LoadingMessage'
-import { Trans } from '@lingui/macro'
-import {
-  Link as RouteLink,
-  useHistory,
-  useLocation,
-  useParams,
-} from 'react-router-dom'
-import { ArrowLeftIcon, LinkIcon } from '@chakra-ui/icons'
 import { ScanDomainButton } from '../domains/ScanDomainButton'
-import WebGuidance from './WebGuidance'
-import EmailGuidance from './EmailGuidance'
+import { Link as RouteLink, useHistory, useLocation, useParams } from 'react-router-dom'
+import { WebGuidance } from './WebGuidance'
+import { EmailGuidance } from './EmailGuidance'
+import { Trans } from '@lingui/macro'
+import { useQuery } from '@apollo/client'
+import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
+import { LoadingMessage } from '../components/LoadingMessage'
+import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { useUserVar } from '../utilities/userState'
 
-const GuidancePage = () => {
-  const { domainSlug, activeTab } = useParams()
-  const history = useHistory()
-  const location = useLocation()
-  const { from } = location.state || { from: { pathname: '/domains' } }
-  const tabNames = ['web', 'email']
-  const defaultActiveTab = tabNames[0]
+function GuidancePage() {
+  const { domainSlug: domain } = useParams()
 
-  const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS_OF_DOMAIN, {
-    variables: { domain: domainSlug },
+  const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
+    variables: { domain: domain },
   })
 
-  useEffect(() => {
-    if (!activeTab) {
-      history.replace(`/domains/${domainSlug}/${defaultActiveTab}`)
-    }
-  }, [activeTab, history, domainSlug, defaultActiveTab])
+  const history = useHistory()
+  const location = useLocation()
+  const { isLoggedIn, isEmailValidated } = useUserVar()
+  const { from } = location.state || { from: { pathname: '/domains' } }
 
-  if (loading)
+  if (loading) {
     return (
       <LoadingMessage>
-        <Trans>Guidance Tags</Trans>
+        <Trans>Guidance results</Trans>
       </LoadingMessage>
     )
-  if (error) return <ErrorFallbackMessage error={error} />
+  }
+
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
+  }
 
   const {
     domain: domainName,
     web: webScan,
-    email: emailScan,
-    status: webStatus,
+    dnsScan,
     organizations,
     dmarcPhase,
+    rcode,
+    status,
   } = data.findDomainByDomain
 
-  const changeActiveTab = (index) => {
-    const tab = tabNames[index]
-    if (activeTab !== tab) {
-      history.replace(`/domains/${domainSlug}/${tab}`)
-    }
+  let guidanceResults
+  if (rcode !== 'NOERROR') {
+    guidanceResults = (
+      <Box fontSize="lg">
+        <Flex>
+          <Text mr="1">
+            <Trans>A DNS request for this service has resulted in the following error code:</Trans>
+          </Text>
+          <Text fontWeight="bold">{rcode}</Text>
+        </Flex>
+        <Text>
+          <Trans>
+            If you believe this could be the result of an issue with the scan, rescan the service using the refresh
+            button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be
+            removed from all affiliated organizations.
+          </Trans>
+        </Text>
+      </Box>
+    )
+  } else {
+    const { results: webResults } = webScan?.edges[0]?.node
+    const { node: dnsResults } = dnsScan?.edges[0]
+
+    const noScanData = (
+      <Flex fontSize="xl" fontWeight="bold" textAlign="center" px="2" py="1">
+        <Text>
+          <Trans>
+            No scan data is currently available for this service. You may request a scan using the refresh button, or
+            wait up to 24 hours for data to refresh.
+          </Trans>
+        </Text>
+      </Flex>
+    )
+
+    guidanceResults = (
+      <Tabs isFitted variant="enclosed-colored">
+        <TabList mb="4">
+          <Tab borderTopWidth="0.25">
+            <Trans>Web Guidance</Trans>
+          </Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>Email Guidance</Trans>
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            {webResults.length === 0 ? noScanData : <WebGuidance webResults={webResults} status={status} />}
+          </TabPanel>
+          <TabPanel>
+            {dnsScan.edges.length === 0 ? (
+              noScanData
+            ) : (
+              <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} status={status} />
+            )}
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    )
   }
 
   return (
     <Flex flexDirection="column" width="100%">
-      <Flex
-        flexDirection={{ base: 'column', md: 'row' }}
-        alignItems="center"
-        mb="4"
-      >
+      <Flex flexDirection={{ base: 'column', md: 'row' }} alignItems="center" mb="4">
         <IconButton
           icon={<ArrowLeftIcon />}
           onClick={() => history.push(from)}
@@ -87,38 +132,29 @@ const GuidancePage = () => {
           aria-label="back"
           mr="0.5rem"
         />
-        <Heading textAlign={{ base: 'center', md: 'left' }}>
+        <Heading textAlign={{ base: 'center', md: 'left' }} mr="auto">
           {domainName.toUpperCase()}
         </Heading>
-        <ScanDomainButton
-          domainUrl={data.findDomainByDomain.domain}
-          ml="auto"
-        />
+        {data.findDomainByDomain.webScanPending && (
+          <Badge color="info" alignSelf="center" fontSize="md">
+            <Trans>Scan Pending</Trans>
+          </Badge>
+        )}
+        {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={domainName} ml="2" />}
         {data.findDomainByDomain.hasDMARCReport && (
-          <Link
-            color="teal.600"
-            whiteSpace="noWrap"
-            my="auto"
-            ml={4}
-            to={`/domains/${domainSlug}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+          <Button
+            ml="2"
+            variant="primary"
             as={RouteLink}
-            d="block"
-            textAlign={{ base: 'center', md: 'right' }}
+            to={`/domains/${domainName}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
           >
-            <Trans>DMARC Report</Trans>
-            <LinkIcon ml="4px" aria-hidden="true" />
-          </Link>
+            <Text whiteSpace="noWrap">
+              <Trans>DMARC Report</Trans>
+            </Text>
+          </Button>
         )}
       </Flex>
-      <Flex
-        maxW="auto"
-        mb="2"
-        bg="gray.100"
-        px="2"
-        py="1"
-        borderWidth="1px"
-        borderColor="gray.300"
-      >
+      <Flex maxW="auto" mb="2" px="2" py="1">
         <Text fontWeight="bold" mr="2">
           <Trans>Organization(s):</Trans>
         </Text>
@@ -133,39 +169,9 @@ const GuidancePage = () => {
           )
         })}
       </Flex>
-      <Tabs
-        isFitted
-        variant="enclosed-colored"
-        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
-        onChange={(i) => changeActiveTab(i)}
-      >
-        <TabList mb="4">
-          <Tab borderTopWidth="0.25">Web Guidance</Tab>
-          <Tab borderTopWidth="0.25">Email Guidance</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <WebGuidance
-                webScan={webScan}
-                sslStatus={webStatus.ssl}
-                httpsStatus={webStatus.https}
-              />
-            </ErrorBoundary>
-          </TabPanel>
-          <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <EmailGuidance emailScan={emailScan} dmarcPhase={dmarcPhase} />
-            </ErrorBoundary>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      {guidanceResults}
     </Flex>
   )
-}
-
-GuidancePage.propTypes = {
-  children: PropTypes.element,
 }
 
 export default GuidancePage

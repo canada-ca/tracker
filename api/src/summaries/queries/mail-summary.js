@@ -1,10 +1,10 @@
-import { categorizedSummaryType } from '../objects'
-import { t } from '@lingui/macro'
+import {categorizedSummaryType} from '../objects'
+import {t} from '@lingui/macro'
 
 export const mailSummary = {
   type: categorizedSummaryType,
   description: 'Email summary computed values, used to build summary cards.',
-  resolve: async (_, __, { i18n, loaders: { loadChartSummaryByKey } }) => {
+  resolve: async (_, __, {i18n, loaders: {loadChartSummaryByKey}}) => {
     const summary = await loadChartSummaryByKey.load('mail')
 
     if (typeof summary === 'undefined') {

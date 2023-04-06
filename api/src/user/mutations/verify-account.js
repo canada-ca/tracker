@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLString} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { verifyAccountUnion } from '../unions'
+import {verifyAccountUnion} from '../unions'
 
 export const verifyAccount = new mutationWithClientMutationId({
   name: 'VerifyAccount',
@@ -29,16 +29,16 @@ export const verifyAccount = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { verifyToken },
-      loaders: { loadUserByKey },
-      validators: { cleanseInput },
+      auth: {verifyToken},
+      loaders: {loadUserByKey},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse Input
     const verifyTokenString = cleanseInput(args.verifyTokenString)
 
     // Get info from token
-    const tokenParameters = verifyToken({ token: verifyTokenString })
+    const tokenParameters = verifyToken({token: verifyTokenString})
 
     // Check to see if userKey exists in tokenParameters
     if (!tokenParameters?.userKey) {
@@ -56,7 +56,7 @@ export const verifyAccount = new mutationWithClientMutationId({
 
     // Auth shouldn't be needed with this
     // Check if user exists
-    const { userKey } = tokenParameters
+    const {userKey} = tokenParameters
     const user = await loadUserByKey.load(userKey)
 
     if (typeof user === 'undefined') {

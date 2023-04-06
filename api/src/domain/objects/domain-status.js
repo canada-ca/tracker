@@ -6,6 +6,11 @@ export const domainStatus = new GraphQLObjectType({
   description:
     'This object contains how the domain is doing on the various scans we preform, based on the latest scan data.',
   fields: () => ({
+    certificates: {
+      type: StatusEnum,
+      description: 'Certificates Status',
+      resolve: ({ certificates }) => certificates,
+    },
     ciphers: {
       type: StatusEnum,
       description: 'Ciphers Status',
@@ -40,9 +45,7 @@ export const domainStatus = new GraphQLObjectType({
       type: StatusEnum,
       description: 'Policy Status',
       resolve: ({ ciphers, https, hsts, protocols, ssl }) =>
-        [ciphers, https, hsts, protocols, ssl].every((t) => t !== 'fail')
-          ? 'pass'
-          : 'fail',
+        [ciphers, https, hsts, protocols, ssl].every((t) => t !== 'fail') ? 'pass' : 'fail',
     },
     protocols: {
       type: StatusEnum,

@@ -5,7 +5,6 @@ import time
 import json
 import logging
 import traceback
-import emoji
 import random
 import datetime
 from arango import ArangoClient
@@ -15,9 +14,8 @@ load_dotenv()
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
-DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
-DB_HOST = os.getenv("DB_HOST")
+DB_URL = os.getenv("DB_URL")
 
 SCAN_TYPES = ["https", "ssl", "dkim", "spf", "dmarc"]
 CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"],
@@ -41,13 +39,12 @@ def is_domain_hidden(domain, db):
     return False
 
 
-def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                          password=DB_PASS, port=DB_PORT):
+def update_scan_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
+                          password=DB_PASS):
     logging.info(f"Updating scan summaries...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for scan_type in SCAN_TYPES:
@@ -171,13 +168,12 @@ def update_dmarc_phase_chart_summaries(db):
     logging.info("DMARC phase scan summary updated.")
 
 
-def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                           password=DB_PASS, port=DB_PORT):
+def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
+                           password=DB_PASS):
     logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for chart_type, scan_types in CHARTS.items():
@@ -226,13 +222,12 @@ def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
     logging.info(f"Chart summary update completed.")
 
 
-def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                         password=DB_PASS, port=DB_PORT):
+def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
+                         password=DB_PASS):
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
@@ -348,7 +343,7 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
 
 
 if __name__ == "__main__":
-    logging.info(emoji.emojize("Summary service started :rocket:"))
+    logging.info("Summary service started")
     update_scan_summaries()
     update_chart_summaries()
     update_org_summaries()

@@ -1,7 +1,7 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
@@ -11,15 +11,15 @@ import {
   verifiedRequired,
   tfaRequired,
 } from '../../../auth'
-import { createMutationSchema } from '../../../mutation'
-import { createQuerySchema } from '../../../query'
-import { cleanseInput } from '../../../validators'
-import { loadOrgByKey } from '../../../organization/loaders'
-import { loadUserByKey, loadUserByUserName } from '../../../user/loaders'
+import {createMutationSchema} from '../../../mutation'
+import {createQuerySchema} from '../../../query'
+import {cleanseInput} from '../../../validators'
+import {loadOrgByKey} from '../../../organization/loaders'
+import {loadUserByKey, loadUserByUserName} from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
+const {DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY} = process.env
 
 describe('invite user to org', () => {
   let query,
@@ -53,7 +53,7 @@ describe('invite user to org', () => {
 
   describe('given a successful invitation', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -84,8 +84,8 @@ describe('invite user to org', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -184,18 +184,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -281,18 +281,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -378,18 +378,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -470,18 +470,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -566,18 +566,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -663,18 +663,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -777,18 +777,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -874,18 +874,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -967,18 +967,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1064,18 +1064,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1121,8 +1121,8 @@ describe('invite user to org', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1221,18 +1221,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1318,18 +1318,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1415,18 +1415,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1508,18 +1508,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1548,7 +1548,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
+                user: {userName: 'test@email.gc.ca', preferredLang: 'french'},
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -1602,18 +1602,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1642,7 +1642,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
+                user: {userName: 'test@email.gc.ca', preferredLang: 'french'},
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -1696,18 +1696,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1736,7 +1736,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
+                user: {userName: 'test@email.gc.ca', preferredLang: 'french'},
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -1807,18 +1807,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1904,18 +1904,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteEmail: sendOrgInviteEmail},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -1997,18 +1997,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -2037,7 +2037,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
+                user: {userName: 'test@email.gc.ca', preferredLang: 'french'},
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -2091,18 +2091,18 @@ describe('invite user to org', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
-                    verifiedRequired: verifiedRequired({ i18n }),
-                    tfaRequired: tfaRequired({ i18n }),
+                    verifiedRequired: verifiedRequired({i18n}),
+                    tfaRequired: tfaRequired({i18n}),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({query}),
                   },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
+                  notify: {sendOrgInviteCreateAccount},
+                  validators: {cleanseInput},
                 },
               )
 
@@ -2131,7 +2131,7 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
+                user: {userName: 'test@email.gc.ca', preferredLang: 'french'},
                 orgName: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
@@ -2147,8 +2147,8 @@ describe('invite user to org', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2217,8 +2217,8 @@ describe('invite user to org', () => {
                   },
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -2297,8 +2297,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -2368,7 +2368,7 @@ describe('invite user to org', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
                 loadUserByKey: {
                   load: jest.fn(),
@@ -2377,8 +2377,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -2449,7 +2449,7 @@ describe('invite user to org', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
                 loadUserByKey: {
                   load: jest.fn(),
@@ -2458,8 +2458,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -2530,7 +2530,7 @@ describe('invite user to org', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
                 loadUserByKey: {
                   load: jest.fn(),
@@ -2539,8 +2539,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -2625,8 +2625,8 @@ describe('invite user to org', () => {
                     }),
                   },
                 },
-                notify: { sendOrgInviteCreateAccount: jest.fn() },
-                validators: { cleanseInput },
+                notify: {sendOrgInviteCreateAccount: jest.fn()},
+                validators: {cleanseInput},
               },
             )
 
@@ -2707,7 +2707,7 @@ describe('invite user to org', () => {
                   sendOrgInviteCreateAccount: jest.fn(),
                   sendOrgInviteEmail: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 
@@ -2728,8 +2728,8 @@ describe('invite user to org', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2798,8 +2798,8 @@ describe('invite user to org', () => {
                   },
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -2878,8 +2878,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -2950,7 +2950,7 @@ describe('invite user to org', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
                 loadUserByKey: {
                   load: jest.fn(),
@@ -2959,8 +2959,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -3031,7 +3031,7 @@ describe('invite user to org', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
                 loadUserByKey: {
                   load: jest.fn(),
@@ -3040,8 +3040,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -3112,7 +3112,7 @@ describe('invite user to org', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({ _key: 123 }),
+                  load: jest.fn().mockReturnValue({_key: 123}),
                 },
                 loadUserByKey: {
                   load: jest.fn(),
@@ -3121,8 +3121,8 @@ describe('invite user to org', () => {
                   load: jest.fn(),
                 },
               },
-              notify: { sendOrgInviteCreateAccount: jest.fn() },
-              validators: { cleanseInput },
+              notify: {sendOrgInviteCreateAccount: jest.fn()},
+              validators: {cleanseInput},
             },
           )
 
@@ -3207,8 +3207,8 @@ describe('invite user to org', () => {
                     }),
                   },
                 },
-                notify: { sendOrgInviteCreateAccount: jest.fn() },
-                validators: { cleanseInput },
+                notify: {sendOrgInviteCreateAccount: jest.fn()},
+                validators: {cleanseInput},
               },
             )
 
@@ -3291,7 +3291,7 @@ describe('invite user to org', () => {
                   sendOrgInviteCreateAccount: jest.fn(),
                   sendOrgInviteEmail: jest.fn(),
                 },
-                validators: { cleanseInput },
+                validators: {cleanseInput},
               },
             )
 

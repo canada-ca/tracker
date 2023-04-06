@@ -28,8 +28,7 @@ const parseCookies = (str) => {
 
 const now = () => Math.floor(new Date().getTime() / 1000)
 
-const future = (expPeriod) =>
-  Math.floor(new Date((now() + expPeriod) * 1000) / 1000)
+const future = (expPeriod) => Math.floor(new Date((now() + expPeriod) * 1000) / 1000)
 
 const tokenize = ({
   parameters = {},
@@ -143,11 +142,17 @@ const mocks = {
       totalMessages: faker.datatype.number({ min: 0, max: 15000 }),
     }
   },
+  ConnectionInfo: () => {
+    return {
+      headers: {
+        'Content-Length': '62',
+        'Content-Type': 'text/html; charset=utf-8',
+      },
+    }
+  },
   Date: () => {
     // gives date in format "2020-12-31 15:30:20.262Z"
-    return new Date(faker.date.between('2019-01-01', '2022-01-01'))
-      .toISOString()
-      .replace('T', ' ')
+    return new Date(faker.date.between('2019-01-01', '2022-01-01')).toISOString().replace('T', ' ')
   },
   DkimFailureTable: () => {
     const dkimDomains = getStringOfDomains(0, 2)
@@ -213,11 +218,7 @@ const mocks = {
   },
   DmarcSub: () => {
     return {
-      dmarcPhase: faker.helpers.randomize([
-        'maintain',
-        'deploy',
-        'not implemented',
-      ]),
+      dmarcPhase: faker.helpers.randomize(['maintain', 'deploy', 'not implemented']),
     }
   },
   DmarcSummaryConnection: () => {
@@ -231,18 +232,10 @@ const mocks = {
     // gives date in format "2020-12-31 15:30:20.262Z"
     const lastRan =
       Math.random() > 0.2
-        ? new Date(faker.date.between('2019-01-01', '2022-01-01'))
-            .toISOString()
-            .replace('T', ' ')
+        ? new Date(faker.date.between('2019-01-01', '2022-01-01')).toISOString().replace('T', ' ')
         : null
     const curDate = new Date()
-    const dmarcPhase = faker.random.arrayElement([
-      'assess',
-      'deploy',
-      'enforce',
-      'maintain',
-      'not implemented',
-    ])
+    const dmarcPhase = faker.random.arrayElement(['assess', 'deploy', 'enforce', 'maintain', 'not implemented'])
 
     // generate an object matching DmarcSummary
     const generateFakeSummary = (currentDate, month, year) => {
@@ -264,23 +257,13 @@ const mocks = {
       })
       const failCount = maxNumber - passDkimOnlyCount
 
-      const fullPassPercent = Math.round(
-        (100 * fullPassCount) / totalMessageCount,
-      )
-      const passSpfOnlyPercent = Math.round(
-        (100 * passSpfOnlyCount) / totalMessageCount,
-      )
-      const passDkimOnlyPercent = Math.round(
-        (100 * passDkimOnlyCount) / totalMessageCount,
-      )
+      const fullPassPercent = Math.round((100 * fullPassCount) / totalMessageCount)
+      const passSpfOnlyPercent = Math.round((100 * passSpfOnlyCount) / totalMessageCount)
+      const passDkimOnlyPercent = Math.round((100 * passDkimOnlyCount) / totalMessageCount)
       const failPercent = Math.round((100 * failCount) / totalMessageCount)
 
       return {
-        month:
-          month ||
-          currentDate
-            .toLocaleString('default', { month: 'long' })
-            .toUpperCase(),
+        month: month || currentDate.toLocaleString('default', { month: 'long' }).toUpperCase(),
         year: year || currentDate.getFullYear(),
         categoryTotals: {
           fullPass: fullPassCount,
@@ -352,20 +335,13 @@ const mocks = {
   GuidanceTag: () => {
     const tagId = 'tag' + faker.datatype.number({ min: 1, max: 14 })
     const tagName =
-      'TAG-' +
-      faker.helpers.randomize([
-        'missing',
-        'downgraded',
-        'bad-chain',
-        'short-age',
-        'certificate-expired',
-      ])
+      'TAG-' + faker.helpers.randomize(['missing', 'downgraded', 'bad-chain', 'short-age', 'certificate-expired'])
     const guidance = faker.lorem.sentence()
     const refLinks = [...new Array(1)]
     const refLinksTech = [...new Array(1)]
 
     return {
-      guidance,
+      // guidance,
       refLinks,
       refLinksTech,
       tagId,
@@ -477,8 +453,7 @@ const mocks = {
       refLink,
     }
   },
-  Selector: () =>
-    'selector' + faker.datatype.number({ min: 1, max: 9 }),
+  Selector: () => 'selector' + faker.datatype.number({ min: 1, max: 9 }),
   SignInError: () => ({
     description: 'Mocked sign in error description',
   }),
@@ -549,11 +524,7 @@ const edgesToConnection = (store, edges, args) => {
 
 const getConnectionObject = (store, args, resolveInfo) => {
   // use key of calling object to ensure consistency
-  const allEdges = store.get(
-    resolveInfo.returnType.toString(),
-    resolveInfo.path.key,
-    'edges',
-  )
+  const allEdges = store.get(resolveInfo.returnType.toString(), resolveInfo.path.key, 'edges')
 
   return edgesToConnection(store, allEdges, args)
 }
@@ -572,12 +543,7 @@ const dmarcPhaseSummaryMock = () => {
   const enforceTotal = faker.datatype.number({ min: 1, max: 2000 })
   const maintainTotal = faker.datatype.number({ min: 1, max: 2000 })
 
-  const totalDomains =
-    notImplementedTotal +
-    assessTotal +
-    deployTotal +
-    enforceTotal +
-    maintainTotal
+  const totalDomains = notImplementedTotal + assessTotal + deployTotal + enforceTotal + maintainTotal
 
   const notImplementedCategory = {
     name: 'not implemented',
@@ -605,13 +571,7 @@ const dmarcPhaseSummaryMock = () => {
     percentage: (maintainTotal / totalDomains) * 100,
   }
 
-  const categories = [
-    notImplementedCategory,
-    assessCategory,
-    deployCategory,
-    enforceCategory,
-    maintainCategory,
-  ]
+  const categories = [notImplementedCategory, assessCategory, deployCategory, enforceCategory, maintainCategory]
 
   return {
     total: totalDomains,
@@ -626,10 +586,7 @@ const schemaWithMocks = addMocksToSchema({
   resolvers: (store) => ({
     Query: {
       findMe: (_, _args, context, _resolveInfo, ___) => {
-        return store.get(
-          'PersonalUser',
-          jwt.decode(context.token, 'secret').parameters.userKey,
-        )
+        return store.get('PersonalUser', jwt.decode(context.token, 'secret').parameters.userKey)
       },
       findMyDmarcSummaries: (_, args, _context, resolveInfo, ___) => {
         return getConnectionObject(store, args, resolveInfo)
@@ -663,23 +620,12 @@ const schemaWithMocks = addMocksToSchema({
     },
     Organization: {
       affiliations: (parent, args, _context, _resolveInfo) => {
-        const organizationAffiliationEdges = store.get(parent, [
-          'affiliations',
-          'edges',
-        ])
+        const organizationAffiliationEdges = store.get(parent, ['affiliations', 'edges'])
         return edgesToConnection(store, organizationAffiliationEdges, args)
       },
       domains: (parent, args, _context, _resolveInfo) => {
         const organizationDomainEdges = store.get(parent, ['domains', 'edges'])
         return edgesToConnection(store, organizationDomainEdges, args)
-      },
-    },
-    WebScan: {
-      https: (_, args, _context, resolveInfo) => {
-        return getConnectionObject(store, args, resolveInfo)
-      },
-      ssl: (_, args, _context, resolveInfo) => {
-        return getConnectionObject(store, args, resolveInfo)
       },
     },
     Mutation: {
@@ -703,8 +649,7 @@ const schemaWithMocks = addMocksToSchema({
 
         const refreshToken = tokenize({
           parameters: {
-            userKey: jwt.decode(context.cookies.refresh_token, 'secret')
-              .parameters.userKey,
+            userKey: jwt.decode(context.cookies.refresh_token, 'secret').parameters.userKey,
           },
           expPeriod: REFRESH_TOKEN_EXPIRY_SECONDS,
         })
@@ -714,15 +659,10 @@ const schemaWithMocks = addMocksToSchema({
           result: {
             authToken: tokenize({
               parameters: {
-                userKey: jwt.decode(context.cookies.refresh_token, 'secret')
-                  .parameters.userKey,
+                userKey: jwt.decode(context.cookies.refresh_token, 'secret').parameters.userKey,
               },
             }),
-            user: store.get(
-              'PersonalUser',
-              jwt.decode(context.cookies.refresh_token, 'secret').parameters
-                .userKey,
-            ),
+            user: store.get('PersonalUser', jwt.decode(context.cookies.refresh_token, 'secret').parameters.userKey),
             type: 'AuthResult',
           },
         }
@@ -733,66 +673,41 @@ const schemaWithMocks = addMocksToSchema({
         store.set('DkimSub', scanUuid, 'sharedId', scanUuid)
         const dkimScanData = store.get('DkimSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(
-            `${NEW_DKIM_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-            {
-              dkimScanData: dkimScanData,
-            },
-          )
+          pubsub.publish(`${NEW_DKIM_DATA_STREAM}/${jwt.decode(context.token, 'secret').parameters.userKey}`, {
+            dkimScanData: dkimScanData,
+          })
         }, Math.random() * 10000)
 
         store.set('DmarcSub', scanUuid, 'sharedId', scanUuid)
         const dmarcScanData = store.get('DmarcSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(
-            `${NEW_DMARC_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-            {
-              dmarcScanData: dmarcScanData,
-            },
-          )
+          pubsub.publish(`${NEW_DMARC_DATA_STREAM}/${jwt.decode(context.token, 'secret').parameters.userKey}`, {
+            dmarcScanData: dmarcScanData,
+          })
         }, Math.random() * 10000)
 
         store.set('SpfSub', scanUuid, 'sharedId', scanUuid)
         const spfScanData = store.get('SpfSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(
-            `${NEW_SPF_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-            {
-              spfScanData: spfScanData,
-            },
-          )
+          pubsub.publish(`${NEW_SPF_DATA_STREAM}/${jwt.decode(context.token, 'secret').parameters.userKey}`, {
+            spfScanData: spfScanData,
+          })
         }, Math.random() * 10000)
 
         store.set('HttpsSub', scanUuid, 'sharedId', scanUuid)
         const httpsScanData = store.get('HttpsSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(
-            `${NEW_HTTPS_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-            {
-              httpsScanData: httpsScanData,
-            },
-          )
+          pubsub.publish(`${NEW_HTTPS_DATA_STREAM}/${jwt.decode(context.token, 'secret').parameters.userKey}`, {
+            httpsScanData: httpsScanData,
+          })
         }, Math.random() * 10000)
 
         store.set('SslSub', scanUuid, 'sharedId', scanUuid)
         const sslScanData = store.get('SslSub', scanUuid)
         setTimeout(() => {
-          pubsub.publish(
-            `${NEW_SSL_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-            {
-              sslScanData: sslScanData,
-            },
-          )
+          pubsub.publish(`${NEW_SSL_DATA_STREAM}/${jwt.decode(context.token, 'secret').parameters.userKey}`, {
+            sslScanData: sslScanData,
+          })
         }, Math.random() * 10000)
 
         return {
@@ -813,12 +728,7 @@ const schemaWithMocks = addMocksToSchema({
           if (key === 'id') return
 
           // Current mock implementation does not support multi-lang, remove language from keys
-          store.set(
-            'Organization',
-            args.input.id,
-            key.substring(0, key.length - 2),
-            value,
-          )
+          store.set('Organization', args.input.id, key.substring(0, key.length - 2), value)
         })
 
         return {
@@ -834,12 +744,8 @@ const schemaWithMocks = addMocksToSchema({
         )
         return {
           result: {
-            status:
-              'Phone number has been successfully set, you will receive a verification text message shortly.',
-            user: store.get(
-              'PersonalUser',
-              jwt.decode(context.token, 'secret').parameters.userKey,
-            ),
+            status: 'Phone number has been successfully set, you will receive a verification text message shortly.',
+            user: store.get('PersonalUser', jwt.decode(context.token, 'secret').parameters.userKey),
             type: 'SetPhoneNumberResult',
           },
         }
@@ -889,48 +795,6 @@ const schemaWithMocks = addMocksToSchema({
     SignInUnion: {
       __resolveType: (obj, _context, _resolveInfo) => {
         if (obj.authToken) return 'AuthResult'
-      },
-    },
-    Subscription: {
-      dkimScanData: {
-        subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(
-            `${NEW_DKIM_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-          ),
-      },
-      dmarcScanData: {
-        subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(
-            `${NEW_DMARC_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-          ),
-      },
-      spfScanData: {
-        subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(
-            `${NEW_SPF_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-          ),
-      },
-      httpsScanData: {
-        subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(
-            `${NEW_HTTPS_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-          ),
-      },
-      sslScanData: {
-        subscribe: (_, _args, context) =>
-          pubsub.asyncIterator(
-            `${NEW_SSL_DATA_STREAM}/${
-              jwt.decode(context.token, 'secret').parameters.userKey
-            }`,
-          ),
       },
     },
   }),

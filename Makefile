@@ -107,7 +107,7 @@ reports:
 credentials:
 		@cat <<-'EOF' > k8s/apps/bases/scanners/scanner-platform/creds/scanners.env
 		DB_PASS=test
-		DB_HOST=arangodb.db
+		DB_URL=http://arangodb.db:8529
 		DB_USER=root
 		DB_NAME=track_dmarc
 		EOF
@@ -119,10 +119,10 @@ credentials:
 		DB_PASS=dbpass
 		DB_URL=http://arangodb.db:8529/
 		DB_NAME=track_dmarc
-		GITHUB_BRANCH=master
-		GITHUB_FILE=dmarc-domains.json
-		GITHUB_OWNER=cybercentrecanada
-		GITHUB_REPO=dmarc-tbs-domains
+		GITHUB_BRANCH=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		GITHUB_FILE=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		GITHUB_OWNER=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		GITHUB_REPO=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		GITHUB_URL=https://api.github.com/graphql
 		AZURE_CONN_STRING=???

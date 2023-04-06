@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-processor
+  labels:
+    app: web-processor
+  namespace: scanners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-processor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: web-processor
+    spec:
+      containers:
+        - name: web-processor
+          image: gcr.io/track-compliance/web-processor # {"$imagepolicy": "flux-system:web-processor"}
+          env:
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_URL
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*.web.results
+            - name: QUEUE_GROUP
+              value: web_processor
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+          resources: {}
+status: {}

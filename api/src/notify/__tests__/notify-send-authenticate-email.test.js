@@ -1,10 +1,10 @@
-import { setupI18n } from '@lingui/core'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
-import { sendAuthEmail } from '../index'
+import {sendAuthEmail} from '../index'
 
-const { NOTIFICATION_AUTHENTICATE_EMAIL_ID } = process.env
+const {NOTIFICATION_AUTHENTICATE_EMAIL_ID} = process.env
 
 describe('given the sendAuthEmail function', () => {
   let i18n
@@ -16,8 +16,8 @@ describe('given the sendAuthEmail function', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -43,8 +43,8 @@ describe('given the sendAuthEmail function', () => {
         tfaCode: 123456,
       }
 
-      const mockedSendAuthEmail = sendAuthEmail({ notifyClient, i18n })
-      await mockedSendAuthEmail({ user })
+      const mockedSendAuthEmail = sendAuthEmail({notifyClient, i18n})
+      await mockedSendAuthEmail({user})
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(
         NOTIFICATION_AUTHENTICATE_EMAIL_ID,
@@ -63,8 +63,8 @@ describe('given the sendAuthEmail function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -88,8 +88,8 @@ describe('given the sendAuthEmail function', () => {
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail({ notifyClient, i18n })
-          await mockedSendAuthEmail({ user })
+          const mockedSendAuthEmail = sendAuthEmail({notifyClient, i18n})
+          await mockedSendAuthEmail({user})
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to send authentication email. Please try again.'),
@@ -107,8 +107,8 @@ describe('given the sendAuthEmail function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -132,8 +132,8 @@ describe('given the sendAuthEmail function', () => {
         }
 
         try {
-          const mockedSendAuthEmail = sendAuthEmail({ notifyClient, i18n })
-          await mockedSendAuthEmail({ user })
+          const mockedSendAuthEmail = sendAuthEmail({notifyClient, i18n})
+          await mockedSendAuthEmail({user})
         } catch (err) {
           expect(err).toEqual(
             new Error(

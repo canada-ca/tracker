@@ -1,5 +1,5 @@
-import { domainErrorType, domainType } from '../../objects/index'
-import { createDomainUnion } from '../create-domain-union'
+import {domainErrorType, domainType} from '../../objects/index'
+import {createDomainUnion} from '../create-domain-union'
 
 describe('given the createDomainUnion', () => {
   describe('testing the field types', () => {

@@ -1,5 +1,5 @@
-const { createContext } = require('../create-context.js')
-const { tokenize } = require('../auth')
+const {createContext} = require('../create-context.js')
+const {tokenize} = require('../auth')
 
 describe('given the create context function', () => {
   describe('request authorization token is not set', () => {
@@ -8,7 +8,7 @@ describe('given the create context function', () => {
         query: jest.fn(),
         transaction: jest.fn(),
         collections: [],
-        req: { headers: {}, language: 'en' },
+        req: {headers: {}, language: 'en'},
         res: {},
       })
 
@@ -25,7 +25,7 @@ describe('given the create context function', () => {
         req: {
           language: 'en',
           headers: {
-            authorization: tokenize({ parameters: { userKey: '1234' } }),
+            authorization: tokenize({parameters: {userKey: '1234'}}),
           },
         },
         res: {},

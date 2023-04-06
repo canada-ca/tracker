@@ -1,16 +1,16 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
-import { v4 as uuidv4 } from 'uuid'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
+import {v4 as uuidv4} from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { loadUserByKey } from '../../loaders'
-import { tokenize } from '../../../auth'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {loadUserByKey} from '../../loaders'
+import {tokenize} from '../../../auth'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -44,7 +44,7 @@ describe('refresh users tokens', () => {
 
   describe('given a successful refresh', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -80,11 +80,11 @@ describe('refresh users tokens', () => {
       })
       it('returns a new auth, and refresh token', async () => {
         const refreshToken = tokenize({
-          parameters: { userKey: user._key, uuid: '1234' },
+          parameters: {userKey: user._key, uuid: '1234'},
           expPeriod: 168,
           secret: String(REFRESH_KEY),
         })
-        const mockedRequest = { cookies: { refresh_token: refreshToken } }
+        const mockedRequest = {cookies: {refresh_token: refreshToken}}
 
         const mockedFormat = jest
           .fn()
@@ -96,7 +96,7 @@ describe('refresh users tokens', () => {
         })
 
         const mockedCookie = jest.fn()
-        const mockedResponse = { cookie: mockedCookie }
+        const mockedResponse = {cookie: mockedCookie}
 
         const response = await graphql(
           schema,
@@ -135,7 +135,7 @@ describe('refresh users tokens', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -183,11 +183,11 @@ describe('refresh users tokens', () => {
       })
       it('returns a new auth, and refresh token', async () => {
         const refreshToken = tokenize({
-          parameters: { userKey: user._key, uuid: '1234' },
+          parameters: {userKey: user._key, uuid: '1234'},
           expPeriod: 168,
           secret: String(REFRESH_KEY),
         })
-        const mockedRequest = { cookies: { refresh_token: refreshToken } }
+        const mockedRequest = {cookies: {refresh_token: refreshToken}}
 
         const mockedFormat = jest
           .fn()
@@ -199,7 +199,7 @@ describe('refresh users tokens', () => {
         })
 
         const mockedCookie = jest.fn()
-        const mockedResponse = { cookie: mockedCookie }
+        const mockedResponse = {cookie: mockedCookie}
 
         const response = await graphql(
           schema,
@@ -238,7 +238,7 @@ describe('refresh users tokens', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -276,8 +276,8 @@ describe('refresh users tokens', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -289,7 +289,7 @@ describe('refresh users tokens', () => {
       describe('given an unsuccessful refresh', () => {
         describe('refresh token is undefined', () => {
           it('returns an error', async () => {
-            const mockedRequest = { cookies: {} }
+            const mockedRequest = {cookies: {}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -336,7 +336,7 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -361,11 +361,11 @@ describe('refresh users tokens', () => {
         describe('refresh token is invalid', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: 'invalid-token',
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -412,7 +412,7 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -437,11 +437,11 @@ describe('refresh users tokens', () => {
         describe('user is undefined', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: '1234', uuid: '1234' },
+              parameters: {userKey: '1234', uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -515,11 +515,11 @@ describe('refresh users tokens', () => {
         describe('if the token is expired', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -597,11 +597,11 @@ describe('refresh users tokens', () => {
         describe('if the uuids do not match', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '5678' },
+              parameters: {userKey: 123, uuid: '5678'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -687,11 +687,11 @@ describe('refresh users tokens', () => {
             })
 
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -772,11 +772,11 @@ describe('refresh users tokens', () => {
             })
 
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
 
             const mockedFormat = jest
               .fn()
@@ -854,8 +854,8 @@ describe('refresh users tokens', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -867,7 +867,7 @@ describe('refresh users tokens', () => {
       describe('given an unsuccessful refresh', () => {
         describe('refresh token is undefined', () => {
           it('returns an error', async () => {
-            const mockedRequest = { cookies: {} }
+            const mockedRequest = {cookies: {}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -914,7 +914,7 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -940,11 +940,11 @@ describe('refresh users tokens', () => {
         describe('refresh token is invalid', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: 'invalid-token',
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -991,7 +991,7 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 },
               },
             )
@@ -1017,11 +1017,11 @@ describe('refresh users tokens', () => {
         describe('user is undefined', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: '1234', uuid: '1234' },
+              parameters: {userKey: '1234', uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1096,11 +1096,11 @@ describe('refresh users tokens', () => {
         describe('if the token is expired', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1179,11 +1179,11 @@ describe('refresh users tokens', () => {
         describe('if the uuids do not match', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '5678' },
+              parameters: {userKey: 123, uuid: '5678'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1270,11 +1270,11 @@ describe('refresh users tokens', () => {
             })
 
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1357,11 +1357,11 @@ describe('refresh users tokens', () => {
             })
 
             const refreshToken = tokenize({
-              parameters: { userKey: 123, uuid: '1234' },
+              parameters: {userKey: 123, uuid: '1234'},
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = { cookies: { refresh_token: refreshToken } }
+            const mockedRequest = {cookies: {refresh_token: refreshToken}}
 
             const mockedFormat = jest
               .fn()

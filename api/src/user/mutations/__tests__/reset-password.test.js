@@ -1,21 +1,21 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import {ensure, dbNameFromFile} from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
-import { v4 as uuidv4 } from 'uuid'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
+import {v4 as uuidv4} from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { tokenize, verifyToken } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {tokenize, verifyToken} from '../../../auth'
+import {loadUserByUserName, loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 const mockNotify = jest.fn()
 
@@ -42,7 +42,7 @@ describe('reset users password', () => {
   describe('given a successful reset', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, transaction } = await ensure({
+      ;({query, drop, truncate, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -93,7 +93,7 @@ describe('reset users password', () => {
             cleanseInput,
           },
           loaders: {
-            loadUserByUserName: loadUserByUserName({ query }),
+            loadUserByUserName: loadUserByUserName({query}),
           },
           notify: {
             sendVerificationEmail: jest.fn(),
@@ -116,8 +116,8 @@ describe('reset users password', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -135,7 +135,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const resetToken = tokenize({
-          parameters: { userKey: user._key, currentPassword: user.password },
+          parameters: {userKey: user._key, currentPassword: user.password},
         })
 
         const response = await graphql(
@@ -176,8 +176,8 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -198,7 +198,7 @@ describe('reset users password', () => {
         ])
 
         consoleOutput.length = 0
-        const mockedResponse = { cookie: jest.fn() }
+        const mockedResponse = {cookie: jest.fn()}
 
         const testSignIn = await graphql(
           schema,
@@ -239,7 +239,7 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -272,7 +272,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const resetToken = tokenize({
-          parameters: { userKey: user._key, currentPassword: user.password },
+          parameters: {userKey: user._key, currentPassword: user.password},
         })
 
         await graphql(
@@ -313,8 +313,8 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -334,8 +334,8 @@ describe('reset users password', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -353,7 +353,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const resetToken = tokenize({
-          parameters: { userKey: user._key, currentPassword: user.password },
+          parameters: {userKey: user._key, currentPassword: user.password},
         })
 
         const response = await graphql(
@@ -394,8 +394,8 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -416,7 +416,7 @@ describe('reset users password', () => {
         ])
 
         consoleOutput.length = 0
-        const mockedResponse = { cookie: jest.fn() }
+        const mockedResponse = {cookie: jest.fn()}
 
         const testSignIn = await graphql(
           schema,
@@ -457,7 +457,7 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
             },
             notify: {
               sendAuthEmail: mockNotify,
@@ -490,7 +490,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const resetToken = tokenize({
-          parameters: { userKey: user._key, currentPassword: user.password },
+          parameters: {userKey: user._key, currentPassword: user.password},
         })
 
         await graphql(
@@ -531,8 +531,8 @@ describe('reset users password', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({ query }),
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -554,8 +554,8 @@ describe('reset users password', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -636,7 +636,7 @@ describe('reset users password', () => {
       describe('userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: undefined },
+            parameters: {userKey: undefined},
           })
 
           const response = await graphql(
@@ -705,7 +705,7 @@ describe('reset users password', () => {
       describe('user cannot be found', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: 1, currentPassword: 'secretPassword' },
+            parameters: {userKey: 1, currentPassword: 'secretPassword'},
           })
 
           const response = await graphql(
@@ -848,7 +848,7 @@ describe('reset users password', () => {
       describe('new passwords do not match', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: 123, currentPassword: 'currentPassword' },
+            parameters: {userKey: 123, currentPassword: 'currentPassword'},
           })
 
           const response = await graphql(
@@ -919,7 +919,7 @@ describe('reset users password', () => {
       describe('new passwords do not meet GoC requirements', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: 123, currentPassword: 'currentPassword' },
+            parameters: {userKey: 123, currentPassword: 'currentPassword'},
           })
 
           const response = await graphql(
@@ -1033,7 +1033,7 @@ describe('reset users password', () => {
                 auth: {
                   bcrypt,
                   tokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -1107,7 +1107,7 @@ describe('reset users password', () => {
                 auth: {
                   bcrypt,
                   tokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -1140,8 +1140,8 @@ describe('reset users password', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1222,7 +1222,7 @@ describe('reset users password', () => {
       describe('userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: undefined },
+            parameters: {userKey: undefined},
           })
 
           const response = await graphql(
@@ -1291,7 +1291,7 @@ describe('reset users password', () => {
       describe('user cannot be found', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: 1, currentPassword: 'secretPassword' },
+            parameters: {userKey: 1, currentPassword: 'secretPassword'},
           })
 
           const response = await graphql(
@@ -1435,7 +1435,7 @@ describe('reset users password', () => {
       describe('new passwords do not match', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: 123, currentPassword: 'currentPassword' },
+            parameters: {userKey: 123, currentPassword: 'currentPassword'},
           })
 
           const response = await graphql(
@@ -1507,7 +1507,7 @@ describe('reset users password', () => {
       describe('new passwords do not meet GoC requirements', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
-            parameters: { userKey: 123, currentPassword: 'currentPassword' },
+            parameters: {userKey: 123, currentPassword: 'currentPassword'},
           })
 
           const response = await graphql(
@@ -1621,7 +1621,7 @@ describe('reset users password', () => {
                 auth: {
                   bcrypt,
                   tokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -1697,7 +1697,7 @@ describe('reset users password', () => {
                 auth: {
                   bcrypt,
                   tokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,

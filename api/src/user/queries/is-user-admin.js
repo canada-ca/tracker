@@ -1,6 +1,6 @@
-import { t } from '@lingui/macro'
-import { GraphQLBoolean, GraphQLID } from 'graphql'
-import { fromGlobalId } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLBoolean, GraphQLID} from 'graphql'
+import {fromGlobalId} from 'graphql-relay'
 
 export const isUserAdmin = {
   type: GraphQLBoolean,
@@ -19,12 +19,12 @@ export const isUserAdmin = {
       i18n,
       query,
       userKey,
-      auth: { checkPermission, userRequired },
-      loaders: { loadOrgByKey },
-      validators: { cleanseInput },
+      auth: {checkPermission, userRequired},
+      loaders: {loadOrgByKey},
+      validators: {cleanseInput},
     },
   ) => {
-    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
+    const {id: orgKey} = fromGlobalId(cleanseInput(args.orgId))
 
     const user = await userRequired()
 
@@ -32,7 +32,7 @@ export const isUserAdmin = {
     if (orgKey !== '') {
       const org = await loadOrgByKey.load(orgKey)
 
-      const permission = await checkPermission({ orgId: org._id })
+      const permission = await checkPermission({orgId: org._id})
 
       if (permission === 'admin' || permission === 'super_admin') {
         return true

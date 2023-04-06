@@ -8,7 +8,7 @@ export const loadAllOrganizationDomainStatuses =
     try {
       statuses = (
         await query`
-          WITH domains
+          WITH domains, organizations
           FOR org IN organizations
               FILTER org.orgDetails.en.acronym != "SA"
               FOR domain, claim IN 1..1 OUTBOUND org._id claims
@@ -28,14 +28,8 @@ export const loadAllOrganizationDomainStatuses =
       `
       ).all()
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} running loadAllOrganizationDomainStatuses: ${err}`,
-      )
-      throw new Error(
-        i18n._(
-          t`Unable to load all organization domain statuses. Please try again.`,
-        ),
-      )
+      console.error(`Database error occurred when user: ${userKey} running loadAllOrganizationDomainStatuses: ${err}`)
+      throw new Error(i18n._(t`Unable to load all organization domain statuses. Please try again.`))
     }
 
     return statuses

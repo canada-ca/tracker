@@ -1,12 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
-import { checkDomainOwnership } from '../index'
+import {checkDomainOwnership} from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given the check domain ownership function', () => {
   let query, drop, truncate, collections, org, domain, i18n, user
@@ -23,17 +23,17 @@ describe('given the check domain ownership function', () => {
   describe('given a successful domain ownership call', () => {
     let permitted
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -109,7 +109,7 @@ describe('given the check domain ownership function', () => {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               query,
               userKey: user._key,
-              auth: { loginRequiredBool: true },
+              auth: {loginRequiredBool: true},
             })
             permitted = await testCheckDomainOwnerShip({
               domainId: domain._id,
@@ -130,7 +130,7 @@ describe('given the check domain ownership function', () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
             userKey: user._key,
-            auth: { loginRequiredBool: true },
+            auth: {loginRequiredBool: true},
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -150,7 +150,7 @@ describe('given the check domain ownership function', () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
             userKey: user._key,
-            auth: { loginRequiredBool: true },
+            auth: {loginRequiredBool: true},
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -168,10 +168,10 @@ describe('given the check domain ownership function', () => {
             query: jest.fn().mockReturnValue({
               next: jest
                 .fn()
-                .mockReturnValue({ superAdmin: true, domainOwnership: false }),
+                .mockReturnValue({superAdmin: true, domainOwnership: false}),
             }),
             userKey: 123,
-            auth: { loginRequiredBool: true },
+            auth: {loginRequiredBool: true},
           })
           const permitted = await testCheckDomainOwnerShip({
             domainId: 'domains/123',
@@ -187,13 +187,13 @@ describe('given the check domain ownership function', () => {
           query: jest
             .fn()
             .mockReturnValueOnce({
-              next: jest.fn().mockReturnValue({ superAdmin: false }),
+              next: jest.fn().mockReturnValue({superAdmin: false}),
             })
             .mockReturnValue({
               next: jest.fn().mockReturnValue([]),
             }),
           userKey: '123',
-          auth: { loginRequiredBool: true },
+          auth: {loginRequiredBool: true},
         })
         permitted = await testCheckDomainOwnerShip({
           domainId: 'domains/123',
@@ -206,8 +206,8 @@ describe('given the check domain ownership function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -228,7 +228,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
@@ -268,7 +268,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
@@ -296,7 +296,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
@@ -332,7 +332,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
@@ -357,8 +357,8 @@ describe('given the check domain ownership function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -379,7 +379,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
@@ -419,7 +419,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
@@ -447,7 +447,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
@@ -483,7 +483,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: { loginRequired: true },
+              auth: {loginRequired: true},
               query: mockQuery,
               userKey: user._key,
             })
