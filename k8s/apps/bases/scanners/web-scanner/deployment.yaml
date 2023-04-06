@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: web-scanner
-          image: gcr.io/track-compliance/web-scanner # {"$imagepolicy": "flux-system:web-scanner"}
+          image: gcr.io/track-compliance/web-scanner:master-test # {"$imagepolicy": "flux-system:web-scanner"}
           env:
             - name: PYTHONWARNINGS
               value: ignore
