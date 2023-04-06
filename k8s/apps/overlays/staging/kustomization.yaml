@@ -22,5 +22,4 @@ replicas:
   - name: web-scanner
     count: 13
 patchesStrategicMerge:
-  - image-policy-patch.yaml
   - domain-dispatcher-suspend-patch.yaml

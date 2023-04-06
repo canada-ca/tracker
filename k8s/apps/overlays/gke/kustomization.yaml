@@ -23,4 +23,3 @@ replicas:
     count: 13
 patchesStrategicMerge:
   - domain-dispatcher-suspend-patch.yaml
-  - image-policy-patch.yaml
