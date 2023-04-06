@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: guidance
+  name: jobs
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./k8s/apps/bases/scanners/guidance-cronjob
+  path: ./k8s/jobs/overlays/gke
   sourceRef:
     kind: GitRepository
     name: tracker

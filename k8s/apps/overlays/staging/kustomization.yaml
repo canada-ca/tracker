@@ -10,7 +10,6 @@ resources:
   - ../../bases/scanners/web-scanner
   - ../../bases/scanners/dmarc-report-cronjob
   - ../../bases/scanners/domain-dispatcher-cronjob
-  - ../../bases/scanners/guidance-cronjob
   - ../../bases/scanners/summaries-cronjob
 replicas:
   - name: tracker-api
