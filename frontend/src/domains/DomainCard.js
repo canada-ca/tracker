@@ -41,7 +41,7 @@ export function DomainCard({
 }) {
   const location = useLocation()
   const toast = useToast()
-  const { isLoggedIn } = useUserVar()
+  const { isLoggedIn, isEmailValidated } = useUserVar()
 
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
@@ -236,7 +236,7 @@ export function DomainCard({
           )}
         </Stack>
         <Stack ml={4}>
-          <ScanDomainButton domainUrl={url} />
+          {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={url} />}
           <ABTestingWrapper insiderVariantName="B">
             <ABTestVariant name="B">
               {isLoggedIn() &&

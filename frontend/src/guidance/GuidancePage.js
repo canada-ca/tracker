@@ -25,6 +25,7 @@ import { useQuery } from '@apollo/client'
 import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { useUserVar } from '../utilities/userState'
 
 function GuidancePage() {
   const { domainSlug: domain } = useParams()
@@ -35,6 +36,7 @@ function GuidancePage() {
 
   const history = useHistory()
   const location = useLocation()
+  const { isLoggedIn, isEmailValidated } = useUserVar()
   const { from } = location.state || { from: { pathname: '/domains' } }
 
   if (loading) {
@@ -138,7 +140,7 @@ function GuidancePage() {
             <Trans>Scan Pending</Trans>
           </Badge>
         )}
-        <ScanDomainButton domainUrl={domainName} ml="2" />
+        {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={domainName} ml="2" />}
         {data.findDomainByDomain.hasDMARCReport && (
           <Button
             ml="2"

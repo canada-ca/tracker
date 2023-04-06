@@ -31,11 +31,9 @@ export const requestScan = new mutationWithClientMutationId({
       validators: { cleanseInput },
     },
   ) => {
-    if (loginRequiredBool) {
-      // Get User
-      const user = await userRequired()
-      verifiedRequired({ user })
-    }
+    // Get User
+    const user = await userRequired()
+    verifiedRequired({ user })
 
     // Cleanse input
     const domainInput = cleanseInput(args.domain)
