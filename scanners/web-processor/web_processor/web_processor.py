@@ -175,7 +175,6 @@ def process_tls_results(tls_results):
     # get cipher status
     if "ssl6" in negative_tags:
         cipher_status = "fail"
-        negative_tags.append("ssl19")
     else:
         cipher_status = "pass"
         positive_tags.append("ssl19")
