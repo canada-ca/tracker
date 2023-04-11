@@ -3,7 +3,7 @@ cffi==1.15.1
 charset-normalizer==2.1.1
 cryptography==39.0.1
 idna==3.4
-nassl==4.0.2
+nassl==5.0.1
 nats-py==2.2.0
 pycparser==2.21
 pydantic==1.9.2
