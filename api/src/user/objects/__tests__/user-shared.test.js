@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
+import {GraphQLNonNull, GraphQLID, GraphQLString} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
 
-import { userSharedType } from '../index'
+import {userSharedType} from '../index'
 
 describe('given the user object', () => {
   describe('testing the field definitions', () => {
@@ -31,7 +31,7 @@ describe('given the user object', () => {
       it('returns the resolved field', () => {
         const demoType = userSharedType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
+        expect(demoType.id.resolve({id: '1'})).toEqual(
           toGlobalId('user', '1'),
         )
       })
@@ -41,7 +41,7 @@ describe('given the user object', () => {
         const demoType = userSharedType.getFields()
 
         expect(
-          demoType.displayName.resolve({ displayName: 'Display Name' }),
+          demoType.displayName.resolve({displayName: 'Display Name'}),
         ).toEqual('Display Name')
       })
     })
@@ -50,7 +50,7 @@ describe('given the user object', () => {
         const demoType = userSharedType.getFields()
 
         expect(
-          demoType.userName.resolve({ userName: 'test@email.gc.ca' }),
+          demoType.userName.resolve({userName: 'test@email.gc.ca'}),
         ).toEqual('test@email.gc.ca')
       })
     })

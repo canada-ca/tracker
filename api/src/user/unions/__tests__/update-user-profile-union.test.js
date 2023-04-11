@@ -2,7 +2,7 @@ import {
   updateUserProfileResultType,
   updateUserProfileErrorType,
 } from '../../objects/index'
-import { updateUserProfileUnion } from '../update-user-profile-union'
+import {updateUserProfileUnion} from '../update-user-profile-union'
 
 describe('given the updateUserProfileUnion', () => {
   describe('testing the field types', () => {

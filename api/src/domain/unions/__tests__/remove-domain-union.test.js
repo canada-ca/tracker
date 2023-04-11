@@ -1,5 +1,5 @@
-import { domainErrorType, domainResultType } from '../../objects'
-import { removeDomainUnion } from '../remove-domain-union'
+import {domainErrorType, domainResultType} from '../../objects'
+import {removeDomainUnion} from '../remove-domain-union'
 
 describe('given the removeDomainUnion', () => {
   describe('testing the field types', () => {

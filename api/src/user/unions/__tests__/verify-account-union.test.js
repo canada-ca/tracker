@@ -2,7 +2,7 @@ import {
   verifyAccountErrorType,
   verifyAccountResultType,
 } from '../../objects/index'
-import { verifyAccountUnion } from '../verify-account-union'
+import {verifyAccountUnion} from '../verify-account-union'
 
 describe('given the verifyAccountUnion', () => {
   describe('testing the field types', () => {

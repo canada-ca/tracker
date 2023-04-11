@@ -1,13 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -19,14 +12,10 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import {
-  PAGINATED_DOMAINS as FORWARD,
-  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
-} from '../graphql/queries'
+import { PAGINATED_DOMAINS as FORWARD, GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
-import { SubdomainWarning } from './SubdomainWarning'
 
 export default function DomainsPage() {
   const toast = useToast()
@@ -36,21 +25,21 @@ export default function DomainsPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
 
-  const [
-    getAllOrgDomainStatuses,
-    { loading: allOrgDomainStatusesLoading, _error, _data },
-  ] = useLazyQuery(GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV, {
-    onError(error) {
-      toast({
-        title: error.message,
-        description: t`An error occured when you attempted to download all domain statuses.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
+  const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+    GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
+    {
+      onError(error) {
+        toast({
+          title: error.message,
+          description: t`An error occured when you attempted to download all domain statuses.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
     },
-  })
+  )
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -58,27 +47,18 @@ export default function DomainsPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: domainsPerPage,
-    relayRoot: 'findMyDomains',
-    variables: {
-      orderBy: { field: orderField, direction: orderDirection },
-      search: debouncedSearchTerm,
-    },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      recordsPerPage: domainsPerPage,
+      relayRoot: 'findMyDomains',
+      variables: {
+        orderBy: { field: orderField, direction: orderDirection },
+        search: debouncedSearchTerm,
+      },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -110,17 +90,17 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, status, hasDMARCReport, archived }, index) => (
-        <ErrorBoundary
-          key={`${id}:${index}`}
-          FallbackComponent={ErrorFallbackMessage}
-        >
+      {({ id, domain, status, hasDMARCReport, archived, rcode, blocked, webScanPending }, index) => (
+        <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
           <DomainCard
             id={id}
             url={domain}
             status={status}
             hasDMARCReport={hasDMARCReport}
             isArchived={archived}
+            rcode={rcode}
+            blocked={blocked}
+            webScanPending={webScanPending}
             mb="3"
           />
         </ErrorBoundary>
@@ -130,12 +110,7 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
-      <Flex
-        flexDirection="row"
-        align="center"
-        mb="4"
-        flexWrap={{ base: 'wrap', md: 'nowrap' }}
-      >
+      <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
         </Heading>
@@ -176,30 +151,15 @@ export default function DomainsPage() {
 
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Ciphers`}
-          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`Curves`}
-          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`HSTS`}
-          info={t`Shows if the domain meets the HSTS requirements.`}
-        />
+        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
+        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
+        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
         <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
         />
-        <InfoBox
-          title={t`Protocols`}
-          info={t`Shows if the domain uses acceptable protocols.`}
-        />
-        <InfoBox
-          title={t`SPF`}
-          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
-        />
+        <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
+        <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
         <InfoBox
           title={t`DKIM`}
           info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
@@ -228,8 +188,6 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
         />
-
-        <SubdomainWarning mb="4" />
 
         {domainList}
 

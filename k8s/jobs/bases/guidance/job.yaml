@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: guidance
+  namespace: scanners
+spec:
+  template:
+    spec:
+      containers:
+        - name: guidance
+          image: gcr.io/track-compliance/services/guidance:master-eb7770e-1681225593 # {"$imagepolicy": "flux-system:guidance"}
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_URL
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
+      restartPolicy: OnFailure

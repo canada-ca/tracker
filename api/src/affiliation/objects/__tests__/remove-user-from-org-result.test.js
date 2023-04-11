@@ -1,7 +1,7 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { removeUserFromOrgResultType } from '../remove-user-from-org-result'
-import { userSharedType } from '../../../user/objects'
+import {removeUserFromOrgResultType} from '../remove-user-from-org-result'
+import {userSharedType} from '../../../user/objects'
 
 describe('given the removeUserFromOrgResultType object', () => {
   describe('testing the field definitions', () => {
@@ -23,7 +23,7 @@ describe('given the removeUserFromOrgResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = removeUserFromOrgResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
     describe('testing the user resolver', () => {
@@ -31,8 +31,8 @@ describe('given the removeUserFromOrgResultType object', () => {
         const demoType = removeUserFromOrgResultType.getFields()
 
         expect(
-          demoType.user.resolve({ user: { id: 1, userName: 'test@email.ca' } }),
-        ).toEqual({ id: 1, userName: 'test@email.ca' })
+          demoType.user.resolve({user: {id: 1, userName: 'test@email.ca'}}),
+        ).toEqual({id: 1, userName: 'test@email.ca'})
       })
     })
   })

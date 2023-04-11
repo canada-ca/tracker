@@ -1,4 +1,4 @@
-import { initializeLoaders } from '../initialize-loaders'
+import {initializeLoaders} from '../initialize-loaders'
 
 describe('initializeLoaders', () => {
   it('returns a object with a key for each loader', () => {
@@ -29,18 +29,9 @@ describe('initializeLoaders', () => {
       'loadDomainByKey',
       'loadDomainConnectionsByOrgId',
       'loadDomainConnectionsByUserId',
-      'loadDkimByKey',
-      'loadDkimResultByKey',
-      'loadDmarcByKey',
-      'loadSpfByKey',
-      'loadDkimConnectionsByDomainId',
-      'loadDkimResultConnectionsByDkimId',
-      'loadDmarcConnectionsByDomainId',
-      'loadSpfConnectionsByDomainId',
-      'loadHttpsByKey',
-      'loadHttpsConnectionsByDomainId',
-      'loadSslByKey',
-      'loadSslConnectionByDomainId',
+      'loadDnsConnectionsByDomainId',
+      'loadWebConnectionsByDomainId',
+      'loadWebScansByWebId',
       'loadDkimGuidanceTagByTagId',
       'loadDkimGuidanceTagConnectionsByTagId',
       'loadDmarcGuidanceTagByTagId',

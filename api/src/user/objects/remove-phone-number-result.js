@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const removePhoneNumberResultType = new GraphQLObjectType({
   name: 'RemovePhoneNumberResult',
@@ -9,7 +9,7 @@ export const removePhoneNumberResultType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'Informs the user if the phone number removal was successful.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
 })

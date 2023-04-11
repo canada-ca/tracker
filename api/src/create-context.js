@@ -36,6 +36,7 @@ import {
 
 export async function createContext({
   query,
+  db,
   transaction,
   collections,
   publish,
@@ -59,6 +60,7 @@ export async function createContext({
 
   return {
     query,
+    db,
     transaction,
     collections,
     publish,
@@ -126,6 +128,7 @@ export async function createContext({
     },
     loaders: initializeLoaders({
       query,
+      db,
       userKey,
       i18n,
       language: request.language,

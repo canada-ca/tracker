@@ -6,13 +6,10 @@ resources:
   - ../../bases/scanners/scanner-platform
   - ../../bases/scanners/dns-processor
   - ../../bases/scanners/dns-scanner
-  - ../../bases/scanners/https-processor
-  - ../../bases/scanners/https-scanner
-  - ../../bases/scanners/tls-processor
-  - ../../bases/scanners/tls-scanner
+  - ../../bases/scanners/web-processor
+  - ../../bases/scanners/web-scanner
   - ../../bases/scanners/dmarc-report-cronjob
   - ../../bases/scanners/domain-dispatcher-cronjob
-  - ../../bases/scanners/guidance-cronjob
   - ../../bases/scanners/summaries-cronjob
 replicas:
   - name: tracker-api
@@ -21,9 +18,7 @@ replicas:
     count: 2
   - name: dns-scanner
     count: 3
-  - name: tls-scanner
-    count: 7
-  - name: https-scanner
+  - name: web-scanner
     count: 13
 patchesStrategicMerge:
   - domain-dispatcher-suspend-patch.yaml

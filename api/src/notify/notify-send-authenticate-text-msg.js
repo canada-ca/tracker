@@ -1,17 +1,17 @@
 import crypto from 'crypto'
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
-const { CIPHER_KEY, NOTIFICATION_AUTHENTICATE_TEXT_ID } = process.env
+const {CIPHER_KEY, NOTIFICATION_AUTHENTICATE_TEXT_ID} = process.env
 
-export const sendAuthTextMsg = ({ notifyClient, i18n }) => async ({ user }) => {
+export const sendAuthTextMsg = ({notifyClient, i18n}) => async ({user}) => {
   const templateId = NOTIFICATION_AUTHENTICATE_TEXT_ID
 
-  const { iv, tag, phoneNumber: encryptedData } = user.phoneDetails
+  const {iv, tag, phoneNumber: encryptedData} = user.phoneDetails
   const decipher = crypto.createDecipheriv(
     'aes-256-ccm',
     String(CIPHER_KEY),
     Buffer.from(iv, 'hex'),
-    { authTagLength: 16 },
+    {authTagLength: 16},
   )
   decipher.setAuthTag(Buffer.from(tag, 'hex'))
   let phoneNumber = decipher.update(encryptedData, 'hex', 'utf8')

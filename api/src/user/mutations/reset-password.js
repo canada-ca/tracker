@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLString} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { resetPasswordUnion } from '../unions'
+import {resetPasswordUnion} from '../unions'
 
 export const resetPassword = new mutationWithClientMutationId({
   name: 'ResetPassword',
@@ -38,9 +38,9 @@ export const resetPassword = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { verifyToken, bcrypt },
-      loaders: { loadUserByKey },
-      validators: { cleanseInput },
+      auth: {verifyToken, bcrypt},
+      loaders: {loadUserByKey},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse input
@@ -49,7 +49,7 @@ export const resetPassword = new mutationWithClientMutationId({
     const resetToken = cleanseInput(args.resetToken)
 
     // Check if reset token is valid
-    const tokenParameters = verifyToken({ token: resetToken })
+    const tokenParameters = verifyToken({token: resetToken})
 
     // Check to see if user id exists in token params !!!
     if (

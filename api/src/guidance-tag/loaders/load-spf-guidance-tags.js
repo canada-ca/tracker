@@ -1,8 +1,7 @@
-import DataLoader from 'dataloader'
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
-export const loadSpfGuidanceTagByTagId = ({ query, userKey, i18n, language }) =>
-  new DataLoader(async (tags) => {
+export const loadSpfGuidanceTagByTagId = ({query, userKey, i18n, language}) =>
+  async ({tags = []}) => {
     let cursor
     try {
       cursor = await query`
@@ -45,4 +44,4 @@ export const loadSpfGuidanceTagByTagId = ({ query, userKey, i18n, language }) =>
     }
 
     return tags.map((tag) => tagMap[tag])
-  })
+  }

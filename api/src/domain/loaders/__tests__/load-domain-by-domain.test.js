@@ -1,12 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { loadDomainByDomain } from '../index'
+import {loadDomainByDomain} from '../index'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given a loadDomainByDomain dataloader', () => {
   let query, drop, truncate, collections, i18n
@@ -20,17 +20,17 @@ describe('given a loadDomainByDomain dataloader', () => {
   })
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.domains.save({
@@ -56,7 +56,7 @@ describe('given a loadDomainByDomain dataloader', () => {
         `
         const expectedDomain = await expectedCursor.next()
 
-        const loader = loadDomainByDomain({ query })
+        const loader = loadDomainByDomain({query})
         const domain = await loader.load(expectedDomain.domain)
 
         expect(domain).toEqual(expectedDomain)
@@ -77,7 +77,7 @@ describe('given a loadDomainByDomain dataloader', () => {
           expectedDomains.push(tempDomain)
         }
 
-        const loader = loadDomainByDomain({ query })
+        const loader = loadDomainByDomain({query})
         const domains = await loader.loadMany(domainDomains)
         expect(domains).toEqual(expectedDomains)
       })

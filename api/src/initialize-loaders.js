@@ -23,16 +23,6 @@ import {
   loadDomainTagsByOrgId,
 } from './domain/loaders'
 import {
-  loadDkimByKey,
-  loadDkimResultByKey,
-  loadDmarcByKey,
-  loadSpfByKey,
-  loadDkimConnectionsByDomainId,
-  loadDkimResultConnectionsByDkimId,
-  loadDmarcConnectionsByDomainId,
-  loadSpfConnectionsByDomainId,
-} from './email-scan/loaders'
-import {
   loadAggregateGuidanceTagByTagId,
   loadAggregateGuidanceTagConnectionsByTagId,
   loadDkimGuidanceTagByTagId,
@@ -61,12 +51,7 @@ import {
   loadUserByKey,
   loadUserConnectionsByUserId,
 } from './user/loaders'
-import {
-  loadHttpsByKey,
-  loadHttpsConnectionsByDomainId,
-  loadSslByKey,
-  loadSslConnectionByDomainId,
-} from './web-scan/loaders'
+import { loadWebConnectionsByDomainId, loadWebScansByWebId} from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
   loadVerifiedDomainByKey,
@@ -80,9 +65,11 @@ import {
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
+import {loadDnsConnectionsByDomainId} from "./dns-scan"
 
 export function initializeLoaders({
   query,
+  db,
   userKey,
   i18n,
   language,
@@ -179,45 +166,26 @@ export function initializeLoaders({
       auth: { loginRequiredBool },
     }),
     loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query, userKey, i18n }),
-    loadDkimByKey: loadDkimByKey({ query, userKey, i18n }),
-    loadDkimResultByKey: loadDkimResultByKey({ query, userKey, i18n }),
-    loadDmarcByKey: loadDmarcByKey({ query, userKey, i18n }),
-    loadSpfByKey: loadSpfByKey({ query, userKey, i18n }),
-    loadDkimConnectionsByDomainId: loadDkimConnectionsByDomainId({
+    loadDnsConnectionsByDomainId: loadDnsConnectionsByDomainId({
       query,
+      db,
       userKey,
       cleanseInput,
       i18n,
     }),
-    loadDkimResultConnectionsByDkimId: loadDkimResultConnectionsByDkimId({
+    loadWebConnectionsByDomainId: loadWebConnectionsByDomainId({
       query,
+      db,
       userKey,
       cleanseInput,
       i18n,
     }),
-    loadDmarcConnectionsByDomainId: loadDmarcConnectionsByDomainId({
+    loadWebScansByWebId: loadWebScansByWebId({
       query,
+      db,
       userKey,
       cleanseInput,
       i18n,
-    }),
-    loadSpfConnectionsByDomainId: loadSpfConnectionsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-      i18n,
-    }),
-    loadHttpsByKey: loadHttpsByKey({ query, userKey, i18n }),
-    loadHttpsConnectionsByDomainId: loadHttpsConnectionsByDomainId({
-      query,
-      userKey,
-      cleanseInput,
-    }),
-    loadSslByKey: loadSslByKey({ query, userKey, i18n }),
-    loadSslConnectionByDomainId: loadSslConnectionByDomainId({
-      query,
-      userKey,
-      cleanseInput,
     }),
     loadDkimGuidanceTagByTagId: loadDkimGuidanceTagByTagId({
       query,

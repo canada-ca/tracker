@@ -1,4 +1,4 @@
-import { GraphQLUnionType } from 'graphql'
+import {GraphQLUnionType} from 'graphql'
 import {
   updateUserPasswordErrorType,
   updateUserPasswordResultType,
@@ -9,7 +9,7 @@ export const updateUserPasswordUnion = new GraphQLUnionType({
   description:
     'This union is used with the `updateUserPassword` mutation, allowing for users to update their password, and support any errors that may occur',
   types: [updateUserPasswordErrorType, updateUserPasswordResultType],
-  resolveType({ _type }) {
+  resolveType({_type}) {
     if (_type === 'regular') {
       return updateUserPasswordResultType
     } else {

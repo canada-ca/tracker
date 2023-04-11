@@ -1,16 +1,16 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
 
-import { userRequired } from '../../../auth'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
-import { loadUserByKey } from '../../loaders'
-import { cleanseInput } from '../../../validators'
+import {userRequired} from '../../../auth'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {loadAffiliationConnectionsByUserId} from '../../../affiliation/loaders'
+import {loadUserByKey} from '../../loaders'
+import {cleanseInput} from '../../../validators'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given the findMe query', () => {
   let query, drop, truncate, schema, collections, user
@@ -22,17 +22,17 @@ describe('given the findMe query', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({ query, drop, truncate, collections } = await ensure({
-    variables: {
-      dbname: dbNameFromFile(__filename),
-      username: 'root',
-      rootPassword: rootPass,
-      password: rootPass,
-      url,
-    },
+    ;({query, drop, truncate, collections} = await ensure({
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
+        rootPassword: rootPass,
+        password: rootPass,
+        url,
+      },
 
-    schema: dbschema,
-  }))
+      schema: dbschema,
+    }))
   })
 
   let consoleOutput = []
@@ -79,7 +79,7 @@ describe('given the findMe query', () => {
           auth: {
             userRequired: userRequired({
               userKey: user._key,
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             }),
           },
           loaders: {

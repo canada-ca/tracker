@@ -1,7 +1,7 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLString} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {t} from '@lingui/macro'
 
 export const sendPasswordResetLink = new mutationWithClientMutationId({
   name: 'SendPasswordResetLink',
@@ -29,10 +29,10 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      auth: { tokenize },
-      validators: { cleanseInput },
-      loaders: { loadUserByUserName },
-      notify: { sendPasswordResetEmail },
+      auth: {tokenize},
+      validators: {cleanseInput},
+      loaders: {loadUserByUserName},
+      notify: {sendPasswordResetEmail},
     },
   ) => {
     // Cleanse Input
@@ -42,11 +42,11 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
 
     if (typeof user !== 'undefined') {
       const token = tokenize({
-        parameters: { userKey: user._key, currentPassword: user.password },
+        parameters: {userKey: user._key, currentPassword: user.password},
       })
       const resetUrl = `https://${request.get('host')}/reset-password/${token}`
 
-      await sendPasswordResetEmail({ user, resetUrl })
+      await sendPasswordResetEmail({user, resetUrl})
 
       console.info(
         `User: ${user._key} successfully sent a password reset email.`,

@@ -1,10 +1,10 @@
-import { GraphQLString, GraphQLBoolean } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { t } from '@lingui/macro'
+import {GraphQLString, GraphQLBoolean} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {t} from '@lingui/macro'
 
-import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
-import { updateUserProfileUnion } from '../unions'
+import {LanguageEnums, TfaSendMethodEnum} from '../../enums'
+import {updateUserProfileUnion} from '../unions'
 
 export const updateUserProfile = new mutationWithClientMutationId({
   name: 'UpdateUserProfile',
@@ -52,10 +52,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
       transaction,
       userKey,
       request,
-      auth: { tokenize, userRequired },
-      loaders: { loadUserByKey, loadUserByUserName },
-      notify: { sendVerificationEmail },
-      validators: { cleanseInput },
+      auth: {tokenize, userRequired},
+      loaders: {loadUserByKey, loadUserByUserName},
+      notify: {sendVerificationEmail},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse Input
@@ -185,11 +185,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const returnUser = await loadUserByKey.load(userKey)
 
     if (changedUserName) {
-      const token = tokenize({ parameters: { userKey: returnUser._key } })
+      const token = tokenize({parameters: {userKey: returnUser._key}})
 
       const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
-      await sendVerificationEmail({ user: returnUser, verifyUrl })
+      await sendVerificationEmail({user: returnUser, verifyUrl})
     }
 
     console.info(`User: ${userKey} successfully updated their profile.`)

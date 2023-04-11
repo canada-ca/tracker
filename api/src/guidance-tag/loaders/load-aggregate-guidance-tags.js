@@ -1,12 +1,12 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 import DataLoader from 'dataloader'
 
 export const loadAggregateGuidanceTagByTagId = ({
-  query,
-  userKey,
-  i18n,
-  language,
-}) =>
+                                                  query,
+                                                  userKey,
+                                                  i18n,
+                                                  language,
+                                                }) =>
   new DataLoader(async (tags) => {
     let cursor
     try {

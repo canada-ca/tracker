@@ -1,7 +1,6 @@
-export * from './https-sub'
-export * from './https'
-export * from './https-connection'
-export * from './ssl-sub'
-export * from './ssl'
-export * from './ssl-connection'
+export * from './tls-result'
 export * from './web-scan'
+export * from './web-connection-result'
+export * from './web-connection'
+export * from './web-scan-result'
+

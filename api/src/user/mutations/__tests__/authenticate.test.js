@@ -1,17 +1,17 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import {ensure, dbNameFromFile} from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { setupI18n } from '@lingui/core'
-import { v4 as uuidv4 } from 'uuid'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {v4 as uuidv4} from 'uuid'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { tokenize, verifyToken } from '../../../auth'
-import { loadUserByKey } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {tokenize, verifyToken} from '../../../auth'
+import {loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -46,7 +46,7 @@ describe('authenticate user account', () => {
   describe('given successful authentication', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -89,12 +89,12 @@ describe('authenticate user account', () => {
         let user = await cursor.next()
 
         const token = tokenize({
-          parameters: { userKey: user._key },
+          parameters: {userKey: user._key},
           secret: String(SIGN_IN_KEY),
         })
 
         const mockedCookie = jest.fn()
-        const mockedResponse = { cookie: mockedCookie }
+        const mockedResponse = {cookie: mockedCookie}
 
         const response = await graphql(
           schema,
@@ -142,7 +142,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -213,12 +213,12 @@ describe('authenticate user account', () => {
         let user = await cursor.next()
 
         const token = tokenize({
-          parameters: { userKey: user._key },
+          parameters: {userKey: user._key},
           secret: String(SIGN_IN_KEY),
         })
 
         const mockedCookie = jest.fn()
-        const mockedResponse = { cookie: mockedCookie }
+        const mockedResponse = {cookie: mockedCookie}
 
         const response = await graphql(
           schema,
@@ -266,7 +266,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({ query }),
+              loadUserByKey: loadUserByKey({query}),
             },
           },
         )
@@ -320,8 +320,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -333,7 +333,7 @@ describe('authenticate user account', () => {
       describe('when userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: undefined },
+            parameters: {userKey: undefined},
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -382,7 +382,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -456,7 +456,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -481,7 +481,7 @@ describe('authenticate user account', () => {
       describe('when user cannot be found in database', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: 1 },
+            parameters: {userKey: 1},
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -557,7 +557,7 @@ describe('authenticate user account', () => {
       describe('when tfa codes do not match', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: 123 },
+            parameters: {userKey: 123},
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -629,7 +629,7 @@ describe('authenticate user account', () => {
         describe('when clearing tfa code and setting refresh id', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
               secret: String(SIGN_IN_KEY),
             })
 
@@ -711,7 +711,7 @@ describe('authenticate user account', () => {
         describe('when user attempts to authenticate', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
               secret: String(SIGN_IN_KEY),
             })
 
@@ -796,8 +796,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -809,7 +809,7 @@ describe('authenticate user account', () => {
       describe('when userKey in token is undefined', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: undefined },
+            parameters: {userKey: undefined},
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -858,7 +858,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -933,7 +933,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByKey: loadUserByKey({query}),
               },
             },
           )
@@ -959,7 +959,7 @@ describe('authenticate user account', () => {
       describe('when user cannot be found in database', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: 1 },
+            parameters: {userKey: 1},
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -1036,7 +1036,7 @@ describe('authenticate user account', () => {
       describe('when tfa codes do not match', () => {
         it('returns an error message', async () => {
           const token = tokenize({
-            parameters: { userKey: 123 },
+            parameters: {userKey: 123},
             secret: String(SIGN_IN_KEY),
           })
           const response = await graphql(
@@ -1108,7 +1108,7 @@ describe('authenticate user account', () => {
         describe('when clearing tfa code and setting refresh id', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
               secret: String(SIGN_IN_KEY),
             })
 
@@ -1192,7 +1192,7 @@ describe('authenticate user account', () => {
         describe('when user attempts to authenticate', () => {
           it('throws an error', async () => {
             const token = tokenize({
-              parameters: { userKey: 123 },
+              parameters: {userKey: 123},
               secret: String(SIGN_IN_KEY),
             })
 

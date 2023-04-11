@@ -1,9 +1,9 @@
-import { GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean } from 'graphql'
-import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
-import { t } from '@lingui/macro'
+import {GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean} from 'graphql'
+import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
+import {t} from '@lingui/macro'
 
-import { updateDomainUnion } from '../unions'
-import { Domain, Selectors } from '../../scalars'
+import {updateDomainUnion} from '../unions'
+import {Domain, Selectors} from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 
@@ -61,19 +61,19 @@ export const updateDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      validators: { cleanseInput },
-      loaders: { loadDomainByKey, loadOrgByKey },
+      auth: {checkPermission, userRequired, verifiedRequired, tfaRequired},
+      validators: {cleanseInput},
+      loaders: {loadDomainByKey, loadOrgByKey},
     },
   ) => {
     // Get User
     const user = await userRequired()
 
-    verifiedRequired({ user })
-    tfaRequired({ user })
+    verifiedRequired({user})
+    tfaRequired({user})
 
-    const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
-    const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+    const {id: domainId} = fromGlobalId(cleanseInput(args.domainId))
+    const {id: orgId} = fromGlobalId(cleanseInput(args.orgId))
     const updatedDomain = cleanseInput(args.domain)
 
     let selectors
@@ -133,7 +133,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check permission
-    const permission = await checkPermission({ orgId: org._id })
+    const permission = await checkPermission({orgId: org._id})
 
     if (
       permission !== 'user' &&

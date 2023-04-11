@@ -22,6 +22,7 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { ListOf } from '../components/ListOf'
 import { SearchBox } from '../components/SearchBox'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
+import { useUserVar } from '../utilities/userState'
 
 export default function WebCheckPage() {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -29,6 +30,7 @@ export default function WebCheckPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(1)
+  const { isLoggedIn, isEmailValidated } = useUserVar()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -36,30 +38,21 @@ export default function WebCheckPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: WEBCHECK_ORGS,
-    variables: {
-      orderBy: {
-        field: orderField,
-        direction: orderDirection,
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: WEBCHECK_ORGS,
+      variables: {
+        orderBy: {
+          field: orderField,
+          direction: orderDirection,
+        },
+        search: debouncedSearchTerm,
       },
-      search: debouncedSearchTerm,
-    },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    recordsPerPage: orgsPerPage,
-    relayRoot: 'findMyWebCheckOrganizations',
-  })
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+      recordsPerPage: orgsPerPage,
+      relayRoot: 'findMyWebCheckOrganizations',
+    })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -121,11 +114,7 @@ export default function WebCheckPage() {
                   <Text fontWeight="bold">
                     {name} ({acronym}){' '}
                     {verified && (
-                      <CheckCircleIcon
-                        color="blue.500"
-                        size="icons.sm"
-                        aria-label="Verified Organization"
-                      />
+                      <CheckCircleIcon color="blue.500" size="icons.sm" aria-label="Verified Organization" />
                     )}
                   </Text>
                   {displayTags(tags)}
@@ -135,14 +124,7 @@ export default function WebCheckPage() {
             {domains.edges.map(({ id, domain, lastRan, tags }) => {
               return (
                 <AccordionPanel key={id}>
-                  <Flex
-                    borderColor="black"
-                    borderWidth="1px"
-                    rounded="md"
-                    align="center"
-                    p="4"
-                    w="100%"
-                  >
+                  <Flex borderColor="black" borderWidth="1px" rounded="md" align="center" p="4" w="100%">
                     <Text fontWeight="semibold" mr="1">
                       <Trans>Domain:</Trans>
                     </Text>
@@ -156,7 +138,7 @@ export default function WebCheckPage() {
                     <Text isTruncated>{lastRan}</Text>
 
                     {displayTags(tags)}
-                    <ScanDomainButton domainUrl={domain} ml={4} />
+                    {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={domain} ml={4} />}
                   </Flex>
                 </AccordionPanel>
               )

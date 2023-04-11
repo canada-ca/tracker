@@ -1,6 +1,6 @@
-import { GraphQLInputObjectType, GraphQLNonNull } from 'graphql'
+import {GraphQLInputObjectType, GraphQLNonNull} from 'graphql'
 
-import { OrderDirection, GuidanceTagOrderField } from '../../enums'
+import {OrderDirection, GuidanceTagOrderField} from '../../enums'
 
 export const guidanceTagOrder = new GraphQLInputObjectType({
   name: 'GuidanceTagOrder',
