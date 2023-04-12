@@ -14,11 +14,7 @@ def process_dkim(dkim_results):
     def get_dkim_tag_status(selector_tag_list):
         selector_tags = {}
 
-        dkim_tags = {
-            "positive_tags": [],
-            "negative_tags": [],
-            "neutral_tags": []
-        }
+        dkim_tags = {"positive_tags": [], "negative_tags": [], "neutral_tags": []}
 
         # get dkim statuses
         dkim_statuses = []
@@ -28,7 +24,7 @@ def process_dkim(dkim_results):
                 "status": "fail",
                 "positive_tags": [],
                 "negative_tags": [],
-                "neutral_tags": []
+                "neutral_tags": [],
             }
 
             for tag in tags:
@@ -46,8 +42,12 @@ def process_dkim(dkim_results):
                 dkim_statuses.append("pass")
                 selector_tags[dkim_selector]["status"] = "pass"
 
-        dkim_status = "pass" if all([False if status == "fail" else True for status in dkim_statuses]) and len(
-            selector_tags) > 0 else "fail"
+        dkim_status = (
+            "pass"
+            if all([False if status == "fail" else True for status in dkim_statuses])
+            and len(selector_tags) > 0
+            else "fail"
+        )
 
         if len(selector_tags) == 0:
             dkim_tags["negative_tags"].append("dkim16")
@@ -97,7 +97,6 @@ def process_dkim(dkim_results):
         if p_tag is None:
             dkim_tags[selector].append("dkim15")
 
-
         # Testing Enabled
         t_enabled = dkim_results[selector].get("parsed", {}).get("t", "")
         if t_enabled.lower() == "y":
@@ -108,11 +107,7 @@ def process_dkim(dkim_results):
 
 def process_spf(spf_results):
     def get_spf_tag_status(tags):
-        processed_spf = {
-            "positive_tags": [],
-            "negative_tags": [],
-            "neutral_tags": []
-        }
+        processed_spf = {"positive_tags": [], "negative_tags": [], "neutral_tags": []}
         for tag in tags:
             if tag in guidance["spf"]["pass"]:
                 processed_spf["positive_tags"].append(tag)
@@ -121,7 +116,10 @@ def process_spf(spf_results):
             if tag in guidance["spf"]["info"]:
                 processed_spf["neutral_tags"].append(tag)
 
-        if "spf12" in processed_spf["positive_tags"] and len(processed_spf["negative_tags"]) == 0:
+        if (
+            "spf12" in processed_spf["positive_tags"]
+            and len(processed_spf["negative_tags"]) == 0
+        ):
             spf_status = "pass"
         else:
             spf_status = "fail"
@@ -135,7 +133,6 @@ def process_spf(spf_results):
     ):
         spf_tags.append("spf2")
         return get_spf_tag_status(spf_tags)
-
 
     # Check all tag
     # "all": "neutral"
@@ -162,7 +159,6 @@ def process_spf(spf_results):
                 case _:
                     raise ValueError(f"Unexpected 'all' tag state: {all_tag}")
 
-
     # Check redirect tag
     redirect_tag = spf_results.get("parsed", {}).get("redirect", None)
     if redirect_tag is not None:
@@ -173,7 +169,6 @@ def process_spf(spf_results):
     dns_lookups = spf_results.get("dns_lookups", 0)
     if dns_lookups > 10:
         spf_tags.append("spf11")
-
 
     # "valid": true,
     if spf_results["valid"]:
@@ -186,11 +181,7 @@ def process_spf(spf_results):
 
 def process_dmarc(dmarc_results):
     def get_dmarc_tag_status(tags):
-        processed_dmarc = {
-            "positive_tags": [],
-            "negative_tags": [],
-            "neutral_tags": []
-        }
+        processed_dmarc = {"positive_tags": [], "negative_tags": [], "neutral_tags": []}
 
         for tag in tags:
             if tag in guidance["dmarc"]["pass"]:
@@ -200,8 +191,11 @@ def process_dmarc(dmarc_results):
             if tag in guidance["dmarc"]["info"]:
                 processed_dmarc["neutral_tags"].append(tag)
 
-        if "dmarc10" in processed_dmarc["positive_tags"] and "dmarc23" in processed_dmarc["positive_tags"] and len(
-            processed_dmarc["negative_tags"]) == 0:
+        if (
+            "dmarc10" in processed_dmarc["positive_tags"]
+            and "dmarc23" in processed_dmarc["positive_tags"]
+            and len(processed_dmarc["negative_tags"]) == 0
+        ):
             dmarc_status = "pass"
         else:
             dmarc_status = "fail"
@@ -210,7 +204,10 @@ def process_dmarc(dmarc_results):
 
     dmarc_tags = []
 
-    if dmarc_results.get("error") == "missing" or dmarc_results.get("record", None) is None:
+    if (
+        dmarc_results.get("error") == "missing"
+        or dmarc_results.get("record", None) is None
+    ):
         dmarc_tags.append("dmarc2")
         return get_dmarc_tag_status(dmarc_tags)
 
@@ -361,23 +358,30 @@ def process_results(results):
     dkim = results.get("dkim") or {}
     spf = results.get("spf") or {}
 
-    dkim_tags, dkim_selector_tags, dkim_status = ({}, "info") if (rcode == "NXDOMAIN" or results["dkim"] is None) else process_dkim(
-        results["dkim"])
+    dkim_tags, dkim_selector_tags, dkim_status = (
+        ({"positive_tags": [], "negative_tags": [], "neutral_tags": []}, {}, "info")
+        if (rcode == "NXDOMAIN" or results["dkim"] is None)
+        else process_dkim(results["dkim"])
+    )
 
-    dmarc_tags, dmarc_status = ({
-        "positive_tags": [],
-        "negative_tags": [],
-        "neutral_tags": []
-    }, "info") if (rcode == "NXDOMAIN" or results["dmarc"] is None) else process_dmarc(results["dmarc"])
+    dmarc_tags, dmarc_status = (
+        ({"positive_tags": [], "negative_tags": [], "neutral_tags": []}, "info")
+        if (rcode == "NXDOMAIN" or results["dmarc"] is None)
+        else process_dmarc(results["dmarc"])
+    )
 
-    spf_tags, spf_status = ({
-        "positive_tags": [],
-        "negative_tags": [],
-        "neutral_tags": []
-    }, "info") if (rcode == "NXDOMAIN" or results["spf"] is None) else process_spf(results["spf"])
+    spf_tags, spf_status = (
+        ({"positive_tags": [], "negative_tags": [], "neutral_tags": []}, "info")
+        if (rcode == "NXDOMAIN" or results["spf"] is None)
+        else process_spf(results["spf"])
+    )
 
     if dmarc_tags:
-        all_dmarc_tags = dmarc_tags["negative_tags"] + dmarc_tags["neutral_tags"] + dmarc_tags["positive_tags"]
+        all_dmarc_tags = (
+            dmarc_tags["negative_tags"]
+            + dmarc_tags["neutral_tags"]
+            + dmarc_tags["positive_tags"]
+        )
     else:
         all_dmarc_tags = None
 
@@ -385,7 +389,10 @@ def process_results(results):
     phase = "not implemented"
 
     rua_addresses = dmarc.get("tags", {}).get("rua", {}).get("value", [])
-    if any(tag in all_dmarc_tags for tag in ["dmarc4", "dmarc5", "dmarc6"]) and len(rua_addresses) > 0:
+    if (
+        any(tag in all_dmarc_tags for tag in ["dmarc4", "dmarc5", "dmarc6"])
+        and len(rua_addresses) > 0
+    ):
         phase = "assess"
 
         if dkim_status and spf_status:
@@ -422,7 +429,7 @@ def process_results(results):
         "positive_tags": dkim_tags["positive_tags"],
         "neutral_tags": dkim_tags["neutral_tags"],
         "negative_tags": dkim_tags["negative_tags"],
-        "selectors": {}
+        "selectors": {},
     }
 
     if not dkim.get("error", None):
@@ -433,7 +440,9 @@ def process_results(results):
                 "parsed": results["dkim"][selector].get("parsed", None),
                 "key_length": results["dkim"][selector].get("key_size", None),
                 "key_type": results["dkim"][selector].get("key_type", None),
-                "public_exponent": results["dkim"][selector].get("public_exponent", None),
+                "public_exponent": results["dkim"][selector].get(
+                    "public_exponent", None
+                ),
                 "neutral_tags": dkim_selector_tags[selector]["neutral_tags"],
                 "positive_tags": dkim_selector_tags[selector]["positive_tags"],
                 "negative_tags": dkim_selector_tags[selector]["negative_tags"],
@@ -459,5 +468,5 @@ def process_results(results):
         "ns_records": results.get("ns_records", None),
         "dmarc": dmarc_results,
         "spf": spf_results,
-        "dkim": dkim_results
+        "dkim": dkim_results,
     }
