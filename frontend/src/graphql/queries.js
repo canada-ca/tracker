@@ -1040,13 +1040,13 @@ export const MY_TRACKER_DOMAINS = gql`
             domain
             hasDMARCReport
             status {
+              certificates
               ciphers
               curves
               dkim
               dmarc
               hsts
               https
-              # policy
               protocols
               spf
               ssl
