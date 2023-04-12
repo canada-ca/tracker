@@ -1,9 +1,13 @@
-import {GraphQLEnumType} from 'graphql'
+import { GraphQLEnumType } from 'graphql'
 
 export const DomainOrderField = new GraphQLEnumType({
   name: 'DomainOrderField',
   description: 'Properties by which domain connections can be ordered.',
   values: {
+    CERTIFICATES_STATUS: {
+      value: 'certificates-status',
+      description: 'Order domains by certificates status.',
+    },
     CIPHERS_STATUS: {
       value: 'ciphers-status',
       description: 'Order domains by ciphers status.',
