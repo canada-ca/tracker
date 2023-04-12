@@ -62,7 +62,9 @@ class CertificateInfo:
         self.common_names = get_common_names(cert.subject)
         self.serial_number = str(cert.serial_number)
         self.signature_hash_algorithm = cert.signature_hash_algorithm.name
-        self.san_list = parse_subject_alternative_name_extension(cert)
+        self.san_list = parse_subject_alternative_name_extension(cert).dns_names
+
+        print(self.san_list.dns_names)
 
         try:
             cert_not_revoked, self.cert_revoked_status = query_crlite(cert.public_bytes(Encoding.PEM))
