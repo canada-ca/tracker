@@ -10,7 +10,7 @@ from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
 from sslyze.errors import ConnectionToServerFailed, \
     ServerHostnameCouldNotBeResolved
-from sslyze.plugins.certificate_info._certificate_utils import get_common_names, extract_dns_subject_alternative_names
+from sslyze.plugins.certificate_info._certificate_utils import get_common_names, parse_subject_alternative_name_extension
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze import Scanner, ServerScanRequest, ServerScanResultAsJson, \
     CipherSuiteAcceptedByServer, CipherSuiteRejectedByServer, TlsResumptionSupportEnum, \
@@ -62,7 +62,7 @@ class CertificateInfo:
         self.common_names = get_common_names(cert.subject)
         self.serial_number = str(cert.serial_number)
         self.signature_hash_algorithm = cert.signature_hash_algorithm.name
-        self.san_list = extract_dns_subject_alternative_names(cert)
+        self.san_list = parse_subject_alternative_name_extension(cert)
 
         try:
             cert_not_revoked, self.cert_revoked_status = query_crlite(cert.public_bytes(Encoding.PEM))
