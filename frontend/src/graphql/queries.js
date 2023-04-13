@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { Guidance } from './fragments'
+import { Guidance, Summary } from './fragments'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations(
@@ -59,22 +59,46 @@ export const PAGINATED_ORGANIZATIONS = gql`
 export const HTTPS_AND_DMARC_SUMMARY = gql`
   query LandingPageSummaries {
     httpsSummary {
-      total
-      categories {
-        name
-        count
-        percentage
-      }
+      ...RequiredSummaryFields
     }
     dmarcPhaseSummary {
-      total
-      categories {
-        name
-        count
-        percentage
-      }
+      ...RequiredSummaryFields
     }
   }
+  ${Summary.fragments.requiredFields}
+`
+
+export const TIER_TWO_SUMMARY = gql`
+  query TierTwoSummary {
+    connectionsSummary {
+      ...RequiredSummaryFields
+    }
+    sslSummary {
+      ...RequiredSummaryFields
+    }
+    spfSummary {
+      ...RequiredSummaryFields
+    }
+    dkimSummary {
+      ...RequiredSummaryFields
+    }
+    dmarcPhaseSummary {
+      ...RequiredSummaryFields
+    }
+  }
+  ${Summary.fragments.requiredFields}
+`
+
+export const TIER_THREE_SUMMARY = gql`
+  query TierThreeSummary {
+    webSummary {
+      ...RequiredSummaryFields
+    }
+    mailSummary {
+      ...RequiredSummaryFields
+    }
+  }
+  ${Summary.fragments.requiredFields}
 `
 
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
