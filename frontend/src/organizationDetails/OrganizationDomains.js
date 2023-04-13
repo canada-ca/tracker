@@ -160,9 +160,11 @@ export function OrganizationDomains({ orgSlug }) {
                               </option>
                             )
                           })}
-                          <option value="TAGS">
-                            <Trans>Tag</Trans>
-                          </option>
+                          {orgSlug !== 'my-tracker' && (
+                            <option value="TAGS">
+                              <Trans>Tag</Trans>
+                            </option>
+                          )}
                         </Select>
                         <Text color="red.500" mt={0}>
                           {errors.filterCategory}
