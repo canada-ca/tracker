@@ -18,8 +18,15 @@ DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 
 SCAN_TYPES = ["https", "ssl", "dkim", "spf", "dmarc"]
-CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"],
-          "https": ["https"]}
+CHARTS = {
+    "mail": ["dmarc", "spf", "dkim"], 
+    "web": ["https", "ssl"],
+    "https": ["https"],
+    "webConnections": ["https", "hsts"],
+    "tls": ["ssl"],
+    "spf": ["spf"],
+    "dkim": ["dkim"],
+}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
