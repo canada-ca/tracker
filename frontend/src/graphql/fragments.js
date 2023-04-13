@@ -38,3 +38,22 @@ export const Guidance = {
     `,
   },
 }
+
+export const Status = {
+  fragments: {
+    requiredFields: gql`
+      fragment RequiredDomainStatusFields on DomainStatus {
+        certificates
+        ciphers
+        curves
+        dkim
+        dmarc
+        hsts
+        https
+        protocols
+        spf
+        ssl
+      }
+    `,
+  },
+}
