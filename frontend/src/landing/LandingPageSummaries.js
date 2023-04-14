@@ -12,13 +12,10 @@ export function LandingPageSummaries() {
 
   if (loading) return <LoadingMessage />
   if (error) return <ErrorFallbackMessage error={error} />
-
+  // console.log(JSON.stringify(data))
   return (
     <Box w="100%">
-      <SummaryGroup
-        dmarcPhases={data?.dmarcPhaseSummary}
-        https={data?.httpsSummary}
-      />
+      <SummaryGroup dmarcPhases={data?.dmarcPhaseSummary} https={data?.httpsSummary} />
     </Box>
   )
 }

@@ -5,6 +5,8 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
+import { TierTwoSummaries } from '../summaries/TierTwoSummaries'
+import { TierThreeSummaries } from '../summaries/TierThreeSummaries'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -26,10 +28,8 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
         <Text fontSize="xl">
           <Trans>
-            Canadians rely on the Government of Canada to provide secure digital
-            services. The Policy on Service and Digital guides government online
-            services to adopt good security practices for practices outlined in
-            the{' '}
+            Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
+            Digital guides government online services to adopt good security practices for practices outlined in the{' '}
             <Link
               href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
               isExternal
@@ -49,7 +49,15 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
           </Trans>
         </Text>
       </Box>
-      {(!loginRequired || isLoggedIn) && <LandingPageSummaries />}
+      {(!loginRequired || isLoggedIn) && (
+        <Box>
+          <LandingPageSummaries />
+          <Divider />
+          <TierTwoSummaries />
+          <Divider />
+          <TierThreeSummaries />
+        </Box>
+      )}
     </Stack>
   )
 }

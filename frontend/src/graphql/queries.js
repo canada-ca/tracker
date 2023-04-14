@@ -70,7 +70,7 @@ export const HTTPS_AND_DMARC_SUMMARY = gql`
 
 export const TIER_TWO_SUMMARY = gql`
   query TierTwoSummary {
-    connectionsSummary {
+    webConnectionsSummary {
       ...RequiredSummaryFields
     }
     sslSummary {
