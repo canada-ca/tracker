@@ -23,7 +23,7 @@ CHARTS = {
     "web": ["https", "ssl"],
     "https": ["https"],
     "webConnections": ["https", "hsts"],
-    "tls": ["ssl"],
+    "ssl": ["ssl"],
     "spf": ["spf"],
     "dkim": ["dkim"],
 }
