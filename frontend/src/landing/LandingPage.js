@@ -5,8 +5,6 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
-import { TierTwoSummaries } from '../summaries/TierTwoSummaries'
-import { TierThreeSummaries } from '../summaries/TierThreeSummaries'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -52,10 +50,6 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
       {(!loginRequired || isLoggedIn) && (
         <Box>
           <LandingPageSummaries />
-          <Divider />
-          <TierTwoSummaries />
-          <Divider />
-          <TierThreeSummaries />
         </Box>
       )}
     </Stack>

@@ -18,11 +18,11 @@ export function SummaryGroup({ https, dmarcPhases }) {
       categoryDisplay={{
         fail: {
           name: t`Non-compliant`,
-          color: '#22485B',
+          color: colors.summaries.fail,
         },
         pass: {
           name: t`Compliant`,
-          color: '#F15E6B',
+          color: colors.summaries.pass,
         },
         unscanned: {
           name: t`Unscanned`,
@@ -34,9 +34,7 @@ export function SummaryGroup({ https, dmarcPhases }) {
     />
   ) : (
     <Text fontWeight="bold" textAlign="center">
-      <Trans>
-        No HTTPS configuration information available for this organization.
-      </Trans>
+      <Trans>No HTTPS configuration information available for this organization.</Trans>
     </Text>
   )
 
@@ -48,7 +46,7 @@ export function SummaryGroup({ https, dmarcPhases }) {
       categoryDisplay={{
         'not implemented': {
           name: t`Not Implemented`,
-          color: '#22485B',
+          color: colors.summaries.fail,
         },
         unscanned: {
           name: t`Unscanned`,
@@ -56,7 +54,7 @@ export function SummaryGroup({ https, dmarcPhases }) {
         },
         implemented: {
           name: t`Implemented`,
-          color: '#F15E6B',
+          color: colors.summaries.pass,
         },
       }}
       data={dmarcPhases}

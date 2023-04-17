@@ -59,6 +59,10 @@ export default extendTheme({
     medium: '#F7FFDA',
     high: '#FFE1B0',
     critical: '#FFB3BC',
+    summaries: {
+      fail: '#22485B',
+      pass: '#F15E6B',
+    },
     green: {
       50: '#F2FFF0',
       100: '#C3EEBF',

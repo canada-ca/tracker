@@ -3,21 +3,29 @@ import { Box, Flex } from '@chakra-ui/react'
 import { useQuery } from '@apollo/client'
 import { SummaryCard } from './SummaryCard'
 
-// import theme from '../theme/canada'
+import theme from '../theme/canada'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TIER_TWO_SUMMARY } from '../graphql/queries'
 import { t } from '@lingui/macro'
 
 export function TierTwoSummaries() {
-  //   const { colors } = theme
-  const failColour = '#22485B'
-  const passColour = '#F15E6B'
+  const { colors } = theme
   const { loading, error, data } = useQuery(TIER_TWO_SUMMARY)
   if (loading) return <LoadingMessage />
   if (error) return <ErrorFallbackMessage error={error} />
-  console.log(JSON.stringify(data))
   const { webConnectionsSummary, sslSummary, spfSummary, dkimSummary, dmarcPhaseSummary } = data
+
+  const categoryDisplay = {
+    fail: {
+      name: t`Non-compliant`,
+      color: colors.summaries.fail,
+    },
+    pass: {
+      name: t`Compliant`,
+      color: colors.summaries.pass,
+    },
+  }
 
   const dmarcPhases = () => {
     let dmarcFailCount = 0
@@ -53,16 +61,7 @@ export function TierTwoSummaries() {
           id="webConnectionsSummary"
           title={t`Web Connections Summary`}
           description={t`Web connections are configured to use HTTPS and valid HSTS`}
-          categoryDisplay={{
-            fail: {
-              name: t`Non-compliant`,
-              color: failColour,
-            },
-            pass: {
-              name: t`Compliant`,
-              color: passColour,
-            },
-          }}
+          categoryDisplay={categoryDisplay}
           data={webConnectionsSummary}
           mb={{ base: 6, md: 0 }}
         />
@@ -71,16 +70,7 @@ export function TierTwoSummaries() {
           id="sslSummary"
           title={t`TLS Summary`}
           description={t`TLS certificate is valid and configured to use strong ciphers`}
-          categoryDisplay={{
-            fail: {
-              name: t`Non-compliant`,
-              color: failColour,
-            },
-            pass: {
-              name: t`Compliant`,
-              color: passColour,
-            },
-          }}
+          categoryDisplay={categoryDisplay}
           data={sslSummary}
           mb={{ base: 6, md: 0 }}
         />
@@ -90,16 +80,7 @@ export function TierTwoSummaries() {
           id="spfSummary"
           title={t`SPF Summary`}
           description={t`SPF record is configured and valid`}
-          categoryDisplay={{
-            fail: {
-              name: t`Non-compliant`,
-              color: failColour,
-            },
-            pass: {
-              name: t`Compliant`,
-              color: passColour,
-            },
-          }}
+          categoryDisplay={categoryDisplay}
           data={spfSummary}
           mb={{ base: 6, md: 0 }}
         />
@@ -107,16 +88,7 @@ export function TierTwoSummaries() {
           id="dkimSummary"
           title={t`DKIM Summary`}
           description={t`DKIM record is configured and valid`}
-          categoryDisplay={{
-            fail: {
-              name: t`Non-compliant`,
-              color: failColour,
-            },
-            pass: {
-              name: t`Compliant`,
-              color: passColour,
-            },
-          }}
+          categoryDisplay={categoryDisplay}
           data={dkimSummary}
           mb={{ base: 6, md: 0 }}
         />
@@ -124,16 +96,7 @@ export function TierTwoSummaries() {
           id="dmarcPhaseSummary"
           title={t`DMARC Summary`}
           description={t`A DMARC phase of maintain is configured`}
-          categoryDisplay={{
-            fail: {
-              name: t`Non-compliant`,
-              color: failColour,
-            },
-            pass: {
-              name: t`Compliant`,
-              color: passColour,
-            },
-          }}
+          categoryDisplay={categoryDisplay}
           data={dmarcPhases()}
           mb={{ base: 6, md: 0 }}
         />
