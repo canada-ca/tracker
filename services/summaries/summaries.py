@@ -246,6 +246,14 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         web_pass = 0
         mail_fail = 0
         mail_pass = 0
+        web_connections_fail = 0
+        web_connections_pass = 0
+        ssl_fail = 0
+        ssl_pass = 0
+        spf_fail = 0
+        spf_pass = 0
+        dkim_fail = 0
+        dkim_pass = 0
         dmarc_phase_not_implemented = 0
         dmarc_phase_assess = 0
         dmarc_phase_deploy = 0
@@ -289,6 +297,26 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
                     mail_pass = mail_pass + 1
                 else:
                     mail_fail = mail_fail + 1
+
+                if domain.get("status", {}).get("spf") == "pass":
+                    spf_pass = spf_pass + 1
+                else:
+                    spf_fail = spf_fail + 1
+
+                if domain.get("status", {}).get("dkim") == "pass":
+                    dkim_pass = dkim_pass + 1
+                else:
+                    dkim_fail = dkim_fail + 1
+
+                if domain.get("status", {}).get("ssl") == "pass":
+                    ssl_pass = ssl_pass + 1
+                elif domain.get("status", {}).get("ssl") == "fail":
+                    ssl_fail = ssl_fail + 1
+
+                if (domain.get("status", {}).get("https") == "pass" and domain.get("status", {}).get("hsts") == "pass"):
+                    web_connections_pass = web_connections_pass + 1
+                elif (domain.get("status", {}).get("https") == "fail" or domain.get("status", {}).get("hsts") == "fail"):
+                    web_connections_fail = web_connections_fail + 1
 
                 phase = domain.get("phase")
 
@@ -339,7 +367,29 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
                     "fail": https_fail,
                     "total": https_pass + https_fail
                     # Don't count non web-hosting domains
-                }
+                },
+                "ssl": {
+                    "pass": ssl_pass,
+                    "fail": ssl_fail,
+                    "total": ssl_pass + ssl_fail
+                    # Don't count non web-hosting domains
+                },
+                "spf": {
+                    "pass": spf_pass,
+                    "fail": spf_fail,
+                    "total": spf_pass + spf_fail
+                },
+                "dkim": {
+                    "pass": dkim_pass,
+                    "fail": dkim_fail,
+                    "total": dkim_pass + dkim_fail
+                },
+                "web_connections": {
+                    "pass": web_connections_pass,
+                    "fail": web_connections_fail,
+                    "total": web_connections_pass + web_connections_fail
+                     # Don't count non web-hosting domains
+                },
             }
         }
 
