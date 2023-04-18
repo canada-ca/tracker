@@ -26,6 +26,7 @@ CHARTS = {
     "ssl": ["ssl"],
     "spf": ["spf"],
     "dkim": ["dkim"],
+    "dmarc": ["dmarc"],
 }
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

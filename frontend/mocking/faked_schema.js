@@ -155,17 +155,23 @@ export const getTypeNames = () => gql`
     # CSV formatted output of all domains in all organizations including their email and web scan statuses.
     getAllOrganizationDomainStatuses: String
 
-    # Email summary computed values, used to build summary cards.
-    mailSummary: CategorizedSummary
-
-    # Web summary computed values, used to build summary cards.
-    webSummary: CategorizedSummary
+    # DKIM summary computed values, used to build summary cards.
+    dkimSummary: CategorizedSummary
 
     # DMARC phase summary computed values, used to build summary cards.
     dmarcPhaseSummary: CategorizedSummary
 
+    # DMARC summary computed values, used to build summary cards.
+    dmarcSummary: CategorizedSummary
+
     # HTTPS summary computed values, used to build summary cards.
     httpsSummary: CategorizedSummary
+
+    # Email summary computed values, used to build summary cards.
+    mailSummary: CategorizedSummary
+
+    # SPF summary computed values, used to build summary cards.
+    spfSummary: CategorizedSummary
 
     # SSL summary computed values, used to build summary cards.
     sslSummary: CategorizedSummary
@@ -173,11 +179,8 @@ export const getTypeNames = () => gql`
     # SSL summary computed values, used to build summary cards.
     webConnectionsSummary: CategorizedSummary
 
-    # SPF summary computed values, used to build summary cards.
-    spfSummary: CategorizedSummary
-
-    # DKIM summary computed values, used to build summary cards.
-    dkimSummary: CategorizedSummary
+    # Web summary computed values, used to build summary cards.
+    webSummary: CategorizedSummary
 
     # Query the currently logged in user.
     findMe: PersonalUser

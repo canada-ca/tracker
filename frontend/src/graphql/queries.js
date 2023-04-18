@@ -61,7 +61,7 @@ export const HTTPS_AND_DMARC_SUMMARY = gql`
     httpsSummary {
       ...RequiredSummaryFields
     }
-    dmarcPhaseSummary {
+    dmarcSummary {
       ...RequiredSummaryFields
     }
   }
