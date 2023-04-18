@@ -306,7 +306,7 @@ def process_connection_results(connection_results):
                 "preload": preload
             }
 
-            hsts_status = "pass" if hsts and max_age > 0 and "https14" not in negative_tags else "fail"
+            hsts_status = "pass" if hsts and isinstance(max_age, int) and max_age > 0 and "https14" not in negative_tags else "fail"
 
     http_down_or_redirect = not http_live or http_immediately_upgrades
 
