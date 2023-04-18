@@ -853,6 +853,24 @@ export const getTypeNames = () => gql`
 
     # Summary based on DMARC phases for a given organization.
     dmarcPhase: CategorizedSummary
+
+    # Summary based on SSL scan results for a given organization.
+    ssl: CategorizedSummary
+
+    # Summary based on HTTPS and HSTS scan results for a given organization.
+    webConnections: CategorizedSummary
+
+    # Summary based on SPF scan results for a given organization.
+    spf: CategorizedSummary
+
+    # Summary based on DKIM scan results for a given organization.
+    dkim: CategorizedSummary
+
+    # Summary based on HTTPS scan results for a given organization that includes domains marked as hidden.
+    httpsIncludeHidden: CategorizedSummary
+
+    # Summary based on HTTPS scan results for a given organization that includes domains marked as hidden.
+    dmarcIncludeHidden: CategorizedSummary
   }
 
   # This object contains the list of different categories for pre-computed

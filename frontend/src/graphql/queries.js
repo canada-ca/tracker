@@ -487,24 +487,42 @@ export const ORG_DETAILS_PAGE = gql`
       verified
       summaries {
         https {
-          total
-          categories {
-            name
-            count
-            percentage
-          }
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
+        }
+        httpsIncludeHidden {
+          ...RequiredSummaryFields
+        }
+        dmarcIncludeHidden {
+          ...RequiredSummaryFields
+        }
+        dkim {
+          ...RequiredSummaryFields
+        }
+        spf {
+          ...RequiredSummaryFields
+        }
+        ssl {
+          ...RequiredSummaryFields
+        }
+        webConnections {
+          ...RequiredSummaryFields
         }
         dmarcPhase {
-          total
-          categories {
-            name
-            count
-            percentage
-          }
+          ...RequiredSummaryFields
+        }
+        web {
+          ...RequiredSummaryFields
+        }
+        mail {
+          ...RequiredSummaryFields
         }
       }
     }
   }
+  ${Summary.fragments.requiredFields}
 `
 
 export const PAGINATED_ORG_DOMAINS = gql`
