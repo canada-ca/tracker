@@ -56,20 +56,16 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
-export const HTTPS_AND_DMARC_SUMMARY = gql`
+export const LANDING_PAGE_SUMMARIES = gql`
   query LandingPageSummaries {
+    # Tier 1
     httpsSummary {
       ...RequiredSummaryFields
     }
     dmarcSummary {
       ...RequiredSummaryFields
     }
-  }
-  ${Summary.fragments.requiredFields}
-`
-
-export const TIER_TWO_SUMMARY = gql`
-  query TierTwoSummary {
+    # Tier 2
     webConnectionsSummary {
       ...RequiredSummaryFields
     }
@@ -85,12 +81,7 @@ export const TIER_TWO_SUMMARY = gql`
     dmarcPhaseSummary {
       ...RequiredSummaryFields
     }
-  }
-  ${Summary.fragments.requiredFields}
-`
-
-export const TIER_THREE_SUMMARY = gql`
-  query TierThreeSummary {
+    # Tier 3
     webSummary {
       ...RequiredSummaryFields
     }

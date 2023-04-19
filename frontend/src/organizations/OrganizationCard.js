@@ -1,28 +1,11 @@
 import React from 'react'
-import {
-  Box,
-  Button,
-  Flex,
-  ListItem,
-  Progress,
-  Stack,
-  Text,
-  useBreakpointValue,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, ListItem, Progress, Stack, Text, useBreakpointValue } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
-export function OrganizationCard({
-  name,
-  acronym,
-  slug,
-  domainCount,
-  verified,
-  summaries,
-  ...rest
-}) {
+export function OrganizationCard({ name, acronym, slug, domainCount, verified, summaries, ...rest }) {
   const { path, _url } = useRouteMatch()
   let httpsValue = 0
   let dmarcValue = 0
@@ -75,24 +58,13 @@ export function OrganizationCard({
           maxWidth="100%"
         >
           <Stack isInline align="center">
-            <Text
-              fontSize="lg"
-              fontWeight="semibold"
-              textDecoration="underline"
-              isTruncated
-            >
+            <Text fontSize="lg" fontWeight="semibold" textDecoration="underline" isTruncated>
               {name}
             </Text>
             <Text fontSize="lg" fontWeight="semibold">
               ({acronym})
             </Text>
-            {verified && (
-              <CheckCircleIcon
-                color="blue.500"
-                size="icons.sm"
-                aria-label="Verified Organization"
-              />
-            )}
+            {verified && <CheckCircleIcon color="blue.500" size="icons.sm" aria-label="Verified Organization" />}
           </Stack>
         </Box>
         <Box
@@ -108,12 +80,7 @@ export function OrganizationCard({
           </Text>
         </Box>
 
-        <Box
-          mr={{ md: '1em' }}
-          flexShrink={{ md: '0.5' }}
-          minWidth={{ base: '100%', md: '3em' }}
-          textAlign="left"
-        >
+        <Box mr={{ md: '1em' }} flexShrink={{ md: '0.5' }} minWidth={{ base: '100%', md: '3em' }} textAlign="left">
           <Text fontWeight="bold">
             <Trans>HTTPS Configured</Trans>
           </Text>
@@ -121,11 +88,7 @@ export function OrganizationCard({
           <Progress value={httpsValue} bg="gray.300" aria-hidden="true" />
         </Box>
 
-        <Box
-          flexShrink={{ md: '0.5' }}
-          minWidth={{ base: '100%', md: '3em' }}
-          textAlign="left"
-        >
+        <Box flexShrink={{ md: '0.5' }} minWidth={{ base: '100%', md: '3em' }} textAlign="left">
           <Text fontWeight="bold">
             <Trans>DMARC Configured</Trans>
           </Text>
@@ -133,13 +96,7 @@ export function OrganizationCard({
           <Progress value={dmarcValue} bg="gray.300" aria-hidden="true" />
         </Box>
         {hasButton && (
-          <Button
-            variant="primary"
-            as={RouteLink}
-            to={`${path}/${slug}`}
-            w="100%"
-            mt={2}
-          >
+          <Button variant="primary" as={RouteLink} to={`${path}/${slug}`} w="100%" mt={2}>
             <Text whiteSpace="noWrap">
               <Trans>View Details</Trans>
             </Text>

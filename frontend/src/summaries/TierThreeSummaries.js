@@ -1,20 +1,13 @@
 import React from 'react'
 import { Box, Flex } from '@chakra-ui/react'
-import { useQuery } from '@apollo/client'
 import { SummaryCard } from './SummaryCard'
 
 import theme from '../theme/canada'
-import { LoadingMessage } from '../components/LoadingMessage'
-import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { TIER_THREE_SUMMARY } from '../graphql/queries'
 import { t } from '@lingui/macro'
+import { object } from 'prop-types'
 
-export function TierThreeSummaries() {
+export function TierThreeSummaries({ web, mail }) {
   const { colors } = theme
-  const { loading, error, data } = useQuery(TIER_THREE_SUMMARY)
-  if (loading) return <LoadingMessage />
-  if (error) return <ErrorFallbackMessage error={error} />
-  const { webSummary, mailSummary } = data
 
   return (
     <Box w="100%">
@@ -33,7 +26,7 @@ export function TierThreeSummaries() {
               color: colors.summaries.pass,
             },
           }}
-          data={webSummary}
+          data={web}
           mb={{ base: 6, md: 0 }}
         />
 
@@ -51,10 +44,15 @@ export function TierThreeSummaries() {
               color: colors.summaries.pass,
             },
           }}
-          data={mailSummary}
+          data={mail}
           mb={{ base: 6, md: 0 }}
         />
       </Flex>
     </Box>
   )
+}
+
+TierThreeSummaries.propTypes = {
+  web: object,
+  mail: object,
 }

@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { Flex, Tabs, TabPanels, TabPanel, IconButton, Text, Box } from '@chakra-ui/react'
 import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons'
 
-import { LandingPageSummaries } from '../landing/LandingPageSummaries'
+import { TierOneSummaries } from './TierOneSummaries'
 import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
 import { Trans } from '@lingui/macro'
+import { object } from 'prop-types'
 
-export function TieredSummaries() {
+export function TieredSummaries({ summaries }) {
+  const { https, dmarc, webConnections, ssl, spf, dkim, dmarcPhase, web, mail } = summaries
   const [tabIndex, setTabIndex] = useState(0)
 
   const handleBackBtn = () => {
@@ -44,16 +46,26 @@ export function TieredSummaries() {
       <Tabs index={tabIndex} isLazy>
         <TabPanels>
           <TabPanel>
-            <LandingPageSummaries />
+            <TierOneSummaries https={https} dmarc={dmarc} />
           </TabPanel>
           <TabPanel>
-            <TierTwoSummaries />
+            <TierTwoSummaries
+              webConnections={webConnections}
+              ssl={ssl}
+              spf={spf}
+              dkim={dkim}
+              dmarcPhases={dmarcPhase}
+            />
           </TabPanel>
           <TabPanel>
-            <TierThreeSummaries />
+            <TierThreeSummaries web={web} mail={mail} />
           </TabPanel>
         </TabPanels>
       </Tabs>
     </Box>
   )
+}
+
+TieredSummaries.propTypes = {
+  summaries: object,
 }

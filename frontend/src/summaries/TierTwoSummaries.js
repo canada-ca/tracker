@@ -1,20 +1,13 @@
 import React from 'react'
 import { Box, Flex } from '@chakra-ui/react'
-import { useQuery } from '@apollo/client'
 import { SummaryCard } from './SummaryCard'
 
 import theme from '../theme/canada'
-import { LoadingMessage } from '../components/LoadingMessage'
-import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import { TIER_TWO_SUMMARY } from '../graphql/queries'
 import { t } from '@lingui/macro'
+import { object } from 'prop-types'
 
-export function TierTwoSummaries() {
+export function TierTwoSummaries({ webConnections, ssl, spf, dkim, dmarcPhases }) {
   const { colors } = theme
-  const { loading, error, data } = useQuery(TIER_TWO_SUMMARY)
-  if (loading) return <LoadingMessage />
-  if (error) return <ErrorFallbackMessage error={error} />
-  const { webConnectionsSummary, sslSummary, spfSummary, dkimSummary, dmarcPhaseSummary } = data
 
   const categoryDisplay = {
     fail: {
@@ -27,16 +20,16 @@ export function TierTwoSummaries() {
     },
   }
 
-  const dmarcPhases = () => {
+  const makeDmarcPhases = () => {
     let dmarcFailCount = 0
     let dmarcFailPercentage = 0
-    dmarcPhaseSummary.categories.forEach(({ name, count, percentage }) => {
+    dmarcPhases.categories.forEach(({ name, count, percentage }) => {
       if (name !== 'maintain') {
         dmarcFailCount += count
         dmarcFailPercentage += percentage
       }
     })
-    const maintain = dmarcPhaseSummary.categories.find(({ name }) => name === 'maintain')
+    const maintain = dmarcPhases.categories.find(({ name }) => name === 'maintain')
     return {
       categories: [
         {
@@ -50,7 +43,7 @@ export function TierTwoSummaries() {
           percentage: maintain.percentage,
         },
       ],
-      total: dmarcPhaseSummary.total,
+      total: dmarcPhases.total,
     }
   }
 
@@ -62,7 +55,7 @@ export function TierTwoSummaries() {
           title={t`Web Connections Summary`}
           description={t`Web connections are configured to use HTTPS and valid HSTS`}
           categoryDisplay={categoryDisplay}
-          data={webConnectionsSummary}
+          data={webConnections}
           mb={{ base: 6, md: 0 }}
         />
 
@@ -71,7 +64,7 @@ export function TierTwoSummaries() {
           title={t`TLS Summary`}
           description={t`TLS certificate is valid and configured to use strong ciphers`}
           categoryDisplay={categoryDisplay}
-          data={sslSummary}
+          data={ssl}
           mb={{ base: 6, md: 0 }}
         />
       </Flex>
@@ -81,7 +74,7 @@ export function TierTwoSummaries() {
           title={t`SPF Summary`}
           description={t`SPF record is configured and valid`}
           categoryDisplay={categoryDisplay}
-          data={spfSummary}
+          data={spf}
           mb={{ base: 6, md: 0 }}
         />
         <SummaryCard
@@ -89,18 +82,35 @@ export function TierTwoSummaries() {
           title={t`DKIM Summary`}
           description={t`DKIM record is configured and valid`}
           categoryDisplay={categoryDisplay}
-          data={dkimSummary}
+          data={dkim}
           mb={{ base: 6, md: 0 }}
         />
         <SummaryCard
           id="dmarcPhaseSummary"
           title={t`DMARC Summary`}
           description={t`A DMARC phase of maintain is configured`}
-          categoryDisplay={categoryDisplay}
-          data={dmarcPhases()}
+          categoryDisplay={{
+            fail: {
+              name: t`Not implemented`,
+              color: colors.summaries.fail,
+            },
+            pass: {
+              name: t`Implemented`,
+              color: colors.summaries.pass,
+            },
+          }}
+          data={makeDmarcPhases()}
           mb={{ base: 6, md: 0 }}
         />
       </Flex>
     </Box>
   )
+}
+
+TierTwoSummaries.propTypes = {
+  webConnections: object,
+  ssl: object,
+  spf: object,
+  dkim: object,
+  dmarcPhases: object,
 }

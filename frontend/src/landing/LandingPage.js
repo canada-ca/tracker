@@ -47,11 +47,7 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
           </Trans>
         </Text>
       </Box>
-      {(!loginRequired || isLoggedIn) && (
-        <Box>
-          <LandingPageSummaries />
-        </Box>
-      )}
+      {(!loginRequired || isLoggedIn) && <LandingPageSummaries />}
     </Stack>
   )
 }

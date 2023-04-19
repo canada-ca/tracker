@@ -1,33 +1,19 @@
 import React, { useEffect } from 'react'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import {
-  Box,
-  Flex,
-  Heading,
-  IconButton,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Flex, Heading, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from './OrganizationDomains'
 import { OrganizationAffiliations } from './OrganizationAffiliations'
-import { OrganizationSummary } from './OrganizationSummary'
+import { TieredSummaries } from '../summaries/TieredSummaries'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import {
-  GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
-  ORG_DETAILS_PAGE,
-} from '../graphql/queries'
+import { GET_ORGANIZATION_DOMAINS_STATUSES_CSV, ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { ExportButton } from '../components/ExportButton'
 
@@ -44,12 +30,12 @@ export default function OrganizationDetails() {
     // errorPolicy: 'ignore', // allow partial success
   })
 
-  const [
-    getOrgDomainStatuses,
-    { loading: orgDomainStatusesLoading, _error, _data },
-  ] = useLazyQuery(GET_ORGANIZATION_DOMAINS_STATUSES_CSV, {
-    variables: { orgSlug: orgSlug },
-  })
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+    GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
+    {
+      variables: { orgSlug: orgSlug },
+    },
+  )
 
   useEffect(() => {
     if (!activeTab) {
@@ -77,14 +63,11 @@ export default function OrganizationDetails() {
     }
   }
 
+  // const { httpsIncludeHidden, dmarcIncludeHidden, ...rest } = data?.organization?.summaries ?? {}
+
   return (
     <Box w="100%">
-      <Flex
-        flexDirection="row"
-        align="center"
-        mb="4"
-        flexWrap={{ base: 'wrap', md: 'nowrap' }}
-      >
+      <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <IconButton
           icon={<ArrowLeftIcon />}
           as={RouteLink}
@@ -148,18 +131,14 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationSummary summaries={data?.organization?.summaries} />
+              <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <Box>
                 <Text fontSize="3xl">DMARC Phases</Text>
-                <RadialBarChart
-                  height={600}
-                  width={600}
-                  data={data?.organization?.summaries?.dmarcPhase?.categories}
-                />
+                <RadialBarChart height={600} width={600} data={data?.organization?.summaries?.dmarcPhase?.categories} />
               </Box>
             </ErrorBoundary>
           </TabPanel>
