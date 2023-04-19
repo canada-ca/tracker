@@ -1,25 +1,11 @@
 import React from 'react'
-import { Box, Flex } from '@chakra-ui/react'
-import { SummaryCard } from './SummaryCard'
+import { Box } from '@chakra-ui/react'
 
-import theme from '../theme/canada'
 import { t } from '@lingui/macro'
 import { object } from 'prop-types'
+import { SummaryGroup } from './SummaryGroup'
 
 export function TierTwoSummaries({ webConnections, ssl, spf, dkim, dmarcPhases }) {
-  const { colors } = theme
-
-  const categoryDisplay = {
-    fail: {
-      name: t`Non-compliant`,
-      color: colors.summaries.fail,
-    },
-    pass: {
-      name: t`Compliant`,
-      color: colors.summaries.pass,
-    },
-  }
-
   const makeDmarcPhases = () => {
     let dmarcFailCount = 0
     let dmarcFailPercentage = 0
@@ -47,62 +33,36 @@ export function TierTwoSummaries({ webConnections, ssl, spf, dkim, dmarcPhases }
     }
   }
 
+  const webSummaries = [
+    {
+      id: 'web',
+      title: t`Web Connections Summary`,
+      description: t`Web connections are configured to use HTTPS and valid HSTS`,
+      data: webConnections,
+    },
+    {
+      id: 'web',
+      title: t`TLS Summary`,
+      description: `TLS certificate is valid and configured to use strong ciphers`,
+      data: ssl,
+    },
+  ]
+
+  const mailSummaries = [
+    { id: 'email', title: t`SPF Summary`, description: t`SPF record is configured and valid`, data: spf },
+    { id: 'email', title: t`DKIM Summary`, description: t`DKIM record is configured and valid`, data: dkim },
+    {
+      id: 'email',
+      title: t`DMARC Summary`,
+      description: t`A DMARC phase of maintain is configured`,
+      data: makeDmarcPhases(),
+    },
+  ]
+
   return (
     <Box>
-      <Flex direction={{ base: 'column', md: 'row' }} justify="space-evenly" align="stretch" w="100%" mb={6}>
-        <SummaryCard
-          id="webConnectionsSummary"
-          title={t`Web Connections Summary`}
-          description={t`Web connections are configured to use HTTPS and valid HSTS`}
-          categoryDisplay={categoryDisplay}
-          data={webConnections}
-          mb={{ base: 6, md: 0 }}
-        />
-
-        <SummaryCard
-          id="sslSummary"
-          title={t`TLS Summary`}
-          description={t`TLS certificate is valid and configured to use strong ciphers`}
-          categoryDisplay={categoryDisplay}
-          data={ssl}
-          mb={{ base: 6, md: 0 }}
-        />
-      </Flex>
-      <Flex direction={{ base: 'column', md: 'row' }} justify="space-evenly" align="stretch" w="100%" mb={6}>
-        <SummaryCard
-          id="spfSummary"
-          title={t`SPF Summary`}
-          description={t`SPF record is configured and valid`}
-          categoryDisplay={categoryDisplay}
-          data={spf}
-          mb={{ base: 6, md: 0 }}
-        />
-        <SummaryCard
-          id="dkimSummary"
-          title={t`DKIM Summary`}
-          description={t`DKIM record is configured and valid`}
-          categoryDisplay={categoryDisplay}
-          data={dkim}
-          mb={{ base: 6, md: 0 }}
-        />
-        <SummaryCard
-          id="dmarcPhaseSummary"
-          title={t`DMARC Summary`}
-          description={t`A DMARC phase of maintain is configured`}
-          categoryDisplay={{
-            fail: {
-              name: t`Not implemented`,
-              color: colors.summaries.fail,
-            },
-            pass: {
-              name: t`Implemented`,
-              color: colors.summaries.pass,
-            },
-          }}
-          data={makeDmarcPhases()}
-          mb={{ base: 6, md: 0 }}
-        />
-      </Flex>
+      <SummaryGroup summaries={webSummaries} />
+      <SummaryGroup summaries={mailSummaries} />
     </Box>
   )
 }

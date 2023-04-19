@@ -35,7 +35,7 @@ export function TieredSummaries({ summaries }) {
     <Box>
       <ABTestingWrapper insiderVariantName="B">
         <ABTestVariant name="B">
-          <Flex align="center" w="100%" mb="2" justifyContent="space-between">
+          <Flex align="center" w="100%" mb="4" justifyContent="space-between">
             <IconButton
               borderColor="gray.900"
               bg="gray.50"
@@ -45,10 +45,18 @@ export function TieredSummaries({ summaries }) {
               onClick={handleBackBtn}
             />
             <Flex align="center">
-              <Text mb="2" mr="2" textAlign="center" fontWeight="bold" fontSize="xl">
+              <Text mr="2" textAlign="center" fontWeight="bold" fontSize="xl">
                 <Trans>Tier {tabIndex + 1}</Trans>
               </Text>
-              {hidden && <IconButton onClick={() => setShow(!show)} icon={show ? <ViewOffIcon /> : <ViewIcon />} />}
+              {hidden && tabIndex === 0 && (
+                <Box>
+                  <IconButton
+                    variant="primaryOutline"
+                    onClick={() => setShow(!show)}
+                    icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                  />
+                </Box>
+              )}
             </Flex>
             <IconButton
               borderColor="gray.900"
@@ -61,6 +69,7 @@ export function TieredSummaries({ summaries }) {
           </Flex>
         </ABTestVariant>
       </ABTestingWrapper>
+
       <Tabs index={tabIndex} isLazy>
         <TabPanels>
           <TabPanel>
