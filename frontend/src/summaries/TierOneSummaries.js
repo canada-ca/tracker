@@ -18,7 +18,7 @@ export function TierOneSummaries({ https, dmarc }) {
 
   return (
     <Box w="100%">
-      <Flex flexWrap="wrap" justifyContent="space-evenly">
+      <Flex direction={{ base: 'column', md: 'row' }} justify="space-evenly" align="stretch" w="100%" mb={6}>
         <SummaryCard
           id="httpsStatus"
           title={t`HTTPS Configuration Summary`}

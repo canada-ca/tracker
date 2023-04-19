@@ -7,6 +7,8 @@ import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
 import { Trans } from '@lingui/macro'
 import { object } from 'prop-types'
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 
 export function TieredSummaries({ summaries }) {
   const { https, dmarc, webConnections, ssl, spf, dkim, dmarcPhase, web, mail } = summaries
@@ -22,27 +24,31 @@ export function TieredSummaries({ summaries }) {
 
   return (
     <Box>
-      <Flex align="center" w="100%" mb="2" justifyContent="space-between">
-        <IconButton
-          borderColor="gray.900"
-          bg="gray.50"
-          borderWidth="1px"
-          rounded="full"
-          icon={<ArrowLeftIcon />}
-          onClick={handleBackBtn}
-        />
-        <Text mb="2" textAlign="center" fontWeight="bold" fontSize="xl">
-          <Trans>Tier {tabIndex + 1}</Trans>
-        </Text>
-        <IconButton
-          borderColor="gray.900"
-          bg="gray.50"
-          borderWidth="1px"
-          rounded="full"
-          icon={<ArrowRightIcon />}
-          onClick={handleFwdBtn}
-        />
-      </Flex>
+      <ABTestingWrapper insiderVariantName="B">
+        <ABTestVariant name="B">
+          <Flex align="center" w="100%" mb="2" justifyContent="space-between">
+            <IconButton
+              borderColor="gray.900"
+              bg="gray.50"
+              borderWidth="1px"
+              rounded="full"
+              icon={<ArrowLeftIcon />}
+              onClick={handleBackBtn}
+            />
+            <Text mb="2" textAlign="center" fontWeight="bold" fontSize="xl">
+              <Trans>Tier {tabIndex + 1}</Trans>
+            </Text>
+            <IconButton
+              borderColor="gray.900"
+              bg="gray.50"
+              borderWidth="1px"
+              rounded="full"
+              icon={<ArrowRightIcon />}
+              onClick={handleFwdBtn}
+            />
+          </Flex>
+        </ABTestVariant>
+      </ABTestingWrapper>
       <Tabs index={tabIndex} isLazy>
         <TabPanels>
           <TabPanel>
