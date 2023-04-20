@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Flex, Tabs, TabPanels, TabPanel, IconButton, Text, Box, Tooltip } from '@chakra-ui/react'
-import { ArrowLeftIcon, ArrowRightIcon, QuestionOutlineIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { ArrowLeftIcon, ArrowRightIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 import { TierOneSummaries } from './TierOneSummaries'
 import { TierTwoSummaries } from './TierTwoSummaries'
