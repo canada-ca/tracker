@@ -53,7 +53,8 @@ def update_scan_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         scan_total = 0
         for domain in db.collection("domains"):
             archived = domain.get("archived")
-            if archived != True:
+            hidden = is_domain_hidden(domain, db)
+            if archived != True and hidden != True:
                 # We don't want to count domains not passing or failing
                 # (i.e unreachable or unscanned) towards the total.
                 if domain.get("status", {}).get(scan_type) == "fail":
@@ -112,7 +113,8 @@ def update_dmarc_phase_chart_summaries(db):
 
     for domain in db.collection("domains"):
         archived = domain.get("archived")
-        if archived != True:
+        hidden = is_domain_hidden(domain, db)
+        if archived != True and hidden != True:
             phase = domain.get("phase")
 
             if phase is None:
@@ -180,7 +182,8 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER,
         domain_total = 0
         for domain in db.collection("domains"):
             archived = domain.get("archived")
-            if archived != True:
+            hidden = is_domain_hidden(domain, db)
+            if archived != True and hidden != True:
                 category_status = []
                 for scan_type in scan_types:
                     category_status.append(domain.get("status", {}).get(scan_type))
