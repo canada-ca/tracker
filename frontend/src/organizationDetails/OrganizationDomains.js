@@ -28,6 +28,7 @@ import { SearchBox } from '../components/SearchBox'
 import { Formik } from 'formik'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
+import { ABTestVariant, ABTestingWrapper } from '../app/ABTestWrapper'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -94,6 +95,9 @@ export function OrganizationDomains({ orgSlug }) {
     { value: t`TEST`, text: t`Test` },
     { value: t`WEB`, text: t`Web` },
     { value: t`INACTIVE`, text: t`Inactive` },
+  ]
+
+  const hiddenFilterOptions = [
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
   ]
@@ -186,13 +190,26 @@ export function OrganizationDomains({ orgSlug }) {
                           <Trans>Status or tag</Trans>
                         </option>
                         {values.filterCategory === 'TAGS' ? (
-                          filterTagOptions.map(({ value, text }, idx) => {
-                            return (
-                              <option key={idx} value={value}>
-                                {text}
-                              </option>
-                            )
-                          })
+                          <>
+                            {filterTagOptions.map(({ value, text }, idx) => {
+                              return (
+                                <option key={idx} value={value}>
+                                  {text}
+                                </option>
+                              )
+                            })}
+                            <ABTestingWrapper insiderVariantName="B">
+                              <ABTestVariant name="B">
+                                {hiddenFilterOptions.map(({ value, text }, idx) => {
+                                  return (
+                                    <option key={idx} value={value}>
+                                      {text}
+                                    </option>
+                                  )
+                                })}
+                              </ABTestVariant>
+                            </ABTestingWrapper>
+                          </>
                         ) : (
                           <>
                             <option value="PASS">
