@@ -49,14 +49,13 @@ export function TieredSummaries({ summaries }) {
                 <Trans>Tier {tabIndex + 1}</Trans>
               </Text>
               {hidden && tabIndex === 0 && (
-                <Flex>
-                  <IconButton
-                    variant="primaryOutline"
-                    onClick={() => setShow(!show)}
-                    icon={show ? <ViewOffIcon /> : <ViewIcon />}
-                  />
+                <Flex align="center">
                   <Tooltip label={t`Show summaries including hidden domains.`}>
-                    <QuestionOutlineIcon tabIndex={0} />
+                    <IconButton
+                      variant="primaryOutline"
+                      onClick={() => setShow(!show)}
+                      icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                    />
                   </Tooltip>
                 </Flex>
               )}
