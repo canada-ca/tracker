@@ -547,7 +547,6 @@ export const PAGINATED_ORG_DOMAINS = gql`
               dmarc
               hsts
               https
-              # policy
               protocols
               spf
               ssl
@@ -612,7 +611,6 @@ export const PAGINATED_DOMAINS = gql`
             dmarc
             hsts
             https
-            # policy
             protocols
             spf
           }
@@ -1035,25 +1033,18 @@ export const MY_TRACKER_SUMMARY = gql`
     findMyTracker {
       summaries {
         https {
-          categories {
-            name
-            count
-            percentage
-          }
-          total
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
         }
         dmarcPhase {
-          categories {
-            name
-            count
-            percentage
-          }
-          total
+          ...RequiredSummaryFields
         }
       }
-      domainCount
     }
   }
+  ${Summary.fragments.requiredFields}
 `
 
 export const MY_TRACKER_DOMAINS = gql`
@@ -1079,7 +1070,6 @@ export const MY_TRACKER_DOMAINS = gql`
               dmarc
               hsts
               https
-              # policy
               protocols
               spf
               ssl

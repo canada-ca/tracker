@@ -336,7 +336,7 @@ const mocks = {
     const tagId = 'tag' + faker.datatype.number({ min: 1, max: 14 })
     const tagName =
       'TAG-' + faker.helpers.randomize(['missing', 'downgraded', 'bad-chain', 'short-age', 'certificate-expired'])
-    const guidance = faker.lorem.sentence()
+    // const guidance = faker.lorem.sentence()
     const refLinks = [...new Array(1)]
     const refLinksTech = [...new Array(1)]
 
@@ -354,6 +354,58 @@ const mocks = {
     return {
       edges: [...new Array(numberOfEdges)],
       totalCount: numberOfEdges,
+    }
+  },
+  MyTrackerResult: () => {
+    const domainCount = faker.datatype.number({ min: 0, max: 500 })
+    const httpsPassCount = faker.datatype.number({ min: 0, max: domainCount })
+    const httpsFailCount = domainCount - httpsPassCount
+    const httpsPassPercentage = (httpsPassCount / domainCount) * 100
+    const httpsFailPercentage = 100 - httpsPassPercentage
+    const https = {
+      total: domainCount,
+      categories: [
+        {
+          name: 'pass',
+          count: httpsPassCount,
+          percentage: httpsPassPercentage,
+        },
+        {
+          name: 'fail',
+          count: httpsFailCount,
+          percentage: httpsFailPercentage,
+        },
+      ],
+    }
+
+    const mailPassCount = faker.datatype.number({ min: 0, max: domainCount })
+    const mailFailCount = domainCount - mailPassCount
+    const mailPassPercentage = (mailPassCount / domainCount) * 100
+    const mailFailPercentage = 100 - mailPassPercentage
+    const dmarc = {
+      total: domainCount,
+      categories: [
+        {
+          name: 'pass',
+          count: mailPassCount,
+          percentage: mailPassPercentage,
+        },
+        {
+          name: 'fail',
+          count: mailFailCount,
+          percentage: mailFailPercentage,
+        },
+      ],
+    }
+
+    const dmarcPhase = dmarcPhaseSummaryMock()
+    return {
+      domainCount,
+      domains: {
+        edges: [...new Array(domainCount)],
+        totalCount: domainCount,
+      },
+      summaries: { https, dmarc, dmarcPhase },
     }
   },
   Organization: () => {
@@ -599,6 +651,9 @@ const schemaWithMocks = addMocksToSchema({
       },
       findMyOrganizations: (_, args, _context, resolveInfo) => {
         return getConnectionObject(store, args, resolveInfo)
+      },
+      findMyTracker: (_, _args, _context, _resolveInfo) => {
+        return store.get('MyTrackerResult')
       },
       dmarcPhaseSummary: (_, _args, _context, _resolveInfo) => {
         return dmarcPhaseSummaryMock()

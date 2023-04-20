@@ -1,27 +1,17 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import {
-  Box,
-  Flex,
-  Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import { useParams, useHistory } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from '../organizationDetails/OrganizationDomains'
-import { OrganizationSummary } from '../organizationDetails/OrganizationSummary'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
+import { TierOneSummaries } from '../summaries/TierOneSummaries'
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
@@ -29,7 +19,7 @@ export default function OrganizationDetails() {
   const tabNames = ['summary', 'dmarc_phases', 'domains']
   const defaultActiveTab = tabNames[0]
 
-  const { loading, error, data } = useQuery(MY_TRACKER_SUMMARY, {})
+  const { loading, error, data } = useQuery(MY_TRACKER_SUMMARY)
 
   useEffect(() => {
     if (!activeTab) {
@@ -58,12 +48,7 @@ export default function OrganizationDetails() {
 
   return (
     <Box w="100%">
-      <Flex
-        flexDirection="row"
-        align="center"
-        mb="4"
-        flexWrap={{ base: 'wrap', md: 'nowrap' }}
-      >
+      <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading
           as="h1"
           textAlign={{ base: 'center', md: 'left' }}
@@ -76,10 +61,8 @@ export default function OrganizationDetails() {
       </Flex>
       <Text fontSize="lg" mb="2">
         <Trans>
-          Welcome to your personal view of Tracker. Moderate the security
-          posture of domains of interest across multiple organizations. To add
-          domains to this view, use the star icon buttons available on domain
-          lists.
+          Welcome to your personal view of Tracker. Moderate the security posture of domains of interest across multiple
+          organizations. To add domains to this view, use the star icon buttons available on domain lists.
         </Trans>
       </Text>
       <Tabs
@@ -103,9 +86,9 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationSummary
-                summaries={data?.findMyTracker?.summaries}
-                domainCount={data?.findMyTracker?.domainCount}
+              <TierOneSummaries
+                https={data?.findMyTracker?.summaries.https}
+                dmarc={data?.findMyTracker?.summaries.dmarc}
               />
             </ErrorBoundary>
           </TabPanel>

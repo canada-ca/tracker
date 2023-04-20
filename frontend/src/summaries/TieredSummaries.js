@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Flex, Tabs, TabPanels, TabPanel, IconButton, Text, Box } from '@chakra-ui/react'
-import { ArrowLeftIcon, ArrowRightIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { Flex, Tabs, TabPanels, TabPanel, IconButton, Text, Box, Tooltip } from '@chakra-ui/react'
+import { ArrowLeftIcon, ArrowRightIcon, QuestionOutlineIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 import { TierOneSummaries } from './TierOneSummaries'
 import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { object } from 'prop-types'
 import { ABTestingWrapper } from '../app/ABTestWrapper'
 import { ABTestVariant } from '../app/ABTestVariant'
@@ -49,13 +49,16 @@ export function TieredSummaries({ summaries }) {
                 <Trans>Tier {tabIndex + 1}</Trans>
               </Text>
               {hidden && tabIndex === 0 && (
-                <Box>
+                <Flex>
                   <IconButton
                     variant="primaryOutline"
                     onClick={() => setShow(!show)}
                     icon={show ? <ViewOffIcon /> : <ViewIcon />}
                   />
-                </Box>
+                  <Tooltip label={t`Show summaries including hidden domains.`}>
+                    <QuestionOutlineIcon tabIndex={0} />
+                  </Tooltip>
+                </Flex>
               )}
             </Flex>
             <IconButton

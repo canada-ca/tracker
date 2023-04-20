@@ -138,16 +138,16 @@ export const organizationSummaryType = new GraphQLObjectType({
       type: categorizedSummaryType,
       description: 'Summary based on DMARC phases for a given organization.',
       resolve: ({ dmarc_phase }, _) => {
-        let percentNotImplemented, percentAsses, percentDeploy, percentEnforce, percentMaintain
+        let percentNotImplemented, percentAssess, percentDeploy, percentEnforce, percentMaintain
         if (dmarc_phase.total <= 0) {
           percentNotImplemented = 0
-          percentAsses = 0
+          percentAssess = 0
           percentDeploy = 0
           percentEnforce = 0
           percentMaintain = 0
         } else {
           percentNotImplemented = Number(((dmarc_phase.not_implemented / dmarc_phase.total) * 100).toFixed(1))
-          percentAsses = Number(((dmarc_phase.assess / dmarc_phase.total) * 100).toFixed(1))
+          percentAssess = Number(((dmarc_phase.assess / dmarc_phase.total) * 100).toFixed(1))
           percentDeploy = Number(((dmarc_phase.deploy / dmarc_phase.total) * 100).toFixed(1))
           percentEnforce = Number(((dmarc_phase.enforce / dmarc_phase.total) * 100).toFixed(1))
           percentMaintain = Number(((dmarc_phase.maintain / dmarc_phase.total) * 100).toFixed(1))
@@ -162,7 +162,7 @@ export const organizationSummaryType = new GraphQLObjectType({
           {
             name: 'assess',
             count: dmarc_phase.assess,
-            percentage: percentAsses,
+            percentage: percentAssess,
           },
           {
             name: 'deploy',
