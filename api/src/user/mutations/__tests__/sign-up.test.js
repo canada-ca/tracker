@@ -1,22 +1,22 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import {ensure, dbNameFromFile} from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { setupI18n } from '@lingui/core'
-import { v4 as uuidv4 } from 'uuid'
+import {graphql, GraphQLError, GraphQLSchema} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
+import {v4 as uuidv4} from 'uuid'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { tokenize, verifyToken } from '../../../auth'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
-import { loadOrgByKey } from '../../../organization/loaders'
+import {tokenize, verifyToken} from '../../../auth'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {loadUserByUserName, loadUserByKey} from '../../loaders'
+import {loadOrgByKey} from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
+const {DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY} = process.env
 
 describe('testing user sign up', () => {
   let query,
@@ -58,7 +58,7 @@ describe('testing user sign up', () => {
 
   describe('given a successful sign up', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -81,8 +81,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -96,7 +96,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -147,8 +147,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -245,8 +245,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -271,7 +271,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -323,8 +323,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -421,8 +421,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -483,7 +483,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -530,15 +530,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -631,15 +631,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -714,15 +714,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -747,7 +747,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -795,15 +795,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -896,15 +896,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -979,15 +979,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1017,8 +1017,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1032,7 +1032,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -1083,8 +1083,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1181,8 +1181,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1207,7 +1207,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -1259,8 +1259,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1357,8 +1357,8 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1419,7 +1419,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -1466,15 +1466,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1567,15 +1567,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1650,15 +1650,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1683,7 +1683,7 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
+              const mockedResponse = {cookie: mockedCookie}
 
               const response = await graphql(
                 schema,
@@ -1731,15 +1731,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1832,15 +1832,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1915,15 +1915,15 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({ i18n: {} }),
+                    verifyToken: verifyToken({i18n: {}}),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
-                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
+                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
@@ -1955,8 +1955,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2272,7 +2272,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -2396,7 +2396,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -2487,7 +2487,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -2593,7 +2593,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -2704,14 +2704,14 @@ describe('testing user sign up', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
-                    .mockReturnValueOnce({ next: jest.fn() })
+                    .mockReturnValueOnce({next: jest.fn()})
                     .mockRejectedValue('Transaction Step Error'),
                 }),
                 uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -2809,7 +2809,7 @@ describe('testing user sign up', () => {
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({ next: jest.fn() }),
+                  step: jest.fn().mockReturnValue({next: jest.fn()}),
                   commit: jest
                     .fn()
                     .mockRejectedValue('Transaction Commit Error'),
@@ -2818,7 +2818,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -2882,8 +2882,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -3199,7 +3199,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -3323,7 +3323,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -3414,7 +3414,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -3520,7 +3520,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -3631,14 +3631,14 @@ describe('testing user sign up', () => {
                 transaction: jest.fn().mockReturnValue({
                   step: jest
                     .fn()
-                    .mockReturnValueOnce({ next: jest.fn() })
+                    .mockReturnValueOnce({next: jest.fn()})
                     .mockRejectedValue('Transaction Step Error'),
                 }),
                 uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,
@@ -3736,7 +3736,7 @@ describe('testing user sign up', () => {
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({ next: jest.fn() }),
+                  step: jest.fn().mockReturnValue({next: jest.fn()}),
                   commit: jest
                     .fn()
                     .mockRejectedValue('Transaction Commit Error'),
@@ -3745,7 +3745,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({ i18n }),
+                  verifyToken: verifyToken({i18n}),
                 },
                 validators: {
                   cleanseInput,

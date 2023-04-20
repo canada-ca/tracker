@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { updateUserPasswordResultType } from '../update-user-password-result'
+import {updateUserPasswordResultType} from '../update-user-password-result'
 
 describe('given the updateUserPasswordResultType object', () => {
   describe('testing the field definitions', () => {
@@ -17,7 +17,7 @@ describe('given the updateUserPasswordResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = updateUserPasswordResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
   })

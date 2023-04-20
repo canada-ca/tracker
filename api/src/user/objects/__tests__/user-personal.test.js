@@ -5,15 +5,15 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
+import {toGlobalId} from 'graphql-relay'
+import {GraphQLEmailAddress, GraphQLPhoneNumber} from 'graphql-scalars'
 
-import { affiliationConnection } from '../../../affiliation/objects'
-import { userPersonalType } from '../index'
-import { LanguageEnums, TfaSendMethodEnum } from '../../../enums'
-import { decryptPhoneNumber } from '../../../validators'
+import {affiliationConnection} from '../../../affiliation/objects'
+import {userPersonalType} from '../index'
+import {LanguageEnums, TfaSendMethodEnum} from '../../../enums'
+import {decryptPhoneNumber} from '../../../validators'
 
-const { CIPHER_KEY } = process.env
+const {CIPHER_KEY} = process.env
 
 describe('given the user object', () => {
   describe('testing the field definitions', () => {
@@ -79,7 +79,7 @@ describe('given the user object', () => {
       it('returns the resolved field', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
+        expect(demoType.id.resolve({id: '1'})).toEqual(
           toGlobalId('user', '1'),
         )
       })
@@ -89,7 +89,7 @@ describe('given the user object', () => {
         const demoType = userPersonalType.getFields()
 
         expect(
-          demoType.userName.resolve({ userName: 'test@email.gc.ca' }),
+          demoType.userName.resolve({userName: 'test@email.gc.ca'}),
         ).toEqual('test@email.gc.ca')
       })
     })
@@ -98,7 +98,7 @@ describe('given the user object', () => {
         const demoType = userPersonalType.getFields()
 
         expect(
-          demoType.displayName.resolve({ displayName: 'display name' }),
+          demoType.displayName.resolve({displayName: 'display name'}),
         ).toEqual('display name')
       })
     })
@@ -115,7 +115,7 @@ describe('given the user object', () => {
                 phoneDetails,
               },
               {},
-              { validators: { decryptPhoneNumber } },
+              {validators: {decryptPhoneNumber}},
             ),
           ).toEqual(null)
         })
@@ -132,7 +132,7 @@ describe('given the user object', () => {
                 phoneDetails,
               },
               {},
-              { validators: { decryptPhoneNumber } },
+              {validators: {decryptPhoneNumber}},
             ),
           ).toEqual(null)
         })
@@ -167,7 +167,7 @@ describe('given the user object', () => {
                 },
               },
               {},
-              { validators: { decryptPhoneNumber } },
+              {validators: {decryptPhoneNumber}},
             ),
           ).toEqual(phoneDetails.phoneNumber)
         })
@@ -178,7 +178,7 @@ describe('given the user object', () => {
         const demoType = userPersonalType.getFields()
 
         expect(
-          demoType.preferredLang.resolve({ preferredLang: 'english' }),
+          demoType.preferredLang.resolve({preferredLang: 'english'}),
         ).toEqual('english')
       })
     })
@@ -187,7 +187,7 @@ describe('given the user object', () => {
         const demoType = userPersonalType.getFields()
 
         expect(
-          demoType.phoneValidated.resolve({ phoneValidated: true }),
+          demoType.phoneValidated.resolve({phoneValidated: true}),
         ).toEqual(true)
       })
     })
@@ -196,7 +196,7 @@ describe('given the user object', () => {
         const demoType = userPersonalType.getFields()
 
         expect(
-          demoType.emailValidated.resolve({ emailValidated: true }),
+          demoType.emailValidated.resolve({emailValidated: true}),
         ).toEqual(true)
       })
     })
@@ -205,7 +205,7 @@ describe('given the user object', () => {
         const demoType = userPersonalType.getFields()
 
         expect(
-          demoType.tfaSendMethod.resolve({ tfaSendMethod: 'phone' }),
+          demoType.tfaSendMethod.resolve({tfaSendMethod: 'phone'}),
         ).toEqual('phone')
       })
     })
@@ -242,8 +242,8 @@ describe('given the user object', () => {
 
         await expect(
           demoType.affiliations.resolve(
-            { _id: '1' },
-            { first: 1 },
+            {_id: '1'},
+            {first: 1},
             {
               loaders: {
                 loadAffiliationConnectionsByUserId: jest

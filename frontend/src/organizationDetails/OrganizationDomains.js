@@ -23,17 +23,10 @@ import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import {
-  PAGINATED_ORG_DOMAINS as FORWARD,
-  MY_TRACKER_DOMAINS,
-} from '../graphql/queries'
+import { PAGINATED_ORG_DOMAINS as FORWARD, MY_TRACKER_DOMAINS } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
-import { SubdomainWarning } from '../domains/SubdomainWarning'
 import { Formik } from 'formik'
-import {
-  getRequirement,
-  schemaToValidation,
-} from '../utilities/fieldRequirements'
+import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
 
 export function OrganizationDomains({ orgSlug }) {
@@ -69,27 +62,15 @@ export function OrganizationDomains({ orgSlug }) {
           filters,
         }
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
-    recordsPerPage: domainsPerPage,
-    relayRoot:
-      orgSlug === 'my-tracker'
-        ? 'findMyTracker.domains'
-        : 'findOrganizationBySlug.domains',
-    variables: queryVariables,
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
+      recordsPerPage: domainsPerPage,
+      relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
+      variables: queryVariables,
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -136,8 +117,7 @@ export function OrganizationDomains({ orgSlug }) {
               setFilters([
                 ...new Map(
                   [...filters, values].map((item) => {
-                    if (item['filterCategory'] !== 'TAGS')
-                      return [item['filterCategory'], item]
+                    if (item['filterCategory'] !== 'TAGS') return [item['filterCategory'], item]
                     else return [item['filterValue'], item]
                   }),
                 ).values(),
@@ -147,12 +127,7 @@ export function OrganizationDomains({ orgSlug }) {
           >
             {({ handleChange, handleSubmit, values, errors }) => {
               return (
-                <form
-                  onSubmit={handleSubmit}
-                  role="form"
-                  aria-label="form"
-                  name="form"
-                >
+                <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
                   <Flex align="center">
                     <Text fontWeight="bold" mr="2">
                       <Trans>Filters:</Trans>
@@ -163,10 +138,8 @@ export function OrganizationDomains({ orgSlug }) {
                         borderColor="black"
                         onChange={(e) => {
                           if (
-                            (values.filterCategory === 'TAGS' &&
-                              e.target.value !== 'TAGS') ||
-                            (values.filterCategory !== 'TAGS' &&
-                              e.target.value === 'TAGS')
+                            (values.filterCategory === 'TAGS' && e.target.value !== 'TAGS') ||
+                            (values.filterCategory !== 'TAGS' && e.target.value === 'TAGS')
                           ) {
                             values.filterValue = ''
                           }
@@ -192,11 +165,7 @@ export function OrganizationDomains({ orgSlug }) {
                       </Text>
                     </Box>
                     <Box maxW="25%" mx="1">
-                      <Select
-                        name="comparison"
-                        borderColor="black"
-                        onChange={handleChange}
-                      >
+                      <Select name="comparison" borderColor="black" onChange={handleChange}>
                         <option hidden value="">
                           <Trans>Comparison</Trans>
                         </option>
@@ -212,11 +181,7 @@ export function OrganizationDomains({ orgSlug }) {
                       </Text>
                     </Box>
                     <Box maxW="25%" mx="1">
-                      <Select
-                        name="filterValue"
-                        borderColor="black"
-                        onChange={handleChange}
-                      >
+                      <Select name="filterValue" borderColor="black" onChange={handleChange}>
                         <option hidden value="">
                           <Trans>Status or tag</Trans>
                         </option>
@@ -266,13 +231,10 @@ export function OrganizationDomains({ orgSlug }) {
         mb="4"
       >
         {(
-          { id, domain, status, hasDMARCReport, claimTags, hidden, archived },
+          { id, domain, status, hasDMARCReport, claimTags, hidden, archived, rcode, blocked, webScanPending },
           index,
         ) => (
-          <ErrorBoundary
-            key={`${id}:${index}`}
-            FallbackComponent={ErrorFallbackMessage}
-          >
+          <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <DomainCard
               id={id}
               url={domain}
@@ -280,7 +242,10 @@ export function OrganizationDomains({ orgSlug }) {
               hasDMARCReport={hasDMARCReport}
               tags={claimTags}
               isHidden={hidden}
+              rcode={rcode}
               isArchived={archived}
+              blocked={blocked}
+              webScanPending={webScanPending}
               mb="3"
             />
           </ErrorBoundary>
@@ -293,30 +258,15 @@ export function OrganizationDomains({ orgSlug }) {
     <Box>
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Ciphers`}
-          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`Curves`}
-          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`HSTS`}
-          info={t`Shows if the domain meets the HSTS requirements.`}
-        />
+        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
+        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
+        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
         <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
         />
-        <InfoBox
-          title={t`Protocols`}
-          info={t`Shows if the domain uses acceptable protocols.`}
-        />
-        <InfoBox
-          title={t`SPF`}
-          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
-        />
+        <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
+        <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
         <InfoBox
           title={t`DKIM`}
           info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
@@ -340,14 +290,9 @@ export function OrganizationDomains({ orgSlug }) {
         setOrderField={setOrderField}
         setOrderDirection={setOrderDirection}
         resetToFirstPage={resetToFirstPage}
-        orderByOptions={[
-          { value: 'DOMAIN', text: t`Domain` },
-          ...orderByOptions,
-        ]}
+        orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
         placeholder={t`Search for a domain`}
       />
-
-      <SubdomainWarning mb="4" />
 
       {orgSlug !== 'my-tracker' && (
         <Flex align="center" mb="2">
@@ -387,29 +332,13 @@ export function OrganizationDomains({ orgSlug }) {
                   <>
                     <TagLabel>{statuses[filterCategory]}</TagLabel>
                     <TagRightIcon
-                      color={
-                        filterValue === 'PASS'
-                          ? 'strong'
-                          : filterValue === 'FAIL'
-                          ? 'weak'
-                          : 'info'
-                      }
-                      as={
-                        filterValue === 'PASS'
-                          ? CheckCircleIcon
-                          : filterValue === 'FAIL'
-                          ? WarningIcon
-                          : InfoIcon
-                      }
+                      color={filterValue === 'PASS' ? 'strong' : filterValue === 'FAIL' ? 'weak' : 'info'}
+                      as={filterValue === 'PASS' ? CheckCircleIcon : filterValue === 'FAIL' ? WarningIcon : InfoIcon}
                     />
                   </>
                 )}
 
-                <TagCloseButton
-                  onClick={() =>
-                    setFilters(filters.filter((_, i) => i !== idx))
-                  }
-                />
+                <TagCloseButton onClick={() => setFilters(filters.filter((_, i) => i !== idx))} />
               </Tag>
             )
           })}

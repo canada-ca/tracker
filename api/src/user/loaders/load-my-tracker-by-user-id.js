@@ -8,7 +8,7 @@ export const loadMyTrackerByUserId =
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`
-        WITH users
+        WITH users, domains
         LET favDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
                 OPTIONS {order: "bfs"}
@@ -70,8 +70,7 @@ export const loadMyTrackerByUserId =
       }
 
       // calculate dmarcPhase summary
-      if (phase === 'not implemented')
-        returnSummaries.dmarc_phase.not_implemented++
+      if (phase === 'not implemented') returnSummaries.dmarc_phase.not_implemented++
       else if (phase === 'assess') returnSummaries.dmarc_phase.assess++
       else if (phase === 'deploy') returnSummaries.dmarc_phase.deploy++
       else if (phase === 'enforce') returnSummaries.dmarc_phase.enforce++

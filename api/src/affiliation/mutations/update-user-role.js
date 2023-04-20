@@ -1,10 +1,10 @@
-import { GraphQLNonNull, GraphQLID } from 'graphql'
-import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
-import { GraphQLEmailAddress } from 'graphql-scalars'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull, GraphQLID} from 'graphql'
+import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
+import {GraphQLEmailAddress} from 'graphql-scalars'
+import {t} from '@lingui/macro'
 
-import { RoleEnums } from '../../enums'
-import { updateUserRoleUnion } from '../unions'
+import {RoleEnums} from '../../enums'
+import {updateUserRoleUnion} from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const updateUserRole = new mutationWithClientMutationId({
@@ -44,21 +44,21 @@ given organization.`,
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
-      loaders: { loadOrgByKey, loadUserByUserName },
-      validators: { cleanseInput },
+      auth: {checkPermission, userRequired, verifiedRequired, tfaRequired},
+      loaders: {loadOrgByKey, loadUserByUserName},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse Input
     const userName = cleanseInput(args.userName).toLowerCase()
-    const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
+    const {id: orgId} = fromGlobalId(cleanseInput(args.orgId))
     const role = cleanseInput(args.role)
 
     // Get requesting user from db
     const user = await userRequired()
 
-    verifiedRequired({ user })
-    tfaRequired({ user })
+    verifiedRequired({user})
+    tfaRequired({user})
 
     // Make sure user is not attempting to update their own role
     if (user.userName === userName) {
@@ -101,7 +101,7 @@ given organization.`,
     }
 
     // Check requesting user's permission
-    const permission = await checkPermission({ orgId: org._id })
+    const permission = await checkPermission({orgId: org._id})
 
     if (permission === 'user' || typeof permission === 'undefined') {
       console.warn(

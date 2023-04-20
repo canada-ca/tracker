@@ -2,7 +2,7 @@ import {
   affiliationError,
   transferOrgOwnershipResult,
 } from '../../objects/index'
-import { transferOrgOwnershipUnion } from '../transfer-org-ownership-union'
+import {transferOrgOwnershipUnion} from '../transfer-org-ownership-union'
 
 describe('given the transferOrgOwnershipUnion', () => {
   describe('testing the field types', () => {

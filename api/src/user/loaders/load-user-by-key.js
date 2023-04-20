@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader'
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
-export const loadUserByKey = ({ query, userKey, i18n }) =>
+export const loadUserByKey = ({query, userKey, i18n}) =>
   new DataLoader(async (ids) => {
     let cursor
 

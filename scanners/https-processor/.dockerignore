@@ -1,7 +1,0 @@
-**/.pytest_cache
-**/__pycache__
-Dockerfile
-tests
-*.yaml
-**/*.env
-.venv

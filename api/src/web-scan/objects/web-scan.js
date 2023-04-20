@@ -1,84 +1,23 @@
-import { GraphQLObjectType } from 'graphql'
-import { connectionArgs } from 'graphql-relay'
-import { GraphQLDateTime } from 'graphql-scalars'
+import { GraphQLObjectType, GraphQLString } from 'graphql'
 
-import { domainType } from '../../domain/objects'
-import { httpsOrder, sslOrder } from '../inputs'
-import { httpsConnection } from './https-connection'
-import { sslConnection } from './ssl-connection'
+import { webScanResultType } from './web-scan-result'
 
 export const webScanType = new GraphQLObjectType({
   name: 'WebScan',
   fields: () => ({
-    domain: {
-      type: domainType,
-      description: `The domain the scan was ran on.`,
-      resolve: async ({ _key }, _, { loaders: { loadDomainByKey } }) => {
-        const domain = await loadDomainByKey.load(_key)
-        domain.id = domain._key
-        return domain
-      },
+    ipAddress: {
+      type: GraphQLString,
+      description: `IP address for scan target.`,
     },
-    https: {
-      type: httpsConnection.connectionType,
-      args: {
-        startDate: {
-          type: GraphQLDateTime,
-          description: 'Start date for date filter.',
-        },
-        endDate: {
-          type: GraphQLDateTime,
-          description: 'End date for date filter.',
-        },
-        orderBy: {
-          type: httpsOrder,
-          description: 'Ordering options for https connections.',
-        },
-        ...connectionArgs,
-      },
-      description: `Hyper Text Transfer Protocol Secure scan results.`,
-      resolve: async (
-        { _id },
-        args,
-        { loaders: { loadHttpsConnectionsByDomainId } },
-      ) => {
-        const https = await loadHttpsConnectionsByDomainId({
-          domainId: _id,
-          ...args,
-        })
-        return https
-      },
+    status: {
+      type: GraphQLString,
+      description: `The status of the scan for the given domain and IP address.`,
     },
-    ssl: {
-      type: sslConnection.connectionType,
-      args: {
-        startDate: {
-          type: GraphQLDateTime,
-          description: 'Start date for date filter.',
-        },
-        endDate: {
-          type: GraphQLDateTime,
-          description: 'End date for date filter.',
-        },
-        orderBy: {
-          type: sslOrder,
-          description: 'Ordering options for ssl connections.',
-        },
-        ...connectionArgs,
-      },
-      description: `Secure Socket Layer scan results.`,
-      resolve: async (
-        { _id },
-        args,
-        { loaders: { loadSslConnectionByDomainId } },
-      ) => {
-        const ssl = await loadSslConnectionByDomainId({
-          domainId: _id,
-          ...args,
-        })
-        return ssl
-      },
+    results: {
+      type: webScanResultType,
+      description: `Results of TLS and HTTP connection scans on the given domain.`,
+      resolve: async ({ results }) => results,
     },
   }),
-  description: `Results of HTTPS, and SSL scan on the given domain.`,
+  description: `Information for the TLS and HTTP connection scans on the given domain.`,
 })

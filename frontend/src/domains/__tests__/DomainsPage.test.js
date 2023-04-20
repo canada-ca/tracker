@@ -219,9 +219,7 @@ describe('<DomainsPage />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() =>
-        expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument())
     })
 
     it('handles an empty list of domains', async () => {
@@ -245,9 +243,7 @@ describe('<DomainsPage />', () => {
         </MockedProvider>,
       )
 
-      await waitFor(() =>
-        expect(queryByText(/No Domains/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(queryByText(/No Domains/i)).toBeInTheDocument())
     })
 
     describe('domain card links', () => {
@@ -285,14 +281,12 @@ describe('<DomainsPage />', () => {
         await waitFor(() => {
           const reportLinks = getAllByText(/DMARC Report/i)
           fireEvent.click(reportLinks[0])
-          expect(history.location.pathname).toEqual(
-            `/domains/tbs-sct.gc.ca/dmarc-report/LAST30DAYS/${currentYear}`,
-          )
+          expect(history.location.pathname).toEqual(`/domains/tbs-sct.gc.ca/dmarc-report/LAST30DAYS/${currentYear}`)
         })
       })
 
       it('takes user to Guidance page', async () => {
-        const { getAllByText } = render(
+        const { getAllByRole } = render(
           <MockedProvider mocks={mocks} cache={createCache()}>
             <UserVarProvider
               userVar={makeVar({
@@ -317,7 +311,7 @@ describe('<DomainsPage />', () => {
         )
 
         await waitFor(() => {
-          const guidanceLinks = getAllByText(/Guidance/i)
+          const guidanceLinks = getAllByRole('link', { name: /View Results/i })
           fireEvent.click(guidanceLinks[0])
           expect(history.location.pathname).toEqual('/domains/tbs-sct.gc.ca')
         })
@@ -338,10 +332,7 @@ describe('<DomainsPage />', () => {
               >
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={['/domains']}
-                      initialIndex={0}
-                    >
+                    <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                       <DomainsPage />
                     </MemoryRouter>
                   </I18nProvider>
@@ -380,10 +371,7 @@ describe('<DomainsPage />', () => {
               >
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={['/domains']}
-                      initialIndex={0}
-                    >
+                    <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                       <DomainsPage />
                     </MemoryRouter>
                   </I18nProvider>

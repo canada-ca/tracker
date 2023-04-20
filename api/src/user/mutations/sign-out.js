@@ -1,6 +1,6 @@
-import { t } from '@lingui/macro'
-import { GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLString} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
 
 export const signOut = new mutationWithClientMutationId({
   name: 'SignOut',
@@ -10,10 +10,10 @@ export const signOut = new mutationWithClientMutationId({
     status: {
       type: GraphQLString,
       description: 'Status of the users signing-out.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
-  mutateAndGetPayload: async (_, { i18n, response }) => {
+  mutateAndGetPayload: async (_, {i18n, response}) => {
     response.cookie('refresh_token', '', {
       httpOnly: true,
       expires: new Date(0),

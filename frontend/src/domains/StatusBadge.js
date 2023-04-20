@@ -4,7 +4,7 @@ import { string } from 'prop-types'
 
 import { StatusIcon } from '../components/StatusIcon'
 
-export function StatusBadge({ text, status }) {
+export function StatusBadge({ text, status, ...props }) {
   return (
     <Stack
       align="center"
@@ -12,6 +12,7 @@ export function StatusBadge({ text, status }) {
       justifyContent="space-between"
       spacing={0}
       mx={{ md: 1 }}
+      {...props}
     >
       <Text
         fontWeight="bold"

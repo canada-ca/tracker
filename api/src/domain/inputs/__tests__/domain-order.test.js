@@ -1,7 +1,7 @@
-import { GraphQLNonNull } from 'graphql'
+import {GraphQLNonNull} from 'graphql'
 
-import { domainOrder } from '../domain-order'
-import { OrderDirection, DomainOrderField } from '../../../enums'
+import {domainOrder} from '../domain-order'
+import {OrderDirection, DomainOrderField} from '../../../enums'
 
 describe('given the domainOrder input object', () => {
   describe('testing fields', () => {

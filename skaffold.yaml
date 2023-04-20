@@ -6,30 +6,30 @@ requires:
   - configs: ["infrastructure"]
 build:
   artifacts:
-#  - image: gcr.io/track-compliance/api-js
-#    context: api
-#    docker: {}
+  - image: gcr.io/track-compliance/api-js
+    context: api
+    docker: {}
 #  - image: gcr.io/track-compliance/counter
 #    context: scanners/counter
 #    docker: {}
-#  - image: gcr.io/track-compliance/database-migration
-#    context: database-migration
-#    docker: {}
-#  - image: gcr.io/track-compliance/dmarc-report
-#    context: services/dmarc-report
-#    docker: {}
-#  - image: gcr.io/track-compliance/dns-processor
-#    context: scanners/dns-processor
-#    docker: {}
-#  - image: gcr.io/track-compliance/dns-scanner
-#    context: scanners/dns-scanner
-#    docker: {}
-#  - image: gcr.io/track-compliance/domain-dispatcher
-#    context: scanners/domain-dispatcher
-#    docker: {}
-#  - image: gcr.io/track-compliance/frontend
-#    context: frontend
-#    docker: {}
+  - image: gcr.io/track-compliance/database-migration
+    context: database-migration
+    docker: {}
+  - image: gcr.io/track-compliance/dmarc-report
+    context: services/dmarc-report
+    docker: {}
+  - image: gcr.io/track-compliance/dns-processor
+    context: scanners/dns-processor
+    docker: {}
+  - image: gcr.io/track-compliance/dns-scanner
+    context: scanners/dns-scanner
+    docker: {}
+  - image: gcr.io/track-compliance/domain-dispatcher
+    context: scanners/domain-dispatcher
+    docker: {}
+  - image: gcr.io/track-compliance/frontend
+    context: frontend
+    docker: {}
 #  - image: gcr.io/track-compliance/https-processor
 #    context: scanners/https-processor
 #    docker: {}
@@ -42,35 +42,32 @@ build:
 #  - image: gcr.io/track-compliance/log4shell-scanner
 #    context: scanners/log4shell-scanner
 #    docker: {}
-#  - image: gcr.io/track-compliance/services/guidance
-#    context: services/guidance
-#    docker: {}
-#  - image: gcr.io/track-compliance/services/scanners/dns
-#    context: scanners/dns-scanner
-#    docker: {}
-#  - image: gcr.io/track-compliance/services/summaries
-#    context: services/summaries
-#    docker: {}
+  - image: gcr.io/track-compliance/services/guidance
+    context: services/guidance
+    docker: {}
+  - image: gcr.io/track-compliance/services/summaries
+    context: services/summaries
+    docker: {}
 #  - image: gcr.io/track-compliance/spring4shell-scanner
 #    context: scanners/spring4shell
 #    docker: {}
-#  - image: gcr.io/track-compliance/super-admin
-#    context: services/super-admin
-#    docker: {}
-#  - image: gcr.io/track-compliance/tls-processor
-#    context: scanners/tls-processor
-#    docker: {}
-#  - image: gcr.io/track-compliance/tls-scanner
-#    context: scanners/tls-scanner
-#    docker: {}
-deploy:
-  kubeContext: minikube
-  kustomize:
-    paths:
-      - k8s/apps/overlays/minikube
-      - k8s/apps/bases/api/creds
-      - k8s/apps/bases/scanners/dmarc-report-cronjob/creds
-      - k8s/apps/bases/scanners/scanner-platform/creds
+  - image: gcr.io/track-compliance/super-admin
+    context: services/super-admin
+    docker: {}
+  - image: gcr.io/track-compliance/web-processor
+    context: scanners/web-processor
+    docker: {}
+  - image: gcr.io/track-compliance/web-scanner
+    context: scanners/web-scanner
+    docker: {}
+#deploy:
+#  kubeContext: minikube
+#  kustomize:
+#    paths:
+#      - k8s/apps/overlays/minikube
+#      - k8s/apps/bases/api/creds
+#      - k8s/apps/bases/scanners/dmarc-report-cronjob/creds
+#      - k8s/apps/bases/scanners/scanner-platform/creds
 profiles:
   - name: gke
     deploy:
@@ -146,14 +143,14 @@ metadata:
   name: infrastructure
 requires:
   - configs: ["infrastructure-platform"]
-deploy:
-  kubeContext: minikube
-  kustomize:
-    flags:
-      delete: [ "-l app!=arangodb" ]
-    paths:
-      - k8s/infrastructure/overlays/minikube
-      - k8s/infrastructure/bases/arangodb/creds
+#deploy:
+#  kubeContext: minikube
+#  kustomize:
+#    flags:
+#      delete: [ "-l app!=arangodb" ]
+#    paths:
+#      - k8s/infrastructure/overlays/minikube
+#      - k8s/infrastructure/bases/arangodb/creds
 profiles:
   - name: gke
     deploy:
@@ -205,8 +202,8 @@ portForward:
     namespace: pubsub
     port: 4222
     localPort: 4222
-  - resourceType: service
-    resourceName: kiali
-    namespace: istio-system
-    port: 20001
-    localPort: 20001
+#  - resourceType: service
+#    resourceName: kiali
+#    namespace: istio-system
+#    port: 20001
+#    localPort: 20001

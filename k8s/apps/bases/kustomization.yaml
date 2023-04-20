@@ -3,5 +3,10 @@ kind: Kustomization
 resources:
   - api
   - frontend
-  - scanners/tls-processor
-  - scanners/tls-scanner
+  - scanners/dns-scanner
+  - scanners/dns-processor
+  - scanners/web-scanner
+  - scanners/web-processor
+  - scanners/dmarc-report-cronjob
+  - scanners/domain-dispatcher-cronjob
+  - scanners/summaries-cronjob

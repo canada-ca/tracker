@@ -1,5 +1,5 @@
 import React from 'react'
-import { theme, ChakraProvider } from '@chakra-ui/react'
+import { theme, ChakraProvider, Accordion } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
@@ -22,9 +22,7 @@ const i18n = setupI18n({
   },
 })
 
-const guidanceTag =
-  rawDmarcGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
-    .negativeGuidanceTags.edges[0].node
+const guidanceTag = rawDmarcGuidancePageData.data.findDomainByDomain.dnsScan.edges[0].node.spf.positiveTags[0]
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -38,19 +36,19 @@ describe('<GuidanceTagDetails />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
       <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <GuidanceTagDetails guidanceTag={guidanceTag} />
+                <Accordion>
+                  <GuidanceTagDetails guidanceTag={guidanceTag} />
+                </Accordion>
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => getAllByText(/DKIM-missing/i))
+    await waitFor(() => getAllByText(/TAG-short-age/i))
   })
 })

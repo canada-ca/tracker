@@ -1,6 +1,7 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
+  Badge,
   Box,
   Button,
   Divider,
@@ -15,7 +16,8 @@ import {
 } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
-
+import { ABTestingWrapper } from '../app/ABTestWrapper'
+import { ABTestVariant } from '../app/ABTestVariant'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 import { StarIcon } from '@chakra-ui/icons'
@@ -31,37 +33,37 @@ export function DomainCard({
   tags,
   isHidden,
   isArchived,
+  rcode,
+  blocked,
+  webScanPending,
   ...rest
 }) {
   const location = useLocation()
   const toast = useToast()
-  const { isLoggedIn } = useUserVar()
+  const { isLoggedIn, isEmailValidated } = useUserVar()
 
-  const [favouriteDomain, { _loading, _error }] = useMutation(
-    FAVOURITE_DOMAIN,
-    {
-      onError: ({ message }) => {
-        toast({
-          title: t`An error occurred while favouriting a domain.`,
-          description: message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
-      onCompleted() {
-        toast({
-          title: t`Favourited Domain`,
-          description: t`You have successfully added ${url} to myTracker.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
+  const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while favouriting a domain.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
     },
-  )
+    onCompleted() {
+      toast({
+        title: t`Favourited Domain`,
+        description: t`You have successfully added ${url} to myTracker.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+  })
 
   const [unfavouriteDomain, { _l, _e }] = useMutation(UNFAVOURITE_DOMAIN, {
     refetchQueries: ['FindMyTracker'],
@@ -121,65 +123,83 @@ export function DomainCard({
           flexShrink={{ md: '0.5' }}
           minWidth={{ md: '3em' }}
         >
-          <Text fontWeight="semibold">
-            <Trans>Domain:</Trans>
-          </Text>
+          <Flex flexDirection="row">
+            <Text fontWeight="semibold" mr="6">
+              <Trans>Domain:</Trans>
+            </Text>
+            {rcode === 'NXDOMAIN' && (
+              <Badge colorScheme="red" mr="auto" alignSelf="center">
+                NXDOMAIN
+              </Badge>
+            )}
+            {blocked && (
+              <Badge colorScheme="red" mr="auto" alignSelf="center">
+                <Trans>Blocked</Trans>
+              </Badge>
+            )}
+            {webScanPending && (
+              <Badge color="info" mr="auto" alignSelf="center">
+                <Trans>Scan Pending</Trans>
+              </Badge>
+            )}
+          </Flex>
           <Text isTruncated>{url}</Text>
+
           <Flex flexWrap="wrap">
             {tags?.map((tag, idx) => {
               return (
-                <Tag
-                  key={idx}
-                  m="0.5"
-                  bg="gray.50"
-                  borderWidth="1px"
-                  borderColor="gray.900"
-                >
+                <Tag key={idx} m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                   <TagLabel textColor="primary" fontWeight="bold" mx="auto">
                     {tag}
                   </TagLabel>
                 </Tag>
               )
             })}
-            {isHidden && (
-              <Tag
-                m="0.5"
-                bg="gray.50"
-                borderWidth="1px"
-                borderColor="gray.900"
-              >
-                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                  <Trans>HIDDEN</Trans>
-                </TagLabel>
-              </Tag>
-            )}
-            {isArchived && (
-              <Tag
-                m="0.5"
-                bg="gray.50"
-                borderWidth="1px"
-                borderColor="gray.900"
-              >
-                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                  <Trans>ARCHIVED</Trans>
-                </TagLabel>
-              </Tag>
-            )}
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                {isHidden && (
+                  <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>HIDDEN</Trans>
+                    </TagLabel>
+                  </Tag>
+                )}
+                {isArchived && (
+                  <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>ARCHIVED</Trans>
+                    </TagLabel>
+                  </Tag>
+                )}{' '}
+              </ABTestVariant>
+            </ABTestingWrapper>
           </Flex>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
-        <Flex {...statusGroupingProps} px="1">
-          <StatusBadge text={t`HTTPS`} status={status.https} />
-          <StatusBadge text={t`HSTS`} status={status.hsts} />
-          <StatusBadge text={t`Ciphers`} status={status.ciphers} />
-          <StatusBadge text={t`Curves`} status={status.curves} />
-          <StatusBadge text={t`Protocols`} status={status.protocols} />
-        </Flex>
-        <Flex {...statusGroupingProps} px="1">
-          <StatusBadge text="SPF" status={status.spf} />
-          <StatusBadge text="DKIM" status={status.dkim} />
-          <StatusBadge text="DMARC" status={status.dmarc} />
-        </Flex>
+
+        <Box {...statusGroupingProps} px="1">
+          <Text textAlign="center" color="gray.600">
+            <Trans>Web (HTTPS/TLS)</Trans>
+          </Text>
+          <Flex>
+            <StatusBadge text={t`HTTPS`} status={status.https} />
+            <StatusBadge text={t`HSTS`} status={status.hsts} />
+            <StatusBadge text={t`Certificates`} status={status.certificates} />
+            <StatusBadge text={t`Protocols`} status={status.protocols} />
+            <StatusBadge text={t`Ciphers`} status={status.ciphers} />
+            <StatusBadge text={t`Curves`} status={status.curves} />
+          </Flex>
+        </Box>
+        <Box {...statusGroupingProps} px="1">
+          <Text textAlign="center" color="gray.600">
+            <Trans>Email</Trans>
+          </Text>
+          <Flex>
+            <StatusBadge text="SPF" status={status.spf} />
+            <StatusBadge text="DKIM" status={status.dkim} />
+            <StatusBadge text="DMARC" status={status.dmarc} />
+          </Flex>
+        </Box>
         <Divider variant="card" display={{ md: 'none' }} />
 
         <Stack
@@ -199,7 +219,7 @@ export function DomainCard({
             px="10"
           >
             <Text whiteSpace="noWrap">
-              <Trans>Guidance</Trans>
+              <Trans>View Results</Trans>
             </Text>
           </Button>
 
@@ -216,7 +236,7 @@ export function DomainCard({
           )}
         </Stack>
         <Stack ml={4}>
-          <ScanDomainButton domainUrl={url} />
+          {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={url} />}
           {isLoggedIn() &&
             (location.pathname.match('my-tracker') ? (
               <IconButton
@@ -246,9 +266,12 @@ export function DomainCard({
 DomainCard.propTypes = {
   id: string,
   url: string.isRequired,
+  rcode: string,
   status: object,
   hasDMARCReport: bool,
   tags: array,
   isHidden: bool,
   isArchived: bool,
+  blocked: bool,
+  webScanPending: bool,
 }

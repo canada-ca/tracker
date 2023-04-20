@@ -2,7 +2,7 @@ import {
   affiliationError,
   inviteUserToOrgResultType,
 } from '../../objects/index'
-import { inviteUserToOrgUnion } from '../invite-user-to-org-union'
+import {inviteUserToOrgUnion} from '../invite-user-to-org-union'
 
 describe('given the inviteUserToOrgUnion', () => {
   describe('testing the field types', () => {

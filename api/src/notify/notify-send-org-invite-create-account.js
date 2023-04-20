@@ -1,15 +1,15 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 const {
   NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN,
   NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR,
 } = process.env
 
-export const sendOrgInviteCreateAccount = ({ notifyClient, i18n }) => async ({
-  user,
-  orgName,
-  createAccountLink,
-}) => {
+export const sendOrgInviteCreateAccount = ({notifyClient, i18n}) => async ({
+                                                                             user,
+                                                                             orgName,
+                                                                             createAccountLink,
+                                                                           }) => {
   let templateId = NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
   if (user.preferredLang === 'french') {
     templateId = NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR

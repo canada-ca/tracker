@@ -9,11 +9,11 @@ import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
 import { en } from 'make-plural/plurals'
 
-import DmarcGuidancePage from '../GuidancePage'
+import GuidancePage from '../GuidancePage'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { rawDmarcGuidancePageData } from '../../fixtures/dmarcGuidancePageData'
-import { GET_GUIDANCE_TAGS_OF_DOMAIN } from '../../graphql/queries'
+import { DOMAIN_GUIDANCE_PAGE } from '../../graphql/queries'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -46,31 +46,26 @@ window.resizeTo = function resizeTo(width, height) {
 const mocks = [
   {
     request: {
-      query: GET_GUIDANCE_TAGS_OF_DOMAIN,
+      query: DOMAIN_GUIDANCE_PAGE,
       variables: { domain: 'forces.gc.ca' },
     },
     result: {
-      data: rawDmarcGuidancePageData,
+      data: rawDmarcGuidancePageData.data,
     },
   },
 ]
 
-describe('<DmarcGuidancePage />', () => {
+describe('<GuidancePage />', () => {
   it('uses the a domainSlug param to fetch data', async () => {
     window.resizeTo(1024, 768)
     const { getByText } = render(
       <MockedProvider mocks={mocks}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/domains/forces.gc.ca']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
                 <Route path="/domains/:domainSlug">
-                  <DmarcGuidancePage />
+                  <GuidancePage />
                 </Route>
               </MemoryRouter>
             </I18nProvider>
@@ -80,7 +75,7 @@ describe('<DmarcGuidancePage />', () => {
     )
 
     await waitFor(() => {
-      expect(getByText(/forces.gc.ca/i)).toBeInTheDocument()
+      expect(getByText(/amie.info/i)).toBeInTheDocument()
     })
   })
 })

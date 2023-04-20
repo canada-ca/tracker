@@ -2,7 +2,7 @@ import {
   verifyPhoneNumberErrorType,
   verifyPhoneNumberResultType,
 } from '../../objects/index'
-import { verifyPhoneNumberUnion } from '../index'
+import {verifyPhoneNumberUnion} from '../index'
 
 describe('given the verifyPhoneNumberUnion', () => {
   describe('testing the field types', () => {

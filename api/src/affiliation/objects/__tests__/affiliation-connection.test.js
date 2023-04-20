@@ -1,5 +1,5 @@
-import { GraphQLInt } from 'graphql'
-import { affiliationConnection } from '../affiliation-connection'
+import {GraphQLInt} from 'graphql'
+import {affiliationConnection} from '../affiliation-connection'
 
 describe('given the affiliation connection object', () => {
   describe('testing its field definitions', () => {
@@ -15,7 +15,7 @@ describe('given the affiliation connection object', () => {
       it('returns the resolved value', () => {
         const demoType = affiliationConnection.connectionType.getFields()
 
-        expect(demoType.totalCount.resolve({ totalCount: 1 })).toEqual(1)
+        expect(demoType.totalCount.resolve({totalCount: 1})).toEqual(1)
       })
     })
   })

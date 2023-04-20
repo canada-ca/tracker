@@ -3,14 +3,7 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByOrgId =
-  ({
-    query,
-    userKey,
-    language,
-    cleanseInput,
-    i18n,
-    auth: { loginRequiredBool },
-  }) =>
+  ({ query, userKey, language, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
   async ({
     orgId,
     permission,
@@ -150,18 +143,14 @@ export const loadDomainConnectionsByOrgId =
         `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
       )
       throw new Error(
-        i18n._(
-          t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`,
-        ),
+        i18n._(t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`),
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
       console.warn(
         `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
       )
       throw new Error(
-        i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`,
-        ),
+        i18n._(t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`),
       )
     } else if (typeof first === 'number' || typeof last === 'number') {
       /* istanbul ignore else */
@@ -170,17 +159,11 @@ export const loadDomainConnectionsByOrgId =
         console.warn(
           `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDomainConnectionsByOrgId.`,
         )
-        throw new Error(
-          i18n._(
-            t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`,
-          ),
-        )
+        throw new Error(i18n._(t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`))
       } else if (first > 100 || last > 100) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         const amount = typeof first !== 'undefined' ? first : last
-        console.warn(
-          `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: loadDomainConnectionsByOrgId.`,
-        )
+        console.warn(`User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: loadDomainConnectionsByOrgId.`)
         throw new Error(
           i18n._(
             t`Requesting \`${amount}\` records on the \`Domain\` connection exceeds the \`${argSet}\` limit of 100 records.`,
@@ -197,9 +180,7 @@ export const loadDomainConnectionsByOrgId =
       console.warn(
         `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDomainConnectionsByOrgId.`,
       )
-      throw new Error(
-        i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
-      )
+      throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
     }
 
     let hasNextPageFilter = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(LAST(retrievedDomains)._key)`
