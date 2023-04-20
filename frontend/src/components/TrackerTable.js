@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react'
-import { useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
+import {
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable,
+} from 'react-table'
 import { array, bool, func, number, string } from 'prop-types'
 import {
   Box,
@@ -31,6 +36,7 @@ import {
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { ExportButton } from './ExportButton'
+import { InfoButton } from './InfoPanel'
 
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
 
@@ -42,13 +48,17 @@ export function TrackerTable({ ...props }) {
     title,
     initialSort,
     frontendPagination = true,
-    selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)').matches ? 5 : 10,
+    selectedDisplayLimit = window.matchMedia('screen and (max-width: 760px)')
+      .matches
+      ? 5
+      : 10,
     onSort,
     manualSort,
     manualFilters,
     searchPlaceholder,
     fileName,
     exportDataFunction,
+    onToggle,
   } = props
 
   const [firstRender, setFirstRender] = React.useState(true)
@@ -115,13 +125,30 @@ export function TrackerTable({ ...props }) {
             placeholder={searchPlaceholder}
           />
         )}
-        {fileName && <ExportButton ml="auto" dataFunction={exportDataFunction} fileName={`${fileName}_${title}`} />}
+        {typeof onToggle !== 'undefined' && (
+          <InfoButton
+            onToggle={onToggle}
+            ml="auto"
+            borderWidth="1px"
+            borderColor="black"
+          />
+        )}
+        {fileName && (
+          <ExportButton
+            ml="auto"
+            dataFunction={exportDataFunction}
+            fileName={`${fileName}_${title}`}
+          />
+        )}
       </Flex>
 
       <Table variant="med" {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => (
-            <Tr key={headerGroup.getHeaderGroupProps().key} {...headerGroup.getHeaderGroupProps()}>
+            <Tr
+              key={headerGroup.getHeaderGroupProps().key}
+              {...headerGroup.getHeaderGroupProps()}
+            >
               {headerGroup.headers.map((column) => (
                 <Th
                   key={column.getHeaderProps(column.getSortByToggleProps()).key}
@@ -150,10 +177,17 @@ export function TrackerTable({ ...props }) {
             return (
               <Tr key={row.getRowProps().key} {...row.getRowProps()}>
                 {row.cells.map((cell) => (
-                  <Td key={cell.getCellProps().key} {...cell.getCellProps()} isNumeric={cell.column.isNumeric}>
+                  <Td
+                    key={cell.getCellProps().key}
+                    {...cell.getCellProps()}
+                    isNumeric={cell.column.isNumeric}
+                  >
                     {cell.column.id === 'guidanceTag' ? (
                       cell?.value?.refLinks ? (
-                        <Link href={cell.value?.refLinks[0]?.refLink} isExternal>
+                        <Link
+                          href={cell.value?.refLinks[0]?.refLink}
+                          isExternal
+                        >
                           {cell.value.guidance} <ExternalLinkIcon />
                         </Link>
                       ) : (
@@ -172,7 +206,12 @@ export function TrackerTable({ ...props }) {
 
       {frontendPagination && (
         <Box mt="0.25em">
-          <Stack isInline align="center" flexWrap="wrap" justify="space-between">
+          <Stack
+            isInline
+            align="center"
+            flexWrap="wrap"
+            justify="space-between"
+          >
             <Stack spacing="1em" isInline align="center" flexWrap="wrap">
               <IconButton
                 onClick={() => {
@@ -278,4 +317,5 @@ TrackerTable.propTypes = {
   manualFilters: bool,
   fileName: string,
   exportDataFunction: func,
+  onToggle: func,
 }

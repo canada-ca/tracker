@@ -22,7 +22,7 @@ const i18n = setupI18n({
   },
 })
 
-describe('<ContactUsPage />', () => {
+describe('<ReadGuidancePage />', () => {
   afterEach(cleanup)
 
   it('renders the page', async () => {
@@ -45,6 +45,8 @@ describe('<ContactUsPage />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => expect(getByText(/Read guidance/i)))
+    await waitFor(() =>
+      expect(getByText('Getting Started')).toBeInTheDocument(),
+    )
   })
 })
