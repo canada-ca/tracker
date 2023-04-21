@@ -1,21 +1,16 @@
 import React, { Suspense, useEffect } from 'react'
+import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
 import {
-  Switch,
-  Link as RouteLink,
-  Redirect,
-  useLocation,
-} from 'react-router-dom'
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  CloseButton,
+  // Alert,
+  // AlertIcon,
+  // AlertTitle,
+  // Box,
+  // CloseButton,
   CSSReset,
   Flex,
   Link,
   Text,
-  useDisclosure,
+  // useDisclosure,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -67,7 +62,7 @@ export function App() {
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } = useUserVar()
   const { i18n } = useLingui()
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
-  const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true })
+  // const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true })
   const location = useLocation()
 
   // Close websocket on user jwt change (refresh/logout)
@@ -155,7 +150,7 @@ export function App() {
           </Text>
         </NotificationBanner>
       )}
-      {isVisible && (
+      {/* {isVisible && (
         <Alert status="warning" variant="left-accent" mx="4" my="2" maxW="98%">
           <AlertIcon />
           <Box>
@@ -184,7 +179,7 @@ export function App() {
             onClick={onClose}
           />
         </Alert>
-      )}
+      )} */}
 
       <Main mb={{ base: '40px', md: 'none' }}>
         <Suspense fallback={<LoadingMessage />}>
