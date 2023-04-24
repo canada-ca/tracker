@@ -7,7 +7,7 @@ import { SummaryGroup } from './SummaryGroup'
 export function TierOneSummaries({ https, dmarc }) {
   const summaries = [
     {
-      id: 'web',
+      id: 'httpsStatus',
       title: t`HTTPS Configuration Summary`,
       description: t`HTTPS is configured and HTTP connections redirect to HTTPS`,
       data: https,

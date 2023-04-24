@@ -1,6 +1,17 @@
 import React, { useState } from 'react'
-import { Flex, Tabs, TabPanels, TabPanel, IconButton, Text, Box, Tooltip } from '@chakra-ui/react'
-import { ArrowLeftIcon, ArrowRightIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import {
+  Flex,
+  IconButton,
+  Text,
+  Box,
+  Tooltip,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from '@chakra-ui/react'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 import { TierOneSummaries } from './TierOneSummaries'
 import { TierTwoSummaries } from './TierTwoSummaries'
@@ -21,66 +32,50 @@ export function TieredSummaries({ summaries }) {
       dmarc: summaries?.dmarcIncludeHidden,
     }
 
-  const [tabIndex, setTabIndex] = useState(0)
-
-  const handleBackBtn = () => {
-    tabIndex === 0 ? setTabIndex(2) : setTabIndex(tabIndex - 1)
-  }
-
-  const handleFwdBtn = () => {
-    tabIndex === 2 ? setTabIndex(0) : setTabIndex(tabIndex + 1)
-  }
-
   return (
     <Box>
       <ABTestingWrapper insiderVariantName="B">
-        <ABTestVariant name="B">
-          <Flex align="center" w="100%" mb="4" justifyContent="space-between">
-            <IconButton
-              borderColor="gray.900"
-              bg="gray.50"
-              borderWidth="1px"
-              rounded="full"
-              icon={<ArrowLeftIcon />}
-              onClick={handleBackBtn}
-            />
-            <Flex align="center">
-              <Text mr="2" textAlign="center" fontWeight="bold" fontSize="xl">
-                <Trans>Tier {tabIndex + 1}</Trans>
-              </Text>
-              {hidden && tabIndex === 0 && (
-                <Flex align="center">
-                  <Tooltip label={t`Show summaries including hidden domains.`}>
-                    <IconButton
-                      variant="primaryOutline"
-                      onClick={() => setShow(!show)}
-                      icon={show ? <ViewOffIcon /> : <ViewIcon />}
-                    />
-                  </Tooltip>
-                </Flex>
-              )}
-            </Flex>
-            <IconButton
-              borderColor="gray.900"
-              bg="gray.50"
-              borderWidth="1px"
-              rounded="full"
-              icon={<ArrowRightIcon />}
-              onClick={handleFwdBtn}
-            />
-          </Flex>
-        </ABTestVariant>
+        <ABTestVariant name="B"></ABTestVariant>
       </ABTestingWrapper>
 
-      <Tabs index={tabIndex} isLazy>
-        <TabPanels>
-          <TabPanel>
+      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        <AccordionItem>
+          <AccordionButton>
+            <Text fontSize="xl">
+              <Trans>Tier 1</Trans>
+            </Text>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
+            <Flex align="center" justify="space-between">
+              <Text>
+                <Trans>The minimum security requirements set for GC domains</Trans>
+              </Text>
+              {hidden && (
+                <Tooltip label={t`Include hidden domains in summaries.`}>
+                  <IconButton
+                    variant="primaryOutline"
+                    onClick={() => setShow(!show)}
+                    icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                  />
+                </Tooltip>
+              )}
+            </Flex>
+
             <TierOneSummaries
               https={show && hidden ? hidden.https : https}
               dmarc={show && hidden ? hidden.dmarc : dmarc}
             />
-          </TabPanel>
-          <TabPanel>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Text fontSize="xl">
+              <Trans>Tier 2</Trans>
+            </Text>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
             <TierTwoSummaries
               webConnections={webConnections}
               ssl={ssl}
@@ -88,12 +83,20 @@ export function TieredSummaries({ summaries }) {
               dkim={dkim}
               dmarcPhases={dmarcPhase}
             />
-          </TabPanel>
-          <TabPanel>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Text fontSize="xl">
+              <Trans>Tier 3</Trans>
+            </Text>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
             <TierThreeSummaries web={web} mail={mail} />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     </Box>
   )
 }
