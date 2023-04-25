@@ -35,22 +35,6 @@ export function TieredSummaries({ summaries }) {
     <Box>
       <ABTestingWrapper insiderVariantName="B">
         <ABTestVariant name="A">
-          <Flex align="center" justify="flex-end" mb="2">
-            {hidden && (
-              <Tooltip label={t`Include hidden domains in summaries.`}>
-                <IconButton
-                  variant="primaryOutline"
-                  onClick={() => setShow(!show)}
-                  icon={show ? <ViewOffIcon /> : <ViewIcon />}
-                />
-              </Tooltip>
-            )}
-          </Flex>
-
-          <TierOneSummaries
-            https={show && hidden ? hidden.https : https}
-            dmarc={show && hidden ? hidden.dmarc : dmarc}
-          />
           <TierOneSummaries
             https={show && hidden ? hidden.https : https}
             dmarc={show && hidden ? hidden.dmarc : dmarc}
