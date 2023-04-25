@@ -54,6 +54,7 @@ export function TieredSummaries({ summaries }) {
                   {hidden && (
                     <Tooltip label={t`Include hidden domains in summaries.`}>
                       <IconButton
+                        aria-label={t`Include hidden domains in summaries.`}
                         variant="primaryOutline"
                         onClick={() => setShow(!show)}
                         icon={show ? <ViewOffIcon /> : <ViewIcon />}
