@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: web-processor
-          image: gcr.io/track-compliance/web-processor:master-5f03381-1681911454 # {"$imagepolicy": "flux-system:web-processor"}
+          image: gcr.io/track-compliance/web-processor:master-cdbea07-1682441075 # {"$imagepolicy": "flux-system:web-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
