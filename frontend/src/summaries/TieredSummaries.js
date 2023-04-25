@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   Flex,
   IconButton,
-  Text,
   Box,
   Tooltip,
   Accordion,
@@ -35,68 +34,87 @@ export function TieredSummaries({ summaries }) {
   return (
     <Box>
       <ABTestingWrapper insiderVariantName="B">
-        <ABTestVariant name="B"></ABTestVariant>
+        <ABTestVariant name="A">
+          <Flex align="center" justify="flex-end" mb="2">
+            {hidden && (
+              <Tooltip label={t`Include hidden domains in summaries.`}>
+                <IconButton
+                  variant="primaryOutline"
+                  onClick={() => setShow(!show)}
+                  icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                />
+              </Tooltip>
+            )}
+          </Flex>
+
+          <TierOneSummaries
+            https={show && hidden ? hidden.https : https}
+            dmarc={show && hidden ? hidden.dmarc : dmarc}
+          />
+          <TierOneSummaries
+            https={show && hidden ? hidden.https : https}
+            dmarc={show && hidden ? hidden.dmarc : dmarc}
+          />
+        </ABTestVariant>
+        <ABTestVariant name="B">
+          <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+            <AccordionItem>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left" fontSize="xl">
+                  <Trans>Tier 1: Minimum Requirements</Trans>
+                </Box>
+                <AccordionIcon boxSize="icons.xl" />
+              </AccordionButton>
+              <AccordionPanel>
+                <Flex align="center" justify="flex-end" mb="2">
+                  {hidden && (
+                    <Tooltip label={t`Include hidden domains in summaries.`}>
+                      <IconButton
+                        variant="primaryOutline"
+                        onClick={() => setShow(!show)}
+                        icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                      />
+                    </Tooltip>
+                  )}
+                </Flex>
+
+                <TierOneSummaries
+                  https={show && hidden ? hidden.https : https}
+                  dmarc={show && hidden ? hidden.dmarc : dmarc}
+                />
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left" fontSize="xl">
+                  <Trans>Tier 2: Improved Posture</Trans>
+                </Box>
+                <AccordionIcon boxSize="icons.xl" />
+              </AccordionButton>
+              <AccordionPanel>
+                <TierTwoSummaries
+                  webConnections={webConnections}
+                  ssl={ssl}
+                  spf={spf}
+                  dkim={dkim}
+                  dmarcPhases={dmarcPhase}
+                />
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left" fontSize="xl">
+                  <Trans>Tier 3: Compliance</Trans>
+                </Box>
+                <AccordionIcon boxSize="icons.xl" />
+              </AccordionButton>
+              <AccordionPanel>
+                <TierThreeSummaries web={web} mail={mail} />
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </ABTestVariant>
       </ABTestingWrapper>
-
-      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-        <AccordionItem>
-          <AccordionButton>
-            <Text fontSize="xl">
-              <Trans>Tier 1</Trans>
-            </Text>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel>
-            <Flex align="center" justify="space-between">
-              <Text>
-                <Trans>The minimum security requirements set for GC domains</Trans>
-              </Text>
-              {hidden && (
-                <Tooltip label={t`Include hidden domains in summaries.`}>
-                  <IconButton
-                    variant="primaryOutline"
-                    onClick={() => setShow(!show)}
-                    icon={show ? <ViewOffIcon /> : <ViewIcon />}
-                  />
-                </Tooltip>
-              )}
-            </Flex>
-
-            <TierOneSummaries
-              https={show && hidden ? hidden.https : https}
-              dmarc={show && hidden ? hidden.dmarc : dmarc}
-            />
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem>
-          <AccordionButton>
-            <Text fontSize="xl">
-              <Trans>Tier 2</Trans>
-            </Text>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel>
-            <TierTwoSummaries
-              webConnections={webConnections}
-              ssl={ssl}
-              spf={spf}
-              dkim={dkim}
-              dmarcPhases={dmarcPhase}
-            />
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem>
-          <AccordionButton>
-            <Text fontSize="xl">
-              <Trans>Tier 3</Trans>
-            </Text>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel>
-            <TierThreeSummaries web={web} mail={mail} />
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
     </Box>
   )
 }
