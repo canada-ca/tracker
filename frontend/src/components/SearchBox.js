@@ -69,6 +69,7 @@ export function SearchBox({
             id="Sort-by-field"
             aria-label="Sort by field"
             w="fit-content"
+            borderColor="black"
             size="md"
             onChange={(e) => {
               setOrderField(e.target.value)
@@ -88,6 +89,8 @@ export function SearchBox({
             icon={orderIconName}
             color="primary"
             bg="white"
+            borderColor="black"
+            borderWidth="1px"
             onClick={() => {
               const newOrderDirection = orderDirection === 'ASC' ? 'DESC' : 'ASC'
               setOrderDirection(newOrderDirection)
