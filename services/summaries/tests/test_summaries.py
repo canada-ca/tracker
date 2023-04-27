@@ -32,6 +32,10 @@ org = orgs.insert(
             "web": {"pass": 0, "fail": 0, "total": 0},
             "mail": {"pass": 0, "fail": 0, "total": 0},
             "https": {"pass": 0, "fail": 0, "total": 0},
+            "web_connections": {"pass": 0, "fail": 0, "total": 0},
+            "ssl": {"pass": 0, "fail": 0, "total": 0},
+            "dkim": {"pass": 0, "fail": 0, "total": 0},
+            "spf": {"pass": 0, "fail": 0, "total": 0},
             "dmarc_phase": {"not_implemented": 0, "assess": 0, "deploy": 0,
                             "enforce": 0, "maintain": 0},
 
@@ -222,6 +226,14 @@ def test_update_org_summaries():
         "https": {"pass": 2, "fail": 1, "total": 3},
         "web": {"pass": 2, "fail": 1, "total": 3},
         "mail": {"pass": 1, "fail": 2, "total": 3},
+        "web_connections": {"pass": 0, "fail": 0, "total": 0},
+        "ssl": {"pass": 1, "fail": 2, "total": 3},
+        "dkim": {"pass": 2, "fail": 1, "total": 3},
+        "spf": {"pass": 1, "fail": 2, "total": 3},
+        "hidden": {
+            "https": {"pass": 0, "fail": 0, "total": 0},
+            "dmarc": {"pass": 0, "fail": 0, "total": 0},
+        },
         "dmarc_phase": {"not_implemented": 1, "assess": 0, "deploy": 0,
                         "enforce": 0, "maintain": 2, "total": 3},
     }
