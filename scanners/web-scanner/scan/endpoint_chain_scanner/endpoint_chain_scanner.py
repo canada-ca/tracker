@@ -10,9 +10,12 @@ from dataclasses import dataclass, field, asdict
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT = 10
+# Set the default timeout for requests (connect, read)
+TIMEOUT = (0.75, 10)
 
 CONNECTION_ERROR = "CONNECTION_ERROR"
+CONNECTION_TIMEOUT_ERROR = "CONNECTION_TIMEOUT_ERROR"
+READ_TIMEOUT_ERROR = "READ_TIMEOUT_ERROR"
 TIMEOUT_ERROR = "TIMEOUT_ERROR"
 UNKNOWN_ERROR = "UNKNOWN_ERROR"
 
@@ -128,6 +131,20 @@ def request_connection(uri: Optional[str] = None,
                 connection = HTTPSConnectionRequest(uri=uri, http_response=response)
             return {"connection": connection, "response": response}
 
+        except requests.exceptions.ConnectTimeout as e:
+            logger.error(f"Connection timeout error {context}: {str(e)}")
+            if scheme.lower() == "http":
+                connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
+            elif scheme.lower() == "https":
+                connection = HTTPSConnectionRequest(uri=uri, error=CONNECTION_TIMEOUT_ERROR)
+            return {"connection": connection, "response": response}
+        except requests.exceptions.ReadTimeout as e:
+            logger.error(f"Read timeout error {context}: {str(e)}")
+            if scheme.lower() == "http":
+                connection = HTTPConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
+            elif scheme.lower() == "https":
+                connection = HTTPSConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
+            return {"connection": connection, "response": response}
         except requests.exceptions.Timeout as e:
             logger.error(f"Timeout error {context}: {str(e)}")
             if scheme.lower() == "http":
