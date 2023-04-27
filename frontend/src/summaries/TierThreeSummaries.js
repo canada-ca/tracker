@@ -9,13 +9,13 @@ export function TierThreeSummaries({ web, mail }) {
     {
       id: 'web',
       title: t`Web Summary`,
-      description: t`Service configuration is fully compliant with the Web Security Policy in Appendix G`,
+      description: t`Configuration requirements for web sites and services completely met`,
       data: web,
     },
     {
       id: 'email',
-      title: t`Mail Summary`,
-      description: t`Service configuration is fully compliant with the Mail Security Policy in Appendix G`,
+      title: t`Email Summary`,
+      description: t`Configuration requirements for email services completely met`,
       data: mail,
     },
   ]

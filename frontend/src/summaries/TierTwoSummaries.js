@@ -37,24 +37,24 @@ export function TierTwoSummaries({ webConnections, ssl, spf, dkim, dmarcPhases }
     {
       id: 'web',
       title: t`Web Connections Summary`,
-      description: t`Web connections are configured to use HTTPS and valid HSTS`,
+      description: t`HTTPS is configured, HTTP redirects, and HSTS is enabled`,
       data: webConnections,
     },
     {
       id: 'web',
       title: t`TLS Summary`,
-      description: `TLS certificate is valid and configured to use strong ciphers`,
+      description: `Certificate is valid and configured to use strong protocols, ciphers, and curves`,
       data: ssl,
     },
   ]
 
   const mailSummaries = [
-    { id: 'email', title: t`SPF Summary`, description: t`SPF record is configured and valid`, data: spf },
-    { id: 'email', title: t`DKIM Summary`, description: t`DKIM record is configured and valid`, data: dkim },
+    { id: 'email', title: t`SPF Summary`, description: t`SPF record is deployed and valid`, data: spf },
+    { id: 'email', title: t`DKIM Summary`, description: t`DKIM record and keys are deployed and valid`, data: dkim },
     {
       id: 'email',
       title: t`DMARC Summary`,
-      description: t`A DMARC phase of maintain is configured`,
+      description: t`DMARC policy of quarantine or reject, and all messages from non-mail domain is rejected`,
       data: makeDmarcPhases(),
     },
   ]
