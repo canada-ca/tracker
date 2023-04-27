@@ -3,9 +3,9 @@ import { t } from '@lingui/macro'
 
 export const webConnectionsSummary = {
   type: categorizedSummaryType,
-  description: 'SSL summary computed values, used to build summary cards.',
+  description: 'Web connections (HTTPS + HSTS) summary computed values, used to build summary cards.',
   resolve: async (_, __, { i18n, loaders: { loadChartSummaryByKey } }) => {
-    const summary = await loadChartSummaryByKey.load('webConnections')
+    const summary = await loadChartSummaryByKey.load('web_connections')
 
     if (typeof summary === 'undefined') {
       console.warn(`User could not retrieve web connections summary.`)

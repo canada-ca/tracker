@@ -21,7 +21,7 @@ export const loadMyTrackerByUserId =
                     id: domain._key,
                     _type: "domain",
                     "phase": domain.phase,
-                    "https": domain.status.https
+                    "https": domain.status.https,
                     "dmarc": domain.status.dmarc
                 }
         )
