@@ -38,6 +38,7 @@ export function RelayPaginationControls({
           aria-label="Items per page"
           isDisabled={isLoadingMore}
           value={selectedDisplayLimit}
+          borderColor="black"
           onChange={(e) => {
             setSelectedDisplayLimit(parseInt(e.target.value))
             resetToFirstPage() // Make sure to provide this as a prop if !onlyPagination

@@ -19,12 +19,7 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons'
 export function InfoPanel({ isOpen, onToggle, children }) {
   const btnRef = React.useRef()
   return (
-    <Drawer
-      isOpen={isOpen}
-      placement="bottom"
-      onClose={onToggle}
-      finalFocusRef={btnRef}
-    >
+    <Drawer isOpen={isOpen} placement="bottom" onClose={onToggle} finalFocusRef={btnRef}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
@@ -60,7 +55,7 @@ export function InfoButton({ onToggle, ...props }) {
       {...props}
       icon={<QuestionOutlineIcon />}
       aria-label="Open glossary"
-      variant="outline"
+      variant="primaryOutline"
       mx="2"
       onClick={onToggle}
     />
