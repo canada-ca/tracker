@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { Guidance, Summary } from './fragments'
+import { Guidance, Summary, Status } from './fragments'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations(
@@ -207,14 +207,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       blocked
       webScanPending
       status {
-        dkim
-        dmarc
-        https
-        hsts
-        protocols
-        ciphers
-        curves
-        spf
+        ...RequiredDomainStatusFields
       }
       organizations(first: 20) {
         edges {
@@ -466,6 +459,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       }
     }
   }
+  ${Status.fragments.requiredFields}
   ${Guidance.fragments.requiredFields}
 `
 
@@ -540,16 +534,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             id
             domain
             status {
-              certificates
-              ciphers
-              curves
-              dkim
-              dmarc
-              hsts
-              https
-              protocols
-              spf
-              ssl
+              ...RequiredDomainStatusFields
             }
             hasDMARCReport
             claimTags
@@ -562,6 +547,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
       }
     }
   }
+  ${Status.fragments.requiredFields}
 `
 
 export const PAGINATED_ORG_AFFILIATIONS = gql`
@@ -604,15 +590,7 @@ export const PAGINATED_DOMAINS = gql`
           blocked
           webScanPending
           status {
-            certificates
-            ciphers
-            curves
-            dkim
-            dmarc
-            hsts
-            https
-            protocols
-            spf
+            ...RequiredDomainStatusFields
           }
           archived
           hasDMARCReport
@@ -630,6 +608,7 @@ export const PAGINATED_DOMAINS = gql`
       __typename
     }
   }
+  ${Status.fragments.requiredFields}
 `
 
 export const QUERY_CURRENT_USER = gql`
@@ -1064,15 +1043,7 @@ export const MY_TRACKER_DOMAINS = gql`
             domain
             hasDMARCReport
             status {
-              ciphers
-              curves
-              dkim
-              dmarc
-              hsts
-              https
-              protocols
-              spf
-              ssl
+              ...RequiredDomainStatusFields
             }
             archived
             blocked
@@ -1083,4 +1054,5 @@ export const MY_TRACKER_DOMAINS = gql`
       }
     }
   }
+  ${Status.fragments.requiredFields}
 `
