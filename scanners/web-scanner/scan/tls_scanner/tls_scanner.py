@@ -24,8 +24,7 @@ from scan.tls_scanner.query_crlite import query_crlite
 
 logger = logging.getLogger()
 
-TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
-
+CONNECT_TIMEOUT = 1
 
 @dataclass
 class AcceptedCipherSuites:
@@ -184,9 +183,15 @@ class TLSResult:
 
         try:
             scan_request = ServerScanRequest(
-                server_location=ServerNetworkLocation(hostname=domain,
-                                                      ip_address=ip_address),
-                scan_commands=designated_scans
+                server_location=ServerNetworkLocation(
+                    hostname=domain,
+                    ip_address=ip_address
+                ),
+                scan_commands=designated_scans,
+                network_configuration=ServerNetworkConfiguration(
+                    tls_server_name_indication=domain,
+                    network_timeout=CONNECT_TIMEOUT
+                )
             )
         except ServerHostnameCouldNotBeResolved as e:
             logger.info(f"Server hostname could not be resolved for domain '{domain}': {str(e)}")
