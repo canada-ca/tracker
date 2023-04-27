@@ -309,6 +309,7 @@ export function OrganizationDomains({ orgSlug }) {
               const statuses = {
                 HTTPS_STATUS: `HTTPS`,
                 HSTS_STATUS: `HSTS`,
+                CERTIFICATES_STATUS: `Certificate`,
                 CIPHERS_STATUS: `Ciphers`,
                 CURVES_STATUS: t`Curves`,
                 PROTOCOLS_STATUS: t`Protocols`,
