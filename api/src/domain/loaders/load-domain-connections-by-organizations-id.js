@@ -4,18 +4,7 @@ import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByOrgId =
   ({ query, userKey, language, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
-  async ({
-    orgId,
-    permission,
-    after,
-    before,
-    first,
-    last,
-    ownership,
-    orderBy,
-    search,
-    filters = [],
-  }) => {
+  async ({ orgId, permission, after, before, first, last, ownership, orderBy, search, filters = [] }) => {
     const userDBId = `users/${userKey}`
     let afterTemplate = aql``
     let afterVar = aql``
@@ -67,6 +56,9 @@ export const loadDomainConnectionsByOrgId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`afterVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`afterVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         afterTemplate = aql`
@@ -127,6 +119,9 @@ export const loadDomainConnectionsByOrgId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`beforeVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`beforeVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         beforeTemplate = aql`
@@ -248,6 +243,10 @@ export const loadDomainConnectionsByOrgId =
         domainField = aql`domain.status.protocols`
         hasNextPageDocumentField = aql`LAST(retrievedDomains).status.protocols`
         hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.protocols`
+      } else if (orderBy.field === 'certificates-status') {
+        domainField = aql`domain.status.certificates`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.certificates`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.certificates`
       }
 
       hasNextPageFilter = aql`
@@ -285,6 +284,8 @@ export const loadDomainConnectionsByOrgId =
         sortByField = aql`domain.status.policy ${orderBy.direction},`
       } else if (orderBy.field === 'protocols-status') {
         sortByField = aql`domain.status.protocols ${orderBy.direction},`
+      } else if (orderBy.field === 'certificates-status') {
+        sortByField = aql`domain.status.certificates ${orderBy.direction},`
       }
     }
 
@@ -362,6 +363,11 @@ export const loadDomainConnectionsByOrgId =
           domainFilters = aql`
           ${domainFilters}
           FILTER domain.status.protocols ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'certificates-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
           if (filterValue === 'hidden') {

@@ -26,10 +26,7 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORG_DOMAINS as FORWARD, MY_TRACKER_DOMAINS } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { Formik } from 'formik'
-import {
-  getRequirement,
-  schemaToValidation,
-} from '../utilities/fieldRequirements'
+import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
 import { ABTestingWrapper } from '../app/ABTestWrapper'
 import { ABTestVariant } from '../app/ABTestVariant'
@@ -84,6 +81,7 @@ export function OrganizationDomains({ orgSlug }) {
   const orderByOptions = [
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
+    { value: 'CERTIFICATES_STATUS', text: t`Certificates Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
     { value: 'CURVES_STATUS', text: t`Curves Status` },
     { value: 'PROTOCOLS_STATUS', text: t`Protocols Status` },
@@ -123,8 +121,7 @@ export function OrganizationDomains({ orgSlug }) {
                 setFilters([
                   ...new Map(
                     [...filters, values].map((item) => {
-                      if (item['filterCategory'] !== 'TAGS')
-                        return [item['filterCategory'], item]
+                      if (item['filterCategory'] !== 'TAGS') return [item['filterCategory'], item]
                       else return [item['filterValue'], item]
                     }),
                   ).values(),
@@ -134,12 +131,7 @@ export function OrganizationDomains({ orgSlug }) {
             >
               {({ handleChange, handleSubmit, values, errors }) => {
                 return (
-                  <form
-                    onSubmit={handleSubmit}
-                    role="form"
-                    aria-label="form"
-                    name="form"
-                  >
+                  <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
                     <Flex align="center">
                       <Text fontWeight="bold" mr="2">
                         <Trans>Filters:</Trans>
@@ -150,10 +142,8 @@ export function OrganizationDomains({ orgSlug }) {
                           borderColor="black"
                           onChange={(e) => {
                             if (
-                              (values.filterCategory === 'TAGS' &&
-                                e.target.value !== 'TAGS') ||
-                              (values.filterCategory !== 'TAGS' &&
-                                e.target.value === 'TAGS')
+                              (values.filterCategory === 'TAGS' && e.target.value !== 'TAGS') ||
+                              (values.filterCategory !== 'TAGS' && e.target.value === 'TAGS')
                             ) {
                               values.filterValue = ''
                             }
@@ -170,20 +160,18 @@ export function OrganizationDomains({ orgSlug }) {
                               </option>
                             )
                           })}
-                          <option value="TAGS">
-                            <Trans>Tag</Trans>
-                          </option>
+                          {orgSlug !== 'my-tracker' && (
+                            <option value="TAGS">
+                              <Trans>Tag</Trans>
+                            </option>
+                          )}
                         </Select>
                         <Text color="red.500" mt={0}>
                           {errors.filterCategory}
                         </Text>
                       </Box>
                       <Box maxW="25%" mx="1">
-                        <Select
-                          name="comparison"
-                          borderColor="black"
-                          onChange={handleChange}
-                        >
+                        <Select name="comparison" borderColor="black" onChange={handleChange}>
                           <option hidden value="">
                             <Trans>Comparison</Trans>
                           </option>
@@ -199,11 +187,7 @@ export function OrganizationDomains({ orgSlug }) {
                         </Text>
                       </Box>
                       <Box maxW="25%" mx="1">
-                        <Select
-                          name="filterValue"
-                          borderColor="black"
-                          onChange={handleChange}
-                        >
+                        <Select name="filterValue" borderColor="black" onChange={handleChange}>
                           <option hidden value="">
                             <Trans>Status or tag</Trans>
                           </option>
@@ -245,27 +229,30 @@ export function OrganizationDomains({ orgSlug }) {
         </ABTestVariant>
       </ABTestingWrapper>
       <ListOf
-      elements={nodes}
-      ifEmpty={() => (
-        <Text layerStyle="loadingMessage">
-          <Trans>No Domains</Trans>
-        </Text>
-      )}
-      mb="4"
-    >
-      {({ id, domain, status, hasDMARCReport, claimTags, hidden, archived, rcode, blocked, webScanPending }, index) => (
+        elements={nodes}
+        ifEmpty={() => (
+          <Text layerStyle="loadingMessage">
+            <Trans>No Domains</Trans>
+          </Text>
+        )}
+        mb="4"
+      >
+        {(
+          { id, domain, status, hasDMARCReport, claimTags, hidden, archived, rcode, blocked, webScanPending },
+          index,
+        ) => (
           <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <DomainCard
-            id={id}
-            url={domain}
-            status={status}
-            hasDMARCReport={hasDMARCReport}
-            tags={claimTags}
-            isHidden={hidden}
-            rcode={rcode}
-            isArchived={archived}
-            blocked={blocked}
-            webScanPending={webScanPending}
+              id={id}
+              url={domain}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+              tags={claimTags}
+              isHidden={hidden}
+              rcode={rcode}
+              isArchived={archived}
+              blocked={blocked}
+              webScanPending={webScanPending}
               mb="3"
             />
           </ErrorBoundary>
@@ -310,10 +297,7 @@ export function OrganizationDomains({ orgSlug }) {
         setOrderField={setOrderField}
         setOrderDirection={setOrderDirection}
         resetToFirstPage={resetToFirstPage}
-        orderByOptions={[
-          { value: 'DOMAIN', text: t`Domain` },
-          ...orderByOptions,
-        ]}
+        orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
         placeholder={t`Search for a domain`}
         onToggle={onToggle}
       />
@@ -357,29 +341,13 @@ export function OrganizationDomains({ orgSlug }) {
                     <>
                       <TagLabel>{statuses[filterCategory]}</TagLabel>
                       <TagRightIcon
-                        color={
-                          filterValue === 'PASS'
-                            ? 'strong'
-                            : filterValue === 'FAIL'
-                            ? 'weak'
-                            : 'info'
-                        }
-                        as={
-                          filterValue === 'PASS'
-                            ? CheckCircleIcon
-                            : filterValue === 'FAIL'
-                            ? WarningIcon
-                            : InfoIcon
-                        }
+                        color={filterValue === 'PASS' ? 'strong' : filterValue === 'FAIL' ? 'weak' : 'info'}
+                        as={filterValue === 'PASS' ? CheckCircleIcon : filterValue === 'FAIL' ? WarningIcon : InfoIcon}
                       />
                     </>
                   )}
 
-                  <TagCloseButton
-                    onClick={() =>
-                      setFilters(filters.filter((_, i) => i !== idx))
-                    }
-                  />
+                  <TagCloseButton onClick={() => setFilters(filters.filter((_, i) => i !== idx))} />
                 </Tag>
               )
             })}
