@@ -20,7 +20,7 @@ import { ListOf } from '../components/ListOf'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORG_DOMAINS as FORWARD, MY_TRACKER_DOMAINS } from '../graphql/queries'
@@ -315,6 +315,7 @@ export function OrganizationDomains({ orgSlug }) {
           ...orderByOptions,
         ]}
         placeholder={t`Search for a domain`}
+        onToggle={onToggle}
       />
 
       <ABTestingWrapper insiderVariantName="B">
@@ -400,7 +401,6 @@ export function OrganizationDomains({ orgSlug }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }

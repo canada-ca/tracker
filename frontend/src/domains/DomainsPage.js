@@ -6,7 +6,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { DomainCard } from './DomainCard'
 
 import { ListOf } from '../components/ListOf'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -186,6 +186,7 @@ export default function DomainsPage() {
           resetToFirstPage={resetToFirstPage}
           orderByOptions={orderByOptions}
           placeholder={t`Search for a domain`}
+          onToggle={onToggle}
         />
 
         {domainList}
@@ -202,7 +203,6 @@ export default function DomainsPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
-        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
       </ErrorBoundary>
     </Box>
   )
