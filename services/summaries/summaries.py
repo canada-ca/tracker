@@ -22,7 +22,7 @@ CHARTS = {
     "mail": ["dmarc", "spf", "dkim"], 
     "web": ["https", "ssl"],
     "https": ["https"],
-    "webConnections": ["https", "hsts"],
+    "web_connections": ["https", "hsts"],
     "ssl": ["ssl"],
     "spf": ["spf"],
     "dkim": ["dkim"],

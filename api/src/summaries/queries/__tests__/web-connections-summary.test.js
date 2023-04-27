@@ -61,7 +61,7 @@ describe('given webConnectionsSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'webConnections',
+        _key: 'web_connections',
         total: 1000,
         fail: 500,
         pass: 500,
