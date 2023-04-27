@@ -226,7 +226,7 @@ def test_update_org_summaries():
         "https": {"pass": 2, "fail": 1, "total": 3},
         "web": {"pass": 2, "fail": 1, "total": 3},
         "mail": {"pass": 1, "fail": 2, "total": 3},
-        "web_connections": {"pass": 1, "fail": 0, "total": 1},
+        "web_connections": {"pass": 0, "fail": 1, "total": 1},
         "ssl": {"pass": 2, "fail": 1, "total": 3},
         "dkim": {"pass": 1, "fail": 2, "total": 3},
         "spf": {"pass": 2, "fail": 1, "total": 3},
