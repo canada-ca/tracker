@@ -13,7 +13,7 @@ export function TierOneSummaries({ https, dmarc }) {
       data: https,
     },
     {
-      id: 'email',
+      id: 'dmarc',
       title: t`DMARC Configuration Summary`,
       description: t`A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports`,
       data: dmarc,

@@ -10,6 +10,15 @@ export function SummaryCard({ id, title, categoryDisplay, description, data, ...
 
   let { categories } = data
 
+  const descriptionMb = {
+    httpsStatus: ['2', '2', i18n.locale === 'fr' ? '8' : '2', '8'],
+    dmarc: '2',
+    spf: { base: 2, md: '14' },
+    dkim: { base: 2, md: i18n.locale === 'fr' ? '14' : '8' },
+    web: { base: 2, md: i18n.locale === 'fr' ? '8' : '2' },
+    email: '2',
+  }
+
   return (
     <Box
       rounded="lg"
@@ -20,7 +29,7 @@ export function SummaryCard({ id, title, categoryDisplay, description, data, ...
       mx="4"
       {...props}
     >
-      <Box px="8" mb={id === 'httpsStatus' ? ['2', '2', i18n.locale === 'fr' ? '8' : '2', '8'] : '2'}>
+      <Box px="8" mb={descriptionMb[id]}>
         <Text fontSize="xl" fontWeight="semibold" textAlign="left" color="primary" my="2">
           {title}
         </Text>
