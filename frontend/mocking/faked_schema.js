@@ -931,6 +931,9 @@ export const getTypeNames = () => gql`
 
   # Properties by which domain connections can be ordered.
   enum DomainOrderField {
+    # Order domains by certificates status.
+    CERTIFICATES_STATUS
+
     # Order domains by ciphers status.
     CIPHERS_STATUS
 
