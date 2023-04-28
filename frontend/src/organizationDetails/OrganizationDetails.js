@@ -63,8 +63,6 @@ export default function OrganizationDetails() {
     }
   }
 
-  // const { httpsIncludeHidden, dmarcIncludeHidden, ...rest } = data?.organization?.summaries ?? {}
-
   return (
     <Box w="100%">
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
