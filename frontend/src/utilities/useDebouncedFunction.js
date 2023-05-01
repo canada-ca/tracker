@@ -2,7 +2,9 @@ import { useEffect } from 'react'
 
 export const useDebouncedFunction = (functionToCall, delay) => {
   useEffect(() => {
-    const timeoutID = setTimeout(functionToCall, delay)
+    const timeoutID = setTimeout(function () {
+      functionToCall()
+    }, delay)
 
     return () => {
       clearTimeout(timeoutID)
