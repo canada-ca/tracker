@@ -1,5 +1,6 @@
 export * from './invite-user-to-org'
 export * from './leave-organization'
 export * from './remove-user-from-org'
+export * from './request-org-affiliation'
 export * from './transfer-org-ownership'
 export * from './update-user-role'
