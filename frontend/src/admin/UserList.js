@@ -18,7 +18,6 @@ import { number, string } from 'prop-types'
 
 import { UserListModal } from './UserListModal'
 
-import { REMOVE_USER_FROM_ORG } from '../graphql/mutations'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { UserCard } from '../components/UserCard'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -26,8 +25,9 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
+import { bool } from 'prop-types'
 
-export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
+export function UserList({ filterPending, permission, orgSlug, usersPerPage, orgId }) {
   const [mutation, setMutation] = useState()
   const [addedUserName, setAddedUserName] = useState('')
   const [selectedRemoveUser, setSelectedRemoveUser] = useState({
@@ -47,23 +47,16 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: usersPerPage,
-    variables: { orgSlug, search: debouncedSearchUser },
-    relayRoot: 'findOrganizationBySlug.affiliations',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage } = usePaginatedCollection(
+    {
+      fetchForward: FORWARD,
+      recordsPerPage: usersPerPage,
+      variables: { orgSlug, search: debouncedSearchUser, filterPending },
+      relayRoot: 'findOrganizationBySlug.affiliations',
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    },
+  )
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -133,26 +126,11 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
           onOpen()
         }}
       >
-        <Flex
-          align="center"
-          flexDirection={{ base: 'column', md: 'row' }}
-          mb="2"
-        >
-          <Text
-            as="label"
-            htmlFor="Search-for-user-field"
-            fontSize="md"
-            fontWeight="bold"
-            textAlign="center"
-            mr={2}
-          >
+        <Flex align="center" flexDirection={{ base: 'column', md: 'row' }} mb="2">
+          <Text as="label" htmlFor="Search-for-user-field" fontSize="md" fontWeight="bold" textAlign="center" mr={2}>
             <Trans>Search: </Trans>
           </Text>
-          <InputGroup
-            width={{ base: '100%', md: '75%' }}
-            mb={{ base: '8px', md: '0' }}
-            mr={{ base: '0', md: '4' }}
-          >
+          <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
             <InputLeftElement aria-hidden="true">
               <EmailIcon color="gray.300" />
             </InputLeftElement>
@@ -164,11 +142,7 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             />
           </InputGroup>
 
-          <Button
-            w={{ base: '100%', md: '25%' }}
-            variant="primary"
-            type="submit"
-          >
+          <Button w={{ base: '100%', md: '25%' }} variant="primary" type="submit">
             <AddIcon mr={2} aria-hidden="true" />
             <Trans>Invite User</Trans>
           </Button>
@@ -190,9 +164,7 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         isOpen={isOpen}
         onClose={onClose}
         orgId={orgId}
-        editingUserName={
-          mutation === 'remove' ? selectedRemoveUser.userName : editingUserName
-        }
+        editingUserName={mutation === 'remove' ? selectedRemoveUser.userName : editingUserName}
         editingUserRole={editingUserRole}
         editingUserId={selectedRemoveUser.id}
         orgSlug={orgSlug}
@@ -208,4 +180,5 @@ UserList.propTypes = {
   permission: string,
   usersPerPage: number,
   orgId: string.isRequired,
+  filterPending: bool,
 }

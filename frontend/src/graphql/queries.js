@@ -124,10 +124,16 @@ export const GET_ONE_TIME_SSL_SCANS = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
-  query PaginatedOrgAffiliations($orgSlug: Slug!, $first: Int, $after: String, $search: String) {
+  query PaginatedOrgAffiliations(
+    $orgSlug: Slug!
+    $first: Int
+    $after: String
+    $search: String
+    $filterPending: Boolean
+  ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after, search: $search) {
+      affiliations(first: $first, after: $after, search: $search, filterPending: $filterPending) {
         edges {
           node {
             id
@@ -144,18 +150,6 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
           hasPreviousPage
           startCursor
           endCursor
-        }
-        totalCount
-      }
-      pending: affiliations(first: 10, filterPending: true) {
-        edges {
-          node {
-            user {
-              id
-              userName
-              displayName
-            }
-          }
         }
         totalCount
       }

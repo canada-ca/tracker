@@ -192,7 +192,7 @@ export const loadAffiliationConnectionsByOrgId =
       LET affiliationKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
           ${userIdFilter}
-          ${pendingFilter}
+
           RETURN e._key
       )
 
