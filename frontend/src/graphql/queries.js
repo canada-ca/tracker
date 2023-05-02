@@ -147,6 +147,18 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
         }
         totalCount
       }
+      pending: affiliations(first: 10, filterPending: true) {
+        edges {
+          node {
+            user {
+              id
+              userName
+              displayName
+            }
+          }
+        }
+        totalCount
+      }
     }
   }
 `
