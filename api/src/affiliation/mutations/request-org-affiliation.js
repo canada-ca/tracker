@@ -32,7 +32,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       userKey,
       auth: { userRequired, verifiedRequired, tfaRequired },
       loaders: { loadOrgByKey },
-      notify: { sendOrgInviteEmail },
+      // notify: { sendOrgInviteEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -40,9 +40,8 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
 
     // Get requesting user
     const user = await userRequired()
-
     verifiedRequired({ user })
-    tfaRequired({ user })
+    // tfaRequired({ user })
 
     // Check to see if requested org exists
     const org = await loadOrgByKey.load(orgId)
@@ -136,7 +135,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     }
 
     // send notification to org admins
-    await sendOrgInviteEmail({ orgId })
+    // await sendOrgInviteEmail({ orgId })
 
     // Commit Transaction
     try {

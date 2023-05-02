@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Heading, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, IconButton, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -13,7 +13,10 @@ import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
+import { REQUEST_INVITE_TO_ORG } from '../graphql/mutations'
+import { useMutation } from '@apollo/client'
 import { SearchBox } from '../components/SearchBox'
+import { UserIcon } from '../theme/Icons'
 
 export default function Organizations() {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -21,6 +24,7 @@ export default function Organizations() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(10)
+  const toast = useToast()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -30,28 +34,53 @@ export default function Organizations() {
 
   const { isOpen, onToggle } = useDisclosure()
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    variables: {
-      field: orderField,
-      direction: orderDirection,
-      search: debouncedSearchTerm,
-      includeSuperAdminOrg: false,
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      variables: {
+        field: orderField,
+        direction: orderDirection,
+        search: debouncedSearchTerm,
+        includeSuperAdminOrg: false,
+      },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+      recordsPerPage: orgsPerPage,
+      relayRoot: 'findMyOrganizations',
+    })
+
+  const [requestInviteToOrg] = useMutation(REQUEST_INVITE_TO_ORG, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`Unable to request invite, please try again.`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
     },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    recordsPerPage: orgsPerPage,
-    relayRoot: 'findMyOrganizations',
+    onCompleted({ requestOrgAffiliation }) {
+      if (requestOrgAffiliation.result.__typename === 'InviteUserToOrgResult') {
+        toast({
+          title: t`Invite Requested`,
+          description: t`Your request has been sent to the organization administrators.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Unable to request invite, please try again.`,
+          description: requestOrgAffiliation.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      }
+    },
   })
 
   if (error) return <ErrorFallbackMessage error={error} />
@@ -83,20 +112,32 @@ export default function Organizations() {
         )}
         mb="4"
       >
-        {({ name, slug, acronym, domainCount, verified, summaries }, index) => (
-          <ErrorBoundary
-            key={`${slug}:${index}`}
-            FallbackComponent={ErrorFallbackMessage}
-          >
-            <OrganizationCard
-              slug={slug}
-              name={name}
-              acronym={acronym}
-              domainCount={domainCount}
-              verified={verified}
-              summaries={summaries}
-              mb="3"
-            />
+        {({ id, name, slug, acronym, domainCount, verified, summaries }, index) => (
+          <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+            <Flex align="center">
+              <OrganizationCard
+                slug={slug}
+                name={name}
+                acronym={acronym}
+                domainCount={domainCount}
+                verified={verified}
+                summaries={summaries}
+                mb="3"
+                mr="2"
+                w="100%"
+              />
+              <IconButton
+                variant="primary"
+                icon={<UserIcon ml="1" color="white" boxSize="icons.md" />}
+                onClick={async () =>
+                  requestInviteToOrg({
+                    variables: {
+                      orgId: id,
+                    },
+                  })
+                }
+              />
+            </Flex>
           </ErrorBoundary>
         )}
       </ListOf>
@@ -114,10 +155,7 @@ export default function Organizations() {
           title={t`Organization Name`}
           info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
         />
-        <InfoBox
-          title={t`Services`}
-          info={t`Shows the number of domains that the organization is in control of.`}
-        />
+        <InfoBox title={t`Services`} info={t`Shows the number of domains that the organization is in control of.`} />
         <InfoBox
           title={t`HTTPS Configured`}
           info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS`}
@@ -127,10 +165,7 @@ export default function Organizations() {
           info={t`Shows the percentage of domains which have a valid DMARC policy configuration.`}
         />
         <Divider borderColor="gray.500" mb={4} />
-        <Trans>
-          Further details for each organization can be found by clicking on its
-          row.
-        </Trans>
+        <Trans>Further details for each organization can be found by clicking on its row.</Trans>
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>

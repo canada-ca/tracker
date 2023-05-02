@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useLazyQuery, useQuery } from '@apollo/client'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import {
   Box,
+  Button,
   Flex,
   Heading,
   IconButton,
@@ -12,8 +13,10 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
+import { UserIcon } from '../theme/Icons'
 import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -24,10 +27,9 @@ import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import {
-  GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
-  ORG_DETAILS_PAGE,
-} from '../graphql/queries'
+import { REQUEST_INVITE_TO_ORG } from '../graphql/mutations'
+import { useMutation } from '@apollo/client'
+import { GET_ORGANIZATION_DOMAINS_STATUSES_CSV, ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { ExportButton } from '../components/ExportButton'
 
@@ -36,6 +38,7 @@ export default function OrganizationDetails() {
   const history = useHistory()
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
   const defaultActiveTab = tabNames[0]
+  const toast = useToast()
 
   useDocumentTitle(`${orgSlug}`)
 
@@ -44,11 +47,45 @@ export default function OrganizationDetails() {
     // errorPolicy: 'ignore', // allow partial success
   })
 
-  const [
-    getOrgDomainStatuses,
-    { loading: orgDomainStatusesLoading, _error, _data },
-  ] = useLazyQuery(GET_ORGANIZATION_DOMAINS_STATUSES_CSV, {
-    variables: { orgSlug: orgSlug },
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+    GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
+    {
+      variables: { orgSlug: orgSlug },
+    },
+  )
+
+  const [requestInviteToOrg] = useMutation(REQUEST_INVITE_TO_ORG, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`Unable to request invite, please try again.`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ requestOrgAffiliation }) {
+      if (requestOrgAffiliation.result.__typename === 'InviteUserToOrgResult') {
+        toast({
+          title: t`Invite Requested`,
+          description: t`Your request has been sent to the organization administrators.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: t`Unable to request invite, please try again.`,
+          description: requestOrgAffiliation.result.description,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      }
+    },
   })
 
   useEffect(() => {
@@ -79,12 +116,7 @@ export default function OrganizationDetails() {
 
   return (
     <Box w="100%">
-      <Flex
-        flexDirection="row"
-        align="center"
-        mb="4"
-        flexWrap={{ base: 'wrap', md: 'nowrap' }}
-      >
+      <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <IconButton
           icon={<ArrowLeftIcon />}
           as={RouteLink}
@@ -110,17 +142,21 @@ export default function OrganizationDetails() {
             </>
           )}
         </Heading>
-        <ExportButton
-          order={{ base: 2, md: 1 }}
+        <Button
           ml="auto"
-          mt={{ base: '4', md: 0 }}
-          fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
-          dataFunction={async () => {
-            const result = await getOrgDomainStatuses()
-            return result.data?.findOrganizationBySlug?.toCsv
-          }}
-          isLoading={orgDomainStatusesLoading}
-        />
+          order={{ base: 2, md: 1 }}
+          variant="primary"
+          onClick={async () =>
+            requestInviteToOrg({
+              variables: {
+                orgId: data?.organization?.id,
+              },
+            })
+          }
+        >
+          <Trans>Request Invite</Trans>
+          <UserIcon ml="1" color="white" boxSize="icons.md" />
+        </Button>
       </Flex>
       <Tabs
         isFitted
@@ -155,23 +191,30 @@ export default function OrganizationDetails() {
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <Box>
                 <Text fontSize="3xl">DMARC Phases</Text>
-                <RadialBarChart
-                  height={600}
-                  width={600}
-                  data={data?.organization?.summaries?.dmarcPhase?.categories}
-                />
+                <RadialBarChart height={600} width={600} data={data?.organization?.summaries?.dmarcPhase?.categories} />
               </Box>
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
+              <ExportButton
+                ml="auto"
+                my="2"
+                mt={{ base: '4', md: 0 }}
+                fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
+                dataFunction={async () => {
+                  const result = await getOrgDomainStatuses()
+                  return result.data?.findOrganizationBySlug?.toCsv
+                }}
+                isLoading={orgDomainStatusesLoading}
+              />
+              <OrganizationDomains orgSlug={orgSlug} />
             </ErrorBoundary>
           </TabPanel>
           {!isNaN(data?.organization?.affiliations?.totalCount) && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
+                <OrganizationAffiliations orgSlug={orgSlug} />
               </ErrorBoundary>
             </TabPanel>
           )}
