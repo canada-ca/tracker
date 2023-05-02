@@ -1,11 +1,5 @@
 import { t } from '@lingui/macro'
-import {
-  GraphQLBoolean,
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-} from 'graphql'
+import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { organizationSummaryType } from './organization-summary'
@@ -67,8 +61,7 @@ export const organizationType = new GraphQLObjectType({
     },
     summaries: {
       type: organizationSummaryType,
-      description:
-        'Summaries based on scan types that are preformed on the given organizations domains.',
+      description: 'Summaries based on scan types that are preformed on the given organizations domains.',
       resolve: ({ summaries }) => summaries,
     },
     domainCount: {
@@ -80,25 +73,11 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'CSV formatted output of all domains in the organization including their email and web scan statuses.',
-      resolve: async (
-        { _id },
-        _args,
-        { loaders: { loadOrganizationDomainStatuses } },
-      ) => {
+      resolve: async ({ _id }, _args, { loaders: { loadOrganizationDomainStatuses } }) => {
         const domains = await loadOrganizationDomainStatuses({
           orgId: _id,
         })
-        const headers = [
-          'domain',
-          'https',
-          'hsts',
-          'ciphers',
-          'curves',
-          'protocols',
-          'spf',
-          'dkim',
-          'dmarc',
-        ]
+        const headers = ['domain', 'https', 'hsts', 'ciphers', 'curves', 'protocols', 'spf', 'dkim', 'dmarc']
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
           let csvLine = `${domain.domain}`
@@ -120,8 +99,7 @@ export const organizationType = new GraphQLObjectType({
         },
         ownership: {
           type: GraphQLBoolean,
-          description:
-            'Limit domains to those that belong to an organization that has ownership.',
+          description: 'Limit domains to those that belong to an organization that has ownership.',
         },
         search: {
           type: GraphQLString,
@@ -137,10 +115,7 @@ export const organizationType = new GraphQLObjectType({
         { _id },
         args,
 
-        {
-          auth: { checkPermission },
-          loaders: { loadDomainConnectionsByOrgId },
-        },
+        { auth: { checkPermission }, loaders: { loadDomainConnectionsByOrgId } },
       ) => {
         // Check to see requesting users permission to the org is
         const permission = await checkPermission({ orgId: _id })
@@ -164,16 +139,16 @@ export const organizationType = new GraphQLObjectType({
           type: GraphQLString,
           description: 'String used to search for affiliated users.',
         },
+        filterPending: {
+          type: GraphQLBoolean,
+          description: 'Exclude (false) or include only (true) pending affiliations in the results.',
+        },
         ...connectionArgs,
       },
       resolve: async (
         { _id },
         args,
-        {
-          i18n,
-          auth: { checkPermission },
-          loaders: { loadAffiliationConnectionsByOrgId },
-        },
+        { i18n, auth: { checkPermission }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
         const permission = await checkPermission({ orgId: _id })
         if (permission === 'admin' || permission === 'super_admin') {
@@ -183,15 +158,10 @@ export const organizationType = new GraphQLObjectType({
           })
           return affiliations
         }
-        throw new Error(
-          i18n._(
-            t`Cannot query affiliations on organization without admin permission or higher.`,
-          ),
-        )
+        throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
       },
     },
   }),
   interfaces: [nodeInterface],
-  description:
-    'Organization object containing information for a given Organization.',
+  description: 'Organization object containing information for a given Organization.',
 })
