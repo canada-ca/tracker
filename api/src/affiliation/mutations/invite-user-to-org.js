@@ -167,7 +167,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Unable to invite user to organization. User already affiliated with organization.`),
+        description: i18n._(t`Unable to invite user to organization. Please try again.`),
       }
     }
 
@@ -176,7 +176,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.warn(
         `User: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug} however they are already affiliated with that org.`,
       )
-      throw new Error(i18n._(t`User is already affiliated with this organization.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to invite user to organization. User is already affiliated with organization.`),
+      }
     }
 
     // User is not affiliated with org, create affiliation
