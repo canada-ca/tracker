@@ -166,13 +166,13 @@ able to sign-up and be assigned to that organization in one mutation.`,
       )
       return {
         _type: 'error',
-        code: 400,
+        code: 500,
         description: i18n._(t`Unable to invite user to organization. Please try again.`),
       }
     }
 
     if (affiliationCursor.count > 0) {
-      // If affiliation is found, throw error
+      // If affiliation is found, return error
       console.warn(
         `User: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug} however they are already affiliated with that org.`,
       )
@@ -206,7 +206,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.error(
         `Transaction step error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to invite user. Please try again.`))
+      return {
+        _type: 'error',
+        code: 500,
+        description: i18n._(t`Unable to invite user. Please try again.`),
+      }
     }
 
     await sendOrgInviteEmail({
@@ -221,7 +225,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
       console.error(
         `Transaction commit error occurred while user: ${userKey} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to invite user. Please try again.`))
+      return {
+        _type: 'error',
+        code: 500,
+        description: i18n._(t`Unable to invite user. Please try again.`),
+      }
     }
 
     console.info(`User: ${userKey} successfully invited user: ${requestedUser._key} to the org: ${org.slug}.`)
