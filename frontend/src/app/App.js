@@ -1,10 +1,5 @@
 import React, { Suspense, useEffect } from 'react'
-import {
-  Switch,
-  Link as RouteLink,
-  Redirect,
-  useLocation,
-} from 'react-router-dom'
+import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
 import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -112,7 +107,7 @@ export function App() {
           </>
         )}
 
-        {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
+        {isLoggedIn() && isEmailValidated() && (
           <>
             <RouteLink to="/admin">
               <Trans>Admin Profile</Trans>
@@ -195,7 +190,7 @@ export function App() {
             <PrivatePage isLoginRequired={data?.loginRequired} path="/organizations" title={t`Organizations`} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <Organizations />
+                  <Organizations isLoggedIn={isLoggedIn()} />
                 </ErrorBoundary>
               )}
             </PrivatePage>
@@ -208,13 +203,13 @@ export function App() {
             >
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <OrganizationDetails />
+                  <OrganizationDetails isLoggedIn={isLoggedIn()} />
                 </ErrorBoundary>
               )}
             </PrivatePage>
 
             <Page path="/admin/:activeMenu?" title={t`Admin`}>
-              {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
+              {isLoggedIn() && isEmailValidated() ? (
                 <AdminPage isLoginRequired={data?.loginRequired} />
               ) : (
                 <Redirect

@@ -32,8 +32,9 @@ import { useMutation } from '@apollo/client'
 import { GET_ORGANIZATION_DOMAINS_STATUSES_CSV, ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { ExportButton } from '../components/ExportButton'
+import { bool } from 'prop-types'
 
-export default function OrganizationDetails() {
+export default function OrganizationDetails({ isLoggedIn }) {
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
@@ -142,21 +143,23 @@ export default function OrganizationDetails() {
             </>
           )}
         </Heading>
-        <Button
-          ml="auto"
-          order={{ base: 2, md: 1 }}
-          variant="primary"
-          onClick={async () =>
-            requestInviteToOrg({
-              variables: {
-                orgId: data?.organization?.id,
-              },
-            })
-          }
-        >
-          <Trans>Request Invite</Trans>
-          <UserIcon ml="1" color="white" boxSize="icons.md" />
-        </Button>
+        {isLoggedIn && (
+          <Button
+            ml="auto"
+            order={{ base: 2, md: 1 }}
+            variant="primary"
+            onClick={async () =>
+              requestInviteToOrg({
+                variables: {
+                  orgId: data?.organization?.id,
+                },
+              })
+            }
+          >
+            <Trans>Request Invite</Trans>
+            <UserIcon ml="1" color="white" boxSize="icons.md" />
+          </Button>
+        )}
       </Flex>
       <Tabs
         isFitted
@@ -222,4 +225,8 @@ export default function OrganizationDetails() {
       </Tabs>
     </Box>
   )
+}
+
+OrganizationDetails.propTypes = {
+  isLoggedIn: bool,
 }

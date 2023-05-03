@@ -17,8 +17,9 @@ import { REQUEST_INVITE_TO_ORG } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { SearchBox } from '../components/SearchBox'
 import { UserIcon } from '../theme/Icons'
+import { bool } from 'prop-types'
 
-export default function Organizations() {
+export default function Organizations({ isLoggedIn }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
@@ -126,17 +127,19 @@ export default function Organizations() {
                 mr="2"
                 w="100%"
               />
-              <IconButton
-                variant="primary"
-                icon={<UserIcon ml="1" color="white" boxSize="icons.md" />}
-                onClick={async () =>
-                  requestInviteToOrg({
-                    variables: {
-                      orgId: id,
-                    },
-                  })
-                }
-              />
+              {isLoggedIn && (
+                <IconButton
+                  variant="primary"
+                  icon={<UserIcon ml="1" color="white" boxSize="icons.md" />}
+                  onClick={async () =>
+                    requestInviteToOrg({
+                      variables: {
+                        orgId: id,
+                      },
+                    })
+                  }
+                />
+              )}
             </Flex>
           </ErrorBoundary>
         )}
@@ -202,4 +205,8 @@ export default function Organizations() {
       </ErrorBoundary>
     </Box>
   )
+}
+
+Organizations.propTypes = {
+  isLoggedIn: bool,
 }
