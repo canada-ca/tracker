@@ -3858,7 +3858,7 @@ msgstr "Wiki"
 
 #: src/organizations/RequestOrgInviteModal.js:65
 msgid "Would you like to request an invite to {orgName}?"
-msgstr "Souhaitez-vous demander une invitation à {nom de l'organisme} ?"
+msgstr "Souhaitez-vous demander une invitation à {orgName} ?"
 
 #: src/guidance/WebConnectionResults.js:126
 #: src/guidance/WebConnectionResults.js:166
