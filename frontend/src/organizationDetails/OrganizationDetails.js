@@ -135,13 +135,15 @@ export default function OrganizationDetails({ isLoggedIn }) {
           order={{ base: 2, md: 1 }}
           flexBasis={{ base: '100%', md: 'auto' }}
         >
-          {orgName}
-          {data?.organization?.verified && (
-            <>
-              {' '}
-              <CheckCircleIcon color="blue.500" boxSize="icons.lg" />
-            </>
-          )}
+          <Flex align="center">
+            {orgName}
+            {data?.organization?.verified && (
+              <>
+                {' '}
+                <CheckCircleIcon ml="1" color="blue.500" boxSize="icons.lg" />
+              </>
+            )}
+          </Flex>
         </Heading>
         {isLoggedIn && (
           <Button

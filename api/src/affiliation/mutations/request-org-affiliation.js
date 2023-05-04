@@ -27,12 +27,13 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      request,
       collections,
       transaction,
       userKey,
       auth: { userRequired, verifiedRequired },
-      loaders: { loadOrgByKey },
-      notify: { sendOrgInviteEmail },
+      loaders: { loadOrgByKey, loadUserByKey },
+      notify: { sendInviteRequestEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -133,8 +134,29 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to invite user. Please try again.`))
     }
 
+    // get all org admins
+    let orgAdmins
+    try {
+      orgAdmins = await query`
+        WITH affiliations, organizations, users
+        FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
+          FILTER e.permission == "admin"
+          RETURN v._key
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to request invite. Please try again.`))
+    }
+
+    const adminLink = `https://${request.get('host')}/admin/organizations`
+
     // send notification to org admins
-    // await sendOrgInviteEmail({ orgId })
+    for (const userKey of orgAdmins) {
+      const adminUser = await loadUserByKey.load(userKey)
+      await sendInviteRequestEmail({ user: adminUser, orgId, adminLink })
+    }
 
     // Commit Transaction
     try {

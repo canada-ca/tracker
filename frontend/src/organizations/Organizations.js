@@ -130,7 +130,7 @@ export default function Organizations({ isLoggedIn }) {
               {isLoggedIn && (
                 <IconButton
                   variant="primary"
-                  icon={<UserIcon ml="1" color="white" boxSize="icons.md" />}
+                  icon={<UserIcon color="white" boxSize="icons.md" />}
                   onClick={async () =>
                     requestInviteToOrg({
                       variables: {
