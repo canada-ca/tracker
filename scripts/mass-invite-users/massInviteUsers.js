@@ -26,7 +26,7 @@ const csv2json = (str, delimiter = ",") => {
 };
 
 const getOrg = async (orgSlug) => {
-  const res = await fetch("https://tracker.alpha.canada.ca/graphql", {
+  const res = await fetch(TRACKER_GRAPHQL_URI, {
     body: JSON.stringify({
       query: `query {
             findOrganizationBySlug(orgSlug: "${orgSlug}") {
@@ -47,7 +47,7 @@ const getOrg = async (orgSlug) => {
 };
 
 const inviteUser = async ({ email, role, orgId }) => {
-  const res = await fetch("https://tracker.alpha.canada.ca/graphql", {
+  const res = await fetch(TRACKER_GRAPHQL_URI, {
     body: JSON.stringify({
       query: `mutation {
             inviteUserToOrg(input: {
