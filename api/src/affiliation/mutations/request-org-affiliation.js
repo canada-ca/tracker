@@ -150,12 +150,13 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
-    const adminLink = `https://${request.get('host')}/admin/organizations`
-
-    // send notification to org admins
-    for (const userKey of orgAdmins) {
-      const adminUser = await loadUserByKey.load(userKey)
-      await sendInviteRequestEmail({ user: adminUser, orgId, adminLink })
+    if (orgAdmins.length > 0) {
+      const adminLink = `https://${request.get('host')}/admin/organizations`
+      // send notification to org admins
+      for (const userKey of orgAdmins) {
+        const adminUser = await loadUserByKey.load(userKey)
+        await sendInviteRequestEmail({ user: adminUser, orgId, adminLink })
+      }
     }
 
     // Commit Transaction
