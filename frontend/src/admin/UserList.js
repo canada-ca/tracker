@@ -27,7 +27,7 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { bool } from 'prop-types'
 
-export function UserList({ filterPending, permission, orgSlug, usersPerPage, orgId }) {
+export function UserList({ includePending, permission, orgSlug, usersPerPage, orgId }) {
   const [mutation, setMutation] = useState()
   const [addedUserName, setAddedUserName] = useState('')
   const [selectedRemoveUser, setSelectedRemoveUser] = useState({
@@ -51,7 +51,7 @@ export function UserList({ filterPending, permission, orgSlug, usersPerPage, org
     {
       fetchForward: FORWARD,
       recordsPerPage: usersPerPage,
-      variables: { orgSlug, search: debouncedSearchUser, filterPending },
+      variables: { orgSlug, search: debouncedSearchUser, includePending },
       relayRoot: 'findOrganizationBySlug.affiliations',
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
@@ -180,5 +180,5 @@ UserList.propTypes = {
   permission: string,
   usersPerPage: number,
   orgId: string.isRequired,
-  filterPending: bool,
+  includePending: bool,
 }

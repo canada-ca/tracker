@@ -41,21 +41,13 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <UserList
-                filterPending={true}
+                includePending={true}
                 activeMenu={activeMenu}
                 permission={permission}
                 orgSlug={orgSlug}
                 usersPerPage={10}
                 orgId={orgId}
               />
-              {/* <UserList
-                filterPending={true}
-                activeMenu={activeMenu}
-                permission={permission}
-                orgSlug={orgSlug}
-                usersPerPage={10}
-                orgId={orgId}
-              /> */}
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
