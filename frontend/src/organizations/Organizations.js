@@ -25,6 +25,7 @@ export default function Organizations({ isLoggedIn }) {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(10)
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
+  const [orgInfo, setOrgInfo] = useState({})
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -94,8 +95,20 @@ export default function Organizations({ isLoggedIn }) {
               />
               {isLoggedIn && (
                 <>
-                  <IconButton variant="primary" icon={<UserIcon color="white" boxSize="icons.md" />} onClick={onOpen} />
-                  <RequestOrgInviteModal isOpen={inviteRequestIsOpen} onClose={onClose} orgId={id} orgName={name} />
+                  <IconButton
+                    variant="primary"
+                    icon={<UserIcon color="white" boxSize="icons.md" />}
+                    onClick={() => {
+                      setOrgInfo({ id, name })
+                      onOpen()
+                    }}
+                  />
+                  <RequestOrgInviteModal
+                    isOpen={inviteRequestIsOpen}
+                    onClose={onClose}
+                    orgId={orgInfo.id}
+                    orgName={orgInfo.name}
+                  />
                 </>
               )}
             </Flex>
