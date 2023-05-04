@@ -25,27 +25,6 @@ const csv2json = (str, delimiter = ",") => {
   });
 };
 
-const getOrg = async (orgSlug) => {
-  const res = await fetch(TRACKER_GRAPHQL_URI, {
-    body: JSON.stringify({
-      query: `query {
-            findOrganizationBySlug(orgSlug: "${orgSlug}") {
-                id
-                name
-                slug
-            }
-        }`,
-    }),
-    headers: {
-      Accept: "application/json",
-      Authorization: AUTH_TOKEN,
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  });
-  return (await res.json()).data;
-};
-
 const changeUserRole = async ({ email, role = "USER", orgId }) => {
   const res = await fetch(TRACKER_GRAPHQL_URI, {
     body: JSON.stringify({
@@ -84,30 +63,40 @@ const file = await fileHandle.getFile();
 const content = (await file.text()).trim();
 const downgradeUserList = csv2json(content, ",");
 
-// for await (const [key, inv] of downgradeUserList.entries()) {
-//   try {
-//     const data = await getOrg(inv.orgSlug);
-//     downgradeUserList[key].orgId = data.findOrganizationBySlug.id;
-//     const inviteRes = await inviteUser({ email: inv.email, orgId: inv.orgId, role: inv.role });
-//     if (inviteRes.data.inviteUserToOrg.result["__typename"] === "AffiliationError") {
-//       console.error(`Error while inviting ${inv.email} to ${inv.orgSlug}: `, inv);
-//       downgradeUserList[key].success = false;
-//       downgradeUserList[key].error = inviteRes.data.inviteUserToOrg.result.description;
-//       continue;
-//     }
-//   } catch (e) {
-//     console.error(`Error while inviting ${inv.email} to ${inv.orgSlug}: `, inv);
-//     downgradeUserList[key].success = false;
-//     downgradeUserList[key].error = e;
-//   }
-//   downgradeUserList[key].success = true;
-//   console.log(`Successfully invited ${inv.email} to ${inv.orgSlug}: `, inv);
-// }
-//
-// for (const inv of downgradeUserList) {
-//   if (inv.error) {
-//     console.error(`Error while inviting ${inv.email} to ${inv.orgSlug}: `, inv);
-//   }
-// }
-//
-// console.table(downgradeUserList.filter((inv) => inv.success === false));
+for await (const [key, val] of downgradeUserList.entries()) {
+  try {
+    const updateRoleRes = await changeUserRole({ email: val.userName, orgId: val.organizationId, role: "USER" });
+    if (updateRoleRes.data.updateUserRole.result["__typename"] === "AffiliationError") {
+      console.error(
+        `Error while updating "${val.email}" permission for organization "${val.organizationId}" to "USER": `,
+        val
+      );
+      downgradeUserList[key].success = false;
+      downgradeUserList[key].error = updateRoleRes.data.updateUserRole.result.description;
+      continue;
+    }
+  } catch (e) {
+    console.error(
+      `Error while updating "${val.email}" permission for organization "${val.organizationId}" to "USER": `,
+      val
+    );
+    downgradeUserList[key].success = false;
+    downgradeUserList[key].error = e;
+  }
+  downgradeUserList[key].success = true;
+  console.log(
+    `Successfully changed "${val.email}" permission for organization "${val.organizationId}" to "USER": `,
+    val
+  );
+}
+
+for (const val of downgradeUserList) {
+  if (val.error) {
+    console.error(
+      `Error while updating "${val.email}" permission for organization "${val.organizationId}" to "USER": `,
+      val
+    );
+  }
+}
+
+console.table(downgradeUserList.filter((val) => val.success === false));
