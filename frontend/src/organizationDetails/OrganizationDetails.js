@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useLazyQuery, useQuery } from '@apollo/client'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import {
   Box,
   Button,
@@ -13,7 +13,7 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useToast,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { UserIcon } from '../theme/Icons'
@@ -27,19 +27,18 @@ import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import { REQUEST_INVITE_TO_ORG } from '../graphql/mutations'
-import { useMutation } from '@apollo/client'
 import { GET_ORGANIZATION_DOMAINS_STATUSES_CSV, ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { ExportButton } from '../components/ExportButton'
 import { bool } from 'prop-types'
+import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 
 export default function OrganizationDetails({ isLoggedIn }) {
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
   const defaultActiveTab = tabNames[0]
-  const toast = useToast()
 
   useDocumentTitle(`${orgSlug}`)
 
@@ -54,40 +53,6 @@ export default function OrganizationDetails({ isLoggedIn }) {
       variables: { orgSlug: orgSlug },
     },
   )
-
-  const [requestInviteToOrg] = useMutation(REQUEST_INVITE_TO_ORG, {
-    onError(error) {
-      toast({
-        title: error.message,
-        description: t`Unable to request invite, please try again.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-    onCompleted({ requestOrgAffiliation }) {
-      if (requestOrgAffiliation.result.__typename === 'InviteUserToOrgResult') {
-        toast({
-          title: t`Invite Requested`,
-          description: t`Your request has been sent to the organization administrators.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      } else {
-        toast({
-          title: t`Unable to request invite, please try again.`,
-          description: requestOrgAffiliation.result.description,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      }
-    },
-  })
 
   useEffect(() => {
     if (!activeTab) {
@@ -137,30 +102,22 @@ export default function OrganizationDetails({ isLoggedIn }) {
         >
           <Flex align="center">
             {orgName}
-            {data?.organization?.verified && (
-              <>
-                {' '}
-                <CheckCircleIcon ml="1" color="blue.500" boxSize="icons.lg" />
-              </>
-            )}
+            {data?.organization?.verified && <CheckCircleIcon ml="1" color="blue.500" boxSize="icons.lg" />}
           </Flex>
         </Heading>
         {isLoggedIn && (
-          <Button
-            ml="auto"
-            order={{ base: 2, md: 1 }}
-            variant="primary"
-            onClick={async () =>
-              requestInviteToOrg({
-                variables: {
-                  orgId: data?.organization?.id,
-                },
-              })
-            }
-          >
-            <Trans>Request Invite</Trans>
-            <UserIcon ml="1" color="white" boxSize="icons.md" />
-          </Button>
+          <>
+            <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
+              <Trans>Request Invite</Trans>
+              <UserIcon ml="1" color="white" boxSize="icons.md" />
+            </Button>
+            <RequestOrgInviteModal
+              onClose={onClose}
+              isOpen={isOpen}
+              orgId={data?.organization?.id}
+              orgName={data?.organization?.name}
+            />
+          </>
         )}
       </Flex>
       <Tabs

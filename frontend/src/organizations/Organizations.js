@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Flex, Heading, IconButton, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, IconButton, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -13,11 +13,10 @@ import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
-import { REQUEST_INVITE_TO_ORG } from '../graphql/mutations'
-import { useMutation } from '@apollo/client'
 import { SearchBox } from '../components/SearchBox'
 import { UserIcon } from '../theme/Icons'
 import { bool } from 'prop-types'
+import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 
 export default function Organizations({ isLoggedIn }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -25,7 +24,7 @@ export default function Organizations({ isLoggedIn }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(10)
-  const toast = useToast()
+  const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -49,40 +48,6 @@ export default function Organizations({ isLoggedIn }) {
       recordsPerPage: orgsPerPage,
       relayRoot: 'findMyOrganizations',
     })
-
-  const [requestInviteToOrg] = useMutation(REQUEST_INVITE_TO_ORG, {
-    onError(error) {
-      toast({
-        title: error.message,
-        description: t`Unable to request invite, please try again.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
-    },
-    onCompleted({ requestOrgAffiliation }) {
-      if (requestOrgAffiliation.result.__typename === 'InviteUserToOrgResult') {
-        toast({
-          title: t`Invite Requested`,
-          description: t`Your request has been sent to the organization administrators.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      } else {
-        toast({
-          title: t`Unable to request invite, please try again.`,
-          description: requestOrgAffiliation.result.description,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      }
-    },
-  })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -128,17 +93,10 @@ export default function Organizations({ isLoggedIn }) {
                 w="100%"
               />
               {isLoggedIn && (
-                <IconButton
-                  variant="primary"
-                  icon={<UserIcon color="white" boxSize="icons.md" />}
-                  onClick={async () =>
-                    requestInviteToOrg({
-                      variables: {
-                        orgId: id,
-                      },
-                    })
-                  }
-                />
+                <>
+                  <IconButton variant="primary" icon={<UserIcon color="white" boxSize="icons.md" />} onClick={onOpen} />
+                  <RequestOrgInviteModal isOpen={inviteRequestIsOpen} onClose={onClose} orgId={id} orgName={name} />
+                </>
               )}
             </Flex>
           </ErrorBoundary>
