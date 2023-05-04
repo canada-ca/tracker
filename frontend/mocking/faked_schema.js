@@ -308,8 +308,8 @@ export const getTypeNames = () => gql`
     # The ID of an object
     id: ID!
 
-    # Datetime string the activity occured.
-    timestamp: String
+    # Datetime string the activity occurred.
+    timestamp: DateTime
 
     # Username of admin that initiated the activity.
     initiatedBy: InitiatedBy
@@ -323,6 +323,9 @@ export const getTypeNames = () => gql`
     # Optional reason for action, used for domain removal.
     reason: DomainRemovalReasonEnum
   }
+
+  # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the 'date-time' format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+  scalar DateTime
 
   # Information on the user that initiated the logged action
   type InitiatedBy {
@@ -344,6 +347,9 @@ export const getTypeNames = () => gql`
 
   # An enum used to assign, and test users roles.
   enum RoleEnums {
+    # A user who has requested an invite to an organization.
+    PENDING
+
     # A user who has been given access to view an organization.
     USER
 
@@ -450,12 +456,12 @@ export const getTypeNames = () => gql`
     RESOURCE_NAME
   }
 
-  # Possible directions in which to order a list of items when provided an "orderBy" argument.
+  # Possible directions in which to order a list of items when provided an 'orderBy' argument.
   enum OrderDirection {
-    # Specifies an ascending order for a given "orderBy" argument.
+    # Specifies an ascending order for a given 'orderBy' argument.
     ASC
 
-    # Specifies a descending order for a given "orderBy" argument.
+    # Specifies a descending order for a given 'orderBy' argument.
     DESC
   }
 
@@ -539,6 +545,15 @@ export const getTypeNames = () => gql`
     # The domains scan status, based on the latest scan data.
     status: DomainStatus
 
+    # Value that determines if a domain is excluded from any results and scans.
+    archived: Boolean
+
+    # Value that determines if a domain is possibly blocked.
+    blocked: Boolean
+
+    # Value that determines if a domain has a web scan pending.
+    webScanPending: Boolean
+
     # The organization that this domain belongs to.
     organizations(
       # Ordering options for organization connections
@@ -569,10 +584,10 @@ export const getTypeNames = () => gql`
     # DNS scan results.
     dnsScan(
       # Start date for date filter.
-      startDate: Date
+      startDate: DateTime
 
       # End date for date filter.
-      endDate: Date
+      endDate: DateTime
 
       # Ordering options for DNS connections.
       orderBy: DNSOrder
@@ -596,16 +611,19 @@ export const getTypeNames = () => gql`
     # HTTPS, and TLS scan results.
     web(
       # Start date for date filter.
-      startDate: Date
+      startDate: DateTime
 
       # End date for date filter.
-      endDate: Date
+      endDate: DateTime
 
       # Ordering options for web connections.
       orderBy: WebOrder
 
       # Number of web scans to retrieve.
       limit: Int
+
+      # Exclude web scans which have pending status.
+      excludePending: Boolean
 
       # Returns the items in the list that come after the specified cursor.
       after: String
@@ -637,9 +655,6 @@ export const getTypeNames = () => gql`
 
     # Value that determines if a domain is excluded from an organization's results.
     hidden: Boolean
-
-    # Value that determines if a domain is excluded from any results and scans.
-    archived: Boolean
   }
 
   # String that conforms to a domain structure.
@@ -650,6 +665,9 @@ export const getTypeNames = () => gql`
 
   # This object contains how the domain is doing on the various scans we preform, based on the latest scan data.
   type DomainStatus {
+    # Certificates Status
+    certificates: StatusEnum
+
     # Ciphers Status
     ciphers: StatusEnum
 
@@ -766,6 +784,9 @@ export const getTypeNames = () => gql`
       # String used to search for domains.
       search: String
 
+      # Filters used to limit domains returned.
+      filters: [DomainFilter]
+
       # Returns the items in the list that come after the specified cursor.
       after: String
 
@@ -786,6 +807,9 @@ export const getTypeNames = () => gql`
 
       # String used to search for affiliated users.
       search: String
+
+      # Exclude (false) or include only (true) pending affiliations in the results.
+      includePending: Boolean
 
       # Returns the items in the list that come after the specified cursor.
       after: String
@@ -880,6 +904,9 @@ export const getTypeNames = () => gql`
 
   # Properties by which domain connections can be ordered.
   enum DomainOrderField {
+    # Order domains by certificates status.
+    CERTIFICATES_STATUS
+
     # Order domains by ciphers status.
     CIPHERS_STATUS
 
@@ -909,6 +936,75 @@ export const getTypeNames = () => gql`
 
     # Order domains by spf status.
     SPF_STATUS
+
+    # Order domains by tags.
+    TAGS
+  }
+
+  # This object is used to provide filtering options when querying org-claimed domains.
+  input DomainFilter {
+    # Category of filter to be applied.
+    filterCategory: DomainOrderField
+
+    # First value equals or does not equal second value.
+    comparison: ComparisonEnums
+
+    # Status type or tag label.
+    filterValue: filterValueEnums
+  }
+
+  #
+  enum ComparisonEnums {
+    #
+    EQUAL
+
+    #
+    NOT_EQUAL
+  }
+
+  #
+  enum filterValueEnums {
+    # If the given check meets the passing requirements.
+    PASS
+
+    # If the given check has flagged something that can provide information on the domain that aren't scan related.
+    INFO
+
+    # If the given check does not meet the passing requirements
+    FAIL
+
+    # English label for tagging domains as new to the system.
+    NEW
+
+    # French label for tagging domains as new to the system.
+    NOUVEAU
+
+    # Bilingual Label for tagging domains as a production environment.
+    PROD
+
+    # English label for tagging domains as a staging environment.
+    STAGING
+
+    # French label for tagging domains as a staging environment.
+    DEV
+
+    # Bilingual label for tagging domains as a test environment.
+    TEST
+
+    # Bilingual label for tagging domains as web-hosting.
+    WEB
+
+    # English label for tagging domains that are not active.
+    INACTIVE
+
+    # French label for tagging domains that are not active.
+    INACTIF
+
+    # English label for tagging domains that are hidden.
+    HIDDEN
+
+    # English label for tagging domains that are archived.
+    ARCHIVED
   }
 
   # A connection to a list of items.
@@ -1164,7 +1260,7 @@ export const getTypeNames = () => gql`
     domain: String
 
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
     # String of the base domain the scan was run on.
     baseDomain: String
@@ -1193,9 +1289,6 @@ export const getTypeNames = () => gql`
     # The SKIM scan results for the domain.
     dkim: DKIM
   }
-
-  # A date string, such as 2007-12-03, compliant with the "full-date" format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-  scalar Date
 
   type MXRecord {
     # Hosts listed in the domain's MX record.
@@ -1330,6 +1423,15 @@ export const getTypeNames = () => gql`
     # The compliance status for DKIM for the scanned domain.
     status: String
 
+    # List of positive tags for the scanned domain from this scan.
+    positiveTags: [GuidanceTag]
+
+    # List of neutral tags for the scanned domain from this scan.
+    neutralTags: [GuidanceTag]
+
+    # List of negative tags for the scanned domain from this scan.
+    negativeTags: [GuidanceTag]
+
     # Individual scans results for each DKIM selector.
     selectors: [DKIMSelectorResult]
   }
@@ -1416,7 +1518,7 @@ export const getTypeNames = () => gql`
     domain: String
 
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
     # Results of the web scan at each IP address.
     results: [WebScan]
@@ -1424,9 +1526,6 @@ export const getTypeNames = () => gql`
 
   # Information for the TLS and HTTP connection scans on the given domain.
   type WebScan {
-    # The time when the scan was initiated.
-    timestamp: Date
-
     # IP address for scan target.
     ipAddress: String
 
@@ -1440,7 +1539,7 @@ export const getTypeNames = () => gql`
   # Results of TLS and HTTP connection scans on the given domain.
   type WebScanResult {
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
     # The result for the TLS scan for the scanned server.
     tlsResult: TLSResult
@@ -1466,6 +1565,9 @@ export const getTypeNames = () => gql`
     # Whether or not the scanned server is vulnerable to heartbleed.
     heartbleedVulnerable: Boolean
 
+    # Whether or not the scanned server is vulnerable to heartbleed.
+    robotVulnerable: String
+
     # Whether or not the scanned server is vulnerable to CCS injection.
     ccsInjectionVulnerable: Boolean
 
@@ -1483,6 +1585,9 @@ export const getTypeNames = () => gql`
 
     # List of negative tags for the scanned server from this scan.
     negativeTags: [GuidanceTag]
+
+    # The compliance status of the certificate bundle for the scanned server from this scan.
+    certificateStatus: String
 
     # The compliance status for TLS for the scanned server from this scan.
     sslStatus: String
@@ -1745,7 +1850,7 @@ export const getTypeNames = () => gql`
     HSTS: Boolean
   }
 
-  # The "JSONObject" scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+  # The 'JSONObject' scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
   scalar JSONObject
 
   # Ordering options for web connections.
@@ -2413,7 +2518,7 @@ export const getTypeNames = () => gql`
     domain: DomainScalar
 
     # The last time that a scan was ran on this domain.
-    lastRan: Date
+    lastRan: DateTime
 
     # The domains scan status, based on the latest scan data.
     status: DomainStatus
@@ -2629,6 +2734,9 @@ export const getTypeNames = () => gql`
     # This mutation allows admins or higher to remove users from any organizations they belong to.
     removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
 
+    # This mutation allows users to request to join an organization.
+    requestOrgAffiliation(input: RequestOrgAffiliationInput!): RequestOrgAffiliationPayload
+
     # This mutation allows a user to transfer org ownership to another user in the given org.
     transferOrgOwnership(input: TransferOrgOwnershipInput!): TransferOrgOwnershipPayload
 
@@ -2636,6 +2744,9 @@ export const getTypeNames = () => gql`
     # update the permission level of a given user that already belongs to the
     # given organization.
     updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
+
+    # Mutation used to create multiple new domains for an organization.
+    addOrganizationsDomains(input: AddOrganizationsDomainsInput!): AddOrganizationsDomainsPayload
 
     # Mutation used to create a new domain for an organization.
     createDomain(input: CreateDomainInput!): CreateDomainPayload
@@ -2645,6 +2756,9 @@ export const getTypeNames = () => gql`
 
     # This mutation allows the removal of unused domains.
     removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
+
+    # This mutation allows the removal of unused domains.
+    removeOrganizationsDomains(input: RemoveOrganizationsDomainsInput!): RemoveOrganizationsDomainsPayload
 
     # This mutation is used to step a manual scan on a requested domain.
     requestScan(input: RequestScanInput!): RequestScanPayload
@@ -2714,12 +2828,12 @@ export const getTypeNames = () => gql`
   }
 
   type InviteUserToOrgPayload {
-    # "InviteUserToOrgUnion" returning either a "InviteUserToOrgResult", or "InviteUserToOrgError" object.
+    # 'InviteUserToOrgUnion' returning either a 'InviteUserToOrgResult', or 'InviteUserToOrgError' object.
     result: InviteUserToOrgUnion
     clientMutationId: String
   }
 
-  # This union is used with the "InviteUserToOrg" mutation, allowing for users to invite user to their org, and support any errors that may occur
+  # This union is used with the 'InviteUserToOrg' mutation, allowing for users to invite user to their org, and support any errors that may occur
   union InviteUserToOrgUnion = AffiliationError | InviteUserToOrgResult
 
   # This object is used to inform the user if any errors occurred while executing affiliation mutations.
@@ -2753,12 +2867,12 @@ export const getTypeNames = () => gql`
   }
 
   type LeaveOrganizationPayload {
-    # "LeaveOrganizationUnion" resolving to either a "LeaveOrganizationResult" or "AffiliationError".
+    # 'LeaveOrganizationUnion' resolving to either a 'LeaveOrganizationResult' or 'AffiliationError'.
     result: LeaveOrganizationUnion
     clientMutationId: String
   }
 
-  # This union is used with the "leaveOrganization" mutation, allowing for users to leave a given organization, and support any errors that may occur.
+  # This union is used with the 'leaveOrganization' mutation, allowing for users to leave a given organization, and support any errors that may occur.
   union LeaveOrganizationUnion = AffiliationError | LeaveOrganizationResult
 
   # This object is used to inform the user that they successful left a given organization.
@@ -2774,12 +2888,12 @@ export const getTypeNames = () => gql`
   }
 
   type RemoveUserFromOrgPayload {
-    # "RemoveUserFromOrgUnion" returning either a "RemoveUserFromOrgResult", or "RemoveUserFromOrgError" object.
+    # 'RemoveUserFromOrgUnion' returning either a 'RemoveUserFromOrgResult', or 'RemoveUserFromOrgError' object.
     result: RemoveUserFromOrgUnion
     clientMutationId: String
   }
 
-  # This union is used with the "RemoveUserFromOrg" mutation, allowing for users to remove a user from their org, and support any errors that may occur
+  # This union is used with the 'RemoveUserFromOrg' mutation, allowing for users to remove a user from their org, and support any errors that may occur
   union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 
   # This object is used to inform the user of the removal status.
@@ -2800,13 +2914,25 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type RequestOrgAffiliationPayload {
+    # 'InviteUserToOrgUnion' returning either a 'InviteUserToOrgResult', or 'InviteUserToOrgError' object.
+    result: InviteUserToOrgUnion
+    clientMutationId: String
+  }
+
+  input RequestOrgAffiliationInput {
+    # The organization you wish to invite the user to.
+    orgId: ID!
+    clientMutationId: String
+  }
+
   type TransferOrgOwnershipPayload {
-    # "TransferOrgOwnershipUnion" resolving to either a "TransferOrgOwnershipResult" or "AffiliationError".
+    # 'TransferOrgOwnershipUnion' resolving to either a 'TransferOrgOwnershipResult' or 'AffiliationError'.
     result: TransferOrgOwnershipUnion
     clientMutationId: String
   }
 
-  # This union is used with the "transferOrgOwnership" mutation, allowing for
+  # This union is used with the 'transferOrgOwnership' mutation, allowing for
   # users to transfer ownership of a given organization, and support any errors that may occur.
   union TransferOrgOwnershipUnion = AffiliationError | TransferOrgOwnershipResult
 
@@ -2826,12 +2952,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateUserRolePayload {
-    # "UpdateUserRoleUnion" returning either a "UpdateUserRoleResult", or "UpdateUserRoleError" object.
+    # 'UpdateUserRoleUnion' returning either a 'UpdateUserRoleResult', or 'UpdateUserRoleError' object.
     result: UpdateUserRoleUnion
     clientMutationId: String
   }
 
-  # This union is used with the "UpdateUserRole" mutation, allowing for users to update a users role in an org, and support any errors that may occur
+  # This union is used with the 'UpdateUserRole' mutation, allowing for users to update a users role in an org, and support any errors that may occur
   union UpdateUserRoleUnion = AffiliationError | UpdateUserRoleResult
 
   # This object is used to inform the user of the status of the role update.
@@ -2855,16 +2981,16 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  type CreateDomainPayload {
-    # "CreateDomainUnion" returning either a "Domain", or "CreateDomainError" object.
-    result: CreateDomainUnion
+  type AddOrganizationsDomainsPayload {
+    # 'BulkModifyDomainsUnion' returning either a 'DomainBulkResult', or 'DomainErrorType' object.
+    result: BulkModifyDomainsUnion
     clientMutationId: String
   }
 
-  # This union is used with the "CreateDomain" mutation,
-  # allowing for users to create a domain and add it to their org,
-  # and support any errors that may occur
-  union CreateDomainUnion = DomainError | Domain
+  # This union is used with the 'AddOrganizationsDomains' and 'RemoveOrganizationsDomains' mutation,
+  #                 allowing for users to add/remove multiple domains belonging to their org,
+  #                 and support any errors that may occur
+  union BulkModifyDomainsUnion = DomainError | DomainBulkResult
 
   # This object is used to inform the user if any errors occurred while using a domain mutation.
   type DomainError {
@@ -2874,6 +3000,41 @@ export const getTypeNames = () => gql`
     # Description of the issue that was encountered.
     description: String
   }
+
+  # This object is used to inform the user that no errors were encountered while mutating a domain.
+  type DomainBulkResult {
+    # Informs the user if the domain mutation was successful.
+    status: String
+  }
+
+  input AddOrganizationsDomainsInput {
+    # The global id of the organization you wish to assign this domain to.
+    orgId: ID!
+
+    # Url that you would like to be added to the database.
+    domains: [DomainScalar]!
+
+    # New domains will be hidden.
+    hideNewDomains: Boolean
+
+    # New domains will be tagged with NEW.
+    tagNewDomains: Boolean
+
+    # Audit logs will be created.
+    audit: Boolean
+    clientMutationId: String
+  }
+
+  type CreateDomainPayload {
+    # 'CreateDomainUnion' returning either a 'Domain', or 'CreateDomainError' object.
+    result: CreateDomainUnion
+    clientMutationId: String
+  }
+
+  # This union is used with the 'CreateDomain' mutation,
+  # allowing for users to create a domain and add it to their org,
+  # and support any errors that may occur
+  union CreateDomainUnion = DomainError | Domain
 
   input CreateDomainInput {
     # The global id of the organization you wish to assign this domain to.
@@ -2887,6 +3048,12 @@ export const getTypeNames = () => gql`
 
     # List of labelled tags users have applied to the domain.
     tags: [InputTag]
+
+    # Value that determines if the domain is excluded from an organization's score.
+    hidden: Boolean
+
+    # Value that determines if the domain is excluded from the scanning process.
+    archived: Boolean
     clientMutationId: String
   }
 
@@ -2927,10 +3094,16 @@ export const getTypeNames = () => gql`
 
     # French label for tagging domains that are not active.
     INACTIF
+
+    # English label for tagging domains that are hidden.
+    HIDDEN
+
+    # English label for tagging domains that are archived.
+    ARCHIVED
   }
 
   type FavouriteDomainPayload {
-    # "CreateDomainUnion" returning either a "Domain", or "CreateDomainError" object.
+    # 'CreateDomainUnion' returning either a 'Domain', or 'CreateDomainError' object.
     result: CreateDomainUnion
     clientMutationId: String
   }
@@ -2942,19 +3115,19 @@ export const getTypeNames = () => gql`
   }
 
   type RemoveDomainPayload {
-    # "RemoveDomainUnion" returning either a "DomainResultType", or "DomainErrorType" object.
+    # 'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     result: RemoveDomainUnion!
     clientMutationId: String
   }
 
-  # This union is used with the "RemoveDomain" mutation,
+  # This union is used with the 'RemoveDomain' mutation,
   # allowing for users to remove a domain belonging to their org,
   # and support any errors that may occur
   union RemoveDomainUnion = DomainError | DomainResult
 
-  # This object is used to inform the user that no errors were encountered while removing a domain.
+  # This object is used to inform the user that no errors were encountered while mutating a domain.
   type DomainResult {
-    # Informs the user if the domain removal was successful.
+    # Informs the user if the domain mutation was successful.
     status: String
 
     # The domain that is being mutated.
@@ -2973,6 +3146,27 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type RemoveOrganizationsDomainsPayload {
+    # 'BulkModifyDomainsUnion' returning either a 'DomainBulkResult', or 'DomainErrorType' object.
+    result: BulkModifyDomainsUnion!
+    clientMutationId: String
+  }
+
+  input RemoveOrganizationsDomainsInput {
+    # Domains you wish to remove from the organization.
+    domains: [DomainScalar]!
+
+    # The organization you wish to remove the domain from.
+    orgId: ID!
+
+    # Domains will be archived.
+    archiveDomains: Boolean
+
+    # Audit logs will be created.
+    audit: Boolean
+    clientMutationId: String
+  }
+
   type RequestScanPayload {
     # Informs the user if the scan was dispatched successfully.
     status: String
@@ -2986,7 +3180,7 @@ export const getTypeNames = () => gql`
   }
 
   type UnfavouriteDomainPayload {
-    # "RemoveDomainUnion" returning either a "DomainResultType", or "DomainErrorType" object.
+    # 'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     result: RemoveDomainUnion!
     clientMutationId: String
   }
@@ -2998,12 +3192,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateDomainPayload {
-    # "UpdateDomainUnion" returning either a "Domain", or "DomainError" object.
+    # 'UpdateDomainUnion' returning either a 'Domain', or 'DomainError' object.
     result: UpdateDomainUnion
     clientMutationId: String
   }
 
-  # This union is used with the "UpdateDomain" mutation,
+  # This union is used with the 'UpdateDomain' mutation,
   # allowing for users to update a domain belonging to their org,
   # and support any errors that may occur
   union UpdateDomainUnion = DomainError | Domain
@@ -3023,16 +3217,22 @@ export const getTypeNames = () => gql`
 
     # List of labelled tags users have applied to the domain.
     tags: [InputTag]
+
+    # Value that determines if the domain is excluded from an organization's score.
+    hidden: Boolean
+
+    # Value that determines if the domain is excluded from the scanning process.
+    archived: Boolean
     clientMutationId: String
   }
 
   type CreateOrganizationPayload {
-    # "CreateOrganizationUnion" returning either an "Organization", or "OrganizationError" object.
+    # 'CreateOrganizationUnion' returning either an 'Organization', or 'OrganizationError' object.
     result: CreateOrganizationUnion
     clientMutationId: String
   }
 
-  # This union is used with the "CreateOrganization" mutation,
+  # This union is used with the 'CreateOrganization' mutation,
   # allowing for users to create an organization, and support any errors that may occur
   union CreateOrganizationUnion = OrganizationError | Organization
 
@@ -3091,12 +3291,12 @@ export const getTypeNames = () => gql`
   }
 
   type RemoveOrganizationPayload {
-    # "RemoveOrganizationUnion" returning either an "OrganizationResult", or "OrganizationError" object.
+    # 'RemoveOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     result: RemoveOrganizationUnion!
     clientMutationId: String
   }
 
-  # This union is used with the "RemoveOrganization" mutation,
+  # This union is used with the 'RemoveOrganization' mutation,
   # allowing for users to remove an organization they belong to,
   # and support any errors that may occur
   union RemoveOrganizationUnion = OrganizationError | OrganizationResult
@@ -3117,12 +3317,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateOrganizationPayload {
-    # "UpdateOrganizationUnion" returning either an "Organization", or "OrganizationError" object.
+    # 'UpdateOrganizationUnion' returning either an 'Organization', or 'OrganizationError' object.
     result: UpdateOrganizationUnion!
     clientMutationId: String
   }
 
-  # This union is used with the "UpdateOrganization" mutation,
+  # This union is used with the 'UpdateOrganization' mutation,
   # allowing for users to update an organization, and support any errors that may occur
   union UpdateOrganizationUnion = OrganizationError | Organization
 
@@ -3175,12 +3375,12 @@ export const getTypeNames = () => gql`
   }
 
   type VerifyOrganizationPayload {
-    # "VerifyOrganizationUnion" returning either an "OrganizationResult", or "OrganizationError" object.
+    # 'VerifyOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     result: VerifyOrganizationUnion
     clientMutationId: String
   }
 
-  # This union is used with the "VerifyOrganization" mutation,
+  # This union is used with the 'VerifyOrganization' mutation,
   # allowing for super admins to verify an organization,
   # and support any errors that may occur
   union VerifyOrganizationUnion = OrganizationError | OrganizationResult
@@ -3192,12 +3392,12 @@ export const getTypeNames = () => gql`
   }
 
   type AuthenticatePayload {
-    # Authenticate union returning either a "authResult" or "authenticateError" object.
+    # Authenticate union returning either a 'authResult' or 'authenticateError' object.
     result: AuthenticateUnion
     clientMutationId: String
   }
 
-  # This union is used with the "authenticate" mutation, allowing for the user to authenticate, and support any errors that may occur
+  # This union is used with the 'authenticate' mutation, allowing for the user to authenticate, and support any errors that may occur
   union AuthenticateUnion = AuthResult | AuthenticateError
 
   # An object used to return information when users sign up or authenticate.
@@ -3228,12 +3428,12 @@ export const getTypeNames = () => gql`
   }
 
   type CloseAccountPayload {
-    # "CloseAccountUnion" returning either a "CloseAccountResult", or "CloseAccountError" object.
+    # 'CloseAccountUnion' returning either a 'CloseAccountResult', or 'CloseAccountError' object.
     result: CloseAccountUnion
     clientMutationId: String
   }
 
-  # This union is used for the "closeAccount" mutation, to support successful or errors that may occur.
+  # This union is used for the 'closeAccount' mutation, to support successful or errors that may occur.
   union CloseAccountUnion = CloseAccountResult | CloseAccountError
 
   # This object is used to inform the user of the status of closing their account.
@@ -3258,12 +3458,12 @@ export const getTypeNames = () => gql`
   }
 
   type RefreshTokensPayload {
-    # Refresh tokens union returning either a "authResult" or "authenticateError" object.
+    # Refresh tokens union returning either a 'authResult' or 'authenticateError' object.
     result: RefreshTokensUnion
     clientMutationId: String
   }
 
-  # This union is used with the "refreshTokens" mutation, allowing for the user to refresh their tokens, and support any errors that may occur
+  # This union is used with the 'refreshTokens' mutation, allowing for the user to refresh their tokens, and support any errors that may occur
   union RefreshTokensUnion = AuthResult | AuthenticateError
 
   input RefreshTokensInput {
@@ -3271,12 +3471,12 @@ export const getTypeNames = () => gql`
   }
 
   type RemovePhoneNumberPayload {
-    # "RemovePhoneNumberUnion" returning either a "RemovePhoneNumberResult", or "RemovePhoneNumberError" object.
+    # 'RemovePhoneNumberUnion' returning either a 'RemovePhoneNumberResult', or 'RemovePhoneNumberError' object.
     result: RemovePhoneNumberUnion
     clientMutationId: String
   }
 
-  # This union is used with the "RemovePhoneNumber" mutation, allowing for users to remove their phone number, and support any errors that may occur
+  # This union is used with the 'RemovePhoneNumber' mutation, allowing for users to remove their phone number, and support any errors that may occur
   union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while removing their phone number.
@@ -3299,12 +3499,12 @@ export const getTypeNames = () => gql`
   }
 
   type ResetPasswordPayload {
-    # "ResetPasswordUnion" returning either a "ResetPasswordResult", or "ResetPasswordError" object.
+    # 'ResetPasswordUnion' returning either a 'ResetPasswordResult', or 'ResetPasswordError' object.
     result: ResetPasswordUnion
     clientMutationId: String
   }
 
-  # This union is used with the "ResetPassword" mutation, allowing for users to reset their password, and support any errors that may occur
+  # This union is used with the 'ResetPassword' mutation, allowing for users to reset their password, and support any errors that may occur
   union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
 
   # This object is used to inform the user if any errors occurred while resetting their password.
@@ -3359,12 +3559,12 @@ export const getTypeNames = () => gql`
   }
 
   type SetPhoneNumberPayload {
-    # "SetPhoneNumberUnion" returning either a "SetPhoneNumberResult", or "SetPhoneNumberError" object.
+    # 'SetPhoneNumberUnion' returning either a 'SetPhoneNumberResult', or 'SetPhoneNumberError' object.
     result: SetPhoneNumberUnion
     clientMutationId: String
   }
 
-  # This union is used with the "setPhoneNumber" mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
+  # This union is used with the 'setPhoneNumber' mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
   union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while setting a new phone number.
@@ -3392,12 +3592,12 @@ export const getTypeNames = () => gql`
   }
 
   type SignInPayload {
-    # "SignInUnion" returning either a "regularSignInResult", "tfaSignInResult", or "signInError" object.
+    # 'SignInUnion' returning either a 'regularSignInResult', 'tfaSignInResult', or 'signInError' object.
     result: SignInUnion
     clientMutationId: String
   }
 
-  # This union is used with the "SignIn" mutation, allowing for multiple styles of logging in, and support any errors that may occur
+  # This union is used with the 'SignIn' mutation, allowing for multiple styles of logging in, and support any errors that may occur
   union SignInUnion = AuthResult | SignInError | TFASignInResult
 
   # This object is used to inform the user if any errors occurred during sign in.
@@ -3441,12 +3641,12 @@ export const getTypeNames = () => gql`
   }
 
   type SignUpPayload {
-    # "SignUpUnion" returning either a "AuthResult", or "SignUpError" object.
+    # 'SignUpUnion' returning either a 'AuthResult', or 'SignUpError' object.
     result: SignUpUnion
     clientMutationId: String
   }
 
-  # This union is used with the "signUp" mutation, allowing for the user to sign up, and support any errors that may occur.
+  # This union is used with the 'signUp' mutation, allowing for the user to sign up, and support any errors that may occur.
   union SignUpUnion = AuthResult | SignUpError
 
   # This object is used to inform the user if any errors occurred during sign up.
@@ -3483,12 +3683,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateUserPasswordPayload {
-    # "UpdateUserPasswordUnion" returning either a "UpdateUserPasswordResultType", or "UpdateUserPasswordError" object.
+    # 'UpdateUserPasswordUnion' returning either a 'UpdateUserPasswordResultType', or 'UpdateUserPasswordError' object.
     result: UpdateUserPasswordUnion
     clientMutationId: String
   }
 
-  # This union is used with the "updateUserPassword" mutation, allowing for users to update their password, and support any errors that may occur
+  # This union is used with the 'updateUserPassword' mutation, allowing for users to update their password, and support any errors that may occur
   union UpdateUserPasswordUnion = UpdateUserPasswordError | UpdateUserPasswordResultType
 
   # This object is used to inform the user if any errors occurred while updating their password.
@@ -3519,12 +3719,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateUserProfilePayload {
-    # "UpdateUserProfileUnion" returning either a "UpdateUserProfileResult", or "UpdateUserProfileError" object.
+    # 'UpdateUserProfileUnion' returning either a 'UpdateUserProfileResult', or 'UpdateUserProfileError' object.
     result: UpdateUserProfileUnion
     clientMutationId: String
   }
 
-  # This union is used with the "updateUserProfile" mutation, allowing for users to update their profile, and support any errors that may occur
+  # This union is used with the 'updateUserProfile' mutation, allowing for users to update their profile, and support any errors that may occur
   union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
 
   # This object is used to inform the user if any errors occurred while updating their profile.
@@ -3564,12 +3764,12 @@ export const getTypeNames = () => gql`
   }
 
   type VerifyAccountPayload {
-    # "VerifyAccountUnion" returning either a "VerifyAccountResult", or "VerifyAccountError" object.
+    # 'VerifyAccountUnion' returning either a 'VerifyAccountResult', or 'VerifyAccountError' object.
     result: VerifyAccountUnion
     clientMutationId: String
   }
 
-  # This union is used with the "verifyAccount" mutation, allowing for users to verify their account, and support any errors that may occur
+  # This union is used with the 'verifyAccount' mutation, allowing for users to verify their account, and support any errors that may occur
   union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
 
   # This object is used to inform the user if any errors occurred while verifying their account.
@@ -3594,12 +3794,12 @@ export const getTypeNames = () => gql`
   }
 
   type verifyPhoneNumberPayload {
-    # "VerifyPhoneNumberUnion" returning either a "VerifyPhoneNumberResult", or "VerifyPhoneNumberError" object.
+    # 'VerifyPhoneNumberUnion' returning either a 'VerifyPhoneNumberResult', or 'VerifyPhoneNumberError' object.
     result: VerifyPhoneNumberUnion
     clientMutationId: String
   }
 
-  # This union is used with the "verifyPhoneNumber" mutation, allowing for users to verify their phone number, and support any errors that may occur
+  # This union is used with the 'verifyPhoneNumber' mutation, allowing for users to verify their phone number, and support any errors that may occur
   union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while verifying their phone number.
