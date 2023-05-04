@@ -241,7 +241,7 @@ msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisat
 msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs."
 
-#: src/affiliation/mutations/invite-user-to-org.js:114
+#: src/affiliation/mutations/invite-user-to-org.js:105
 msgid "Permission Denied: Please contact organization admin for help with user invitations."
 msgstr "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide concernant les invitations d'utilisateurs."
 
@@ -427,7 +427,7 @@ msgstr "Un seul balayage a été effectué avec succès."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Réussir à envoyer un email au compte vérifié, et définir la méthode d'envoi de la TFA sur email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:241
+#: src/affiliation/mutations/invite-user-to-org.js:259
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "L'utilisateur a été invité avec succès à l'organisation et l'email de notification a été envoyé."
 
@@ -455,15 +455,15 @@ msgstr "L'utilisateur a été retiré de l'organisation avec succès."
 msgid "Successfully removed {domainCount} domain(s) from {0}."
 msgstr "Supprimé avec succès le(s) domaine(s) {domainCount} de {0}."
 
-#: src/domain/mutations/remove-organizations-domains.js:530
-#~ msgid "Successfully removed {domainCount} domains from {0}."
-#~ msgstr "Suppression réussie des domaines {domainCount} de {0}."
-
 #: src/affiliation/mutations/request-org-affiliation.js:201
 msgid "Successfully requested invite to organization, and sent notification email."
 msgstr "La demande d'invitation à l'organisation a été effectuée avec succès et un courriel de notification a été envoyé."
 
-#: src/affiliation/mutations/invite-user-to-org.js:167
+#: src/domain/mutations/remove-organizations-domains.js:530
+#~ msgid "Successfully removed {domainCount} domains from {0}."
+#~ msgstr "Suppression réussie des domaines {domainCount} de {0}."
+
+#: src/affiliation/mutations/invite-user-to-org.js:150
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "Envoi réussi de l'invitation au service, et de l'email de l'organisation."
 
@@ -689,7 +689,15 @@ msgstr "Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez rées
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:95
+#: src/affiliation/mutations/invite-user-to-org.js:170
+msgid "Unable to invite user to organization. Please try again."
+msgstr "Impossible d'inviter un utilisateur dans une organisation. Veuillez réessayer."
+
+#: src/affiliation/mutations/invite-user-to-org.js:182
+msgid "Unable to invite user to organization. User is already affiliated with organization."
+msgstr "Impossible d'inviter un utilisateur dans une organisation. L'utilisateur est déjà affilié à l'organisation."
+
+#: src/affiliation/mutations/invite-user-to-org.js:87
 msgid "Unable to invite user to unknown organization."
 msgstr "Impossible d'inviter un utilisateur à une organisation inconnue."
 
@@ -699,7 +707,7 @@ msgstr "Impossible d'inviter un utilisateur à une organisation inconnue."
 msgid "Unable to invite user. Please try again."
 msgstr "Impossible d'inviter un utilisateur. Veuillez réessayer."
 
-#: src/affiliation/mutations/invite-user-to-org.js:81
+#: src/affiliation/mutations/invite-user-to-org.js:73
 msgid "Unable to invite yourself to an org."
 msgstr "Impossible de s'inviter à un org."
 

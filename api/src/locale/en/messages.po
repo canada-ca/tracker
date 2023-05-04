@@ -241,7 +241,7 @@ msgstr "Permission Denied: Please contact organization admin for help with updat
 msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 msgstr "Permission Denied: Please contact organization admin for help with updating user roles."
 
-#: src/affiliation/mutations/invite-user-to-org.js:114
+#: src/affiliation/mutations/invite-user-to-org.js:105
 msgid "Permission Denied: Please contact organization admin for help with user invitations."
 msgstr "Permission Denied: Please contact organization admin for help with user invitations."
 
@@ -427,7 +427,7 @@ msgstr "Successfully dispatched one time scan."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:241
+#: src/affiliation/mutations/invite-user-to-org.js:259
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
@@ -455,15 +455,15 @@ msgstr "Successfully removed user from organization."
 msgid "Successfully removed {domainCount} domain(s) from {0}."
 msgstr "Successfully removed {domainCount} domain(s) from {0}."
 
-#: src/domain/mutations/remove-organizations-domains.js:530
-#~ msgid "Successfully removed {domainCount} domains from {0}."
-#~ msgstr "Successfully removed {domainCount} domains from {0}."
-
 #: src/affiliation/mutations/request-org-affiliation.js:201
 msgid "Successfully requested invite to organization, and sent notification email."
 msgstr "Successfully requested invite to organization, and sent notification email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:167
+#: src/domain/mutations/remove-organizations-domains.js:530
+#~ msgid "Successfully removed {domainCount} domains from {0}."
+#~ msgstr "Successfully removed {domainCount} domains from {0}."
+
+#: src/affiliation/mutations/invite-user-to-org.js:150
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "Successfully sent invitation to service, and organization email."
 
@@ -689,7 +689,15 @@ msgstr "Unable to find user affiliation(s). Please try again."
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Unable to find verified organization(s). Please try again."
 
-#: src/affiliation/mutations/invite-user-to-org.js:95
+#: src/affiliation/mutations/invite-user-to-org.js:170
+msgid "Unable to invite user to organization. Please try again."
+msgstr "Unable to invite user to organization. Please try again."
+
+#: src/affiliation/mutations/invite-user-to-org.js:182
+msgid "Unable to invite user to organization. User is already affiliated with organization."
+msgstr "Unable to invite user to organization. User is already affiliated with organization."
+
+#: src/affiliation/mutations/invite-user-to-org.js:87
 msgid "Unable to invite user to unknown organization."
 msgstr "Unable to invite user to unknown organization."
 
@@ -699,7 +707,7 @@ msgstr "Unable to invite user to unknown organization."
 msgid "Unable to invite user. Please try again."
 msgstr "Unable to invite user. Please try again."
 
-#: src/affiliation/mutations/invite-user-to-org.js:81
+#: src/affiliation/mutations/invite-user-to-org.js:73
 msgid "Unable to invite yourself to an org."
 msgstr "Unable to invite yourself to an org."
 
