@@ -135,9 +135,9 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     }
 
     // get all org admins
-    let orgAdmins
+    let orgAdminsCursor
     try {
-      orgAdmins = await query`
+      orgAdminsCursor = await query`
         WITH affiliations, organizations, users
         FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
           FILTER e.permission == "admin"
@@ -146,6 +146,16 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     } catch (err) {
       console.error(
         `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to request invite. Please try again.`))
+    }
+
+    let orgAdmins
+    try {
+      orgAdmins = await orgAdminsCursor.all()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
