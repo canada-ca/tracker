@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 
 export const loadAffiliationConnectionsByOrgId =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ orgId, after, before, first, last, orderBy, search, filterPending }) => {
+  async ({ orgId, after, before, first, last, orderBy, search, includePending }) => {
     let afterTemplate = aql``
     if (typeof after !== 'undefined') {
       const { id: afterId } = fromGlobalId(cleanseInput(after))
@@ -178,8 +178,8 @@ export const loadAffiliationConnectionsByOrgId =
     }
 
     let pendingFilter = aql`FILTER e.permission != "pending"`
-    if (filterPending) {
-      pendingFilter = aql`FILTER e.permission == "pending"`
+    if (includePending) {
+      pendingFilter = aql``
     }
 
     let filteredAffiliationCursor
@@ -192,7 +192,7 @@ export const loadAffiliationConnectionsByOrgId =
       LET affiliationKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
           ${userIdFilter}
-
+          ${pendingFilter}
           RETURN e._key
       )
 

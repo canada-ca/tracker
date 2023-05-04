@@ -139,7 +139,7 @@ export const organizationType = new GraphQLObjectType({
           type: GraphQLString,
           description: 'String used to search for affiliated users.',
         },
-        filterPending: {
+        includePending: {
           type: GraphQLBoolean,
           description: 'Exclude (false) or include only (true) pending affiliations in the results.',
         },
