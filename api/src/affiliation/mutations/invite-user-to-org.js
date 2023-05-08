@@ -117,9 +117,36 @@ able to sign-up and be assigned to that organization in one mutation.`,
       })
       const createAccountLink = `https://${request.get('host')}/create-user/${token}`
 
+      let orgNamesCursor
+      try {
+        orgNamesCursor = await query`
+        LET org = DOCUMENT(organizations, ${org._id})
+        RETURN {
+          "orgNameEN": org.orgDetails.en.name,
+          "orgNameFR": org.orgDetails.fr.name,
+        }
+      `
+      } catch (err) {
+        console.error(
+          `Database error occurred when user: ${userKey} attempted to invite user: ${userName} to org: ${org._key}. Error while creating cursor for retrieving organization names. error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to invite user to organization. Please try again.`))
+      }
+
+      let orgNames
+      try {
+        orgNames = await orgNamesCursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error occurred when user: ${userKey} attempted to invite user: ${userName} to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to invite user to organization. Please try again.`))
+      }
+
       await sendOrgInviteCreateAccount({
         user: { userName: userName, preferredLang },
-        orgName: org.name,
+        orgNameEN: orgNames.orgNameEN,
+        orgNameFR: orgNames.orgNameFR,
         createAccountLink,
       })
 
