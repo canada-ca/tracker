@@ -40,6 +40,7 @@ export function RequestOrgInviteModal({ isOpen, onClose, orgId, orgName }) {
           isClosable: true,
           position: 'top-left',
         })
+        onClose()
       } else {
         toast({
           title: t`Unable to request invite, please try again.`,

@@ -48,7 +48,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
 
     if (typeof org === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to request invite to ${orgId} however there is no org associated with that id.`,
+        `User: ${userKey} attempted to request invite to org: ${orgId} however there is no org associated with that id.`,
       )
       return {
         _type: 'error',
@@ -57,41 +57,15 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       }
     }
 
-    // Check to see if user has already requested to join the org
-    let checkIfUserHasAlreadyRequestedToJoinOrg
-    try {
-      checkIfUserHasAlreadyRequestedToJoinOrg = await query`
-        FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
-            FILTER e._to == ${user._id}
-            FILTER e.permission == "pending"
-            RETURN e
-        `
-    } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
-      )
-      throw new Error(i18n._(t`Unable to request invite. Please try again.`))
-    }
-
-    if (checkIfUserHasAlreadyRequestedToJoinOrg.count > 0) {
-      console.warn(
-        `User: ${userKey} attempted to request invite to ${orgId} however they have already requested to join that org.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to request invite to organization with which you have already requested to join.`),
-      }
-    }
-
     // Check to see if user is already a member of the org
-    let checkIfUserIsAlreadyMemberOfOrg
+    let affiliationCursor
     try {
-      checkIfUserIsAlreadyMemberOfOrg = await query`
+      affiliationCursor = await query`
+        WITH affiliations, organizations, users
         FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
-            FILTER e._to == ${user._id}
-            RETURN e
-        `
+          FILTER e._to == ${user._id}
+          RETURN e
+      `
     } catch (err) {
       console.error(
         `Database error occurred when user: ${userKey} attempted to request invite to ${orgId}, error: ${err}`,
@@ -99,14 +73,28 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
-    if (checkIfUserIsAlreadyMemberOfOrg.count > 0) {
-      console.warn(
-        `User: ${userKey} attempted to request invite to ${orgId} however they are already affiliated with that org.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to request invite to organization with which you are already affiliated.`),
+    if (affiliationCursor.count > 0) {
+      const requestedAffiliation = await affiliationCursor.next()
+      if (requestedAffiliation.permission === 'pending') {
+        console.warn(
+          `User: ${userKey} attempted to request invite to org: ${orgId} however they have already requested to join that org.`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(
+            t`Unable to request invite to organization with which you have already requested to join.`,
+          ),
+        }
+      } else {
+        console.warn(
+          `User: ${userKey} attempted to request invite to ${orgId} however they are already affiliated with that org.`,
+        )
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Unable to request invite to organization with which you are already affiliated.`),
+        }
       }
     }
 
@@ -131,7 +119,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred while user: ${userKey} attempted to request invite to org: ${org.slug}, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to invite user. Please try again.`))
+      throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
     // get all org admins
@@ -165,7 +153,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       // send notification to org admins
       for (const userKey of orgAdmins) {
         const adminUser = await loadUserByKey.load(userKey)
-        await sendInviteRequestEmail({ user: adminUser, orgId, adminLink })
+        await sendInviteRequestEmail({ user: adminUser, orgName: org.name, adminLink })
       }
     }
 
