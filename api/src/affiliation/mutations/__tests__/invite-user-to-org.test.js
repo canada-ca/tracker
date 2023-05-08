@@ -501,7 +501,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -597,7 +598,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -693,7 +695,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -994,7 +997,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1090,7 +1094,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1535,7 +1540,8 @@ describe('invite user to org', () => {
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1628,7 +1634,8 @@ describe('invite user to org', () => {
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1721,7 +1728,8 @@ describe('invite user to org', () => {
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -2021,7 +2029,8 @@ describe('invite user to org', () => {
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -2114,7 +2123,8 @@ describe('invite user to org', () => {
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
