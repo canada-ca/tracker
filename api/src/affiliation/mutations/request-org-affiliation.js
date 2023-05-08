@@ -61,7 +61,6 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
     let affiliationCursor
     try {
       affiliationCursor = await query`
-        WITH affiliations, organizations, users
         FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
           FILTER e._to == ${user._id}
           RETURN e
@@ -88,7 +87,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
         }
       } else {
         console.warn(
-          `User: ${userKey} attempted to request invite to ${orgId} however they are already affiliated with that org.`,
+          `User: ${userKey} attempted to request invite to org: ${orgId} however they are already affiliated with that org.`,
         )
         return {
           _type: 'error',
