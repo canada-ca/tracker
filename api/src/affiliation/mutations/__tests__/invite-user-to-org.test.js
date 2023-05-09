@@ -143,7 +143,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: SUPER_ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: ENGLISH
                         }
                       ) {
                         result {
@@ -239,7 +238,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -335,7 +333,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -424,7 +421,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: SUPER_ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -519,7 +515,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -615,7 +610,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -730,7 +724,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -826,7 +819,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -916,7 +908,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -1012,7 +1003,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -1175,7 +1165,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: SUPER_ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1272,7 +1261,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1369,7 +1357,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1460,7 +1447,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: SUPER_ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1554,7 +1540,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1648,7 +1633,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1761,7 +1745,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1858,7 +1841,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1949,7 +1931,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -2043,7 +2024,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -2226,7 +2206,6 @@ describe('invite user to org', () => {
                       userName: "${user.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2298,7 +2277,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 1)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2378,7 +2356,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2459,7 +2436,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2540,7 +2516,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: SUPER_ADMIN
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2622,7 +2597,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2698,7 +2672,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2795,7 +2768,6 @@ describe('invite user to org', () => {
                       userName: "test.account@istio.actually.exists"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 1)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2875,7 +2847,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 1)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2955,7 +2926,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3035,7 +3005,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3115,7 +3084,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: SUPER_ADMIN
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3196,7 +3164,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3272,7 +3239,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {

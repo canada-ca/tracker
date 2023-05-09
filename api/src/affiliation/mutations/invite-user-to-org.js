@@ -4,7 +4,7 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { LanguageEnums, RoleEnums } from '../../enums'
+import { RoleEnums } from '../../enums'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
@@ -24,10 +24,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
     orgId: {
       type: GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to invite the user to.',
-    },
-    preferredLang: {
-      type: GraphQLNonNull(LanguageEnums),
-      description: 'The language in which the email will be sent in.',
     },
   }),
   outputFields: () => ({
@@ -56,7 +52,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
     const userName = cleanseInput(args.userName).toLowerCase()
     const requestedRole = cleanseInput(args.requestedRole)
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-    const preferredLang = cleanseInput(args.preferredLang)
 
     // Get requesting user
     const user = await userRequired()
