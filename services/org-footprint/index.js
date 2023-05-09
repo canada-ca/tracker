@@ -12,7 +12,7 @@ const { orgFootprintService } = require('./src')
 
 ;(async () => {
   // Generate Database information
-  const { query, collections, transaction } = await ensure({
+  const { query } = await ensure({
     type: 'database',
     name: databaseName,
     url,
@@ -20,5 +20,5 @@ const { orgFootprintService } = require('./src')
     options: databaseOptions({ rootPass }),
   })
 
-  await orgFootprintService({ query, collections, transaction, log: console.log })
+  await orgFootprintService({ query, log: console.log })
 })()
