@@ -15,10 +15,11 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { UserIcon } from '../theme/Icons'
-import { bool } from 'prop-types'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
+import { useUserVar } from '../utilities/userState'
 
-export default function Organizations({ isLoggedIn }) {
+export default function Organizations() {
+  const { isLoggedIn } = useUserVar()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
@@ -176,8 +177,4 @@ export default function Organizations({ isLoggedIn }) {
       </ErrorBoundary>
     </Box>
   )
-}
-
-Organizations.propTypes = {
-  isLoggedIn: bool,
 }

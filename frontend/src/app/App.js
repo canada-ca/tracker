@@ -190,7 +190,7 @@ export function App() {
             <PrivatePage isLoginRequired={data?.loginRequired} path="/organizations" title={t`Organizations`} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <Organizations isLoggedIn={isLoggedIn()} />
+                  <Organizations />
                 </ErrorBoundary>
               )}
             </PrivatePage>
@@ -203,7 +203,7 @@ export function App() {
             >
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <OrganizationDetails isLoggedIn={isLoggedIn()} />
+                  <OrganizationDetails />
                 </ErrorBoundary>
               )}
             </PrivatePage>

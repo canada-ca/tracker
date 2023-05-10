@@ -30,10 +30,11 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { GET_ORGANIZATION_DOMAINS_STATUSES_CSV, ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { ExportButton } from '../components/ExportButton'
-import { bool } from 'prop-types'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
+import { useUserVar } from '../utilities/userState'
 
-export default function OrganizationDetails({ isLoggedIn }) {
+export default function OrganizationDetails() {
+  const { isLoggedIn } = useUserVar()
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -184,8 +185,4 @@ export default function OrganizationDetails({ isLoggedIn }) {
       </Tabs>
     </Box>
   )
-}
-
-OrganizationDetails.propTypes = {
-  isLoggedIn: bool,
 }
