@@ -6,7 +6,7 @@ const getOrgAdmins = async ({ query, orgKey }) => {
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
             FILTER e.permission == "admin"
             // TODO: filter out users who have opted out of emails  
-            RETURN { email: v.userName, language: v.preferredLang }
+            RETURN v
     `
   } catch (err) {
     throw new Error(`Database error occurred well trying to find org admins: ${err}`)

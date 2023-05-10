@@ -1,4 +1,5 @@
 const { getOrgAdmins, getAllOrgKeys, getNewAuditLogs } = require('./database')
+const { notifyClient, sendOrgFootprintEmail } = require('./notify')
 
 const orgFootprintService = async ({ query, log }) => {
   // get list of all orgs
@@ -13,9 +14,9 @@ const orgFootprintService = async ({ query, log }) => {
       // if org admins exist
       if (orgAdmins.length > 0) {
         // send email to org admins
-        for (const admin of orgAdmins) {
-          log(`Sending email to ${admin.email}`)
-          // TODO: send email
+        for (const user of orgAdmins) {
+          log(`Sending email to ${user.email}`)
+          await sendOrgFootprintEmail({ notifyClient, user, auditLogs })
         }
       }
     }
