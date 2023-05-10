@@ -14,7 +14,7 @@ export const sendInviteRequestEmail =
       await notifyClient.sendEmail(templateId, user.userName, {
         personalisation: {
           admin_link: adminLink,
-          display_name: user.userName,
+          display_name: user.displayName,
           organization_name: orgName,
         },
       })
