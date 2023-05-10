@@ -19,14 +19,14 @@ export function TierTwoSummaries({ webConnections, ssl, spf, dkim, dmarcPhases }
     return {
       categories: [
         {
-          name: 'fail',
-          count: dmarcFailCount,
-          percentage: dmarcFailPercentage,
-        },
-        {
           name: 'pass',
           count: maintain.count,
           percentage: maintain.percentage,
+        },
+        {
+          name: 'fail',
+          count: dmarcFailCount,
+          percentage: dmarcFailPercentage,
         },
       ],
       total: dmarcPhases.total,
@@ -52,7 +52,7 @@ export function TierTwoSummaries({ webConnections, ssl, spf, dkim, dmarcPhases }
     { id: 'spf', title: t`SPF Summary`, description: t`SPF record is deployed and valid`, data: spf },
     { id: 'dkim', title: t`DKIM Summary`, description: t`DKIM record and keys are deployed and valid`, data: dkim },
     {
-      id: 'dmarcPhases',
+      id: 'email',
       title: t`DMARC Summary`,
       description: t`DMARC policy of quarantine or reject, and all messages from non-mail domain is rejected`,
       data: makeDmarcPhases(),
