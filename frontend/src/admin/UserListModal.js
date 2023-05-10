@@ -253,6 +253,7 @@ export function UserListModal({
                       defaultValue={editingUserRole}
                       onChange={handleChange}
                     >
+                      {editingUserRole === 'PENDING' && <option value="PENDING">{t`PENDING`}</option>}
                       {(['PENDING', 'USER'].includes(editingUserRole) ||
                         (permission === 'SUPER_ADMIN' && editingUserRole === 'ADMIN')) && (
                         <option value="USER">{t`USER`}</option>

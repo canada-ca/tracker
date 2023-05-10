@@ -77,7 +77,7 @@ msgstr "A more detailed breakdown of each domain can be found by clicking on its
 msgid "A verification link has been sent to your email account"
 msgstr "A verification link has been sent to your email account"
 
-#: src/admin/UserListModal.js:261
+#: src/admin/UserListModal.js:262
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -123,7 +123,7 @@ msgstr "Account created."
 #: src/admin/WebCheckPage.js:61
 #: src/createOrganization/CreateOrganizationPage.js:184
 #: src/createOrganization/CreateOrganizationPage.js:189
-#: src/organizations/Organizations.js:56
+#: src/organizations/Organizations.js:58
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -541,8 +541,8 @@ msgstr "Compliant"
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
 #: src/admin/SuperAdminUserList.js:441
-#: src/admin/UserListModal.js:274
-#: src/organizations/RequestOrgInviteModal.js:74
+#: src/admin/UserListModal.js:275
+#: src/organizations/RequestOrgInviteModal.js:75
 #: src/user/EditableUserDisplayName.js:168
 #: src/user/EditableUserEmail.js:168
 #: src/user/EditableUserPassword.js:182
@@ -732,7 +732,7 @@ msgstr "DKIM Status"
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/organizations/Organizations.js:125
+#: src/organizations/Organizations.js:139
 msgid "DMARC Configuration"
 msgstr "DMARC Configuration"
 
@@ -759,7 +759,7 @@ msgstr "DMARC Failures by IP Address"
 msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
-#: src/organizationDetails/OrganizationDetails.js:134
+#: src/organizationDetails/OrganizationDetails.js:135
 #: src/user/MyTrackerPage.js:96
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
@@ -890,7 +890,7 @@ msgstr "Display Name:"
 msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
-#: src/organizations/Organizations.js:117
+#: src/organizations/Organizations.js:131
 msgid "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 msgstr "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 
@@ -962,7 +962,7 @@ msgstr "Domain:"
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:82
 #: src/domains/DomainsPage.js:116
-#: src/organizationDetails/OrganizationDetails.js:137
+#: src/organizationDetails/OrganizationDetails.js:138
 #: src/organizationDetails/OrganizationDomains.js:106
 #: src/summaries/Doughnut.js:50
 #: src/summaries/Doughnut.js:75
@@ -1302,7 +1302,7 @@ msgstr "Fully Aligned Table"
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/organizations/Organizations.js:129
+#: src/organizations/Organizations.js:143
 msgid "Further details for each organization can be found by clicking on its row."
 msgstr "Further details for each organization can be found by clicking on its row."
 
@@ -1431,7 +1431,7 @@ msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
 #: src/organizations/OrganizationCard.js:118
-#: src/organizations/Organizations.js:121
+#: src/organizations/Organizations.js:135
 msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
 
@@ -1999,7 +1999,7 @@ msgstr "NEW"
 #: src/admin/WebCheckPage.js:60
 #: src/createOrganization/CreateOrganizationPage.js:173
 #: src/createOrganization/CreateOrganizationPage.js:178
-#: src/organizations/Organizations.js:55
+#: src/organizations/Organizations.js:57
 msgid "Name"
 msgstr "Name"
 
@@ -2115,7 +2115,7 @@ msgid "No HTTPS configuration information available for this organization."
 msgstr "No HTTPS configuration information available for this organization."
 
 #: src/admin/WebCheckPage.js:94
-#: src/organizations/Organizations.js:76
+#: src/organizations/Organizations.js:78
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -2281,7 +2281,7 @@ msgstr "Options include contacting the <0>SSC WebSSL services team</0> and/or us
 msgid "Organization"
 msgstr "Organization"
 
-#: src/organizationDetails/OrganizationDetails.js:66
+#: src/organizationDetails/OrganizationDetails.js:67
 msgid "Organization Details"
 msgstr "Organization Details"
 
@@ -2290,7 +2290,7 @@ msgid "Organization Information"
 msgstr "Organization Information"
 
 #: src/admin/OrganizationInformation.js:509
-#: src/organizations/Organizations.js:116
+#: src/organizations/Organizations.js:130
 msgid "Organization Name"
 msgstr "Organization Name"
 
@@ -2325,10 +2325,14 @@ msgstr "Organization:"
 #: src/app/App.js:84
 #: src/app/App.js:190
 #: src/app/FloatingMenu.js:103
-#: src/organizations/Organizations.js:67
-#: src/organizations/Organizations.js:111
+#: src/organizations/Organizations.js:69
+#: src/organizations/Organizations.js:125
 msgid "Organizations"
 msgstr "Organizations"
+
+#: src/admin/UserListModal.js:256
+msgid "PENDING"
+msgstr "PENDING"
 
 #: src/organizationDetails/OrganizationDomains.js:95
 msgid "PROD"
@@ -2633,8 +2637,8 @@ msgstr "Removed Organization"
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
-#: src/organizationDetails/OrganizationDetails.js:111
-#: src/organizations/RequestOrgInviteModal.js:61
+#: src/organizationDetails/OrganizationDetails.js:112
+#: src/organizations/RequestOrgInviteModal.js:62
 msgid "Request Invite"
 msgstr "Request Invite"
 
@@ -2775,7 +2779,7 @@ msgstr "SPF Status"
 msgid "STAGING"
 msgstr "STAGING"
 
-#: src/admin/UserListModal.js:265
+#: src/admin/UserListModal.js:266
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
@@ -2848,7 +2852,7 @@ msgstr "Search for a user (email)"
 #~ msgid "Search for an activity"
 #~ msgstr "Search for an activity"
 
-#: src/organizations/Organizations.js:147
+#: src/organizations/Organizations.js:161
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -2913,8 +2917,8 @@ msgstr "September"
 msgid "Serial:"
 msgstr "Serial:"
 
-#: src/organizations/Organizations.js:57
-#: src/organizations/Organizations.js:119
+#: src/organizations/Organizations.js:59
+#: src/organizations/Organizations.js:133
 msgid "Services"
 msgstr "Services"
 
@@ -3054,11 +3058,11 @@ msgstr "Shows if the server was found to be vulnerable to the ROBOT vulnerabilit
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Shows the duration of time, in seconds, that the HSTS header is valid."
 
-#: src/organizations/Organizations.js:119
+#: src/organizations/Organizations.js:133
 msgid "Shows the number of domains that the organization is in control of."
 msgstr "Shows the number of domains that the organization is in control of."
 
-#: src/organizations/Organizations.js:122
+#: src/organizations/Organizations.js:136
 msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 
@@ -3066,7 +3070,7 @@ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade 
 #~ msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 #~ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 
-#: src/organizations/Organizations.js:126
+#: src/organizations/Organizations.js:140
 msgid "Shows the percentage of domains which have a valid DMARC policy configuration."
 msgstr "Shows the percentage of domains which have a valid DMARC policy configuration."
 
@@ -3181,7 +3185,7 @@ msgstr "Submit"
 msgid "Successfully removed user {0}."
 msgstr "Successfully removed user {0}."
 
-#: src/organizationDetails/OrganizationDetails.js:131
+#: src/organizationDetails/OrganizationDetails.js:132
 #: src/user/MyTrackerPage.js:93
 msgid "Summary"
 msgstr "Summary"
@@ -3497,7 +3501,7 @@ msgstr "Two-Factor Authentication:"
 msgid "URL:"
 msgstr "URL:"
 
-#: src/admin/UserListModal.js:258
+#: src/admin/UserListModal.js:259
 msgid "USER"
 msgstr "USER"
 
@@ -3552,7 +3556,7 @@ msgid "Unable to remove user."
 msgstr "Unable to remove user."
 
 #: src/organizations/RequestOrgInviteModal.js:26
-#: src/organizations/RequestOrgInviteModal.js:45
+#: src/organizations/RequestOrgInviteModal.js:46
 msgid "Unable to request invite, please try again."
 msgstr "Unable to request invite, please try again."
 
@@ -3722,7 +3726,7 @@ msgstr "User:"
 
 #: src/admin/AdminPage.js:190
 #: src/admin/AdminPanel.js:24
-#: src/organizationDetails/OrganizationDetails.js:141
+#: src/organizationDetails/OrganizationDetails.js:142
 msgid "Users"
 msgstr "Users"
 
@@ -3740,7 +3744,7 @@ msgstr "Verification code must only contains numbers"
 
 #: src/admin/SuperAdminUserList.js:150
 #: src/admin/SuperAdminUserList.js:341
-#: src/organizations/Organizations.js:58
+#: src/organizations/Organizations.js:60
 msgid "Verified"
 msgstr "Verified"
 
@@ -3914,7 +3918,7 @@ msgstr "Why does the guidance page not show the domain’s DKIM selectors even t
 msgid "Wiki"
 msgstr "Wiki"
 
-#: src/organizations/RequestOrgInviteModal.js:65
+#: src/organizations/RequestOrgInviteModal.js:66
 msgid "Would you like to request an invite to {orgName}?"
 msgstr "Would you like to request an invite to {orgName}?"
 
