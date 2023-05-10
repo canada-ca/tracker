@@ -244,6 +244,16 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_VERIFICATION_EMAIL_FR
+            - name: NOTIFICATION_ORG_INVITE_REQUEST_EN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_REQUEST_EN
+            - name: NOTIFICATION_ORG_INVITE_REQUEST_FR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_REQUEST_FR
             - name: TRACING_ENABLED
               valueFrom:
                 secretKeyRef:
