@@ -1,9 +1,9 @@
-const { NOTIFICATION_ORG_FOOTPRINT_EMAIL_ID_EN, NOTIFICATION_ORG_FOOTPRINT_EMAIL_ID_FR } = process.env
+const { NOTIFICATION_ORG_FOOTPRINT_EN, NOTIFICATION_ORG_FOOTPRINT_FR } = process.env
 
 const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }) => {
-  let templateId = NOTIFICATION_ORG_FOOTPRINT_EMAIL_ID_EN
+  let templateId = NOTIFICATION_ORG_FOOTPRINT_EN
   if (user.preferredLang === 'french') {
-    templateId = NOTIFICATION_ORG_FOOTPRINT_EMAIL_ID_FR
+    templateId = NOTIFICATION_ORG_FOOTPRINT_FR
   }
 
   // Get stats for user changes
