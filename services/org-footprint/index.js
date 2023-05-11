@@ -3,12 +3,21 @@ require('dotenv-safe').config({
   example: '.env.example',
 })
 
-const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
+const {
+  DB_PASS: rootPass,
+  DB_URL: url,
+  DB_NAME: databaseName,
+  NOTIFICATION_API_KEY,
+  NOTIFICATION_API_URL,
+} = process.env
 
 const { ensure } = require('arango-tools')
+const { NotifyClient } = require('notifications-node-client')
 const { databaseOptions } = require('./database-options')
 
 const { orgFootprintService } = require('./src')
+
+const notifyClient = new NotifyClient(NOTIFICATION_API_URL, NOTIFICATION_API_KEY)
 
 ;(async () => {
   // Generate Database information
@@ -20,5 +29,5 @@ const { orgFootprintService } = require('./src')
     options: databaseOptions({ rootPass }),
   })
 
-  await orgFootprintService({ query, log: console.log })
+  await orgFootprintService({ query, log: console.log, notifyClient })
 })()

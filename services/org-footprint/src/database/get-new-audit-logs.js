@@ -7,7 +7,7 @@ const getNewAuditLogs = async ({ query, orgKey, days = 1 }) => {
         let currentTime = DATE_NOW()
         FOR log IN auditLogs
             let logTime = DATE_TIMESTAMP(log.timestamp)
-            FILTER log.orgKey == ${orgKey}
+            FILTER log.target.organization.id == ${orgKey}
             FILTER (currentTime - logTime) < timeframe
             RETURN log
     `

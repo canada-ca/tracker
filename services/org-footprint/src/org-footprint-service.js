@@ -1,7 +1,7 @@
-const { getOrgAdmins, getAllOrgKeys, getNewAuditLogs } = require('./database')
-const { notifyClient, sendOrgFootprintEmail } = require('./notify')
+const { getOrgAdmins, getAllOrgKeys, getNewAuditLogs, getBilingualOrgNames } = require('./database')
+const { sendOrgFootprintEmail } = require('./notify')
 
-const orgFootprintService = async ({ query, log }) => {
+const orgFootprintService = async ({ query, _log, notifyClient }) => {
   // get list of all orgs
   const orgKeys = await getAllOrgKeys({ query })
   for (const orgKey of orgKeys) {
@@ -10,13 +10,13 @@ const orgFootprintService = async ({ query, log }) => {
     // if new audit logs exist
     if (auditLogs.length > 0) {
       // get list of org admins
+      const orgNames = await getBilingualOrgNames({ query, orgKey })
       const orgAdmins = await getOrgAdmins({ query, orgKey })
       // if org admins exist
       if (orgAdmins.length > 0) {
         // send email to org admins
         for (const user of orgAdmins) {
-          log(`Sending email to ${user.email}`)
-          await sendOrgFootprintEmail({ notifyClient, user, auditLogs })
+          await sendOrgFootprintEmail({ notifyClient, user, auditLogs, orgNames })
         }
       }
     }
