@@ -17,7 +17,7 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
   const domainsRemoved = auditLogs.filter((log) => log.action === 'remove' && log.target.resourceType === 'domain')
 
   try {
-    await notifyClient.sendEmail(templateId, user.email, {
+    await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
         display_name: user.displayName,
         organization_name: user.preferredLang === 'french' ? orgNames.fr : orgNames.en,
