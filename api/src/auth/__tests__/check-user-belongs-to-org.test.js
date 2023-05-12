@@ -1,18 +1,18 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { setupI18n } from '@lingui/core'
 
-import {checkUserBelongsToOrg} from '../check-user-belongs-to-org'
+import { checkUserBelongsToOrg } from '../check-user-belongs-to-org'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the checkUserBelongsToOrg function', () => {
   describe('given a successful call', () => {
     let query, drop, truncate, collections, user, org
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -68,8 +68,7 @@ describe('given the checkUserBelongsToOrg function', () => {
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
-          permission: 'admin',
-          owner: true,
+          permission: 'owner',
         })
       })
       it('returns true', async () => {
@@ -78,7 +77,7 @@ describe('given the checkUserBelongsToOrg function', () => {
           userKey: user._key,
         })
 
-        const result = await testCheckUserBelongsToOrg({orgId: org._id})
+        const result = await testCheckUserBelongsToOrg({ orgId: org._id })
 
         expect(result).toEqual(true)
       })
@@ -90,7 +89,7 @@ describe('given the checkUserBelongsToOrg function', () => {
           userKey: user._key,
         })
 
-        const result = await testCheckUserBelongsToOrg({orgId: org._id})
+        const result = await testCheckUserBelongsToOrg({ orgId: org._id })
 
         expect(result).toEqual(false)
       })
@@ -111,7 +110,7 @@ describe('given the checkUserBelongsToOrg function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
+            en: { plurals: {} },
           },
           locales: ['en'],
           messages: {
@@ -121,9 +120,7 @@ describe('given the checkUserBelongsToOrg function', () => {
       })
       describe('database error occurs', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
             i18n,
@@ -132,13 +129,9 @@ describe('given the checkUserBelongsToOrg function', () => {
           })
 
           try {
-            await testCheckUserBelongsToOrg({orgId: '123'})
+            await testCheckUserBelongsToOrg({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `Unable to load affiliation information. Please try again.`,
-              ),
-            )
+            expect(err).toEqual(new Error(`Unable to load affiliation information. Please try again.`))
           }
           expect(consoleOutput).toEqual([
             `Database error when checking to see if user: 123 belongs to org: 123: Error: Database error occurred`,
@@ -151,7 +144,7 @@ describe('given the checkUserBelongsToOrg function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            fr: {plurals: {}},
+            fr: { plurals: {} },
           },
           locales: ['fr'],
           messages: {
@@ -161,9 +154,7 @@ describe('given the checkUserBelongsToOrg function', () => {
       })
       describe('database error occurs', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
             i18n,
@@ -172,13 +163,9 @@ describe('given the checkUserBelongsToOrg function', () => {
           })
 
           try {
-            await testCheckUserBelongsToOrg({orgId: '123'})
+            await testCheckUserBelongsToOrg({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `Impossible de charger les informations d'affiliation. Veuillez réessayer.`,
-              ),
-            )
+            expect(err).toEqual(new Error(`Impossible de charger les informations d'affiliation. Veuillez réessayer.`))
           }
           expect(consoleOutput).toEqual([
             `Database error when checking to see if user: 123 belongs to org: 123: Error: Database error occurred`,

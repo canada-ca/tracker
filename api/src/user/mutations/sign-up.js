@@ -202,7 +202,6 @@ export const signUp = new mutationWithClientMutationId({
               _from: ${checkOrg._id},
               _to: ${insertedUser._id},
               permission: ${tokenRequestedRole},
-              owner: false
             } INTO affiliations
           `,
         )
