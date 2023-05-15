@@ -6,6 +6,10 @@ const isInsiderUser = ({ userName, insideUser }) => {
   return userName.endsWith('@tbs-sct.gc.ca') || insideUser
 }
 
+export function ABTestVariant({ children }) {
+  return <>{children}</>
+}
+
 export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
   const { currentUser } = useUserVar()
   let childIndex = 0
@@ -32,17 +36,16 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
       insideUser: currentUser?.insideUser || false,
     })
   ) {
-    childIndex = children.findIndex(
-      (variant) => variant.props.name === insiderVariantName,
-    )
+    childIndex = children.findIndex((variant) => variant.props.name === insiderVariantName)
   } else {
-    childIndex = children.findIndex(
-      (variant) => variant.props.name !== insiderVariantName,
-    )
+    childIndex = children.findIndex((variant) => variant.props.name !== insiderVariantName)
   }
   return <>{children[childIndex]}</>
 }
 
+ABTestVariant.propTypes = {
+  children: any,
+}
 ABTestingWrapper.propTypes = {
   insiderVariantName: string,
   children: any,
