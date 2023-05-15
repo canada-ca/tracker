@@ -261,8 +261,12 @@ msgid "An error occurred while updating your email address."
 msgstr "An error occurred while updating your email address."
 
 #: src/user/InsideUserSwitch.js:19
-msgid "An error occurred while updating your insider preference."
-msgstr "An error occurred while updating your insider preference."
+msgid "An error occurred while updating your inside user preference."
+msgstr "An error occurred while updating your inside user preference."
+
+#: src/user/InsideUserSwitch.js:19
+#~ msgid "An error occurred while updating your insider preference."
+#~ msgstr "An error occurred while updating your insider preference."
 
 #: src/user/EditableUserLanguage.js:20
 msgid "An error occurred while updating your language."
@@ -411,7 +415,7 @@ msgstr "By default our scanners check domains ending in “.gc.ca” and “.can
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
-#: src/admin/SuperAdminUserList.js:432
+#: src/admin/SuperAdminUserList.js:434
 #: src/user/UserPage.js:289
 msgid "Cancel"
 msgstr "Cancel"
@@ -513,8 +517,8 @@ msgstr "Clear"
 msgid "Close"
 msgstr "Close"
 
-#: src/admin/SuperAdminUserList.js:369
-#: src/admin/SuperAdminUserList.js:402
+#: src/admin/SuperAdminUserList.js:371
+#: src/admin/SuperAdminUserList.js:404
 #: src/user/UserPage.js:229
 #: src/user/UserPage.js:260
 msgid "Close Account"
@@ -1154,7 +1158,7 @@ msgid "English"
 msgstr "English"
 
 #: src/admin/OrganizationInformation.js:501
-#: src/admin/SuperAdminUserList.js:413
+#: src/admin/SuperAdminUserList.js:415
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 
@@ -1814,18 +1818,23 @@ msgstr "Informative tags highlight relevant configuration details, but are not a
 msgid "Initiated By"
 msgstr "Initiated By"
 
-#: src/user/InsideUserSwitch.js:83
-#~ msgid "Inside User"
-#~ msgstr "Inside User"
+#: src/admin/SuperAdminUserList.js:151
+#: src/admin/SuperAdminUserList.js:351
+msgid "Inside User"
+msgstr "Inside User"
+
+#: src/user/InsideUserSwitch.js:31
+msgid "Inside user status changed"
+msgstr "Inside user status changed"
 
 #: src/admin/SuperAdminUserList.js:151
 #: src/admin/SuperAdminUserList.js:350
-msgid "Insider"
-msgstr "Insider"
+#~ msgid "Insider"
+#~ msgstr "Insider"
 
 #: src/user/InsideUserSwitch.js:31
-msgid "Insider status changed"
-msgstr "Insider status changed"
+#~ msgid "Insider status changed"
+#~ msgstr "Insider status changed"
 
 #: src/termsConditions/TermsConditionsPage.js:132
 msgid "Intellectual Property, Copyright and Trademarks"
@@ -2890,7 +2899,7 @@ msgstr "Search for a domain"
 msgid "Search for a tagged organization"
 msgstr "Search for a tagged organization"
 
-#: src/admin/SuperAdminUserList.js:471
+#: src/admin/SuperAdminUserList.js:473
 msgid "Search for a user (email)"
 msgstr "Search for a user (email)"
 
@@ -3416,7 +3425,7 @@ msgstr "These metrics are an important first step in securing your services and 
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 
-#: src/admin/SuperAdminUserList.js:406
+#: src/admin/SuperAdminUserList.js:408
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 
@@ -3670,8 +3679,12 @@ msgid "Unable to update to your display name, please try again."
 msgstr "Unable to update to your display name, please try again."
 
 #: src/user/InsideUserSwitch.js:46
-msgid "Unable to update to your insider status, please try again."
-msgstr "Unable to update to your insider status, please try again."
+msgid "Unable to update to your inside user status, please try again."
+msgstr "Unable to update to your inside user status, please try again."
+
+#: src/user/InsideUserSwitch.js:46
+#~ msgid "Unable to update to your insider status, please try again."
+#~ msgstr "Unable to update to your insider status, please try again."
 
 #: src/user/EditableUserLanguage.js:42
 msgid "Unable to update to your preferred language, please try again."
@@ -3764,7 +3777,7 @@ msgstr "User"
 msgid "User Affiliations"
 msgstr "User Affiliations"
 
-#: src/admin/SuperAdminUserList.js:421
+#: src/admin/SuperAdminUserList.js:423
 #: src/user/UserPage.js:278
 msgid "User Email"
 msgstr "User Email"
@@ -4070,8 +4083,12 @@ msgid "You have successfully updated your email."
 msgstr "You have successfully updated your email."
 
 #: src/user/InsideUserSwitch.js:32
-msgid "You have successfully updated your insider preference."
-msgstr "You have successfully updated your insider preference."
+msgid "You have successfully updated your inside user preference."
+msgstr "You have successfully updated your inside user preference."
+
+#: src/user/InsideUserSwitch.js:32
+#~ msgid "You have successfully updated your insider preference."
+#~ msgstr "You have successfully updated your insider preference."
 
 #: src/user/EditableUserPassword.js:55
 msgid "You have successfully updated your password."
