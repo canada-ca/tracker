@@ -27,6 +27,7 @@ import {
   notifyClient,
   sendAuthEmail,
   sendAuthTextMsg,
+  sendInviteRequestEmail,
   sendOrgInviteCreateAccount,
   sendOrgInviteEmail,
   sendPasswordResetEmail,
@@ -117,6 +118,7 @@ export async function createContext({
     notify: {
       sendAuthEmail: sendAuthEmail({ notifyClient, i18n }),
       sendAuthTextMsg: sendAuthTextMsg({ notifyClient, i18n }),
+      sendInviteRequestEmail: sendInviteRequestEmail({ notifyClient, i18n }),
       sendOrgInviteCreateAccount: sendOrgInviteCreateAccount({
         notifyClient,
         i18n,

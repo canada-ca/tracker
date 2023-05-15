@@ -362,6 +362,9 @@ export const getTypeNames = () => gql`
 
   # An enum used to assign, and test users roles.
   enum RoleEnums {
+    # A user who has requested an invite to an organization.
+    PENDING
+
     # A user who has been given access to view an organization.
     USER
 
@@ -819,6 +822,9 @@ export const getTypeNames = () => gql`
 
       # String used to search for affiliated users.
       search: String
+
+      # Exclude (false) or include only (true) pending affiliations in the results.
+      includePending: Boolean
 
       # Returns the items in the list that come after the specified cursor.
       after: String
@@ -2761,6 +2767,9 @@ export const getTypeNames = () => gql`
     # This mutation allows admins or higher to remove users from any organizations they belong to.
     removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
 
+    # This mutation allows users to request to join an organization.
+    requestOrgAffiliation(input: RequestOrgAffiliationInput!): RequestOrgAffiliationPayload
+
     # This mutation allows a user to transfer org ownership to another user in the given org.
     transferOrgOwnership(input: TransferOrgOwnershipInput!): TransferOrgOwnershipPayload
 
@@ -2885,8 +2894,6 @@ export const getTypeNames = () => gql`
     # The organization you wish to invite the user to.
     orgId: ID!
 
-    # The language in which the email will be sent in.
-    preferredLang: LanguageEnums!
     clientMutationId: String
   }
 
@@ -2934,6 +2941,18 @@ export const getTypeNames = () => gql`
     userId: ID!
 
     # The organization that the user is to be removed from.
+    orgId: ID!
+    clientMutationId: String
+  }
+
+  type RequestOrgAffiliationPayload {
+    # 'InviteUserToOrgUnion' returning either a 'InviteUserToOrgResult', or 'InviteUserToOrgError' object.
+    result: InviteUserToOrgUnion
+    clientMutationId: String
+  }
+
+  input RequestOrgAffiliationInput {
+    # The organization you wish to invite the user to.
     orgId: ID!
     clientMutationId: String
   }

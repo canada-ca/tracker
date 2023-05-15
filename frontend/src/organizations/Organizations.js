@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Heading, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, IconButton, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -14,13 +14,20 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
+import { UserIcon } from '../theme/Icons'
+import { RequestOrgInviteModal } from './RequestOrgInviteModal'
+import { useUserVar } from '../utilities/userState'
+import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export default function Organizations() {
+  const { isLoggedIn } = useUserVar()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [orgsPerPage, setOrgsPerPage] = useState(10)
+  const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
+  const [orgInfo, setOrgInfo] = useState({})
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -30,29 +37,20 @@ export default function Organizations() {
 
   const { isOpen, onToggle } = useDisclosure()
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    variables: {
-      field: orderField,
-      direction: orderDirection,
-      search: debouncedSearchTerm,
-      includeSuperAdminOrg: false,
-    },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    recordsPerPage: orgsPerPage,
-    relayRoot: 'findMyOrganizations',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      variables: {
+        field: orderField,
+        direction: orderDirection,
+        search: debouncedSearchTerm,
+        includeSuperAdminOrg: false,
+      },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+      recordsPerPage: orgsPerPage,
+      relayRoot: 'findMyOrganizations',
+    })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -83,20 +81,43 @@ export default function Organizations() {
         )}
         mb="4"
       >
-        {({ name, slug, acronym, domainCount, verified, summaries }, index) => (
-          <ErrorBoundary
-            key={`${slug}:${index}`}
-            FallbackComponent={ErrorFallbackMessage}
-          >
-            <OrganizationCard
-              slug={slug}
-              name={name}
-              acronym={acronym}
-              domainCount={domainCount}
-              verified={verified}
-              summaries={summaries}
-              mb="3"
-            />
+        {({ id, name, slug, acronym, domainCount, verified, summaries }, index) => (
+          <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+            <Flex align="center">
+              <OrganizationCard
+                slug={slug}
+                name={name}
+                acronym={acronym}
+                domainCount={domainCount}
+                verified={verified}
+                summaries={summaries}
+                mb="3"
+                mr="2"
+                w="100%"
+              />
+              <ABTestingWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  {isLoggedIn && (
+                    <>
+                      <IconButton
+                        variant="primary"
+                        icon={<UserIcon color="white" boxSize="icons.md" />}
+                        onClick={() => {
+                          setOrgInfo({ id, name })
+                          onOpen()
+                        }}
+                      />
+                      <RequestOrgInviteModal
+                        isOpen={inviteRequestIsOpen}
+                        onClose={onClose}
+                        orgId={orgInfo.id}
+                        orgName={orgInfo.name}
+                      />
+                    </>
+                  )}
+                </ABTestVariant>
+              </ABTestingWrapper>
+            </Flex>
           </ErrorBoundary>
         )}
       </ListOf>
@@ -114,10 +135,7 @@ export default function Organizations() {
           title={t`Organization Name`}
           info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
         />
-        <InfoBox
-          title={t`Services`}
-          info={t`Shows the number of domains that the organization is in control of.`}
-        />
+        <InfoBox title={t`Services`} info={t`Shows the number of domains that the organization is in control of.`} />
         <InfoBox
           title={t`HTTPS Configured`}
           info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS`}
@@ -127,10 +145,7 @@ export default function Organizations() {
           info={t`Shows the percentage of domains which have a valid DMARC policy configuration.`}
         />
         <Divider borderColor="gray.500" mb={4} />
-        <Trans>
-          Further details for each organization can be found by clicking on its
-          row.
-        </Trans>
+        <Trans>Further details for each organization can be found by clicking on its row.</Trans>
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>

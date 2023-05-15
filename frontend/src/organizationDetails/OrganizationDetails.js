@@ -1,8 +1,22 @@
 import React, { useEffect } from 'react'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import { Box, Flex, Heading, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
+import { UserIcon } from '../theme/Icons'
 import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -16,10 +30,15 @@ import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { GET_ORGANIZATION_DOMAINS_STATUSES_CSV, ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { ExportButton } from '../components/ExportButton'
+import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
+import { useUserVar } from '../utilities/userState'
+import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export default function OrganizationDetails() {
+  const { isLoggedIn } = useUserVar()
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
   const defaultActiveTab = tabNames[0]
 
@@ -83,25 +102,29 @@ export default function OrganizationDetails() {
           order={{ base: 2, md: 1 }}
           flexBasis={{ base: '100%', md: 'auto' }}
         >
-          {orgName}
-          {data?.organization?.verified && (
-            <>
-              {' '}
-              <CheckCircleIcon color="blue.500" boxSize="icons.lg" />
-            </>
-          )}
+          <Flex align="center">
+            {orgName}
+            {data?.organization?.verified && <CheckCircleIcon ml="1" color="blue.500" boxSize="icons.lg" />}
+          </Flex>
         </Heading>
-        <ExportButton
-          order={{ base: 2, md: 1 }}
-          ml="auto"
-          mt={{ base: '4', md: 0 }}
-          fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
-          dataFunction={async () => {
-            const result = await getOrgDomainStatuses()
-            return result.data?.findOrganizationBySlug?.toCsv
-          }}
-          isLoading={orgDomainStatusesLoading}
-        />
+        <ABTestingWrapper insiderVariantName="B">
+          <ABTestVariant name="B">
+            {isLoggedIn && (
+              <>
+                <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
+                  <Trans>Request Invite</Trans>
+                  <UserIcon ml="1" color="white" boxSize="icons.md" />
+                </Button>
+                <RequestOrgInviteModal
+                  onClose={onClose}
+                  isOpen={isOpen}
+                  orgId={data?.organization?.id}
+                  orgName={data?.organization?.name}
+                />
+              </>
+            )}
+          </ABTestVariant>
+        </ABTestingWrapper>
       </Flex>
       <Tabs
         isFitted
@@ -142,13 +165,24 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationDomains orgSlug={orgSlug} domainsPerPage={10} />
+              <ExportButton
+                ml="auto"
+                my="2"
+                mt={{ base: '4', md: 0 }}
+                fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
+                dataFunction={async () => {
+                  const result = await getOrgDomainStatuses()
+                  return result.data?.findOrganizationBySlug?.toCsv
+                }}
+                isLoading={orgDomainStatusesLoading}
+              />
+              <OrganizationDomains orgSlug={orgSlug} />
             </ErrorBoundary>
           </TabPanel>
           {!isNaN(data?.organization?.affiliations?.totalCount) && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                <OrganizationAffiliations orgSlug={orgSlug} usersPerPage={10} />
+                <OrganizationAffiliations orgSlug={orgSlug} />
               </ErrorBoundary>
             </TabPanel>
           )}
