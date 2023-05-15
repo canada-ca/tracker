@@ -21,7 +21,8 @@ export const loadMyTrackerByUserId =
                     id: domain._key,
                     _type: "domain",
                     "phase": domain.phase,
-                    "httpsStatus": domain.status.https
+                    "https": domain.status.https,
+                    "dmarc": domain.status.dmarc
                 }
         )
         RETURN { "domains": favDomains }
@@ -49,6 +50,11 @@ export const loadMyTrackerByUserId =
         fail: 0,
         total: 0,
       },
+      dmarc: {
+        pass: 0,
+        fail: 0,
+        total: 0,
+      },
       dmarc_phase: {
         not_implemented: 0,
         assess: 0,
@@ -59,15 +65,20 @@ export const loadMyTrackerByUserId =
       },
     }
 
-    domainsInfo.domains.forEach(({ phase, httpsStatus }) => {
+    domainsInfo.domains.forEach(({ phase, https, dmarc }) => {
       // calculate https summary
-      if (httpsStatus === 'pass') {
+      if (https === 'pass') {
         returnSummaries.https.pass++
         returnSummaries.https.total++
-      } else if (httpsStatus === 'fail') {
+      } else if (https === 'fail') {
         returnSummaries.https.fail++
         returnSummaries.https.total++
       }
+
+      // calculate DMARC summary
+      if (dmarc === 'pass') returnSummaries.dmarc.pass++
+      else if (dmarc === 'fail') returnSummaries.dmarc.fail++
+      returnSummaries.dmarc.total++
 
       // calculate dmarcPhase summary
       if (phase === 'not implemented') returnSummaries.dmarc_phase.not_implemented++

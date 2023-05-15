@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { Guidance, Status } from './fragments'
+import { Guidance, Summary, Status } from './fragments'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations(
@@ -56,25 +56,40 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
-export const HTTPS_AND_DMARC_SUMMARY = gql`
+export const LANDING_PAGE_SUMMARIES = gql`
   query LandingPageSummaries {
+    # Tier 1
     httpsSummary {
-      total
-      categories {
-        name
-        count
-        percentage
-      }
+      ...RequiredSummaryFields
+    }
+    dmarcSummary {
+      ...RequiredSummaryFields
+    }
+    # Tier 2
+    webConnectionsSummary {
+      ...RequiredSummaryFields
+    }
+    sslSummary {
+      ...RequiredSummaryFields
+    }
+    spfSummary {
+      ...RequiredSummaryFields
+    }
+    dkimSummary {
+      ...RequiredSummaryFields
     }
     dmarcPhaseSummary {
-      total
-      categories {
-        name
-        count
-        percentage
-      }
+      ...RequiredSummaryFields
+    }
+    # Tier 3
+    webSummary {
+      ...RequiredSummaryFields
+    }
+    mailSummary {
+      ...RequiredSummaryFields
     }
   }
+  ${Summary.fragments.requiredFields}
 `
 
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
@@ -463,24 +478,42 @@ export const ORG_DETAILS_PAGE = gql`
       verified
       summaries {
         https {
-          total
-          categories {
-            name
-            count
-            percentage
-          }
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
+        }
+        httpsIncludeHidden {
+          ...RequiredSummaryFields
+        }
+        dmarcIncludeHidden {
+          ...RequiredSummaryFields
+        }
+        dkim {
+          ...RequiredSummaryFields
+        }
+        spf {
+          ...RequiredSummaryFields
+        }
+        ssl {
+          ...RequiredSummaryFields
+        }
+        webConnections {
+          ...RequiredSummaryFields
         }
         dmarcPhase {
-          total
-          categories {
-            name
-            count
-            percentage
-          }
+          ...RequiredSummaryFields
+        }
+        web {
+          ...RequiredSummaryFields
+        }
+        mail {
+          ...RequiredSummaryFields
         }
       }
     }
   }
+  ${Summary.fragments.requiredFields}
 `
 
 export const PAGINATED_ORG_DOMAINS = gql`
@@ -985,25 +1018,18 @@ export const MY_TRACKER_SUMMARY = gql`
     findMyTracker {
       summaries {
         https {
-          categories {
-            name
-            count
-            percentage
-          }
-          total
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
         }
         dmarcPhase {
-          categories {
-            name
-            count
-            percentage
-          }
-          total
+          ...RequiredSummaryFields
         }
       }
-      domainCount
     }
   }
+  ${Summary.fragments.requiredFields}
 `
 
 export const MY_TRACKER_DOMAINS = gql`

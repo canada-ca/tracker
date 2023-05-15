@@ -1,24 +1,28 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
 
-import { SummaryGroup } from '../summaries/SummaryGroup'
-import { HTTPS_AND_DMARC_SUMMARY } from '../graphql/queries'
-import { Box } from '@chakra-ui/react'
+import { LANDING_PAGE_SUMMARIES } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
+import { TieredSummaries } from '../summaries/TieredSummaries'
 
 export function LandingPageSummaries() {
-  const { loading, error, data } = useQuery(HTTPS_AND_DMARC_SUMMARY)
+  const { loading, error, data } = useQuery(LANDING_PAGE_SUMMARIES)
 
   if (loading) return <LoadingMessage />
   if (error) return <ErrorFallbackMessage error={error} />
 
-  return (
-    <Box w="100%">
-      <SummaryGroup
-        dmarcPhases={data?.dmarcPhaseSummary}
-        https={data?.httpsSummary}
-      />
-    </Box>
-  )
+  const summaries = {
+    https: data?.httpsSummary,
+    dmarc: data?.dmarcSummary,
+    webConnections: data?.webConnectionsSummary,
+    ssl: data?.sslSummary,
+    spf: data?.spfSummary,
+    dkim: data?.dkimSummary,
+    dmarcPhase: data?.dmarcPhaseSummary,
+    web: data?.webSummary,
+    mail: data?.mailSummary,
+  }
+
+  return <TieredSummaries summaries={summaries} />
 }
