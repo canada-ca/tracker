@@ -124,10 +124,16 @@ export const GET_ONE_TIME_SSL_SCANS = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
-  query PaginatedOrgAffiliations($orgSlug: Slug!, $first: Int, $after: String, $search: String) {
+  query PaginatedOrgAffiliations(
+    $orgSlug: Slug!
+    $first: Int
+    $after: String
+    $search: String
+    $includePending: Boolean
+  ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after, search: $search) {
+      affiliations(first: $first, after: $after, search: $search, includePending: $includePending) {
         edges {
           node {
             id

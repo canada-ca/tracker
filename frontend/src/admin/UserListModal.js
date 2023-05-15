@@ -38,10 +38,13 @@ export function UserListModal({
   const toast = useToast()
   const initialFocusRef = useRef()
 
-  const [addUser, { loading: _addUserLoading }] = useMutation(INVITE_USER_TO_ORG, {
-    refetchQueries: ['PaginatedOrgAffiliations', 'FindAuditLogs'],
+  const refetchQueriesValues = {
+    refetchQueries: ['PaginatedOrgAffiliations', 'FindAuditLogs', 'FindMyUsers'],
     awaitRefetchQueries: true,
+  }
 
+  const [addUser, { loading: _addUserLoading }] = useMutation(INVITE_USER_TO_ORG, {
+    ...refetchQueriesValues,
     onError(error) {
       toast({
         title: t`An error occurred.`,
@@ -86,9 +89,7 @@ export function UserListModal({
   })
 
   const [updateUserRole, { loading: _updateLoading, error: _updateError }] = useMutation(UPDATE_USER_ROLE, {
-    refetchQueries: ['FindMyUsers', 'FindAuditLogs'],
-    awaitRefetchQueries: true,
-
+    ...refetchQueriesValues,
     onError(updateError) {
       toast({
         title: updateError.message,
@@ -133,9 +134,7 @@ export function UserListModal({
   })
 
   const [removeUser, { loading: _removeUserLoading }] = useMutation(REMOVE_USER_FROM_ORG, {
-    refetchQueries: ['FindMyUsers', 'FindAuditLogs'],
-    awaitRefetchQueries: true,
-
+    ...refetchQueriesValues,
     onError(error) {
       toast({
         title: t`An error occurred.`,
@@ -253,11 +252,12 @@ export function UserListModal({
                       defaultValue={editingUserRole}
                       onChange={handleChange}
                     >
-                      {(editingUserRole === 'USER' ||
+                      {editingUserRole === 'PENDING' && <option value="PENDING">{t`PENDING`}</option>}
+                      {(['PENDING', 'USER'].includes(editingUserRole) ||
                         (permission === 'SUPER_ADMIN' && editingUserRole === 'ADMIN')) && (
                         <option value="USER">{t`USER`}</option>
                       )}
-                      {(editingUserRole === 'USER' || editingUserRole === 'ADMIN') && (
+                      {['PENDING', 'USER', 'ADMIN'].includes(editingUserRole) && (
                         <option value="ADMIN">{t`ADMIN`}</option>
                       )}
                       {(editingUserRole === 'SUPER_ADMIN' ||

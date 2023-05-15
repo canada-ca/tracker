@@ -4,11 +4,7 @@ import { string } from 'prop-types'
 
 export function UserCard({ userName, displayName, role, ...props }) {
   return (
-    <Grid
-      templateColumns={{ base: 'auto', md: '45% auto auto' }}
-      columnGap="1.5rem"
-      {...props}
-    >
+    <Grid templateColumns={{ base: 'auto', md: '45% auto auto' }} columnGap="1.5rem" {...props}>
       <Text fontSize="md" wordBreak="break-all" ml={{ md: '1rem' }}>
         {userName}
       </Text>
@@ -16,7 +12,7 @@ export function UserCard({ userName, displayName, role, ...props }) {
       {role && (
         <Badge
           variant="solid"
-          bg={role === 'USER' ? 'primary' : role === 'ADMIN' ? 'info' : 'weak'}
+          bg={role === 'USER' ? 'primary' : role === 'ADMIN' ? 'info' : role === 'PENDING' ? 'strong' : 'weak'}
           pt={1}
           mr={{ md: '1rem' }}
           justifySelf={{ base: 'start', md: 'end' }}

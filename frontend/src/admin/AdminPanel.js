@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from '@chakra-ui/react'
+import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -36,17 +29,13 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <AdminDomains
-                permission={permission}
-                orgSlug={orgSlug}
-                domainsPerPage={10}
-                orgId={orgId}
-              />
+              <AdminDomains permission={permission} orgSlug={orgSlug} domainsPerPage={10} orgId={orgId} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <UserList
+                includePending={true}
                 activeMenu={activeMenu}
                 permission={permission}
                 orgSlug={orgSlug}

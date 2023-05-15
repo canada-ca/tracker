@@ -632,4 +632,20 @@ export const REMOVE_ORGANIZATIONS_DOMAINS = gql`
   }
 `
 
+export const REQUEST_INVITE_TO_ORG = gql`
+  mutation RequestInviteToOrg($orgId: ID!) {
+    requestOrgAffiliation(input: { orgId: $orgId }) {
+      result {
+        ... on InviteUserToOrgResult {
+          status
+        }
+        ... on AffiliationError {
+          code
+          description
+        }
+      }
+    }
+  }
+`
+
 export default ''
