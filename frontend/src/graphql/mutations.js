@@ -35,18 +35,8 @@ export const SIGN_UP = gql`
 `
 
 export const SIGN_IN = gql`
-  mutation signIn(
-    $userName: EmailAddress!
-    $password: String!
-    $rememberMe: Boolean
-  ) {
-    signIn(
-      input: {
-        userName: $userName
-        password: $password
-        rememberMe: $rememberMe
-      }
-    ) {
+  mutation signIn($userName: EmailAddress!, $password: String!, $rememberMe: Boolean) {
+    signIn(input: { userName: $userName, password: $password, rememberMe: $rememberMe }) {
       result {
         ... on TFASignInResult {
           authenticateToken
@@ -66,16 +56,8 @@ export const SIGN_IN = gql`
 `
 
 export const AUTHENTICATE = gql`
-  mutation authenticate(
-    $authenticationCode: Int!
-    $authenticateToken: String!
-  ) {
-    authenticate(
-      input: {
-        authenticationCode: $authenticationCode
-        authenticateToken: $authenticateToken
-      }
-    ) {
+  mutation authenticate($authenticationCode: Int!, $authenticateToken: String!) {
+    authenticate(input: { authenticationCode: $authenticationCode, authenticateToken: $authenticateToken }) {
       result {
         ... on AuthResult {
           ...RequiredAuthResultFields
@@ -91,18 +73,8 @@ export const AUTHENTICATE = gql`
 `
 
 export const RESET_PASSWORD = gql`
-  mutation ResetPassword(
-    $password: String!
-    $confirmPassword: String!
-    $resetToken: String!
-  ) {
-    resetPassword(
-      input: {
-        password: $password
-        confirmPassword: $confirmPassword
-        resetToken: $resetToken
-      }
-    ) {
+  mutation ResetPassword($password: String!, $confirmPassword: String!, $resetToken: String!) {
+    resetPassword(input: { password: $password, confirmPassword: $confirmPassword, resetToken: $resetToken }) {
       result {
         ... on ResetPasswordError {
           code
@@ -125,11 +97,7 @@ export const SEND_PASSWORD_RESET_LINK = gql`
 `
 
 export const UPDATE_USER_ROLE = gql`
-  mutation UpdateUserRole(
-    $userName: EmailAddress!
-    $orgId: ID!
-    $role: RoleEnums!
-  ) {
+  mutation UpdateUserRole($userName: EmailAddress!, $orgId: ID!, $role: RoleEnums!) {
     updateUserRole(input: { userName: $userName, orgId: $orgId, role: $role }) {
       result {
         ... on UpdateUserRoleResult {
@@ -183,11 +151,7 @@ export const UPDATE_USER_PROFILE = gql`
 `
 
 export const UPDATE_USER_PASSWORD = gql`
-  mutation UpdateUserPassword(
-    $currentPassword: String!
-    $updatedPassword: String!
-    $updatedPasswordConfirm: String!
-  ) {
+  mutation UpdateUserPassword($currentPassword: String!, $updatedPassword: String!, $updatedPasswordConfirm: String!) {
     updateUserPassword(
       input: {
         currentPassword: $currentPassword
@@ -241,14 +205,8 @@ export const CREATE_DOMAIN = gql`
 `
 
 export const REMOVE_DOMAIN = gql`
-  mutation RemoveDomain(
-    $domainId: ID!
-    $orgId: ID!
-    $reason: DomainRemovalReasonEnum!
-  ) {
-    removeDomain(
-      input: { domainId: $domainId, orgId: $orgId, reason: $reason }
-    ) {
+  mutation RemoveDomain($domainId: ID!, $orgId: ID!, $reason: DomainRemovalReasonEnum!) {
+    removeDomain(input: { domainId: $domainId, orgId: $orgId, reason: $reason }) {
       result {
         ... on DomainResult {
           status
@@ -332,20 +290,8 @@ export const UPDATE_DOMAIN = gql`
 `
 
 export const INVITE_USER_TO_ORG = gql`
-  mutation InviteUserToOrg(
-    $userName: EmailAddress!
-    $requestedRole: RoleEnums!
-    $orgId: ID!
-    $preferredLang: LanguageEnums!
-  ) {
-    inviteUserToOrg(
-      input: {
-        userName: $userName
-        requestedRole: $requestedRole
-        orgId: $orgId
-        preferredLang: $preferredLang
-      }
-    ) {
+  mutation InviteUserToOrg($userName: EmailAddress!, $requestedRole: RoleEnums!, $orgId: ID!) {
+    inviteUserToOrg(input: { userName: $userName, requestedRole: $requestedRole, orgId: $orgId }) {
       result {
         ... on InviteUserToOrgResult {
           status
@@ -671,12 +617,7 @@ export const REMOVE_ORGANIZATIONS_DOMAINS = gql`
     $audit: Boolean
   ) {
     removeOrganizationsDomains(
-      input: {
-        orgId: $orgId
-        domains: $domains
-        archiveDomains: $archiveDomains
-        audit: $audit
-      }
+      input: { orgId: $orgId, domains: $domains, archiveDomains: $archiveDomains, audit: $audit }
     ) {
       result {
         ... on DomainBulkResult {

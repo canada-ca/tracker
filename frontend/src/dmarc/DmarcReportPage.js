@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 
 import { TrackerTable } from '../components/TrackerTable'
-import { InfoBox, InfoPanel, InfoButton } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
@@ -42,7 +42,10 @@ export default function DmarcReportPage() {
     `${selectedPeriod}, ${selectedYear}`,
   )
 
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen: fullPassOpen, onToggle: fullPassToggle } = useDisclosure()
+  const { isOpen: failDkimOpen, onToggle: failDkimToggle } = useDisclosure()
+  const { isOpen: failSpfOpen, onToggle: failSpfToggle } = useDisclosure()
+  const { isOpen: failDmarcOpen, onToggle: failDmarcToggle } = useDisclosure()
 
   // Allows the use of forward/backward navigation
   if (selectedPeriod !== period) setSelectedPeriod(period)
@@ -214,6 +217,83 @@ export default function DmarcReportPage() {
     accessor: 'disposition',
   }
 
+  const glossary = {
+    sourceIpAddress: {
+      title: sourceIpAddress.Header,
+      info: t`The IP address of sending server.`,
+    },
+    envelopeFrom: {
+      title: envelopeFrom.Header,
+      info: t`Domain from Simple Mail Transfer Protocol (SMTP) banner message.`,
+    },
+    dkimDomains: {
+      title: dkimDomains.Header,
+      info: t`The domains used for DKIM validation.`,
+    },
+    dkimSelectors: {
+      title: dkimSelectors.Header,
+      info: t`Pointer to a DKIM public key record in DNS.`,
+    },
+    totalMessages: {
+      title: totalMessages.Header,
+      info: t`The Total Messages from this sender.`,
+    },
+    dnsHost: {
+      title: dnsHost.Header,
+      info: t`Host from reverse DNS of source IP address.`,
+    },
+    spfDomains: {
+      title: spfDomains.Header,
+      info: t`Domains used for SPF validation.`,
+    },
+    headerFrom: {
+      title: headerFrom.Header,
+      info: t`The address/domain used in the "From" field.`,
+    },
+    guidance: {
+      title: guidance.Header,
+      info: t`Details for a given guidance tag can be found on the wiki, see below.`,
+    },
+    spfAligned: {
+      title: spfAligned.Header,
+      info: t`Is SPF aligned. Can be true or false.`,
+    },
+    spfResults: {
+      title: spfResults.Header,
+      info: t`The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.`,
+    },
+    dkimAligned: {
+      title: dkimAligned.Header,
+      info: t`Is DKIM aligned. Can be true or false.`,
+    },
+    dkimResults: {
+      title: dkimResults.Header,
+      info: t`The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.`,
+    },
+    disposition: {
+      title: disposition.Header,
+      info: t`The DMARC enforcement action that the receiver took, either none, quarantine, or reject.`,
+    },
+  }
+
+  const generalGlossary = (
+    <>
+      <InfoBox
+        title={glossary.sourceIpAddress.title}
+        info={glossary.sourceIpAddress.info}
+      />
+      <InfoBox title={glossary.dnsHost.title} info={glossary.dnsHost.info} />
+      <InfoBox
+        title={glossary.envelopeFrom.title}
+        info={glossary.envelopeFrom.info}
+      />
+      <InfoBox
+        title={glossary.headerFrom.title}
+        info={glossary.headerFrom.info}
+      />
+    </>
+  )
+
   const dataToCsv = (columns, data) => {
     let csvOutput = columns.map((column) => column.Header).join(',')
     data.forEach((entry) => {
@@ -296,6 +376,7 @@ export default function DmarcReportPage() {
           exportDataFunction={() =>
             dataToCsv(dkimFailureColumns[0].columns, dkimFailureNodes)
           }
+          onToggle={failDkimToggle}
         />
       </ErrorBoundary>
     )
@@ -371,6 +452,7 @@ export default function DmarcReportPage() {
           exportDataFunction={() =>
             dataToCsv(fullPassColumns[0].columns, fullPassNodes)
           }
+          onToggle={fullPassToggle}
         />
       </ErrorBoundary>
     )
@@ -445,6 +527,7 @@ export default function DmarcReportPage() {
           exportDataFunction={() =>
             dataToCsv(spfFailureColumns[0].columns, spfFailureNodes)
           }
+          onToggle={failSpfToggle}
         />
       </ErrorBoundary>
     )
@@ -530,6 +613,7 @@ export default function DmarcReportPage() {
           exportDataFunction={() =>
             dataToCsv(dmarcFailureColumns[0].columns, dmarcFailureNodes)
           }
+          onToggle={failDmarcToggle}
         />
       </ErrorBoundary>
     )
@@ -630,61 +714,121 @@ export default function DmarcReportPage() {
       </Flex>
 
       {tableDisplay}
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
-      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+
+      <InfoPanel isOpen={fullPassOpen} onToggle={fullPassToggle}>
+        {generalGlossary}
         <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
+          title={glossary.spfDomains.title}
+          info={glossary.spfDomains.info}
         />
         <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
+          title={glossary.dkimDomains.title}
+          info={glossary.dkimDomains.info}
         />
         <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
+          title={glossary.dkimSelectors.title}
+          info={glossary.dkimSelectors.info}
         />
         <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
+          title={glossary.totalMessages.title}
+          info={glossary.totalMessages.info}
+        />
+        <Divider borderColor="gray.500" />
+        <Link
+          isExternal
+          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+        >
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
+
+      <InfoPanel isOpen={failDkimOpen} onToggle={failDkimToggle}>
+        {generalGlossary}
+        <InfoBox
+          title={glossary.dkimDomains.title}
+          info={glossary.dkimDomains.info}
         />
         <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
+          title={glossary.dkimSelectors.title}
+          info={glossary.dkimSelectors.info}
         />
         <InfoBox
-          title="DKIM Domains"
-          info="The domains used for DKIM validation."
+          title={glossary.dkimResults.title}
+          info={glossary.dkimResults.info}
         />
         <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
+          title={glossary.dkimAligned.title}
+          info={glossary.dkimAligned.info}
         />
         <InfoBox
-          title="DKIM Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
+          title={glossary.totalMessages.title}
+          info={glossary.totalMessages.info}
         />
         <InfoBox
-          title="DKIM Aligned"
-          info="Is DKIM aligned. Can be true or false."
+          title={glossary.guidance.title}
+          info={glossary.guidance.info}
         />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
+        <Divider borderColor="gray.500" />
+        <Link
+          isExternal
+          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+        >
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
+
+      <InfoPanel isOpen={failSpfOpen} onToggle={failSpfToggle}>
+        {generalGlossary}
         <InfoBox
-          title="SPF Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
+          title={glossary.spfDomains.title}
+          info={glossary.spfDomains.info}
         />
         <InfoBox
-          title="SPF Aligned"
-          info="Is SPF aligned. Can be true or false."
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="Disposition"
-          info="The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
+          title={glossary.spfResults.title}
+          info={glossary.spfResults.info}
         />
         <InfoBox
-          title="Guidance"
-          info="Details for a given guidance tag can be found on the wiki, see below."
+          title={glossary.spfAligned.title}
+          info={glossary.spfAligned.info}
+        />
+        <InfoBox
+          title={glossary.totalMessages.title}
+          info={glossary.totalMessages.info}
+        />
+        <InfoBox
+          title={glossary.guidance.title}
+          info={glossary.guidance.info}
+        />
+        <Divider borderColor="gray.500" />
+        <Link
+          isExternal
+          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
+        >
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
+
+      <InfoPanel isOpen={failDmarcOpen} onToggle={failDmarcToggle}>
+        {generalGlossary}
+        <InfoBox
+          title={glossary.spfDomains.title}
+          info={glossary.spfDomains.info}
+        />
+        <InfoBox
+          title={glossary.dkimDomains.title}
+          info={glossary.dkimDomains.info}
+        />
+        <InfoBox
+          title={glossary.dkimSelectors.title}
+          info={glossary.dkimSelectors.info}
+        />
+        <InfoBox
+          title={glossary.disposition.title}
+          info={glossary.disposition.info}
+        />
+        <InfoBox
+          title={glossary.totalMessages.title}
+          info={glossary.totalMessages.info}
         />
         <Divider borderColor="gray.500" />
         <Link

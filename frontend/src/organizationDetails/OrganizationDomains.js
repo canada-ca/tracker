@@ -20,7 +20,7 @@ import { ListOf } from '../components/ListOf'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { PAGINATED_ORG_DOMAINS as FORWARD, MY_TRACKER_DOMAINS } from '../graphql/queries'
@@ -80,6 +80,7 @@ export function OrganizationDomains({ orgSlug }) {
   const orderByOptions = [
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
+    { value: 'CERTIFICATES_STATUS', text: t`Certificates Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
     { value: 'CURVES_STATUS', text: t`Curves Status` },
     { value: 'PROTOCOLS_STATUS', text: t`Protocols Status` },
@@ -275,6 +276,7 @@ export function OrganizationDomains({ orgSlug }) {
     <Box>
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
+        <InfoBox title={t`Certificates`} info={t`Shows if the domain has a valid SSL certificate.`} />
         <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
         <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
         <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
@@ -309,6 +311,7 @@ export function OrganizationDomains({ orgSlug }) {
         resetToFirstPage={resetToFirstPage}
         orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
         placeholder={t`Search for a domain`}
+        onToggle={onToggle}
       />
 
       {orgSlug !== 'my-tracker' && (
@@ -317,6 +320,7 @@ export function OrganizationDomains({ orgSlug }) {
             const statuses = {
               HTTPS_STATUS: `HTTPS`,
               HSTS_STATUS: `HSTS`,
+              CERTIFICATES_STATUS: `Certificates`,
               CIPHERS_STATUS: `Ciphers`,
               CURVES_STATUS: t`Curves`,
               PROTOCOLS_STATUS: t`Protocols`,
@@ -376,7 +380,6 @@ export function OrganizationDomains({ orgSlug }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }

@@ -52,6 +52,7 @@ async def run():
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     async def subscribe_handler(msg):
+        await asyncio.sleep(0.01)
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()

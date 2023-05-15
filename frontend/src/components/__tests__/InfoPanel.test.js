@@ -19,7 +19,7 @@ const i18n = setupI18n({
 
 describe('<InfoPanel>', () => {
   it('successfully renders with mocked data', async () => {
-    const isOpen = false
+    const isOpen = true
     const { getByText } = render(
       <ChakraProvider theme={theme}>
         <I18nProvider i18n={i18n}>

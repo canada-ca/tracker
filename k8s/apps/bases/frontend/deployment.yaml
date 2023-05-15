@@ -20,7 +20,7 @@ spec:
         app: tracker-frontend
     spec:
       containers:
-        - image: gcr.io/track-compliance/frontend:master-a802403-1680797001 # {"$imagepolicy": "flux-system:frontend"}
+        - image: gcr.io/track-compliance/frontend:master-8173830-1683813647 # {"$imagepolicy": "flux-system:frontend"}
           name: frontend
           resources:
             limits:
