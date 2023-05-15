@@ -17,8 +17,7 @@ import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
 import { Trans, t } from '@lingui/macro'
 import { object } from 'prop-types'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
+import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export function TieredSummaries({ summaries }) {
   const [show, setShow] = useState(false)
