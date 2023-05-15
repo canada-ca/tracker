@@ -9,8 +9,6 @@ import { UserList } from './UserList'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { AuditLogTable } from './AuditLogTable'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
   return (
@@ -23,13 +21,9 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
           <Tab borderTopWidth="4px">
             <Trans>Users</Trans>
           </Tab>
-          <ABTestingWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <Tab borderTopWidth="4px">
-                <Trans>Activity</Trans>
-              </Tab>
-            </ABTestVariant>
-          </ABTestingWrapper>
+          <Tab borderTopWidth="4px">
+            <Trans>Activity</Trans>
+          </Tab>
         </TabList>
 
         <TabPanels>
@@ -51,13 +45,9 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <ABTestingWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <AuditLogTable orgId={orgId} />
-                </ErrorBoundary>
-              </ABTestVariant>
-            </ABTestingWrapper>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <AuditLogTable orgId={orgId} />
+            </ErrorBoundary>
           </TabPanel>
         </TabPanels>
       </Tabs>

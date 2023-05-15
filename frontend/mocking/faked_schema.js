@@ -2861,8 +2861,6 @@ export const getTypeNames = () => gql`
     # The organization you wish to invite the user to.
     orgId: ID!
 
-    # The language in which the email will be sent in.
-    preferredLang: LanguageEnums!
     clientMutationId: String
   }
 

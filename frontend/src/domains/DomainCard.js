@@ -16,15 +16,13 @@ import {
 } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
-
+import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 import { StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
 
 export function DomainCard({
   id,
@@ -145,18 +143,19 @@ export function DomainCard({
             )}
           </Flex>
           <Text isTruncated>{url}</Text>
-          <ABTestingWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <Flex flexWrap="wrap">
-                {tags?.map((tag, idx) => {
-                  return (
-                    <Tag key={idx} m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                      <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                        {tag}
-                      </TagLabel>
-                    </Tag>
-                  )
-                })}
+
+          <Flex flexWrap="wrap">
+            {tags?.map((tag, idx) => {
+              return (
+                <Tag key={idx} m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                  <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                    {tag}
+                  </TagLabel>
+                </Tag>
+              )
+            })}
+            <ABTestingWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
                 {isHidden && (
                   <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                     <TagLabel textColor="primary" fontWeight="bold" mx="auto">
@@ -170,10 +169,10 @@ export function DomainCard({
                       <Trans>ARCHIVED</Trans>
                     </TagLabel>
                   </Tag>
-                )}
-              </Flex>
-            </ABTestVariant>
-          </ABTestingWrapper>
+                )}{' '}
+              </ABTestVariant>
+            </ABTestingWrapper>
+          </Flex>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
 
@@ -237,30 +236,26 @@ export function DomainCard({
         </Stack>
         <Stack ml={4}>
           {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={url} />}
-          <ABTestingWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              {isLoggedIn() &&
-                (location.pathname.match('my-tracker') ? (
-                  <IconButton
-                    onClick={async () => {
-                      await unfavouriteDomain({ variables: { domainId: id } })
-                    }}
-                    variant="primary"
-                    aria-label={`unfavourite ${url}`}
-                    icon={<StarIcon color="moderate" />}
-                  />
-                ) : (
-                  <IconButton
-                    onClick={async () => {
-                      await favouriteDomain({ variables: { domainId: id } })
-                    }}
-                    variant="primary"
-                    aria-label={`favourite ${url}`}
-                    icon={<StarIcon />}
-                  />
-                ))}
-            </ABTestVariant>
-          </ABTestingWrapper>
+          {isLoggedIn() &&
+            (location.pathname.match('my-tracker') ? (
+              <IconButton
+                onClick={async () => {
+                  await unfavouriteDomain({ variables: { domainId: id } })
+                }}
+                variant="primary"
+                aria-label={`unfavourite ${url}`}
+                icon={<StarIcon color="moderate" />}
+              />
+            ) : (
+              <IconButton
+                onClick={async () => {
+                  await favouriteDomain({ variables: { domainId: id } })
+                }}
+                variant="primary"
+                aria-label={`favourite ${url}`}
+                icon={<StarIcon />}
+              />
+            ))}
         </Stack>
       </Flex>
     </ListItem>

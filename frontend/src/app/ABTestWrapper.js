@@ -46,7 +46,6 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
 ABTestVariant.propTypes = {
   children: any,
 }
-
 ABTestingWrapper.propTypes = {
   insiderVariantName: string,
   children: any,

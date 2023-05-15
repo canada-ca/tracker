@@ -196,7 +196,6 @@ export function UserListModal({
                   orgId: orgId,
                   requestedRole: values.role,
                   userName: values.email,
-                  preferredLang: 'ENGLISH',
                 },
               })
             } else if (mutation === 'remove') {

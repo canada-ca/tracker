@@ -81,7 +81,7 @@ msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
 msgid "ADMIN"
 msgstr "ADMIN"
 
-#: src/domains/DomainCard.js:170
+#: src/domains/DomainCard.js:169
 msgid "ARCHIVED"
 msgstr "ARCHIVES"
 
@@ -167,7 +167,7 @@ msgstr "Ajouter"
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
-#: src/admin/AdminDomainModal.js:271
+#: src/admin/AdminDomainModal.js:240
 msgid "Add Domain Details"
 msgstr "Ajouter les détails du domaine"
 
@@ -224,11 +224,11 @@ msgid "An error occured when you attempted to download all domain statuses."
 msgstr "Une erreur s'est produite lorsque vous avez tenté de télécharger tous les statuts de domaine."
 
 #: src/app/FloatingMenu.js:38
-#: src/app/TopBanner.js:31
+#: src/app/TopBanner.js:30
 msgid "An error occured when you attempted to sign out"
 msgstr "Une erreur s'est produite lorsque vous avez tenté de vous déconnecter."
 
-#: src/domains/DomainCard.js:49
+#: src/domains/DomainCard.js:47
 msgid "An error occurred while favouriting a domain."
 msgstr "Une erreur s'est produite lors de la mise en favori d'un domaine."
 
@@ -240,7 +240,7 @@ msgstr "Une erreur s'est produite lors de la suppression de cette organisation."
 msgid "An error occurred while requesting a scan."
 msgstr "Une erreur s'est produite lors de la demande d'un scan."
 
-#: src/domains/DomainCard.js:75
+#: src/domains/DomainCard.js:73
 msgid "An error occurred while unfavouriting a domain."
 msgstr "Une erreur s'est produite lors du dé-favorisage d'un domaine."
 
@@ -280,8 +280,8 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 msgid "An error occurred while verifying your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
-#: src/admin/AdminDomainModal.js:75
-#: src/admin/AdminDomainModal.js:124
+#: src/admin/AdminDomainModal.js:63
+#: src/admin/AdminDomainModal.js:110
 #: src/admin/AdminDomains.js:103
 #: src/admin/UserListModal.js:50
 #: src/admin/UserListModal.js:140
@@ -316,7 +316,7 @@ msgstr "Appliquer"
 msgid "April"
 msgstr "Avril"
 
-#: src/admin/AdminDomainModal.js:421
+#: src/admin/AdminDomainModal.js:368
 msgid "Archive domain"
 msgstr "Archiver ce domaine"
 
@@ -356,7 +356,7 @@ msgstr "Août"
 msgid "Authenticate"
 msgstr "Authentifier"
 
-#: src/app/TopBanner.js:98
+#: src/app/TopBanner.js:82
 msgid "BETA"
 msgstr "BETA"
 
@@ -381,7 +381,7 @@ msgstr "Voici la façon dont les organisations gouvernementales peuvent tirer pa
 msgid "Blank fields will not be included when updating the organization."
 msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de l'organisation."
 
-#: src/domains/DomainCard.js:138
+#: src/domains/DomainCard.js:136
 #: src/guidance/WebGuidance.js:83
 msgid "Blocked"
 msgstr "Bloqué"
@@ -424,7 +424,8 @@ msgstr "Chaîne de certificats"
 msgid "Certificate chain info could not be found during the scan."
 msgstr "Les informations sur la chaîne de certificats n'ont pas pu être trouvées pendant l'analyse."
 
-#: src/domains/DomainCard.js:187
+#: src/domains/DomainCard.js:186
+#: src/organizationDetails/OrganizationDomains.js:279
 msgid "Certificates"
 msgstr "Certificats"
 
@@ -536,7 +537,7 @@ msgstr "Comparaison"
 msgid "Compliant"
 msgstr "Conforme"
 
-#: src/admin/AdminDomainModal.js:459
+#: src/admin/AdminDomainModal.js:391
 #: src/admin/AdminDomains.js:386
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
@@ -627,7 +628,7 @@ msgid "Create"
 msgstr "Créer"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:143
+#: src/app/TopBanner.js:127
 #: src/auth/CreateUserPage.js:243
 msgid "Create Account"
 msgstr "Créer un compte"
@@ -706,7 +707,7 @@ msgstr "Défaillances DKIM par adresse IP"
 msgid "DKIM Results"
 msgstr "Résultats DKIM"
 
-#: src/admin/AdminDomainModal.js:325
+#: src/admin/AdminDomainModal.js:280
 msgid "DKIM Selector"
 msgstr "Sélecteur DKIM"
 
@@ -714,7 +715,7 @@ msgstr "Sélecteur DKIM"
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
-#: src/admin/AdminDomainModal.js:288
+#: src/admin/AdminDomainModal.js:252
 msgid "DKIM Selectors:"
 msgstr "Sélecteurs DKIM:"
 
@@ -925,7 +926,7 @@ msgstr "URL du domaine"
 msgid "Domain URL:"
 msgstr "URL du domaine:"
 
-#: src/admin/AdminDomainModal.js:86
+#: src/admin/AdminDomainModal.js:74
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
@@ -941,7 +942,7 @@ msgstr "Domaine supprimé"
 msgid "Domain removed from {orgSlug}"
 msgstr "Domaine supprimé de {orgSlug}"
 
-#: src/admin/AdminDomainModal.js:135
+#: src/admin/AdminDomainModal.js:121
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
@@ -1001,7 +1002,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/admin/AdminDomainModal.js:269
+#: src/admin/AdminDomainModal.js:240
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -1023,7 +1024,7 @@ msgstr "Modifier l'utilisateur"
 
 #: src/admin/SuperAdminUserList.js:148
 #: src/components/fields/EmailField.js:15
-#: src/domains/DomainCard.js:195
+#: src/domains/DomainCard.js:194
 #: src/user/EditableUserTFAMethod.js:166
 msgid "Email"
 msgstr "Courriel"
@@ -1184,7 +1185,7 @@ msgstr "Échec du SPF %"
 msgid "Fake email domain blocks (reject + quarantine):"
 msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 
-#: src/domains/DomainCard.js:59
+#: src/domains/DomainCard.js:57
 msgid "Favourited Domain"
 msgstr "Domaine favori"
 
@@ -1337,7 +1338,7 @@ msgstr "Résultats de l'orientation"
 #~ msgid "Guidance:"
 #~ msgstr "Orientation:"
 
-#: src/domains/DomainCard.js:163
+#: src/domains/DomainCard.js:162
 msgid "HIDDEN"
 msgstr "CACHÉ"
 
@@ -1461,7 +1462,7 @@ msgstr "Vulnérabilité Heartbleed"
 msgid "Hidden"
 msgstr "Caché"
 
-#: src/admin/AdminDomainModal.js:398
+#: src/admin/AdminDomainModal.js:346
 msgid "Hide domain"
 msgstr "Cacher ce domaine"
 
@@ -1606,7 +1607,7 @@ msgstr "Incorrect authenticate.result typename."
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
-#: src/admin/AdminDomainModal.js:108
+#: src/admin/AdminDomainModal.js:94
 msgid "Incorrect createDomain.result typename."
 msgstr "Incorrect createDomain.result typename."
 
@@ -1635,8 +1636,8 @@ msgstr "Incorrect removeOrganization.result typename."
 msgid "Incorrect resetPassword.result typename."
 msgstr "Incorrect resetPassword.result typename."
 
-#: src/admin/AdminDomainModal.js:107
-#: src/admin/AdminDomainModal.js:156
+#: src/admin/AdminDomainModal.js:93
+#: src/admin/AdminDomainModal.js:142
 #: src/admin/AdminDomains.js:133
 #: src/admin/SuperAdminUserList.js:110
 #: src/admin/UserListModal.js:80
@@ -1678,7 +1679,7 @@ msgstr "Incorrect typename received."
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
 
-#: src/admin/AdminDomainModal.js:157
+#: src/admin/AdminDomainModal.js:143
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
 
@@ -2017,11 +2018,11 @@ msgstr "Nouveau"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage:"
 
-#: src/admin/AdminDomainModal.js:280
+#: src/admin/AdminDomainModal.js:245
 msgid "New Domain URL"
 msgstr "Nouvelle URL de domaine"
 
-#: src/admin/AdminDomainModal.js:279
+#: src/admin/AdminDomainModal.js:245
 msgid "New Domain URL:"
 msgstr "Nouvelle URL de domaine:"
 
@@ -2186,11 +2187,11 @@ msgstr "Non mis en œuvre"
 msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 msgstr "Notez que les données de conformité ne sont pas automatiquement actualisées. La mise à jour des modifications apportées aux domaines peut prendre 24 heures."
 
-#: src/admin/AdminDomainModal.js:432
+#: src/admin/AdminDomainModal.js:376
 msgid "Note: This could affect results for multiple organizations"
 msgstr "Note : Cela pourrait affecter les résultats de plusieurs organisations"
 
-#: src/admin/AdminDomainModal.js:427
+#: src/admin/AdminDomainModal.js:374
 msgid "Note: This will affect results for {orgCount} organizations"
 msgstr "Note : Ceci affectera les résultats pour les organisations {orgCount}."
 
@@ -2394,7 +2395,7 @@ msgstr "Le champ du numéro de téléphone ne doit pas être vide"
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Le numéro de téléphone doit être un numéro de téléphone valide de 10 à 15 chiffres."
 
-#: src/admin/AdminDomainModal.js:442
+#: src/admin/AdminDomainModal.js:382
 msgid "Please allow up to 24 hours for summaries to reflect any changes."
 msgstr "Veuillez prévoir jusqu'à 24 heures pour que les résumés reflètent les changements éventuels."
 
@@ -2449,7 +2450,7 @@ msgstr "Positif"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Statut préchargé:"
 
-#: src/admin/AdminDomainModal.js:384
+#: src/admin/AdminDomainModal.js:333
 msgid "Prevent this domain from being counted in your organization's summaries."
 msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre organisation."
 
@@ -2457,7 +2458,7 @@ msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre o
 #~ msgid "Prevent this domain from being scanned and being counted in any summaries."
 #~ msgstr "Empêchez ce domaine d'être scanné et d'être compté dans les résumés."
 
-#: src/admin/AdminDomainModal.js:406
+#: src/admin/AdminDomainModal.js:353
 msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
 msgstr "Empêchez ce domaine d'être visible, d'être scanné et d'être compté dans les résumés."
 
@@ -2935,6 +2936,10 @@ msgstr "Indique si le point de terminaison HTTPS passe en HTTP non sécurisé im
 msgid "Shows if the certificate bundle provided from the server included the root certificate."
 msgstr "Indique si le paquet de certificats fourni par le serveur comprend le certificat racine."
 
+#: src/organizationDetails/OrganizationDomains.js:279
+msgid "Shows if the domain has a valid SSL certificate."
+msgstr ""
+
 #: src/domains/DomainsPage.js:185
 #: src/organizationDetails/OrganizationDomains.js:126
 #~ msgid "Shows if the domain is compliant with"
@@ -3070,7 +3075,7 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 
 #: src/app/App.js:160
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:134
+#: src/app/TopBanner.js:118
 #: src/auth/SignInPage.js:189
 msgid "Sign In"
 msgstr "Se connecter"
@@ -3081,12 +3086,12 @@ msgid "Sign In."
 msgstr "Se connecter."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:122
+#: src/app/TopBanner.js:106
 msgid "Sign Out"
 msgstr "Déconnexion"
 
 #: src/app/FloatingMenu.js:48
-#: src/app/TopBanner.js:41
+#: src/app/TopBanner.js:40
 msgid "Sign Out."
 msgstr "Déconnexion."
 
@@ -3160,7 +3165,7 @@ msgstr "Super Admin Menu :"
 #~ msgid "Supports ECDH Key Exchange:"
 #~ msgstr "Supporte l'échange de clés ECDH:"
 
-#: src/app/TopBanner.js:67
+#: src/app/TopBanner.js:61
 msgid "Symbol of the Government of Canada"
 msgstr "Symbole du gouvernement du Canada"
 
@@ -3358,7 +3363,7 @@ msgstr "Ce domaine n'existe plus"
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/app/TopBanner.js:106
+#: src/app/TopBanner.js:90
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 
@@ -3422,11 +3427,11 @@ msgstr "Suivi n'ajoute pas automatiquement les sélecteurs, il est donc probable
 #~ msgid "Tracker does not automatically add selectors, so it is likely that they are not in the system yet. More information can be found in Getting Started with Tracker - Managing Your Domains."
 #~ msgstr "Suivi n'ajoute pas automatiquement les sélecteurs, il est donc probable qu'ils ne soient pas encore dans le système. Pour plus d'informations, consultez la section Premiers pas avec Suivi - Gérer vos domaines."
 
-#: src/app/TopBanner.js:81
+#: src/app/TopBanner.js:70
 msgid "Tracker logo outline"
 msgstr "Contour du logo Suivi"
 
-#: src/app/TopBanner.js:89
+#: src/app/TopBanner.js:73
 msgid "Tracker logo text"
 msgstr "Texte du logo du Suivi"
 
@@ -3476,7 +3481,7 @@ msgstr "Impossible de fermer ce compte."
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:98
+#: src/admin/AdminDomainModal.js:84
 msgid "Unable to create new domain."
 msgstr "Impossible de créer un nouveau domaine."
 
@@ -3537,7 +3542,7 @@ msgstr "Impossible d'envoyer l'e-mail de vérification"
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:147
+#: src/admin/AdminDomainModal.js:133
 msgid "Unable to update domain."
 msgstr "Impossible de mettre à jour le domaine."
 
@@ -3726,7 +3731,7 @@ msgstr "Vérifier le compte"
 msgid "View Details"
 msgstr "Voir les détails"
 
-#: src/domains/DomainCard.js:222
+#: src/domains/DomainCard.js:221
 msgid "View Results"
 msgstr "Voir les résultats"
 
@@ -3778,7 +3783,7 @@ msgstr "Nous vous avons envoyé un e-mail avec un code d'authentification pour v
 msgid "Web"
 msgstr "Web"
 
-#: src/domains/DomainCard.js:182
+#: src/domains/DomainCard.js:181
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
 
@@ -3899,12 +3904,12 @@ msgstr "Vous acceptez de protéger toute information qui vous est divulguée par
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "Vous acceptez d'utiliser notre site Web, nos produits et nos services uniquement à des fins légales et de manière à ne pas enfreindre les droits d'un tiers, ni à restreindre ou à empêcher l'utilisation et la jouissance du site Web, des produits ou des services par un tiers. En outre, vous ne devez pas abuser, compromettre ou interférer avec nos services, ni introduire dans nos services des éléments malveillants ou technologiquement dangereux. Vous ne devez pas tenter d'obtenir un accès non autorisé à notre site Web, à nos produits ou services, au(x) serveur(s) sur le(s)quel(s) ils sont stockés, ou à tout serveur, ordinateur ou base de données connecté à notre site Web, à nos produits ou à nos services, ni les altérer, les désosser ou les modifier. Nous pouvons suspendre ou cesser de vous fournir nos produits ou services si vous ne respectez pas nos conditions ou politiques ou si nous enquêtons sur une suspicion de mauvaise conduite. Tout soupçon d'utilisation illégale de notre site web, de nos produits ou de nos services peut être signalé aux autorités compétentes chargées de l'application de la loi et, si nécessaire, nous coopérerons avec ces autorités en leur divulguant votre identité."
 
-#: src/domains/DomainCard.js:60
+#: src/domains/DomainCard.js:58
 msgid "You have successfully added {url} to myTracker."
 msgstr "Vous avez ajouté avec succès {url} à monSuivi."
 
 #: src/app/FloatingMenu.js:49
-#: src/app/TopBanner.js:42
+#: src/app/TopBanner.js:41
 msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
 
@@ -3917,7 +3922,7 @@ msgstr "Vous avez été déconnecté avec succès."
 msgid "You have successfully removed {0}."
 msgstr "Vous avez retiré {0} avec succès."
 
-#: src/domains/DomainCard.js:86
+#: src/domains/DomainCard.js:84
 msgid "You have successfully removed {url} from myTracker."
 msgstr "Vous avez réussi à supprimer {url} de monSuivi."
 
@@ -4048,7 +4053,7 @@ msgstr "e-mail de l'utilisateur"
 msgid "weak"
 msgstr "faible"
 
-#: src/admin/AdminDomainModal.js:88
+#: src/admin/AdminDomainModal.js:75
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
 
@@ -4068,7 +4073,7 @@ msgstr "{count} enregistrements..."
 msgid "{domainSlug} does not support aggregate data"
 msgstr "{domainSlug} ne supporte pas les données agrégées"
 
-#: src/admin/AdminDomainModal.js:137
+#: src/admin/AdminDomainModal.js:123
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 

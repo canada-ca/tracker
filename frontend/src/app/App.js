@@ -24,8 +24,6 @@ import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
-import { ABTestingWrapper } from './ABTestWrapper'
-import { ABTestVariant } from './ABTestVariant'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -53,6 +51,7 @@ export function App() {
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } = useUserVar()
   const { i18n } = useLingui()
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
+  // const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true })
   const location = useLocation()
 
   // Close websocket on user jwt change (refresh/logout)
@@ -94,13 +93,10 @@ export function App() {
 
         {isLoggedIn() && (
           <>
-            <ABTestingWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <RouteLink to="/my-tracker">
-                  <Trans>myTracker</Trans>
-                </RouteLink>
-              </ABTestVariant>
-            </ABTestingWrapper>
+            <RouteLink to="/my-tracker">
+              <Trans>myTracker</Trans>
+            </RouteLink>
+
             <RouteLink to="/user">
               <Trans>Account Settings</Trans>
             </RouteLink>
@@ -278,11 +274,7 @@ export function App() {
 
             <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
               {isLoggedIn() ? (
-                <ABTestingWrapper insiderVariantName="B">
-                  <ABTestVariant name="B">
-                    <MyTrackerPage />
-                  </ABTestVariant>
-                </ABTestingWrapper>
+                <MyTrackerPage />
               ) : (
                 <Redirect
                   to={{

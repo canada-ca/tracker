@@ -290,15 +290,8 @@ export const UPDATE_DOMAIN = gql`
 `
 
 export const INVITE_USER_TO_ORG = gql`
-  mutation InviteUserToOrg(
-    $userName: EmailAddress!
-    $requestedRole: RoleEnums!
-    $orgId: ID!
-    $preferredLang: LanguageEnums!
-  ) {
-    inviteUserToOrg(
-      input: { userName: $userName, requestedRole: $requestedRole, orgId: $orgId, preferredLang: $preferredLang }
-    ) {
+  mutation InviteUserToOrg($userName: EmailAddress!, $requestedRole: RoleEnums!, $orgId: ID!) {
+    inviteUserToOrg(input: { userName: $userName, requestedRole: $requestedRole, orgId: $orgId }) {
       result {
         ... on InviteUserToOrgResult {
           status
