@@ -1,17 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
-import {
-  // Alert,
-  // AlertIcon,
-  // AlertTitle,
-  // Box,
-  // CloseButton,
-  CSSReset,
-  Flex,
-  Link,
-  Text,
-  // useDisclosure,
-} from '@chakra-ui/react'
+import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useQuery } from '@apollo/client'
@@ -150,36 +139,6 @@ export function App() {
           </Text>
         </NotificationBanner>
       )}
-      {/* {isVisible && (
-        <Alert status="warning" variant="left-accent" mx="4" my="2" maxW="98%">
-          <AlertIcon />
-          <Box>
-            <AlertTitle>
-              <Trans>Attention Tracker Users</Trans>
-            </AlertTitle>
-            <Text>
-              <Trans>
-                In an effort to consolidate a complete list of digital services
-                across the GC, new domains will be added to all organizations.
-                To allow organization admins time to react to this change, new
-                domains will be tagged as "new" for easy identification and
-                hidden from affecting summary scores. For more information,{' '}
-                <Link color="blue.600" href="">
-                  see the full blog post here
-                </Link>
-                . Thank you for helping make GC cyber space safer for all.
-              </Trans>
-            </Text>
-          </Box>
-          <CloseButton
-            alignSelf="flex-start"
-            position="relative"
-            right={-1}
-            top={-1}
-            onClick={onClose}
-          />
-        </Alert>
-      )} */}
 
       <Main mb={{ base: '40px', md: 'none' }}>
         <Suspense fallback={<LoadingMessage />}>

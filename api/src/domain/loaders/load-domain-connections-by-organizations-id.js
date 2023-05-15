@@ -4,18 +4,7 @@ import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByOrgId =
   ({ query, userKey, language, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
-  async ({
-    orgId,
-    permission,
-    after,
-    before,
-    first,
-    last,
-    ownership,
-    orderBy,
-    search,
-    filters = [],
-  }) => {
+  async ({ orgId, permission, after, before, first, last, ownership, orderBy, search, filters = [] }) => {
     const userDBId = `users/${userKey}`
     let afterTemplate = aql``
     let afterVar = aql``
@@ -409,7 +398,7 @@ export const loadDomainConnectionsByOrgId =
       showArchivedDomains = aql``
     }
     let showHiddenDomains = aql`FILTER e.hidden != true`
-    if (['admin', 'super_admin'].includes(permission)) {
+    if (['super_admin'].includes(permission)) {
       showHiddenDomains = aql``
     }
 
