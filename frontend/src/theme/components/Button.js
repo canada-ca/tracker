@@ -44,6 +44,10 @@ const Button = {
       bg: 'transparent',
       borderColor: 'primary',
       borderWidth: '1px',
+      _hover: {
+        color: 'primary',
+        bg: 'gray.200',
+      },
     },
     primaryWhite: {
       ...commonProps,

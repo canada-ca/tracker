@@ -41,6 +41,14 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'INACTIF',
       description: 'French label for tagging domains that are not active.',
     },
+    HIDDEN: {
+      value: 'hidden',
+      description: 'English label for tagging domains that are hidden.',
+    },
+    ARCHIVED: {
+      value: 'archived',
+      description: 'English label for tagging domains that are archived.',
+    },
   },
   description: 'An enum used to assign and test user-generated domain tags',
 })

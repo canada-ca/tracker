@@ -16,8 +16,7 @@ import { useUserVar } from '../utilities/userState'
 import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
-import { ABTestingWrapper } from './ABTestWrapper'
-import { ABTestVariant } from './ABTestVariant'
+import { ABTestingWrapper, ABTestVariant } from './ABTestWrapper'
 
 export const TopBanner = (props) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -53,12 +52,7 @@ export const TopBanner = (props) => {
       <Flex align="center" fontFamily="body" {...props}>
         <Link href="https://www.canada.ca/" isExternal>
           <Flex>
-            <Box
-              ml="8"
-              mr="4"
-              width={{ base: 272, md: 360 }}
-              display={{ base: 'none', md: 'initial' }}
-            >
+            <Box ml="8" mr="4" width={{ base: 272, md: 360 }} display={{ base: 'none', md: 'initial' }}>
               <Image
                 src={i18n.locale === 'en' ? sigEn : sigFr}
                 pr="auto"
@@ -72,20 +66,10 @@ export const TopBanner = (props) => {
 
         <Link as={RouteLink} to="/">
           <Flex align="center">
-            <Box
-              my="4"
-              ml="4"
-              width={{ base: 0, md: 125 }}
-              display={{ base: 'none', md: 'initial' }}
-            >
+            <Box my="4" ml="4" width={{ base: 0, md: 125 }} display={{ base: 'none', md: 'initial' }}>
               <Image src={trackerLogo} alt={t`Tracker logo outline`} />
             </Box>
-            <Box
-              mr="4"
-              my="4"
-              width={{ base: 0, md: 125 }}
-              display={{ base: 'none', md: 'initial' }}
-            >
+            <Box mr="4" my="4" width={{ base: 0, md: 125 }} display={{ base: 'none', md: 'initial' }}>
               <Image src={trackerText} alt={t`Tracker logo text`} />
             </Box>
           </Flex>

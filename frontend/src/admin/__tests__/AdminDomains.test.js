@@ -279,7 +279,7 @@ describe('<AdminDomains />', () => {
       userEvent.click(confirmButton)
 
       await waitFor(() =>
-        expect(getByText(/Unable to create new domain./i)).toBeVisible(),
+        expect(getByText(/Unable to create new domain./i)).toBeInTheDocument(),
       )
     })
 

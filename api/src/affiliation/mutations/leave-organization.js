@@ -16,8 +16,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: leaveOrganizationUnion,
-      description:
-        '`LeaveOrganizationUnion` resolving to either a `LeaveOrganizationResult` or `AffiliationError`.',
+      description: '`LeaveOrganizationUnion` resolving to either a `LeaveOrganizationResult` or `AffiliationError`.',
       resolve: (payload) => payload,
     },
   }),
@@ -42,9 +41,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
     const org = await loadOrgByKey.load(orgKey)
 
     if (typeof org === 'undefined') {
-      console.warn(
-        `User ${user._key} attempted to leave undefined organization: ${orgKey}`,
-      )
+      console.warn(`User ${user._key} attempted to leave undefined organization: ${orgKey}`)
       return {
         _type: 'error',
         code: 400,
@@ -111,9 +108,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while attempting to remove dmarc summaries for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable leave organization. Please try again.`),
-          )
+          throw new Error(i18n._(t`Unable leave organization. Please try again.`))
         }
 
         try {
@@ -128,9 +123,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while attempting to remove ownership for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable leave organization. Please try again.`),
-          )
+          throw new Error(i18n._(t`Unable leave organization. Please try again.`))
         }
       }
 
@@ -149,7 +142,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
               FOR v, e IN 1..1 INBOUND domain._id claims
                 RETURN 1
             )
-            RETURN { 
+            RETURN {
               _id: domain._id,
               _key: domain._key,
               domain: domain.domain,
@@ -176,162 +169,43 @@ export const leaveOrganization = new mutationWithClientMutationId({
       for (const domain of domainInfo) {
         if (domain.count === 1) {
           try {
-            await trx.step(
-              () =>
-                query`
-                  WITH claims, dkim, domains, domainsDKIM, organizations, dkimToDkimResults, dkimResults
-                  LET dkimEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM 
-                      RETURN { edgeKey: e._key, dkimId: e._to }
-                  )
-                  FOR dkimEdge IN dkimEdges
-                    LET dkimResultEdges = (
-                      FOR v, e IN 1..1 OUTBOUND dkimEdge.dkimId dkimToDkimResults
-                        RETURN { edgeKey: e._key, dkimResultId: e._to }
-                    )
-                    LET removeDkimResultEdges = (
-                      FOR dkimResultEdge IN dkimResultEdges 
-                        REMOVE dkimResultEdge.edgeKey IN dkimToDkimResults
-                        OPTIONS { waitForSync: true }
-                    )
-                    LET removeDkimResult = (
-                      FOR dkimResultEdge IN dkimResultEdges 
-                        LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key 
-                        REMOVE key IN dkimResults
-                        OPTIONS { waitForSync: true }
-                    )
-                  RETURN true
-                `,
-            )
+            // Remove web data
+            await trx.step(async () => {
+              await query`
+                WITH web, webScan, domains
+                FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
+                  FOR webScanV, webToWebScansV In 1..1 ANY webV._id webToWebScans
+                    REMOVE webScanV IN webScan
+                    REMOVE webToWebScansV IN webToWebScans
+                    OPTIONS { waitForSync: true }
+                  REMOVE webV IN web
+                  REMOVE domainsWebEdge IN domainsWeb
+                  OPTIONS { waitForSync: true }
+              `
+            })
           } catch (err) {
             console.error(
-              `Trx step error occurred while attempting to remove dkim results for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
+              `Trx step error occurred while user: ${user._key} attempted to remove web data for ${domain.domain} in org: ${org.slug}, ${err}`,
             )
-            throw new Error(
-              i18n._(t`Unable leave organization. Please try again.`),
-            )
+            throw new Error(i18n._(t`Unable to leave organization. Please try again.`))
           }
 
           try {
-            await Promise.all([
-              trx.step(
-                () =>
-                  query`
-                  WITH claims, dkim, domains, domainsDKIM, organizations
-                  LET dkimEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM 
-                      RETURN { edgeKey: e._key, dkimId: e._to }
-                  )
-                  LET removeDkimEdges = (
-                    FOR dkimEdge IN dkimEdges 
-                      REMOVE dkimEdge.edgeKey IN domainsDKIM
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeDkim = (
-                    FOR dkimEdge IN dkimEdges 
-                      LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key 
-                      REMOVE key IN dkim
-                      OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () =>
-                  query`
-                  WITH claims, dmarc, domains, domainsDMARC, organizations
-                  LET dmarcEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDMARC 
-                      RETURN { edgeKey: e._key, dmarcId: e._to }
-                  )
-                  LET removeDmarcEdges = (
-                    FOR dmarcEdge IN dmarcEdges 
-                      REMOVE dmarcEdge.edgeKey IN domainsDMARC
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeDmarc = (
-                    FOR dmarcEdge IN dmarcEdges 
-                      LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key 
-                      REMOVE key IN dmarc
-                      OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () =>
-                  query`
-                  WITH claims, domains, domainsSPF, organizations, spf
-                  LET spfEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSPF 
-                      RETURN { edgeKey: e._key, spfId: e._to }
-                  )
-                  LET removeSpfEdges = (
-                    FOR spfEdge IN spfEdges 
-                      REMOVE spfEdge.edgeKey IN domainsSPF
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeSpf = (
-                    FOR spfEdge IN spfEdges 
-                      LET key = PARSE_IDENTIFIER(spfEdge.spfId).key 
-                      REMOVE key IN spf
-                      OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () =>
-                  query`
-                  WITH claims, domains, domainsHTTPS, https, organizations
-                  LET httpsEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsHTTPS 
-                      RETURN { edgeKey: e._key, httpsId: e._to }
-                  )
-                  LET removeHttpsEdges = (
-                    FOR httpsEdge IN httpsEdges 
-                      REMOVE httpsEdge.edgeKey IN domainsHTTPS
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeHttps = (
-                    FOR httpsEdge IN httpsEdges 
-                      LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key 
-                      REMOVE key IN https
-                      OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-              trx.step(
-                () =>
-                  query`
-                  WITH claims, domains, domainsSSL, organizations, ssl
-                  LET sslEdges = (
-                    FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSSL 
-                      RETURN { edgeKey: e._key, sslId: e._to}
-                  )
-                  LET removeSslEdges = (
-                    FOR sslEdge IN sslEdges 
-                      REMOVE sslEdge.edgeKey IN domainsSSL
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeSsl = (
-                    FOR sslEdge IN sslEdges 
-                      LET key = PARSE_IDENTIFIER(sslEdge.sslId).key 
-                      REMOVE key IN ssl
-                      OPTIONS { waitForSync: true }
-                  )
-                  RETURN true
-                `,
-              ),
-            ])
+            // Remove DNS data
+            await trx.step(async () => {
+              await query`
+            WITH dns, domains
+            FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
+              REMOVE dnsV IN dns
+              REMOVE domainsDNSEdge IN domainsDNS
+              OPTIONS { waitForSync: true }
+          `
+            })
           } catch (err) {
             console.error(
-              `Trx step error occurred while attempting to remove scan results for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
+              `Trx step error occurred while user: ${user._key} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
             )
-            throw new Error(
-              i18n._(t`Unable leave organization. Please try again.`),
-            )
+            throw new Error(i18n._(t`Unable to leave organization. Please try again.`))
           }
 
           try {
@@ -345,13 +219,13 @@ export const leaveOrganization = new mutationWithClientMutationId({
                       RETURN { edgeKey: e._key, domainId: e._to }
                   )
                   LET removeDomainEdges = (
-                    FOR domainEdge in domainEdges 
+                    FOR domainEdge in domainEdges
                       REMOVE domainEdge.edgeKey IN claims
                       OPTIONS { waitForSync: true }
                   )
                   LET removeDomain = (
-                    FOR domainEdge in domainEdges 
-                      LET key = PARSE_IDENTIFIER(domainEdge.domainId).key 
+                    FOR domainEdge in domainEdges
+                      LET key = PARSE_IDENTIFIER(domainEdge.domainId).key
                       REMOVE key IN domains
                       OPTIONS { waitForSync: true }
                   )
@@ -362,9 +236,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
             console.error(
               `Trx step error occurred while attempting to remove domains for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
             )
-            throw new Error(
-              i18n._(t`Unable leave organization. Please try again.`),
-            )
+            throw new Error(i18n._(t`Unable leave organization. Please try again.`))
           }
         }
       }
@@ -380,7 +252,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
                     RETURN { edgeKey: e._key, userKey: e._to }
                 )
                 LET removeUserEdges = (
-                  FOR userEdge IN userEdges 
+                  FOR userEdge IN userEdges
                     REMOVE userEdge.edgeKey IN affiliations
                     OPTIONS { waitForSync: true }
                 )
@@ -425,9 +297,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred when user: ${user._key} attempted to leave org: ${org._key}: ${err}`,
-      )
+      console.error(`Trx commit error occurred when user: ${user._key} attempted to leave org: ${org._key}: ${err}`)
       throw new Error(i18n._(t`Unable leave organization. Please try again.`))
     }
 

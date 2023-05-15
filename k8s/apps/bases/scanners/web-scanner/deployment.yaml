@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-scanner
+  labels:
+    app: web-scanner
+  namespace: scanners
+spec:
+  selector:
+    matchLabels:
+      app: web-scanner
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: web-scanner
+      annotations:
+        traffic.sidecar.istio.io/includeOutboundIPRanges: 10.0.0.0/8,192.168.0.0/16
+    spec:
+      containers:
+        - name: web-scanner
+          image: gcr.io/track-compliance/web-scanner:master-769f1ba-1682958826 # {"$imagepolicy": "flux-system:web-scanner"}
+          env:
+            - name: PYTHONWARNINGS
+              value: ignore
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*.web
+            - name: QUEUE_GROUP
+              value: web_scanner
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources: {}
+status: {}

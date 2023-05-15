@@ -8,6 +8,10 @@ const isInsiderUser = ({ isUserSuperAdmin, insideUser }) => {
   return insideUser || isUserSuperAdmin
 }
 
+export function ABTestVariant({ children }) {
+  return <>{children}</>
+}
+
 export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
   const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const { currentUser } = useUserVar()
@@ -35,17 +39,16 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
       insideUser: currentUser?.insideUser || false,
     })
   ) {
-    childIndex = children.findIndex(
-      (variant) => variant.props.name === insiderVariantName,
-    )
+    childIndex = children.findIndex((variant) => variant.props.name === insiderVariantName)
   } else {
-    childIndex = children.findIndex(
-      (variant) => variant.props.name !== insiderVariantName,
-    )
+    childIndex = children.findIndex((variant) => variant.props.name !== insiderVariantName)
   }
   return <>{children[childIndex]}</>
 }
 
+ABTestVariant.propTypes = {
+  children: any,
+}
 ABTestingWrapper.propTypes = {
   insiderVariantName: string,
   children: any,

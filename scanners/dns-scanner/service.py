@@ -1,28 +1,26 @@
-import time
+import functools
 import json
-import argparse, sys
+import sys
 import logging
 import asyncio
 import os
 import signal
-import traceback
-import datetime as dt
-from operator import itemgetter
+
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
-from dns_scanner import DMARCScanner, DKIMScanner
-from nats.aio.client import Client as NATS
-from concurrent.futures import ProcessPoolExecutor
+from dns_scanner.dns_scanner import scan_domain
+import nats
 
 load_dotenv()
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
+logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "dns-scanner")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
-PUBLISH_TO = os.getenv("PUBLISH_TO")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP")
-SERVERLIST = os.getenv("NATS_SERVERS")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
+PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP", "dns-scanner")
+SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
 
@@ -30,65 +28,67 @@ def to_json(msg):
     print(json.dumps(msg, indent=2))
 
 
-async def run(loop):
-    nc = NATS()
+async def run():
+    loop = asyncio.get_running_loop()
 
-    async def error_cb(e):
-        print("Error:", e)
+    async def error_cb(error):
+        logger.error(f"MY ERROR: {error}")
 
     async def closed_cb():
-        print("Connection to NATS is closed.")
+        logger.info("Connection to NATS is closed.")
         await asyncio.sleep(0.1)
         loop.stop()
 
     async def reconnected_cb():
-        print(f"Connected to NATS at {nc.connected_url.netloc}...")
+        logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
+
+    nc = await nats.connect(
+        error_cb=error_cb,
+        closed_cb=closed_cb,
+        reconnected_cb=reconnected_cb,
+        servers=SERVERS,
+        name=NAME,
+    )
+    logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     async def subscribe_handler(msg):
+        await asyncio.sleep(0.01)
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
-        print(
+        logger.info(
             "Received a message on '{subject} {reply}': {data}".format(
                 subject=subject, reply=reply, data=data
             )
         )
         payload = json.loads(msg.data)
 
-        domain = payload["domain"]
-        domain_key = payload["domain_key"]
-        user_key = payload["user_key"]
-        shared_id = payload["shared_id"]
-        selectors = payload["selectors"]
+        domain = payload.get("domain")
+        domain_key = payload.get("domain_key")
+        user_key = payload.get("user_key")
+        shared_id = payload.get("shared_id")
+        selectors = payload.get("selectors")
 
         try:
-            # DMARC scan
-            loop = asyncio.get_event_loop()
+            logger.info(f"Starting DNS scan on '{domain}' with DKIM selectors '{str(selectors)}'")
+            scan_results = scan_domain(domain=domain, dkim_selectors=selectors)
 
-            dmarc_start_time = time.monotonic()
-            print(f"starting dmarc scanner")
-            with ProcessPoolExecutor() as executor:
-                dmarc_scanner = DMARCScanner(domain)
-                scan_results = await loop.run_in_executor(executor, dmarc_scanner.run)
-            print(f"dmarc scan elapsed time: {time.monotonic() - dmarc_start_time}")
-
-            if len(selectors) != 0:
-                # DKIM scan
-                dkim_start_time = time.time()
-                print(f"starting DKIM scanner")
-                try:
-                    dkim_scanner = DKIMScanner(domain, selectors)
-                    scan_results["dkim"] = dkim_scanner.run()
-                except:
-                    logging.error(f'Error while running DKIM scanner on domain "{domain}" with selectors "{selectors}."', exc_info=True)
-                    scan_results["dkim"] = {"error": "error while scanning"}
-                print(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
-            else:
-                scan_results["dkim"] = {"error": "missing"}
-
+            await nc.publish(
+                f"{PUBLISH_TO}.{domain_key}.dns",
+                json.dumps(
+                    {
+                        "results": scan_results,
+                        "domain": domain,
+                        "scan_type": "dns",
+                        "user_key": user_key,
+                        "domain_key": domain_key,
+                        "shared_id": shared_id,
+                    }
+                ).encode(),
+            )
         except TimeoutError:
-            logging.error(
-                f"Timeout while scanning {domain} (Aborted after {round(time.time()-start, 2)} seconds)"
+            logger.error(
+                f"Timeout while scanning {domain} with DKIM selectors '{str(selectors)}'"
             )
             await nc.publish(
                 f"{PUBLISH_TO}.{domain_key}.dns",
@@ -100,7 +100,7 @@ async def run(loop):
                             "mx": {"error": "missing"},
                             "dkim": {"error": "missing"},
                         },
-                        "scan_type": "dns",
+                        "domain": domain,
                         "user_key": user_key,
                         "domain_key": domain_key,
                         "shared_id": shared_id,
@@ -108,49 +108,21 @@ async def run(loop):
                 ).encode(),
             )
 
-        await nc.publish(
-            f"{PUBLISH_TO}.{domain_key}.dns",
-            json.dumps(
-                {
-                    "results": scan_results,
-                    "scan_type": "dns",
-                    "user_key": user_key,
-                    "domain_key": domain_key,
-                    "shared_id": shared_id,
-                }
-            ).encode(),
-        )
+    await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
-    try:
-        await nc.connect(
-            loop=loop,
-            error_cb=error_cb,
-            closed_cb=closed_cb,
-            reconnected_cb=reconnected_cb,
-            servers=SERVERS,
-            name=NAME,
-        )
-    except Exception as e:
-        print(f"Exception while connecting to Nats: {e}")
-
-    print(f"Connected to NATS at {nc.connected_url.netloc}...")
-
-    def signal_handler():
+    def ask_exit(sig_name):
+        logger.error(f"Got signal {sig_name}: exit")
         if nc.is_closed:
             return
-        print("Disconnecting...")
         loop.create_task(nc.close())
 
-    for sig in ("SIGINT", "SIGTERM"):
-        loop.add_signal_handler(getattr(signal, sig), signal_handler)
+    for signal_name in {'SIGINT', 'SIGTERM'}:
+        loop.add_signal_handler(
+            getattr(signal, signal_name),
+            functools.partial(ask_exit, signal_name))
 
-    await nc.subscribe(SUBSCRIBE_TO, QUEUE_GROUP, subscribe_handler)
+    await asyncio.Future()
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(run(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+    asyncio.run(run())

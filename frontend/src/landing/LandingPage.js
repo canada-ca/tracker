@@ -26,10 +26,8 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
         <Text fontSize="xl">
           <Trans>
-            Canadians rely on the Government of Canada to provide secure digital
-            services. The Policy on Service and Digital guides government online
-            services to adopt good security practices for practices outlined in
-            the{' '}
+            Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
+            Digital guides government online services to adopt good security practices for practices outlined in the{' '}
             <Link
               href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
               isExternal

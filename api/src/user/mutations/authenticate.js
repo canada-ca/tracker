@@ -1,9 +1,9 @@
-import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { t } from '@lingui/macro'
-import { authenticateUnion } from '../unions'
+import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {authenticateUnion} from '../unions'
 
-const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
+const {SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY} = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -36,9 +36,9 @@ export const authenticate = new mutationWithClientMutationId({
       collections,
       transaction,
       uuidv4,
-      auth: { tokenize, verifyToken },
-      loaders: { loadUserByKey },
-      validators: { cleanseInput },
+      auth: {tokenize, verifyToken},
+      loaders: {loadUserByKey},
+      validators: {cleanseInput},
     },
   ) => {
     // Cleanse Inputs
@@ -126,9 +126,9 @@ export const authenticate = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
-      const token = tokenize({ parameters: { userKey: user._key } })
+      const token = tokenize({parameters: {userKey: user._key}})
       const refreshToken = tokenize({
-        parameters: { userKey: user._key, uuid: refreshId },
+        parameters: {userKey: user._key, uuid: refreshId},
         expPeriod: 168,
         secret: String(REFRESH_KEY),
       })

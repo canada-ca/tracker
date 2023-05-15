@@ -23,13 +23,10 @@ const i18n = setupI18n({
   },
 })
 
-const selectorNode =
-  rawDmarcGuidancePageData.findDomainByDomain.email.dmarc.edges[0].node
-const negativeTags = selectorNode.negativeGuidanceTags.edges
-const neutralTags = selectorNode.neutralGuidanceTags.edges
-const positiveTags = selectorNode.positiveGuidanceTags.edges
-const selector = selectorNode.selector
-const categoryName = 'dmarc'
+const spfResult = rawDmarcGuidancePageData.data.findDomainByDomain.dnsScan.edges[0].node.spf
+const negativeTags = spfResult.negativeTags
+const neutralTags = spfResult.neutralTags
+const positiveTags = spfResult.positiveTags
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -40,12 +37,10 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 describe('<GuidanceTagList />', () => {
-  it('renders negative guidance tags', async () => {
+  it('renders guidance tags', async () => {
     const { getAllByText } = render(
       <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -53,8 +48,7 @@ describe('<GuidanceTagList />', () => {
                   negativeTags={negativeTags}
                   neutralTags={neutralTags}
                   positiveTags={positiveTags}
-                  selector={selector}
-                  categoryName={categoryName}
+                  selector="selector"
                 />
               </MemoryRouter>
             </I18nProvider>
@@ -62,58 +56,7 @@ describe('<GuidanceTagList />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    await waitFor(() => getAllByText(/DKIM-missing/i))
-  })
-  it('renders neutral guidance tags', async () => {
-    const { getAllByText } = render(
-      <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
-          <ChakraProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <GuidanceTagList
-                  negativeTags={negativeTags}
-                  neutralTags={neutralTags}
-                  positiveTags={positiveTags}
-                  selector={selector}
-                  categoryName={categoryName}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ChakraProvider>
-        </UserVarProvider>
-      </MockedProvider>,
-    )
-    await waitFor(() =>
-      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
-    )
-  })
-  it('renders positive guidance tags', async () => {
-    const { getAllByText } = render(
-      <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
-          <ChakraProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <GuidanceTagList
-                  negativeTags={negativeTags}
-                  neutralTags={neutralTags}
-                  positiveTags={positiveTags}
-                  selector={selector}
-                  categoryName={categoryName}
-                />
-              </MemoryRouter>
-            </I18nProvider>
-          </ChakraProvider>
-        </UserVarProvider>
-      </MockedProvider>,
-    )
-    await waitFor(() =>
-      getAllByText(/A.3.4 Deploy DKIM for All Domains and senders/i),
-    )
+    await waitFor(() => getAllByText(/TAG-short-age/i))
+    await waitFor(() => getAllByText(/Hello World/i))
   })
 })

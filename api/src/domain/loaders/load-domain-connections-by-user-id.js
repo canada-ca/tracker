@@ -4,17 +4,7 @@ import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByUserId =
   ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
-  async ({
-    after,
-    before,
-    first,
-    last,
-    ownership,
-    orderBy,
-    isSuperAdmin,
-    myTracker,
-    search,
-  }) => {
+  async ({ after, before, first, last, ownership, orderBy, isSuperAdmin, myTracker, search }) => {
     const userDBId = `users/${userKey}`
 
     let ownershipOrgsOnly = aql`
@@ -86,6 +76,9 @@ export const loadDomainConnectionsByUserId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`afterVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`afterVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         afterTemplate = aql`
@@ -146,6 +139,9 @@ export const loadDomainConnectionsByUserId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`beforeVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`beforeVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         beforeTemplate = aql`
@@ -162,18 +158,14 @@ export const loadDomainConnectionsByUserId =
         `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDomainConnectionsByUserId.`,
       )
       throw new Error(
-        i18n._(
-          t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`,
-        ),
+        i18n._(t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`),
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
       console.warn(
         `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDomainConnectionsByUserId.`,
       )
       throw new Error(
-        i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`,
-        ),
+        i18n._(t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`),
       )
     } else if (typeof first === 'number' || typeof last === 'number') {
       /* istanbul ignore else */
@@ -182,11 +174,7 @@ export const loadDomainConnectionsByUserId =
         console.warn(
           `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDomainConnectionsByUserId.`,
         )
-        throw new Error(
-          i18n._(
-            t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`,
-          ),
-        )
+        throw new Error(i18n._(t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`))
       } else if (first > 100 || last > 100) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         const amount = typeof first !== 'undefined' ? first : last
@@ -209,9 +197,7 @@ export const loadDomainConnectionsByUserId =
       console.warn(
         `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDomainConnectionsByUserId.`,
       )
-      throw new Error(
-        i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
-      )
+      throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
     }
 
     let hasNextPageFilter = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(LAST(retrievedDomains)._key)`
@@ -279,6 +265,10 @@ export const loadDomainConnectionsByUserId =
         domainField = aql`domain.status.protocols`
         hasNextPageDocumentField = aql`LAST(retrievedDomains).status.protocols`
         hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.protocols`
+      } else if (orderBy.field === 'certificates-status') {
+        domainField = aql`domain.status.certificates`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.certificates`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.certificates`
       }
 
       hasNextPageFilter = aql`
@@ -316,6 +306,8 @@ export const loadDomainConnectionsByUserId =
         sortByField = aql`domain.status.policy ${orderBy.direction},`
       } else if (orderBy.field === 'protocols-status') {
         sortByField = aql`domain.status.protocols ${orderBy.direction},`
+      } else if (orderBy.field === 'certificates-status') {
+        sortByField = aql`domain.status.certificates ${orderBy.direction},`
       }
     }
 
@@ -356,7 +348,7 @@ export const loadDomainConnectionsByUserId =
         FOR orgId IN orgIds
           LET claimDomainKeys = (
             FOR v, e IN 1..1 OUTBOUND orgId claims
-              OPTIONS {order: "bfs"} 
+              OPTIONS {order: "bfs"}
               FILTER v.archived != true
               RETURN v._key
           )
@@ -404,7 +396,6 @@ export const loadDomainConnectionsByUserId =
     if (isSuperAdmin) {
       showArchivedDomains = aql``
     }
-
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`

@@ -1,12 +1,12 @@
 import crypto from 'crypto'
-import { GraphQLNonNull } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { GraphQLPhoneNumber } from 'graphql-scalars'
-import { t } from '@lingui/macro'
+import {GraphQLNonNull} from 'graphql'
+import {mutationWithClientMutationId} from 'graphql-relay'
+import {GraphQLPhoneNumber} from 'graphql-scalars'
+import {t} from '@lingui/macro'
 
-import { setPhoneNumberUnion } from '../unions'
+import {setPhoneNumberUnion} from '../unions'
 
-const { CIPHER_KEY } = process.env
+const {CIPHER_KEY} = process.env
 
 export const setPhoneNumber = new mutationWithClientMutationId({
   name: 'SetPhoneNumber',
@@ -33,10 +33,10 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { userRequired },
-      loaders: { loadUserByKey },
-      validators: { cleanseInput },
-      notify: { sendTfaTextMsg },
+      auth: {userRequired},
+      loaders: {loadUserByKey},
+      validators: {cleanseInput},
+      notify: {sendTfaTextMsg},
     },
   ) => {
     // Cleanse input
@@ -57,7 +57,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       'aes-256-ccm',
       String(CIPHER_KEY),
       Buffer.from(phoneDetails.iv, 'hex'),
-      { authTagLength: 16 },
+      {authTagLength: 16},
     )
     let encrypted = cipher.update(phoneNumber, 'utf8', 'hex')
     encrypted += cipher.final('hex')
@@ -115,7 +115,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     await loadUserByKey.clear(user._key)
     user = await loadUserByKey.load(user._key)
 
-    await sendTfaTextMsg({ phoneNumber, user })
+    await sendTfaTextMsg({phoneNumber, user})
 
     console.info(`User: ${user._key} successfully set phone number.`)
     return {

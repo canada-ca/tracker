@@ -1,6 +1,6 @@
-import { GraphQLInt, GraphQLString } from 'graphql'
+import {GraphQLInt, GraphQLString} from 'graphql'
 
-import { closeAccountError } from '../close-account-error'
+import {closeAccountError} from '../close-account-error'
 
 describe('given the closeAccountError object', () => {
   describe('testing the field definitions', () => {
@@ -23,7 +23,7 @@ describe('given the closeAccountError object', () => {
       it('returns the resolved field', () => {
         const demoType = closeAccountError.getFields()
 
-        expect(demoType.code.resolve({ code: 400 })).toEqual(400)
+        expect(demoType.code.resolve({code: 400})).toEqual(400)
       })
     })
     describe('testing the description field', () => {
@@ -31,7 +31,7 @@ describe('given the closeAccountError object', () => {
         const demoType = closeAccountError.getFields()
 
         expect(
-          demoType.description.resolve({ description: 'description' }),
+          demoType.description.resolve({description: 'description'}),
         ).toEqual('description')
       })
     })

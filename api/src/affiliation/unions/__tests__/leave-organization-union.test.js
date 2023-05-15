@@ -2,7 +2,7 @@ import {
   affiliationError,
   leaveOrganizationResultType,
 } from '../../objects/index'
-import { leaveOrganizationUnion } from '../leave-organization-union'
+import {leaveOrganizationUnion} from '../leave-organization-union'
 
 describe('given the leaveOrganizationUnion', () => {
   describe('testing the field types', () => {

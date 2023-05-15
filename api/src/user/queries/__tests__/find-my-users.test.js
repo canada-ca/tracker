@@ -1,23 +1,23 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {toGlobalId} from 'graphql-relay'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
 import {
   checkSuperAdmin,
   superAdminRequired,
   userRequired,
   verifiedRequired,
 } from '../../../auth'
-import { loadUserByKey, loadUserConnectionsByUserId } from '../../loaders'
+import {loadUserByKey, loadUserConnectionsByUserId} from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given findMyUsersQuery', () => {
   let query,
@@ -53,7 +53,7 @@ describe('given findMyUsersQuery', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections } = await ensure({
+      ;({query, drop, truncate, collections} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -171,8 +171,8 @@ describe('given findMyUsersQuery', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -257,7 +257,7 @@ describe('given findMyUsersQuery', () => {
                       query,
                       userKey: superAdmin._key,
                       cleanseInput,
-                      auth: { loginRequired: true },
+                      auth: {loginRequired: true},
                       language: 'en',
                     }),
                   },
@@ -321,8 +321,8 @@ describe('given findMyUsersQuery', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: { plurals: {} },
-              fr: { plurals: {} },
+              en: {plurals: {}},
+              fr: {plurals: {}},
             },
             locales: ['en', 'fr'],
             messages: {
@@ -375,7 +375,7 @@ describe('given findMyUsersQuery', () => {
                     query: mockedQuery,
                     userKey: superAdmin._key,
                     cleanseInput,
-                    auth: { loginRequired: true },
+                    auth: {loginRequired: true},
                     language: 'en',
                     i18n,
                   }),

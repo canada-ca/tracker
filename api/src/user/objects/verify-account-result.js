@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const verifyAccountResultType = new GraphQLObjectType({
   name: 'VerifyAccountResult',
@@ -9,7 +9,7 @@ export const verifyAccountResultType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'Informs the user if their account was successfully verified.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
 })

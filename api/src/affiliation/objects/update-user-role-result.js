@@ -1,5 +1,5 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
-import { userSharedType } from '../../user/objects'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
+import {userSharedType} from '../../user/objects'
 
 export const updateUserRoleResultType = new GraphQLObjectType({
   name: 'UpdateUserRoleResult',
@@ -10,12 +10,12 @@ export const updateUserRoleResultType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         "Informs the user if the user who's role was successfully updated.",
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
     user: {
       type: userSharedType,
       description: "The user who's role was successfully updated.",
-      resolve: ({ user }) => user,
+      resolve: ({user}) => user,
     },
   }),
 })

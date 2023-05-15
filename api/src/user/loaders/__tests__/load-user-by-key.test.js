@@ -1,12 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { loadUserByKey } from '../index'
+import {loadUserByKey} from '../index'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given a loadUserByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
@@ -18,8 +18,8 @@ describe('given a loadUserByKey dataloader', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -34,17 +34,17 @@ describe('given a loadUserByKey dataloader', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.users.save({
@@ -78,7 +78,7 @@ describe('given a loadUserByKey dataloader', () => {
         `
         const expectedUser = await expectedCursor.next()
 
-        const loader = loadUserByKey({ query })
+        const loader = loadUserByKey({query})
         const user = await loader.load(expectedUser._key)
 
         expect(user).toEqual(expectedUser)
@@ -99,7 +99,7 @@ describe('given a loadUserByKey dataloader', () => {
           expectedUsers.push(tempUser)
         }
 
-        const loader = loadUserByKey({ query })
+        const loader = loadUserByKey({query})
         const users = await loader.loadMany(userKeys)
         expect(users).toEqual(expectedUsers)
       })
@@ -111,8 +111,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -178,8 +178,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {

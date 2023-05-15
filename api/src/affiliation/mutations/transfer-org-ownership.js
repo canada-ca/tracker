@@ -1,8 +1,8 @@
-import { t } from '@lingui/macro'
-import { GraphQLID, GraphQLNonNull } from 'graphql'
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
+import {t} from '@lingui/macro'
+import {GraphQLID, GraphQLNonNull} from 'graphql'
+import {fromGlobalId, mutationWithClientMutationId} from 'graphql-relay'
 
-import { transferOrgOwnershipUnion } from '../unions'
+import {transferOrgOwnershipUnion} from '../unions'
 
 export const transferOrgOwnership = new mutationWithClientMutationId({
   name: 'TransferOrgOwnership',
@@ -35,20 +35,20 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: { checkOrgOwner, userRequired, verifiedRequired },
-      loaders: { loadOrgByKey, loadUserByKey },
-      validators: { cleanseInput },
+      auth: {checkOrgOwner, userRequired, verifiedRequired},
+      loaders: {loadOrgByKey, loadUserByKey},
+      validators: {cleanseInput},
     },
   ) => {
     // cleanse inputs
-    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
-    const { id: userTransferKey } = fromGlobalId(cleanseInput(args.userId))
+    const {id: orgKey} = fromGlobalId(cleanseInput(args.orgId))
+    const {id: userTransferKey} = fromGlobalId(cleanseInput(args.userId))
 
     // protect mutation from un-authed users
     const requestingUser = await userRequired()
 
     // ensure that user has email verified their account
-    verifiedRequired({ user: requestingUser })
+    verifiedRequired({user: requestingUser})
 
     // load the requested org
     const org = await loadOrgByKey.load(orgKey)
@@ -81,7 +81,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     }
 
     // get org owner bool value
-    const owner = await checkOrgOwner({ orgId: org._id })
+    const owner = await checkOrgOwner({orgId: org._id})
 
     // check to see if requesting user is the org owner
     if (!owner) {

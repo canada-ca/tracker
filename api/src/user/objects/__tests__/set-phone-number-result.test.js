@@ -1,6 +1,6 @@
-import { GraphQLString } from 'graphql'
+import {GraphQLString} from 'graphql'
 
-import { setPhoneNumberResultType, userPersonalType } from '../index'
+import {setPhoneNumberResultType, userPersonalType} from '../index'
 
 describe('given the setPhoneNumberResultType object', () => {
   describe('testing the field definitions', () => {
@@ -23,7 +23,7 @@ describe('given the setPhoneNumberResultType object', () => {
       it('returns the resolved field', () => {
         const demoType = setPhoneNumberResultType.getFields()
 
-        expect(demoType.status.resolve({ status: 'status' })).toEqual('status')
+        expect(demoType.status.resolve({status: 'status'})).toEqual('status')
       })
     })
     describe('testing the user resolver', () => {
@@ -34,7 +34,7 @@ describe('given the setPhoneNumberResultType object', () => {
           displayName: 'John Doe',
         }
 
-        expect(demoType.user.resolve({ user })).toEqual({
+        expect(demoType.user.resolve({user})).toEqual({
           displayName: 'John Doe',
         })
       })

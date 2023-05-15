@@ -1,20 +1,20 @@
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { createQuerySchema } from '../../../query'
-import { createMutationSchema } from '../../../mutation'
-import { cleanseInput } from '../../../validators'
-import { tokenize, userRequired } from '../../../auth'
-import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import {createQuerySchema} from '../../../query'
+import {createMutationSchema} from '../../../mutation'
+import {cleanseInput} from '../../../validators'
+import {tokenize, userRequired} from '../../../auth'
+import {loadUserByUserName, loadUserByKey} from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
+const {DB_PASS: rootPass, DB_URL: url, CIPHER_KEY} = process.env
 
 describe('authenticate user account', () => {
   let query, drop, truncate, collections, transaction, schema, i18n
@@ -41,7 +41,7 @@ describe('authenticate user account', () => {
   describe('given a successful update', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({ query, drop, truncate, collections, transaction } = await ensure({
+      ;({query, drop, truncate, collections, transaction} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -72,8 +72,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -123,17 +123,17 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByKey: loadUserByKey({query}),
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: {sendVerificationEmail: jest.fn()},
             },
           )
 
@@ -202,17 +202,17 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByKey: loadUserByKey({query}),
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: {sendVerificationEmail: jest.fn()},
             },
           )
 
@@ -281,17 +281,17 @@ describe('authenticate user account', () => {
                 tokenize: jest.fn().mockReturnValue('token'),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByKey: loadUserByKey({query}),
               },
-              notify: { sendVerificationEmail: mockNotify },
+              notify: {sendVerificationEmail: mockNotify},
             },
           )
 
@@ -360,17 +360,17 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -432,17 +432,17 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -497,17 +497,17 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByKey: loadUserByKey({query}),
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: {sendVerificationEmail: jest.fn()},
             },
           )
 
@@ -543,7 +543,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                { authTagLength: 16 },
+                {authTagLength: 16},
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -600,17 +600,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -644,7 +644,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                { authTagLength: 16 },
+                {authTagLength: 16},
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -701,17 +701,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -787,17 +787,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -871,17 +871,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -956,17 +956,17 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -996,8 +996,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1047,17 +1047,17 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByKey: loadUserByKey({query}),
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: {sendVerificationEmail: jest.fn()},
             },
           )
 
@@ -1127,17 +1127,17 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -1206,17 +1206,17 @@ describe('authenticate user account', () => {
                   tokenize: jest.fn().mockReturnValue('token'),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
-                notify: { sendVerificationEmail: mockNotify },
+                notify: {sendVerificationEmail: mockNotify},
               },
             )
 
@@ -1285,17 +1285,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -1357,17 +1357,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -1423,17 +1423,17 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByKey: loadUserByKey({query}),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({ query }),
-                loadUserByKey: loadUserByKey({ query }),
+                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByKey: loadUserByKey({query}),
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: {sendVerificationEmail: jest.fn()},
             },
           )
 
@@ -1469,7 +1469,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                { authTagLength: 16 },
+                {authTagLength: 16},
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -1526,17 +1526,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -1570,7 +1570,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                { authTagLength: 16 },
+                {authTagLength: 16},
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -1627,17 +1627,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -1713,17 +1713,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -1797,17 +1797,17 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({ query }),
+                      loadUserByKey: loadUserByKey({query}),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({ query }),
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({query}),
+                    loadUserByKey: loadUserByKey({query}),
                   },
-                  notify: { sendVerificationEmail: jest.fn() },
+                  notify: {sendVerificationEmail: jest.fn()},
                 },
               )
 
@@ -1882,17 +1882,17 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByKey: loadUserByKey({query}),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({ query }),
-                  loadUserByKey: loadUserByKey({ query }),
+                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByKey: loadUserByKey({query}),
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -1924,8 +1924,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1983,7 +1983,7 @@ describe('authenticate user account', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: {sendVerificationEmail: jest.fn()},
             },
           )
 
@@ -2062,7 +2062,7 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -2136,7 +2136,7 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -2157,8 +2157,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: { plurals: {} },
-            fr: { plurals: {} },
+            en: {plurals: {}},
+            fr: {plurals: {}},
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2216,7 +2216,7 @@ describe('authenticate user account', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              notify: { sendVerificationEmail: jest.fn() },
+              notify: {sendVerificationEmail: jest.fn()},
             },
           )
 
@@ -2296,7 +2296,7 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 
@@ -2372,7 +2372,7 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: { sendVerificationEmail: jest.fn() },
+                notify: {sendVerificationEmail: jest.fn()},
               },
             )
 

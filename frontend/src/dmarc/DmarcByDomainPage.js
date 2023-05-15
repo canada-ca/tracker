@@ -278,19 +278,32 @@ export default function DmarcByDomainPage() {
         )}
       </Flex>
 
-      <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
-        <InputLeftElement>
-          <SearchIcon />
-        </InputLeftElement>
-        <Input
-          type="text"
-          placeholder={t`Search for a domain`}
-          onChange={(e) => {
-            setSearchTerm(e.target.value)
-            resetToFirstPage()
-          }}
+      <Flex>
+        <InputGroup
+          w={{ base: '100%', md: '50%' }}
+          mb={{ base: '8px', md: '0' }}
+        >
+          <InputLeftElement>
+            <SearchIcon />
+          </InputLeftElement>
+          <Input
+            borderColor="black"
+            type="text"
+            placeholder={t`Search for a domain`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              resetToFirstPage()
+            }}
+          />
+        </InputGroup>
+
+        <InfoButton
+          onToggle={onToggle}
+          ml="100%"
+          borderColor="black"
+          borderWidth="1px"
         />
-      </InputGroup>
+      </Flex>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
@@ -307,7 +320,6 @@ export default function DmarcByDomainPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
-        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
         <InfoPanel isOpen={isOpen} onToggle={onToggle}>
           <InfoBox title={t`Domain`} info={t`The domain address.`} />
           <InfoBox

@@ -54,7 +54,7 @@ spec:
             - name: database-config
               mountPath: /app
       containers:
-        - image: gcr.io/track-compliance/api-js:master-06e45a8-1678136240 # {"$imagepolicy": "flux-system:api"}
+        - image: gcr.io/track-compliance/api-js:master-31a6309-1684164117 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
@@ -244,6 +244,16 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_VERIFICATION_EMAIL_FR
+            - name: NOTIFICATION_ORG_INVITE_REQUEST_EN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_REQUEST_EN
+            - name: NOTIFICATION_ORG_INVITE_REQUEST_FR
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_REQUEST_FR
             - name: TRACING_ENABLED
               valueFrom:
                 secretKeyRef:

@@ -1,5 +1,5 @@
-import { GraphQLInt } from 'graphql'
-import { domainConnection } from '../domain-connection'
+import {GraphQLInt} from 'graphql'
+import {domainConnection} from '../domain-connection'
 
 describe('given the domain connection object', () => {
   describe('testing its field definitions', () => {
@@ -15,7 +15,7 @@ describe('given the domain connection object', () => {
       it('returns the resolved value', () => {
         const demoType = domainConnection.connectionType.getFields()
 
-        expect(demoType.totalCount.resolve({ totalCount: 1 })).toEqual(1)
+        expect(demoType.totalCount.resolve({totalCount: 1})).toEqual(1)
       })
     })
   })

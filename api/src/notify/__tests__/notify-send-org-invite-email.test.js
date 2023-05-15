@@ -1,10 +1,10 @@
-import { setupI18n } from '@lingui/core'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
-import { sendOrgInviteEmail } from '../index'
+import {sendOrgInviteEmail} from '../index'
 
-const { NOTIFICATION_ORG_INVITE_EN, NOTIFICATION_ORG_INVITE_FR } = process.env
+const {NOTIFICATION_ORG_INVITE_EN, NOTIFICATION_ORG_INVITE_FR} = process.env
 
 describe('given the sendOrgInviteEmail function', () => {
   let i18n
@@ -16,8 +16,8 @@ describe('given the sendOrgInviteEmail function', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: { plurals: {} },
-        fr: { plurals: {} },
+        en: {plurals: {}},
+        fr: {plurals: {}},
       },
       locales: ['en', 'fr'],
       messages: {
@@ -35,8 +35,8 @@ describe('given the sendOrgInviteEmail function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -120,8 +120,8 @@ describe('given the sendOrgInviteEmail function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {

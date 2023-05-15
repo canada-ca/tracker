@@ -1,5 +1,5 @@
-import { authResultType, signUpError } from '../../objects/index'
-import { signUpUnion } from '../sign-up-union'
+import {authResultType, signUpError} from '../../objects/index'
+import {signUpUnion} from '../sign-up-union'
 
 describe('given the sign up union', () => {
   describe('testing the field types', () => {

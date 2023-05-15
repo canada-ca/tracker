@@ -16,13 +16,13 @@ export const getTypeNames = () => gql`
 
     # Select activity logs a user has access to.
     findAuditLogs(
-      # The organization you wish to remove the domain from.
+      # The organization you wish to query the logs from.
       orgId: ID
 
       # Ordering options for log connections.
       orderBy: LogOrder
 
-      # String used to search for domains.
+      # String used to search for logs by initiant user or target resource.
       search: String
 
       # Keywords used to filter log results.
@@ -155,17 +155,32 @@ export const getTypeNames = () => gql`
     # CSV formatted output of all domains in all organizations including their email and web scan statuses.
     getAllOrganizationDomainStatuses: String
 
-    # Email summary computed values, used to build summary cards.
-    mailSummary: CategorizedSummary
-
-    # Web summary computed values, used to build summary cards.
-    webSummary: CategorizedSummary
+    # DKIM summary computed values, used to build summary cards.
+    dkimSummary: CategorizedSummary
 
     # DMARC phase summary computed values, used to build summary cards.
     dmarcPhaseSummary: CategorizedSummary
 
+    # DMARC summary computed values, used to build summary cards.
+    dmarcSummary: CategorizedSummary
+
     # HTTPS summary computed values, used to build summary cards.
     httpsSummary: CategorizedSummary
+
+    # Email summary computed values, used to build summary cards.
+    mailSummary: CategorizedSummary
+
+    # SPF summary computed values, used to build summary cards.
+    spfSummary: CategorizedSummary
+
+    # SSL summary computed values, used to build summary cards.
+    sslSummary: CategorizedSummary
+
+    # SSL summary computed values, used to build summary cards.
+    webConnectionsSummary: CategorizedSummary
+
+    # Web summary computed values, used to build summary cards.
+    webSummary: CategorizedSummary
 
     # Query the currently logged in user.
     findMe: PersonalUser
@@ -308,35 +323,74 @@ export const getTypeNames = () => gql`
     # The ID of an object
     id: ID!
 
-    # Domain that scans will be ran on.
-    timestamp: String
+    # Datetime string the activity occurred.
+    timestamp: DateTime
 
-    # Domain that scans will be ran on.
+    # Username of admin that initiated the activity.
     initiatedBy: InitiatedBy
 
-    # Domain that scans will be ran on.
-    action: String
+    # Type of activity that was initiated.
+    action: UserActionEnums
 
-    # Domain that scans will be ran on.
+    # Information on targeted resource.
     target: TargetResource
 
-    # Domain that scans will be ran on.
-    reason: String
+    # Optional reason for action, used for domain removal.
+    reason: DomainRemovalReasonEnum
   }
+
+  # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the 'date-time' format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+  scalar DateTime
 
   # Information on the user that initiated the logged action
   type InitiatedBy {
     # The ID of an object
     id: ID!
 
-    # Domain that scans will be ran on.
-    userName: String
+    # User email address.
+    userName: EmailAddress
 
-    # Domain that scans will be ran on.
-    role: String
+    # User permission level.
+    role: RoleEnums
 
-    # Domain that scans will be ran on.
+    # User affiliated organization.
     organization: String
+  }
+
+  # A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
+  scalar EmailAddress
+
+  # An enum used to assign, and test users roles.
+  enum RoleEnums {
+    # A user who has requested an invite to an organization.
+    PENDING
+
+    # A user who has been given access to view an organization.
+    USER
+
+    # A user who has the same access as a user write account, but can define new user read/write accounts.
+    ADMIN
+
+    # A user who has the same access as an admin, but can define new admins.
+    SUPER_ADMIN
+  }
+
+  # Describes actions performed by users to modify resources.
+  enum UserActionEnums {
+    # A new resource was created.
+    CREATE
+
+    # A resource was deleted.
+    DELETE
+
+    # An affiliation between resources was created.
+    ADD
+
+    # Properties of a resource or affiliation were modified.
+    UPDATE
+
+    # An affiliation between resources was deleted.
+    REMOVE
   }
 
   # Resource that was the target of a specified action by a user.
@@ -348,7 +402,7 @@ export const getTypeNames = () => gql`
     organization: TargetOrganization
 
     # Type of resource that was modified: user, domain, or organization.
-    resourceType: String
+    resourceType: ResourceTypeEnums
 
     # List of resource properties that were modified.
     updatedProperties: [UpdatedProperties]
@@ -363,6 +417,18 @@ export const getTypeNames = () => gql`
     name: String
   }
 
+  # Keywords used to decribe resources that can be modified.
+  enum ResourceTypeEnums {
+    # A user account affiliated with an organization.
+    USER
+
+    # An organization.
+    ORGANIZATION
+
+    # A domain affiliated with an organization.
+    DOMAIN
+  }
+
   # Object describing how a resource property was updated.
   type UpdatedProperties {
     # Name of updated resource.
@@ -373,6 +439,15 @@ export const getTypeNames = () => gql`
 
     # New value of updated property.
     newValue: String
+  }
+
+  # Reason why a domain was removed from an organization.
+  enum DomainRemovalReasonEnum {
+    # Domain does not exist.
+    NONEXISTENT
+
+    # Domain was in the incorrect organization.
+    WRONG_ORG
   }
 
   # Ordering options for audit logs.
@@ -386,13 +461,13 @@ export const getTypeNames = () => gql`
 
   # Properties by which domain connections can be ordered.
   enum LogOrderField {
-    # Order domains by spf status.
+    # Order logs by timestamp.
     TIMESTAMP
 
-    # Order domains by spf status.
+    # Order logs by initiant's username.
     INITIATED_BY
 
-    # Order domains by spf status.
+    # Order logs by name of targeted resource.
     RESOURCE_NAME
   }
 
@@ -412,36 +487,6 @@ export const getTypeNames = () => gql`
 
     # List of user actions to include when returning logs.
     action: [UserActionEnums]
-  }
-
-  # Keywords used to decribe resources that can be modified.
-  enum ResourceTypeEnums {
-    # A user account affiliated with an organization.
-    USER
-
-    # An organization.
-    ORGANIZATION
-
-    # A domain affiliated with an organization.
-    DOMAIN
-  }
-
-  # Describes actions performed by users to modify resources.
-  enum UserActionEnums {
-    # A new resource was created.
-    CREATE
-
-    # A resource was deleted.
-    DELETE
-
-    # An affiliation between resources was created.
-    ADD
-
-    # Properties of a resource or affiliation were modified.
-    UPDATE
-
-    # An affiliation between resources was deleted.
-    REMOVE
   }
 
   # A connection to a list of items.
@@ -506,11 +551,23 @@ export const getTypeNames = () => gql`
     # The last time that a scan was ran on this domain.
     lastRan: String
 
+    # The status code when performing a DNS lookup for this domain.
+    rcode: String
+
     # Domain Keys Identified Mail (DKIM) selector strings associated with domain.
     selectors: [Selector]
 
     # The domains scan status, based on the latest scan data.
     status: DomainStatus
+
+    # Value that determines if a domain is excluded from any results and scans.
+    archived: Boolean
+
+    # Value that determines if a domain is possibly blocked.
+    blocked: Boolean
+
+    # Value that determines if a domain has a web scan pending.
+    webScanPending: Boolean
 
     # The organization that this domain belongs to.
     organizations(
@@ -539,11 +596,62 @@ export const getTypeNames = () => gql`
       last: Int
     ): OrganizationConnection
 
-    # DKIM, DMARC, and SPF scan results.
-    email: EmailScan
+    # DNS scan results.
+    dnsScan(
+      # Start date for date filter.
+      startDate: DateTime
 
-    # HTTPS, and SSL scan results.
-    web: WebScan
+      # End date for date filter.
+      endDate: DateTime
+
+      # Ordering options for DNS connections.
+      orderBy: DNSOrder
+
+      # Number of DNS scans to retrieve.
+      limit: Int
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): DNSScanConnection
+
+    # HTTPS, and TLS scan results.
+    web(
+      # Start date for date filter.
+      startDate: DateTime
+
+      # End date for date filter.
+      endDate: DateTime
+
+      # Ordering options for web connections.
+      orderBy: WebOrder
+
+      # Number of web scans to retrieve.
+      limit: Int
+
+      # Exclude web scans which have pending status.
+      excludePending: Boolean
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): WebConnection
 
     # Summarized DMARC aggregate reports.
     dmarcSummaryByPeriod(
@@ -559,16 +667,22 @@ export const getTypeNames = () => gql`
 
     # List of labelled tags users of an organization have applied to the claimed domain.
     claimTags: [String]
+
+    # Value that determines if a domain is excluded from an organization's results.
+    hidden: Boolean
   }
 
   # String that conforms to a domain structure.
   scalar DomainScalar
 
-  # A field that conforms to a DKIM selector. Only alphanumeric characters and periods are allowed, string must also start and end with alphanumeric characters
+  # A field that conforms to a DKIM selector. Must be either a single asterisk or a string where only alphanumeric characters and periods are allowed, string must also start and end with alphanumeric characters
   scalar Selector
 
   # This object contains how the domain is doing on the various scans we preform, based on the latest scan data.
   type DomainStatus {
+    # Certificates Status
+    certificates: StatusEnum
+
     # Ciphers Status
     ciphers: StatusEnum
 
@@ -685,6 +799,9 @@ export const getTypeNames = () => gql`
       # String used to search for domains.
       search: String
 
+      # Filters used to limit domains returned.
+      filters: [DomainFilter]
+
       # Returns the items in the list that come after the specified cursor.
       after: String
 
@@ -705,6 +822,9 @@ export const getTypeNames = () => gql`
 
       # String used to search for affiliated users.
       search: String
+
+      # Exclude (false) or include only (true) pending affiliations in the results.
+      includePending: Boolean
 
       # Returns the items in the list that come after the specified cursor.
       after: String
@@ -742,6 +862,24 @@ export const getTypeNames = () => gql`
 
     # Summary based on DMARC phases for a given organization.
     dmarcPhase: CategorizedSummary
+
+    # Summary based on SSL scan results for a given organization.
+    ssl: CategorizedSummary
+
+    # Summary based on HTTPS and HSTS scan results for a given organization.
+    webConnections: CategorizedSummary
+
+    # Summary based on SPF scan results for a given organization.
+    spf: CategorizedSummary
+
+    # Summary based on DKIM scan results for a given organization.
+    dkim: CategorizedSummary
+
+    # Summary based on HTTPS scan results for a given organization that includes domains marked as hidden.
+    httpsIncludeHidden: CategorizedSummary
+
+    # Summary based on HTTPS scan results for a given organization that includes domains marked as hidden.
+    dmarcIncludeHidden: CategorizedSummary
   }
 
   # This object contains the list of different categories for pre-computed
@@ -799,6 +937,9 @@ export const getTypeNames = () => gql`
 
   # Properties by which domain connections can be ordered.
   enum DomainOrderField {
+    # Order domains by certificates status.
+    CERTIFICATES_STATUS
+
     # Order domains by ciphers status.
     CIPHERS_STATUS
 
@@ -828,6 +969,75 @@ export const getTypeNames = () => gql`
 
     # Order domains by spf status.
     SPF_STATUS
+
+    # Order domains by tags.
+    TAGS
+  }
+
+  # This object is used to provide filtering options when querying org-claimed domains.
+  input DomainFilter {
+    # Category of filter to be applied.
+    filterCategory: DomainOrderField
+
+    # First value equals or does not equal second value.
+    comparison: ComparisonEnums
+
+    # Status type or tag label.
+    filterValue: filterValueEnums
+  }
+
+  #
+  enum ComparisonEnums {
+    #
+    EQUAL
+
+    #
+    NOT_EQUAL
+  }
+
+  #
+  enum filterValueEnums {
+    # If the given check meets the passing requirements.
+    PASS
+
+    # If the given check has flagged something that can provide information on the domain that aren't scan related.
+    INFO
+
+    # If the given check does not meet the passing requirements
+    FAIL
+
+    # English label for tagging domains as new to the system.
+    NEW
+
+    # French label for tagging domains as new to the system.
+    NOUVEAU
+
+    # Bilingual Label for tagging domains as a production environment.
+    PROD
+
+    # English label for tagging domains as a staging environment.
+    STAGING
+
+    # French label for tagging domains as a staging environment.
+    DEV
+
+    # Bilingual label for tagging domains as a test environment.
+    TEST
+
+    # Bilingual label for tagging domains as web-hosting.
+    WEB
+
+    # English label for tagging domains that are not active.
+    INACTIVE
+
+    # French label for tagging domains that are not active.
+    INACTIF
+
+    # English label for tagging domains that are hidden.
+    HIDDEN
+
+    # English label for tagging domains that are archived.
+    ARCHIVED
   }
 
   # A connection to a list of items.
@@ -864,18 +1074,6 @@ export const getTypeNames = () => gql`
 
     # The affiliated organizations information.
     organization: Organization
-  }
-
-  # An enum used to assign, and test users roles.
-  enum RoleEnums {
-    # A user who has been given access to view an organization.
-    USER
-
-    # A user who has the same access as a user write account, but can define new user read/write accounts.
-    ADMIN
-
-    # A user who has the same access as an admin, but can define new admins.
-    SUPER_ADMIN
   }
 
   # This object is used for showing none personal user details,
@@ -917,9 +1115,6 @@ export const getTypeNames = () => gql`
       last: Int
     ): AffiliationConnection
   }
-
-  # A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
-  scalar EmailAddress
 
   # Ordering options for affiliation connections.
   input AffiliationOrgOrder {
@@ -995,13 +1190,16 @@ export const getTypeNames = () => gql`
     # Order affiliation edges by username.
     USER_USERNAME
 
-    # Order affiliation edges by displayName
+    # Order affiliation edges by displayName.
     USER_DISPLAYNAME
 
-    # Order affiliation edges by user verification status
+    # Order affiliation edges by user verification status.
     USER_EMAIL_VALIDATED
 
-    # Order affiliation edges by amount of total affiliations
+    # Order affiliation edges by user insider status.
+    USER_INSIDER
+
+    # Order affiliation edges by amount of total affiliations.
     USER_AFFILIATIONS_COUNT
   }
 
@@ -1065,281 +1263,128 @@ export const getTypeNames = () => gql`
     DOMAIN_COUNT
   }
 
-  # Results of DKIM, DMARC, and SPF scans on the given domain.
-  type EmailScan {
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # DomainKeys Identified Mail (DKIM) Signatures scan results.
-    dkim(
-      # Start date for date filter.
-      startDate: Date
-
-      # End date for date filter.
-      endDate: Date
-
-      # Ordering options for dkim connections.
-      orderBy: DKIMOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): DKIMConnection
-
-    # Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.
-    dmarc(
-      # Start date for date filter.
-      startDate: Date
-
-      # End date for date filter.
-      endDate: Date
-
-      # Ordering options for dmarc connections.
-      orderBy: DMARCOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): DMARCConnection
-
-    # Sender Policy Framework (SPF) scan results.
-    spf(
-      # Start date for date filter.
-      startDate: Date
-
-      # End date for date filter.
-      endDate: Date
-
-      # Ordering options for spf connections.
-      orderBy: SPFOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): SPFConnection
-  }
-
   # A connection to a list of items.
-  type DKIMConnection {
+  type DNSScanConnection {
     # Information to aid in pagination.
     pageInfo: PageInfo!
 
     # A list of edges.
-    edges: [DKIMEdge]
+    edges: [DNSScanEdge]
 
-    # The total amount of dkim scans related to a given domain.
+    # The total amount of DNS scans related to a given domain.
     totalCount: Int
   }
 
   # An edge in a connection.
-  type DKIMEdge {
+  type DNSScanEdge {
     # The item at the end of the edge
-    node: DKIM
+    node: DNSScan
 
     # A cursor for use in pagination
     cursor: String!
   }
 
-  # DomainKeys Identified Mail (DKIM) permits a person, role, or
-  # organization that owns the signing domain to claim some
-  # responsibility for a message by associating the domain with the
-  # message.  This can be an author's organization, an operational relay,
-  # or one of their agents.
-  type DKIM implements Node {
+  # Results of DKIM, DMARC, and SPF scans on the given domain.
+  type DNSScan implements Node {
     # The ID of an object
     id: ID!
 
     # The domain the scan was ran on.
-    domain: Domain
+    domain: String
 
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
-    # Individual scans results for each DKIM selector.
-    results(
-      # Ordering options for DKIM result connections.
-      orderBy: DKIMResultOrder
+    # String of the base domain the scan was run on.
+    baseDomain: String
 
-      # Returns the items in the list that come after the specified cursor.
-      after: String
+    # Whether or not there are DNS records for the domain scanned.
+    recordExists: Boolean
 
-      # Returns the first n items from the list.
-      first: Int
+    # The chain CNAME/IP addresses for the domain.
+    resolveChain: [[String]]
 
-      # Returns the items in the list that come before the specified cursor.
-      before: String
+    # The CNAME for the domain (if it exists).
+    cnameRecord: String
 
-      # Returns the last n items from the list.
-      last: Int
-    ): DKIMResultConnection
-  }
+    # The MX records for the domain (if they exist).
+    mxRecords: MXRecord
 
-  # A date string, such as 2007-12-03, compliant with the \`full-date\` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-  scalar Date
+    # The NS records for the domain.
+    nsRecords: NSRecord
 
-  # A connection to a list of items.
-  type DKIMResultConnection {
-    # Information to aid in pagination.
-    pageInfo: PageInfo!
+    # The DMARC scan results for the domain.
+    dmarc: DMARC
 
-    # A list of edges.
-    edges: [DKIMResultEdge]
+    # The SPF scan results for the domain.
+    spf: SPF
 
-    # The total amount of dkim results related to a given domain.
-    totalCount: Int
-  }
-
-  # An edge in a connection.
-  type DKIMResultEdge {
-    # The item at the end of the edge
-    node: DKIMResult
-
-    # A cursor for use in pagination
-    cursor: String!
-  }
-
-  # Individual scans results for the given DKIM selector.
-  type DKIMResult implements Node {
-    # The ID of an object
-    id: ID!
-
-    # The DKIM scan information that this result belongs to.
+    # The SKIM scan results for the domain.
     dkim: DKIM
+  }
 
-    # The selector the scan was ran on.
-    selector: String
+  type MXRecord {
+    # Hosts listed in the domain's MX record.
+    hosts: [MXHost]
 
-    # DKIM record retrieved during the scan of the domain.
+    # Additional warning info about the MX record.
+    warnings: [String]
+  }
+
+  # Hosts listed in the domain's MX record.
+  type MXHost {
+    # The preference (or priority) of the host.
+    preference: Int
+
+    # The hostname of the given host.
+    hostname: String
+
+    # The IP addresses for the given host.
+    addresses: [String]
+  }
+
+  type NSRecord {
+    # Hostnames for the nameservers for the domain.
+    hostnames: [String]
+
+    # Additional warning info about the NS record.
+    warnings: [String]
+  }
+
+  # Domain-based Message Authentication, Reporting, and Conformance
+  # (DMARC) is a scalable mechanism by which a mail-originating
+  # organization can express domain-level policies and preferences for
+  # message validation, disposition, and reporting, that a mail-receiving
+  # organization can use to improve mail handling.
+  type DMARC {
+    # The compliance status for DMARC for the scanned domain.
+    status: String
+
+    # DMARC record retrieved during scan.
     record: String
 
-    # Size of the Public Key in bits
-    keyLength: String
+    # The requested policy you wish mailbox providers to apply
+    # when your email fails DMARC authentication and alignment checks.
+    pPolicy: String
 
-    # Raw scan result.
-    rawJson: JSON
+    # This tag is used to indicate a requested policy for all
+    # subdomains where mail is failing the DMARC authentication and alignment checks.
+    spPolicy: String
 
-    # Guidance tags found during scan.
-    guidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
+    # The percentage of messages to which the DMARC policy is to be applied.
+    pct: Int
 
-      # Returns the items in the list that come after the specified cursor.
-      after: String
+    # The current phase of the DMARC implementation.
+    phase: String
 
-      # Returns the first n items from the list.
-      first: Int
+    # List of positive tags for the scanned domain from this scan.
+    positiveTags: [GuidanceTag]
 
-      # Returns the items in the list that come before the specified cursor.
-      before: String
+    # List of neutral tags for the scanned domain from this scan.
+    neutralTags: [GuidanceTag]
 
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-  }
-
-  # The \`JSON\` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-  scalar JSON
-
-  # A connection to a list of items.
-  type GuidanceTagConnection {
-    # Information to aid in pagination.
-    pageInfo: PageInfo!
-
-    # A list of edges.
-    edges: [GuidanceTagEdge]
-
-    # The total amount of guidance tags for a given scan type.
-    totalCount: Int
-  }
-
-  # An edge in a connection.
-  type GuidanceTagEdge {
-    # The item at the end of the edge
-    node: GuidanceTag
-
-    # A cursor for use in pagination
-    cursor: String!
+    # List of negative tags for the scanned domain from this scan.
+    negativeTags: [GuidanceTag]
   }
 
   # Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags
@@ -1372,240 +1417,6 @@ export const getTypeNames = () => gql`
     refLink: String
   }
 
-  # Ordering options for guidance tag connections.
-  input GuidanceTagOrder {
-    # The field to order guidance tags by.
-    field: GuidanceTagOrderField!
-
-    # The ordering direction.
-    direction: OrderDirection!
-  }
-
-  # Properties by which Guidance Tag connections can be ordered.
-  enum GuidanceTagOrderField {
-    # Order guidance tag edges by tag id.
-    TAG_ID
-
-    # Order guidance tag edges by tag name.
-    TAG_NAME
-
-    # Order guidance tag edges by tag guidance.
-    GUIDANCE
-  }
-
-  # Ordering options for DKIM Result connections.
-  input DKIMResultOrder {
-    # The field to order DKIM Results by.
-    field: DKIMResultOrderField!
-
-    # The ordering direction.
-    direction: OrderDirection!
-  }
-
-  # Properties by which DKIM Result connections can be ordered.
-  enum DKIMResultOrderField {
-    # Order DKIM Result edges by timestamp.
-    SELECTOR
-
-    # Order DKIM Result edges by record.
-    RECORD
-
-    # Order DKIM Result edges by key length.
-    KEY_LENGTH
-  }
-
-  # Ordering options for DKIM connections.
-  input DKIMOrder {
-    # The field to order DKIM scans by.
-    field: DKIMOrderField!
-
-    # The ordering direction.
-    direction: OrderDirection!
-  }
-
-  # Properties by which DKIM connections can be ordered.
-  enum DKIMOrderField {
-    # Order DKIM edges by timestamp.
-    TIMESTAMP
-  }
-
-  # A connection to a list of items.
-  type DMARCConnection {
-    # Information to aid in pagination.
-    pageInfo: PageInfo!
-
-    # A list of edges.
-    edges: [DMARCEdge]
-
-    # The total amount of dmarc scans related to a given domain.
-    totalCount: Int
-  }
-
-  # An edge in a connection.
-  type DMARCEdge {
-    # The item at the end of the edge
-    node: DMARC
-
-    # A cursor for use in pagination
-    cursor: String!
-  }
-
-  # Domain-based Message Authentication, Reporting, and Conformance
-  # (DMARC) is a scalable mechanism by which a mail-originating
-  # organization can express domain-level policies and preferences for
-  # message validation, disposition, and reporting, that a mail-receiving
-  # organization can use to improve mail handling.
-  type DMARC implements Node {
-    # The ID of an object
-    id: ID!
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The time when the scan was initiated.
-    timestamp: Date
-
-    # DMARC record retrieved during scan.
-    record: String
-
-    # The requested policy you wish mailbox providers to apply
-    # when your email fails DMARC authentication and alignment checks.
-    pPolicy: String
-
-    # This tag is used to indicate a requested policy for all
-    # subdomains where mail is failing the DMARC authentication and alignment checks.
-    spPolicy: String
-
-    # The percentage of messages to which the DMARC policy is to be applied.
-    pct: Int
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # Guidance tags found during DMARC Scan.
-    guidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
-
-    # Negative guidance tags found during DMARC Scan.
-    negativeGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Neutral guidance tags found during DMARC Scan.
-    neutralGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Positive guidance tags found during DMARC Scan.
-    positiveGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-  }
-
-  # Ordering options for DMARC connections.
-  input DMARCOrder {
-    # The field to order DMARC scans by.
-    field: DmarcOrderField!
-
-    # The ordering direction.
-    direction: OrderDirection!
-  }
-
-  # Properties by which dmarc connections can be ordered.
-  enum DmarcOrderField {
-    # Order dmarc summaries by timestamp.
-    TIMESTAMP
-
-    # Order dmarc summaries by record.
-    RECORD
-
-    # Order dmarc summaries by p policy.
-    P_POLICY
-
-    # Order dmarc summaries by sp policy.
-    SP_POLICY
-
-    # Order dmarc summaries by percentage.
-    PCT
-  }
-
-  # A connection to a list of items.
-  type SPFConnection {
-    # Information to aid in pagination.
-    pageInfo: PageInfo!
-
-    # A list of edges.
-    edges: [SPFEdge]
-
-    # The total amount of spf scans related to a given domain.
-    totalCount: Int
-  }
-
-  # An edge in a connection.
-  type SPFEdge {
-    # The item at the end of the edge
-    node: SPF
-
-    # A cursor for use in pagination
-    cursor: String!
-  }
-
   # Email on the Internet can be forged in a number of ways.  In
   # particular, existing protocols place no restriction on what a sending
   # host can use as the "MAIL FROM" of a message or the domain given on
@@ -1613,516 +1424,481 @@ export const getTypeNames = () => gql`
   # protocol is where Administrative Management Domains (ADMDs) can explicitly
   # authorize the hosts that are allowed to use their domain names, and a
   # receiving host can check such authorization.
-  type SPF implements Node {
-    # The ID of an object
-    id: ID!
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The time the scan was initiated.
-    timestamp: Date
-
-    # The amount of DNS lookups.
-    lookups: Int
+  type SPF {
+    # The compliance status for SPF for the scanned domain.
+    status: String
 
     # SPF record retrieved during the scan of the given domain.
     record: String
 
+    # The amount of DNS lookups.
+    lookups: Int
+
     # Instruction of what a recipient should do if there is not a match to your SPF record.
     spfDefault: String
 
-    # Raw scan result.
-    rawJson: JSON
+    # List of positive tags for the scanned domain from this scan.
+    positiveTags: [GuidanceTag]
 
-    # Guidance tags found during scan.
-    guidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
+    # List of neutral tags for the scanned domain from this scan.
+    neutralTags: [GuidanceTag]
 
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
+    # List of negative tags for the scanned domain from this scan.
+    negativeTags: [GuidanceTag]
   }
 
-  # Ordering options for SPF connections.
-  input SPFOrder {
-    # The field to order SPF scans by.
-    field: SPFOrderField!
+  # DomainKeys Identified Mail (DKIM) permits a person, role, or
+  # organization that owns the signing domain to claim some
+  # responsibility for a message by associating the domain with the
+  # message.  This can be an author's organization, an operational relay,
+  # or one of their agents.
+  type DKIM {
+    # The compliance status for DKIM for the scanned domain.
+    status: String
+
+    # List of positive tags for the scanned domain from this scan.
+    positiveTags: [GuidanceTag]
+
+    # List of neutral tags for the scanned domain from this scan.
+    neutralTags: [GuidanceTag]
+
+    # List of negative tags for the scanned domain from this scan.
+    negativeTags: [GuidanceTag]
+
+    # Individual scans results for each DKIM selector.
+    selectors: [DKIMSelectorResult]
+  }
+
+  # DomainKeys Identified Mail (DKIM) permits a person, role, or
+  # organization that owns the signing domain to claim some
+  # responsibility for a message by associating the domain with the
+  # message.  This can be an author's organization, an operational relay,
+  # or one of their agents.
+  type DKIMSelectorResult {
+    # The selector which was scanned.
+    selector: String
+
+    # The compliance status for DKIM for the scanned domain.
+    status: String
+
+    # DKIM record retrieved during scan.
+    record: String
+
+    # Size of the Public Key in bits.
+    keyLength: String
+
+    # Type of DKIM key used.
+    keyType: String
+
+    # The public exponent used for DKIM.
+    publicExponent: Int
+
+    # The key modulus used.
+    keyModulus: String
+
+    # List of positive tags for the scanned domain from this scan.
+    positiveTags: [GuidanceTag]
+
+    # List of neutral tags for the scanned domain from this scan.
+    neutralTags: [GuidanceTag]
+
+    # List of negative tags for the scanned domain from this scan.
+    negativeTags: [GuidanceTag]
+  }
+
+  # Ordering options for DNS connections.
+  input DNSOrder {
+    # The field to order DNS scans by.
+    field: DNSOrderField!
 
     # The ordering direction.
     direction: OrderDirection!
   }
 
-  # Properties by which SPF connections can be ordered.
-  enum SPFOrderField {
-    # Order SPF edges by timestamp.
+  # Properties by which DNS connections can be ordered.
+  enum DNSOrderField {
+    # Order DNS edges by timestamp.
     TIMESTAMP
-
-    # Order SPF edges by lookups.
-    LOOKUPS
-
-    # Order SPF edges by record.
-    RECORD
-
-    # Order SPF edges by spf-default.
-    SPF_DEFAULT
-  }
-
-  # Results of HTTPS, and SSL scan on the given domain.
-  type WebScan {
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # Hyper Text Transfer Protocol Secure scan results.
-    https(
-      # Start date for date filter.
-      startDate: Date
-
-      # End date for date filter.
-      endDate: Date
-
-      # Ordering options for https connections.
-      orderBy: HTTPSOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): HTTPSConnection
-
-    # Secure Socket Layer scan results.
-    ssl(
-      # Start date for date filter.
-      startDate: Date
-
-      # End date for date filter.
-      endDate: Date
-
-      # Ordering options for ssl connections.
-      orderBy: SSLOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): SSLConnection
   }
 
   # A connection to a list of items.
-  type HTTPSConnection {
+  type WebConnection {
     # Information to aid in pagination.
     pageInfo: PageInfo!
 
     # A list of edges.
-    edges: [HTTPSEdge]
+    edges: [WebEdge]
 
-    # The total amount of https scans for a given domain.
+    # The total amount of web scans related to a given domain.
     totalCount: Int
   }
 
   # An edge in a connection.
-  type HTTPSEdge {
+  type WebEdge {
     # The item at the end of the edge
-    node: HTTPS
+    node: Web
 
     # A cursor for use in pagination
     cursor: String!
   }
 
-  # Hyper Text Transfer Protocol Secure scan results.
-  type HTTPS implements Node {
+  # Results of TLS and HTTP connection scans on the given domain.
+  type Web implements Node {
     # The ID of an object
     id: ID!
 
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The time the scan was initiated.
-    timestamp: Date
-
-    # State of the HTTPS implementation on the server and any issues therein.
-    implementation: String
-
-    # Degree to which HTTPS is enforced on the server based on behaviour.
-    enforced: String
-
-    # Presence and completeness of HSTS implementation.
-    hsts: String
-
-    # Denotes how long the domain should only be accessed using HTTPS
-    hstsAge: String
-
-    # Denotes whether the domain has been submitted and included within HSTS preload list.
-    preloaded: String
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # Guidance tags found during scan.
-    guidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-  }
-
-  # Ordering options for HTTPS connections.
-  input HTTPSOrder {
-    # The field to order HTTPS edges by.
-    field: HTTPSOrderField!
-
-    # The ordering direction.
-    direction: OrderDirection!
-  }
-
-  # Properties by which HTTPS connections can be ordered.
-  enum HTTPSOrderField {
-    # Order HTTPS edges by timestamp.
-    TIMESTAMP
-
-    # Order HTTPS edges by implementation.
-    IMPLEMENTATION
-
-    # Order HTTPS edges by enforced.
-    ENFORCED
-
-    # Order HTTPS edges by hsts.
-    HSTS
-
-    # Order HTTPS edges by hsts age.
-    HSTS_AGE
-
-    # Order HTTPS edges by preloaded.
-    PRELOADED
-  }
-
-  # A connection to a list of items.
-  type SSLConnection {
-    # Information to aid in pagination.
-    pageInfo: PageInfo!
-
-    # A list of edges.
-    edges: [SSLEdge]
-
-    # The total amount of https scans for a given domain.
-    totalCount: Int
-  }
-
-  # An edge in a connection.
-  type SSLEdge {
-    # The item at the end of the edge
-    node: SSL
-
-    # A cursor for use in pagination
-    cursor: String!
-  }
-
-  # Secure Socket Layer scan results.
-  type SSL implements Node {
-    # The ID of an object
-    id: ID!
-
-    # List of ciphers in use by the server deemed to be "acceptable".
-    acceptableCiphers: [String]
-
-    # List of curves in use by the server deemed to be "acceptable".
-    acceptableCurves: [String]
-
-    # Denotes vulnerability to OpenSSL CCS Injection.
-    ccsInjectionVulnerable: Boolean
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # Denotes vulnerability to "Heartbleed" exploit.
-    heartbleedVulnerable: Boolean
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # List of ciphers in use by the server deemed to be "strong".
-    strongCiphers: [String]
-
-    # List of curves in use by the server deemed to be "strong".
-    strongCurves: [String]
-
-    # Denotes support for elliptic curve key pairs.
-    supportsEcdhKeyExchange: Boolean
+    # The domain string the scan was ran on.
+    domain: String
 
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
-    # List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
-    weakCiphers: [String]
-
-    # List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
-    weakCurves: [String]
-
-    # Guidance tags found during scan.
-    guidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-      @deprecated(
-        reason: "This has been sub-divided into neutral, negative, and positive tags."
-      )
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags(
-      # Ordering options for guidance tag connections
-      orderBy: GuidanceTagOrder
-
-      # Returns the items in the list that come after the specified cursor.
-      after: String
-
-      # Returns the first n items from the list.
-      first: Int
-
-      # Returns the items in the list that come before the specified cursor.
-      before: String
-
-      # Returns the last n items from the list.
-      last: Int
-    ): GuidanceTagConnection
+    # Results of the web scan at each IP address.
+    results: [WebScan]
   }
 
-  # Ordering options for SSL connections.
-  input SSLOrder {
-    # The field to order SSL edges by.
-    field: SSLOrderField!
+  # Information for the TLS and HTTP connection scans on the given domain.
+  type WebScan {
+    # IP address for scan target.
+    ipAddress: String
+
+    # The status of the scan for the given domain and IP address.
+    status: String
+
+    # Results of TLS and HTTP connection scans on the given domain.
+    results: WebScanResult
+  }
+
+  # Results of TLS and HTTP connection scans on the given domain.
+  type WebScanResult {
+    # The time when the scan was initiated.
+    timestamp: DateTime
+
+    # The result for the TLS scan for the scanned server.
+    tlsResult: TLSResult
+
+    # The result for the HTTP connection scan for the scanned server.
+    connectionResults: WebConnectionResult
+  }
+
+  # Results of TLS scans on the given domain.
+  type TLSResult {
+    # The IP address of the domain scanned.
+    ipAddress: String
+
+    # Information regarding the server which was scanned.
+    serverLocation: ServerLocation
+
+    # Information for the TLS certificate retrieved from the scanned server.
+    certificateChainInfo: CertificateChainInfo
+
+    # Whether or not the scanned server supports ECDH key exchange.
+    supportsEcdhKeyExchange: Boolean
+
+    # Whether or not the scanned server is vulnerable to heartbleed.
+    heartbleedVulnerable: Boolean
+
+    # Whether or not the scanned server is vulnerable to heartbleed.
+    robotVulnerable: String
+
+    # Whether or not the scanned server is vulnerable to CCS injection.
+    ccsInjectionVulnerable: Boolean
+
+    # An object containing the various TLS protocols and which suites are enabled for each protocol.
+    acceptedCipherSuites: AcceptedCipherSuites
+
+    # List of the scanned servers accepted elliptic curves and their strength.
+    acceptedEllipticCurves: [EllipticCurve]
+
+    # List of positive tags for the scanned server from this scan.
+    positiveTags: [GuidanceTag]
+
+    # List of neutral tags for the scanned server from this scan.
+    neutralTags: [GuidanceTag]
+
+    # List of negative tags for the scanned server from this scan.
+    negativeTags: [GuidanceTag]
+
+    # The compliance status of the certificate bundle for the scanned server from this scan.
+    certificateStatus: String
+
+    # The compliance status for TLS for the scanned server from this scan.
+    sslStatus: String
+
+    # The compliance status for TLS protocol for the scanned server from this scan.
+    protocolStatus: String
+
+    # The compliance status for cipher suites for the scanned server from this scan.
+    cipherStatus: String
+
+    # The compliance status for ECDH curves for the scanned server from this scan.
+    curveStatus: String
+  }
+
+  type ServerLocation {
+    # Hostname which was scanned.
+    hostname: String
+
+    # IP address used for scan.
+    ipAddress: String
+  }
+
+  #
+  type CertificateChainInfo {
+    # Validation results from each trust store.
+    pathValidationResults: [PathValidationResults]
+
+    # True if domain is not listed on the given TLS certificate.
+    badHostname: Boolean
+
+    # Whether or not the TLS certificate includes the OCSP Must-Staple extension.
+    mustHaveStaple: Boolean
+
+    # Whether or not the leaf (server) certificate is an Extended Validation (EV) certificate.
+    leafCertificateIsEv: Boolean
+
+    # Whether or not the certificate bundle includes the anchor (root) certificate.
+    receivedChainContainsAnchorCertificate: Boolean
+
+    # Whether or not the certificates in the certificate bundles are in the correct order.
+    receivedChainHasValidOrder: Boolean
+
+    # Whether or not any certificates in the certificate bundle were signed using the SHA1 algorithm.
+    verifiedChainHasSha1Signature: Boolean
+
+    # Whether or not the certificate chain includes a distrusted Symantec certificate.
+    verifiedChainHasLegacySymantecAnchor: Boolean
+
+    # The certificate chain which was used to create the TLS connection.
+    certificateChain: [Certificate]
+  }
+
+  # Validation results from each trust store.
+  type PathValidationResults {
+    # Error string which occurred when attempting to validate certificate if error exists, else null.
+    opensslErrorString: String
+
+    # Whether or not the certificate was successfully validated.
+    wasValidationSuccessful: Boolean
+
+    # Trust store used to validate TLS certificate.
+    trustStore: TrustStore
+  }
+
+  # Trust store used to validate TLS certificate.
+  type TrustStore {
+    # Name of trust store used to validate certificate.
+    name: String
+
+    # Version of trust store used to validate certificate.
+    version: String
+  }
+
+  # Certificate from the scanned server.
+  type Certificate {
+    # The date which the certificate becomes initially becomes valid.
+    notValidBefore: String
+
+    # The date which the certificate becomes invalid.
+    notValidAfter: String
+
+    # The entity which signed the certificate.
+    issuer: String
+
+    # The entity for which the certificate was created for.
+    subject: String
+
+    # Whether or not the certificate is expired.
+    expiredCert: Boolean
+
+    # Whether or not the certificate is self-signed.
+    selfSignedCert: Boolean
+
+    # Whether or not the certificate has been revoked.
+    certRevoked: Boolean
+
+    # The status of the certificate revocation check.
+    certRevokedStatus: String
+
+    # The list of common names for the given certificate.
+    commonNames: [String]
+
+    # The serial number for the given certificate.
+    serialNumber: String
+
+    # The hashing algorithm used to validate this certificate.
+    signatureHashAlgorithm: String
+
+    # The list of all alternative (domain)names which can use this certificate.
+    sanList: [String]
+  }
+
+  # List of accepted cipher suites separated by TLS version.
+  type AcceptedCipherSuites {
+    # Accepted cipher suites for SSL2.
+    ssl2_0CipherSuites: [CipherSuite]
+
+    # Accepted cipher suites for SSL3.
+    ssl3_0CipherSuites: [CipherSuite]
+
+    # Accepted cipher suites for TLS1.0.
+    tls1_0CipherSuites: [CipherSuite]
+
+    # Accepted cipher suites for TLS1.1.
+    tls1_1CipherSuites: [CipherSuite]
+
+    # Accepted cipher suites for TLS1.2.
+    tls1_2CipherSuites: [CipherSuite]
+
+    # Accepted cipher suites for TLS1.3.
+    tls1_3CipherSuites: [CipherSuite]
+  }
+
+  # Cipher suite information.
+  type CipherSuite {
+    # The name of the cipher suite
+    name: String
+
+    # The strength of the cipher suite.
+    strength: String
+  }
+
+  # Elliptic curve information.
+  type EllipticCurve {
+    # The name of the elliptic curve.
+    name: String
+
+    # The strength of the elliptic curve.
+    strength: String
+  }
+
+  # Results of HTTP connection scan on the given domain.
+  type WebConnectionResult {
+    # The compliance status for HSTS for the scanned server from this scan.
+    hstsStatus: String
+
+    # The compliance status for HTTPS for the scanned server from this scan.
+    httpsStatus: String
+
+    # Whether or not the server is serving data over HTTP.
+    httpLive: Boolean
+
+    # Whether or not the server is serving data over HTTPS
+    httpsLive: Boolean
+
+    # Whether or not HTTP connection was immediately upgraded (redirected) to HTTPS.
+    httpImmediatelyUpgrades: Boolean
+
+    # Whether or not HTTP connection was eventually upgraded to HTTPS.
+    httpEventuallyUpgrades: Boolean
+
+    # Whether or not HTTPS connection is immediately downgraded to HTTP.
+    httpsImmediatelyDowngrades: Boolean
+
+    # Whether or not HTTPS connection is eventually downgraded to HTTP.
+    httpsEventuallyDowngrades: Boolean
+
+    # The parsed values for the HSTS header.
+    hstsParsed: HSTSParsed
+
+    # The IP address for the scanned server.
+    ipAddress: String
+
+    # The chain of connections created when visiting the domain using HTTP.
+    httpChainResult: ConnectionChainResult
+
+    # The chain of connections created when visiting the domain using HTTPS.
+    httpsChainResult: ConnectionChainResult
+
+    # List of positive tags for the scanned server from this scan.
+    positiveTags: [GuidanceTag]
+
+    # List of neutral tags for the scanned server from this scan.
+    neutralTags: [GuidanceTag]
+
+    # List of negative tags for the scanned server from this scan.
+    negativeTags: [GuidanceTag]
+  }
+
+  # The parsed values of the HSTS header.
+  type HSTSParsed {
+    # How long to trust the HSTS header.
+    maxAge: Int
+
+    # Whether or not this HSTS policy should apply to subdomains.
+    includeSubdomains: Boolean
+
+    # Whether or not the HSTS header includes the 'preload' option.
+    preload: Boolean
+  }
+
+  # Information collected while checking HTTP connections while following redirects.
+  type ConnectionChainResult {
+    # The connection protocol used for the initial connection to the server (HTTP or HTTPS).
+    scheme: String
+
+    # The domain the scan was run on.
+    domain: String
+
+    # The initial full connection URI.
+    uri: String
+
+    # Whether or not a redirection loop is created (causing endless redirects).
+    hasRedirectLoop: Boolean
+
+    # The connection chain created when following redirects.
+    connections: [Connection]
+  }
+
+  # An HTTP (or HTTPS) connection.
+  type Connection {
+    # The URI for the given connection.
+    uri: String
+
+    # Detailed information for a given connection.
+    connection: ConnectionInfo
+
+    # Any errors which occurred when attempting to create this connection.
+    error: String
+
+    # The connection protocol used for this connection (HTTP or HTTPS).
+    scheme: String
+  }
+
+  # Detailed info for a given connection.
+  type ConnectionInfo {
+    # The HTTP response status code.
+    statusCode: Int
+
+    # The redirect location from the HTTP response.
+    redirectTo: String
+
+    # The response headers from the HTTP response. The keys of the response are the header keys.
+    headers: JSONObject
+
+    # The detected category for the domain if blocked by firewall.
+    blockedCategory: String
+
+    # Whether or not the response included an HSTS header.
+    HSTS: Boolean
+  }
+
+  # The 'JSONObject' scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+  scalar JSONObject
+
+  # Ordering options for web connections.
+  input WebOrder {
+    # The field to order web scans by.
+    field: WebOrderField!
 
     # The ordering direction.
     direction: OrderDirection!
   }
 
-  # Properties by which SSL connections can be ordered.
-  enum SSLOrderField {
-    # Order SSL edges by their acceptable ciphers.
-    ACCEPTABLE_CIPHERS
-
-    # Order SSL edges by their acceptable curves.
-    ACCEPTABLE_CURVES
-
-    # Order SSL edges by ccs-injection-vulnerable.
-    CCS_INJECTION_VULNERABLE
-
-    # Order SSL edges by heart-bleed-vulnerable.
-    HEARTBLEED_VULNERABLE
-
-    # Order SSL edges by their strong ciphers.
-    STRONG_CIPHERS
-
-    # Order SSL edges by their strong curves.
-    STRONG_CURVES
-
-    # Order SSL edges by supports-ecdh-key-exchange.
-    SUPPORTS_ECDH_KEY_EXCHANGE
-
-    # Order SSL edges by timestamp.
+  # Properties by which web connections can be ordered.
+  enum WebOrderField {
+    # Order web edges by timestamp.
     TIMESTAMP
-
-    # Order SSL edges by their weak ciphers.
-    WEAK_CIPHERS
-
-    # Order SSL edges by their weak curves.
-    WEAK_CURVES
   }
 
   # An enum used to select information from the dmarc-report-api.
@@ -2313,7 +2089,7 @@ export const getTypeNames = () => gql`
     # Guidance for any issues that were found from the report.
     guidance: String
       @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+        reason: "This has been turned into the 'guidanceTag' field providing detailed information to act upon if a given tag is present."
       )
 
     # Guidance for any issues that were found from the report.
@@ -2469,7 +2245,7 @@ export const getTypeNames = () => gql`
     # Guidance for any issues that were found from the report.
     guidance: String
       @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+        reason: "This has been turned into the 'guidanceTag' field providing detailed information to act upon if a given tag is present."
       )
 
     # Guidance for any issues that were found from the report.
@@ -2775,7 +2551,7 @@ export const getTypeNames = () => gql`
     domain: DomainScalar
 
     # The last time that a scan was ran on this domain.
-    lastRan: Date
+    lastRan: DateTime
 
     # The domains scan status, based on the latest scan data.
     status: DomainStatus
@@ -2991,15 +2767,19 @@ export const getTypeNames = () => gql`
     # This mutation allows admins or higher to remove users from any organizations they belong to.
     removeUserFromOrg(input: RemoveUserFromOrgInput!): RemoveUserFromOrgPayload
 
+    # This mutation allows users to request to join an organization.
+    requestOrgAffiliation(input: RequestOrgAffiliationInput!): RequestOrgAffiliationPayload
+
     # This mutation allows a user to transfer org ownership to another user in the given org.
-    transferOrgOwnership(
-      input: TransferOrgOwnershipInput!
-    ): TransferOrgOwnershipPayload
+    transferOrgOwnership(input: TransferOrgOwnershipInput!): TransferOrgOwnershipPayload
 
     # This mutation allows super admins, and admins of the given organization to
     # update the permission level of a given user that already belongs to the
     # given organization.
     updateUserRole(input: UpdateUserRoleInput!): UpdateUserRolePayload
+
+    # Mutation used to create multiple new domains for an organization.
+    addOrganizationsDomains(input: AddOrganizationsDomainsInput!): AddOrganizationsDomainsPayload
 
     # Mutation used to create a new domain for an organization.
     createDomain(input: CreateDomainInput!): CreateDomainPayload
@@ -3009,6 +2789,9 @@ export const getTypeNames = () => gql`
 
     # This mutation allows the removal of unused domains.
     removeDomain(input: RemoveDomainInput!): RemoveDomainPayload
+
+    # This mutation allows the removal of unused domains.
+    removeOrganizationsDomains(input: RemoveOrganizationsDomainsInput!): RemoveOrganizationsDomainsPayload
 
     # This mutation is used to step a manual scan on a requested domain.
     requestScan(input: RequestScanInput!): RequestScanPayload
@@ -3020,24 +2803,16 @@ export const getTypeNames = () => gql`
     updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
 
     # This mutation allows the creation of an organization inside the database.
-    createOrganization(
-      input: CreateOrganizationInput!
-    ): CreateOrganizationPayload
+    createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
 
     # This mutation allows the removal of unused organizations.
-    removeOrganization(
-      input: RemoveOrganizationInput!
-    ): RemoveOrganizationPayload
+    removeOrganization(input: RemoveOrganizationInput!): RemoveOrganizationPayload
 
     # Mutation allows the modification of organizations if any changes to the organization may occur.
-    updateOrganization(
-      input: UpdateOrganizationInput!
-    ): UpdateOrganizationPayload
+    updateOrganization(input: UpdateOrganizationInput!): UpdateOrganizationPayload
 
     # Mutation allows the verification of an organization.
-    verifyOrganization(
-      input: VerifyOrganizationInput!
-    ): VerifyOrganizationPayload
+    verifyOrganization(input: VerifyOrganizationInput!): VerifyOrganizationPayload
 
     # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
     authenticate(input: AuthenticateInput!): AuthenticatePayload
@@ -3055,14 +2830,10 @@ export const getTypeNames = () => gql`
     resetPassword(input: ResetPasswordInput!): ResetPasswordPayload
 
     # This mutation is used for re-sending a verification email if it failed during user creation.
-    sendEmailVerification(
-      input: SendEmailVerificationInput!
-    ): SendEmailVerificationPayload
+    sendEmailVerification(input: SendEmailVerificationInput!): SendEmailVerificationPayload
 
     # This mutation allows a user to provide their username and request that a password reset email be sent to their account with a reset token in a url.
-    sendPasswordResetLink(
-      input: SendPasswordResetLinkInput!
-    ): SendPasswordResetLinkPayload
+    sendPasswordResetLink(input: SendPasswordResetLinkInput!): SendPasswordResetLinkPayload
 
     # This mutation is used for setting a new phone number for a user, and sending a code for verifying the new number.
     setPhoneNumber(input: SetPhoneNumberInput!): SetPhoneNumberPayload
@@ -3077,9 +2848,7 @@ export const getTypeNames = () => gql`
     signUp(input: SignUpInput!): SignUpPayload
 
     # This mutation allows the user to update their account password.
-    updateUserPassword(
-      input: UpdateUserPasswordInput!
-    ): UpdateUserPasswordPayload
+    updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
 
     # This mutation allows the user to update their user profile to change various details of their current profile.
     updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfilePayload
@@ -3092,12 +2861,12 @@ export const getTypeNames = () => gql`
   }
 
   type InviteUserToOrgPayload {
-    # \`InviteUserToOrgUnion\` returning either a \`InviteUserToOrgResult\`, or \`InviteUserToOrgError\` object.
+    # 'InviteUserToOrgUnion' returning either a 'InviteUserToOrgResult', or 'InviteUserToOrgError' object.
     result: InviteUserToOrgUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`InviteUserToOrg\` mutation, allowing for users to invite user to their org, and support any errors that may occur
+  # This union is used with the 'InviteUserToOrg' mutation, allowing for users to invite user to their org, and support any errors that may occur
   union InviteUserToOrgUnion = AffiliationError | InviteUserToOrgResult
 
   # This object is used to inform the user if any errors occurred while executing affiliation mutations.
@@ -3125,18 +2894,16 @@ export const getTypeNames = () => gql`
     # The organization you wish to invite the user to.
     orgId: ID!
 
-    # The language in which the email will be sent in.
-    preferredLang: LanguageEnums!
     clientMutationId: String
   }
 
   type LeaveOrganizationPayload {
-    # \`LeaveOrganizationUnion\` resolving to either a \`LeaveOrganizationResult\` or \`AffiliationError\`.
+    # 'LeaveOrganizationUnion' resolving to either a 'LeaveOrganizationResult' or 'AffiliationError'.
     result: LeaveOrganizationUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`leaveOrganization\` mutation, allowing for users to leave a given organization, and support any errors that may occur.
+  # This union is used with the 'leaveOrganization' mutation, allowing for users to leave a given organization, and support any errors that may occur.
   union LeaveOrganizationUnion = AffiliationError | LeaveOrganizationResult
 
   # This object is used to inform the user that they successful left a given organization.
@@ -3152,12 +2919,12 @@ export const getTypeNames = () => gql`
   }
 
   type RemoveUserFromOrgPayload {
-    # \`RemoveUserFromOrgUnion\` returning either a \`RemoveUserFromOrgResult\`, or \`RemoveUserFromOrgError\` object.
+    # 'RemoveUserFromOrgUnion' returning either a 'RemoveUserFromOrgResult', or 'RemoveUserFromOrgError' object.
     result: RemoveUserFromOrgUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`RemoveUserFromOrg\` mutation, allowing for users to remove a user from their org, and support any errors that may occur
+  # This union is used with the 'RemoveUserFromOrg' mutation, allowing for users to remove a user from their org, and support any errors that may occur
   union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 
   # This object is used to inform the user of the removal status.
@@ -3178,17 +2945,27 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type RequestOrgAffiliationPayload {
+    # 'InviteUserToOrgUnion' returning either a 'InviteUserToOrgResult', or 'InviteUserToOrgError' object.
+    result: InviteUserToOrgUnion
+    clientMutationId: String
+  }
+
+  input RequestOrgAffiliationInput {
+    # The organization you wish to invite the user to.
+    orgId: ID!
+    clientMutationId: String
+  }
+
   type TransferOrgOwnershipPayload {
-    # \`TransferOrgOwnershipUnion\` resolving to either a \`TransferOrgOwnershipResult\` or \`AffiliationError\`.
+    # 'TransferOrgOwnershipUnion' resolving to either a 'TransferOrgOwnershipResult' or 'AffiliationError'.
     result: TransferOrgOwnershipUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`transferOrgOwnership\` mutation, allowing for
+  # This union is used with the 'transferOrgOwnership' mutation, allowing for
   # users to transfer ownership of a given organization, and support any errors that may occur.
-  union TransferOrgOwnershipUnion =
-      AffiliationError
-    | TransferOrgOwnershipResult
+  union TransferOrgOwnershipUnion = AffiliationError | TransferOrgOwnershipResult
 
   # This object is used to inform the user that they successful transferred ownership of a given organization.
   type TransferOrgOwnershipResult {
@@ -3206,12 +2983,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateUserRolePayload {
-    # \`UpdateUserRoleUnion\` returning either a \`UpdateUserRoleResult\`, or \`UpdateUserRoleError\` object.
+    # 'UpdateUserRoleUnion' returning either a 'UpdateUserRoleResult', or 'UpdateUserRoleError' object.
     result: UpdateUserRoleUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`UpdateUserRole\` mutation, allowing for users to update a users role in an org, and support any errors that may occur
+  # This union is used with the 'UpdateUserRole' mutation, allowing for users to update a users role in an org, and support any errors that may occur
   union UpdateUserRoleUnion = AffiliationError | UpdateUserRoleResult
 
   # This object is used to inform the user of the status of the role update.
@@ -3235,16 +3012,16 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  type CreateDomainPayload {
-    # \`CreateDomainUnion\` returning either a \`Domain\`, or \`CreateDomainError\` object.
-    result: CreateDomainUnion
+  type AddOrganizationsDomainsPayload {
+    # 'BulkModifyDomainsUnion' returning either a 'DomainBulkResult', or 'DomainErrorType' object.
+    result: BulkModifyDomainsUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`CreateDomain\` mutation,
-  # allowing for users to create a domain and add it to their org,
-  # and support any errors that may occur
-  union CreateDomainUnion = DomainError | Domain
+  # This union is used with the 'AddOrganizationsDomains' and 'RemoveOrganizationsDomains' mutation,
+  #                 allowing for users to add/remove multiple domains belonging to their org,
+  #                 and support any errors that may occur
+  union BulkModifyDomainsUnion = DomainError | DomainBulkResult
 
   # This object is used to inform the user if any errors occurred while using a domain mutation.
   type DomainError {
@@ -3254,6 +3031,41 @@ export const getTypeNames = () => gql`
     # Description of the issue that was encountered.
     description: String
   }
+
+  # This object is used to inform the user that no errors were encountered while mutating a domain.
+  type DomainBulkResult {
+    # Informs the user if the domain mutation was successful.
+    status: String
+  }
+
+  input AddOrganizationsDomainsInput {
+    # The global id of the organization you wish to assign this domain to.
+    orgId: ID!
+
+    # Url that you would like to be added to the database.
+    domains: [DomainScalar]!
+
+    # New domains will be hidden.
+    hideNewDomains: Boolean
+
+    # New domains will be tagged with NEW.
+    tagNewDomains: Boolean
+
+    # Audit logs will be created.
+    audit: Boolean
+    clientMutationId: String
+  }
+
+  type CreateDomainPayload {
+    # 'CreateDomainUnion' returning either a 'Domain', or 'CreateDomainError' object.
+    result: CreateDomainUnion
+    clientMutationId: String
+  }
+
+  # This union is used with the 'CreateDomain' mutation,
+  # allowing for users to create a domain and add it to their org,
+  # and support any errors that may occur
+  union CreateDomainUnion = DomainError | Domain
 
   input CreateDomainInput {
     # The global id of the organization you wish to assign this domain to.
@@ -3267,6 +3079,12 @@ export const getTypeNames = () => gql`
 
     # List of labelled tags users have applied to the domain.
     tags: [InputTag]
+
+    # Value that determines if the domain is excluded from an organization's score.
+    hidden: Boolean
+
+    # Value that determines if the domain is excluded from the scanning process.
+    archived: Boolean
     clientMutationId: String
   }
 
@@ -3307,10 +3125,16 @@ export const getTypeNames = () => gql`
 
     # French label for tagging domains that are not active.
     INACTIF
+
+    # English label for tagging domains that are hidden.
+    HIDDEN
+
+    # English label for tagging domains that are archived.
+    ARCHIVED
   }
 
   type FavouriteDomainPayload {
-    # \`CreateDomainUnion\` returning either a \`Domain\`, or \`CreateDomainError\` object.
+    # 'CreateDomainUnion' returning either a 'Domain', or 'CreateDomainError' object.
     result: CreateDomainUnion
     clientMutationId: String
   }
@@ -3322,19 +3146,19 @@ export const getTypeNames = () => gql`
   }
 
   type RemoveDomainPayload {
-    # \`RemoveDomainUnion\` returning either a \`DomainResultType\`, or \`DomainErrorType\` object.
+    # 'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     result: RemoveDomainUnion!
     clientMutationId: String
   }
 
-  # This union is used with the \`RemoveDomain\` mutation,
+  # This union is used with the 'RemoveDomain' mutation,
   # allowing for users to remove a domain belonging to their org,
   # and support any errors that may occur
   union RemoveDomainUnion = DomainError | DomainResult
 
-  # This object is used to inform the user that no errors were encountered while removing a domain.
+  # This object is used to inform the user that no errors were encountered while mutating a domain.
   type DomainResult {
-    # Informs the user if the domain removal was successful.
+    # Informs the user if the domain mutation was successful.
     status: String
 
     # The domain that is being mutated.
@@ -3353,13 +3177,25 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  # Reason why a domain was removed from an organization.
-  enum DomainRemovalReasonEnum {
-    # Domain does not exist.
-    NONEXISTENT
+  type RemoveOrganizationsDomainsPayload {
+    # 'BulkModifyDomainsUnion' returning either a 'DomainBulkResult', or 'DomainErrorType' object.
+    result: BulkModifyDomainsUnion!
+    clientMutationId: String
+  }
 
-    # Domain was in the incorrect organization.
-    WRONG_ORG
+  input RemoveOrganizationsDomainsInput {
+    # Domains you wish to remove from the organization.
+    domains: [DomainScalar]!
+
+    # The organization you wish to remove the domain from.
+    orgId: ID!
+
+    # Domains will be archived.
+    archiveDomains: Boolean
+
+    # Audit logs will be created.
+    audit: Boolean
+    clientMutationId: String
   }
 
   type RequestScanPayload {
@@ -3375,7 +3211,7 @@ export const getTypeNames = () => gql`
   }
 
   type UnfavouriteDomainPayload {
-    # \`RemoveDomainUnion\` returning either a \`DomainResultType\`, or \`DomainErrorType\` object.
+    # 'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     result: RemoveDomainUnion!
     clientMutationId: String
   }
@@ -3387,12 +3223,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateDomainPayload {
-    # \`UpdateDomainUnion\` returning either a \`Domain\`, or \`DomainError\` object.
+    # 'UpdateDomainUnion' returning either a 'Domain', or 'DomainError' object.
     result: UpdateDomainUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`UpdateDomain\` mutation,
+  # This union is used with the 'UpdateDomain' mutation,
   # allowing for users to update a domain belonging to their org,
   # and support any errors that may occur
   union UpdateDomainUnion = DomainError | Domain
@@ -3412,16 +3248,22 @@ export const getTypeNames = () => gql`
 
     # List of labelled tags users have applied to the domain.
     tags: [InputTag]
+
+    # Value that determines if the domain is excluded from an organization's score.
+    hidden: Boolean
+
+    # Value that determines if the domain is excluded from the scanning process.
+    archived: Boolean
     clientMutationId: String
   }
 
   type CreateOrganizationPayload {
-    # \`CreateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
+    # 'CreateOrganizationUnion' returning either an 'Organization', or 'OrganizationError' object.
     result: CreateOrganizationUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`CreateOrganization\` mutation,
+  # This union is used with the 'CreateOrganization' mutation,
   # allowing for users to create an organization, and support any errors that may occur
   union CreateOrganizationUnion = OrganizationError | Organization
 
@@ -3480,12 +3322,12 @@ export const getTypeNames = () => gql`
   }
 
   type RemoveOrganizationPayload {
-    # \`RemoveOrganizationUnion\` returning either an \`OrganizationResult\`, or \`OrganizationError\` object.
+    # 'RemoveOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     result: RemoveOrganizationUnion!
     clientMutationId: String
   }
 
-  # This union is used with the \`RemoveOrganization\` mutation,
+  # This union is used with the 'RemoveOrganization' mutation,
   # allowing for users to remove an organization they belong to,
   # and support any errors that may occur
   union RemoveOrganizationUnion = OrganizationError | OrganizationResult
@@ -3506,12 +3348,12 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateOrganizationPayload {
-    # \`UpdateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
+    # 'UpdateOrganizationUnion' returning either an 'Organization', or 'OrganizationError' object.
     result: UpdateOrganizationUnion!
     clientMutationId: String
   }
 
-  # This union is used with the \`UpdateOrganization\` mutation,
+  # This union is used with the 'UpdateOrganization' mutation,
   # allowing for users to update an organization, and support any errors that may occur
   union UpdateOrganizationUnion = OrganizationError | Organization
 
@@ -3564,12 +3406,12 @@ export const getTypeNames = () => gql`
   }
 
   type VerifyOrganizationPayload {
-    # \`VerifyOrganizationUnion\` returning either an \`OrganizationResult\`, or \`OrganizationError\` object.
+    # 'VerifyOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     result: VerifyOrganizationUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`VerifyOrganization\` mutation,
+  # This union is used with the 'VerifyOrganization' mutation,
   # allowing for super admins to verify an organization,
   # and support any errors that may occur
   union VerifyOrganizationUnion = OrganizationError | OrganizationResult
@@ -3581,12 +3423,12 @@ export const getTypeNames = () => gql`
   }
 
   type AuthenticatePayload {
-    # Authenticate union returning either a \`authResult\` or \`authenticateError\` object.
+    # Authenticate union returning either a 'authResult' or 'authenticateError' object.
     result: AuthenticateUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`authenticate\` mutation, allowing for the user to authenticate, and support any errors that may occur
+  # This union is used with the 'authenticate' mutation, allowing for the user to authenticate, and support any errors that may occur
   union AuthenticateUnion = AuthResult | AuthenticateError
 
   # An object used to return information when users sign up or authenticate.
@@ -3617,12 +3459,12 @@ export const getTypeNames = () => gql`
   }
 
   type CloseAccountPayload {
-    # \`CloseAccountUnion\` returning either a \`CloseAccountResult\`, or \`CloseAccountError\` object.
+    # 'CloseAccountUnion' returning either a 'CloseAccountResult', or 'CloseAccountError' object.
     result: CloseAccountUnion
     clientMutationId: String
   }
 
-  # This union is used for the \`closeAccount\` mutation, to support successful or errors that may occur.
+  # This union is used for the 'closeAccount' mutation, to support successful or errors that may occur.
   union CloseAccountUnion = CloseAccountResult | CloseAccountError
 
   # This object is used to inform the user of the status of closing their account.
@@ -3647,12 +3489,12 @@ export const getTypeNames = () => gql`
   }
 
   type RefreshTokensPayload {
-    # Refresh tokens union returning either a \`authResult\` or \`authenticateError\` object.
+    # Refresh tokens union returning either a 'authResult' or 'authenticateError' object.
     result: RefreshTokensUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`refreshTokens\` mutation, allowing for the user to refresh their tokens, and support any errors that may occur
+  # This union is used with the 'refreshTokens' mutation, allowing for the user to refresh their tokens, and support any errors that may occur
   union RefreshTokensUnion = AuthResult | AuthenticateError
 
   input RefreshTokensInput {
@@ -3660,15 +3502,13 @@ export const getTypeNames = () => gql`
   }
 
   type RemovePhoneNumberPayload {
-    # \`RemovePhoneNumberUnion\` returning either a \`RemovePhoneNumberResult\`, or \`RemovePhoneNumberError\` object.
+    # 'RemovePhoneNumberUnion' returning either a 'RemovePhoneNumberResult', or 'RemovePhoneNumberError' object.
     result: RemovePhoneNumberUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to remove their phone number, and support any errors that may occur
-  union RemovePhoneNumberUnion =
-      RemovePhoneNumberError
-    | RemovePhoneNumberResult
+  # This union is used with the 'RemovePhoneNumber' mutation, allowing for users to remove their phone number, and support any errors that may occur
+  union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while removing their phone number.
   type RemovePhoneNumberError {
@@ -3690,12 +3530,12 @@ export const getTypeNames = () => gql`
   }
 
   type ResetPasswordPayload {
-    # \`ResetPasswordUnion\` returning either a \`ResetPasswordResult\`, or \`ResetPasswordError\` object.
+    # 'ResetPasswordUnion' returning either a 'ResetPasswordResult', or 'ResetPasswordError' object.
     result: ResetPasswordUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`ResetPassword\` mutation, allowing for users to reset their password, and support any errors that may occur
+  # This union is used with the 'ResetPassword' mutation, allowing for users to reset their password, and support any errors that may occur
   union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
 
   # This object is used to inform the user if any errors occurred while resetting their password.
@@ -3750,12 +3590,12 @@ export const getTypeNames = () => gql`
   }
 
   type SetPhoneNumberPayload {
-    # \`SetPhoneNumberUnion\` returning either a \`SetPhoneNumberResult\`, or \`SetPhoneNumberError\` object.
+    # 'SetPhoneNumberUnion' returning either a 'SetPhoneNumberResult', or 'SetPhoneNumberError' object.
     result: SetPhoneNumberUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`setPhoneNumber\` mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
+  # This union is used with the 'setPhoneNumber' mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
   union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while setting a new phone number.
@@ -3783,12 +3623,12 @@ export const getTypeNames = () => gql`
   }
 
   type SignInPayload {
-    # \`SignInUnion\` returning either a \`regularSignInResult\`, \`tfaSignInResult\`, or \`signInError\` object.
+    # 'SignInUnion' returning either a 'regularSignInResult', 'tfaSignInResult', or 'signInError' object.
     result: SignInUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`SignIn\` mutation, allowing for multiple styles of logging in, and support any errors that may occur
+  # This union is used with the 'SignIn' mutation, allowing for multiple styles of logging in, and support any errors that may occur
   union SignInUnion = AuthResult | SignInError | TFASignInResult
 
   # This object is used to inform the user if any errors occurred during sign in.
@@ -3832,12 +3672,12 @@ export const getTypeNames = () => gql`
   }
 
   type SignUpPayload {
-    # \`SignUpUnion\` returning either a \`AuthResult\`, or \`SignUpError\` object.
+    # 'SignUpUnion' returning either a 'AuthResult', or 'SignUpError' object.
     result: SignUpUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`signUp\` mutation, allowing for the user to sign up, and support any errors that may occur.
+  # This union is used with the 'signUp' mutation, allowing for the user to sign up, and support any errors that may occur.
   union SignUpUnion = AuthResult | SignUpError
 
   # This object is used to inform the user if any errors occurred during sign up.
@@ -3874,15 +3714,13 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateUserPasswordPayload {
-    # \`UpdateUserPasswordUnion\` returning either a \`UpdateUserPasswordResultType\`, or \`UpdateUserPasswordError\` object.
+    # 'UpdateUserPasswordUnion' returning either a 'UpdateUserPasswordResultType', or 'UpdateUserPasswordError' object.
     result: UpdateUserPasswordUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`updateUserPassword\` mutation, allowing for users to update their password, and support any errors that may occur
-  union UpdateUserPasswordUnion =
-      UpdateUserPasswordError
-    | UpdateUserPasswordResultType
+  # This union is used with the 'updateUserPassword' mutation, allowing for users to update their password, and support any errors that may occur
+  union UpdateUserPasswordUnion = UpdateUserPasswordError | UpdateUserPasswordResultType
 
   # This object is used to inform the user if any errors occurred while updating their password.
   type UpdateUserPasswordError {
@@ -3912,15 +3750,13 @@ export const getTypeNames = () => gql`
   }
 
   type UpdateUserProfilePayload {
-    # \`UpdateUserProfileUnion\` returning either a \`UpdateUserProfileResult\`, or \`UpdateUserProfileError\` object.
+    # 'UpdateUserProfileUnion' returning either a 'UpdateUserProfileResult', or 'UpdateUserProfileError' object.
     result: UpdateUserProfileUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`updateUserProfile\` mutation, allowing for users to update their profile, and support any errors that may occur
-  union UpdateUserProfileUnion =
-      UpdateUserProfileError
-    | UpdateUserProfileResult
+  # This union is used with the 'updateUserProfile' mutation, allowing for users to update their profile, and support any errors that may occur
+  union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
 
   # This object is used to inform the user if any errors occurred while updating their profile.
   type UpdateUserProfileError {
@@ -3959,12 +3795,12 @@ export const getTypeNames = () => gql`
   }
 
   type VerifyAccountPayload {
-    # \`VerifyAccountUnion\` returning either a \`VerifyAccountResult\`, or \`VerifyAccountError\` object.
+    # 'VerifyAccountUnion' returning either a 'VerifyAccountResult', or 'VerifyAccountError' object.
     result: VerifyAccountUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`verifyAccount\` mutation, allowing for users to verify their account, and support any errors that may occur
+  # This union is used with the 'verifyAccount' mutation, allowing for users to verify their account, and support any errors that may occur
   union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
 
   # This object is used to inform the user if any errors occurred while verifying their account.
@@ -3989,15 +3825,13 @@ export const getTypeNames = () => gql`
   }
 
   type verifyPhoneNumberPayload {
-    # \`VerifyPhoneNumberUnion\` returning either a \`VerifyPhoneNumberResult\`, or \`VerifyPhoneNumberError\` object.
+    # 'VerifyPhoneNumberUnion' returning either a 'VerifyPhoneNumberResult', or 'VerifyPhoneNumberError' object.
     result: VerifyPhoneNumberUnion
     clientMutationId: String
   }
 
-  # This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to verify their phone number, and support any errors that may occur
-  union VerifyPhoneNumberUnion =
-      VerifyPhoneNumberError
-    | VerifyPhoneNumberResult
+  # This union is used with the 'verifyPhoneNumber' mutation, allowing for users to verify their phone number, and support any errors that may occur
+  union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
 
   # This object is used to inform the user if any errors occurred while verifying their phone number.
   type VerifyPhoneNumberError {
@@ -4021,225 +3855,5 @@ export const getTypeNames = () => gql`
     # The two factor code that was received via text message.
     twoFactorCode: Int!
     clientMutationId: String
-  }
-
-  type Subscription {
-    # This subscription allows the user to receive dkim data directly from the scanners in real time.
-    dkimScanData: DkimSub
-
-    # This subscription allows the user to receive dmarc data directly from the scanners in real time.
-    dmarcScanData: DmarcSub
-
-    # This subscription allows the user to receive spf data directly from the scanners in real time.
-    spfScanData: SpfSub
-
-    # This subscription allows the user to receive https data directly from the scanners in real time.
-    httpsScanData: HttpsSub
-
-    # This subscription allows the user to receive ssl data directly from the scanners in real time.
-    sslScanData: SslSub
-  }
-
-  # DKIM gql object containing the fields for the \`dkimScanData\` subscription.
-  type DkimSub {
-    # The shared id to match scans together.
-    sharedId: ID
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The success status of the scan.
-    status: StatusEnum
-
-    # Individual scans results for each dkim selector.
-    results: [DkimResultSub]
-  }
-
-  # Individual one-off scans results for the given dkim selector.
-  type DkimResultSub {
-    # The selector the scan was ran on.
-    selector: String
-
-    # DKIM record retrieved during the scan of the domain.
-    record: String
-
-    # Size of the Public Key in bits
-    keyLength: String
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags: [GuidanceTag]
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags: [GuidanceTag]
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags: [GuidanceTag]
-  }
-
-  # DMARC gql object containing the fields for the \`dkimScanData\` subscription.
-  type DmarcSub {
-    # The shared id to match scans together.
-    sharedId: ID
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The current dmarc phase the domain is compliant to.
-    dmarcPhase: String
-
-    # The success status of the scan.
-    status: StatusEnum
-
-    # DMARC record retrieved during scan.
-    record: String
-
-    # The requested policy you wish mailbox providers to apply
-    # when your email fails DMARC authentication and alignment checks.
-    pPolicy: String
-
-    # This tag is used to indicate a requested policy for all
-    # subdomains where mail is failing the DMARC authentication and alignment checks.
-    spPolicy: String
-
-    # The percentage of messages to which the DMARC policy is to be applied.
-    pct: Int
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # Negative guidance tags found during DMARC Scan.
-    negativeGuidanceTags: [GuidanceTag]
-
-    # Neutral guidance tags found during DMARC Scan.
-    neutralGuidanceTags: [GuidanceTag]
-
-    # Positive guidance tags found during DMARC Scan.
-    positiveGuidanceTags: [GuidanceTag]
-  }
-
-  # SPF gql object containing the fields for the \`dkimScanData\` subscription.
-  type SpfSub {
-    # The shared id to match scans together.
-    sharedId: ID
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The success status of the scan.
-    status: StatusEnum
-
-    # The amount of DNS lookups.
-    lookups: Int
-
-    # SPF record retrieved during the scan of the given domain.
-    record: String
-
-    # Instruction of what a recipient should do if there is not a match to your SPF record.
-    spfDefault: String
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags: [GuidanceTag]
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags: [GuidanceTag]
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags: [GuidanceTag]
-  }
-
-  # HTTPS gql object containing the fields for the \`dkimScanData\` subscription.
-  type HttpsSub {
-    # The shared id to match scans together.
-    sharedId: ID
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The success status of the scan.
-    status: StatusEnum
-
-    # State of the HTTPS implementation on the server and any issues therein.
-    implementation: String
-
-    # Degree to which HTTPS is enforced on the server based on behaviour.
-    enforced: String
-
-    # Presence and completeness of HSTS implementation.
-    hsts: String
-
-    # Denotes how long the domain should only be accessed using HTTPS
-    hstsAge: String
-
-    # Denotes whether the domain has been submitted and included within HSTS preload list.
-    preloaded: String
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags: [GuidanceTag]
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags: [GuidanceTag]
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags: [GuidanceTag]
-  }
-
-  # SSL gql object containing the fields for the \`dkimScanData\` subscription.
-  type SslSub {
-    # The shared id to match scans together.
-    sharedId: ID
-
-    # The domain the scan was ran on.
-    domain: Domain
-
-    # The success status of the scan.
-    status: StatusEnum
-
-    # List of ciphers in use by the server deemed to be "acceptable".
-    acceptableCiphers: [String]
-
-    # List of curves in use by the server deemed to be "acceptable".
-    acceptableCurves: [String]
-
-    # Denotes vulnerability to OpenSSL CCS Injection.
-    ccsInjectionVulnerable: Boolean
-
-    # Denotes vulnerability to "Heartbleed" exploit.
-    heartbleedVulnerable: Boolean
-
-    # List of ciphers in use by the server deemed to be "strong".
-    strongCiphers: [String]
-
-    # List of curves in use by the server deemed to be "strong".
-    strongCurves: [String]
-
-    # Denotes support for elliptic curve key pairs.
-    supportsEcdhKeyExchange: Boolean
-
-    # List of ciphers in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
-    weakCiphers: [String]
-
-    # List of curves in use by the server deemed to be "weak" or in other words, are not compliant with security standards.
-    weakCurves: [String]
-
-    # Raw scan result.
-    rawJson: JSON
-
-    # Negative guidance tags found during scan.
-    negativeGuidanceTags: [GuidanceTag]
-
-    # Neutral guidance tags found during scan.
-    neutralGuidanceTags: [GuidanceTag]
-
-    # Positive guidance tags found during scan.
-    positiveGuidanceTags: [GuidanceTag]
   }
 `

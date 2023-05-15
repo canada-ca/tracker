@@ -1,10 +1,13 @@
-import { t } from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 export const checkDomainOwnership =
-  ({ i18n, query, userKey, auth: { loginRequiredBool } }) =>
-  async ({ domainId }) => {
-    let userAffiliatedOwnership, ownership
-    const userKeyString = `users/${userKey}`
+                                       ({i18n,
+                                       query,
+                                       userKey,
+                                       auth: {loginRequiredBool}}) =>
+                                      async ({domainId}) => {
+  let userAffiliatedOwnership, ownership
+  const userKeyString = `users/${userKey}`
 
     // Check to see if the user is a super admin
     let superAdminAffiliationCursor

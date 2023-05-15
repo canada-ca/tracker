@@ -1,12 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { loadAffiliationByKey } from '..'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {loadAffiliationByKey} from '..'
+import {setupI18n} from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given a loadAffiliationByKey dataloader', () => {
   let i18n
@@ -24,17 +24,17 @@ describe('given a loadAffiliationByKey dataloader', () => {
     let query, drop, truncate, collections, orgOne, orgTwo, affOne, user
 
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+      ;({query, drop, truncate, collections} = await ensure({
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
 
     beforeEach(async () => {
@@ -125,7 +125,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
         `
         const expectedAffiliation = await expectedCursor.next()
 
-        const loader = loadAffiliationByKey({ query, i18n })
+        const loader = loadAffiliationByKey({query, i18n})
         const affiliation = await loader.load(expectedAffiliation._key)
 
         expect(affiliation).toEqual(expectedAffiliation)
@@ -148,7 +148,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
           expectedAffiliations.push(tempAff)
         }
 
-        const loader = loadAffiliationByKey({ query, i18n })
+        const loader = loadAffiliationByKey({query, i18n})
         const affiliations = await loader.loadMany(affiliationIds)
         expect(affiliations).toEqual(expectedAffiliations)
       })
@@ -160,8 +160,8 @@ describe('given a loadAffiliationByKey dataloader', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {
@@ -227,8 +227,8 @@ describe('given a loadAffiliationByKey dataloader', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {

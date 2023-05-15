@@ -3,27 +3,9 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByOrgId =
-  ({
-    query,
-    userKey,
-    language,
-    cleanseInput,
-    i18n,
-    auth: { loginRequiredBool },
-  }) =>
-  async ({
-    orgId,
-    permission,
-    after,
-    before,
-    first,
-    last,
-    ownership,
-    orderBy,
-    search,
-  }) => {
+  ({ query, userKey, language, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
+  async ({ orgId, permission, after, before, first, last, ownership, orderBy, search, filters = [] }) => {
     const userDBId = `users/${userKey}`
-
     let afterTemplate = aql``
     let afterVar = aql``
 
@@ -74,6 +56,9 @@ export const loadDomainConnectionsByOrgId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`afterVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`afterVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         afterTemplate = aql`
@@ -134,6 +119,9 @@ export const loadDomainConnectionsByOrgId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`beforeVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`beforeVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         beforeTemplate = aql`
@@ -150,18 +138,14 @@ export const loadDomainConnectionsByOrgId =
         `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
       )
       throw new Error(
-        i18n._(
-          t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`,
-        ),
+        i18n._(t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`),
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
       console.warn(
         `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDomainConnectionsByOrgId.`,
       )
       throw new Error(
-        i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`,
-        ),
+        i18n._(t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`),
       )
     } else if (typeof first === 'number' || typeof last === 'number') {
       /* istanbul ignore else */
@@ -170,17 +154,11 @@ export const loadDomainConnectionsByOrgId =
         console.warn(
           `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDomainConnectionsByOrgId.`,
         )
-        throw new Error(
-          i18n._(
-            t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`,
-          ),
-        )
+        throw new Error(i18n._(t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`))
       } else if (first > 100 || last > 100) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         const amount = typeof first !== 'undefined' ? first : last
-        console.warn(
-          `User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: loadDomainConnectionsByOrgId.`,
-        )
+        console.warn(`User: ${userKey} attempted to have \`${argSet}\` to ${amount} for: loadDomainConnectionsByOrgId.`)
         throw new Error(
           i18n._(
             t`Requesting \`${amount}\` records on the \`Domain\` connection exceeds the \`${argSet}\` limit of 100 records.`,
@@ -197,9 +175,7 @@ export const loadDomainConnectionsByOrgId =
       console.warn(
         `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDomainConnectionsByOrgId.`,
       )
-      throw new Error(
-        i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
-      )
+      throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
     }
 
     let hasNextPageFilter = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(LAST(retrievedDomains)._key)`
@@ -267,6 +243,10 @@ export const loadDomainConnectionsByOrgId =
         domainField = aql`domain.status.protocols`
         hasNextPageDocumentField = aql`LAST(retrievedDomains).status.protocols`
         hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.protocols`
+      } else if (orderBy.field === 'certificates-status') {
+        domainField = aql`domain.status.certificates`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.certificates`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.certificates`
       }
 
       hasNextPageFilter = aql`
@@ -304,6 +284,8 @@ export const loadDomainConnectionsByOrgId =
         sortByField = aql`domain.status.policy ${orderBy.direction},`
       } else if (orderBy.field === 'protocols-status') {
         sortByField = aql`domain.status.protocols ${orderBy.direction},`
+      } else if (orderBy.field === 'certificates-status') {
+        sortByField = aql`domain.status.certificates ${orderBy.direction},`
       }
     }
 
@@ -312,6 +294,100 @@ export const loadDomainConnectionsByOrgId =
       sortString = aql`DESC`
     } else {
       sortString = aql`ASC`
+    }
+
+    let domainFilters = aql`
+      LET hidden = (
+        FOR v, e IN 1..1 ANY domain._id claims
+          FILTER e._from == ${orgId}
+          RETURN e.hidden
+      )[0]
+      LET claimTags = (
+        FOR v, e IN 1..1 ANY domain._id claims
+          FILTER e._from == ${orgId}
+          LET translatedTags = (
+            FOR tag IN e.tags || []
+              RETURN TRANSLATE(${language}, tag)
+          )
+          RETURN translatedTags
+      )[0]
+      `
+    if (typeof filters !== 'undefined') {
+      filters.forEach(({ filterCategory, comparison, filterValue }) => {
+        if (comparison === '==') {
+          comparison = aql`==`
+        } else {
+          comparison = aql`!=`
+        }
+        if (filterCategory === 'dmarc-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dmarc ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'dkim-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dkim ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'https-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.https ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'spf-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.spf ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'ciphers-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.ciphers ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'curves-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.curves ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'hsts-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.hsts ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'policy-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.policy ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'protocols-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.protocols ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'certificates-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.certificates ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'tags') {
+          if (filterValue === 'hidden') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER hidden ${comparison} true
+          `
+          } else if (filterValue === 'archived') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.archived ${comparison} true
+          `
+          } else {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER POSITION( claimTags, ${filterValue}) ${comparison} true
+          `
+          }
+        }
+      })
     }
 
     let domainQuery = aql``
@@ -339,7 +415,7 @@ export const loadDomainConnectionsByOrgId =
       showArchivedDomains = aql``
     }
     let showHiddenDomains = aql`FILTER e.hidden != true`
-    if (permission === 'admin' || permission === 'super_admin') {
+    if (['super_admin'].includes(permission)) {
       showHiddenDomains = aql``
     }
 
@@ -412,20 +488,8 @@ export const loadDomainConnectionsByOrgId =
         ${loopString}
           FILTER domain._key IN domainKeys
           ${showArchivedDomains}
-          LET hidden = (
-            FOR v, e IN 1..1 ANY domain._id claims
-              FILTER e._from == ${orgId}
-              RETURN e.hidden
-          )[0]
-          LET claimTags = (
-            FOR v, e IN 1..1 ANY domain._id claims
-              FILTER e._from == ${orgId}
-              LET translatedTags = (
-                FOR tag IN e.tags || []
-                  RETURN TRANSLATE(${language}, tag)
-              )
-              RETURN translatedTags
-          )[0]
+          ${domainFilters}
+
           ${afterTemplate}
           ${beforeTemplate}
           SORT
@@ -438,6 +502,7 @@ export const loadDomainConnectionsByOrgId =
         ${loopString}
           FILTER domain._key IN domainKeys
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -447,6 +512,7 @@ export const loadDomainConnectionsByOrgId =
         ${loopString}
           FILTER domain._key IN domainKeys
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain

@@ -1,5 +1,0 @@
-**/*.env
-.venv
-Dockerfile
-*.yaml
-tests
