@@ -110,7 +110,6 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${user._id},
               permission: "pending",
-              owner: false
             } INTO affiliations
           `,
       )

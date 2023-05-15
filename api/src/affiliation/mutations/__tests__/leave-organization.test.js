@@ -1,33 +1,23 @@
-import {setupI18n} from '@lingui/core'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {checkOrgOwner, userRequired, verifiedRequired} from '../../../auth'
-import {loadOrgByKey} from '../../../organization/loaders'
-import {loadUserByKey} from '../../../user/loaders'
-import {cleanseInput} from '../../../validators'
-import {createMutationSchema} from '../../../mutation'
-import {createQuerySchema} from '../../../query'
+import { checkOrgOwner, userRequired, verifiedRequired } from '../../../auth'
+import { loadOrgByKey } from '../../../organization/loaders'
+import { loadUserByKey } from '../../../user/loaders'
+import { cleanseInput } from '../../../validators'
+import { createMutationSchema } from '../../../mutation'
+import { createQuerySchema } from '../../../query'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY} = process.env
+const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('given a successful leave', () => {
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    transaction,
-    i18n,
-    user,
-    org,
-    domain,
-    domain2
+  let query, drop, truncate, schema, collections, transaction, i18n, user, org, domain, domain2
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -45,8 +35,8 @@ describe('given a successful leave', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -56,7 +46,7 @@ describe('given a successful leave', () => {
     })
   })
   beforeEach(async () => {
-    ;({query, drop, truncate, collections, transaction} = await ensure({
+    ;({ query, drop, truncate, collections, transaction } = await ensure({
       variables: {
         dbname: dbNameFromFile(__filename),
         username: 'root',
@@ -112,13 +102,13 @@ describe('given a successful leave', () => {
       _to: domain2._id,
     })
 
-    const dns = await collections.dns.save({dns: true})
+    const dns = await collections.dns.save({ dns: true })
     await collections.domainsDNS.save({
       _from: domain._id,
       _to: dns._id,
     })
 
-    const web = await collections.web.save({web: true})
+    const web = await collections.web.save({ web: true })
     await collections.domainsWeb.save({
       _from: domain._id,
       _to: web._id,
@@ -151,8 +141,7 @@ describe('given a successful leave', () => {
       await collections.affiliations.save({
         _from: org._id,
         _to: user._id,
-        permission: 'admin',
-        owner: true,
+        permission: 'owner',
       })
     })
     describe('only one org claims the domains', () => {
@@ -207,7 +196,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -217,7 +206,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -225,8 +214,7 @@ describe('given a successful leave', () => {
           await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
           await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
 
-          const testOwnershipCursor =
-            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toEqual(undefined)
 
@@ -292,7 +280,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -302,7 +290,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -310,8 +298,7 @@ describe('given a successful leave', () => {
           await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
           await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
 
-          const testOwnershipCursor =
-            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toBeDefined()
 
@@ -356,7 +343,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -366,7 +353,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -376,22 +363,19 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
-        const testWebScanCursor =
-          await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+        const testWebScanCursor = await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
         const testWebScan = await testWebScanCursor.next()
         expect(testWebScan).toEqual(undefined)
 
-        const testDNSCursor =
-          await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+        const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
         const testDNS = await testDNSCursor.next()
         expect(testDNS).toEqual(undefined)
 
-        const testWebCursor =
-          await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+        const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
         const testWeb = await testWebCursor.next()
         expect(testWeb).toEqual(undefined)
       })
@@ -425,7 +409,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -435,7 +419,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -445,7 +429,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -453,18 +437,15 @@ describe('given a successful leave', () => {
         await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
         await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
 
-        const testOrgCursor =
-          await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+        const testOrgCursor = await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
         const testOrg = await testOrgCursor.next()
         expect(testOrg).toEqual(undefined)
 
-        const testDomainCursor =
-          await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+        const testDomainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
         const testDomain = await testDomainCursor.next()
         expect(testDomain).toEqual(undefined)
 
-        const testAffiliationCursor =
-          await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+        const testAffiliationCursor = await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
         const testAffiliation = await testAffiliationCursor.next()
         expect(testAffiliation).toEqual(undefined)
       })
@@ -473,8 +454,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -527,7 +508,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -537,7 +518,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -545,17 +526,14 @@ describe('given a successful leave', () => {
             data: {
               leaveOrganization: {
                 result: {
-                  status:
-                    'Successfully left organization: treasury-board-secretariat',
+                  status: 'Successfully left organization: treasury-board-secretariat',
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully left org: treasury-board-secretariat.`])
         })
       })
       describe('users language is set to french', () => {
@@ -563,8 +541,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -617,7 +595,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -627,7 +605,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -635,17 +613,14 @@ describe('given a successful leave', () => {
             data: {
               leaveOrganization: {
                 result: {
-                  status:
-                    "L'organisation a été quittée avec succès: treasury-board-secretariat",
+                  status: "L'organisation a été quittée avec succès: treasury-board-secretariat",
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully left org: treasury-board-secretariat.`])
         })
       })
     })
@@ -732,7 +707,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -742,7 +717,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -750,8 +725,7 @@ describe('given a successful leave', () => {
           await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
           await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
 
-          const testOwnershipCursor =
-            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toEqual(undefined)
 
@@ -817,7 +791,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -827,12 +801,11 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
-          const testOwnershipCursor =
-            await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+          const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
           const testOwnership = await testOwnershipCursor.next()
           expect(testOwnership).toBeDefined()
 
@@ -877,7 +850,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -887,7 +860,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -897,25 +870,21 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
-        const testWebScanCursor =
-          await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+        const testWebScanCursor = await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
         const testWebScan = await testWebScanCursor.next()
         expect(testWebScan).toEqual(true)
 
-        const testDNSCursor =
-          await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+        const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
         const testDNS = await testDNSCursor.next()
         expect(testDNS).toEqual(true)
 
-        const testWebCursor =
-          await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+        const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
         const testWeb = await testWebCursor.next()
         expect(testWeb).toEqual(true)
-
       })
       it('does not remove all domain', async () => {
         await graphql(
@@ -947,7 +916,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -957,7 +926,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -967,12 +936,11 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
-        const testDomainCursor =
-          await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+        const testDomainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
         const testDomain = await testDomainCursor.next()
         expect(testDomain).toBeDefined()
       })
@@ -1006,7 +974,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -1016,7 +984,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -1026,7 +994,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -1042,8 +1010,7 @@ describe('given a successful leave', () => {
         const testOrg = await testOrgCursor.next()
         expect(testOrg).toEqual(undefined)
 
-        const testAffiliationCursor =
-          await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+        const testAffiliationCursor = await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
         const testAffiliation = await testAffiliationCursor.next()
         expect(testAffiliation).toEqual(undefined)
       })
@@ -1052,8 +1019,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -1106,7 +1073,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1116,7 +1083,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1124,17 +1091,14 @@ describe('given a successful leave', () => {
             data: {
               leaveOrganization: {
                 result: {
-                  status:
-                    'Successfully left organization: treasury-board-secretariat',
+                  status: 'Successfully left organization: treasury-board-secretariat',
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully left org: treasury-board-secretariat.`])
         })
       })
       describe('users language is set to french', () => {
@@ -1142,8 +1106,8 @@ describe('given a successful leave', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -1196,7 +1160,7 @@ describe('given a successful leave', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -1206,7 +1170,7 @@ describe('given a successful leave', () => {
                   userKey: user._key,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1214,17 +1178,14 @@ describe('given a successful leave', () => {
             data: {
               leaveOrganization: {
                 result: {
-                  status:
-                    "L'organisation a été quittée avec succès: treasury-board-secretariat",
+                  status: "L'organisation a été quittée avec succès: treasury-board-secretariat",
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully left org: treasury-board-secretariat.`])
         })
       })
     })
@@ -1235,7 +1196,6 @@ describe('given a successful leave', () => {
         _from: org._id,
         _to: user._id,
         permission: 'admin',
-        owner: false,
       })
       await collections.ownership.save({
         _from: 'organizations/1',
@@ -1286,7 +1246,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({i18n}),
+            verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1296,12 +1256,11 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: {cleanseInput},
+          validators: { cleanseInput },
         },
       )
 
-      const testOwnershipCursor =
-        await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+      const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
       const testOwnership = await testOwnershipCursor.next()
       expect(testOwnership).toBeDefined()
 
@@ -1345,7 +1304,7 @@ describe('given a successful leave', () => {
           transaction,
           userKey: user._key,
           auth: {
-            checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
             userRequired: userRequired({
               i18n,
               userKey: user._key,
@@ -1355,7 +1314,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({i18n}),
+            verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1365,25 +1324,21 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: {cleanseInput},
+          validators: { cleanseInput },
         },
       )
 
-      const testWebScanCursor =
-        await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
+      const testWebScanCursor = await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
       const testWebScan = await testWebScanCursor.next()
       expect(testWebScan).toEqual(true)
 
-      const testDNSCursor =
-        await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+      const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
       const testDNS = await testDNSCursor.next()
       expect(testDNS).toEqual(true)
 
-      const testWebCursor =
-        await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+      const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
       const testWeb = await testWebCursor.next()
       expect(testWeb).toEqual(true)
-
     })
     it('does not remove org and domain information', async () => {
       await graphql(
@@ -1415,7 +1370,7 @@ describe('given a successful leave', () => {
           transaction,
           userKey: user._key,
           auth: {
-            checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
             userRequired: userRequired({
               i18n,
               userKey: user._key,
@@ -1425,7 +1380,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({i18n}),
+            verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1435,17 +1390,15 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: {cleanseInput},
+          validators: { cleanseInput },
         },
       )
 
-      const testOrgCursor =
-        await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
+      const testOrgCursor = await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
       const testOrg = await testOrgCursor.next()
       expect(testOrg).toBeDefined()
 
-      const testDomainCursor =
-        await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+      const testDomainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
       const testDomain = await testDomainCursor.next()
       expect(testDomain).toBeDefined()
     })
@@ -1479,7 +1432,7 @@ describe('given a successful leave', () => {
           transaction,
           userKey: user._key,
           auth: {
-            checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+            checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
             userRequired: userRequired({
               i18n,
               userKey: user._key,
@@ -1489,7 +1442,7 @@ describe('given a successful leave', () => {
                 i18n,
               }),
             }),
-            verifiedRequired: verifiedRequired({i18n}),
+            verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
             loadOrgByKey: loadOrgByKey({
@@ -1499,14 +1452,13 @@ describe('given a successful leave', () => {
               userKey: user._key,
             }),
           },
-          validators: {cleanseInput},
+          validators: { cleanseInput },
         },
       )
 
       await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
 
-      const testAffiliationCursor =
-        await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
+      const testAffiliationCursor = await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
       const testAffiliation = await testAffiliationCursor.next()
       expect(testAffiliation).toEqual(undefined)
     })
@@ -1515,8 +1467,8 @@ describe('given a successful leave', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1555,7 +1507,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -1565,7 +1517,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -1575,7 +1527,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -1583,17 +1535,14 @@ describe('given a successful leave', () => {
           data: {
             leaveOrganization: {
               result: {
-                status:
-                  'Successfully left organization: treasury-board-secretariat',
+                status: 'Successfully left organization: treasury-board-secretariat',
               },
             },
           },
         }
 
         expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully left org: treasury-board-secretariat.`])
       })
     })
     describe('language is set to french', () => {
@@ -1601,8 +1550,8 @@ describe('given a successful leave', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1641,7 +1590,7 @@ describe('given a successful leave', () => {
             transaction,
             userKey: user._key,
             auth: {
-              checkOrgOwner: checkOrgOwner({i18n, query, userKey: user._key}),
+              checkOrgOwner: checkOrgOwner({ i18n, query, userKey: user._key }),
               userRequired: userRequired({
                 i18n,
                 userKey: user._key,
@@ -1651,7 +1600,7 @@ describe('given a successful leave', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -1661,7 +1610,7 @@ describe('given a successful leave', () => {
                 userKey: user._key,
               }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -1669,17 +1618,14 @@ describe('given a successful leave', () => {
           data: {
             leaveOrganization: {
               result: {
-                status:
-                  "L'organisation a été quittée avec succès: treasury-board-secretariat",
+                status: "L'organisation a été quittée avec succès: treasury-board-secretariat",
               },
             },
           },
         }
 
         expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully left org: treasury-board-secretariat.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully left org: treasury-board-secretariat.`])
       })
     })
   })
@@ -1709,8 +1655,8 @@ describe('given an unsuccessful leave', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1755,14 +1701,14 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: {
                 load: jest.fn().mockReturnValue(undefined),
               },
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -1778,18 +1724,14 @@ describe('given an unsuccessful leave', () => {
         }
 
         expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User 123 attempted to leave undefined organization: 123`,
-        ])
+        expect(consoleOutput).toEqual([`User 123 attempted to leave undefined organization: 123`])
       })
     })
     describe('user is an org owner', () => {
       describe('database error occurs', () => {
         describe('when querying dmarcSummaryCheck', () => {
           it('throws an error', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
+            const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
             const mockedTransaction = jest.fn()
 
@@ -1818,7 +1760,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -1827,20 +1769,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1884,7 +1824,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -1893,20 +1833,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1919,9 +1857,7 @@ describe('given an unsuccessful leave', () => {
         describe('when getting dmarc summary info', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              all: jest
-                .fn()
-                .mockRejectedValue(new Error('Cursor error occurred.')),
+              all: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
             })
 
             const mockedTransaction = jest.fn()
@@ -1951,7 +1887,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -1960,20 +1896,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1984,10 +1918,7 @@ describe('given an unsuccessful leave', () => {
         describe('when getting domainInfo', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockRejectedValue(new Error('Cursor error occurred.')),
+              all: jest.fn().mockReturnValueOnce([]).mockRejectedValue(new Error('Cursor error occurred.')),
             })
 
             const mockedTransaction = jest.fn()
@@ -2017,7 +1948,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2026,20 +1957,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2056,9 +1985,7 @@ describe('given an unsuccessful leave', () => {
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -2086,7 +2013,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2095,20 +2022,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2123,10 +2048,7 @@ describe('given an unsuccessful leave', () => {
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -2154,7 +2076,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2163,20 +2085,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2190,13 +2110,11 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1, domain: "test.gc.ca"}]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -2224,7 +2142,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2233,20 +2151,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2260,14 +2176,11 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1, domain: "test.gc.ca"}]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -2295,7 +2208,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2304,20 +2217,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2331,7 +2242,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1, domain: "test.gc.ca"}]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2367,7 +2278,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2376,20 +2287,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2403,7 +2312,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1, domain: "test.gc.ca"}]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -2441,7 +2350,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2450,20 +2359,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable leave organization. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2482,9 +2389,7 @@ describe('given an unsuccessful leave', () => {
           })
 
           const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest
-              .fn()
-              .mockRejectedValue(new Error('Step error occurred.')),
+            step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
           })
 
           const response = await graphql(
@@ -2512,7 +2417,7 @@ describe('given an unsuccessful leave', () => {
             {
               i18n,
               query: mockedQuery,
-              collections: jest.fn({property: 'string'}),
+              collections: jest.fn({ property: 'string' }),
               transaction: mockedTransaction,
               userKey: '123',
               auth: {
@@ -2521,20 +2426,18 @@ describe('given an unsuccessful leave', () => {
                   _key: '123',
                   emailValidated: true,
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 123}),
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
-          const error = [
-            new GraphQLError('Unable leave organization. Please try again.'),
-          ]
+          const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2582,7 +2485,7 @@ describe('given an unsuccessful leave', () => {
           {
             i18n,
             query: mockedQuery,
-            collections: jest.fn({property: 'string'}),
+            collections: jest.fn({ property: 'string' }),
             transaction: mockedTransaction,
             userKey: '123',
             auth: {
@@ -2591,20 +2494,18 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({_key: 123}),
+                load: jest.fn().mockReturnValue({ _key: 123 }),
               },
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
-        const error = [
-          new GraphQLError('Unable leave organization. Please try again.'),
-        ]
+        const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
@@ -2618,8 +2519,8 @@ describe('given an unsuccessful leave', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -2664,14 +2565,14 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: {
                 load: jest.fn().mockReturnValue(undefined),
               },
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -2680,26 +2581,21 @@ describe('given an unsuccessful leave', () => {
             leaveOrganization: {
               result: {
                 code: 400,
-                description:
-                  'Impossible de quitter une organisation non définie.',
+                description: 'Impossible de quitter une organisation non définie.',
               },
             },
           },
         }
 
         expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User 123 attempted to leave undefined organization: 123`,
-        ])
+        expect(consoleOutput).toEqual([`User 123 attempted to leave undefined organization: 123`])
       })
     })
     describe('user is an org owner', () => {
       describe('database error occurs', () => {
         describe('when querying dmarcSummaryCheck', () => {
           it('throws an error', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
+            const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
             const mockedTransaction = jest.fn()
 
@@ -2728,7 +2624,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2737,22 +2633,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2796,7 +2688,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2805,22 +2697,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2833,9 +2721,7 @@ describe('given an unsuccessful leave', () => {
         describe('when getting dmarc summary info', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              all: jest
-                .fn()
-                .mockRejectedValue(new Error('Cursor error occurred.')),
+              all: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
             })
 
             const mockedTransaction = jest.fn()
@@ -2865,7 +2751,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2874,22 +2760,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2900,10 +2782,7 @@ describe('given an unsuccessful leave', () => {
         describe('when getting domainInfo', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockReturnValue({
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockRejectedValue(new Error('Cursor error occurred.')),
+              all: jest.fn().mockReturnValueOnce([]).mockRejectedValue(new Error('Cursor error occurred.')),
             })
 
             const mockedTransaction = jest.fn()
@@ -2933,7 +2812,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -2942,22 +2821,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2974,9 +2849,7 @@ describe('given an unsuccessful leave', () => {
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -3004,7 +2877,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3013,22 +2886,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3043,10 +2912,7 @@ describe('given an unsuccessful leave', () => {
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -3074,7 +2940,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3083,22 +2949,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3112,13 +2974,11 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1}]),
+                .mockReturnValue([{ count: 1 }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -3146,7 +3006,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3155,22 +3015,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3184,14 +3040,11 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1, domain: "test.gc.ca"}]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce()
-                .mockRejectedValue(new Error('Step error occurred.')),
+              step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step error occurred.')),
             })
 
             const response = await graphql(
@@ -3219,7 +3072,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3228,22 +3081,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3257,7 +3106,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1, domain: "test.gc.ca"}]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -3293,7 +3142,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3302,22 +3151,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3331,7 +3176,7 @@ describe('given an unsuccessful leave', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{count: 1, domain: "test.gc.ca"}]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             })
 
             const mockedTransaction = jest.fn().mockReturnValue({
@@ -3369,7 +3214,7 @@ describe('given an unsuccessful leave', () => {
               {
                 i18n,
                 query: mockedQuery,
-                collections: jest.fn({property: 'string'}),
+                collections: jest.fn({ property: 'string' }),
                 transaction: mockedTransaction,
                 userKey: '123',
                 auth: {
@@ -3378,22 +3223,18 @@ describe('given an unsuccessful leave', () => {
                     _key: '123',
                     emailValidated: true,
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: {
-                    load: jest.fn().mockReturnValue({_key: 123}),
+                    load: jest.fn().mockReturnValue({ _key: 123 }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de quitter l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3412,9 +3253,7 @@ describe('given an unsuccessful leave', () => {
           })
 
           const mockedTransaction = jest.fn().mockReturnValue({
-            step: jest
-              .fn()
-              .mockRejectedValue(new Error('Step error occurred.')),
+            step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
           })
 
           const response = await graphql(
@@ -3442,7 +3281,7 @@ describe('given an unsuccessful leave', () => {
             {
               i18n,
               query: mockedQuery,
-              collections: jest.fn({property: 'string'}),
+              collections: jest.fn({ property: 'string' }),
               transaction: mockedTransaction,
               userKey: '123',
               auth: {
@@ -3451,22 +3290,18 @@ describe('given an unsuccessful leave', () => {
                   _key: '123',
                   emailValidated: true,
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 123}),
+                  load: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
-          const error = [
-            new GraphQLError(
-              "Impossible de quitter l'organisation. Veuillez réessayer.",
-            ),
-          ]
+          const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -3514,7 +3349,7 @@ describe('given an unsuccessful leave', () => {
           {
             i18n,
             query: mockedQuery,
-            collections: jest.fn({property: 'string'}),
+            collections: jest.fn({ property: 'string' }),
             transaction: mockedTransaction,
             userKey: '123',
             auth: {
@@ -3523,22 +3358,18 @@ describe('given an unsuccessful leave', () => {
                 _key: '123',
                 emailValidated: true,
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({_key: 123}),
+                load: jest.fn().mockReturnValue({ _key: 123 }),
               },
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
-        const error = [
-          new GraphQLError(
-            "Impossible de quitter l'organisation. Veuillez réessayer.",
-          ),
-        ]
+        const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([

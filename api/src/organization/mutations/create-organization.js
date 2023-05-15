@@ -8,8 +8,7 @@ import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const createOrganization = new mutationWithClientMutationId({
   name: 'CreateOrganization',
-  description:
-    'This mutation allows the creation of an organization inside the database.',
+  description: 'This mutation allows the creation of an organization inside the database.',
   inputFields: () => ({
     acronymEN: {
       type: GraphQLNonNull(Acronym),
@@ -29,60 +28,49 @@ export const createOrganization = new mutationWithClientMutationId({
     },
     zoneEN: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The English translation of the zone the organization belongs to.',
+      description: 'The English translation of the zone the organization belongs to.',
     },
     zoneFR: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The English translation of the zone the organization belongs to.',
+      description: 'The English translation of the zone the organization belongs to.',
     },
     sectorEN: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The English translation of the sector the organization belongs to.',
+      description: 'The English translation of the sector the organization belongs to.',
     },
     sectorFR: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The French translation of the sector the organization belongs to.',
+      description: 'The French translation of the sector the organization belongs to.',
     },
     countryEN: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The English translation of the country the organization resides in.',
+      description: 'The English translation of the country the organization resides in.',
     },
     countryFR: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The French translation of the country the organization resides in.',
+      description: 'The French translation of the country the organization resides in.',
     },
     provinceEN: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The English translation of the province the organization resides in.',
+      description: 'The English translation of the province the organization resides in.',
     },
     provinceFR: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The French translation of the province the organization resides in.',
+      description: 'The French translation of the province the organization resides in.',
     },
     cityEN: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The English translation of the city the organization resides in.',
+      description: 'The English translation of the city the organization resides in.',
     },
     cityFR: {
       type: GraphQLNonNull(GraphQLString),
-      description:
-        'The French translation of the city the organization resides in.',
+      description: 'The French translation of the city the organization resides in.',
     },
   }),
   outputFields: () => ({
     result: {
       type: createOrganizationUnion,
-      description:
-        '`CreateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.',
+      description: '`CreateOrganizationUnion` returning either an `Organization`, or `OrganizationError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -129,15 +117,11 @@ export const createOrganization = new mutationWithClientMutationId({
     const [orgEN, orgFR] = await loadOrgBySlug.loadMany([slugEN, slugFR])
 
     if (typeof orgEN !== 'undefined' || typeof orgFR !== 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to create an organization that already exists: ${slugEN}`,
-      )
+      console.warn(`User: ${userKey} attempted to create an organization that already exists: ${slugEN}`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Organization name already in use. Please try again with a different name.`,
-        ),
+        description: i18n._(t`Organization name already in use. Please try again with a different name.`),
       }
     }
 
@@ -194,12 +178,8 @@ export const createOrganization = new mutationWithClientMutationId({
           `,
       )
     } catch (err) {
-      console.error(
-        `Transaction error occurred when user: ${userKey} was creating new organization ${slugEN}: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to create organization. Please try again.`),
-      )
+      console.error(`Transaction error occurred when user: ${userKey} was creating new organization ${slugEN}: ${err}`)
+      throw new Error(i18n._(t`Unable to create organization. Please try again.`))
     }
     const organization = await cursor.next()
 
@@ -211,8 +191,7 @@ export const createOrganization = new mutationWithClientMutationId({
             INSERT {
               _from: ${organization._id},
               _to: ${user._id},
-              permission: "admin",
-              owner: true
+              permission: "owner",
             } INTO affiliations
           `,
       )
@@ -220,9 +199,7 @@ export const createOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred when inserting edge definition for user: ${userKey} to ${slugEN}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to create organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to create organization. Please try again.`))
     }
 
     try {
@@ -231,14 +208,10 @@ export const createOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred when committing new organization: ${slugEN} for user: ${userKey} to db: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to create organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to create organization. Please try again.`))
     }
 
-    console.info(
-      `User: ${userKey} successfully created a new organization: ${slugEN}`,
-    )
+    console.info(`User: ${userKey} successfully created a new organization: ${slugEN}`)
     await logActivity({
       transaction,
       collections,

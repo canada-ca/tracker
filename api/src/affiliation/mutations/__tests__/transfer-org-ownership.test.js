@@ -1,32 +1,23 @@
-import {setupI18n} from '@lingui/core'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {checkOrgOwner, userRequired, verifiedRequired} from '../../../auth'
-import {loadOrgByKey} from '../../../organization/loaders'
-import {loadUserByKey} from '../../../user/loaders'
-import {cleanseInput} from '../../../validators'
-import {createMutationSchema} from '../../../mutation'
-import {createQuerySchema} from '../../../query'
+import { checkOrgOwner, userRequired, verifiedRequired } from '../../../auth'
+import { loadOrgByKey } from '../../../organization/loaders'
+import { loadUserByKey } from '../../../user/loaders'
+import { cleanseInput } from '../../../validators'
+import { createMutationSchema } from '../../../mutation'
+import { createQuerySchema } from '../../../query'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY} = process.env
+const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY } = process.env
 
 describe('given the transferOrgOwnership mutation', () => {
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    transaction,
-    i18n,
-    user,
-    user2,
-    org
+  let query, drop, truncate, schema, collections, transaction, i18n, user, user2, org
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -44,8 +35,8 @@ describe('given the transferOrgOwnership mutation', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -59,7 +50,7 @@ describe('given the transferOrgOwnership mutation', () => {
   })
   describe('given a successful transfer', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -108,14 +99,12 @@ describe('given the transferOrgOwnership mutation', () => {
       await collections.affiliations.save({
         _from: org._id,
         _to: user._id,
-        permission: 'admin',
-        owner: true,
+        permission: 'owner',
       })
       await collections.affiliations.save({
         _from: org._id,
         _to: user2._id,
         permission: 'admin',
-        owner: false,
       })
     })
     afterEach(async () => {
@@ -170,7 +159,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -179,9 +168,9 @@ describe('given the transferOrgOwnership mutation', () => {
                 i18n,
                 userKey: user._key,
               }),
-              loadUserByKey: loadUserByKey({query, userKey: user._key, i18n}),
+              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -191,7 +180,7 @@ describe('given the transferOrgOwnership mutation', () => {
             RETURN aff
         `
         const testAffiliation = await testAffiliationCursor.next()
-        expect(testAffiliation).toMatchObject({owner: false})
+        expect(testAffiliation).toMatchObject({ permission: 'admin' })
       })
       it('sets owner field in the requested users to true', async () => {
         await graphql(
@@ -238,7 +227,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               }),
-              verifiedRequired: verifiedRequired({i18n}),
+              verifiedRequired: verifiedRequired({ i18n }),
             },
             loaders: {
               loadOrgByKey: loadOrgByKey({
@@ -247,9 +236,9 @@ describe('given the transferOrgOwnership mutation', () => {
                 i18n,
                 userKey: user._key,
               }),
-              loadUserByKey: loadUserByKey({query, userKey: user._key, i18n}),
+              loadUserByKey: loadUserByKey({ query, userKey: user._key, i18n }),
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
@@ -259,14 +248,14 @@ describe('given the transferOrgOwnership mutation', () => {
             RETURN aff
         `
         const testAffiliation = await testAffiliationCursor.next()
-        expect(testAffiliation).toMatchObject({owner: true})
+        expect(testAffiliation).toMatchObject({ permission: 'owner' })
       })
       describe('users language is set to english', () => {
         beforeAll(() => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: {plurals: {}},
+              en: { plurals: {} },
             },
             locales: ['en'],
             messages: {
@@ -319,7 +308,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -334,7 +323,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -360,7 +349,7 @@ describe('given the transferOrgOwnership mutation', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              fr: {plurals: {}},
+              fr: { plurals: {} },
             },
             locales: ['fr'],
             messages: {
@@ -413,7 +402,7 @@ describe('given the transferOrgOwnership mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -428,7 +417,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -457,8 +446,8 @@ describe('given the transferOrgOwnership mutation', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -519,7 +508,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -528,17 +517,14 @@ describe('given the transferOrgOwnership mutation', () => {
               transferOrgOwnership: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to transfer ownership of undefined organization.',
+                  description: 'Unable to transfer ownership of undefined organization.',
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to transfer org ownership of an undefined org.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 123 attempted to transfer org ownership of an undefined org.`])
         })
       })
       describe('requested org is verified', () => {
@@ -596,7 +582,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -605,17 +591,14 @@ describe('given the transferOrgOwnership mutation', () => {
               transferOrgOwnership: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to transfer ownership of a verified organization.',
+                  description: 'Unable to transfer ownership of a verified organization.',
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to transfer ownership of a verified org: mocked-org.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 123 attempted to transfer ownership of a verified org: mocked-org.`])
         })
       })
       describe('requesting user is not the org owner', () => {
@@ -669,7 +652,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -678,8 +661,7 @@ describe('given the transferOrgOwnership mutation', () => {
               transferOrgOwnership: {
                 result: {
                   code: 400,
-                  description:
-                    'Permission Denied: Please contact org owner to transfer ownership.',
+                  description: 'Permission Denied: Please contact org owner to transfer ownership.',
                 },
               },
             },
@@ -740,7 +722,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -749,8 +731,7 @@ describe('given the transferOrgOwnership mutation', () => {
               transferOrgOwnership: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to transfer ownership of an org to an undefined user.',
+                  description: 'Unable to transfer ownership of an org to an undefined user.',
                 },
               },
             },
@@ -789,7 +770,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 0}),
+              query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
               userKey: user._key,
@@ -813,7 +794,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -887,15 +868,11 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to transfer organization ownership. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to transfer organization ownership. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -936,7 +913,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 1}),
+                query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -960,15 +937,11 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to transfer organization ownership. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to transfer organization ownership. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -979,10 +952,7 @@ describe('given the transferOrgOwnership mutation', () => {
         describe('when adding ownership to requested user', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce()
-                .mockRejectedValue(new Error('Step Error')),
+              step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step Error')),
             })
 
             const response = await graphql(
@@ -1010,7 +980,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 1}),
+                query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1034,15 +1004,11 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to transfer organization ownership. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to transfer organization ownership. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1083,7 +1049,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 1}),
+              query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
@@ -1107,15 +1073,11 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to transfer organization ownership. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to transfer organization ownership. Please try again.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1129,8 +1091,8 @@ describe('given the transferOrgOwnership mutation', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1191,7 +1153,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1200,17 +1162,14 @@ describe('given the transferOrgOwnership mutation', () => {
               transferOrgOwnership: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de transférer la propriété d'une organisation non définie.",
+                  description: "Impossible de transférer la propriété d'une organisation non définie.",
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to transfer org ownership of an undefined org.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 123 attempted to transfer org ownership of an undefined org.`])
         })
       })
       describe('requested org is verified', () => {
@@ -1268,7 +1227,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1277,17 +1236,14 @@ describe('given the transferOrgOwnership mutation', () => {
               transferOrgOwnership: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de transférer la propriété d'une organisation vérifiée.",
+                  description: "Impossible de transférer la propriété d'une organisation vérifiée.",
                 },
               },
             },
           }
 
           expect(response).toEqual(expectedResult)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to transfer ownership of a verified org: mocked-org.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 123 attempted to transfer ownership of a verified org: mocked-org.`])
         })
       })
       describe('requesting user is not the org owner', () => {
@@ -1341,7 +1297,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1412,7 +1368,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1421,8 +1377,7 @@ describe('given the transferOrgOwnership mutation', () => {
               transferOrgOwnership: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de transférer la propriété d'un org à un utilisateur non défini.",
+                  description: "Impossible de transférer la propriété d'un org à un utilisateur non défini.",
                 },
               },
             },
@@ -1461,7 +1416,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 0}),
+              query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
               userKey: user._key,
@@ -1485,7 +1440,7 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1559,14 +1514,12 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
             const error = [
-              new GraphQLError(
-                "Impossible de transférer la propriété de l'organisation. Veuillez réessayer.",
-              ),
+              new GraphQLError("Impossible de transférer la propriété de l'organisation. Veuillez réessayer."),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1608,7 +1561,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 1}),
+                query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1632,14 +1585,12 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
             const error = [
-              new GraphQLError(
-                "Impossible de transférer la propriété de l'organisation. Veuillez réessayer.",
-              ),
+              new GraphQLError("Impossible de transférer la propriété de l'organisation. Veuillez réessayer."),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1651,10 +1602,7 @@ describe('given the transferOrgOwnership mutation', () => {
         describe('when adding ownership to requested user', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce()
-                .mockRejectedValue(new Error('Step Error')),
+              step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Step Error')),
             })
 
             const response = await graphql(
@@ -1682,7 +1630,7 @@ describe('given the transferOrgOwnership mutation', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 1}),
+                query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: mockedTransaction,
                 userKey: user._key,
@@ -1706,14 +1654,12 @@ describe('given the transferOrgOwnership mutation', () => {
                     }),
                   },
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
             const error = [
-              new GraphQLError(
-                "Impossible de transférer la propriété de l'organisation. Veuillez réessayer.",
-              ),
+              new GraphQLError("Impossible de transférer la propriété de l'organisation. Veuillez réessayer."),
             ]
 
             expect(response.errors).toEqual(error)
@@ -1755,7 +1701,7 @@ describe('given the transferOrgOwnership mutation', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 1}),
+              query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
               transaction: mockedTransaction,
               userKey: user._key,
@@ -1779,14 +1725,12 @@ describe('given the transferOrgOwnership mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
           const error = [
-            new GraphQLError(
-              "Impossible de transférer la propriété de l'organisation. Veuillez réessayer.",
-            ),
+            new GraphQLError("Impossible de transférer la propriété de l'organisation. Veuillez réessayer."),
           ]
 
           expect(response.errors).toEqual(error)
