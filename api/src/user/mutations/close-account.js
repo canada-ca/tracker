@@ -79,7 +79,7 @@ export const closeAccount = new mutationWithClientMutationId({
       orgOwnerAffiliationCursor = await query`
         WITH users, affiliations, organizations
         FOR v, e IN 1..1 INBOUND ${userId} affiliations
-          FILTER e.owner == true
+          FILTER e.permission == "owner"
           RETURN e
       `
     } catch (err) {

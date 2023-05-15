@@ -221,7 +221,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
               _from: ${org._id},
               _to: ${requestedUser._id},
               permission: ${requestedRole},
-              owner: false
             } INTO affiliations
           `,
       )
