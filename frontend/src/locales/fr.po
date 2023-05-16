@@ -2351,7 +2351,7 @@ msgstr "EN ATTENTE"
 
 #: src/app/TopBanner.js:85
 msgid "PREVIEW"
-msgstr "PREVIEW"
+msgstr "APERÇU"
 
 #: src/organizationDetails/OrganizationDomains.js:94
 msgid "PROD"
