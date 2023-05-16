@@ -148,7 +148,7 @@ export function SuperAdminUserList({ permission }) {
     { value: 'USER_USERNAME', text: t`Email` },
     { value: 'USER_DISPLAYNAME', text: t`Display Name` },
     { value: 'USER_EMAIL_VALIDATED', text: t`Verified` },
-    { value: 'USER_INSIDER', text: t`Insider` },
+    { value: 'USER_INSIDER', text: t`Inside User` },
   ]
 
   const userList =
@@ -340,15 +340,17 @@ export function SuperAdminUserList({ permission }) {
                         >
                           <Trans>Verified</Trans>
                         </Badge>
-                        <Badge
-                          variant="solid"
-                          bg={insideUser ? 'strong' : 'weak'}
-                          pt={1}
-                          mr={{ md: '1rem' }}
-                          justifySelf={{ base: 'start', md: 'end' }}
-                        >
-                          <Trans>Insider</Trans>
-                        </Badge>
+                        {insideUser && (
+                          <Badge
+                            variant="solid"
+                            bg="strong"
+                            pt={1}
+                            mr={{ md: '1rem' }}
+                            justifySelf={{ base: 'start', md: 'end' }}
+                          >
+                            <Trans>Inside User</Trans>
+                          </Badge>
+                        )}
                       </Flex>
                       <Text minW="17%">
                         <Trans>Affiliations:</Trans> {totalCount}

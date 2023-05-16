@@ -32,9 +32,17 @@ org = orgs.insert(
             "web": {"pass": 0, "fail": 0, "total": 0},
             "mail": {"pass": 0, "fail": 0, "total": 0},
             "https": {"pass": 0, "fail": 0, "total": 0},
-            "dmarc_phase": {"not_implemented": 0, "assess": 0, "deploy": 0,
-                            "enforce": 0, "maintain": 0},
-
+            "web_connections": {"pass": 0, "fail": 0, "total": 0},
+            "ssl": {"pass": 0, "fail": 0, "total": 0},
+            "dkim": {"pass": 0, "fail": 0, "total": 0},
+            "spf": {"pass": 0, "fail": 0, "total": 0},
+            "dmarc_phase": {
+                "not_implemented": 0,
+                "assess": 0,
+                "deploy": 0,
+                "enforce": 0,
+                "maintain": 0,
+            },
         },
         "orgDetails": {
             "en": {
@@ -112,60 +120,6 @@ claims.insert({"_from": org["_id"], "_to": domain2["_id"], "hidden": False})
 claims.insert({"_from": org["_id"], "_to": domain3["_id"], "hidden": False})
 
 
-def test_update_scan_summaries():
-    update_scan_summaries(host="http://testdb:8529", name="test", user="", password="")
-
-    httpsScanSummary = db.collection("scanSummaries").get({"_key": "https"})
-    assert httpsScanSummary == {
-        "_id": "scanSummaries/https",
-        "_rev": httpsScanSummary["_rev"],
-        "_key": "https",
-        "pass": 2,
-        "fail": 1,
-        "total": 3,
-    }
-
-    sslScanSummary = db.collection("scanSummaries").get({"_key": "ssl"})
-    assert sslScanSummary == {
-        "_id": "scanSummaries/ssl",
-        "_rev": sslScanSummary["_rev"],
-        "_key": "ssl",
-        "pass": 2,
-        "fail": 1,
-        "total": 3,
-    }
-
-    dmarcScanSummary = db.collection("scanSummaries").get({"_key": "dmarc"})
-    assert dmarcScanSummary == {
-        "_id": "scanSummaries/dmarc",
-        "_rev": dmarcScanSummary["_rev"],
-        "_key": "dmarc",
-        "pass": 2,
-        "fail": 1,
-        "total": 3,
-    }
-
-    spfScanSummary = db.collection("scanSummaries").get({"_key": "spf"})
-    assert spfScanSummary == {
-        "_id": "scanSummaries/spf",
-        "_rev": spfScanSummary["_rev"],
-        "_key": "spf",
-        "pass": 2,
-        "fail": 1,
-        "total": 3,
-    }
-
-    dkimScanSummary = db.collection("scanSummaries").get({"_key": "dkim"})
-    assert dkimScanSummary == {
-        "_id": "scanSummaries/dkim",
-        "_rev": dkimScanSummary["_rev"],
-        "_key": "dkim",
-        "pass": 1,
-        "fail": 2,
-        "total": 3,
-    }
-
-
 def test_update_chart_summaries():
     update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
 
@@ -222,6 +176,20 @@ def test_update_org_summaries():
         "https": {"pass": 2, "fail": 1, "total": 3},
         "web": {"pass": 2, "fail": 1, "total": 3},
         "mail": {"pass": 1, "fail": 2, "total": 3},
-        "dmarc_phase": {"not_implemented": 1, "assess": 0, "deploy": 0,
-                        "enforce": 0, "maintain": 2, "total": 3},
+        "web_connections": {"pass": 0, "fail": 1, "total": 1},
+        "ssl": {"pass": 2, "fail": 1, "total": 3},
+        "dkim": {"pass": 1, "fail": 2, "total": 3},
+        "spf": {"pass": 2, "fail": 1, "total": 3},
+        "hidden": {
+            "https": {"pass": 0, "fail": 0, "total": 0},
+            "dmarc": {"pass": 0, "fail": 0, "total": 0},
+        },
+        "dmarc_phase": {
+            "not_implemented": 1,
+            "assess": 0,
+            "deploy": 0,
+            "enforce": 0,
+            "maintain": 2,
+            "total": 3,
+        },
     }

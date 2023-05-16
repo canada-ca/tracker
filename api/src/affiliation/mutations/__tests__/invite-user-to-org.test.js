@@ -143,7 +143,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: SUPER_ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: ENGLISH
                         }
                       ) {
                         result {
@@ -239,7 +238,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -335,7 +333,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -424,7 +421,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: SUPER_ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -499,9 +495,9 @@ describe('invite user to org', () => {
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: {
                   userName: 'test@email.gc.ca',
-                  preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -519,7 +515,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -595,9 +590,9 @@ describe('invite user to org', () => {
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: {
                   userName: 'test@email.gc.ca',
-                  preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -615,7 +610,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -691,9 +685,9 @@ describe('invite user to org', () => {
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: {
                   userName: 'test@email.gc.ca',
-                  preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -730,7 +724,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -826,7 +819,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -916,7 +908,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: ADMIN
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -992,9 +983,9 @@ describe('invite user to org', () => {
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: {
                   userName: 'test@email.gc.ca',
-                  preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1012,7 +1003,6 @@ describe('invite user to org', () => {
                         userName: "test@email.gc.ca"
                         requestedRole: USER
                         orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
                       }
                     ) {
                       result {
@@ -1088,9 +1078,9 @@ describe('invite user to org', () => {
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
                 user: {
                   userName: 'test@email.gc.ca',
-                  preferredLang: 'english',
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1175,7 +1165,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: SUPER_ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1272,7 +1261,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1369,7 +1357,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1460,7 +1447,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: SUPER_ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1534,8 +1520,9 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                user: { userName: 'test@email.gc.ca' },
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1553,7 +1540,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1627,8 +1613,9 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                user: { userName: 'test@email.gc.ca' },
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1646,7 +1633,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1720,8 +1706,9 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                user: { userName: 'test@email.gc.ca' },
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -1758,7 +1745,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1855,7 +1841,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -1946,7 +1931,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: ADMIN
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -2020,8 +2004,9 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                user: { userName: 'test@email.gc.ca' },
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -2039,7 +2024,6 @@ describe('invite user to org', () => {
                           userName: "test@email.gc.ca"
                           requestedRole: USER
                           orgId: "${toGlobalId('organizations', org._key)}"
-                          preferredLang: FRENCH
                         }
                       ) {
                         result {
@@ -2113,8 +2097,9 @@ describe('invite user to org', () => {
                 `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
               ])
               expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                user: { userName: 'test@email.gc.ca', preferredLang: 'french' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                user: { userName: 'test@email.gc.ca' },
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 createAccountLink,
               })
             })
@@ -2221,7 +2206,6 @@ describe('invite user to org', () => {
                       userName: "${user.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2293,7 +2277,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 1)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2373,7 +2356,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2454,7 +2436,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2535,7 +2516,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: SUPER_ADMIN
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2617,7 +2597,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2693,7 +2672,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2790,7 +2768,6 @@ describe('invite user to org', () => {
                       userName: "test.account@istio.actually.exists"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 1)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2870,7 +2847,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 1)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -2950,7 +2926,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3030,7 +3005,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3110,7 +3084,6 @@ describe('invite user to org', () => {
                       userName: "test@email.gc.ca"
                       requestedRole: SUPER_ADMIN
                       orgId: "${toGlobalId('organizations', 123)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3191,7 +3164,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {
@@ -3267,7 +3239,6 @@ describe('invite user to org', () => {
                       userName: "${userToInvite.userName}"
                       requestedRole: USER
                       orgId: "${toGlobalId('organizations', org._key)}"
-                      preferredLang: FRENCH
                     }
                   ) {
                     result {

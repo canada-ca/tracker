@@ -42,7 +42,7 @@ import {
   SIGN_OUT,
 } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
-// import { InsideUserSwitch } from './InsideUserSwitch'
+import { InsideUserSwitch } from './InsideUserSwitch'
 
 export default function UserPage() {
   const toast = useToast()
@@ -164,7 +164,7 @@ export default function UserPage() {
     tfaSendMethod,
     emailValidated,
     phoneValidated,
-    // insideUser,
+    insideUser,
   } = queryUserData?.userPage
 
   return (
@@ -214,7 +214,7 @@ export default function UserPage() {
             </Button>
           )}
 
-          {/* <InsideUserSwitch insideUser={insideUser || false} /> */}
+          <InsideUserSwitch insideUser={insideUser || false} />
 
           <Flex mt="auto">
             <Button

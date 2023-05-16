@@ -4,7 +4,7 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { LanguageEnums, RoleEnums } from '../../enums'
+import { RoleEnums } from '../../enums'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
@@ -24,10 +24,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
     orgId: {
       type: GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to invite the user to.',
-    },
-    preferredLang: {
-      type: GraphQLNonNull(LanguageEnums),
-      description: 'The language in which the email will be sent in.',
     },
   }),
   outputFields: () => ({
@@ -56,7 +52,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
     const userName = cleanseInput(args.userName).toLowerCase()
     const requestedRole = cleanseInput(args.requestedRole)
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
-    const preferredLang = cleanseInput(args.preferredLang)
 
     // Get requesting user
     const user = await userRequired()
@@ -106,6 +101,33 @@ able to sign-up and be assigned to that organization in one mutation.`,
       }
     }
 
+    // Get org names to use in email
+    let orgNamesCursor
+    try {
+      orgNamesCursor = await query`
+        LET org = DOCUMENT(organizations, ${org._id})
+        RETURN {
+          "orgNameEN": org.orgDetails.en.name,
+          "orgNameFR": org.orgDetails.fr.name,
+        }
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred when user: ${userKey} attempted to invite user: ${userName} to org: ${org._key}. Error while creating cursor for retrieving organization names. error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to invite user to organization. Please try again.`))
+    }
+
+    let orgNames
+    try {
+      orgNames = await orgNamesCursor.next()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred when user: ${userKey} attempted to invite user: ${userName} to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to invite user to organization. Please try again.`))
+    }
+
     // Check to see if requested user exists
     const requestedUser = await loadUserByUserName.load(userName)
 
@@ -118,8 +140,9 @@ able to sign-up and be assigned to that organization in one mutation.`,
       const createAccountLink = `https://${request.get('host')}/create-user/${token}`
 
       await sendOrgInviteCreateAccount({
-        user: { userName: userName, preferredLang },
-        orgName: org.name,
+        user: { userName: userName },
+        orgNameEN: orgNames.orgNameEN,
+        orgNameFR: orgNames.orgNameFR,
         createAccountLink,
       })
 
@@ -215,7 +238,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
 
     await sendOrgInviteEmail({
       user: requestedUser,
-      orgName: org.name,
+      orgName: requestedUser.preferredLang === 'english' ? orgNames.orgNameEN : orgNames.orgNameFR,
     })
 
     // Commit affiliation

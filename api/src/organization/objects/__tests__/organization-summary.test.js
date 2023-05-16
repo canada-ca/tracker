@@ -33,6 +33,30 @@ describe('given the organization summary object', () => {
       expect(demoType).toHaveProperty('dmarcPhase')
       expect(demoType.dmarcPhase.type).toMatchObject(categorizedSummaryType)
     })
+    it('has a webConnections field', () => {
+      const demoType = organizationSummaryType.getFields()
+
+      expect(demoType).toHaveProperty('webConnections')
+      expect(demoType.dmarcPhase.type).toMatchObject(categorizedSummaryType)
+    })
+    it('has a ssl field', () => {
+      const demoType = organizationSummaryType.getFields()
+
+      expect(demoType).toHaveProperty('ssl')
+      expect(demoType.dmarcPhase.type).toMatchObject(categorizedSummaryType)
+    })
+    it('has a spf field', () => {
+      const demoType = organizationSummaryType.getFields()
+
+      expect(demoType).toHaveProperty('spf')
+      expect(demoType.dmarcPhase.type).toMatchObject(categorizedSummaryType)
+    })
+    it('has a dkim field', () => {
+      const demoType = organizationSummaryType.getFields()
+
+      expect(demoType).toHaveProperty('dkim')
+      expect(demoType.dmarcPhase.type).toMatchObject(categorizedSummaryType)
+    })
   })
 
   describe('field resolvers', () => {
@@ -48,10 +72,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.dmarc.resolve({ dmarc }, {}, { i18n })).toEqual({
@@ -83,10 +104,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.dmarc.resolve({ dmarc }, {}, { i18n })).toEqual({
@@ -120,10 +138,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.https.resolve({ https }, {}, { i18n })).toEqual({
@@ -155,10 +170,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.https.resolve({ https }, {}, { i18n })).toEqual({
@@ -191,10 +203,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.mail.resolve({ mail }, {}, { i18n })).toEqual({
@@ -226,10 +235,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.mail.resolve({ mail }, {}, { i18n })).toEqual({
@@ -262,10 +268,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.web.resolve({ web }, {}, { i18n })).toEqual({
@@ -296,10 +299,7 @@ describe('given the organization summary object', () => {
           }
 
           const i18n = {
-            _: jest
-              .fn()
-              .mockReturnValueOnce('pass')
-              .mockReturnValueOnce('fail'),
+            _: jest.fn().mockReturnValueOnce('pass').mockReturnValueOnce('fail'),
           }
 
           expect(demoType.web.resolve({ web }, {}, { i18n })).toEqual({
@@ -344,13 +344,7 @@ describe('given the organization summary object', () => {
               .mockReturnValueOnce('maintain'),
           }
 
-          expect(
-            demoType.dmarcPhase.resolve(
-              { dmarc_phase: dmarcPhase },
-              {},
-              { i18n },
-            ),
-          ).toEqual({
+          expect(demoType.dmarcPhase.resolve({ dmarc_phase: dmarcPhase }, {}, { i18n })).toEqual({
             categories: [
               {
                 count: 0,
@@ -406,13 +400,7 @@ describe('given the organization summary object', () => {
               .mockReturnValueOnce('maintain'),
           }
 
-          expect(
-            demoType.dmarcPhase.resolve(
-              { dmarc_phase: dmarcPhase },
-              {},
-              { i18n },
-            ),
-          ).toEqual({
+          expect(demoType.dmarcPhase.resolve({ dmarc_phase: dmarcPhase }, {}, { i18n })).toEqual({
             categories: [
               {
                 count: 50,

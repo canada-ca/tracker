@@ -5,33 +5,18 @@ import { arrayOf, number, objectOf, shape, string } from 'prop-types'
 import { Doughnut, Segment } from './Doughnut'
 import { useLingui } from '@lingui/react'
 
-export function SummaryCard({
-  id,
-  title,
-  categoryDisplay,
-  description,
-  data,
-  ...props
-}) {
+export function SummaryCard({ id, title, categoryDisplay, description, data, ...props }) {
   const { i18n } = useLingui()
-  let dmarcCompliantCount = 0
-  let dmarcCompliantPercentage = 0.0
+
   let { categories } = data
-  if (id === 'dmarcPhases') {
-    data.categories.forEach(({ name, count, percentage }) => {
-      if (name !== 'not implemented') {
-        dmarcCompliantCount += count
-        dmarcCompliantPercentage += percentage
-      }
-    })
-    categories = [
-      {
-        name: 'implemented',
-        count: dmarcCompliantCount,
-        percentage: dmarcCompliantPercentage,
-      },
-      categories[0],
-    ]
+
+  const descriptionMb = {
+    httpsStatus: ['2', '2', i18n.locale === 'fr' ? '8' : '2', '8'],
+    dmarc: '2',
+    spf: { base: 2, md: '14' },
+    dkim: { base: 2, md: i18n.locale === 'fr' ? '14' : '8' },
+    web: { base: 2, md: i18n.locale === 'fr' ? '8' : '2' },
+    email: '2',
   }
 
   return (
@@ -44,21 +29,8 @@ export function SummaryCard({
       mx="4"
       {...props}
     >
-      <Box
-        px="8"
-        mb={
-          id === 'httpsStatus'
-            ? ['2', '2', i18n.locale === 'fr' ? '8' : '2', '8']
-            : '2'
-        }
-      >
-        <Text
-          fontSize="xl"
-          fontWeight="semibold"
-          textAlign="left"
-          color="primary"
-          my="2"
-        >
+      <Box px="8" mb={descriptionMb[id]}>
+        <Text fontSize="xl" fontWeight="semibold" textAlign="left" color="primary" my="2">
           {title}
         </Text>
         <Text fontSize="md" wordBreak="break-word" mb="2">
@@ -81,9 +53,7 @@ export function SummaryCard({
           width={320}
           valueAccessor={(d) => d.count}
         >
-          {(segmentProps, index) => (
-            <Segment key={`segment:${index}`} {...segmentProps} />
-          )}
+          {(segmentProps, index) => <Segment key={`segment:${index}`} {...segmentProps} />}
         </Doughnut>
       </Box>
     </Box>

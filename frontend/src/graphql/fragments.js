@@ -18,6 +18,21 @@ export const Authorization = {
   },
 }
 
+export const Summary = {
+  fragments: {
+    requiredFields: gql`
+      fragment RequiredSummaryFields on CategorizedSummary {
+        total
+        categories {
+          name
+          count
+          percentage
+        }
+      }
+    `,
+  },
+}
+
 export const Guidance = {
   fragments: {
     requiredFields: gql`
