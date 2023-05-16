@@ -48,18 +48,16 @@ export const requestScan = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to request a one time scan on an unknown domain.`))
     }
 
-    if (loginRequiredBool) {
-      // Check to see if user has access to domain
-      const permission = await checkDomainPermission({ domainId: domain._id })
+    // Check to see if user has access to domain
+    const permission = await checkDomainPermission({ domainId: domain._id })
 
-      if (!permission) {
-        console.warn(
-          `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however they do not have permission to do so.`,
-        )
-        throw new Error(
-          i18n._(t`Permission Denied: Please contact organization user for help with scanning this domain.`),
-        )
-      }
+    if (!permission) {
+      console.warn(
+        `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however they do not have permission to do so.`,
+      )
+      throw new Error(
+        i18n._(t`Permission Denied: Please contact organization user for help with scanning this domain.`),
+      )
     }
 
     // Check to see if a scan is already pending
