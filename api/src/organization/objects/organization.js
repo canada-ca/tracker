@@ -73,9 +73,9 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'CSV formatted output of all domains in the organization including their email and web scan statuses.',
-      resolve: async ({ _key }, _args, { loaders: { loadOrganizationDomainStatuses } }) => {
+      resolve: async ({ _id }, _args, { loaders: { loadOrganizationDomainStatuses } }) => {
         const domains = await loadOrganizationDomainStatuses({
-          orgKey: _key,
+          orgId: _id,
         })
         const headers = [
           'domain',

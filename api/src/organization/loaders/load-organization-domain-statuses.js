@@ -2,21 +2,10 @@ import { t } from '@lingui/macro'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const loadOrganizationDomainStatuses =
-  ({
-    query,
-    collections,
-    transaction,
-    userKey,
-    i18n,
-    auth: { userRequired, verifiedRequired },
-    loaders: { loadOrgByKey },
-  }) =>
-  async ({ orgKey }) => {
+  ({ query, collections, transaction, userKey, i18n, auth: { userRequired, verifiedRequired } }) =>
+  async ({ orgId }) => {
     const user = await userRequired()
     verifiedRequired({ user })
-
-    const org = await loadOrgByKey.load(orgKey)
-    const orgId = org._id
 
     let domains
     try {
@@ -36,29 +25,19 @@ export const loadOrganizationDomainStatuses =
     }
 
     // Get org names to use in email
-    let orgNamesCursor
+    let orgCursor
     try {
-      orgNamesCursor = await query`
-        LET org = DOCUMENT(organizations, ${org._id})
-        RETURN {
-          "orgNameEN": org.orgDetails.en.name,
-          "orgNameFR": org.orgDetails.fr.name,
-        }
-      `
+      orgCursor = await query`RETURN DOCUMENT(organizations, ${orgId})`
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} attempted to export org: ${orgKey}. Error while creating cursor for retrieving organization names. error: ${err}`,
-      )
+      console.error(`Database error occurred when user: ${userKey} running loadOrganizationDomainStatuses: ${err}`)
       throw new Error(i18n._(t`Unable to load organization domain statuses. Please try again.`))
     }
 
-    let orgNames
+    let org
     try {
-      orgNames = await orgNamesCursor.next()
+      org = await orgCursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} attempted to export org: ${orgKey}. Error while retrieving organization names. error: ${err}`,
-      )
+      console.error(`Cursor error occurred when user: ${userKey} running loadOrganizationDomainStatuses: ${err}`)
       throw new Error(i18n._(t`Unable to load organization domain statuses. Please try again.`))
     }
 
@@ -73,12 +52,12 @@ export const loadOrganizationDomainStatuses =
       action: 'export',
       target: {
         resource: {
-          en: orgNames.orgNameEN,
-          fr: orgNames.orgNameFR,
+          en: org.orgDetails.en.name,
+          fr: org.orgDetails.fr.name,
         },
         organization: {
           id: org._key,
-          name: org.name,
+          name: org.orgDetails.en.name,
         },
         resourceType: 'organization', // user, org, domain
       },
