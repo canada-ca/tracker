@@ -5,7 +5,7 @@ const getOrgAdmins = async ({ query, orgKey }) => {
     cursor = await query`
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
             FILTER e.permission == "admin"
-            // TODO: filter out users who have opted out of emails  
+            FILTER v.receiveUpdateEmails != false
             RETURN v
     `
   } catch (err) {
