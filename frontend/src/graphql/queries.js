@@ -629,6 +629,7 @@ export const QUERY_CURRENT_USER = gql`
       phoneValidated
       emailValidated
       insideUser
+      receiveUpdateEmails
     }
     isUserAdmin
   }
