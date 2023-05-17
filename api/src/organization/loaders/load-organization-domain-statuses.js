@@ -76,6 +76,10 @@ export const loadOrganizationDomainStatuses =
           en: orgNames.orgNameEN,
           fr: orgNames.orgNameFR,
         },
+        organization: {
+          id: org._key,
+          name: org.name,
+        },
         resourceType: 'organization', // user, org, domain
       },
     })
