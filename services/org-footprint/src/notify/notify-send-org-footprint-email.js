@@ -16,6 +16,8 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
   const domainsUpdated = auditLogs.filter((log) => log.action === 'update' && log.target.resourceType === 'domain')
   const domainsRemoved = auditLogs.filter((log) => log.action === 'remove' && log.target.resourceType === 'domain')
 
+  const exportsToCsv = auditLogs.filter((log) => log.action === 'export')
+
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
@@ -27,6 +29,7 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
         add_domains_count: domainsAdded.length,
         update_domains_count: domainsUpdated.length,
         remove_domains_count: domainsRemoved.length,
+        export_count: exportsToCsv.length,
       },
     })
   } catch (err) {
