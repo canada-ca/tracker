@@ -262,7 +262,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse élec
 
 #: src/user/EmailUpdatesSwitch.js:17
 msgid "An error occurred while updating your email update preference."
-msgstr ""
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences de mise à jour du courrier électronique."
 
 #: src/user/InsideUserSwitch.js:19
 msgid "An error occurred while updating your inside user preference."
@@ -1088,11 +1088,11 @@ msgstr "Résumé de l'e-mail"
 
 #: src/user/EmailUpdatesSwitch.js:82
 msgid "Email Updates"
-msgstr ""
+msgstr "Mises à jour par courriel"
 
 #: src/user/EmailUpdatesSwitch.js:28
 msgid "Email Updates status changed"
-msgstr ""
+msgstr "Changement de statut des mises à jour par courrier électronique"
 
 #: src/user/EditableUserTFAMethod.js:111
 msgid "Email Validated"
@@ -1272,7 +1272,7 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 
 #: src/user/EmailUpdatesSwitch.js:64
 msgid "For organization admins interested in receiving email updates on new activity in their organizations."
-msgstr ""
+msgstr "Pour les administrateurs d'organisations qui souhaitent recevoir des mises à jour par courrier électronique sur les nouvelles activités de leur organisation."
 
 #: src/guidance/GuidanceTagDetails.js:43
 #~ msgid "For technical implementation guidance:"
@@ -3644,7 +3644,7 @@ msgstr "Impossible de mettre à jour cette organisation."
 
 #: src/user/EmailUpdatesSwitch.js:41
 msgid "Unable to update to your Email Updates status, please try again."
-msgstr ""
+msgstr "Impossible de mettre à jour votre statut de mise à jour par courriel, veuillez réessayer."
 
 #: src/user/EditableUserTFAMethod.js:67
 msgid "Unable to update to your TFA send method, please try again."
@@ -4042,7 +4042,7 @@ msgstr "Vous avez réussi à mettre à jour votre nom d'affichage."
 
 #: src/user/EmailUpdatesSwitch.js:29
 msgid "You have successfully updated your email update preference."
-msgstr ""
+msgstr "Vous avez mis à jour vos préférences de mise à jour de l'email avec succès."
 
 #: src/user/EditableUserEmail.js:52
 msgid "You have successfully updated your email."
