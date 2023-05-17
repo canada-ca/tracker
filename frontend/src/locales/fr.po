@@ -644,7 +644,7 @@ msgid "Create"
 msgstr "Créer"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:127
+#: src/app/TopBanner.js:129
 #: src/auth/CreateUserPage.js:243
 msgid "Create Account"
 msgstr "Créer un compte"
@@ -2367,6 +2367,10 @@ msgstr "Organisations"
 msgid "PENDING"
 msgstr "EN ATTENTE"
 
+#: src/app/TopBanner.js:85
+msgid "PREVIEW"
+msgstr "APERÇU"
+
 #: src/organizationDetails/OrganizationDomains.js:94
 msgid "PROD"
 msgstr "PROD"
@@ -3010,7 +3014,7 @@ msgstr "Indique si le paquet de certificats fourni par le serveur comprend le ce
 
 #: src/organizationDetails/OrganizationDomains.js:279
 msgid "Shows if the domain has a valid SSL certificate."
-msgstr ""
+msgstr "Indique si le domaine dispose d'un certificat SSL valide."
 
 #: src/domains/DomainsPage.js:185
 #: src/organizationDetails/OrganizationDomains.js:126
@@ -3147,7 +3151,7 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 
 #: src/app/App.js:156
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:118
+#: src/app/TopBanner.js:120
 #: src/auth/SignInPage.js:189
 msgid "Sign In"
 msgstr "Se connecter"
@@ -3158,7 +3162,7 @@ msgid "Sign In."
 msgstr "Se connecter."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:106
+#: src/app/TopBanner.js:108
 msgid "Sign Out"
 msgstr "Déconnexion"
 
@@ -3439,7 +3443,7 @@ msgstr "Ce domaine n'existe plus"
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/app/TopBanner.js:90
+#: src/app/TopBanner.js:92
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 

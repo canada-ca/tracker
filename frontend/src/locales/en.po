@@ -644,7 +644,7 @@ msgid "Create"
 msgstr "Create"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:127
+#: src/app/TopBanner.js:129
 #: src/auth/CreateUserPage.js:243
 msgid "Create Account"
 msgstr "Create Account"
@@ -2399,6 +2399,10 @@ msgstr "Organizations"
 msgid "PENDING"
 msgstr "PENDING"
 
+#: src/app/TopBanner.js:85
+msgid "PREVIEW"
+msgstr "PREVIEW"
+
 #: src/organizationDetails/OrganizationDomains.js:94
 msgid "PROD"
 msgstr "PROD"
@@ -3177,7 +3181,7 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 
 #: src/app/App.js:156
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:118
+#: src/app/TopBanner.js:120
 #: src/auth/SignInPage.js:189
 msgid "Sign In"
 msgstr "Sign In"
@@ -3188,7 +3192,7 @@ msgid "Sign In."
 msgstr "Sign In."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:106
+#: src/app/TopBanner.js:108
 msgid "Sign Out"
 msgstr "Sign Out"
 
@@ -3477,7 +3481,7 @@ msgstr "This domain no longer exists"
 msgid "This field cannot be empty"
 msgstr "This field cannot be empty"
 
-#: src/app/TopBanner.js:90
+#: src/app/TopBanner.js:92
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
 

@@ -81,7 +81,9 @@ export const TopBanner = (props) => {
               <ABTestVariant name="A">
                 <Trans>BETA</Trans>
               </ABTestVariant>
-              <ABTestVariant name="B">INSIDER</ABTestVariant>
+              <ABTestVariant name="B">
+                <Trans>PREVIEW</Trans>
+              </ABTestVariant>
             </ABTestingWrapper>
           }
           ml={{ base: '0', md: 'auto' }}
