@@ -2,7 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - api
-  - api/org-footprint-cronjob
   - frontend
   - scanners/dns-scanner
   - scanners/dns-processor

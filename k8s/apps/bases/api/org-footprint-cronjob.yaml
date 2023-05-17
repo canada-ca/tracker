@@ -2,7 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: org-footprint
-  namespace: scanners
+  namespace: api
 spec:
   schedule: "30 10 * * *"
   concurrencyPolicy: Replace
@@ -18,36 +18,36 @@ spec:
                 - name: DB_PASS
                   valueFrom:
                     secretKeyRef:
-                      name: footprint
+                      name: api
                       key: DB_PASS
                 - name: DB_URL
                   valueFrom:
                     secretKeyRef:
-                      name: footprint
+                      name: api
                       key: DB_URL
                 - name: DB_NAME
                   valueFrom:
                     secretKeyRef:
-                      name: footprint
+                      name: api
                       key: DB_NAME
                 - name: NOTIFICATION_API_KEY
                   valueFrom:
                     secretKeyRef:
-                      name: footprint
+                      name: api
                       key: NOTIFICATION_API_KEY
                 - name: NOTIFICATION_API_URL
                   valueFrom:
                     secretKeyRef:
-                      name: footprint
+                      name: api
                       key: NOTIFICATION_API_URL
                 - name: NOTIFICATION_ORG_FOOTPRINT_EN
                   valueFrom:
                     secretKeyRef:
-                      name: footprint
+                      name: api
                       key: NOTIFICATION_ORG_FOOTPRINT_EN
                 - name: NOTIFICATION_ORG_FOOTPRINT_FR
                   valueFrom:
                     secretKeyRef:
-                      name: footprint
+                      name: api
                       key: NOTIFICATION_ORG_FOOTPRINT_FR
           restartPolicy: OnFailure
