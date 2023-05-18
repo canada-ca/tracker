@@ -3,6 +3,7 @@ import { GraphQLString } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 
 import { Domain } from '../../scalars'
+import { logActivity } from '../../audit-logs'
 
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
@@ -23,10 +24,13 @@ export const requestScan = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      query,
+      collections,
+      transaction,
       i18n,
       userKey,
       publish,
-      auth: { checkDomainPermission, userRequired, verifiedRequired, loginRequiredBool },
+      auth: { checkDomainPermission, userRequired, verifiedRequired },
       loaders: { loadDomainByDomain, loadWebConnectionsByDomainId, loadWebScansByWebId },
       validators: { cleanseInput },
     },
@@ -97,6 +101,22 @@ export const requestScan = new mutationWithClientMutationId({
         hash: domain.hash,
         user_key: null, // only used for One Time Scans
         shared_id: null, // only used for One Time Scans
+      },
+    })
+
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: permission,
+      },
+      action: 'scan',
+      target: {
+        resource: domain.domain,
+        resourceType: 'domain', // user, org, domain
       },
     })
 

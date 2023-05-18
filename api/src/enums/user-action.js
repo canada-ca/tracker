@@ -23,6 +23,10 @@ export const UserActionEnums = new GraphQLEnumType({
       value: 'remove',
       description: 'An affiliation between resources was deleted.',
     },
+    SCAN: {
+      value: 'scan',
+      description: 'A scan was requested on a resource.',
+    },
   },
   description: 'Describes actions performed by users to modify resources.',
 })
