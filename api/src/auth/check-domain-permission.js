@@ -3,7 +3,7 @@ import { t } from '@lingui/macro'
 export const checkDomainPermission =
   ({ i18n, query, userKey }) =>
   async ({ domainId }) => {
-    let userAffiliatedClaims, claim
+    let userAffiliatedClaims
     const userKeyString = `users/${userKey}`
 
     // Check to see if the user is a super admin
