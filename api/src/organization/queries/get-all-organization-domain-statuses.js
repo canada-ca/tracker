@@ -1,42 +1,31 @@
 import { GraphQLString } from 'graphql'
 
 import { t } from '@lingui/macro'
+import { logActivity } from '../../audit-logs'
 
 export const getAllOrganizationDomainStatuses = {
   type: GraphQLString,
-  description:
-    'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
+  description: 'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
   resolve: async (
     _,
     _args,
     {
       userKey,
       i18n,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
+      auth: { checkSuperAdmin, userRequired, verifiedRequired },
       loaders: { loadAllOrganizationDomainStatuses },
     },
   ) => {
-    if (loginRequiredBool) {
-      const user = await userRequired()
-      verifiedRequired({ user })
+    const user = await userRequired()
+    verifiedRequired({ user })
 
-      const isSuperAdmin = await checkSuperAdmin()
+    const isSuperAdmin = await checkSuperAdmin()
 
-      if (!isSuperAdmin) {
-        console.warn(
-          `User: ${userKey} attempted to load all organization statuses but login is required and they are not a super admin.`,
-        )
-        throw new Error(
-          i18n._(
-            t`Permissions error. You do not have sufficient permissions to access this data.`,
-          ),
-        )
-      }
+    if (!isSuperAdmin) {
+      console.warn(
+        `User: ${userKey} attempted to load all organization statuses but login is required and they are not a super admin.`,
+      )
+      throw new Error(i18n._(t`Permissions error. You do not have sufficient permissions to access this data.`))
     }
 
     const domainStatuses = await loadAllOrganizationDomainStatuses()
@@ -60,9 +49,7 @@ export const getAllOrganizationDomainStatuses = {
     ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
-      const csvLine = headers
-        .map((header) => `"${domainStatus[header]}"`)
-        .join(',')
+      const csvLine = headers.map((header) => `"${domainStatus[header]}"`).join(',')
       csvOutput += `\n${csvLine}`
     })
 
