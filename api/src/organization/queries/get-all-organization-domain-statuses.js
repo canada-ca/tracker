@@ -1,7 +1,6 @@
 import { GraphQLString } from 'graphql'
 
 import { t } from '@lingui/macro'
-import { logActivity } from '../../audit-logs'
 
 export const getAllOrganizationDomainStatuses = {
   type: GraphQLString,

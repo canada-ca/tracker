@@ -9,6 +9,7 @@ import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
+import { logActivity } from '../../audit-logs'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -76,8 +77,19 @@ export const organizationType = new GraphQLObjectType({
       resolve: async (
         { _id },
         _args,
-        { userKey, auth: { checkPermission }, loaders: { loadOrganizationDomainStatuses } },
+        {
+          i18n,
+          userKey,
+          query,
+          transaction,
+          collections,
+          auth: { checkPermission, userRequired, verifiedRequired },
+          loaders: { loadOrganizationDomainStatuses },
+        },
       ) => {
+        const user = await userRequired()
+        verifiedRequired({ user })
+
         const permission = await checkPermission({ orgId: _id })
         if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
           console.error(
@@ -98,6 +110,53 @@ export const organizationType = new GraphQLObjectType({
           }, '')
           csvOutput += `\n${csvLine}`
         })
+
+        // Get org names to use in activity log
+        let orgNamesCursor
+        try {
+          orgNamesCursor = await query`
+            LET org = DOCUMENT(organizations, ${_id})
+            RETURN {
+              "orgNameEN": org.orgDetails.en.name,
+              "orgNameFR": org.orgDetails.fr.name,
+            }
+          `
+        } catch (err) {
+          console.error(
+            `Database error occurred when user: ${userKey} attempted to export org: ${_id}. Error while creating cursor for retrieving organization names. error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to export organization. Please try again.`))
+        }
+
+        let orgNames
+        try {
+          orgNames = await orgNamesCursor.next()
+        } catch (err) {
+          console.error(
+            `Cursor error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to export organization. Please try again.`))
+        }
+
+        await logActivity({
+          transaction,
+          collections,
+          query,
+          initiatedBy: {
+            id: user._key,
+            userName: user.userName,
+            role: permission,
+          },
+          action: 'export',
+          target: {
+            resource: {
+              en: orgNames.orgNameEN,
+              fr: orgNames.orgNameFR,
+            },
+            resourceType: 'organization',
+          },
+        })
+
         return csvOutput
       },
     },
