@@ -119,10 +119,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
             async () =>
               await query`
               WITH domains
-              UPSERT { _key: ${domain._key} }
-                INSERT { archived: true }
-                UPDATE { archived: true }
-                IN domains
+              UPDATE { _key: ${domain._key}, archived: true } IN domains
           `,
           )
         } catch (err) {
@@ -139,10 +136,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
         () =>
           query`
             WITH organizations
-            UPSERT { _key: ${organization._key} }
-              INSERT { verified: false }
-              UPDATE { verified: false }
-              IN organizations
+            UPDATE { _key: ${organization._key}, verified: false } IN organizations
         `,
       )
     } catch (err) {
