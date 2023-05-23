@@ -1,3 +1,4 @@
+export * from './archive-organization'
 export * from './create-organization'
 export * from './remove-organization'
 export * from './update-organization'
