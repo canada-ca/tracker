@@ -65,7 +65,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(t`Permission Denied: Please contact super admin for help with removing organization.`),
+        description: i18n._(t`Permission Denied: Please contact super admin for help with archiving organization.`),
       }
     }
 
@@ -96,7 +96,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       `
     } catch (err) {
       console.error(
-        `Database error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
+        `Database error occurred for user: ${userKey} while attempting to gather domain count while archiving org: ${organization._key}, ${err}`,
       )
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
@@ -106,7 +106,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       domainInfo = await countCursor.all()
     } catch (err) {
       console.error(
-        `Cursor error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
+        `Cursor error occurred for user: ${userKey} while attempting to gather domain count while archiving org: ${organization._key}, ${err}`,
       )
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
@@ -127,7 +127,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
           )
         } catch (err) {
           console.error(
-            `Trx step error occurred for user: ${userKey} while attempting to archive domains while removing org: ${organization._key}, ${err}`,
+            `Trx step error occurred for user: ${userKey} while attempting to archive domains while archiving org: ${organization._key}, ${err}`,
           )
           throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
         }
@@ -147,7 +147,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       )
     } catch (err) {
       console.error(
-        `Trx step error occurred for user: ${userKey} while attempting to archive affiliations, and the org while removing org: ${organization._key}, ${err}`,
+        `Trx step error occurred for user: ${userKey} while attempting to unverify while archiving org: ${organization._key}, ${err}`,
       )
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
@@ -161,7 +161,7 @@ export const archiveOrganization = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to archive organization. Please try again.`))
     }
 
-    console.info(`User: ${userKey} successfully removed org: ${organization._key}.`)
+    console.info(`User: ${userKey} successfully archived org: ${organization._key}.`)
 
     await logActivity({
       transaction,
