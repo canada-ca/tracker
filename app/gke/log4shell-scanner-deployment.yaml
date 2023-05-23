@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: log4shell-scanner
-          image: gcr.io/track-compliance/log4shell-scanner:master-74c49c3-1670863247 # {"$imagepolicy": "flux-system:log4shell-scanner"}
+          image: gcr.io/track-compliance/log4shell-scanner:master-0dd5035-1684843927 # {"$imagepolicy": "flux-system:log4shell-scanner"}
           env:
             - name: PYTHONWARNINGS
               value: ignore
