@@ -35,6 +35,7 @@ export function DomainCard({
   rcode,
   blocked,
   webScanPending,
+  userHasPermission,
   ...rest
 }) {
   const location = useLocation()
@@ -208,20 +209,21 @@ export function DomainCard({
           justifyContent="center"
           ml={{ base: 0, md: '4' }}
         >
-          <Button
-            variant="primary"
-            as={RouteLink}
-            to={{
-              pathname: `/domains/${url}`,
-              state: { from: location.pathname },
-            }}
-            px="10"
-          >
-            <Text whiteSpace="noWrap">
-              <Trans>View Results</Trans>
-            </Text>
-          </Button>
-
+          {userHasPermission && (
+            <Button
+              variant="primary"
+              as={RouteLink}
+              to={{
+                pathname: `/domains/${url}`,
+                state: { from: location.pathname },
+              }}
+              px="10"
+            >
+              <Text whiteSpace="noWrap">
+                <Trans>View Results</Trans>
+              </Text>
+            </Button>
+          )}
           {hasDMARCReport && (
             <Button
               variant="primary"
@@ -235,7 +237,7 @@ export function DomainCard({
           )}
         </Stack>
         <Stack ml={4}>
-          {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={url} />}
+          {userHasPermission && <ScanDomainButton domainUrl={url} />}
           {isLoggedIn() &&
             (location.pathname.match('my-tracker') ? (
               <IconButton
@@ -273,4 +275,5 @@ DomainCard.propTypes = {
   isArchived: bool,
   blocked: bool,
   webScanPending: bool,
+  userHasPermission: bool,
 }

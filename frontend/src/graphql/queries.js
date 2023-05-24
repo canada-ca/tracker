@@ -515,6 +515,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             archived
             blocked
             webScanPending
+            userHasPermission
           }
         }
       }
@@ -567,6 +568,7 @@ export const PAGINATED_DOMAINS = gql`
           }
           archived
           hasDMARCReport
+          userHasPermission
           __typename
         }
         __typename
