@@ -87,9 +87,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
     const permission = await checkPermission({ orgId: org._id })
 
     if (
-      typeof permission === 'undefined' ||
-      permission === 'user' ||
-      (permission === 'admin' && requestedRole === 'super_admin')
+      (['user', 'admin'].includes(requestedRole) && !['admin', 'owner', 'super_admin'].includes(permission)) ||
+      (requestedRole === 'super_admin' && permission !== 'super_admin')
     ) {
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
