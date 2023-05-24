@@ -136,7 +136,7 @@ given organization.`,
     }
 
     // Only admins, owners, and super admins can update a user's role
-    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
+    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
       console.warn(
         `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )
