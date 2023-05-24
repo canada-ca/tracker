@@ -12,6 +12,7 @@ export const Doughnut = ({
   height,
   width,
   title,
+  id,
   valueAccessor = (d) => d,
   innerRadius = Math.ceil(width / 2.8),
   outerRadius = Math.ceil(width / 2.2),
@@ -28,7 +29,7 @@ export const Doughnut = ({
   })
   const { i18n } = useLingui()
 
-  const domainContext = title.includes('DMARC') ? (
+  const domainContext = ['email', 'spf', 'dkim'].includes(id) ? (
     <Trans>Internet-facing</Trans>
   ) : (
     <Trans>Web-hosting</Trans>
@@ -42,9 +43,7 @@ export const Doughnut = ({
         y={15}
         textAnchor="middle"
         dominantBaseline="central"
-        fontSize={
-          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
-        }
+        fontSize={i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`}
         transform={`translate(${width / 2}, ${height / 2})`}
       >
         <Trans>Domains</Trans>
@@ -54,9 +53,7 @@ export const Doughnut = ({
         y={i18n.locale === 'en' ? 20 : 30}
         textAnchor="middle"
         dominantBaseline="central"
-        fontSize={
-          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`
-        }
+        fontSize={i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`}
         transform={`translate(${width / 2}, ${height / 2})`}
       >
         {domainContext}
@@ -67,9 +64,7 @@ export const Doughnut = ({
         y={40}
         textAnchor="middle"
         dominantBaseline="central"
-        fontSize={
-          i18n.locale === 'en' ? `${width / 256}rem` : `${width / 512}rem`
-        }
+        fontSize={i18n.locale === 'en' ? `${width / 256}rem` : `${width / 512}rem`}
         transform={`translate(${width / 2}, ${height / 2})`}
       >
         <Trans>Domains</Trans>
@@ -116,11 +111,7 @@ export const Doughnut = ({
     <div {...rest}>
       <Box my="4">{chartContent}</Box>
       {arcs.map(({ title, count, percentage }, index) => {
-        if (
-          (percentage % 1 === 0.5 &&
-            ['Compliant', 'Implemented'].includes(title)) ||
-          percentage % 1 > 0.5
-        ) {
+        if ((percentage % 1 === 0.5 && ['Compliant', 'Implemented'].includes(title)) || percentage % 1 > 0.5) {
           percentage = Math.ceil(percentage)
         } else {
           percentage = Math.floor(percentage)
@@ -136,20 +127,9 @@ export const Doughnut = ({
             py={arcs.length > 2 ? '2' : '5'}
             overflow="hidden"
           >
-            <svg
-              height={30}
-              width={30}
-              style={{ display: 'inline', marginRight: '1em' }}
-              aria-hidden="true"
-            >
+            <svg height={30} width={30} style={{ display: 'inline', marginRight: '1em' }} aria-hidden="true">
               <g>
-                <rect
-                  stroke="#fff"
-                  strokeWidth="2"
-                  width="30"
-                  height="30"
-                  fill={data[index].color}
-                />
+                <rect stroke="#fff" strokeWidth="2" width="30" height="30" fill={data[index].color} />
               </g>
             </svg>
             <p
