@@ -1,13 +1,10 @@
-import {t} from '@lingui/macro'
+import { t } from '@lingui/macro'
 
 export const checkDomainOwnership =
-                                       ({i18n,
-                                       query,
-                                       userKey,
-                                       auth: {loginRequiredBool}}) =>
-                                      async ({domainId}) => {
-  let userAffiliatedOwnership, ownership
-  const userKeyString = `users/${userKey}`
+  ({ i18n, query, userKey, auth: { loginRequiredBool } }) =>
+  async ({ domainId }) => {
+    let userAffiliatedOwnership, ownership
+    const userKeyString = `users/${userKey}`
 
     // Check to see if the user is a super admin
     let superAdminAffiliationCursor
@@ -29,9 +26,7 @@ export const checkDomainOwnership =
       console.error(
         `Database error when retrieving super admin affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Ownership check error. Unable to request domain information.`),
-      )
+      throw new Error(i18n._(t`Ownership check error. Unable to request domain information.`))
     }
 
     let superAdminAffiliation
@@ -41,9 +36,7 @@ export const checkDomainOwnership =
       console.error(
         `Cursor error when retrieving super admin affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Ownership check error. Unable to request domain information.`),
-      )
+      throw new Error(i18n._(t`Ownership check error. Unable to request domain information.`))
     }
 
     if (superAdminAffiliation.superAdmin || !loginRequiredBool) {
@@ -54,18 +47,22 @@ export const checkDomainOwnership =
     try {
       userAffiliatedOwnership = await query`
       WITH affiliations, domains, organizations, ownership, users
-      LET userAffiliations = (FOR v, e IN 1..1 ANY ${userKeyString} affiliations RETURN e._from)
+      LET userAffiliations = (
+        FOR v, e IN 1..1 ANY ${userKeyString} affiliations
+          FILTER e.permission != "pending"
+          RETURN v
+      )
+      LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
       LET domainOwnerships = (FOR v, e IN 1..1 ANY ${domainId} ownership RETURN e._from)
+      LET domainBelongsToVerifiedOrg = POSITION(domainOrgClaims[*].verified, true)
       LET affiliatedOwnership = INTERSECTION(userAffiliations, domainOwnerships)
-        RETURN affiliatedOwnership
+      RETURN (domainBelongsToVerifiedOrg && hasVerifiedOrgAffiliation) || LENGTH(affiliatedOwnership) > 0
     `
     } catch (err) {
       console.error(
         `Database error when retrieving affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Ownership check error. Unable to request domain information.`),
-      )
+      throw new Error(i18n._(t`Ownership check error. Unable to request domain information.`))
     }
 
     try {
@@ -74,9 +71,7 @@ export const checkDomainOwnership =
       console.error(
         `Cursor error when retrieving affiliated organization ownership for user: ${userKey} and domain: ${domainId}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Ownership check error. Unable to request domain information.`),
-      )
+      throw new Error(i18n._(t`Ownership check error. Unable to request domain information.`))
     }
 
     return ownership[0] !== undefined
