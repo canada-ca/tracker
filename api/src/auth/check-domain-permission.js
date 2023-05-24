@@ -30,7 +30,7 @@ export const checkDomainPermission =
     try {
       userAffiliatedClaims = await query`
         WITH domains, users, organizations
-        FOR v, e IN 1..1 ANY "users/4239843" affiliations
+        FOR v, e IN 1..1 ANY ${userKeyString} affiliations
           FILTER e.permission != "pending"
           FOR domainV, domainE IN 1..1 ANY v claims
             RETURN domainV
