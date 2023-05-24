@@ -96,7 +96,7 @@ export const removeDomain = new mutationWithClientMutationId({
       }
     }
 
-    if (permission !== 'super_admin' && permission !== 'admin') {
+    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
       console.warn(
         `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} however they do not have permission in that org.`,
       )
