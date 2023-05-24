@@ -30,11 +30,19 @@ export const checkDomainPermission =
     try {
       userAffiliatedClaims = await query`
         WITH domains, users, organizations
-        FOR v, e IN 1..1 ANY ${userKeyString} affiliations
-          FILTER e.permission != "pending"
-          FOR domainV, domainE IN 1..1 ANY v claims
-            FILTER domainV._key == ${domainId}
-            RETURN domainV
+        LET userAffiliations = (
+          FOR v, e IN 1..1 ANY ${userKeyString} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
+        LET domainOrgClaims = (
+          FOR v, e IN 1..1 ANY ${domainId} claims
+            RETURN v
+        )
+        LET domainBelongsToVerifiedOrg = POSITION(domainOrgClaims[*].verified, true)
+        LET affiliatedClaims = INTERSECTION(userAffiliations, domainOrgClaims)
+        RETURN (domainBelongsToVerifiedOrg && hasVerifiedOrgAffiliation) || LENGTH(affiliatedClaims) > 0
     `
     } catch (err) {
       console.error(
