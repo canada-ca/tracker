@@ -51,5 +51,5 @@ export const checkDomainPermission =
       throw new Error(i18n._(t`Permission check error. Unable to request domain information.`))
     }
 
-    return userAffiliatedClaims.count > 0
+    return userAffiliatedClaims
   }
