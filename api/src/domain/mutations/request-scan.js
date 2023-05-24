@@ -7,7 +7,7 @@ import { logActivity } from '../../audit-logs'
 
 export const requestScan = new mutationWithClientMutationId({
   name: 'RequestScan',
-  description: 'This mutation is used to step a manual scan on a requested domain.',
+  description: 'This mutation is used to start a manual scan on a requested domain.',
   inputFields: () => ({
     domain: {
       type: Domain,
@@ -47,7 +47,7 @@ export const requestScan = new mutationWithClientMutationId({
 
     if (typeof domain === 'undefined') {
       console.warn(
-        `User: ${userKey} attempted to step a one time scan on: ${domainInput} however domain cannot be found.`,
+        `User: ${userKey} attempted to start a one time scan on: ${domainInput} however domain cannot be found.`,
       )
       throw new Error(i18n._(t`Unable to request a one time scan on an unknown domain.`))
     }
@@ -57,7 +57,7 @@ export const requestScan = new mutationWithClientMutationId({
 
     if (!permission) {
       console.warn(
-        `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however they do not have permission to do so.`,
+        `User: ${userKey} attempted to start a one time scan on: ${domain.domain} however they do not have permission to do so.`,
       )
       throw new Error(
         i18n._(t`Permission Denied: Please contact organization user for help with scanning this domain.`),
@@ -79,7 +79,7 @@ export const requestScan = new mutationWithClientMutationId({
           const timeDifferenceInMinutes = (Date.now() - new Date(webConnection.timestamp).getTime()) / 1000 / 60
           if (result.status.toUpperCase() === 'PENDING' && timeDifferenceInMinutes < 30) {
             console.warn(
-              `User: ${userKey} attempted to step a one time scan on: ${domain.domain} however a scan is already pending.`,
+              `User: ${userKey} attempted to start a one time scan on: ${domain.domain} however a scan is already pending.`,
             )
             throw new Error(i18n._(t`Unable to request a one time scan on a domain that already has a pending scan.`))
           }
@@ -87,7 +87,7 @@ export const requestScan = new mutationWithClientMutationId({
       }
     } catch (err) {
       console.error(
-        `Error occurred when user: ${userKey} attempted to step a one time scan on: ${domain.domain}, error: ${err}`,
+        `Error occurred when user: ${userKey} attempted to start a one time scan on: ${domain.domain}, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to request a one time scan. Please try again.`))
     }
