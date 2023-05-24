@@ -13,13 +13,11 @@ export const DomainTagLabel = new GraphQLEnumType({
     },
     PROD: {
       value: 'PROD',
-      description:
-        'Bilingual Label for tagging domains as a production environment.',
+      description: 'Bilingual Label for tagging domains as a production environment.',
     },
     STAGING: {
       value: 'STAGING',
-      description:
-        'English label for tagging domains as a staging environment.',
+      description: 'English label for tagging domains as a staging environment.',
     },
     DEV: {
       value: 'DÉV',
@@ -48,6 +46,18 @@ export const DomainTagLabel = new GraphQLEnumType({
     ARCHIVED: {
       value: 'archived',
       description: 'English label for tagging domains that are archived.',
+    },
+    NXDOMAIN: {
+      value: 'nxdomain',
+      description: 'Order domains by rcode status.',
+    },
+    BLOCKED: {
+      value: 'blocked',
+      description: 'Order domains by blocked status.',
+    },
+    SCAN_PENDING: {
+      value: 'scan-pending',
+      description: 'Order domains by scan pending status.',
     },
   },
   description: 'An enum used to assign and test user-generated domain tags',
