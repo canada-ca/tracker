@@ -32,13 +32,11 @@ export const domainType = new GraphQLObjectType({
     hasDMARCReport: {
       type: GraphQLBoolean,
       description: 'Whether or not the domain has a aggregate dmarc report.',
-      resolve: async ({ _id }, _, { auth: { checkDomainOwnership, userRequired, loginRequiredBool } }) => {
-        if (loginRequiredBool) await userRequired()
-        const hasDMARCReport = await checkDomainOwnership({
+      resolve: async ({ _id }, _, { auth: { checkDomainOwnership, userRequired } }) => {
+        await userRequired()
+        return await checkDomainOwnership({
           domainId: _id,
         })
-
-        return hasDMARCReport
       },
     },
     lastRan: {
@@ -100,12 +98,11 @@ export const domainType = new GraphQLObjectType({
       resolve: async ({ _id }, args, { auth: { checkSuperAdmin }, loaders: { loadOrgConnectionsByDomainId } }) => {
         const isSuperAdmin = await checkSuperAdmin()
 
-        const orgs = await loadOrgConnectionsByDomainId({
+        return await loadOrgConnectionsByDomainId({
           domainId: _id,
           isSuperAdmin,
           ...args,
         })
-        return orgs
       },
     },
     dnsScan: {
@@ -190,21 +187,19 @@ export const domainType = new GraphQLObjectType({
           i18n,
           userKey,
           loaders: { loadDmarcSummaryEdgeByDomainIdAndPeriod, loadStartDateFromPeriod },
-          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
+          auth: { checkDomainOwnership, userRequired },
         },
       ) => {
-        if (loginRequiredBool) {
-          await userRequired()
-          const permitted = await checkDomainOwnership({
-            domainId: _id,
-          })
+        await userRequired()
+        const permitted = await checkDomainOwnership({
+          domainId: _id,
+        })
 
-          if (!permitted) {
-            console.warn(
-              `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
-            )
-            throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
-          }
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+          )
+          throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
         }
 
         const startDate = loadStartDateFromPeriod({ period: month, year })
@@ -227,39 +222,30 @@ export const domainType = new GraphQLObjectType({
       resolve: async (
         { _id, _key, domain },
         __,
-        {
-          i18n,
-          userKey,
-          loaders: { loadDmarcYearlySumEdge },
-          auth: { checkDomainOwnership, userRequired, loginRequiredBool },
-        },
+        { i18n, userKey, loaders: { loadDmarcYearlySumEdge }, auth: { checkDomainOwnership, userRequired } },
       ) => {
-        if (loginRequiredBool) {
-          await userRequired()
+        await userRequired()
 
-          const permitted = await checkDomainOwnership({
-            domainId: _id,
-          })
+        const permitted = await checkDomainOwnership({
+          domainId: _id,
+        })
 
-          if (!permitted) {
-            console.warn(
-              `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
-            )
-            throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
-          }
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+          )
+          throw new Error(i18n._(t`Unable to retrieve DMARC report information for: ${domain}`))
         }
 
         const dmarcSummaryEdges = await loadDmarcYearlySumEdge({
           domainId: _id,
         })
 
-        const edges = dmarcSummaryEdges.map((edge) => ({
+        return dmarcSummaryEdges.map((edge) => ({
           domainKey: _key,
           _id: edge._to,
           startDate: edge.startDate,
         }))
-
-        return edges
       },
     },
     claimTags: {
