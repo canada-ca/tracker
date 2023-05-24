@@ -9,6 +9,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $direction: OrderDirection!
     $search: String
     $includeSuperAdminOrg: Boolean
+    $isVerified: Boolean
   ) {
     findMyOrganizations(
       after: $after
@@ -16,6 +17,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
       orderBy: { field: $field, direction: $direction }
       search: $search
       includeSuperAdminOrg: $includeSuperAdminOrg
+      isVerified: $isVerified
     ) {
       edges {
         cursor
