@@ -171,8 +171,7 @@ export default function Organizations() {
         <Flex align="center" mb="2">
           <Switch
             isFocusable={true}
-            id="isVerified"
-            name="isVerified"
+            aria-label="Show only verified organizations"
             mx="2"
             defaultChecked={isVerified}
             onChange={(e) => setIsVerified(e.target.checked)}

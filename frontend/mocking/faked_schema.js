@@ -112,6 +112,9 @@ export const getTypeNames = () => gql`
       # Filter org list to either include or exclude the super admin org.
       includeSuperAdminOrg: Boolean
 
+      # Filter org list to include only verified organizations.
+      isVerified: Boolean
+
       # Returns the items in the list that come after the specified cursor.
       after: String
 
