@@ -33,6 +33,7 @@ export const checkDomainPermission =
         FOR v, e IN 1..1 ANY ${userKeyString} affiliations
           FILTER e.permission != "pending"
           FOR domainV, domainE IN 1..1 ANY v claims
+            FILTER domainV._key == ${domainId}
             RETURN domainV
     `
     } catch (err) {
