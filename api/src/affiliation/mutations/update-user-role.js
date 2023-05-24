@@ -98,17 +98,6 @@ given organization.`,
     // Check requesting user's permission
     const permission = await checkPermission({ orgId: org._id })
 
-    if (!['admin', 'super_admin'].includes(permission) || typeof permission === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
-      }
-    }
-
     // Get user's current permission level
     let affiliationCursor
     try {
@@ -146,70 +135,51 @@ given organization.`,
       throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
-    // Setup Transaction
-    const trx = await transaction(collections)
-
-    // Only super admins can create new super admins
-    let edge
-    if (role === 'super_admin' && permission === 'super_admin') {
-      edge = {
-        _from: org._id,
-        _to: requestedUser._id,
-        permission: 'super_admin',
-      }
-    } else if (role === 'admin' && ['admin', 'super_admin'].includes(permission)) {
-      // If requested user's permission is super admin, make sure they don't get downgraded
-      if (affiliation.permission === 'super_admin') {
-        console.warn(
-          `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: admin.`,
-        )
-        return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(
-            t`Permission Denied: Please contact organization admin for help with updating user roles.`,
-          ),
-        }
-      }
-
-      edge = {
-        _from: org._id,
-        _to: requestedUser._id,
-        permission: 'admin',
-      }
-    } else if (role === 'user' && permission === 'super_admin') {
-      // If requested user's permission is super admin or admin, make sure they don't get downgraded
-      if (
-        affiliation.permission === 'super_admin' ||
-        (affiliation.permission === 'admin' && permission !== 'super_admin')
-      ) {
-        console.warn(
-          `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: user.`,
-        )
-        return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(
-            t`Permission Denied: Please contact organization admin for help with updating user roles.`,
-          ),
-        }
-      }
-
-      edge = {
-        _from: org._id,
-        _to: requestedUser._id,
-        permission: 'user',
-      }
-    } else {
+    // Only admins, owners, and super admins can update a user's role
+    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
       console.warn(
-        `User: ${userKey} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: ${role}.`,
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Permission Denied: Please contact organization admin for help with updating user roles.`),
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
       }
     }
+
+    // Only super admins can update other super admins or owners
+    if (['owner', 'super_admin'].includes(affiliation.permission) && permission !== 'super_admin') {
+      console.warn(
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to update a ${affiliation.permission}.`,
+      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
+      }
+    }
+
+    // Only super admins can make other users super admins or owners
+    if (['owner', 'super_admin'].includes(role) && permission !== 'super_admin') {
+      console.warn(
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to make a user a ${role}.`,
+      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
+      }
+    }
+
+    // Only super admins can create new super admins
+    const edge = {
+      _from: org._id,
+      _to: requestedUser._id,
+      permission: role,
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collections)
 
     try {
       await trx.step(async () => {
