@@ -96,6 +96,9 @@ export function OrganizationDomains({ orgSlug }) {
     { value: t`TEST`, text: t`Test` },
     { value: t`WEB`, text: t`Web` },
     { value: t`INACTIVE`, text: t`Inactive` },
+    { value: `NXDOMAIN`, text: `NXDOMAIN` },
+    { value: `BLOCKED`, text: t`Blocked` },
+    { value: `SCAN_PENDING`, text: t`Scan Pending` },
   ]
 
   const hiddenFilterOptions = [
