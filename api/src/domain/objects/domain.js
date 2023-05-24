@@ -51,7 +51,16 @@ export const domainType = new GraphQLObjectType({
     selectors: {
       type: new GraphQLList(Selectors),
       description: 'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: ({ selectors }) => selectors,
+      resolve: async ({ _key, selectors }, _, { userKey, auth: { checkDomainPermission, userRequired } }) => {
+        await userRequired()
+        const permitted = await checkDomainPermission()
+        if (!permitted) {
+          console.warn(`User: ${userKey} attempted to access selectors for ${_key}, but does not have permission.`)
+          throw new Error(t`Cannot query domain selectors without permission.`)
+        }
+
+        return selectors
+      },
     },
     status: {
       type: domainStatus,
@@ -127,7 +136,20 @@ export const domainType = new GraphQLObjectType({
         ...connectionArgs,
       },
       description: `DNS scan results.`,
-      resolve: async ({ _id }, args, { loaders: { loadDnsConnectionsByDomainId } }) => {
+      resolve: async (
+        { _id },
+        args,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDnsConnectionsByDomainId } },
+      ) => {
+        await userRequired()
+        const permitted = await checkDomainPermission()
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access dns scan results for ${_id}, but does not have permission.`,
+          )
+          throw new Error(t`Cannot query dns scan results without permission.`)
+        }
+
         return await loadDnsConnectionsByDomainId({
           domainId: _id,
           ...args,
@@ -160,7 +182,20 @@ export const domainType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      resolve: async ({ _id }, args, { loaders: { loadWebConnectionsByDomainId } }) => {
+      resolve: async (
+        { _id },
+        args,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadWebConnectionsByDomainId } },
+      ) => {
+        await userRequired()
+        const permitted = await checkDomainPermission()
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
+          )
+          throw new Error(t`Cannot query web scan results without permission.`)
+        }
+
         return await loadWebConnectionsByDomainId({
           domainId: _id,
           ...args,
