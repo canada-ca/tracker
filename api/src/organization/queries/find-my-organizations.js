@@ -22,8 +22,11 @@ export const findMyOrganizations = {
     },
     includeSuperAdminOrg: {
       type: GraphQLBoolean,
-      description:
-        'Filter org list to either include or exclude the super admin org.',
+      description: 'Filter org list to either include or exclude the super admin org.',
+    },
+    isVerified: {
+      type: GraphQLBoolean,
+      description: 'Filter org list to include only verified organizations.',
     },
     ...connectionArgs,
   },
@@ -32,12 +35,7 @@ export const findMyOrganizations = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
+      auth: { checkSuperAdmin, userRequired, verifiedRequired, loginRequiredBool },
       loaders: { loadOrgConnectionsByUserId },
     },
   ) => {
