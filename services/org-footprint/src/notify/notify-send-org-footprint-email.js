@@ -16,6 +16,23 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
   const domainsUpdated = auditLogs.filter((log) => log.action === 'update' && log.target.resourceType === 'domain')
   const domainsRemoved = auditLogs.filter((log) => log.action === 'remove' && log.target.resourceType === 'domain')
 
+  let addDomainsList = ''
+  let updateDomainsList = ''
+  let removeDomainsList = ''
+
+  // Get list of domains added
+  if (domainsAdded.length > 0) {
+    addDomainsList = '\t' + domainsAdded.map((log) => log.target.resource).join(', ')
+  }
+  // Get list of domains updated
+  if (domainsUpdated.length > 0) {
+    updateDomainsList = '\t' + domainsUpdated.map((log) => log.target.resource).join(', ')
+  }
+  // Get list of domains removed
+  if (domainsRemoved.length > 0) {
+    removeDomainsList = '\t' + domainsRemoved.map((log) => log.target.resource).join(', ')
+  }
+
   const exportsToCsv = auditLogs.filter((log) => log.action === 'export')
 
   try {
@@ -27,8 +44,11 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
         update_users_count: usersUpdated.length,
         remove_users_count: usersRemoved.length,
         add_domains_count: domainsAdded.length,
+        add_domains_list: addDomainsList,
         update_domains_count: domainsUpdated.length,
+        update_domains_list: updateDomainsList,
         remove_domains_count: domainsRemoved.length,
+        remove_domains_list: removeDomainsList,
         export_count: exportsToCsv.length,
       },
     })
