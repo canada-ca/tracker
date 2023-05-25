@@ -279,15 +279,17 @@ export function OrganizationDomains({ orgSlug }) {
     <Box>
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox title={t`Certificates`} info={t`Shows if the domain has a valid SSL certificate.`} />
-        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
-        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
-        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
+        {/* Web statuses */}
         <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
         />
+        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
+        <InfoBox title={t`Certificates`} info={t`Shows if the domain has a valid SSL certificate.`} />
         <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
+        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
+        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
+        {/* Email statuses */}
         <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
         <InfoBox
           title={t`DKIM`}
@@ -297,6 +299,20 @@ export function OrganizationDomains({ orgSlug }) {
           title={t`DMARC`}
           info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
         />
+        {/* Tags */}
+        <InfoBox title={t`NEW`} info={t`Tag used to show domains as new to the system.`} />
+        <InfoBox title={t`PROD`} info={t`Tag used to show domains as a production environment.`} />
+        <InfoBox title={t`STAGING`} info={t`Tag used to show domains as a staging environment.`} />
+        <InfoBox title={t`TEST`} info={t`Tag used to show domains as a test environment.`} />
+        <InfoBox title={t`WEB`} info={t`Tag used to show domains as web-hosting.`} />
+        <InfoBox title={t`INACTIVE`} info={t`Tag used to show domains that are not active.`} />
+        <InfoBox
+          title={t`HIDDEN`}
+          info={t`Tag used to show domains as hidden from affecting the organization summary scores.`}
+        />
+        <InfoBox title={`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
+        <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
+        <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
       </InfoPanel>
 
       <SearchBox

@@ -49,15 +49,15 @@ export const DomainTagLabel = new GraphQLEnumType({
     },
     NXDOMAIN: {
       value: 'nxdomain',
-      description: 'Order domains by rcode status.',
+      description: 'Label for tagging domains that have an rcode status of NXDOMAIN.',
     },
     BLOCKED: {
       value: 'blocked',
-      description: 'Order domains by blocked status.',
+      description: 'Label for tagging domains that are possibly blocked by a firewall.',
     },
     SCAN_PENDING: {
       value: 'scan-pending',
-      description: 'Order domains by scan pending status.',
+      description: 'Label for tagging domains that have a pending web scan.',
     },
   },
   description: 'An enum used to assign and test user-generated domain tags',
