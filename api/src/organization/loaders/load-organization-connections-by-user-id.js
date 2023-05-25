@@ -19,6 +19,7 @@ export const loadOrgConnectionsByUserId = ({
   search,
   isAdmin,
   includeSuperAdminOrg,
+  isVerified,
 }) => {
   const userDBId = `users/${userKey}`
 
@@ -372,12 +373,18 @@ export const loadOrgConnectionsByUserId = ({
     includeSuperAdminOrgQuery = aql`FILTER org.orgDetails.en.slug != "super-admin" OR org.orgDetails.fr.slug != "super-admin"`
   }
 
+  let isVerifiedQuery = aql``
+  if (isVerified) {
+    isVerifiedQuery = aql`FILTER org.verified == true`
+  }
+
   let orgKeysQuery
   if (isSuperAdmin) {
     orgKeysQuery = aql`
         WITH claims, domains, organizations, organizationSearch
         LET orgKeys = (
           FOR org IN organizations
+          ${isVerifiedQuery}
           ${includeSuperAdminOrgQuery}
           RETURN org._key
         )
@@ -388,8 +395,8 @@ export const loadOrgConnectionsByUserId = ({
         LET orgKeys = (
           FOR org, e IN 1..1
           INBOUND ${userDBId} affiliations
-          FILTER e.permission == "admin"
-          OR e.permission == "super_admin"
+          FILTER e.permission == "admin" OR e.permission == "super_admin"
+          ${isVerifiedQuery}
           ${includeSuperAdminOrgQuery}
           RETURN org._key
         )
@@ -400,6 +407,7 @@ export const loadOrgConnectionsByUserId = ({
         WITH claims, domains, organizations, organizationSearch
         LET orgKeys = (
           FOR org IN organizations
+            ${isVerifiedQuery}
             FILTER org.orgDetails.en.slug != "super-admin" OR org.orgDetails.fr.slug != "super-admin"
             RETURN org._key
         )
@@ -410,6 +418,7 @@ export const loadOrgConnectionsByUserId = ({
         LET orgKeys = (
           FOR org, e IN 1..1
           INBOUND ${userDBId} affiliations
+          ${isVerifiedQuery}
           ${includeSuperAdminOrgQuery}
           RETURN org._key
         )

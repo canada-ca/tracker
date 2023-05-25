@@ -75,6 +75,7 @@ describe('<Organisations />', () => {
               direction: 'ASC',
               search: '',
               includeSuperAdminOrg: false,
+              isVerified: true,
             },
           },
           result: {
@@ -89,7 +90,7 @@ describe('<Organisations />', () => {
                       name: 'organization one',
                       slug: 'organization-one',
                       domainCount: 5,
-                      verified: false,
+                      verified: true,
                       summaries,
                       __typename: 'Organizations',
                     },
@@ -103,7 +104,7 @@ describe('<Organisations />', () => {
                       name: 'organization two',
                       slug: 'organization-two',
                       domainCount: 5,
-                      verified: false,
+                      verified: true,
                       summaries,
                       __typename: 'Organizations',
                     },
@@ -135,10 +136,7 @@ describe('<Organisations />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={['/organizations']}
-                  initialIndex={0}
-                >
+                <MemoryRouter initialEntries={['/organizations']} initialIndex={0}>
                   <Organizations />
                 </MemoryRouter>
               </I18nProvider>
@@ -148,9 +146,7 @@ describe('<Organisations />', () => {
       )
 
       // expect(getByText(/organization two/i)).toBeInTheDocument(),
-      await waitFor(() =>
-        expect(getByText(/organization one/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/organization one/i)).toBeInTheDocument())
     })
 
     it('navigates to an organization detail page when a link is clicked', async () => {
@@ -164,6 +160,7 @@ describe('<Organisations />', () => {
               direction: 'ASC',
               search: '',
               includeSuperAdminOrg: false,
+              isVerified: true,
             },
           },
           result: {
@@ -178,7 +175,7 @@ describe('<Organisations />', () => {
                       name: 'organization one',
                       slug: 'organization-one',
                       domainCount: 5,
-                      verified: false,
+                      verified: true,
                       summaries,
                       __typename: 'Organizations',
                     },
@@ -220,7 +217,7 @@ describe('<Organisations />', () => {
                       name: 'organization two',
                       slug: 'organization-two',
                       domainCount: 5,
-                      verified: false,
+                      verified: true,
                       summaries,
                       __typename: 'Organizations',
                     },
@@ -262,7 +259,7 @@ describe('<Organisations />', () => {
                       name: 'organization two',
                       slug: 'organization-two',
                       domainCount: 5,
-                      verified: false,
+                      verified: true,
                       summaries,
                       __typename: 'Organizations',
                     },
@@ -319,10 +316,7 @@ describe('<Organisations />', () => {
               <I18nProvider i18n={i18n}>
                 <Router history={history}>
                   <Switch>
-                    <Route
-                      path="/organizations"
-                      render={() => <Organizations />}
-                    />
+                    <Route path="/organizations" render={() => <Organizations />} />
                   </Switch>
                 </Router>
               </I18nProvider>
@@ -334,11 +328,7 @@ describe('<Organisations />', () => {
       const cardLink = await findByRole('link', /organization one/i)
       userEvent.click(cardLink)
 
-      await waitFor(() =>
-        expect(history.location.pathname).toEqual(
-          '/organizations/organization-one',
-        ),
-      )
+      await waitFor(() => expect(history.location.pathname).toEqual('/organizations/organization-one'))
     })
   })
 
@@ -355,6 +345,7 @@ describe('<Organisations />', () => {
                 direction: 'ASC',
                 search: '',
                 includeSuperAdminOrg: false,
+                isVerified: true,
               },
             },
             result: {
@@ -369,7 +360,7 @@ describe('<Organisations />', () => {
                         name: 'organization one',
                         slug: 'organization-one',
                         domainCount: 5,
-                        verified: false,
+                        verified: true,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -398,6 +389,7 @@ describe('<Organisations />', () => {
                 direction: 'ASC',
                 search: '',
                 includeSuperAdminOrg: false,
+                isVerified: true,
               },
             },
             result: {
@@ -412,7 +404,7 @@ describe('<Organisations />', () => {
                         name: 'organization two',
                         slug: 'organization-two',
                         domainCount: 5,
-                        verified: false,
+                        verified: true,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -453,10 +445,7 @@ describe('<Organisations />', () => {
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <Switch>
-                      <Route
-                        path="/organizations"
-                        render={() => <Organizations />}
-                      />
+                      <Route path="/organizations" render={() => <Organizations />} />
                     </Switch>
                   </Router>
                 </I18nProvider>
@@ -465,25 +454,19 @@ describe('<Organisations />', () => {
           </MockedProvider>,
         )
 
-        await waitFor(() =>
-          expect(getByText(/organization one/)).toBeInTheDocument(),
-        )
+        await waitFor(() => expect(getByText(/organization one/)).toBeInTheDocument())
 
         const next = await waitFor(() => getAllByLabelText('Next page'))
 
         fireEvent.click(next[0])
 
-        await waitFor(() =>
-          expect(getByText(/organization two/)).toBeInTheDocument(),
-        )
+        await waitFor(() => expect(getByText(/organization two/)).toBeInTheDocument())
 
         const previous = await waitFor(() => getAllByLabelText('Previous page'))
 
         fireEvent.click(previous[0])
 
-        await waitFor(() =>
-          expect(getByText(/organization one/)).toBeInTheDocument(),
-        )
+        await waitFor(() => expect(getByText(/organization one/)).toBeInTheDocument())
       })
     })
 
@@ -498,6 +481,7 @@ describe('<Organisations />', () => {
             direction: 'ASC',
             search: '',
             includeSuperAdminOrg: false,
+            isVerified: true,
           },
           data: {
             findMyOrganizations: {
@@ -510,7 +494,7 @@ describe('<Organisations />', () => {
                     name: 'organization one',
                     slug: 'organization-one',
                     domainCount: 5,
-                    verified: false,
+                    verified: true,
                     summaries,
                     __typename: 'Organizations',
                   },
@@ -539,6 +523,7 @@ describe('<Organisations />', () => {
                 direction: 'ASC',
                 search: '',
                 includeSuperAdminOrg: false,
+                isVerified: true,
               },
             },
             result: {
@@ -553,7 +538,7 @@ describe('<Organisations />', () => {
                         name: 'organization one',
                         slug: 'organization-one',
                         domainCount: 5,
-                        verified: false,
+                        verified: true,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -582,6 +567,7 @@ describe('<Organisations />', () => {
                 direction: 'ASC',
                 search: '',
                 includeSuperAdminOrg: false,
+                isVerified: true,
               },
             },
             result: {
@@ -596,7 +582,7 @@ describe('<Organisations />', () => {
                         name: 'organization two',
                         slug: 'organization-two',
                         domainCount: 5,
-                        verified: false,
+                        verified: true,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -625,6 +611,7 @@ describe('<Organisations />', () => {
                 direction: 'ASC',
                 search: '',
                 includeSuperAdminOrg: false,
+                isVerified: true,
               },
             },
             result: {
@@ -639,7 +626,7 @@ describe('<Organisations />', () => {
                         name: 'organization two',
                         slug: 'organization-two',
                         domainCount: 5,
-                        verified: false,
+                        verified: true,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -678,10 +665,7 @@ describe('<Organisations />', () => {
                 <I18nProvider i18n={i18n}>
                   <Router history={history}>
                     <Switch>
-                      <Route
-                        path="/organizations"
-                        render={() => <Organizations />}
-                      />
+                      <Route path="/organizations" render={() => <Organizations />} />
                     </Switch>
                   </Router>
                 </I18nProvider>
@@ -690,17 +674,13 @@ describe('<Organisations />', () => {
           </MockedProvider>,
         )
 
-        await waitFor(() =>
-          expect(queryByText(/organization one/)).toBeInTheDocument(),
-        )
+        await waitFor(() => expect(queryByText(/organization one/)).toBeInTheDocument())
 
         const next = getAllByLabelText('Next page')
 
         fireEvent.click(next[0])
 
-        await waitFor(() =>
-          expect(queryByText(/organization two/)).toBeInTheDocument(),
-        )
+        await waitFor(() => expect(queryByText(/organization two/)).toBeInTheDocument())
       })
     })
   })
