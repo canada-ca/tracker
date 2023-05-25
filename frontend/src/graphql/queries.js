@@ -548,6 +548,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             claimTags
             hidden
             archived
+            rcode
             blocked
             webScanPending
           }
