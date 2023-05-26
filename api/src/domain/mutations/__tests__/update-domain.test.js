@@ -151,7 +151,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -300,7 +304,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -378,7 +386,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -450,7 +462,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -523,7 +539,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -601,7 +621,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -673,7 +697,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -746,7 +774,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
