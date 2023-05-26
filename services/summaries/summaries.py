@@ -75,8 +75,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
 
     for domain in db.collection("domains"):
         archived = domain.get("archived")
-        hidden = is_domain_hidden(domain, db)
-        if archived != True and hidden != True:
+        if archived != True:
             # Update chart summaries
             for chart_type in chartSummaries:
                 chart = chartSummaries[chart_type]
