@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 
 export const checkDomainOwnership =
-  ({ i18n, query, userKey, auth: { loginRequiredBool } }) =>
+  ({ i18n, query, userKey }) =>
   async ({ domainId }) => {
     let userAffiliatedOwnership, ownership
     const userKeyString = `users/${userKey}`
@@ -39,7 +39,7 @@ export const checkDomainOwnership =
       throw new Error(i18n._(t`Ownership check error. Unable to request domain information.`))
     }
 
-    if (superAdminAffiliation.superAdmin || !loginRequiredBool) {
+    if (superAdminAffiliation.superAdmin) {
       return !!superAdminAffiliation.domainOwnership
     }
 
@@ -53,8 +53,8 @@ export const checkDomainOwnership =
           RETURN v
       )
       LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
-      LET domainOwnerships = (FOR v, e IN 1..1 ANY ${domainId} ownership RETURN e._from)
-      LET domainBelongsToVerifiedOrg = POSITION(domainOrgClaims[*].verified, true)
+      LET domainOwnerships = (FOR v, e IN 1..1 ANY ${domainId} ownership RETURN v)
+      LET domainBelongsToVerifiedOrg = POSITION(domainOwnerships[*].verified, true)
       LET affiliatedOwnership = INTERSECTION(userAffiliations, domainOwnerships)
       RETURN (domainBelongsToVerifiedOrg && hasVerifiedOrgAffiliation) || LENGTH(affiliatedOwnership) > 0
     `
@@ -74,5 +74,5 @@ export const checkDomainOwnership =
       throw new Error(i18n._(t`Ownership check error. Unable to request domain information.`))
     }
 
-    return ownership[0] !== undefined
+    return ownership
   }
