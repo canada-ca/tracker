@@ -53,7 +53,7 @@ export const domainType = new GraphQLObjectType({
       description: 'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
       resolve: async ({ _key, selectors }, _, { userKey, auth: { checkDomainPermission, userRequired } }) => {
         await userRequired()
-        const permitted = await checkDomainPermission()
+        const permitted = await checkDomainPermission({ domainId: _key })
         if (!permitted) {
           console.warn(`User: ${userKey} attempted to access selectors for ${_key}, but does not have permission.`)
           throw new Error(t`Cannot query domain selectors without permission.`)
@@ -142,7 +142,7 @@ export const domainType = new GraphQLObjectType({
         { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDnsConnectionsByDomainId } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission()
+        const permitted = await checkDomainPermission({ domainId: _id })
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access dns scan results for ${_id}, but does not have permission.`,
@@ -188,7 +188,7 @@ export const domainType = new GraphQLObjectType({
         { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadWebConnectionsByDomainId } },
       ) => {
         await userRequired()
-        const permitted = await checkDomainPermission()
+        const permitted = await checkDomainPermission({ domainId: _id })
         if (!permitted) {
           console.warn(
             `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
