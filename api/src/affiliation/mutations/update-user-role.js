@@ -123,11 +123,8 @@ given organization.`,
       console.error(
         `Database error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to update user's role. Please try again.`),
-      }
+
+      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
     if (affiliationCursor.count < 1) {
@@ -148,11 +145,8 @@ given organization.`,
       console.error(
         `Cursor error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to update user's role. Please try again.`),
-      }
+
+      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
     // Only super admins can update other super admins or owners
@@ -203,11 +197,8 @@ given organization.`,
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
-      }
+
+      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
     try {
@@ -216,11 +207,8 @@ given organization.`,
       console.warn(
         `Transaction commit error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
-      }
+
+      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
     }
 
     console.info(`User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`)

@@ -1,25 +1,20 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { setupI18n } from '@lingui/core'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {
-  checkPermission,
-  userRequired,
-  verifiedRequired,
-  tfaRequired,
-} from '../../../auth'
-import {loadUserByUserName, loadUserByKey} from '../../../user/loaders'
-import {loadOrgByKey} from '../../../organization/loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '../../../auth'
+import { loadUserByUserName, loadUserByKey } from '../../../user/loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('update a users role', () => {
   let query, drop, truncate, schema, collections, transaction, i18n, user
@@ -46,7 +41,7 @@ describe('update a users role', () => {
   describe('given a successful role update', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -77,8 +72,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -177,15 +172,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -206,10 +201,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to super_admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
           describe('to user', () => {
@@ -254,15 +249,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -283,10 +278,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to user in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
         })
@@ -340,15 +335,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -369,10 +364,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to super_admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
           describe('to admin', () => {
@@ -417,15 +412,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -446,10 +441,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
         })
@@ -512,15 +507,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -541,10 +536,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
         })
@@ -555,8 +550,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -655,15 +650,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -675,8 +670,7 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status:
-                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      status: "Le rôle de l'utilisateur a été mis à jour avec succès.",
                       user: {
                         displayName: 'Test Account',
                       },
@@ -685,10 +679,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to super_admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
           describe('to user', () => {
@@ -733,15 +727,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -753,8 +747,7 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status:
-                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      status: "Le rôle de l'utilisateur a été mis à jour avec succès.",
                       user: {
                         displayName: 'Test Account',
                       },
@@ -763,10 +756,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to user in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
         })
@@ -820,15 +813,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -840,8 +833,7 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status:
-                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      status: "Le rôle de l'utilisateur a été mis à jour avec succès.",
                       user: {
                         displayName: 'Test Account',
                       },
@@ -850,10 +842,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to super_admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
           describe('to admin', () => {
@@ -898,15 +890,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -918,8 +910,7 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status:
-                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      status: "Le rôle de l'utilisateur a été mis à jour avec succès.",
                       user: {
                         displayName: 'Test Account',
                       },
@@ -928,10 +919,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
         })
@@ -994,15 +985,15 @@ describe('update a users role', () => {
                     }),
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
-                    verifiedRequired: verifiedRequired({i18n}),
-                    tfaRequired: tfaRequired({i18n}),
+                    verifiedRequired: verifiedRequired({ i18n }),
+                    tfaRequired: tfaRequired({ i18n }),
                   },
                   loaders: {
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadUserByUserName: loadUserByUserName({query}),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadUserByUserName: loadUserByUserName({ query }),
                   },
                   validators: {
                     cleanseInput,
@@ -1014,8 +1005,7 @@ describe('update a users role', () => {
                 data: {
                   updateUserRole: {
                     result: {
-                      status:
-                        "Le rôle de l'utilisateur a été mis à jour avec succès.",
+                      status: "Le rôle de l'utilisateur a été mis à jour avec succès.",
                       user: {
                         displayName: 'Test Account',
                       },
@@ -1024,10 +1014,10 @@ describe('update a users role', () => {
                 },
               }
 
-              expect(response).toEqual(expectedResponse)
               expect(consoleOutput).toEqual([
                 `User: ${user._key} successful updated user: ${secondaryUser._key} role to admin in org: treasury-board-secretariat.`,
               ])
+              expect(response).toEqual(expectedResponse)
             })
           })
         })
@@ -1040,8 +1030,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1116,10 +1106,8 @@ describe('update a users role', () => {
               },
             }
 
+            expect(consoleOutput).toEqual([`User: 123 attempted to update their own role in org: 123.`])
             expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: 123 attempted to update their own role in org: 123.`,
-            ])
           })
         })
         describe('user attempts to update a user that does not exist', () => {
@@ -1187,10 +1175,10 @@ describe('update a users role', () => {
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: random@email.ca role in org: 123, however there is no user associated with that user name.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('user attempts to update a users role in an org that does not exist', () => {
@@ -1260,10 +1248,10 @@ describe('update a users role', () => {
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: 1, however there is no org associated with that id.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('requesting user permission is user', () => {
@@ -1336,10 +1324,10 @@ describe('update a users role', () => {
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
@@ -1370,7 +1358,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 0}),
+                query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -1412,10 +1400,10 @@ describe('update a users role', () => {
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('user attempts to update a user that does not belong to the requested org', () => {
@@ -1446,7 +1434,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 0}),
+                query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -1481,185 +1469,16 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description:
-                      'Unable to update role: user does not belong to organization.',
+                    description: 'Unable to update role: user does not belong to organization.',
                   },
                 },
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
             ])
-          })
-        })
-        describe('requesting users role is super admin', () => {
-          describe('user attempts to update users role to admin', () => {
-            describe('requested users current role is super admin', () => {
-              it('returns an error message', async () => {
-                const response = await graphql(
-                  schema,
-                  `
-                  mutation {
-                    updateUserRole (
-                      input: {
-                        userName: "test@email.gc.ca"
-                        orgId: "${toGlobalId('organizations', 123)}"
-                        role: ADMIN
-                      }
-                    ) {
-                      result {
-                        ... on UpdateUserRoleResult {
-                          status
-                        }
-                        ... on AffiliationError {
-                          code
-                          description
-                        }
-                      }
-                    }
-                  }
-                  `,
-                  null,
-                  {
-                    i18n,
-                    query: jest.fn().mockReturnValue({
-                      count: 1,
-                      next: jest
-                        .fn()
-                        .mockReturnValue({permission: 'super_admin'}),
-                    }),
-                    collections: collectionNames,
-                    transaction: jest.fn(),
-                    userKey: 123,
-                    auth: {
-                      checkPermission: jest.fn().mockReturnValue('super_admin'),
-                      userRequired: jest.fn().mockReturnValue({
-                        userName: 'test.account@istio.actually.exists',
-                      }),
-                      verifiedRequired: jest.fn(),
-                      tfaRequired: jest.fn(),
-                    },
-                    loaders: {
-                      loadOrgByKey: {
-                        load: jest.fn().mockReturnValue({
-                          slug: 'treasury-board-secretariat',
-                        }),
-                      },
-                      loadUserByUserName: {
-                        load: jest.fn().mockReturnValue({
-                          _key: 456,
-                        }),
-                      },
-                    },
-                    validators: {
-                      cleanseInput,
-                    },
-                  },
-                )
-
-                const error = {
-                  data: {
-                    updateUserRole: {
-                      result: {
-                        code: 400,
-                        description:
-                          'Permission Denied: Please contact organization admin for help with updating user roles.',
-                      },
-                    },
-                  },
-                }
-
-                expect(response).toEqual(error)
-                expect(consoleOutput).toEqual([
-                  `User: 123 attempted to lower user: 456 from super_admin to: admin.`,
-                ])
-              })
-            })
-          })
-          describe('user attempts to update users role to user', () => {
-            describe('requested users current role is super admin', () => {
-              it('returns an error message', async () => {
-                const response = await graphql(
-                  schema,
-                  `
-                  mutation {
-                    updateUserRole (
-                      input: {
-                        userName: "test@email.gc.ca"
-                        orgId: "${toGlobalId('organizations', 123)}"
-                        role: USER
-                      }
-                    ) {
-                      result {
-                        ... on UpdateUserRoleResult {
-                          status
-                        }
-                        ... on AffiliationError {
-                          code
-                          description
-                        }
-                      }
-                    }
-                  }
-                  `,
-                  null,
-                  {
-                    i18n,
-                    query: jest.fn().mockReturnValue({
-                      count: 1,
-                      next: jest
-                        .fn()
-                        .mockReturnValue({permission: 'super_admin'}),
-                    }),
-                    collections: collectionNames,
-                    transaction: jest.fn(),
-                    userKey: 123,
-                    auth: {
-                      checkPermission: jest.fn().mockReturnValue('super_admin'),
-                      userRequired: jest.fn().mockReturnValue({
-                        userName: 'test.account@istio.actually.exists',
-                      }),
-                      verifiedRequired: jest.fn(),
-                      tfaRequired: jest.fn(),
-                    },
-                    loaders: {
-                      loadOrgByKey: {
-                        load: jest.fn().mockReturnValue({
-                          slug: 'treasury-board-secretariat',
-                        }),
-                      },
-                      loadUserByUserName: {
-                        load: jest.fn().mockReturnValue({
-                          _key: 456,
-                        }),
-                      },
-                    },
-                    validators: {
-                      cleanseInput,
-                    },
-                  },
-                )
-
-                const error = {
-                  data: {
-                    updateUserRole: {
-                      result: {
-                        code: 400,
-                        description:
-                          'Permission Denied: Please contact organization admin for help with updating user roles.',
-                      },
-                    },
-                  },
-                }
-
-                expect(response).toEqual(error)
-                expect(consoleOutput).toEqual([
-                  `User: 123 attempted to lower user: 456 from super_admin to: user.`,
-                ])
-              })
-            })
+            expect(response).toEqual(error)
           })
         })
         describe('requesting users role is admin', () => {
@@ -1693,9 +1512,7 @@ describe('update a users role', () => {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
-                    next: jest
-                      .fn()
-                      .mockReturnValue({permission: 'super_admin'}),
+                    next: jest.fn().mockReturnValue({ permission: 'super_admin' }),
                   }),
                   collections: collectionNames,
                   transaction: jest.fn(),
@@ -1732,95 +1549,16 @@ describe('update a users role', () => {
                     result: {
                       code: 400,
                       description:
-                        'Permission Denied: Please contact organization admin for help with updating user roles.',
+                        'Permission Denied: Please contact organization admin for help with user role changes.',
                     },
                   },
                 },
               }
 
-              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
-                `User: 123 attempted to lower user: 456 from super_admin to: user.`,
+                `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to update a super_admin.`,
               ])
-            })
-          })
-          describe('requested users current role is admin', () => {
-            it('returns an error message', async () => {
-              const response = await graphql(
-                schema,
-                `
-                mutation {
-                  updateUserRole (
-                    input: {
-                      userName: "test@email.gc.ca"
-                      orgId: "${toGlobalId('organizations', 123)}"
-                      role: USER
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserRoleResult {
-                        status
-                      }
-                      ... on AffiliationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-                `,
-                null,
-                {
-                  i18n,
-                  query: jest.fn().mockReturnValue({
-                    count: 1,
-                    next: jest.fn().mockReturnValue({permission: 'admin'}),
-                  }),
-                  collections: collectionNames,
-                  transaction: jest.fn(),
-                  userKey: 123,
-                  auth: {
-                    checkPermission: jest.fn().mockReturnValue('admin'),
-                    userRequired: jest.fn().mockReturnValue({
-                      userName: 'test.account@istio.actually.exists',
-                    }),
-                    verifiedRequired: jest.fn(),
-                    tfaRequired: jest.fn(),
-                  },
-                  loaders: {
-                    loadOrgByKey: {
-                      load: jest.fn().mockReturnValue({
-                        slug: 'treasury-board-secretariat',
-                      }),
-                    },
-                    loadUserByUserName: {
-                      load: jest.fn().mockReturnValue({
-                        _key: 456,
-                      }),
-                    },
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                },
-              )
-
-              const error = {
-                data: {
-                  updateUserRole: {
-                    result: {
-                      code: 400,
-                      description:
-                        'Permission Denied: Please contact organization admin for help with updating user roles.',
-                    },
-                  },
-                },
-              }
-
               expect(response).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `User: 123 attempted to lower user: 456 from admin to: user.`,
-              ])
             })
           })
         })
@@ -1884,16 +1622,12 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                `Unable to update user's role. Please try again.`,
-              ),
-            ]
+            const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Database error occurred when user: 123 attempted to update a user's: 456 role, error: Error: database error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
       })
@@ -1959,16 +1693,12 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                `Unable to update user's role. Please try again.`,
-              ),
-            ]
+            const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Cursor error occurred when user: 123 attempted to update a user's: 456 role, error: Error: cursor error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
       })
@@ -2003,7 +1733,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({permission: 'user'}),
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
@@ -2036,16 +1766,12 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                `Unable to update user's role. Please try again.`,
-              ),
-            ]
+            const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Transaction step error occurred when user: 123 attempted to update a user's: 456 role, error: trx step error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
         describe('when committing transaction', () => {
@@ -2078,7 +1804,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({permission: 'user'}),
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
@@ -2112,16 +1838,12 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                `Unable to update user's role. Please try again.`,
-              ),
-            ]
+            const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Transaction commit error occurred when user: 123 attempted to update a user's: 456 role, error: trx commit error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
       })
@@ -2131,8 +1853,8 @@ describe('update a users role', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2201,17 +1923,14 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de mettre à jour votre propre rôle.',
+                    description: 'Impossible de mettre à jour votre propre rôle.',
                   },
                 },
               },
             }
 
+            expect(consoleOutput).toEqual([`User: 123 attempted to update their own role in org: 123.`])
             expect(response).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: 123 attempted to update their own role in org: 123.`,
-            ])
           })
         })
         describe('user attempts to update a user that does not exist', () => {
@@ -2273,17 +1992,16 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de mettre à jour le rôle : utilisateur inconnu.',
+                    description: 'Impossible de mettre à jour le rôle : utilisateur inconnu.',
                   },
                 },
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: random@email.ca role in org: 123, however there is no user associated with that user name.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('user attempts to update a users role in an org that does not exist', () => {
@@ -2347,17 +2065,16 @@ describe('update a users role', () => {
                 updateUserRole: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de mettre à jour le rôle : organisation inconnue.',
+                    description: 'Impossible de mettre à jour le rôle : organisation inconnue.',
                   },
                 },
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: 1, however there is no org associated with that id.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('requesting user permission is user', () => {
@@ -2430,10 +2147,10 @@ describe('update a users role', () => {
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
@@ -2464,7 +2181,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 0}),
+                query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -2506,10 +2223,10 @@ describe('update a users role', () => {
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to do so.`,
             ])
+            expect(response).toEqual(error)
           })
         })
         describe('user attempts to update a user that does not belong to the requested org', () => {
@@ -2540,7 +2257,7 @@ describe('update a users role', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 0}),
+                query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -2582,180 +2299,13 @@ describe('update a users role', () => {
               },
             }
 
-            expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
               `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however that user does not have an affiliation with that organization.`,
             ])
+            expect(response).toEqual(error)
           })
         })
-        describe('requesting users role is super admin', () => {
-          describe('user attempts to update users role to admin', () => {
-            describe('requested users current role is super admin', () => {
-              it('returns an error message', async () => {
-                const response = await graphql(
-                  schema,
-                  `
-                  mutation {
-                    updateUserRole (
-                      input: {
-                        userName: "test@email.gc.ca"
-                        orgId: "${toGlobalId('organizations', 123)}"
-                        role: ADMIN
-                      }
-                    ) {
-                      result {
-                        ... on UpdateUserRoleResult {
-                          status
-                        }
-                        ... on AffiliationError {
-                          code
-                          description
-                        }
-                      }
-                    }
-                  }
-                  `,
-                  null,
-                  {
-                    i18n,
-                    query: jest.fn().mockReturnValue({
-                      count: 1,
-                      next: jest
-                        .fn()
-                        .mockReturnValue({permission: 'super_admin'}),
-                    }),
-                    collections: collectionNames,
-                    transaction: jest.fn(),
-                    userKey: 123,
-                    auth: {
-                      checkPermission: jest.fn().mockReturnValue('super_admin'),
-                      userRequired: jest.fn().mockReturnValue({
-                        userName: 'test.account@istio.actually.exists',
-                      }),
-                      verifiedRequired: jest.fn(),
-                      tfaRequired: jest.fn(),
-                    },
-                    loaders: {
-                      loadOrgByKey: {
-                        load: jest.fn().mockReturnValue({
-                          slug: 'treasury-board-secretariat',
-                        }),
-                      },
-                      loadUserByUserName: {
-                        load: jest.fn().mockReturnValue({
-                          _key: 456,
-                        }),
-                      },
-                    },
-                    validators: {
-                      cleanseInput,
-                    },
-                  },
-                )
 
-                const error = {
-                  data: {
-                    updateUserRole: {
-                      result: {
-                        code: 400,
-                        description:
-                          "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
-                      },
-                    },
-                  },
-                }
-
-                expect(response).toEqual(error)
-                expect(consoleOutput).toEqual([
-                  `User: 123 attempted to lower user: 456 from super_admin to: admin.`,
-                ])
-              })
-            })
-          })
-          describe('user attempts to update users role to user', () => {
-            describe('requested users current role is super admin', () => {
-              it('returns an error message', async () => {
-                const response = await graphql(
-                  schema,
-                  `
-                  mutation {
-                    updateUserRole (
-                      input: {
-                        userName: "test@email.gc.ca"
-                        orgId: "${toGlobalId('organizations', 123)}"
-                        role: USER
-                      }
-                    ) {
-                      result {
-                        ... on UpdateUserRoleResult {
-                          status
-                        }
-                        ... on AffiliationError {
-                          code
-                          description
-                        }
-                      }
-                    }
-                  }
-                  `,
-                  null,
-                  {
-                    i18n,
-                    query: jest.fn().mockReturnValue({
-                      count: 1,
-                      next: jest
-                        .fn()
-                        .mockReturnValue({permission: 'super_admin'}),
-                    }),
-                    collections: collectionNames,
-                    transaction: jest.fn(),
-                    userKey: 123,
-                    auth: {
-                      checkPermission: jest.fn().mockReturnValue('super_admin'),
-                      userRequired: jest.fn().mockReturnValue({
-                        userName: 'test.account@istio.actually.exists',
-                      }),
-                      verifiedRequired: jest.fn(),
-                      tfaRequired: jest.fn(),
-                    },
-                    loaders: {
-                      loadOrgByKey: {
-                        load: jest.fn().mockReturnValue({
-                          slug: 'treasury-board-secretariat',
-                        }),
-                      },
-                      loadUserByUserName: {
-                        load: jest.fn().mockReturnValue({
-                          _key: 456,
-                        }),
-                      },
-                    },
-                    validators: {
-                      cleanseInput,
-                    },
-                  },
-                )
-
-                const error = {
-                  data: {
-                    updateUserRole: {
-                      result: {
-                        code: 400,
-                        description:
-                          "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
-                      },
-                    },
-                  },
-                }
-
-                expect(response).toEqual(error)
-                expect(consoleOutput).toEqual([
-                  `User: 123 attempted to lower user: 456 from super_admin to: user.`,
-                ])
-              })
-            })
-          })
-        })
         describe('requesting users role is admin', () => {
           describe('requested users role is super admin', () => {
             it('returns an error message', async () => {
@@ -2787,9 +2337,7 @@ describe('update a users role', () => {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
-                    next: jest
-                      .fn()
-                      .mockReturnValue({permission: 'super_admin'}),
+                    next: jest.fn().mockReturnValue({ permission: 'super_admin' }),
                   }),
                   collections: collectionNames,
                   transaction: jest.fn(),
@@ -2826,95 +2374,16 @@ describe('update a users role', () => {
                     result: {
                       code: 400,
                       description:
-                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
+                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur les changements de rôle des utilisateurs.",
                     },
                   },
                 },
               }
 
-              expect(response).toEqual(error)
               expect(consoleOutput).toEqual([
-                `User: 123 attempted to lower user: 456 from super_admin to: user.`,
+                `User: 123 attempted to update a user: 456 role in org: treasury-board-secretariat, however they do not have permission to update a super_admin.`,
               ])
-            })
-          })
-          describe('requested users current role is admin', () => {
-            it('returns an error message', async () => {
-              const response = await graphql(
-                schema,
-                `
-                mutation {
-                  updateUserRole (
-                    input: {
-                      userName: "test@email.gc.ca"
-                      orgId: "${toGlobalId('organizations', 123)}"
-                      role: USER
-                    }
-                  ) {
-                    result {
-                      ... on UpdateUserRoleResult {
-                        status
-                      }
-                      ... on AffiliationError {
-                        code
-                        description
-                      }
-                    }
-                  }
-                }
-                `,
-                null,
-                {
-                  i18n,
-                  query: jest.fn().mockReturnValue({
-                    count: 1,
-                    next: jest.fn().mockReturnValue({permission: 'admin'}),
-                  }),
-                  collections: collectionNames,
-                  transaction: jest.fn(),
-                  userKey: 123,
-                  auth: {
-                    checkPermission: jest.fn().mockReturnValue('admin'),
-                    userRequired: jest.fn().mockReturnValue({
-                      userName: 'test.account@istio.actually.exists',
-                    }),
-                    verifiedRequired: jest.fn(),
-                    tfaRequired: jest.fn(),
-                  },
-                  loaders: {
-                    loadOrgByKey: {
-                      load: jest.fn().mockReturnValue({
-                        slug: 'treasury-board-secretariat',
-                      }),
-                    },
-                    loadUserByUserName: {
-                      load: jest.fn().mockReturnValue({
-                        _key: 456,
-                      }),
-                    },
-                  },
-                  validators: {
-                    cleanseInput,
-                  },
-                },
-              )
-
-              const error = {
-                data: {
-                  updateUserRole: {
-                    result: {
-                      code: 400,
-                      description:
-                        "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la mise à jour des rôles des utilisateurs.",
-                    },
-                  },
-                },
-              }
-
               expect(response).toEqual(error)
-              expect(consoleOutput).toEqual([
-                `User: 123 attempted to lower user: 456 from admin to: user.`,
-              ])
             })
           })
         })
@@ -2979,15 +2448,13 @@ describe('update a users role', () => {
             )
 
             const error = [
-              new GraphQLError(
-                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
-              ),
+              new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),
             ]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Database error occurred when user: 123 attempted to update a user's: 456 role, error: Error: database error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
       })
@@ -3054,15 +2521,13 @@ describe('update a users role', () => {
             )
 
             const error = [
-              new GraphQLError(
-                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
-              ),
+              new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),
             ]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Cursor error occurred when user: 123 attempted to update a user's: 456 role, error: Error: cursor error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
       })
@@ -3097,7 +2562,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({permission: 'user'}),
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
@@ -3131,15 +2596,13 @@ describe('update a users role', () => {
             )
 
             const error = [
-              new GraphQLError(
-                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
-              ),
+              new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),
             ]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Transaction step error occurred when user: 123 attempted to update a user's: 456 role, error: trx step error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
         describe('when committing transaction', () => {
@@ -3172,7 +2635,7 @@ describe('update a users role', () => {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
-                  next: jest.fn().mockReturnValue({permission: 'user'}),
+                  next: jest.fn().mockReturnValue({ permission: 'user' }),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
@@ -3207,15 +2670,13 @@ describe('update a users role', () => {
             )
 
             const error = [
-              new GraphQLError(
-                `Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`,
-              ),
+              new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),
             ]
 
-            expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
               `Transaction commit error occurred when user: 123 attempted to update a user's: 456 role, error: trx commit error`,
             ])
+            expect(response.errors).toEqual(error)
           })
         })
       })
