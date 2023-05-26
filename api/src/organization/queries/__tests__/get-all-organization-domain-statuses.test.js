@@ -14,18 +14,7 @@ import frenchMessages from '../../../locale/fr/messages'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given getAllOrganizationDomainStatuses', () => {
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    orgOne,
-    orgTwo,
-    superAdminOrg,
-    domainOne,
-    domainTwo,
-    i18n,
-    user
+  let query, drop, truncate, schema, collections, orgOne, orgTwo, superAdminOrg, domainOne, domainTwo, i18n, user
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -198,7 +187,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
       loginRequiredBool = false
     })
     describe('the user is not a super admin', () => {
-      it('returns all domain status results', async () => {
+      it('returns a permission error', async () => {
         const response = await graphql(
           schema,
           `
@@ -229,25 +218,20 @@ describe('given getAllOrganizationDomainStatuses', () => {
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
-              loadAllOrganizationDomainStatuses:
-                loadAllOrganizationDomainStatuses({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
+              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+                query,
+                userKey: user._key,
+                i18n,
+              }),
             },
           },
         )
-        const expectedResponse = {
-          data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
-"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
-          },
-        }
-        expect(response).toEqual(expectedResponse)
+        const error = [
+          new GraphQLError('Permissions error. You do not have sufficient permissions to access this data.'),
+        ]
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User ${user._key} successfully retrieved all domain statuses.`,
+          `User: ${user._key} attempted to load all organization statuses but login is required and they are not a super admin.`,
         ])
       })
     })
@@ -291,12 +275,11 @@ describe('given getAllOrganizationDomainStatuses', () => {
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
-              loadAllOrganizationDomainStatuses:
-                loadAllOrganizationDomainStatuses({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
+              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+                query,
+                userKey: user._key,
+                i18n,
+              }),
             },
           },
         )
@@ -310,9 +293,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
         }
 
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} successfully retrieved all domain statuses.`,
-        ])
+        expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved all domain statuses.`])
       })
     })
   })
@@ -352,19 +333,16 @@ describe('given getAllOrganizationDomainStatuses', () => {
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
-              loadAllOrganizationDomainStatuses:
-                loadAllOrganizationDomainStatuses({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
+              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+                query,
+                userKey: user._key,
+                i18n,
+              }),
             },
           },
         )
         const error = [
-          new GraphQLError(
-            'Permissions error. You do not have sufficient permissions to access this data.',
-          ),
+          new GraphQLError('Permissions error. You do not have sufficient permissions to access this data.'),
         ]
 
         expect(response.errors).toEqual(error)
@@ -413,12 +391,11 @@ describe('given getAllOrganizationDomainStatuses', () => {
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
-              loadAllOrganizationDomainStatuses:
-                loadAllOrganizationDomainStatuses({
-                  query,
-                  userKey: user._key,
-                  i18n,
-                }),
+              loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
+                query,
+                userKey: user._key,
+                i18n,
+              }),
             },
           },
         )
@@ -430,9 +407,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
           },
         }
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} successfully retrieved all domain statuses.`,
-        ])
+        expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved all domain statuses.`])
       })
     })
   })
