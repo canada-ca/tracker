@@ -98,6 +98,18 @@ given organization.`,
     // Check requesting user's permission
     const permission = await checkPermission({ orgId: org._id })
 
+    // Only admins, owners, and super admins can update a user's role
+    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+      console.warn(
+        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
+      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
+      }
+    }
+
     // Get user's current permission level
     let affiliationCursor
     try {
@@ -111,7 +123,11 @@ given organization.`,
       console.error(
         `Database error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to update user's role. Please try again.`),
+      }
     }
 
     if (affiliationCursor.count < 1) {
@@ -132,18 +148,10 @@ given organization.`,
       console.error(
         `Cursor error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
-    }
-
-    // Only admins, owners, and super admins can update a user's role
-    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
-      console.warn(
-        `User: ${userKey} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
-      )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
+        description: i18n._(t`Unable to update user's role. Please try again.`),
       }
     }
 
@@ -195,7 +203,11 @@ given organization.`,
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
+      }
     }
 
     try {
@@ -204,7 +216,11 @@ given organization.`,
       console.warn(
         `Transaction commit error occurred when user: ${userKey} attempted to update a user's: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to update user's role. Please try again.`))
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with user role changes.`),
+      }
     }
 
     console.info(`User: ${userKey} successful updated user: ${requestedUser._key} role to ${role} in org: ${org.slug}.`)
