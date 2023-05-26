@@ -1,26 +1,21 @@
-import {setupI18n} from '@lingui/core'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {cleanseInput, slugify} from '../../../validators'
-import {
-  checkPermission,
-  userRequired,
-  verifiedRequired,
-  tfaRequired,
-} from '../../../auth'
-import {loadDomainByKey} from '../../loaders'
-import {loadOrgByKey} from '../../../organization/loaders'
-import {loadUserByKey} from '../../../user/loaders'
+import { cleanseInput, slugify } from '../../../validators'
+import { checkPermission, userRequired, verifiedRequired, tfaRequired, checkDomainPermission } from '../../../auth'
+import { loadDomainByKey } from '../../loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('updating a domain', () => {
   let query, drop, truncate, schema, collections, transaction, user
@@ -45,9 +40,21 @@ describe('updating a domain', () => {
 
   describe('given a successful domain update', () => {
     let org, domain
+    const i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
+    })
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -144,10 +151,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -157,9 +165,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -178,9 +186,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates selectors', () => {
@@ -217,10 +223,15 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -230,9 +241,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -251,9 +262,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates domain and selectors', () => {
@@ -291,10 +300,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -304,9 +314,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -325,9 +335,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
     })
@@ -370,10 +378,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -383,9 +392,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -404,9 +413,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates selectors', () => {
@@ -443,10 +450,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -456,9 +464,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -477,9 +485,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates domain and selectors', () => {
@@ -517,10 +523,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -530,9 +537,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -551,9 +558,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
     })
@@ -596,10 +601,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -609,9 +615,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -630,9 +636,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates selectors', () => {
@@ -669,10 +673,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -682,9 +687,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -703,9 +708,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates domain and selectors', () => {
@@ -743,10 +746,11 @@ describe('updating a domain', () => {
               transaction,
               userKey: user._key,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
@@ -756,9 +760,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                loadDomainByKey: loadDomainByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-                loadUserByKey: loadUserByKey({query}),
+                loadDomainByKey: loadDomainByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+                loadUserByKey: loadUserByKey({ query }),
               },
             },
           )
@@ -777,9 +781,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
     })
@@ -791,8 +793,8 @@ describe('updating a domain', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -857,7 +859,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn(),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -935,7 +937,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -1013,7 +1015,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -1071,7 +1073,7 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 0}),
+              query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
               userKey: 123,
@@ -1092,7 +1094,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -1102,8 +1104,7 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to update domain that does not belong to the given organization.',
+                  description: 'Unable to update domain that does not belong to the given organization.',
                 },
               },
             },
@@ -1172,14 +1173,12 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: {load: jest.fn()},
+                  loadUserByKey: { load: jest.fn() },
                 },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to update domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1224,12 +1223,10 @@ describe('updating a domain', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 1}),
+                query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -1249,14 +1246,12 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: {load: jest.fn()},
+                  loadUserByKey: { load: jest.fn() },
                 },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to update domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1300,13 +1295,11 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 1}),
+              query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
-                commit: jest
-                  .fn()
-                  .mockRejectedValue(new Error('trx commit error')),
+                commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
               }),
               userKey: 123,
               auth: {
@@ -1326,14 +1319,12 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
 
-          const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
-          ]
+          const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
           expect(response.errors).toEqual(error)
         })
@@ -1344,8 +1335,8 @@ describe('updating a domain', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1410,7 +1401,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn(),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -1420,8 +1411,7 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de mettre à jour un domaine inconnu.',
+                  description: 'Impossible de mettre à jour un domaine inconnu.',
                 },
               },
             },
@@ -1489,7 +1479,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -1499,8 +1489,7 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de mettre à jour le domaine dans un org inconnu.',
+                  description: 'Impossible de mettre à jour le domaine dans un org inconnu.',
                 },
               },
             },
@@ -1568,7 +1557,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -1626,7 +1615,7 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 0}),
+              query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
               transaction,
               userKey: 123,
@@ -1647,7 +1636,7 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
@@ -1657,8 +1646,7 @@ describe('updating a domain', () => {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée.",
+                  description: "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée.",
                 },
               },
             },
@@ -1727,16 +1715,12 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: {load: jest.fn()},
+                  loadUserByKey: { load: jest.fn() },
                 },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1781,12 +1765,10 @@ describe('updating a domain', () => {
               null,
               {
                 i18n,
-                query: jest.fn().mockReturnValue({count: 1}),
+                query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -1806,16 +1788,12 @@ describe('updating a domain', () => {
                   loadOrgByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
-                  loadUserByKey: {load: jest.fn()},
+                  loadUserByKey: { load: jest.fn() },
                 },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1859,13 +1837,11 @@ describe('updating a domain', () => {
             null,
             {
               i18n,
-              query: jest.fn().mockReturnValue({count: 1}),
+              query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
-                commit: jest
-                  .fn()
-                  .mockRejectedValue(new Error('trx commit error')),
+                commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
               }),
               userKey: 123,
               auth: {
@@ -1885,16 +1861,12 @@ describe('updating a domain', () => {
                 loadOrgByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
-                loadUserByKey: {load: jest.fn()},
+                loadUserByKey: { load: jest.fn() },
               },
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
-            ),
-          ]
+          const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
           expect(response.errors).toEqual(error)
         })
