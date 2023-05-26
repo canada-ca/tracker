@@ -1,19 +1,19 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {checkSuperAdmin, userRequired, verifiedRequired} from '../../../auth'
-import {loadDomainConnectionsByUserId} from '../../loaders'
-import {loadUserByKey} from '../../../user'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { checkDomainPermission, checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
+import { loadDomainConnectionsByUserId } from '../../loaders'
+import { loadUserByKey } from '../../../user'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findMyDomainsQuery', () => {
   let query, drop, truncate, schema, collections, org, i18n, user
@@ -39,7 +39,7 @@ describe('given findMyDomainsQuery', () => {
     let domainOne, domainTwo
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -158,6 +158,11 @@ describe('given findMyDomainsQuery', () => {
             i18n,
             userKey: user._key,
             auth: {
+              checkDomainPermission: checkDomainPermission({
+                i18n,
+                userKey: user._key,
+                query,
+              }),
               checkSuperAdmin: checkSuperAdmin({
                 i18n,
                 userKey: user._key,
@@ -179,7 +184,7 @@ describe('given findMyDomainsQuery', () => {
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: {loginRequired: true},
+                auth: { loginRequired: true },
               }),
             },
           },
@@ -219,9 +224,7 @@ describe('given findMyDomainsQuery', () => {
           },
         }
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully retrieved their domains.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully retrieved their domains.`])
       })
     })
   })
@@ -230,8 +233,8 @@ describe('given findMyDomainsQuery', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -243,9 +246,7 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const response = await graphql(
             schema,
@@ -285,16 +286,14 @@ describe('given findMyDomainsQuery', () => {
                   query: mockedQuery,
                   userKey: 1,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                   i18n,
                 }),
               },
             },
           )
 
-          const error = [
-            new GraphQLError(`Unable to query domain(s). Please try again.`),
-          ]
+          const error = [new GraphQLError(`Unable to query domain(s). Please try again.`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -309,8 +308,8 @@ describe('given findMyDomainsQuery', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -322,9 +321,7 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const response = await graphql(
             schema,
@@ -364,18 +361,14 @@ describe('given findMyDomainsQuery', () => {
                   query: mockedQuery,
                   userKey: 1,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                   i18n,
                 }),
               },
             },
           )
 
-          const error = [
-            new GraphQLError(
-              "Impossible d'interroger le(s) domaine(s). Veuillez réessayer.",
-            ),
-          ]
+          const error = [new GraphQLError("Impossible d'interroger le(s) domaine(s). Veuillez réessayer.")]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
