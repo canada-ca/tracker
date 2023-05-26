@@ -106,13 +106,13 @@ msgid "Account"
 msgstr "Compte"
 
 #: src/admin/SuperAdminUserList.js:91
-#: src/user/UserPage.js:94
+#: src/user/UserPage.js:88
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
 #: src/app/App.js:101
 #: src/app/FloatingMenu.js:177
-#: src/user/UserPage.js:150
+#: src/user/UserPage.js:137
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
@@ -195,7 +195,7 @@ msgstr "Profil de l'administrateur"
 #~ msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
 #~ msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle, <0>s'il vous plaît activer MFA</0>."
 
-#: src/user/UserPage.js:175
+#: src/user/UserPage.js:163
 msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
 
@@ -260,6 +260,10 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre nom d'afficha
 msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
 
+#: src/user/EmailUpdatesSwitch.js:17
+msgid "An error occurred while updating your email update preference."
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences de mise à jour du courrier électronique."
+
 #: src/user/InsideUserSwitch.js:19
 msgid "An error occurred while updating your inside user preference."
 msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'utilisateur interne."
@@ -291,7 +295,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/UserListModal.js:140
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:56
-#: src/user/UserPage.js:83
+#: src/user/UserPage.js:77
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -422,7 +426,7 @@ msgid "Canadians rely on the Government of Canada to provide secure digital serv
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
 #: src/admin/SuperAdminUserList.js:434
-#: src/user/UserPage.js:289
+#: src/user/UserPage.js:260
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -482,7 +486,7 @@ msgstr "Changements requis pour la mise en conformité ITPIN"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changements requis pour la conformité aux exigences de configuration de la gestion des sites et services Web."
 
-#: src/user/UserPage.js:68
+#: src/user/UserPage.js:64
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
@@ -526,8 +530,8 @@ msgstr "Fermer"
 
 #: src/admin/SuperAdminUserList.js:371
 #: src/admin/SuperAdminUserList.js:404
-#: src/user/UserPage.js:229
-#: src/user/UserPage.js:260
+#: src/user/UserPage.js:216
+#: src/user/UserPage.js:243
 msgid "Close Account"
 msgstr "Fermer le compte"
 
@@ -568,7 +572,7 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserPhoneNumber.js:188
 #: src/user/EditableUserPhoneNumber.js:246
-#: src/user/UserPage.js:298
+#: src/user/UserPage.js:264
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -1089,6 +1093,14 @@ msgstr "Courriel envoyé"
 msgid "Email Summary"
 msgstr "Résumé de l'e-mail"
 
+#: src/user/EmailUpdatesSwitch.js:82
+msgid "Email Updates"
+msgstr "Mises à jour par courriel"
+
+#: src/user/EmailUpdatesSwitch.js:28
+msgid "Email Updates status changed"
+msgstr "Changement de statut des mises à jour par courrier électronique"
+
 #: src/user/EditableUserTFAMethod.js:111
 msgid "Email Validated"
 msgstr "Courriel validé"
@@ -1107,7 +1119,7 @@ msgstr "Le courriel ne peut être vide"
 msgid "Email invitation sent"
 msgstr "Envoi d'une invitation par courriel"
 
-#: src/user/UserPage.js:67
+#: src/user/UserPage.js:63
 msgid "Email successfully sent"
 msgstr "Courriel envoyé avec succès"
 
@@ -1153,7 +1165,7 @@ msgstr "Anglais"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/user/UserPage.js:270
+#: src/user/UserPage.js:252
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -1264,6 +1276,10 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 #: src/guidance/GuidanceTagDetails.js:18
 #~ msgid "For in-depth implementation guidance:"
 #~ msgstr "Pour des conseils approfondis sur la mise en œuvre:"
+
+#: src/user/EmailUpdatesSwitch.js:64
+msgid "For organization admins interested in receiving email updates on new activity in their organizations."
+msgstr "Pour les administrateurs d'organisations qui souhaitent recevoir des mises à jour par courrier électronique sur les nouvelles activités de leur organisation."
 
 #: src/guidance/GuidanceTagDetails.js:43
 #~ msgid "For technical implementation guidance:"
@@ -1653,7 +1669,7 @@ msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
 #: src/admin/SuperAdminUserList.js:111
-#: src/user/UserPage.js:117
+#: src/user/UserPage.js:109
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
@@ -1704,7 +1720,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPhoneNumber.js:67
 #: src/user/EditableUserPhoneNumber.js:118
 #: src/user/EditableUserTFAMethod.js:76
-#: src/user/UserPage.js:116
+#: src/user/UserPage.js:108
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
@@ -1725,6 +1741,7 @@ msgstr "Incorrect signUp.result typename."
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
 
+#: src/user/EmailUpdatesSwitch.js:50
 #: src/user/InsideUserSwitch.js:54
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
@@ -1745,6 +1762,7 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserEmail.js:73
 #: src/user/EditableUserLanguage.js:52
 #: src/user/EditableUserTFAMethod.js:77
+#: src/user/EmailUpdatesSwitch.js:51
 #: src/user/InsideUserSwitch.js:55
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
@@ -3469,7 +3487,7 @@ msgstr "Les présentes conditions générales sont régies et interprétées en 
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {0} ?"
 
-#: src/user/UserPage.js:264
+#: src/user/UserPage.js:247
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
@@ -3563,7 +3581,7 @@ msgid "Tracker HSTS and HTTPS results display incorrectly when a domain has a no
 msgstr "Les résultats de suivi des domaines HSTS et HTTPS s’affichent incorrectement lorsqu’un domaine possède un sous-domaine WWW qui ne se conforme pas aux règles. Vérifiez votre sous-domaine WWW si vos résultats vous semblent incorrects. Par exemple, les résultats que l’on obtient pour le site www.canada.ca dans la plateforme de suivi sont inclus dans les résultats pour le site canada.ca. Les travaux sont en cours pour séparer les résultats."
 
 #: src/admin/SuperAdminUserList.js:92
-#: src/user/UserPage.js:96
+#: src/user/UserPage.js:89
 msgid "Tracker account has been successfully closed."
 msgstr "Le compte du traqueur a été fermé avec succès."
 
@@ -3617,7 +3635,7 @@ msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/admin/SuperAdminUserList.js:101
-#: src/user/UserPage.js:107
+#: src/user/UserPage.js:99
 msgid "Unable to close the account."
 msgstr "Impossible de fermer le compte."
 
@@ -3679,7 +3697,7 @@ msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
 msgid "Unable to send password reset link to email."
 msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
 
-#: src/user/UserPage.js:58
+#: src/user/UserPage.js:54
 msgid "Unable to send verification email"
 msgstr "Impossible d'envoyer l'e-mail de vérification"
 
@@ -3701,6 +3719,10 @@ msgstr "Impossible de mettre à jour le mot de passe"
 #: src/admin/OrganizationInformation.js:160
 msgid "Unable to update this organization."
 msgstr "Impossible de mettre à jour cette organisation."
+
+#: src/user/EmailUpdatesSwitch.js:41
+msgid "Unable to update to your Email Updates status, please try again."
+msgstr "Impossible de mettre à jour votre statut de mise à jour par courriel, veuillez réessayer."
 
 #: src/user/EditableUserTFAMethod.js:67
 msgid "Unable to update to your TFA send method, please try again."
@@ -3808,7 +3830,7 @@ msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
 #: src/admin/SuperAdminUserList.js:423
-#: src/user/UserPage.js:278
+#: src/user/UserPage.js:255
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
@@ -3869,7 +3891,7 @@ msgstr "Chaîne vérifiée sans signature SHA1"
 msgid "Verify"
 msgstr "Vérifier"
 
-#: src/user/UserPage.js:213
+#: src/user/UserPage.js:199
 msgid "Verify Account"
 msgstr "Vérifier le compte"
 
@@ -4096,6 +4118,10 @@ msgstr "Vous avez mis à jour avec succès votre méthode d'envoi de TFA."
 #: src/user/EditableUserDisplayName.js:52
 msgid "You have successfully updated your display name."
 msgstr "Vous avez réussi à mettre à jour votre nom d'affichage."
+
+#: src/user/EmailUpdatesSwitch.js:29
+msgid "You have successfully updated your email update preference."
+msgstr "Vous avez mis à jour vos préférences de mise à jour de l'email avec succès."
 
 #: src/user/EditableUserEmail.js:52
 msgid "You have successfully updated your email."

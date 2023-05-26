@@ -2443,6 +2443,9 @@ export const getTypeNames = () => gql`
     # Does the user want to see new features in progress.
     insideUser: Boolean
 
+    # Does the user want to receive update emails.
+    receiveUpdateEmails: Boolean
+
     # Users affiliations to various organizations.
     affiliations(
       # Ordering options for affiliation connections.
@@ -3794,6 +3797,10 @@ export const getTypeNames = () => gql`
 
     # The updated boolean which represents if the user wants to see features in progress.
     insideUser: Boolean
+
+    # The updated boolean which represents if the user wants to receive update emails.
+    receiveUpdateEmails: Boolean
+
     clientMutationId: String
   }
 

@@ -1,10 +1,10 @@
-import {GraphQLString, GraphQLBoolean} from 'graphql'
-import {mutationWithClientMutationId} from 'graphql-relay'
-import {GraphQLEmailAddress} from 'graphql-scalars'
-import {t} from '@lingui/macro'
+import { GraphQLString, GraphQLBoolean } from 'graphql'
+import { mutationWithClientMutationId } from 'graphql-relay'
+import { GraphQLEmailAddress } from 'graphql-scalars'
+import { t } from '@lingui/macro'
 
-import {LanguageEnums, TfaSendMethodEnum} from '../../enums'
-import {updateUserProfileUnion} from '../unions'
+import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
+import { updateUserProfileUnion } from '../unions'
 
 export const updateUserProfile = new mutationWithClientMutationId({
   name: 'UpdateUserProfile',
@@ -21,18 +21,19 @@ export const updateUserProfile = new mutationWithClientMutationId({
     },
     preferredLang: {
       type: LanguageEnums,
-      description:
-        'The updated preferred language the user wishes to change to.',
+      description: 'The updated preferred language the user wishes to change to.',
     },
     tfaSendMethod: {
       type: TfaSendMethodEnum,
-      description:
-        'The method in which the user wishes to have their TFA code sent via.',
+      description: 'The method in which the user wishes to have their TFA code sent via.',
     },
     insideUser: {
       type: GraphQLBoolean,
-      description:
-        'The updated boolean which represents if the user wants to see features in progress.',
+      description: 'The updated boolean which represents if the user wants to see features in progress.',
+    },
+    receiveUpdateEmails: {
+      type: GraphQLBoolean,
+      description: 'The updated boolean which represents if the user wants to receive update emails.',
     },
   }),
   outputFields: () => ({
@@ -52,10 +53,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
       transaction,
       userKey,
       request,
-      auth: {tokenize, userRequired},
-      loaders: {loadUserByKey, loadUserByUserName},
-      notify: {sendVerificationEmail},
-      validators: {cleanseInput},
+      auth: { tokenize, userRequired },
+      loaders: { loadUserByKey, loadUserByUserName },
+      notify: { sendVerificationEmail },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse Input
@@ -64,6 +65,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const preferredLang = cleanseInput(args.preferredLang)
     const subTfaSendMethod = cleanseInput(args.tfaSendMethod)
     const insideUserBool = args.insideUser
+    const receiveUpdateEmailsBool = args.receiveUpdateEmails
 
     // Get user info from DB
     const user = await userRequired()
@@ -72,9 +74,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     if (userName !== '') {
       const checkUser = await loadUserByUserName.load(userName)
       if (typeof checkUser !== 'undefined') {
-        console.warn(
-          `User: ${userKey} attempted to update their username, but the username is already in use.`,
-        )
+        console.warn(`User: ${userKey} attempted to update their username, but the username is already in use.`)
         return {
           _type: 'error',
           code: 400,
@@ -96,12 +96,8 @@ export const updateUserProfile = new mutationWithClientMutationId({
         RETURN e.permission
       `
       } catch (err) {
-        console.error(
-          `Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`,
-        )
-        throw new Error(
-          i18n._(t`Unable to verify if user is an admin, please try again.`),
-        )
+        console.error(`Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`)
+        throw new Error(i18n._(t`Unable to verify if user is an admin, please try again.`))
       }
 
       if (userAdmin.count > 0) {
@@ -111,9 +107,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
         return {
           _type: 'error',
           code: 403,
-          description: i18n._(
-            t`Permission Denied: Multi-factor authentication is required for admin accounts`,
-          ),
+          description: i18n._(t`Permission Denied: Multi-factor authentication is required for admin accounts`),
         }
       }
     }
@@ -123,10 +117,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       tfaSendMethod = 'phone'
     } else if (subTfaSendMethod === 'email' && user.emailValidated) {
       tfaSendMethod = 'email'
-    } else if (
-      subTfaSendMethod === 'none' ||
-      typeof user.tfaSendMethod === 'undefined'
-    ) {
+    } else if (subTfaSendMethod === 'none' || typeof user.tfaSendMethod === 'undefined') {
       tfaSendMethod = 'none'
     } else {
       tfaSendMethod = user.tfaSendMethod
@@ -146,10 +137,9 @@ export const updateUserProfile = new mutationWithClientMutationId({
       preferredLang: preferredLang || user.preferredLang,
       tfaSendMethod: tfaSendMethod,
       emailValidated,
-      insideUser:
-        typeof insideUserBool !== 'undefined'
-          ? insideUserBool
-          : user?.insideUser,
+      insideUser: typeof insideUserBool !== 'undefined' ? insideUserBool : user?.insideUser,
+      receiveUpdateEmails:
+        typeof receiveUpdateEmailsBool !== 'undefined' ? receiveUpdateEmailsBool : user?.receiveUpdateEmails,
     }
 
     // Setup Transaction
@@ -166,18 +156,14 @@ export const updateUserProfile = new mutationWithClientMutationId({
         `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred when user: ${userKey} attempted to update their profile: ${err}`,
-      )
+      console.error(`Trx step error occurred when user: ${userKey} attempted to update their profile: ${err}`)
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred when user: ${userKey} attempted to update their profile: ${err}`,
-      )
+      console.error(`Trx commit error occurred when user: ${userKey} attempted to update their profile: ${err}`)
       throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
@@ -185,11 +171,11 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const returnUser = await loadUserByKey.load(userKey)
 
     if (changedUserName) {
-      const token = tokenize({parameters: {userKey: returnUser._key}})
+      const token = tokenize({ parameters: { userKey: returnUser._key } })
 
       const verifyUrl = `https://${request.get('host')}/validate/${token}`
 
-      await sendVerificationEmail({user: returnUser, verifyUrl})
+      await sendVerificationEmail({ user: returnUser, verifyUrl })
     }
 
     console.info(`User: ${userKey} successfully updated their profile.`)

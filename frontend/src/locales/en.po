@@ -106,13 +106,13 @@ msgid "Account"
 msgstr "Account"
 
 #: src/admin/SuperAdminUserList.js:91
-#: src/user/UserPage.js:94
+#: src/user/UserPage.js:88
 msgid "Account Closed Successfully"
 msgstr "Account Closed Successfully"
 
 #: src/app/App.js:101
 #: src/app/FloatingMenu.js:177
-#: src/user/UserPage.js:150
+#: src/user/UserPage.js:137
 msgid "Account Settings"
 msgstr "Account Settings"
 
@@ -195,7 +195,7 @@ msgstr "Admin Profile"
 #~ msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
 #~ msgstr "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
 
-#: src/user/UserPage.js:175
+#: src/user/UserPage.js:163
 msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Admin accounts must activate a multi-factor authentication option."
 
@@ -260,6 +260,10 @@ msgstr "An error occurred while updating your display name."
 msgid "An error occurred while updating your email address."
 msgstr "An error occurred while updating your email address."
 
+#: src/user/EmailUpdatesSwitch.js:17
+msgid "An error occurred while updating your email update preference."
+msgstr "An error occurred while updating your email update preference."
+
 #: src/user/InsideUserSwitch.js:19
 msgid "An error occurred while updating your inside user preference."
 msgstr "An error occurred while updating your inside user preference."
@@ -291,7 +295,7 @@ msgstr "An error occurred while verifying your phone number."
 #: src/admin/UserListModal.js:140
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:56
-#: src/user/UserPage.js:83
+#: src/user/UserPage.js:77
 msgid "An error occurred."
 msgstr "An error occurred."
 
@@ -422,7 +426,7 @@ msgid "Canadians rely on the Government of Canada to provide secure digital serv
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
 #: src/admin/SuperAdminUserList.js:434
-#: src/user/UserPage.js:289
+#: src/user/UserPage.js:260
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -482,7 +486,7 @@ msgstr "Changes Required for ITPIN Compliance"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 
-#: src/user/UserPage.js:68
+#: src/user/UserPage.js:64
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Check your associated Tracker email for the verification link"
 
@@ -526,8 +530,8 @@ msgstr "Close"
 
 #: src/admin/SuperAdminUserList.js:371
 #: src/admin/SuperAdminUserList.js:404
-#: src/user/UserPage.js:229
-#: src/user/UserPage.js:260
+#: src/user/UserPage.js:216
+#: src/user/UserPage.js:243
 msgid "Close Account"
 msgstr "Close Account"
 
@@ -568,7 +572,7 @@ msgstr "Configuration requirements for web sites and services completely met"
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserPhoneNumber.js:188
 #: src/user/EditableUserPhoneNumber.js:246
-#: src/user/UserPage.js:298
+#: src/user/UserPage.js:264
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -1097,6 +1101,14 @@ msgstr "Email Sent"
 msgid "Email Summary"
 msgstr "Email Summary"
 
+#: src/user/EmailUpdatesSwitch.js:82
+msgid "Email Updates"
+msgstr "Email Updates"
+
+#: src/user/EmailUpdatesSwitch.js:28
+msgid "Email Updates status changed"
+msgstr "Email Updates status changed"
+
 #: src/user/EditableUserTFAMethod.js:111
 msgid "Email Validated"
 msgstr "Email Validated"
@@ -1115,7 +1127,7 @@ msgstr "Email cannot be empty"
 msgid "Email invitation sent"
 msgstr "Email invitation sent"
 
-#: src/user/UserPage.js:67
+#: src/user/UserPage.js:63
 msgid "Email successfully sent"
 msgstr "Email successfully sent"
 
@@ -1169,7 +1181,7 @@ msgstr "English"
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 
-#: src/user/UserPage.js:270
+#: src/user/UserPage.js:252
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 
@@ -1284,6 +1296,10 @@ msgstr "For details related to terms pertaining to privacy, please refer to"
 #: src/guidance/GuidanceTagDetails.js:18
 #~ msgid "For in-depth implementation guidance:"
 #~ msgstr "For in-depth implementation guidance:"
+
+#: src/user/EmailUpdatesSwitch.js:64
+msgid "For organization admins interested in receiving email updates on new activity in their organizations."
+msgstr "For organization admins interested in receiving email updates on new activity in their organizations."
 
 #: src/guidance/GuidanceTagDetails.js:43
 #~ msgid "For technical implementation guidance:"
@@ -1681,7 +1697,7 @@ msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
 #: src/admin/SuperAdminUserList.js:111
-#: src/user/UserPage.js:117
+#: src/user/UserPage.js:109
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
@@ -1732,7 +1748,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPhoneNumber.js:67
 #: src/user/EditableUserPhoneNumber.js:118
 #: src/user/EditableUserTFAMethod.js:76
-#: src/user/UserPage.js:116
+#: src/user/UserPage.js:108
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
 
@@ -1753,6 +1769,7 @@ msgstr "Incorrect signUp.result typename."
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
 
+#: src/user/EmailUpdatesSwitch.js:50
 #: src/user/InsideUserSwitch.js:54
 msgid "Incorrect update method received."
 msgstr "Incorrect update method received."
@@ -1773,6 +1790,7 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserEmail.js:73
 #: src/user/EditableUserLanguage.js:52
 #: src/user/EditableUserTFAMethod.js:77
+#: src/user/EmailUpdatesSwitch.js:51
 #: src/user/InsideUserSwitch.js:55
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
@@ -3507,7 +3525,7 @@ msgstr "These terms and conditions shall be governed by and interpreted under th
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 
-#: src/user/UserPage.js:264
+#: src/user/UserPage.js:247
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 
@@ -3609,7 +3627,7 @@ msgid "Tracker HSTS and HTTPS results display incorrectly when a domain has a no
 msgstr "Tracker HSTS and HTTPS results display incorrectly when a domain has a non-compliant WWW subdomain. Check your WWW subdomain if your results appear incorrect. For example, the results for www.canada.ca in the Tracker platform are included in the results for canada.ca. Work is in progress to separate the results."
 
 #: src/admin/SuperAdminUserList.js:92
-#: src/user/UserPage.js:96
+#: src/user/UserPage.js:89
 msgid "Tracker account has been successfully closed."
 msgstr "Tracker account has been successfully closed."
 
@@ -3663,7 +3681,7 @@ msgid "Unable to change user role, please try again."
 msgstr "Unable to change user role, please try again."
 
 #: src/admin/SuperAdminUserList.js:101
-#: src/user/UserPage.js:107
+#: src/user/UserPage.js:99
 msgid "Unable to close the account."
 msgstr "Unable to close the account."
 
@@ -3725,7 +3743,7 @@ msgstr "Unable to reset your password, please try again."
 msgid "Unable to send password reset link to email."
 msgstr "Unable to send password reset link to email."
 
-#: src/user/UserPage.js:58
+#: src/user/UserPage.js:54
 msgid "Unable to send verification email"
 msgstr "Unable to send verification email"
 
@@ -3747,6 +3765,10 @@ msgstr "Unable to update password"
 #: src/admin/OrganizationInformation.js:160
 msgid "Unable to update this organization."
 msgstr "Unable to update this organization."
+
+#: src/user/EmailUpdatesSwitch.js:41
+msgid "Unable to update to your Email Updates status, please try again."
+msgstr "Unable to update to your Email Updates status, please try again."
 
 #: src/user/EditableUserTFAMethod.js:67
 msgid "Unable to update to your TFA send method, please try again."
@@ -3854,7 +3876,7 @@ msgid "User Affiliations"
 msgstr "User Affiliations"
 
 #: src/admin/SuperAdminUserList.js:423
-#: src/user/UserPage.js:278
+#: src/user/UserPage.js:255
 msgid "User Email"
 msgstr "User Email"
 
@@ -3915,7 +3937,7 @@ msgstr "Verified Chain Free of SHA1 Signature"
 msgid "Verify"
 msgstr "Verify"
 
-#: src/user/UserPage.js:213
+#: src/user/UserPage.js:199
 msgid "Verify Account"
 msgstr "Verify Account"
 
@@ -4154,6 +4176,10 @@ msgstr "You have successfully updated your TFA send method."
 #: src/user/EditableUserDisplayName.js:52
 msgid "You have successfully updated your display name."
 msgstr "You have successfully updated your display name."
+
+#: src/user/EmailUpdatesSwitch.js:29
+msgid "You have successfully updated your email update preference."
+msgstr "You have successfully updated your email update preference."
 
 #: src/user/EditableUserEmail.js:52
 msgid "You have successfully updated your email."
