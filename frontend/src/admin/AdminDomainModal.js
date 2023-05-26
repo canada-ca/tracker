@@ -37,7 +37,6 @@ import { useMutation } from '@apollo/client'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
-import { ABTestVariant, ABTestingWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
   const {
@@ -327,62 +326,58 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                       </Box>
                     )}
                   />
-                  <ABTestingWrapper insiderVariantName="B">
-                    <ABTestVariant name="B">
+                  <Flex align="center">
+                    <Tooltip label={t`Prevent this domain from being counted in your organization's summaries.`}>
+                      <QuestionOutlineIcon tabIndex={0} />
+                    </Tooltip>
+                    <label>
+                      <Switch
+                        isFocusable={true}
+                        name="hideDomain"
+                        mx="2"
+                        defaultChecked={values.hideDomain}
+                        onChange={handleChange}
+                      />
+                    </label>
+                    <Badge variant="outline" color="gray.900" p="1.5">
+                      <Trans>Hide domain</Trans>
+                    </Badge>
+                  </Flex>
+                  {permission === 'SUPER_ADMIN' && (
+                    <Box>
                       <Flex align="center">
-                        <Tooltip label={t`Prevent this domain from being counted in your organization's summaries.`}>
+                        <Tooltip
+                          label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
+                        >
                           <QuestionOutlineIcon tabIndex={0} />
                         </Tooltip>
                         <label>
                           <Switch
+                            colorScheme="red"
                             isFocusable={true}
-                            name="hideDomain"
+                            name="archiveDomain"
                             mx="2"
-                            defaultChecked={values.hideDomain}
+                            defaultChecked={values.archiveDomain}
                             onChange={handleChange}
                           />
                         </label>
                         <Badge variant="outline" color="gray.900" p="1.5">
-                          <Trans>Hide domain</Trans>
+                          <Trans>Archive domain</Trans>
                         </Badge>
                       </Flex>
-                      {permission === 'SUPER_ADMIN' && (
-                        <Box>
-                          <Flex align="center">
-                            <Tooltip
-                              label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
-                            >
-                              <QuestionOutlineIcon tabIndex={0} />
-                            </Tooltip>
-                            <label>
-                              <Switch
-                                colorScheme="red"
-                                isFocusable={true}
-                                name="archiveDomain"
-                                mx="2"
-                                defaultChecked={values.archiveDomain}
-                                onChange={handleChange}
-                              />
-                            </label>
-                            <Badge variant="outline" color="gray.900" p="1.5">
-                              <Trans>Archive domain</Trans>
-                            </Badge>
-                          </Flex>
 
-                          <Text fontSize="sm">
-                            {orgCount > 0 ? (
-                              <Trans>Note: This will affect results for {orgCount} organizations</Trans>
-                            ) : (
-                              <Trans>Note: This could affect results for multiple organizations</Trans>
-                            )}
-                          </Text>
-                        </Box>
-                      )}
-                      <Text>
-                        <Trans>Please allow up to 24 hours for summaries to reflect any changes.</Trans>
+                      <Text fontSize="sm">
+                        {orgCount > 0 ? (
+                          <Trans>Note: This will affect results for {orgCount} organizations</Trans>
+                        ) : (
+                          <Trans>Note: This could affect results for multiple organizations</Trans>
+                        )}
                       </Text>
-                    </ABTestVariant>
-                  </ABTestingWrapper>
+                    </Box>
+                  )}
+                  <Text>
+                    <Trans>Please allow up to 24 hours for summaries to reflect any changes.</Trans>
+                  </Text>
                 </Stack>
               </ModalBody>
 
