@@ -4,7 +4,7 @@ RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --re
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.10.7-slim-bullseye AS python-builder
+FROM python:3.10.11-slim-bullseye AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -26,7 +26,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.10.7-slim-bullseye
+FROM python:3.10.11-slim-bullseye
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
