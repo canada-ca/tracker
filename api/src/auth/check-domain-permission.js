@@ -51,5 +51,15 @@ export const checkDomainPermission =
       throw new Error(i18n._(t`Permission check error. Unable to request domain information.`))
     }
 
-    return userAffiliatedClaims
+    let affiliated
+    try {
+      affiliated = await userAffiliatedClaims.next()
+    } catch (err) {
+      console.error(
+        `Cursor error when retrieving affiliated organization claims for user: ${userKey} and domain: ${domainId}: ${err}`,
+      )
+      throw new Error(i18n._(t`Permission check error. Unable to request domain information.`))
+    }
+
+    return affiliated
   }
