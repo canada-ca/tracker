@@ -2,7 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: start_testdb
     entrypoint: /bin/sh
-    args: ["-c", "docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb"]
+    args: ["-c", "docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.10.4"]
 
   - name: mikewilliamson/wait-for
     id: wait_testdb
