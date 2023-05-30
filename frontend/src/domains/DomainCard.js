@@ -209,7 +209,7 @@ export function DomainCard({
           justifyContent="center"
           ml={{ base: 0, md: '4' }}
         >
-          {userHasPermission && (
+          {isEmailValidated() && userHasPermission && (
             <Button
               variant="primary"
               as={RouteLink}
@@ -237,7 +237,7 @@ export function DomainCard({
           )}
         </Stack>
         <Stack ml={4}>
-          {userHasPermission && <ScanDomainButton domainUrl={url} />}
+          {isEmailValidated() && userHasPermission && <ScanDomainButton domainUrl={url} />}
           {isLoggedIn() &&
             (location.pathname.match('my-tracker') ? (
               <IconButton
