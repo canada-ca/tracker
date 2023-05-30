@@ -243,6 +243,15 @@ export const organizationType = new GraphQLObjectType({
         throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
       },
     },
+    userHasPermission: {
+      type: GraphQLBoolean,
+      description:
+        'Value that determines if a user is affiliated with an organization, whether through organization affiliation, verified affiliation, or through super admin status.',
+      resolve: async ({ _id }, _args, { auth: { checkPermission } }) => {
+        const permission = await checkPermission({ orgId: _id })
+        return ['user', 'admin', 'super_admin', 'owner'].includes(permission)
+      },
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Organization object containing information for a given Organization.',

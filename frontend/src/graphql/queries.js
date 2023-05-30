@@ -478,6 +478,7 @@ export const ORG_DETAILS_PAGE = gql`
       name
       acronym
       verified
+      userHasPermission
       summaries {
         https {
           ...RequiredSummaryFields
