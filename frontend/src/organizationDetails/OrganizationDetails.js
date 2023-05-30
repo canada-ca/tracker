@@ -109,7 +109,7 @@ export default function OrganizationDetails() {
         </Heading>
         <ABTestingWrapper insiderVariantName="B">
           <ABTestVariant name="B">
-            {isLoggedIn && (
+            {isLoggedIn() && (
               <>
                 <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
                   <Trans>Request Invite</Trans>
