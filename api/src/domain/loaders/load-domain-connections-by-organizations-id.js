@@ -380,6 +380,21 @@ export const loadDomainConnectionsByOrgId =
             ${domainFilters}
             FILTER domain.archived ${comparison} true
           `
+          } else if (filterValue === 'nxdomain') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.rcode ${comparison} "NXDOMAIN"
+          `
+          } else if (filterValue === 'blocked') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.blocked ${comparison} true
+          `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.webScanPending ${comparison} true
+          `
           } else {
             domainFilters = aql`
             ${domainFilters}

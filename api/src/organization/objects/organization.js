@@ -101,7 +101,18 @@ export const organizationType = new GraphQLObjectType({
         const domains = await loadOrganizationDomainStatuses({
           orgId: _id,
         })
-        const headers = ['domain', 'https', 'hsts', 'ciphers', 'curves', 'protocols', 'spf', 'dkim', 'dmarc']
+        const headers = [
+          'domain',
+          'https',
+          'hsts',
+          'certificates',
+          'protocols',
+          'ciphers',
+          'curves',
+          'spf',
+          'dkim',
+          'dmarc',
+        ]
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
           let csvLine = `${domain.domain}`

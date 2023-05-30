@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Flex, Heading, IconButton, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, IconButton, Switch, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
-
+import { CheckCircleIcon } from '@chakra-ui/icons'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
@@ -28,6 +28,7 @@ export default function Organizations() {
   const [orgsPerPage, setOrgsPerPage] = useState(10)
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
   const [orgInfo, setOrgInfo] = useState({})
+  const [isVerified, setIsVerified] = useState(true)
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -45,6 +46,7 @@ export default function Organizations() {
         direction: orderDirection,
         search: debouncedSearchTerm,
         includeSuperAdminOrg: false,
+        isVerified,
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
@@ -166,6 +168,16 @@ export default function Organizations() {
           placeholder={t`Search for an organization`}
           onToggle={onToggle}
         />
+        <Flex align="center" mb="2">
+          <Switch
+            isFocusable={true}
+            aria-label="Show only verified organizations"
+            mx="2"
+            defaultChecked={isVerified}
+            onChange={(e) => setIsVerified(e.target.checked)}
+          />
+          <CheckCircleIcon color="blue.500" boxSize="icons.md" />
+        </Flex>
         {orgList}
         <RelayPaginationControls
           onlyPagination={false}

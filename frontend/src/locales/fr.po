@@ -65,7 +65,7 @@ msgstr "Une requête DNS pour ce service a donné lieu au code d'erreur suivant 
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "Un domaine ne peut être supprimé que pour l'une des raisons ci-dessous. Pour qu'un domaine n'existe plus, il doit être supprimé du DNS. Si vous devez supprimer ce domaine pour une autre raison, veuillez contacter TBS Cyber Security."
 
-#: src/summaries/SummaryGroup.js:47
+#: src/summaries/TierOneSummaries.js:18
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 msgstr "Une politique DMARC minimale de \"p=none\" avec au moins une adresse définie comme destinataire des rapports agrégés."
 
@@ -106,13 +106,13 @@ msgid "Account"
 msgstr "Compte"
 
 #: src/admin/SuperAdminUserList.js:91
-#: src/user/UserPage.js:94
+#: src/user/UserPage.js:88
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
 #: src/app/App.js:101
 #: src/app/FloatingMenu.js:177
-#: src/user/UserPage.js:150
+#: src/user/UserPage.js:137
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
@@ -195,7 +195,7 @@ msgstr "Profil de l'administrateur"
 #~ msgid "Admin accounts must activate a multi-factor authentication option, <0>please activate MFA</0>."
 #~ msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle, <0>s'il vous plaît activer MFA</0>."
 
-#: src/user/UserPage.js:175
+#: src/user/UserPage.js:163
 msgid "Admin accounts must activate a multi-factor authentication option."
 msgstr "Les comptes administrateurs doivent activer une option d'authentification multifactorielle."
 
@@ -203,7 +203,7 @@ msgstr "Les comptes administrateurs doivent activer une option d'authentificatio
 msgid "Admins of an organization can add domains to their list."
 msgstr "Les administrateurs d'une organisation peuvent ajouter des domaines à leur liste."
 
-#: src/admin/SuperAdminUserList.js:354
+#: src/admin/SuperAdminUserList.js:356
 msgid "Affiliations:"
 msgstr "Affiliations :"
 
@@ -260,9 +260,17 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre nom d'afficha
 msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
 
+#: src/user/EmailUpdatesSwitch.js:17
+msgid "An error occurred while updating your email update preference."
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences de mise à jour du courrier électronique."
+
 #: src/user/InsideUserSwitch.js:19
-msgid "An error occurred while updating your insider preference."
-msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'initié."
+msgid "An error occurred while updating your inside user preference."
+msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'utilisateur interne."
+
+#: src/user/InsideUserSwitch.js:19
+#~ msgid "An error occurred while updating your insider preference."
+#~ msgstr "Une erreur s'est produite lors de la mise à jour de vos préférences d'initié."
 
 #: src/user/EditableUserLanguage.js:20
 msgid "An error occurred while updating your language."
@@ -287,7 +295,7 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 #: src/admin/UserListModal.js:140
 #: src/auth/TwoFactorAuthenticatePage.js:29
 #: src/createOrganization/CreateOrganizationPage.js:56
-#: src/user/UserPage.js:83
+#: src/user/UserPage.js:77
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -360,6 +368,11 @@ msgstr "Authentifier"
 msgid "BETA"
 msgstr "BETA"
 
+#: src/domains/DomainsPage.js:177
+#: src/organizationDetails/OrganizationDomains.js:314
+msgid "BLOCKED"
+msgstr "BLOQUÉ"
+
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
 msgid "Back"
@@ -383,6 +396,7 @@ msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de
 
 #: src/domains/DomainCard.js:137
 #: src/guidance/WebGuidance.js:83
+#: src/organizationDetails/OrganizationDomains.js:100
 msgid "Blocked"
 msgstr "Bloqué"
 
@@ -411,8 +425,8 @@ msgstr "Par défaut, nos scanners vérifient les domaines se terminant par \".gc
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Les Canadiens comptent sur le gouvernement du Canada pour fournir des services numériques sécurisés. La Politique sur les services et le numérique guide les services en ligne du gouvernement pour qu'ils adoptent de bonnes pratiques de sécurité pour les pratiques décrites dans les services de <0>courriel</0> et les services <1>Web</1>. Suivez l'évolution de la sécurisation des sites gouvernementaux."
 
-#: src/admin/SuperAdminUserList.js:432
-#: src/user/UserPage.js:289
+#: src/admin/SuperAdminUserList.js:434
+#: src/user/UserPage.js:260
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -471,7 +485,7 @@ msgstr "Changements requis pour la mise en conformité ITPIN"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changements requis pour la conformité aux exigences de configuration de la gestion des sites et services Web."
 
-#: src/user/UserPage.js:68
+#: src/user/UserPage.js:64
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Vérifiez le lien de vérification dans votre courriel de suivi associé."
 
@@ -513,10 +527,10 @@ msgstr "Dégager"
 msgid "Close"
 msgstr "Fermer"
 
-#: src/admin/SuperAdminUserList.js:369
-#: src/admin/SuperAdminUserList.js:402
-#: src/user/UserPage.js:229
-#: src/user/UserPage.js:260
+#: src/admin/SuperAdminUserList.js:371
+#: src/admin/SuperAdminUserList.js:404
+#: src/user/UserPage.js:216
+#: src/user/UserPage.js:243
 msgid "Close Account"
 msgstr "Fermer le compte"
 
@@ -533,15 +547,23 @@ msgstr "Recueillir et analyser les rapports DMARC."
 msgid "Comparison"
 msgstr "Comparaison"
 
-#: src/summaries/SummaryGroup.js:24
+#: src/summaries/SummaryGroup.js:18
 msgid "Compliant"
 msgstr "Conforme"
+
+#: src/summaries/TierThreeSummaries.js:18
+msgid "Configuration requirements for email services completely met"
+msgstr "Les exigences de configuration pour les services de courrier électronique sont entièrement satisfaites"
+
+#: src/summaries/TierThreeSummaries.js:12
+msgid "Configuration requirements for web sites and services completely met"
+msgstr "Les exigences de configuration des sites et services web sont entièrement satisfaites"
 
 #: src/admin/AdminDomainModal.js:391
 #: src/admin/AdminDomains.js:386
 #: src/admin/OrganizationInformation.js:393
 #: src/admin/OrganizationInformation.js:520
-#: src/admin/SuperAdminUserList.js:441
+#: src/admin/SuperAdminUserList.js:443
 #: src/admin/UserListModal.js:274
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/user/EditableUserDisplayName.js:168
@@ -549,7 +571,7 @@ msgstr "Conforme"
 #: src/user/EditableUserPassword.js:182
 #: src/user/EditableUserPhoneNumber.js:188
 #: src/user/EditableUserPhoneNumber.js:246
-#: src/user/UserPage.js:298
+#: src/user/UserPage.js:264
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -628,7 +650,7 @@ msgid "Create"
 msgstr "Créer"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:127
+#: src/app/TopBanner.js:129
 #: src/auth/CreateUserPage.js:243
 msgid "Create Account"
 msgstr "Créer un compte"
@@ -724,6 +746,14 @@ msgstr "Sélecteurs DKIM:"
 msgid "DKIM Status"
 msgstr "Statut DKIM"
 
+#: src/summaries/TierTwoSummaries.js:53
+msgid "DKIM Summary"
+msgstr "Résumé DKIM"
+
+#: src/summaries/TierTwoSummaries.js:53
+msgid "DKIM record and keys are deployed and valid"
+msgstr "L'enregistrement DKIM et les clés sont déployés et valides"
+
 #: src/guidance/EmailGuidance.js:218
 #~ msgid "DKIM record could not be found for this selector."
 #~ msgstr "Un enregistrement DKIM n'a pas pu être trouvé pour ce sélecteur."
@@ -737,11 +767,11 @@ msgstr "DMARC"
 msgid "DMARC Configuration"
 msgstr "Configuration de DMARC"
 
-#: src/summaries/SummaryGroup.js:46
+#: src/summaries/TierOneSummaries.js:17
 msgid "DMARC Configuration Summary"
 msgstr "Résumé de la configuration DMARC"
 
-#: src/organizations/OrganizationCard.js:130
+#: src/organizations/OrganizationCard.js:93
 msgid "DMARC Configured"
 msgstr "DMARC configuré"
 
@@ -761,7 +791,7 @@ msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
 #: src/organizationDetails/OrganizationDetails.js:140
-#: src/user/MyTrackerPage.js:96
+#: src/user/MyTrackerPage.js:79
 msgid "DMARC Phases"
 msgstr "Phases DMARC"
 
@@ -788,9 +818,17 @@ msgstr "Statut DMARC"
 msgid "DMARC Summaries"
 msgstr "Résumés DMARC"
 
+#: src/summaries/TierTwoSummaries.js:56
+msgid "DMARC Summary"
+msgstr "Résumé DMARC"
+
 #: src/summaries/SummaryGroup.js:47
 #~ msgid "DMARC phase summary"
 #~ msgstr "Résumé de la phase DMARC"
+
+#: src/summaries/TierTwoSummaries.js:57
+msgid "DMARC policy of quarantine or reject, and all messages from non-mail domain is rejected"
+msgstr "Politique DMARC de mise en quarantaine ou de rejet, et rejet de tous les messages provenant d'un domaine autre que la messagerie."
 
 #: src/dmarc/DmarcReportPage.js:185
 #: src/guidance/EmailGuidance.js:272
@@ -967,7 +1005,7 @@ msgstr "Domaine:"
 #: src/organizationDetails/OrganizationDomains.js:108
 #: src/summaries/Doughnut.js:50
 #: src/summaries/Doughnut.js:75
-#: src/user/MyTrackerPage.js:99
+#: src/user/MyTrackerPage.js:82
 msgid "Domains"
 msgstr "Domaines"
 
@@ -1050,6 +1088,18 @@ msgstr "Sécurité du courrier électronique :"
 msgid "Email Sent"
 msgstr "Courriel envoyé"
 
+#: src/summaries/TierThreeSummaries.js:17
+msgid "Email Summary"
+msgstr "Résumé de l'e-mail"
+
+#: src/user/EmailUpdatesSwitch.js:82
+msgid "Email Updates"
+msgstr "Mises à jour par courriel"
+
+#: src/user/EmailUpdatesSwitch.js:28
+msgid "Email Updates status changed"
+msgstr "Changement de statut des mises à jour par courrier électronique"
+
 #: src/user/EditableUserTFAMethod.js:111
 msgid "Email Validated"
 msgstr "Courriel validé"
@@ -1068,7 +1118,7 @@ msgstr "Le courriel ne peut être vide"
 msgid "Email invitation sent"
 msgstr "Envoi d'une invitation par courriel"
 
-#: src/user/UserPage.js:67
+#: src/user/UserPage.js:63
 msgid "Email successfully sent"
 msgstr "Courriel envoyé avec succès"
 
@@ -1110,11 +1160,11 @@ msgid "English"
 msgstr "Anglais"
 
 #: src/admin/OrganizationInformation.js:501
-#: src/admin/SuperAdminUserList.js:413
+#: src/admin/SuperAdminUserList.js:415
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{0}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
-#: src/user/UserPage.js:270
+#: src/user/UserPage.js:252
 msgid "Enter \"{userName}\" below to confirm removal. This field is case-sensitive."
 msgstr "Entrez \"{userName}\" ci-dessous pour confirmer la suppression. Ce champ est sensible à la casse."
 
@@ -1138,8 +1188,8 @@ msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisate
 msgid "Envelope From"
 msgstr "Enveloppe De"
 
-#: src/guidance/WebConnectionResults.js:138
-#: src/guidance/WebConnectionResults.js:178
+#: src/guidance/WebConnectionResults.js:143
+#: src/guidance/WebConnectionResults.js:184
 msgid "Eventually"
 msgstr "Éventuellement"
 
@@ -1189,7 +1239,7 @@ msgstr "Blocs de domaines de faux e-mails (rejet + quarantaine) :"
 msgid "Favourited Domain"
 msgstr "Domaine favori"
 
-#: src/user/InsideUserSwitch.js:88
+#: src/user/InsideUserSwitch.js:87
 msgid "Feature Preview"
 msgstr "Aperçu des fonctionnalités"
 
@@ -1226,11 +1276,15 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 #~ msgid "For in-depth implementation guidance:"
 #~ msgstr "Pour des conseils approfondis sur la mise en œuvre:"
 
+#: src/user/EmailUpdatesSwitch.js:64
+msgid "For organization admins interested in receiving email updates on new activity in their organizations."
+msgstr "Pour les administrateurs d'organisations qui souhaitent recevoir des mises à jour par courrier électronique sur les nouvelles activités de leur organisation."
+
 #: src/guidance/GuidanceTagDetails.js:43
 #~ msgid "For technical implementation guidance:"
 #~ msgstr "Pour des conseils de mise en œuvre technique:"
 
-#: src/user/InsideUserSwitch.js:70
+#: src/user/InsideUserSwitch.js:69
 msgid "For users interested in using new features that are still in progress."
 msgstr "Pour les utilisateurs intéressés par l'utilisation de nouvelles fonctionnalités qui sont encore en cours de développement."
 
@@ -1352,19 +1406,19 @@ msgstr "HSTS"
 #~ msgid "HSTS Age:"
 #~ msgstr "Âge du HSTS:"
 
-#: src/guidance/WebConnectionResults.js:212
+#: src/guidance/WebConnectionResults.js:218
 msgid "HSTS Includes Subdomains"
 msgstr "HSTS inclut les sous-domaines"
 
-#: src/guidance/WebConnectionResults.js:194
+#: src/guidance/WebConnectionResults.js:200
 msgid "HSTS Max Age"
 msgstr "HSTS Âge maximum"
 
-#: src/guidance/WebConnectionResults.js:185
+#: src/guidance/WebConnectionResults.js:191
 msgid "HSTS Parsed"
 msgstr "HSTS analysé"
 
-#: src/guidance/WebConnectionResults.js:203
+#: src/guidance/WebConnectionResults.js:209
 msgid "HSTS Preloaded"
 msgstr "HSTS préchargé"
 
@@ -1395,24 +1449,24 @@ msgstr "Mises à jour HTTP"
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/guidance/WebConnectionResults.js:153
+#: src/guidance/WebConnectionResults.js:159
 msgid "HTTPS (443) Chain"
 msgstr "Chaîne HTTPS (443)"
 
-#: src/summaries/SummaryGroup.js:16
+#: src/summaries/TierOneSummaries.js:11
 msgid "HTTPS Configuration Summary"
 msgstr "Résumé de la configuration HTTPS"
 
-#: src/organizations/OrganizationCard.js:118
+#: src/organizations/OrganizationCard.js:85
 #: src/organizations/Organizations.js:140
 msgid "HTTPS Configured"
 msgstr "HTTPS configuré"
 
-#: src/guidance/WebConnectionResults.js:174
+#: src/guidance/WebConnectionResults.js:180
 msgid "HTTPS Downgrades"
 msgstr "Déclassements HTTPS"
 
-#: src/guidance/WebConnectionResults.js:163
+#: src/guidance/WebConnectionResults.js:169
 msgid "HTTPS Live"
 msgstr "HTTPS Live"
 
@@ -1425,13 +1479,17 @@ msgstr "Scan HTTPS terminé"
 msgid "HTTPS Status"
 msgstr "Statut HTTPS"
 
-#: src/summaries/SummaryGroup.js:17
+#: src/summaries/TierOneSummaries.js:12
 msgid "HTTPS is configured and HTTP connections redirect to HTTPS"
 msgstr "HTTPS est configuré et les connexions HTTP sont redirigées vers HTTPS."
 
 #: src/summaries/SummaryGroup.js:17
 #~ msgid "HTTPS is configured and HTTP connections redirect to HTTPS (ITPIN 6.1.1)"
 #~ msgstr "HTTPS est configuré et les connexions HTTP sont redirigées vers HTTPS (ITPIN 6.1.1)"
+
+#: src/summaries/TierTwoSummaries.js:40
+msgid "HTTPS is configured, HTTP redirects, and HSTS is enabled"
+msgstr "HTTPS est configuré, les redirections HTTP et HSTS sont activés."
 
 #: src/app/RequestScanNotificationHandler.js:90
 msgid "HTTPS scan for domain \"{0}\" has completed."
@@ -1565,8 +1623,8 @@ msgstr "Si vous pensez que cela a été causé par un problème avec Tracker, ve
 msgid "If your organization has no affiliated users within Tracker, contact the <0>TBS Cyber Security</0> to assist in onboarding."
 msgstr "Si votre organisation n'a pas d'utilisateurs affiliés à Suivi, contactez l’<0>équipe responsable de la cybersécurité du SCT</0> pour vous aider à l'intégrer."
 
-#: src/guidance/WebConnectionResults.js:138
-#: src/guidance/WebConnectionResults.js:178
+#: src/guidance/WebConnectionResults.js:141
+#: src/guidance/WebConnectionResults.js:184
 msgid "Immediately"
 msgstr "Immédiatement"
 
@@ -1590,7 +1648,7 @@ msgstr "Mise en œuvre : <0>Conseils sur la configuration sécurisée des protoc
 msgid "Implementation: <0>Implementation guidance: email domain protection (ITSP.40.065 v1.1)</0>"
 msgstr "Mise en œuvre : <0>Conseils de mise en œuvre : protection du domaine de messagerie (ITSP.40.065 v1.1)</0>"
 
-#: src/summaries/SummaryGroup.js:58
+#: src/summaries/SummaryGroup.js:29
 msgid "Implemented"
 msgstr "Mis en œuvre"
 
@@ -1598,12 +1656,17 @@ msgstr "Mis en œuvre"
 msgid "Inactive"
 msgstr "Inactif"
 
+#: src/summaries/TieredSummaries.js:54
+#: src/summaries/TieredSummaries.js:56
+msgid "Include hidden domains in summaries."
+msgstr "Inclure les domaines cachés dans les résumés."
+
 #: src/auth/TwoFactorAuthenticatePage.js:81
 msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
 #: src/admin/SuperAdminUserList.js:111
-#: src/user/UserPage.js:117
+#: src/user/UserPage.js:109
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
@@ -1654,7 +1717,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserPhoneNumber.js:67
 #: src/user/EditableUserPhoneNumber.js:118
 #: src/user/EditableUserTFAMethod.js:76
-#: src/user/UserPage.js:116
+#: src/user/UserPage.js:108
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
@@ -1675,7 +1738,8 @@ msgstr "Incorrect signUp.result typename."
 msgid "Incorrect typename received."
 msgstr "Incorrect typename received."
 
-#: src/user/InsideUserSwitch.js:55
+#: src/user/EmailUpdatesSwitch.js:50
+#: src/user/InsideUserSwitch.js:54
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
 
@@ -1695,7 +1759,8 @@ msgstr "Incorrect updateUserPassword.result typename."
 #: src/user/EditableUserEmail.js:73
 #: src/user/EditableUserLanguage.js:52
 #: src/user/EditableUserTFAMethod.js:77
-#: src/user/InsideUserSwitch.js:56
+#: src/user/EmailUpdatesSwitch.js:51
+#: src/user/InsideUserSwitch.js:55
 msgid "Incorrect updateUserProfile.result typename."
 msgstr "Incorrect updateUserProfile.result typename."
 
@@ -1749,18 +1814,23 @@ msgstr "Les balises informatives mettent en évidence des détails de configurat
 msgid "Initiated By"
 msgstr "Initiée par"
 
-#: src/user/InsideUserSwitch.js:83
-#~ msgid "Inside User"
-#~ msgstr "Utilisateur interne"
+#: src/admin/SuperAdminUserList.js:151
+#: src/admin/SuperAdminUserList.js:351
+msgid "Inside User"
+msgstr "Utilisateur interne"
+
+#: src/user/InsideUserSwitch.js:30
+msgid "Inside user status changed"
+msgstr "Changement du statut d'utilisateur interne"
 
 #: src/admin/SuperAdminUserList.js:151
 #: src/admin/SuperAdminUserList.js:350
-msgid "Insider"
-msgstr "Insider"
+#~ msgid "Insider"
+#~ msgstr "Insider"
 
 #: src/user/InsideUserSwitch.js:31
-msgid "Insider status changed"
-msgstr "Changement de statut d'initié"
+#~ msgid "Insider status changed"
+#~ msgstr "Changement de statut d'initié"
 
 #: src/termsConditions/TermsConditionsPage.js:132
 msgid "Intellectual Property, Copyright and Trademarks"
@@ -1965,6 +2035,10 @@ msgstr "Agrafe obligatoire"
 msgid "NEW"
 msgstr "NOUVEAU"
 
+#: src/domains/DomainsPage.js:176
+msgid "NXDOMAIN"
+msgstr "NXDOMAIN"
+
 #: src/admin/WebCheckPage.js:60
 #: src/createOrganization/CreateOrganizationPage.js:173
 #: src/createOrganization/CreateOrganizationPage.js:178
@@ -2005,8 +2079,8 @@ msgstr "Négatif"
 #~ msgid "Neutral tags highlight relevant configuration details, but are not addressed within policy requirements and have no impact on scoring."
 #~ msgstr "Les balises neutres mettent en évidence les détails pertinents de la configuration, mais ne sont pas traitées dans le cadre des exigences de la politique et n'ont aucun impact sur la notation."
 
-#: src/guidance/WebConnectionResults.js:138
-#: src/guidance/WebConnectionResults.js:178
+#: src/guidance/WebConnectionResults.js:144
+#: src/guidance/WebConnectionResults.js:184
 msgid "Never"
 msgstr "Jamais"
 
@@ -2047,10 +2121,10 @@ msgstr "Nouvelle valeur :"
 #~ msgstr "Suivant"
 
 #: src/guidance/WebConnectionResults.js:126
-#: src/guidance/WebConnectionResults.js:166
-#: src/guidance/WebConnectionResults.js:188
-#: src/guidance/WebConnectionResults.js:206
-#: src/guidance/WebConnectionResults.js:215
+#: src/guidance/WebConnectionResults.js:172
+#: src/guidance/WebConnectionResults.js:194
+#: src/guidance/WebConnectionResults.js:212
+#: src/guidance/WebConnectionResults.js:221
 #: src/guidance/WebTLSResults.js:233
 #: src/guidance/WebTLSResults.js:291
 #: src/guidance/WebTLSResults.js:302
@@ -2070,8 +2144,8 @@ msgid "No DKIM selectors are currently attached to this domain. Please contact a
 msgstr "Aucun sélecteur DKIM n'est actuellement associé à ce domaine. Veuillez contacter un administrateur d'une organisation affiliée pour ajouter des sélecteurs."
 
 #: src/summaries/SummaryGroup.js:67
-msgid "No DMARC phase information available for this organization."
-msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organisation."
+#~ msgid "No DMARC phase information available for this organization."
+#~ msgstr "Aucune information sur la phase DMARC n'est disponible pour cette organisation."
 
 #: src/admin/AdminDomains.js:156
 #: src/domains/DomainsPage.js:89
@@ -2080,8 +2154,8 @@ msgid "No Domains"
 msgstr "Aucun domaine"
 
 #: src/summaries/SummaryGroup.js:37
-msgid "No HTTPS configuration information available for this organization."
-msgstr "Aucune information de configuration HTTPS disponible pour cette organisation."
+#~ msgid "No HTTPS configuration information available for this organization."
+#~ msgstr "Aucune information de configuration HTTPS disponible pour cette organisation."
 
 #: src/admin/WebCheckPage.js:94
 #: src/organizations/Organizations.js:79
@@ -2162,7 +2236,7 @@ msgstr "Aucun utilisateur"
 msgid "No values were supplied when attempting to update organization details."
 msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des détails de l'organisation."
 
-#: src/summaries/SummaryGroup.js:20
+#: src/summaries/SummaryGroup.js:14
 msgid "Non-compliant"
 msgstr "Non conforme"
 
@@ -2179,9 +2253,16 @@ msgstr "Pas après :"
 msgid "Not Before:"
 msgstr "Pas avant :"
 
-#: src/summaries/SummaryGroup.js:50
+#: src/summaries/SummaryGroup.js:25
 msgid "Not Implemented"
 msgstr "Non mis en œuvre"
+
+#: src/guidance/WebConnectionResults.js:139
+#: src/guidance/WebConnectionResults.js:203
+#: src/guidance/WebConnectionResults.js:212
+#: src/guidance/WebConnectionResults.js:221
+msgid "Not available"
+msgstr "Non disponible"
 
 #: src/app/ContactUsPage.js:24
 msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
@@ -2489,7 +2570,7 @@ msgstr "Prod"
 msgid "Protect domains that do not send email - GOV.UK (www.gov.uk)"
 msgstr "Protéger les domaines qui n'envoient pas de courrier électronique - GOV.UK (www.gov.uk)"
 
-#: src/domains/DomainCard.js:188
+#: src/domains/DomainCard.js:187
 #: src/domains/DomainsPage.js:163
 #: src/guidance/WebTLSResults.js:52
 #: src/organizationDetails/OrganizationDomains.js:300
@@ -2723,9 +2804,17 @@ msgstr "Résultats du SPF"
 msgid "SPF Status"
 msgstr "Statut SPF"
 
+#: src/summaries/TierTwoSummaries.js:52
+msgid "SPF Summary"
+msgstr "Résumé du SPF"
+
 #: src/guidance/EmailGuidance.js:167
 #~ msgid "SPF record could not be found during the scan."
 #~ msgstr "L'enregistrement SPF n'a pas pu être trouvé pendant l'analyse."
+
+#: src/summaries/TierTwoSummaries.js:52
+msgid "SPF record is deployed and valid"
+msgstr "L'enregistrement SPF est déployé et valide"
 
 #: src/app/RequestScanNotificationHandler.js:72
 #~ msgid "SSL Scan Complete"
@@ -2742,7 +2831,7 @@ msgstr "Statut SPF"
 
 #: src/organizationDetails/OrganizationDomains.js:95
 msgid "STAGING"
-msgstr "DEV"
+msgstr "DÉV"
 
 #: src/admin/UserListModal.js:265
 msgid "SUPER_ADMIN"
@@ -2763,6 +2852,7 @@ msgstr "Domaine de balayage"
 
 #: src/domains/DomainCard.js:142
 #: src/guidance/GuidancePage.js:140
+#: src/organizationDetails/OrganizationDomains.js:101
 msgid "Scan Pending"
 msgstr "Scan en attente"
 
@@ -2809,7 +2899,7 @@ msgstr "Rechercher un domaine"
 msgid "Search for a tagged organization"
 msgstr "Recherche d'une organisation étiquetée"
 
-#: src/admin/SuperAdminUserList.js:471
+#: src/admin/SuperAdminUserList.js:473
 msgid "Search for a user (email)"
 msgstr "Recherche d'un utilisateur (email)"
 
@@ -2887,7 +2977,7 @@ msgstr "En série :"
 msgid "Services"
 msgstr "Services"
 
-#: src/organizations/OrganizationCard.js:107
+#: src/organizations/OrganizationCard.js:79
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
@@ -2904,15 +2994,15 @@ msgstr "Affichage des données pour la période:"
 msgid "Shows if all the certificates in the bundle provided by the server were sent in the correct order."
 msgstr "Indique si tous les certificats du paquet fourni par le serveur ont été envoyés dans le bon ordre."
 
-#: src/guidance/WebConnectionResults.js:182
+#: src/guidance/WebConnectionResults.js:188
 msgid "Shows if the HSTS (HTTP Strict Transport Security) header is present."
 msgstr "Indique si l'en-tête HSTS (HTTP Strict Transport Security) est présent."
 
-#: src/guidance/WebConnectionResults.js:209
+#: src/guidance/WebConnectionResults.js:215
 msgid "Shows if the HSTS header includes the includeSubdomains directive."
 msgstr "Indique si l'en-tête HSTS inclut la directive includeSubdomains."
 
-#: src/guidance/WebConnectionResults.js:200
+#: src/guidance/WebConnectionResults.js:206
 msgid "Shows if the HSTS header includes the preload directive."
 msgstr "Indique si l'en-tête HSTS inclut la directive preload."
 
@@ -2924,11 +3014,11 @@ msgstr "Indique si la connexion HTTP est active."
 msgid "Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never."
 msgstr "Indique si le point d'extrémité HTTP passe à la mise à niveau HTTPS immédiatement, éventuellement (après la première redirection) ou jamais."
 
-#: src/guidance/WebConnectionResults.js:160
+#: src/guidance/WebConnectionResults.js:166
 msgid "Shows if the HTTPS connection is live."
 msgstr "Indique si la connexion HTTPS est active."
 
-#: src/guidance/WebConnectionResults.js:170
+#: src/guidance/WebConnectionResults.js:176
 msgid "Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, eventually, or never."
 msgstr "Indique si le point de terminaison HTTPS passe en HTTP non sécurisé immédiatement, éventuellement ou jamais."
 
@@ -3029,7 +3119,7 @@ msgstr "Indique si le serveur s'est avéré vulnérable à la faille Heartbleed.
 msgid "Shows if the server was found to be vulnerable to the ROBOT vulnerability."
 msgstr "Indique si le serveur a été jugé vulnérable à la vulnérabilité ROBOT."
 
-#: src/guidance/WebConnectionResults.js:191
+#: src/guidance/WebConnectionResults.js:197
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Indique la durée, en secondes, pendant laquelle l'en-tête HSTS est valide."
 
@@ -3075,7 +3165,7 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 
 #: src/app/App.js:156
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:118
+#: src/app/TopBanner.js:120
 #: src/auth/SignInPage.js:189
 msgid "Sign In"
 msgstr "Se connecter"
@@ -3086,7 +3176,7 @@ msgid "Sign In."
 msgstr "Se connecter."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:106
+#: src/app/TopBanner.js:108
 msgid "Sign Out"
 msgstr "Déconnexion"
 
@@ -3153,7 +3243,7 @@ msgid "Successfully removed user {0}."
 msgstr "L'utilisateur {0} a été supprimé."
 
 #: src/organizationDetails/OrganizationDetails.js:137
-#: src/user/MyTrackerPage.js:93
+#: src/user/MyTrackerPage.js:76
 msgid "Summary"
 msgstr "Résumé"
 
@@ -3201,13 +3291,60 @@ msgstr "Résultats TLS"
 msgid "TLS Scan Complete"
 msgstr "Scan TLS terminé"
 
+#: src/summaries/TierTwoSummaries.js:45
+msgid "TLS Summary"
+msgstr "Résumé TLS"
+
 #: src/app/RequestScanNotificationHandler.js:73
 msgid "TLS scan for domain \"{0}\" has completed."
 msgstr "Le scan TLS pour le domaine \"{0}\" est terminé."
 
-#: src/organizationDetails/OrganizationDomains.js:165
+#: src/organizationDetails/OrganizationDomains.js:168
 msgid "Tag"
 msgstr "Tag"
+
+#: src/organizationDetails/OrganizationDomains.js:304
+msgid "Tag used to show domains as a production environment."
+msgstr "Balise utilisée pour montrer que les domaines sont un environnement de production."
+
+#: src/organizationDetails/OrganizationDomains.js:305
+msgid "Tag used to show domains as a staging environment."
+msgstr "Balise utilisée pour montrer les domaines comme un environnement d'essai."
+
+#: src/organizationDetails/OrganizationDomains.js:306
+msgid "Tag used to show domains as a test environment."
+msgstr "Balise utilisée pour montrer les domaines en tant qu'environnement de test."
+
+#: src/organizationDetails/OrganizationDomains.js:311
+msgid "Tag used to show domains as hidden from affecting the organization summary scores."
+msgstr "Balise utilisée pour indiquer que les domaines sont cachés et n'affectent pas les notes de synthèse de l'organisation."
+
+#: src/organizationDetails/OrganizationDomains.js:303
+msgid "Tag used to show domains as new to the system."
+msgstr "Étiquette utilisée pour indiquer que les domaines sont nouveaux dans le système."
+
+#: src/organizationDetails/OrganizationDomains.js:307
+msgid "Tag used to show domains as web-hosting."
+msgstr "Balise utilisée pour afficher les domaines en tant qu'hébergement web."
+
+#: src/organizationDetails/OrganizationDomains.js:308
+msgid "Tag used to show domains that are not active."
+msgstr "Balise utilisée pour afficher les domaines qui ne sont pas actifs."
+
+#: src/domains/DomainsPage.js:177
+#: src/organizationDetails/OrganizationDomains.js:314
+msgid "Tag used to show domains that are possibly blocked by a firewall."
+msgstr "Balise utilisée pour afficher les domaines susceptibles d'être bloqués par un pare-feu."
+
+#: src/domains/DomainsPage.js:178
+#: src/organizationDetails/OrganizationDomains.js:315
+msgid "Tag used to show domains that have a pending web scan."
+msgstr "Balise utilisée pour afficher les domaines dont l'analyse web est en cours."
+
+#: src/domains/DomainsPage.js:176
+#: src/organizationDetails/OrganizationDomains.js:313
+msgid "Tag used to show domains that have an rcode status of NXDOMAIN"
+msgstr "Balise utilisée pour afficher les domaines dont le code rcode est NXDOMAIN"
 
 #: src/guidance/GuidanceTagDetails.js:47
 msgid "Technical implementation guidance:"
@@ -3329,11 +3466,11 @@ msgstr "Ces paramètres constituent une première étape importante dans la séc
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr "Les présentes conditions générales sont régies et interprétées en vertu des lois du Canada, sans égard aux règles de droit applicables. Les tribunaux du Canada auront la compétence exclusive sur toutes les questions relatives à ces conditions générales."
 
-#: src/admin/SuperAdminUserList.js:406
+#: src/admin/SuperAdminUserList.js:408
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {0} ?"
 
-#: src/user/UserPage.js:264
+#: src/user/UserPage.js:247
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?"
 msgstr "Cette action ne peut être annulée, êtes-vous sûr de vouloir fermer le compte {displayName}?"
 
@@ -3363,7 +3500,7 @@ msgstr "Ce domaine n'existe plus"
 msgid "This field cannot be empty"
 msgstr "Ce champ ne peut pas être vide"
 
-#: src/app/TopBanner.js:90
+#: src/app/TopBanner.js:92
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 
@@ -3374,6 +3511,18 @@ msgstr "Ce service n'est pas un service d'hébergement Web et ne nécessite pas 
 #: src/admin/SuperAdminUserList.js:188
 msgid "This user is not affiliated with any organizations"
 msgstr "Cet utilisateur n'est pas affilié à une quelconque organisation"
+
+#: src/summaries/TieredSummaries.js:47
+msgid "Tier 1: Minimum Requirements"
+msgstr "Niveau 1 : Exigences minimales"
+
+#: src/summaries/TieredSummaries.js:74
+msgid "Tier 2: Improved Posture"
+msgstr "Niveau 2 : Amélioration de la posture"
+
+#: src/summaries/TieredSummaries.js:91
+msgid "Tier 3: Compliance"
+msgstr "Niveau 3 : Conformité"
 
 #: src/admin/AuditLogTable.js:70
 msgid "Time Generated"
@@ -3415,7 +3564,7 @@ msgid "Tracker HSTS and HTTPS results display incorrectly when a domain has a no
 msgstr "Les résultats de suivi des domaines HSTS et HTTPS s’affichent incorrectement lorsqu’un domaine possède un sous-domaine WWW qui ne se conforme pas aux règles. Vérifiez votre sous-domaine WWW si vos résultats vous semblent incorrects. Par exemple, les résultats que l’on obtient pour le site www.canada.ca dans la plateforme de suivi sont inclus dans les résultats pour le site canada.ca. Les travaux sont en cours pour séparer les résultats."
 
 #: src/admin/SuperAdminUserList.js:92
-#: src/user/UserPage.js:96
+#: src/user/UserPage.js:89
 msgid "Tracker account has been successfully closed."
 msgstr "Le compte du traqueur a été fermé avec succès."
 
@@ -3455,8 +3604,8 @@ msgstr "Authentification à deux facteurs"
 msgid "Two-Factor Authentication:"
 msgstr "Authentification à deux facteurs:"
 
-#: src/guidance/WebConnectionResults.js:143
-#: src/guidance/WebConnectionResults.js:219
+#: src/guidance/WebConnectionResults.js:149
+#: src/guidance/WebConnectionResults.js:225
 msgid "URL:"
 msgstr "URL :"
 
@@ -3469,7 +3618,7 @@ msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
 #: src/admin/SuperAdminUserList.js:101
-#: src/user/UserPage.js:107
+#: src/user/UserPage.js:99
 msgid "Unable to close the account."
 msgstr "Impossible de fermer le compte."
 
@@ -3531,7 +3680,7 @@ msgstr "Impossible de réinitialiser votre mot de passe, veuillez réessayer."
 msgid "Unable to send password reset link to email."
 msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
 
-#: src/user/UserPage.js:58
+#: src/user/UserPage.js:54
 msgid "Unable to send verification email"
 msgstr "Impossible d'envoyer l'e-mail de vérification"
 
@@ -3554,6 +3703,10 @@ msgstr "Impossible de mettre à jour le mot de passe"
 msgid "Unable to update this organization."
 msgstr "Impossible de mettre à jour cette organisation."
 
+#: src/user/EmailUpdatesSwitch.js:41
+msgid "Unable to update to your Email Updates status, please try again."
+msgstr "Impossible de mettre à jour votre statut de mise à jour par courriel, veuillez réessayer."
+
 #: src/user/EditableUserTFAMethod.js:67
 msgid "Unable to update to your TFA send method, please try again."
 msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réessayer."
@@ -3562,9 +3715,13 @@ msgstr "Impossible de mettre à jour votre méthode d'envoi TFA, veuillez réess
 msgid "Unable to update to your display name, please try again."
 msgstr "Impossible de mettre à jour votre nom d'affichage, veuillez réessayer."
 
+#: src/user/InsideUserSwitch.js:45
+msgid "Unable to update to your inside user status, please try again."
+msgstr "Impossible de mettre à jour votre statut d'utilisateur interne, veuillez réessayer."
+
 #: src/user/InsideUserSwitch.js:46
-msgid "Unable to update to your insider status, please try again."
-msgstr "Impossible de mettre à jour votre statut d'initié, veuillez réessayer."
+#~ msgid "Unable to update to your insider status, please try again."
+#~ msgstr "Impossible de mettre à jour votre statut d'initié, veuillez réessayer."
 
 #: src/user/EditableUserLanguage.js:42
 msgid "Unable to update to your preferred language, please try again."
@@ -3604,8 +3761,6 @@ msgid "Unknown"
 msgstr "Inconnu"
 
 #: src/summaries/RadialBarChart.js:43
-#: src/summaries/SummaryGroup.js:28
-#: src/summaries/SummaryGroup.js:54
 msgid "Unscanned"
 msgstr "Non balayé"
 
@@ -3657,8 +3812,8 @@ msgstr "Utilisateur"
 msgid "User Affiliations"
 msgstr "Affiliations des utilisateurs"
 
-#: src/admin/SuperAdminUserList.js:421
-#: src/user/UserPage.js:278
+#: src/admin/SuperAdminUserList.js:423
+#: src/user/UserPage.js:255
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
@@ -3719,7 +3874,7 @@ msgstr "Chaîne vérifiée sans signature SHA1"
 msgid "Verify"
 msgstr "Vérifier"
 
-#: src/user/UserPage.js:213
+#: src/user/UserPage.js:199
 msgid "Verify Account"
 msgstr "Vérifier le compte"
 
@@ -3727,7 +3882,7 @@ msgstr "Vérifier le compte"
 #~ msgid "Vertical View"
 #~ msgstr "Vue verticale"
 
-#: src/organizations/OrganizationCard.js:144
+#: src/organizations/OrganizationCard.js:101
 msgid "View Details"
 msgstr "Voir les détails"
 
@@ -3791,6 +3946,10 @@ msgstr "Web (HTTPS/TLS)"
 msgid "Web Check"
 msgstr "Vérification du Web"
 
+#: src/summaries/TierTwoSummaries.js:39
+msgid "Web Connections Summary"
+msgstr "Résumé des connexions web"
+
 #: src/domains/ScanDomain.js:242
 #: src/guidance/GuidancePage.js:102
 msgid "Web Guidance"
@@ -3808,6 +3967,10 @@ msgstr "Sécurité du Web :"
 #~ msgid "Web Sites and Services Management Configuration Requirements Compliant"
 #~ msgstr "Gestion des sites et services Web - Exigences de configuration conformes"
 
+#: src/summaries/TierThreeSummaries.js:11
+msgid "Web Summary"
+msgstr "Résumé du site web"
+
 #: src/summaries/Doughnut.js:34
 msgid "Web-hosting"
 msgstr "d'hébergement web"
@@ -3816,7 +3979,7 @@ msgstr "d'hébergement web"
 msgid "Welcome to Tracker, please enter your details."
 msgstr "Bienvenue sur Suivi, veuillez entrer vos coordonnées."
 
-#: src/user/MyTrackerPage.js:78
+#: src/user/MyTrackerPage.js:63
 msgid "Welcome to your personal view of Tracker. Moderate the security posture of domains of interest across multiple organizations. To add domains to this view, use the star icon buttons available on domain lists."
 msgstr "Bienvenue dans votre vision personnelle de Suivi. Modérez la posture de sécurité des domaines d'intérêt à travers plusieurs organisations. Pour ajouter des domaines à cette vue, utilisez les boutons de l'icône étoile disponibles sur les listes de domaines."
 
@@ -3870,10 +4033,10 @@ msgid "Would you like to request an invite to {orgName}?"
 msgstr "Souhaitez-vous demander une invitation à {orgName} ?"
 
 #: src/guidance/WebConnectionResults.js:126
-#: src/guidance/WebConnectionResults.js:166
-#: src/guidance/WebConnectionResults.js:188
-#: src/guidance/WebConnectionResults.js:206
-#: src/guidance/WebConnectionResults.js:215
+#: src/guidance/WebConnectionResults.js:172
+#: src/guidance/WebConnectionResults.js:194
+#: src/guidance/WebConnectionResults.js:212
+#: src/guidance/WebConnectionResults.js:221
 #: src/guidance/WebTLSResults.js:233
 #: src/guidance/WebTLSResults.js:291
 #: src/guidance/WebTLSResults.js:302
@@ -3938,13 +4101,21 @@ msgstr "Vous avez mis à jour avec succès votre méthode d'envoi de TFA."
 msgid "You have successfully updated your display name."
 msgstr "Vous avez réussi à mettre à jour votre nom d'affichage."
 
+#: src/user/EmailUpdatesSwitch.js:29
+msgid "You have successfully updated your email update preference."
+msgstr "Vous avez mis à jour vos préférences de mise à jour de l'email avec succès."
+
 #: src/user/EditableUserEmail.js:52
 msgid "You have successfully updated your email."
 msgstr "Vous avez mis à jour votre courriel avec succès."
 
+#: src/user/InsideUserSwitch.js:31
+msgid "You have successfully updated your inside user preference."
+msgstr "Vous avez réussi à mettre à jour vos préférences d'utilisateur interne."
+
 #: src/user/InsideUserSwitch.js:32
-msgid "You have successfully updated your insider preference."
-msgstr "Vous avez réussi à mettre à jour vos préférences d'initié."
+#~ msgid "You have successfully updated your insider preference."
+#~ msgstr "Vous avez réussi à mettre à jour vos préférences d'initié."
 
 #: src/user/EditableUserPassword.js:55
 msgid "You have successfully updated your password."
@@ -4012,8 +4183,8 @@ msgstr "contactez-nous"
 
 #: src/app/App.js:97
 #: src/app/App.js:275
-#: src/user/MyTrackerPage.js:43
-#: src/user/MyTrackerPage.js:74
+#: src/user/MyTrackerPage.js:33
+#: src/user/MyTrackerPage.js:59
 msgid "myTracker"
 msgstr "monSuivi"
 

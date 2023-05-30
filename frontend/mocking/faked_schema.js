@@ -112,6 +112,9 @@ export const getTypeNames = () => gql`
       # Filter org list to either include or exclude the super admin org.
       includeSuperAdminOrg: Boolean
 
+      # Filter org list to include only verified organizations.
+      isVerified: Boolean
+
       # Returns the items in the list that come after the specified cursor.
       after: String
 
@@ -155,17 +158,32 @@ export const getTypeNames = () => gql`
     # CSV formatted output of all domains in all organizations including their email and web scan statuses.
     getAllOrganizationDomainStatuses: String
 
-    # Email summary computed values, used to build summary cards.
-    mailSummary: CategorizedSummary
-
-    # Web summary computed values, used to build summary cards.
-    webSummary: CategorizedSummary
+    # DKIM summary computed values, used to build summary cards.
+    dkimSummary: CategorizedSummary
 
     # DMARC phase summary computed values, used to build summary cards.
     dmarcPhaseSummary: CategorizedSummary
 
+    # DMARC summary computed values, used to build summary cards.
+    dmarcSummary: CategorizedSummary
+
     # HTTPS summary computed values, used to build summary cards.
     httpsSummary: CategorizedSummary
+
+    # Email summary computed values, used to build summary cards.
+    mailSummary: CategorizedSummary
+
+    # SPF summary computed values, used to build summary cards.
+    spfSummary: CategorizedSummary
+
+    # SSL summary computed values, used to build summary cards.
+    sslSummary: CategorizedSummary
+
+    # SSL summary computed values, used to build summary cards.
+    webConnectionsSummary: CategorizedSummary
+
+    # Web summary computed values, used to build summary cards.
+    webSummary: CategorizedSummary
 
     # Query the currently logged in user.
     findMe: PersonalUser
@@ -847,6 +865,24 @@ export const getTypeNames = () => gql`
 
     # Summary based on DMARC phases for a given organization.
     dmarcPhase: CategorizedSummary
+
+    # Summary based on SSL scan results for a given organization.
+    ssl: CategorizedSummary
+
+    # Summary based on HTTPS and HSTS scan results for a given organization.
+    webConnections: CategorizedSummary
+
+    # Summary based on SPF scan results for a given organization.
+    spf: CategorizedSummary
+
+    # Summary based on DKIM scan results for a given organization.
+    dkim: CategorizedSummary
+
+    # Summary based on HTTPS scan results for a given organization that includes domains marked as hidden.
+    httpsIncludeHidden: CategorizedSummary
+
+    # Summary based on HTTPS scan results for a given organization that includes domains marked as hidden.
+    dmarcIncludeHidden: CategorizedSummary
   }
 
   # This object contains the list of different categories for pre-computed
@@ -2407,6 +2443,9 @@ export const getTypeNames = () => gql`
     # Does the user want to see new features in progress.
     insideUser: Boolean
 
+    # Does the user want to receive update emails.
+    receiveUpdateEmails: Boolean
+
     # Users affiliations to various organizations.
     affiliations(
       # Ordering options for affiliation connections.
@@ -3758,6 +3797,10 @@ export const getTypeNames = () => gql`
 
     # The updated boolean which represents if the user wants to see features in progress.
     insideUser: Boolean
+
+    # The updated boolean which represents if the user wants to receive update emails.
+    receiveUpdateEmails: Boolean
+
     clientMutationId: String
   }
 

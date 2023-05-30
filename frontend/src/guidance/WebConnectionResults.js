@@ -129,13 +129,19 @@ export function WebConnectionResults({ connectionResults }) {
                   <DetailTooltip
                     label={t`Shows if the HTTP endpoint upgrades to HTTPS upgrade immediately, eventually (after the first redirect), or never.`}
                   >
-                    <StatusIcon status={httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />
+                    <StatusIcon status={!httpLive ? 'INFO' : httpImmediatelyUpgrades ? 'PASS' : 'FAIL'} />
                     <Text px="1">
                       <Trans>HTTP Upgrades</Trans>
                     </Text>
                   </DetailTooltip>
                   <Text>
-                    {httpImmediatelyUpgrades ? t`Immediately` : httpEventuallyUpgrades ? t`Eventually` : t`Never`}
+                    {!httpLive
+                      ? t`Not available`
+                      : httpImmediatelyUpgrades
+                      ? t`Immediately`
+                      : httpEventuallyUpgrades
+                      ? t`Eventually`
+                      : t`Never`}
                   </Text>
                 </Flex>
               </Box>
@@ -194,7 +200,7 @@ export function WebConnectionResults({ connectionResults }) {
                       <Trans>HSTS Max Age</Trans>
                     </Text>
                   </DetailTooltip>
-                  <Text>{hstsParsed?.maxAge}</Text>
+                  <Text>{hstsParsed?.maxAge || t`Not available`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
                   <DetailTooltip label={t`Shows if the HSTS header includes the preload directive.`}>
@@ -203,7 +209,7 @@ export function WebConnectionResults({ connectionResults }) {
                       <Trans>HSTS Preloaded</Trans>
                     </Text>
                   </DetailTooltip>
-                  <Text>{hstsParsed?.preload ? t`Yes` : t`No`}</Text>
+                  <Text>{!hstsParsed ? t`Not available` : hstsParsed?.preload ? t`Yes` : t`No`}</Text>
                 </Flex>
                 <Flex {...columnInfoStyleProps}>
                   <DetailTooltip label={t`Shows if the HSTS header includes the includeSubdomains directive.`}>
@@ -212,7 +218,7 @@ export function WebConnectionResults({ connectionResults }) {
                       <Trans>HSTS Includes Subdomains</Trans>
                     </Text>
                   </DetailTooltip>
-                  <Text>{hstsParsed?.includeSubdomains ? t`Yes` : t`No`}</Text>
+                  <Text>{!hstsParsed ? t`Not available` : hstsParsed?.includeSubdomains ? t`Yes` : t`No`}</Text>
                 </Flex>
               </Box>
               <Text mt="2" fontWeight="bold" mx="2">

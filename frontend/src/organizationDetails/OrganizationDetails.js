@@ -22,7 +22,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from './OrganizationDomains'
 import { OrganizationAffiliations } from './OrganizationAffiliations'
-import { OrganizationSummary } from './OrganizationSummary'
+import { TieredSummaries } from '../summaries/TieredSummaries'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -152,7 +152,7 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <OrganizationSummary summaries={data?.organization?.summaries} />
+              <TieredSummaries summaries={data?.organization?.summaries} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
