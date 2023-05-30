@@ -297,8 +297,7 @@ export const domainType = new GraphQLObjectType({
       description:
         'Value that determines if a user is affiliated with a domain, whether through organization affiliation, verified organization network affiliation, or through super admin status.',
       type: GraphQLBoolean,
-      resolve: async ({ _id }, __, { auth: { checkDomainPermission, userRequired } }) => {
-        await userRequired()
+      resolve: async ({ _id }, __, { auth: { checkDomainPermission } }) => {
         return await checkDomainPermission({
           domainId: _id,
         })
