@@ -38,12 +38,14 @@ describe('given the sendOrgFootprintEmail function', () => {
         {
           action: 'remove',
           target: {
+            resource: 'domain1',
             resourceType: 'domain',
           },
         },
         {
           action: 'update',
           target: {
+            resource: 'domain2',
             resourceType: 'domain',
           },
         },
@@ -67,8 +69,12 @@ describe('given the sendOrgFootprintEmail function', () => {
           update_users_count: 0,
           remove_users_count: 0,
           add_domains_count: 0,
+          add_domains_list: '',
           update_domains_count: 1,
+          update_domains_list: 'domain2',
           remove_domains_count: 1,
+          remove_domains_list: 'domain1',
+          export_count: 0,
         },
       })
     })
