@@ -16,7 +16,6 @@ import {
 } from '@chakra-ui/react'
 import { Link as RouteLink, useLocation } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
-import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
 import { StarIcon } from '@chakra-ui/icons'
@@ -155,24 +154,20 @@ export function DomainCard({
                 </Tag>
               )
             })}
-            <ABTestingWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                {isHidden && (
-                  <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      <Trans>HIDDEN</Trans>
-                    </TagLabel>
-                  </Tag>
-                )}
-                {isArchived && (
-                  <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                      <Trans>ARCHIVED</Trans>
-                    </TagLabel>
-                  </Tag>
-                )}{' '}
-              </ABTestVariant>
-            </ABTestingWrapper>
+            {isHidden && (
+              <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                  <Trans>HIDDEN</Trans>
+                </TagLabel>
+              </Tag>
+            )}
+            {isArchived && (
+              <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                  <Trans>ARCHIVED</Trans>
+                </TagLabel>
+              </Tag>
+            )}
           </Flex>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />

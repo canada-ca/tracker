@@ -22,15 +22,15 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
 
   // Get list of domains added
   if (domainsAdded.length > 0) {
-    addDomainsList = '\t' + domainsAdded.map((log) => log.target.resource).join(', ')
+    addDomainsList = domainsAdded.map((log) => log.target.resource).join(', ')
   }
   // Get list of domains updated
   if (domainsUpdated.length > 0) {
-    updateDomainsList = '\t' + domainsUpdated.map((log) => log.target.resource).join(', ')
+    updateDomainsList = domainsUpdated.map((log) => log.target.resource).join(', ')
   }
   // Get list of domains removed
   if (domainsRemoved.length > 0) {
-    removeDomainsList = '\t' + domainsRemoved.map((log) => log.target.resource).join(', ')
+    removeDomainsList = domainsRemoved.map((log) => log.target.resource).join(', ')
   }
 
   const exportsToCsv = auditLogs.filter((log) => log.action === 'export')
