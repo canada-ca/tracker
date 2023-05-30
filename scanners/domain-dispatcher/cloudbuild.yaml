@@ -6,7 +6,7 @@ steps:
     args:
       [
         '-c',
-        'docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arangodb arangodb',
+        'docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arangodb arangodb/arangodb:3.10.4',
       ]
 
   - name: mikewilliamson/wait-for
