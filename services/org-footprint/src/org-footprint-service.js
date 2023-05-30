@@ -11,7 +11,6 @@ const orgFootprintService = async ({ query, log, notifyClient }) => {
     const auditLogs = await getNewAuditLogs({ query, orgKey })
     // if new audit logs exist
     if (auditLogs.length > 0) {
-      // get list of org admins
       if (REDIRECT_TO_SERVICE_ACCOUNT_EMAIL) {
         const orgNames = await getBilingualOrgNames({ query, orgKey })
         log(`Sending recent activity email to service account: ${orgKey}`)
@@ -24,6 +23,7 @@ const orgFootprintService = async ({ query, log, notifyClient }) => {
         }
         await sendOrgFootprintEmail({ notifyClient, user, auditLogs, orgNames })
       } else {
+        // get list of org admins
         const orgAdmins = await getOrgAdmins({ query, orgKey })
         // if org admins exist
         if (orgAdmins.length > 0) {
