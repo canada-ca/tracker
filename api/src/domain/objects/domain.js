@@ -50,11 +50,11 @@ export const domainType = new GraphQLObjectType({
     selectors: {
       type: new GraphQLList(Selectors),
       description: 'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async ({ _key, selectors }, _, { userKey, auth: { checkDomainPermission, userRequired } }) => {
+      resolve: async ({ _id, selectors }, _, { userKey, auth: { checkDomainPermission, userRequired } }) => {
         await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _key })
+        const permitted = await checkDomainPermission({ domainId: _id })
         if (!permitted) {
-          console.warn(`User: ${userKey} attempted to access selectors for ${_key}, but does not have permission.`)
+          console.warn(`User: ${userKey} attempted to access selectors for ${_id}, but does not have permission.`)
           throw new Error(t`Cannot query domain selectors without permission.`)
         }
 
