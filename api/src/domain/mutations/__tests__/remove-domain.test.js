@@ -3424,7 +3424,7 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'Permission Denied: Please contact super admin for help with removing domain.',
+                    description: 'Permission Denied: Please contact organization admin for help with removing domain.',
                   },
                 },
               },
@@ -3432,7 +3432,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -3499,7 +3499,7 @@ describe('removing a domain', () => {
                 removeDomain: {
                   result: {
                     code: 403,
-                    description: 'Permission Denied: Please contact super admin for help with removing domain.',
+                    description: 'Permission Denied: Please contact organization admin for help with removing domain.',
                   },
                 },
               },
@@ -3507,7 +3507,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -4572,7 +4572,7 @@ describe('removing a domain', () => {
                   result: {
                     code: 403,
                     description:
-                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
                   },
                 },
               },
@@ -4580,7 +4580,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
@@ -4648,7 +4648,7 @@ describe('removing a domain', () => {
                   result: {
                     code: 403,
                     description:
-                      "Permission refusée : Veuillez contacter l'utilisateur de l'organisation pour obtenir de l'aide sur la mise à jour de ce domaine.",
+                      "Permission refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide afin de supprimer le domaine.",
                   },
                 },
               },
@@ -4656,7 +4656,7 @@ describe('removing a domain', () => {
 
             expect(response).toEqual(error)
             expect(consoleOutput).toEqual([
-              `User: 123 attempted to remove domain.gc.ca in temp-org but does not have permission to remove a domain from a verified check org.`,
+              `User: 123 attempted to remove domain.gc.ca in temp-org however they do not have permission in that org.`,
             ])
           })
         })
