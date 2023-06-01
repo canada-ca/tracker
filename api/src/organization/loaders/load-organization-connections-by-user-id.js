@@ -365,8 +365,7 @@ export const loadOrgConnectionsByUserId =
           RETURN org._key
         )
       `
-    }
-    if (!loginRequiredBool) {
+    } else if (!loginRequiredBool) {
       orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET userAffiliations = (
