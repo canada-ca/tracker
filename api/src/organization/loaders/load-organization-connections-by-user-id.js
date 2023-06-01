@@ -348,6 +348,11 @@ export const loadOrgConnectionsByUserId =
       isVerifiedQuery = aql`FILTER org.verified == true`
     }
 
+    let isAdminFilter = aql``
+    if (isAdmin) {
+      isAdminFilter = aql`FILTER e.permission IN ["admin", "owner", "super_admin"]`
+    }
+
     let orgKeysQuery
     if (isSuperAdmin) {
       orgKeysQuery = aql`
@@ -356,41 +361,38 @@ export const loadOrgConnectionsByUserId =
           FOR org IN organizations
           ${isVerifiedQuery}
           ${includeSuperAdminOrgQuery}
-          RETURN org._key
-        )
-      `
-    } else if (isAdmin) {
-      orgKeysQuery = aql`
-        WITH affiliations, claims, domains, organizations, organizationSearch, users
-        LET orgKeys = (
-          FOR org, e IN 1..1
-          INBOUND ${userDBId} affiliations
-          FILTER e.permission IN ["admin", "owner", "super_admin"]
-          ${isVerifiedQuery}
-          ${includeSuperAdminOrgQuery}
+          ${isAdminFilter}
           RETURN org._key
         )
       `
     } else {
       if (!loginRequiredBool) {
         orgKeysQuery = aql`
-        WITH claims, domains, organizations, organizationSearch
+        WITH affiliations, claims, domains, organizations, organizationSearch, users
+        LET userAffiliations = (
+          FOR v, e IN 1..1 ANY ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
         LET orgKeys = (
           FOR org IN organizations
+            ${isAdminFilter}
             ${isVerifiedQuery}
-            FILTER org.orgDetails.en.slug != "super-admin" OR org.orgDetails.fr.slug != "super-admin"
+            ${includeSuperAdminOrgQuery}
+            FILTER org._key IN userAffiliations[*]._key || org.verified == true
             RETURN org._key
         )
-      `
+        `
       } else {
         orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET orgKeys = (
-          FOR org, e IN 1..1
-          INBOUND ${userDBId} affiliations
-          ${isVerifiedQuery}
-          ${includeSuperAdminOrgQuery}
-          RETURN org._key
+          FOR org, e IN 1..1 INBOUND ${userDBId} affiliations
+            ${isAdminFilter}
+            ${isVerifiedQuery}
+            ${includeSuperAdminOrgQuery}
+            FILTER e.permission != "pending"
+            RETURN org._key
         )
       `
       }
