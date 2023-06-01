@@ -29,7 +29,7 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <AdminDomains permission={permission} orgSlug={orgSlug} domainsPerPage={10} orgId={orgId} />
+              <AdminDomains permission={permission} orgSlug={orgSlug} orgId={orgId} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>

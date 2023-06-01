@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
-  Box,
   Button,
   Divider,
   Flex,
@@ -43,11 +42,12 @@ import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
 
-export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
+export function AdminDomains({ orgSlug, orgId, permission }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
+  const [domainsPerPage, setDomainsPerPage] = useState(10)
   const [selectedRemoveProps, setSelectedRemoveProps] = useState({
     domain: '',
     domainId: '',
@@ -68,16 +68,15 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
   const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
   const { isOpen: removeIsOpen, onOpen: removeOnOpen, onClose: removeOnClose } = useDisclosure()
 
-  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage } = usePaginatedCollection(
-    {
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
       fetchForward: FORWARD,
       recordsPerPage: domainsPerPage,
-      variables: { orgSlug, search: debouncedSearchTerm },
+      variables: { orgSlug, search: debouncedSearchTerm, orderBy: { field: 'DOMAIN', direction: 'ASC' } },
       relayRoot: 'findOrganizationBySlug.domains',
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
-    },
-  )
+    })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(newDomainUrl)
@@ -147,9 +146,10 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
       )}
     >
       {({ id: domainId, domain, selectors, claimTags, hidden, archived, rcode, organizations }, index) => (
-        <Box key={'admindomain' + index}>
-          <Stack isInline align="center">
-            <Stack direction="row" flexGrow="0">
+        <>
+          {index === 0 && <Divider borderBottomColor="gray.400" />}
+          <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
+            <Stack direction="row" flexGrow="0" mr="2">
               <IconButton
                 data-testid={`remove-${index}`}
                 onClick={() => {
@@ -192,9 +192,9 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
               flexGrow={1}
               fontSize={{ base: '75%', sm: '100%' }}
             />
-          </Stack>
-          <Divider borderColor="gray.900" />
-        </Box>
+          </Flex>
+          <Divider borderBottomColor="gray.400" />
+        </>
       )}
     </ListOf>
   )
@@ -244,7 +244,11 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
       {adminDomainList}
 
       <RelayPaginationControls
-        onlyPagination={true}
+        onlyPagination={false}
+        selectedDisplayLimit={domainsPerPage}
+        setSelectedDisplayLimit={setDomainsPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
         next={next}
