@@ -3,28 +3,11 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByUserId =
-  ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
+  ({ query, userKey, cleanseInput, i18n, db, auth: { loginRequiredBool } }) =>
   async ({ after, before, first, last, ownership, orderBy, isSuperAdmin, myTracker, search }) => {
     const userDBId = `users/${userKey}`
 
-    let ownershipOrgsOnly = aql`
-      LET claimDomainKeys = (
-        FOR v, e IN 1..1 OUTBOUND orgId claims
-          OPTIONS {order: "bfs"}
-          RETURN v._key
-      )
-    `
-    if (typeof ownership !== 'undefined') {
-      if (ownership) {
-        ownershipOrgsOnly = aql`
-          LET claimDomainKeys = (
-            FOR v, e IN 1..1 OUTBOUND orgId ownership
-              OPTIONS {order: "bfs"}
-              RETURN v._key
-          )
-        `
-      }
-    }
+    const orgEdgeCollection = db.edgeCollection(ownership ? 'ownership' : 'claims')
 
     let afterTemplate = aql``
     let afterVar = aql``
@@ -331,44 +314,44 @@ export const loadDomainConnectionsByUserId =
     } else if (isSuperAdmin) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (FOR org IN organizations RETURN org._id)
-        FOR orgId IN orgIds
-          ${ownershipOrgsOnly}
-          RETURN APPEND(keys, claimDomainKeys)
-      ))
+      LET domainsKeys = (
+        FOR org IN organizations
+          FOR v, e IN 1..1 OUTBOUND org._id ${orgEdgeCollection}
+            RETURN v._key
+      )
     `
     } else if (!loginRequiredBool) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (FOR org IN organizations RETURN org._id)
-        FOR orgId IN orgIds
-          LET claimDomainKeys = (
-            FOR v, e IN 1..1 OUTBOUND orgId claims
-              OPTIONS {order: "bfs"}
+      LET domainKeys = (
+        LET userAffiliations = (
+          FOR v, e IN 1..1 ANY ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key || org.verified == true
+            FOR v, e IN 1..1 OUTBOUND org._id ${orgEdgeCollection}
               FILTER v.archived != true
               RETURN v._key
-          )
-          RETURN APPEND(keys, claimDomainKeys)
-      ))
+      )
     `
     } else {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (
+      LET domainKeys = (
+        LET userAffiliations = (
           FOR v, e IN 1..1 ANY ${userDBId} affiliations
-            OPTIONS {order: "bfs"}
-            RETURN e._from
+            FILTER e.permission != "pending"
+            RETURN v
         )
-        FOR orgId IN orgIds
-          ${ownershipOrgsOnly}
-          RETURN APPEND(keys, claimDomainKeys)
-      ))
+        LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key || (hasVerifiedOrgAffiliation == true && org.verified == true)
+          FOR v, e IN 1..1 OUTBOUND org._id ${orgEdgeCollection}
+            FILTER v.archived != true
+            RETURN v._key
+      )
     `
     }
 
