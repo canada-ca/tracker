@@ -47,7 +47,10 @@ export const checkPermission =
             FILTER e._from == ${orgId}
             RETURN e
         )
-        RETURN userOrgAffiliation.permission IN ["admin", "owner", "super_admin"] ? userOrgAffiliation.permission : (orgIsVerified && hasVerifiedOrgAffiliation) ? "user" : null
+        RETURN userOrgAffiliation.permission IN ["user", "admin", "owner", "super_admin"] ? userOrgAffiliation.permission
+          : (orgIsVerified && hasVerifiedOrgAffiliation) ? "user"
+          : userOrgAffiliation.permission == "pending" ? userOrgAffiliation
+          : null
       `
     } catch (err) {
       console.error(`Database error occurred when checking ${userKeyString}'s permission: ${err}`)
