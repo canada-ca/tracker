@@ -13,6 +13,10 @@ export const rawOrgDomainListData = {
             claimTags: [],
             archived: false,
             hidden: false,
+            rcode: 'NOERROR',
+            organizations: {
+              totalCount: 1,
+            },
             __typename: 'Domain',
           },
           __typename: 'DomainEdge',
@@ -26,6 +30,10 @@ export const rawOrgDomainListData = {
             claimTags: [],
             archived: false,
             hidden: false,
+            rcode: 'NOERROR',
+            organizations: {
+              totalCount: 1,
+            },
             __typename: 'Domain',
           },
           __typename: 'DomainEdge',
@@ -39,6 +47,10 @@ export const rawOrgDomainListData = {
             claimTags: [],
             archived: false,
             hidden: false,
+            rcode: 'NOERROR',
+            organizations: {
+              totalCount: 1,
+            },
             __typename: 'Domain',
           },
           __typename: 'DomainEdge',
