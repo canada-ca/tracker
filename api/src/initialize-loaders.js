@@ -147,7 +147,6 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       userKey,
       cleanseInput,
       i18n,
-      db,
       auth: { loginRequiredBool },
     }),
     loadDomainTagsByOrgId: loadDomainTagsByOrgId({ query, userKey, i18n }),

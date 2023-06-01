@@ -317,7 +317,7 @@ export const loadDomainConnectionsByUserId =
     } else if (isSuperAdmin) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainsKeys = (
+      LET domainKeys = (
         FOR org IN organizations
           ${orgEdgeCollectionLoop}
             RETURN v._key
