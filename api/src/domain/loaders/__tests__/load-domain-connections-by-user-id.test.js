@@ -1,15 +1,15 @@
-import {stringify} from 'jest-matcher-utils'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {toGlobalId} from 'graphql-relay'
-import {setupI18n} from '@lingui/core'
+import { stringify } from 'jest-matcher-utils'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { toGlobalId } from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {cleanseInput} from '../../../validators'
-import {loadDomainConnectionsByUserId, loadDomainByKey} from '../index'
+import { cleanseInput } from '../../../validators'
+import { loadDomainConnectionsByUserId, loadDomainByKey } from '../index'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load domain connections by user id function', () => {
   let query, drop, truncate, collections, org, i18n, user, domainOne, domainTwo
@@ -28,7 +28,7 @@ describe('given the load domain connections by user id function', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -123,14 +123,11 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
           })
 
-          const domainLoader = loadDomainByKey({query})
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
+          const domainLoader = loadDomainByKey({ query })
+          const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
           expectedDomains[0].id = expectedDomains[0]._key
           expectedDomains[1].id = expectedDomains[1]._key
@@ -139,7 +136,7 @@ describe('given the load domain connections by user id function', () => {
             first: 10,
             after: toGlobalId('domain', expectedDomains[0].id),
           }
-          const domains = await connectionLoader({...connectionArgs})
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -168,14 +165,11 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
           })
 
-          const domainLoader = loadDomainByKey({query})
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
+          const domainLoader = loadDomainByKey({ query })
+          const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
           expectedDomains[0].id = expectedDomains[0]._key
           expectedDomains[1].id = expectedDomains[1]._key
@@ -184,7 +178,7 @@ describe('given the load domain connections by user id function', () => {
             first: 10,
             before: toGlobalId('domain', expectedDomains[1].id),
           }
-          const domains = await connectionLoader({...connectionArgs})
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -213,14 +207,11 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
           })
 
-          const domainLoader = loadDomainByKey({query})
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
+          const domainLoader = loadDomainByKey({ query })
+          const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
           expectedDomains[0].id = expectedDomains[0]._key
           expectedDomains[1].id = expectedDomains[1]._key
@@ -228,7 +219,7 @@ describe('given the load domain connections by user id function', () => {
           const connectionArgs = {
             first: 1,
           }
-          const domains = await connectionLoader({...connectionArgs})
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -257,14 +248,11 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
           })
 
-          const domainLoader = loadDomainByKey({query})
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
+          const domainLoader = loadDomainByKey({ query })
+          const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
           expectedDomains[0].id = expectedDomains[0]._key
           expectedDomains[1].id = expectedDomains[1]._key
@@ -272,7 +260,7 @@ describe('given the load domain connections by user id function', () => {
           const connectionArgs = {
             last: 1,
           }
-          const domains = await connectionLoader({...connectionArgs})
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -310,10 +298,10 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
           })
 
-          const domainLoader = loadDomainByKey({query})
+          const domainLoader = loadDomainByKey({ query })
           const expectedDomain = await domainLoader.load(domainOne._key)
 
           const connectionArgs = {
@@ -321,7 +309,7 @@ describe('given the load domain connections by user id function', () => {
             search: 'test1.gc.ca',
           }
 
-          const domains = await connectionLoader({...connectionArgs})
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -367,19 +355,17 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequiredBool: true},
+              auth: { loginRequiredBool: true },
             })
 
-            const domainLoader = loadDomainByKey({query})
-            const expectedDomains = await domainLoader.loadMany([
-              domainThree._key,
-            ])
+            const domainLoader = loadDomainByKey({ query })
+            const expectedDomains = await domainLoader.loadMany([domainThree._key])
 
             const connectionArgs = {
               first: 1,
               ownership: true,
             }
-            const domains = await connectionLoader({...connectionArgs})
+            const domains = await connectionLoader({ ...connectionArgs })
 
             const expectedStructure = {
               edges: [
@@ -408,21 +394,17 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
             })
 
-            const domainLoader = loadDomainByKey({query})
-            const expectedDomains = await domainLoader.loadMany([
-              domainOne._key,
-              domainTwo._key,
-              domainThree._key,
-            ])
+            const domainLoader = loadDomainByKey({ query })
+            const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key, domainThree._key])
 
             const connectionArgs = {
               first: 3,
               ownership: false,
             }
-            const domains = await connectionLoader({...connectionArgs})
+            const domains = await connectionLoader({ ...connectionArgs })
 
             const expectedStructure = {
               edges: [
@@ -463,11 +445,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DOMAIN', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -484,9 +463,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -511,11 +490,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -532,9 +508,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -561,11 +537,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DKIM_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -582,9 +555,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -609,11 +582,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -630,9 +600,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -659,11 +629,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DMARC_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -680,9 +647,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -707,11 +674,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -728,9 +692,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -757,11 +721,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on HTTPS_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -778,9 +739,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -805,11 +766,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -826,9 +784,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -855,11 +813,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on SPF_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -876,9 +831,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -903,11 +858,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -924,9 +876,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -955,11 +907,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DOMAIN', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -976,9 +925,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1003,11 +952,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1024,9 +970,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1053,11 +999,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DKIM_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1074,9 +1017,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1101,11 +1044,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1122,9 +1062,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1151,11 +1091,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on DMARC_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1172,9 +1109,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1199,11 +1136,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1220,9 +1154,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1249,11 +1183,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on HTTPS_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1270,9 +1201,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1297,11 +1228,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1318,9 +1246,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1347,11 +1275,8 @@ describe('given the load domain connections by user id function', () => {
           describe('ordering on SPF_STATUS', () => {
             describe('order direction is ASC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1368,9 +1293,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1395,11 +1320,8 @@ describe('given the load domain connections by user id function', () => {
             })
             describe('order direction is DESC', () => {
               it('returns domains in order', async () => {
-                const domainLoader = loadDomainByKey({query})
-                const expectedDomains = await domainLoader.loadMany([
-                  domainOne._key,
-                  domainTwo._key,
-                ])
+                const domainLoader = loadDomainByKey({ query })
+                const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
                 expectedDomains[0].id = expectedDomains[0]._key
                 expectedDomains[1].id = expectedDomains[1]._key
@@ -1416,9 +1338,9 @@ describe('given the load domain connections by user id function', () => {
                   query,
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 })
-                const domains = await connectionLoader({...connectionArgs})
+                const domains = await connectionLoader({ ...connectionArgs })
 
                 const expectedStructure = {
                   edges: [
@@ -1450,20 +1372,17 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
           })
 
           const connectionArgs = {
             first: 10,
             isSuperAdmin: true,
           }
-          const domains = await connectionLoader({...connectionArgs})
+          const domains = await connectionLoader({ ...connectionArgs })
 
-          const domainLoader = loadDomainByKey({query})
-          const expectedDomains = await domainLoader.loadMany([
-            domainOne._key,
-            domainTwo._key,
-          ])
+          const domainLoader = loadDomainByKey({ query })
+          const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
 
           expectedDomains[0].id = expectedDomains[0]._key
           expectedDomains[1].id = expectedDomains[1]._key
@@ -1504,13 +1423,13 @@ describe('given the load domain connections by user id function', () => {
           query,
           userKey: user._key,
           cleanseInput,
-          auth: {loginRequired: true},
+          auth: { loginRequired: true },
         })
 
         const connectionArgs = {
           first: 10,
         }
-        const domains = await connectionLoader({...connectionArgs})
+        const domains = await connectionLoader({ ...connectionArgs })
 
         const expectedStructure = {
           edges: [],
@@ -1532,8 +1451,8 @@ describe('given the load domain connections by user id function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1549,7 +1468,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1577,7 +1496,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1591,9 +1510,7 @@ describe('given the load domain connections by user id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                `Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`,
-              ),
+              new Error(`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`),
             )
           }
 
@@ -1609,7 +1526,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -1639,7 +1556,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -1671,7 +1588,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -1683,11 +1600,7 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `\`first\` on the \`Domain\` connection cannot be less than zero.`,
-                ),
-              )
+              expect(err).toEqual(new Error(`\`first\` on the \`Domain\` connection cannot be less than zero.`))
             }
 
             expect(consoleOutput).toEqual([
@@ -1701,7 +1614,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -1713,11 +1626,7 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `\`last\` on the \`Domain\` connection cannot be less than zero.`,
-                ),
-              )
+              expect(err).toEqual(new Error(`\`last\` on the \`Domain\` connection cannot be less than zero.`))
             }
 
             expect(consoleOutput).toEqual([
@@ -1729,14 +1638,12 @@ describe('given the load domain connections by user id function', () => {
       describe('limits are not set to numbers', () => {
         describe('first limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when first set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadDomainConnectionsByUserId({
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: {loginRequired: true},
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -1749,11 +1656,7 @@ describe('given the load domain connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -1765,14 +1668,12 @@ describe('given the load domain connections by user id function', () => {
         })
         describe('last limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when last set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadDomainConnectionsByUserId({
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: {loginRequired: true},
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -1785,11 +1686,7 @@ describe('given the load domain connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -1804,17 +1701,13 @@ describe('given the load domain connections by user id function', () => {
     describe('given a database error', () => {
       describe('while querying for domain information', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(
-              new Error('Unable to query domains. Please try again.'),
-            )
+          const query = jest.fn().mockRejectedValue(new Error('Unable to query domains. Please try again.'))
 
           const connectionLoader = loadDomainConnectionsByUserId({
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1826,9 +1719,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to query domain(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to query domain(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -1851,7 +1742,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1863,9 +1754,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load domain(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load domain(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -1880,8 +1769,8 @@ describe('given the load domain connections by user id function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1897,7 +1786,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1925,7 +1814,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -1939,9 +1828,7 @@ describe('given the load domain connections by user id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                "Passer à la fois `first` et `last` pour paginer la connexion `Domain` n'est pas supporté.",
-              ),
+              new Error("Passer à la fois `first` et `last` pour paginer la connexion `Domain` n'est pas supporté."),
             )
           }
 
@@ -1957,7 +1844,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -1987,7 +1874,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2019,7 +1906,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2031,11 +1918,7 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`first` sur la connexion `Domain` ne peut être inférieur à zéro.',
-                ),
-              )
+              expect(err).toEqual(new Error('`first` sur la connexion `Domain` ne peut être inférieur à zéro.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -2049,7 +1932,7 @@ describe('given the load domain connections by user id function', () => {
               query,
               userKey: user._key,
               cleanseInput,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               i18n,
             })
 
@@ -2061,11 +1944,7 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`last` sur la connexion `Domain` ne peut être inférieur à zéro.',
-                ),
-              )
+              expect(err).toEqual(new Error('`last` sur la connexion `Domain` ne peut être inférieur à zéro.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -2077,14 +1956,12 @@ describe('given the load domain connections by user id function', () => {
       describe('limits are not set to numbers', () => {
         describe('first limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when first set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadDomainConnectionsByUserId({
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: {loginRequired: true},
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -2098,9 +1975,7 @@ describe('given the load domain connections by user id function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                  ),
+                  new Error(`\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                 )
               }
               expect(consoleOutput).toEqual([
@@ -2113,14 +1988,12 @@ describe('given the load domain connections by user id function', () => {
         })
         describe('last limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when last set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadDomainConnectionsByUserId({
                 query,
                 userKey: user._key,
                 cleanseInput,
-                auth: {loginRequired: true},
+                auth: { loginRequired: true },
                 i18n,
               })
 
@@ -2134,9 +2007,7 @@ describe('given the load domain connections by user id function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                  ),
+                  new Error(`\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                 )
               }
               expect(consoleOutput).toEqual([
@@ -2152,17 +2023,13 @@ describe('given the load domain connections by user id function', () => {
     describe('given a database error', () => {
       describe('while querying domains', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(
-              new Error('Unable to query domains. Please try again.'),
-            )
+          const query = jest.fn().mockRejectedValue(new Error('Unable to query domains. Please try again.'))
 
           const connectionLoader = loadDomainConnectionsByUserId({
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -2174,11 +2041,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                "Impossible d'interroger le(s) domaine(s). Veuillez réessayer.",
-              ),
-            )
+            expect(err).toEqual(new Error("Impossible d'interroger le(s) domaine(s). Veuillez réessayer."))
           }
 
           expect(consoleOutput).toEqual([
@@ -2201,7 +2064,7 @@ describe('given the load domain connections by user id function', () => {
             query,
             userKey: user._key,
             cleanseInput,
-            auth: {loginRequired: true},
+            auth: { loginRequired: true },
             i18n,
           })
 
@@ -2213,11 +2076,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) domaine(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) domaine(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
