@@ -24,8 +24,7 @@ export const findMyDmarcSummaries = {
     },
     search: {
       type: GraphQLString,
-      description:
-        'An optional string used to filter the results based on domains.',
+      description: 'An optional string used to filter the results based on domains.',
     },
     ...connectionArgs,
   },
@@ -34,19 +33,12 @@ export const findMyDmarcSummaries = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
+      auth: { checkSuperAdmin, userRequired, verifiedRequired },
       loaders: { loadDmarcSummaryConnectionsByUserId },
     },
   ) => {
-    if (loginRequiredBool) {
-      const user = await userRequired()
-      verifiedRequired({ user })
-    }
+    const user = await userRequired()
+    verifiedRequired({ user })
 
     const isSuperAdmin = await checkSuperAdmin()
 
