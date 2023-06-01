@@ -3,11 +3,14 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByUserId =
-  ({ query, userKey, cleanseInput, i18n, db, auth: { loginRequiredBool } }) =>
+  ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
   async ({ after, before, first, last, ownership, orderBy, isSuperAdmin, myTracker, search }) => {
     const userDBId = `users/${userKey}`
 
-    const orgEdgeCollection = db.edgeCollection(ownership ? 'ownership' : 'claims')
+    let orgEdgeCollectionLoop = aql`FOR v, e IN 1..1 OUTBOUND org._id claims`
+    if (ownership) {
+      orgEdgeCollectionLoop = aql`FOR v, e IN 1..1 OUTBOUND org._id ownership`
+    }
 
     let afterTemplate = aql``
     let afterVar = aql``
@@ -316,7 +319,7 @@ export const loadDomainConnectionsByUserId =
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET domainsKeys = (
         FOR org IN organizations
-          FOR v, e IN 1..1 OUTBOUND org._id ${orgEdgeCollection}
+          ${orgEdgeCollectionLoop}
             RETURN v._key
       )
     `
@@ -331,7 +334,7 @@ export const loadDomainConnectionsByUserId =
         )
         FOR org IN organizations
           FILTER org._key IN userAffiliations[*]._key || org.verified == true
-            FOR v, e IN 1..1 OUTBOUND org._id ${orgEdgeCollection}
+            ${orgEdgeCollectionLoop}
               FILTER v.archived != true
               RETURN v._key
       )
@@ -348,7 +351,7 @@ export const loadDomainConnectionsByUserId =
         LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
         FOR org IN organizations
           FILTER org._key IN userAffiliations[*]._key || (hasVerifiedOrgAffiliation == true && org.verified == true)
-          FOR v, e IN 1..1 OUTBOUND org._id ${orgEdgeCollection}
+          ${orgEdgeCollectionLoop}
             FILTER v.archived != true
             RETURN v._key
       )
