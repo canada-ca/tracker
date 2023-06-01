@@ -50,4 +50,14 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_ORG_FOOTPRINT_FR
+                - name: SERVICE_ACCOUNT_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: SERVICE_ACCOUNT_EMAIL
+                - name: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
           restartPolicy: OnFailure
