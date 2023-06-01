@@ -365,9 +365,9 @@ export const loadOrgConnectionsByUserId =
           RETURN org._key
         )
       `
-    } else {
-      if (!loginRequiredBool) {
-        orgKeysQuery = aql`
+    }
+    if (!loginRequiredBool) {
+      orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET userAffiliations = (
           FOR v, e IN 1..1 ANY ${userDBId} affiliations
@@ -383,8 +383,8 @@ export const loadOrgConnectionsByUserId =
             RETURN org._key
         )
         `
-      } else {
-        orgKeysQuery = aql`
+    } else {
+      orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET orgKeys = (
           FOR org, e IN 1..1 INBOUND ${userDBId} affiliations
@@ -395,7 +395,6 @@ export const loadOrgConnectionsByUserId =
             RETURN org._key
         )
       `
-      }
     }
 
     let orgQuery = aql``
