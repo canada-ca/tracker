@@ -361,7 +361,6 @@ export const loadOrgConnectionsByUserId =
           FOR org IN organizations
           ${isVerifiedQuery}
           ${includeSuperAdminOrgQuery}
-          ${isAdminFilter}
           RETURN org._key
         )
       `
@@ -371,26 +370,34 @@ export const loadOrgConnectionsByUserId =
         LET userAffiliations = (
           FOR v, e IN 1..1 ANY ${userDBId} affiliations
             FILTER e.permission != "pending"
+            ${isAdminFilter}
             RETURN v
         )
         LET orgKeys = (
           FOR org IN organizations
-            ${isAdminFilter}
             ${isVerifiedQuery}
             ${includeSuperAdminOrgQuery}
-            FILTER org._key IN userAffiliations[*]._key || org.verified == true
+            FILTER org._key IN userAffiliations[*]._key ${isAdmin ? aql`` : aql`|| org.verified == true`}
             RETURN org._key
         )
         `
     } else {
       orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
-        LET orgKeys = (
-          FOR org, e IN 1..1 INBOUND ${userDBId} affiliations
+        LET userAffiliations = (
+          FOR v, e IN 1..1 ANY ${userDBId} affiliations
+            FILTER e.permission != "pending"
             ${isAdminFilter}
+            RETURN v
+        )
+        LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
+        LET orgKeys = (
+          FOR org IN organizations
             ${isVerifiedQuery}
             ${includeSuperAdminOrgQuery}
-            FILTER e.permission != "pending"
+            FILTER org._key IN userAffiliations[*]._key ${
+              isAdmin ? aql`` : aql`|| (org.verified == true && hasVerifiedOrgAffiliation == true)`
+            }
             RETURN org._key
         )
       `
