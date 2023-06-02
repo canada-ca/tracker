@@ -64,6 +64,39 @@ export const requestScan = new mutationWithClientMutationId({
       )
     }
 
+    let orgsClaimingDomainQuery
+    try {
+      orgsClaimingDomainQuery = await query`
+        WITH domains, users, organizations
+        LET userAffiliations = (
+          FOR v, e IN 1..1 ANY ${user._id} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        LET domainOrgClaims = (
+          FOR v, e IN 1..1 ANY ${domain._id} claims
+            RETURN v
+        )
+        LET orgsClaimingDomain = UNIQUE(domainOrgClaims[* FILTER CURRENT.verified == true || CURRENT IN userAffiliations])
+        RETURN orgsClaimingDomain
+    `
+    } catch (err) {
+      console.error(
+        `Database error when retrieving organizations claiming domain: ${userKey} and domain: ${domain._id}: ${err}`,
+      )
+      throw new Error(i18n._(t`Error while requesting scan. Please try again.`))
+    }
+
+    let orgsClaimingDomain
+    try {
+      orgsClaimingDomain = await orgsClaimingDomainQuery.next()
+    } catch (err) {
+      console.error(
+        `Cursor error when retrieving organizations claiming domain: ${userKey} and domain: ${domain._id}: ${err}`,
+      )
+      throw new Error(i18n._(t`Error while requesting scan. Please try again.`))
+    }
+
     // Check to see if a scan is already pending
     try {
       const webConnections = await loadWebConnectionsByDomainId({
@@ -104,21 +137,28 @@ export const requestScan = new mutationWithClientMutationId({
       },
     })
 
-    await logActivity({
-      transaction,
-      collections,
-      query,
-      initiatedBy: {
-        id: user._key,
-        userName: user.userName,
-        role: permission,
-      },
-      action: 'scan',
-      target: {
-        resource: domain.domain,
-        resourceType: 'domain', // user, org, domain
-      },
-    })
+    // Logs scan request activity for each org claiming domain
+    for (const orgClaimingDomain of orgsClaimingDomain) {
+      await logActivity({
+        transaction,
+        collections,
+        query,
+        initiatedBy: {
+          id: user._key,
+          userName: user.userName,
+          role: permission,
+        },
+        action: 'scan',
+        target: {
+          resource: domain.domain,
+          organization: {
+            id: orgClaimingDomain._key,
+            name: orgClaimingDomain.orgDetails.en.name,
+          }, // name of resource being acted upon
+          resourceType: 'domain', // user, org, domain
+        },
+      })
+    }
 
     console.info(`User: ${userKey} successfully dispatched a one time scan on domain: ${domain.domain}.`)
 

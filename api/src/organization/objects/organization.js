@@ -164,6 +164,10 @@ export const organizationType = new GraphQLObjectType({
               en: orgNames.orgNameEN,
               fr: orgNames.orgNameFR,
             },
+            organization: {
+              id: _id,
+              name: orgNames.orgNameEN,
+            }, // name of resource being acted upon
             resourceType: 'organization',
           },
         })
