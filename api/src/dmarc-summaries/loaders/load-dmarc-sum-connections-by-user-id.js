@@ -344,7 +344,7 @@ export const loadDmarcSummaryConnectionsByUserId =
           RETURN APPEND(ids, claimDomainIds)
       ))
     `
-    } else if (!loginRequiredBool) {
+    } else {
       domainIdQueries = aql`
       WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
       LET userAffiliations = (
@@ -360,17 +360,8 @@ export const loadDmarcSummaryConnectionsByUserId =
             RETURN v._id
       )
     `
-    } else {
-      domainIdQueries = aql`
-      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
-      LET domainIds = UNIQUE(
-        FOR v, e IN 1..1 ANY ${userDBId} affiliations
-          FILTER e.permission != "pending"
-          FOR domain, ownershipEdge IN 1..1 OUTBOUND v._id ownership
-            RETURN domain._id
-      )
-    `
     }
+
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
