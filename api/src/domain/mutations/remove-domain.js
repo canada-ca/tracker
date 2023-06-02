@@ -84,19 +84,7 @@ export const removeDomain = new mutationWithClientMutationId({
     // Get permission
     const permission = await checkPermission({ orgId: org._id })
 
-    // Check to see if domain belongs to verified check org
-    if (org.verified && permission !== 'super_admin') {
-      console.warn(
-        `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
-      )
-      return {
-        _type: 'error',
-        code: 403,
-        description: i18n._(t`Permission Denied: Please contact super admin for help with removing domain.`),
-      }
-    }
-
-    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
+    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
       console.warn(
         `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} however they do not have permission in that org.`,
       )
@@ -104,6 +92,19 @@ export const removeDomain = new mutationWithClientMutationId({
         _type: 'error',
         code: 403,
         description: i18n._(t`Permission Denied: Please contact organization admin for help with removing domain.`),
+      }
+    }
+
+    // Check to see if domain belongs to verified check org
+    // if domain returns NXDOMAIN, allow removal
+    if (org.verified && permission !== 'super_admin' && domain.rcode !== 'NXDOMAIN') {
+      console.warn(
+        `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
+      )
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact super admin for help with removing domain.`),
       }
     }
 

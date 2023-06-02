@@ -359,7 +359,7 @@ export const organizationSummaryType = new GraphQLObjectType({
       resolve: ({ dmarc, hidden }, _) => {
         const pass = dmarc.pass + hidden.dmarc.pass
         const fail = dmarc.fail + hidden.dmarc.fail
-        const total = dmarc.total + hidden.https.total
+        const total = dmarc.total + hidden.dmarc.total
 
         let percentPass, percentageFail
         if (total <= 0) {

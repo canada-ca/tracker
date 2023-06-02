@@ -6,7 +6,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { sanitizeUrl } from '../utilities/sanitizeUrl'
 
-export function AdminDomainCard({ url, tags, isHidden, isArchived, ...rest }) {
+export function AdminDomainCard({ url, tags, isHidden, isArchived, rcode, ...rest }) {
   return (
     <ListItem {...rest}>
       <Grid templateColumns={{ base: 'auto', md: '40% 60%' }} columnGap="1.5rem">
@@ -35,6 +35,11 @@ export function AdminDomainCard({ url, tags, isHidden, isArchived, ...rest }) {
               </Tag>
             )
           })}
+          {rcode === 'NXDOMAIN' && (
+            <Tag colorScheme="red" mr="auto" alignSelf="center">
+              NXDOMAIN
+            </Tag>
+          )}
           {isHidden && (
             <Tag m="1" borderRadius="full" borderWidth="1px" borderColor="gray.900">
               <TagLabel mx="auto">
@@ -59,4 +64,5 @@ AdminDomainCard.propTypes = {
   tags: array,
   isHidden: bool,
   isArchived: bool,
+  rcode: string,
 }
