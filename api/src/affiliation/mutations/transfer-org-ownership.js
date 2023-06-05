@@ -59,15 +59,6 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
         description: i18n._(t`Unable to transfer ownership of undefined organization.`),
       }
     }
-    // ensure org is not verified
-    else if (org.verified) {
-      console.warn(`User: ${requestingUser._key} attempted to transfer ownership of a verified org: ${org.slug}.`)
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to transfer ownership of a verified organization.`),
-      }
-    }
 
     // get org owner bool value
     const owner = await checkOrgOwner({ orgId: org._id })
