@@ -3,7 +3,7 @@ import { fromGlobalId, toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadDmarcSummaryConnectionsByUserId =
-  ({ query, userKey, cleanseInput, i18n, loadStartDateFromPeriod, auth: { loginRequiredBool } }) =>
+  ({ query, userKey, cleanseInput, i18n, loadStartDateFromPeriod }) =>
   async ({ after, before, first, last, period, year, orderBy, isSuperAdmin, search }) => {
     const userDBId = `users/${userKey}`
 
