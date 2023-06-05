@@ -275,7 +275,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
             onSubmit={async (values) => {
               removeDomain({
                 variables: {
-                  domainId: selectedRemoveProps.selectedRemoveDomainId,
+                  domainId: selectedRemoveProps.domainId,
                   orgId: orgId,
                   reason: values.reason,
                 },
@@ -293,7 +293,7 @@ export function AdminDomains({ orgSlug, domainsPerPage, orgId, permission }) {
                     <Text>
                       <Trans>Confirm removal of domain:</Trans>
                     </Text>
-                    <Text fontWeight="bold">{selectedRemoveProps.selectedRemoveDomainUrl}</Text>
+                    <Text fontWeight="bold">{selectedRemoveProps.domain}</Text>
 
                     <Text>
                       <Trans>
