@@ -410,7 +410,7 @@ describe('<UserListModal />', () => {
         })
       })
       describe('admin is updating user with "ADMIN" privileges', () => {
-        it('admin cannot downgrade user to "USER"', async () => {
+        it('admin can downgrade user to "USER"', async () => {
           const { getByRole, queryByText } = render(
             <MockedProvider mocks={[]} cache={createCache()}>
               <UserVarProvider
@@ -442,9 +442,11 @@ describe('<UserListModal />', () => {
           const roleChangeSelect = getByRole('combobox', {
             name: /Role:/,
           })
-          expect(roleChangeSelect.options.length).toEqual(1)
-          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/ADMIN/)
-          expect(roleChangeSelect).not.toHaveTextContent(/USER/)
+          expect(roleChangeSelect.options.length).toEqual(2)
+          expect(roleChangeSelect.value).toEqual('ADMIN')
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
+          expect(roleChangeSelect).toHaveTextContent(/USER/)
         })
       })
     })
