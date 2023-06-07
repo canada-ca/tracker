@@ -343,8 +343,8 @@ export const loadDomainConnectionsByUserId =
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET collectedDomains = UNIQUE(
-        FOR org, e IN 1..1 ANY ${userDBId} affiliations
-          FILTER e.permission != "pending"
+        FOR org, affiliationEdge IN 1..1 ANY ${userDBId} affiliations
+          FILTER affiliationEdge.permission != "pending"
           ${ownershipOrgsOnly}
             RETURN v
       )
