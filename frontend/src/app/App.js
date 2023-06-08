@@ -88,8 +88,18 @@ export function App() {
           </>
         )}
 
+        {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
+          <RouteLink to="/dmarc-summaries">
+            <Trans>DMARC Summaries</Trans>
+          </RouteLink>
+        )}
+
         {isLoggedIn() && (
           <>
+            <RouteLink to="/my-tracker">
+              <Trans>myTracker</Trans>
+            </RouteLink>
+
             <RouteLink to="/user">
               <Trans>Account Settings</Trans>
             </RouteLink>
@@ -98,14 +108,6 @@ export function App() {
 
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
           <>
-            <RouteLink to="/my-tracker">
-              <Trans>myTracker</Trans>
-            </RouteLink>
-
-            <RouteLink to="/dmarc-summaries">
-              <Trans>DMARC Summaries</Trans>
-            </RouteLink>
-
             <RouteLink to="/admin">
               <Trans>Admin Profile</Trans>
             </RouteLink>
