@@ -313,9 +313,8 @@ export const closeAccount = new mutationWithClientMutationId({
 
       // remove users affiliation
       try {
-        await Promise.all([
-          trx.step(
-            () => query`
+        await trx.step(
+          () => query`
               WITH affiliations, organizations, users
               LET userEdges = (
                 FOR v, e IN 1..1 INBOUND ${affiliation._from} affiliations
@@ -328,15 +327,14 @@ export const closeAccount = new mutationWithClientMutationId({
               )
               RETURN true
             `,
-          ),
-          trx.step(
-            () => query`
+        )
+        await trx.step(
+          () => query`
               WITH organizations
               REMOVE PARSE_IDENTIFIER(${affiliation._from}).key
               IN organizations OPTIONS { waitForSync: true }
             `,
-          ),
-        ])
+        )
       } catch (err) {
         console.error(
           `Trx step error occurred when removing ownership org and users affiliations when user: ${user._key} attempted to close account: ${userId}: ${err}`,

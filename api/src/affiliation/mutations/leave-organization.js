@@ -242,10 +242,9 @@ export const leaveOrganization = new mutationWithClientMutationId({
       }
 
       try {
-        await Promise.all([
-          trx.step(
-            () =>
-              query`
+        await trx.step(
+          () =>
+            query`
                 WITH affiliations, organizations, users
                 LET userEdges = (
                   FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
@@ -258,16 +257,15 @@ export const leaveOrganization = new mutationWithClientMutationId({
                 )
                 RETURN true
               `,
-          ),
-          trx.step(
-            () =>
-              query`
+        )
+        await trx.step(
+          () =>
+            query`
                 WITH organizations
                 REMOVE ${org._key} IN organizations
                 OPTIONS { waitForSync: true }
               `,
-          ),
-        ])
+        )
       } catch (err) {
         console.error(
           `Trx step error occurred while attempting to remove affiliations, and the org for org: ${org._key}, when user: ${user._key} attempted to leave: ${err}`,
