@@ -237,14 +237,15 @@ export const organizationType = new GraphQLObjectType({
         { i18n, auth: { checkPermission }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
         const permission = await checkPermission({ orgId: _id })
-        if (permission === 'admin' || permission === 'super_admin') {
-          const affiliations = await loadAffiliationConnectionsByOrgId({
-            orgId: _id,
-            ...args,
-          })
-          return affiliations
+        if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+          throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
-        throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
+
+        const affiliations = await loadAffiliationConnectionsByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return affiliations
       },
     },
     userHasPermission: {
