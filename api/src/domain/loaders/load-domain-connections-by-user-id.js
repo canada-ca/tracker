@@ -313,7 +313,7 @@ export const loadDomainConnectionsByUserId =
     let domainKeysQuery
     if (myTracker) {
       domainKeysQuery = aql`
-      WITH favourites, users
+      WITH favourites, users, domains
       LET collectedDomains = (
         FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
           OPTIONS {order: "bfs"}
