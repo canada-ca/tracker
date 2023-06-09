@@ -143,7 +143,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     const trx = await transaction(collections)
 
     try {
-      await trx.step(async () => {
+      await trx.step( () =>
         query`
             WITH affiliations, organizations, users
             FOR aff IN affiliations
@@ -151,8 +151,8 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
               FILTER aff._to == ${requestedUser._id}
               REMOVE aff IN affiliations
               RETURN true
-        `
-      })
+        `,
+      )
     } catch (err) {
       console.error(
         `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,

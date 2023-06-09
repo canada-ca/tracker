@@ -7,9 +7,15 @@ export const loadDomainConnectionsByUserId =
   async ({ after, before, first, last, ownership, orderBy, isSuperAdmin, myTracker, search }) => {
     const userDBId = `users/${userKey}`
 
-    let orgEdgeCollectionLoop = aql`FOR v, e IN 1..1 OUTBOUND org._id claims`
-    if (ownership) {
-      orgEdgeCollectionLoop = aql`FOR v, e IN 1..1 OUTBOUND org._id ownership`
+    let ownershipOrgsOnly = aql`
+        FOR v, e IN 1..1 OUTBOUND org._id claims
+    `
+    if (typeof ownership !== 'undefined') {
+      if (ownership) {
+        ownershipOrgsOnly = aql`
+            FOR v, e IN 1..1 OUTBOUND org._id ownership
+        `
+      }
     }
 
     let afterTemplate = aql``
@@ -308,7 +314,7 @@ export const loadDomainConnectionsByUserId =
     if (myTracker) {
       domainKeysQuery = aql`
       WITH favourites, users
-      LET domainKeys = (
+      LET collectedDomains = (
         FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
           OPTIONS {order: "bfs"}
           RETURN v._key
@@ -317,50 +323,37 @@ export const loadDomainConnectionsByUserId =
     } else if (isSuperAdmin) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = (
+      LET collectedDomains = UNIQUE(
         FOR org IN organizations
-          ${orgEdgeCollectionLoop}
-            RETURN v._key
+          ${ownershipOrgsOnly}
+            RETURN v
       )
     `
     } else if (!loginRequiredBool) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = (
-        LET userAffiliations = (
-          FOR v, e IN 1..1 ANY ${userDBId} affiliations
-            FILTER e.permission != "pending"
-            RETURN v
-        )
+      LET collectedDomains = UNIQUE(
         FOR org IN organizations
-          FILTER org._key IN userAffiliations[*]._key || org.verified == true
-            ${orgEdgeCollectionLoop}
-              FILTER v.archived != true
-              RETURN v._key
+          ${ownershipOrgsOnly}
+            FILTER v.archived != true
+            RETURN v
       )
     `
     } else {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = (
-        LET userAffiliations = (
-          FOR v, e IN 1..1 ANY ${userDBId} affiliations
-            FILTER e.permission != "pending"
+      LET collectedDomains = UNIQUE(
+        FOR org, affiliationEdge IN 1..1 ANY ${userDBId} affiliations
+          FILTER affiliationEdge.permission != "pending"
+          ${ownershipOrgsOnly}
             RETURN v
-        )
-        LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
-        FOR org IN organizations
-          FILTER org._key IN userAffiliations[*]._key || (hasVerifiedOrgAffiliation == true && org.verified == true)
-          ${orgEdgeCollectionLoop}
-            FILTER v.archived != true
-            RETURN v._key
       )
     `
     }
 
     let domainQuery = aql``
-    let loopString = aql`FOR domain IN domains`
-    let totalCount = aql`LENGTH(domainKeys)`
+    let loopString = aql`FOR domain IN collectedDomains`
+    let totalCount = aql`LENGTH(collectedDomains)`
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
@@ -370,7 +363,7 @@ export const loadDomainConnectionsByUserId =
             LET token = LOWER(tokenItem)
             FOR domain IN domainSearch
               SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
-              FILTER domain._key IN domainKeys
+              FILTER domain IN collectedDomains
               RETURN domain
         )
       `
@@ -394,7 +387,6 @@ export const loadDomainConnectionsByUserId =
 
       LET retrievedDomains = (
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${showArchivedDomains}
           ${afterTemplate}
           ${beforeTemplate}
@@ -406,7 +398,6 @@ export const loadDomainConnectionsByUserId =
 
       LET hasNextPage = (LENGTH(
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${showArchivedDomains}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
@@ -415,7 +406,6 @@ export const loadDomainConnectionsByUserId =
 
       LET hasPreviousPage = (LENGTH(
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${showArchivedDomains}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
