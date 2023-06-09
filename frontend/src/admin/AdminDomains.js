@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import {
   Button,
@@ -53,7 +53,6 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
     domainId: '',
     rcode: '',
   })
-  // const [selectedRemoveDomainId, setSelectedRemoveDomainId] = useState()
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [modalProps, setModalProps] = useState({
     hidden: false,
@@ -68,15 +67,31 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
   const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
   const { isOpen: removeIsOpen, onOpen: removeOnOpen, onClose: removeOnClose } = useDisclosure()
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      recordsPerPage: domainsPerPage,
-      variables: { orgSlug, search: debouncedSearchTerm, orderBy: { field: 'DOMAIN', direction: 'ASC' } },
-      relayRoot: 'findOrganizationBySlug.domains',
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-    })
+  const fetchVariables = {
+    orgSlug,
+    search: debouncedSearchTerm,
+    orderBy: { field: 'DOMAIN', direction: 'ASC' },
+  }
+
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    endCursor,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    recordsPerPage: domainsPerPage,
+    variables: fetchVariables,
+    relayRoot: 'findOrganizationBySlug.domains',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(newDomainUrl)
@@ -84,8 +99,15 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
+  useEffect(() => {
+    resetToFirstPage()
+  }, [orgSlug])
+
   const [removeDomain] = useMutation(REMOVE_DOMAIN, {
-    refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
+    refetchQueries: [
+      { query: FORWARD, variables: { after: endCursor, first: domainsPerPage, ...fetchVariables } },
+      'FindAuditLogs',
+    ],
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -231,7 +253,10 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
               type="text"
               placeholder={i18n._(t`Domain URL`)}
               aria-label={i18n._(t`Search by Domain URL`)}
-              onChange={(e) => setNewDomainUrl(e.target.value)}
+              onChange={(e) => {
+                setNewDomainUrl(e.target.value)
+                resetToFirstPage()
+              }}
             />
           </InputGroup>
           <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit">
@@ -264,6 +289,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
         orgSlug={orgSlug}
         {...modalProps}
         permission={permission}
+        refetchQuery={{ query: FORWARD, variables: { after: endCursor, first: domainsPerPage, ...fetchVariables } }}
       />
 
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">
@@ -279,7 +305,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
             onSubmit={async (values) => {
               removeDomain({
                 variables: {
-                  domainId: selectedRemoveProps.selectedRemoveDomainId,
+                  domainId: selectedRemoveProps.domainId,
                   orgId: orgId,
                   reason: values.reason,
                 },
@@ -297,7 +323,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
                     <Text>
                       <Trans>Confirm removal of domain:</Trans>
                     </Text>
-                    <Text fontWeight="bold">{selectedRemoveProps.selectedRemoveDomainUrl}</Text>
+                    <Text fontWeight="bold">{selectedRemoveProps.domain}</Text>
 
                     <Text>
                       <Trans>

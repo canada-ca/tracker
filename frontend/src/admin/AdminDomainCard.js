@@ -7,17 +7,21 @@ export function AdminDomainCard({ url, tags, isHidden, isArchived, rcode, ...res
   return (
     <ListItem {...rest}>
       <Flex align="center">
-        <Text fontWeight="bold">{url}</Text>
-        <Flex ml="auto" align="center">
+        <Text minWidth="35%" fontWeight="bold" fontSize="lg" mr="2">
+          {url}
+        </Text>
+        <Flex>
           {tags?.map((tag, idx) => {
             return (
-              <Tag key={idx} m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
+              <Tag key={idx} mr="1" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                 <TagLabel textColor="primary" fontWeight="bold" mx="auto">
                   {tag}
                 </TagLabel>
               </Tag>
             )
           })}
+        </Flex>
+        <Flex ml="auto">
           {rcode === 'NXDOMAIN' && (
             <Tag colorScheme="red" mr="auto" alignSelf="center">
               <TagLabel fontWeight="bold">NXDOMAIN</TagLabel>
