@@ -334,7 +334,7 @@ export const loadDomainConnectionsByUserId =
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET collectedDomains = UNIQUE(
         LET userAffiliations = (
-          FOR v, e IN 1..1 ANY ${userDBId} affiliations
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
             FILTER e.permission != "pending"
             RETURN v
         )
@@ -350,7 +350,7 @@ export const loadDomainConnectionsByUserId =
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET collectedDomains = UNIQUE(
         LET userAffiliations = (
-          FOR v, e IN 1..1 OUTBOUND ${userDBId} affiliations
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
             FILTER e.permission != "pending"
             RETURN v
         )

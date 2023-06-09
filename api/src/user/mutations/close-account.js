@@ -317,7 +317,7 @@ export const closeAccount = new mutationWithClientMutationId({
           () => query`
               WITH affiliations, organizations, users
               LET userEdges = (
-                FOR v, e IN 1..1 INBOUND ${affiliation._from} affiliations
+                FOR v, e IN 1..1 ANY ${affiliation._from} affiliations
                   RETURN { edgeKey: e._key, userKey: e._to }
               )
               LET removeUserEdges = (
