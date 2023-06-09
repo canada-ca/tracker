@@ -1,0 +1,73 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: start_arango
+    entrypoint: /bin/sh
+    args:
+      [
+        '-c',
+        'docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arangodb arangodb/arangodb:3.10.4',
+      ]
+
+  - name: mikewilliamson/wait-for
+    id: wait
+    args: ['arangodb:8529']
+
+  - name: node:alpine
+    id: install-dependencies
+    dir: services/domain-cleanup
+    entrypoint: npm
+    args: ['ci', '--no-optional']
+
+  - name: node:alpine
+    id: run-eslint
+    dir: services/domain-cleanup
+    entrypoint: npm
+    args: ['run', lint]
+
+  - name: node:alpine
+    id: test
+    dir: services/domain-cleanup
+    entrypoint: npm
+    args: ['test']
+    env:
+      - DB_URL=$_DB_URL
+      - DB_PASS=$_DB_PASS
+      - DB_NAME=$_DB_NAME
+  - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: services/domain-cleanup
+    args:
+      - '-c'
+      - |
+        echo "gcr.io/$PROJECT_ID/domain-cleanup:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-if-master
+    entrypoint: 'bash'
+    dir: services/domain-cleanup
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker build -t $image .
+        else
+          exit 0
+        fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-if-master
+    entrypoint: 'bash'
+    dir: services/domain-cleanup
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi
