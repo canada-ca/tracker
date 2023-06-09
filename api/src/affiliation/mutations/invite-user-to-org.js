@@ -4,8 +4,8 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { RoleEnums } from '../../enums'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import { InvitationRoleEnums } from '../../enums'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
   name: 'InviteUserToOrg',
@@ -18,7 +18,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       description: 'Users email that you would like to invite to your org.',
     },
     requestedRole: {
-      type: GraphQLNonNull(RoleEnums),
+      type: GraphQLNonNull(InvitationRoleEnums),
       description: 'The role which you would like this user to have.',
     },
     orgId: {
