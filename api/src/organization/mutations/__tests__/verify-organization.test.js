@@ -182,8 +182,7 @@ describe('removing an organization', () => {
             data: {
               verifyOrganization: {
                 result: {
-                  status:
-                    'Successfully verified organization: treasury-board-secretariat.',
+                  status: 'Successfully verified organization: treasury-board-secretariat.',
                   organization: {
                     name: 'Treasury Board of Canada Secretariat',
                   },
@@ -193,9 +192,7 @@ describe('removing an organization', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key}, successfully verified org: ${org._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key}, successfully verified org: ${org._key}.`])
 
           const orgLoader = loadOrgByKey({
             query,
@@ -294,8 +291,7 @@ describe('removing an organization', () => {
             data: {
               verifyOrganization: {
                 result: {
-                  status:
-                    "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
+                  status: "Envoi réussi de l'invitation au service, et de l'email de l'organisation.",
                   organization: {
                     name: 'Secrétariat du Conseil Trésor du Canada',
                   },
@@ -305,9 +301,7 @@ describe('removing an organization', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key}, successfully verified org: ${org._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key}, successfully verified org: ${org._key}.`])
 
           const orgLoader = loadOrgByKey({
             query,
@@ -637,9 +631,7 @@ describe('removing an organization', () => {
                   query,
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   auth: {
@@ -658,11 +650,7 @@ describe('removing an organization', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Unable to verify organization. Please try again.',
-                ),
-              ]
+              const error = [new GraphQLError('Unable to verify organization. Please try again.')]
 
               expect(response.errors).toEqual(error)
 
@@ -703,10 +691,7 @@ describe('removing an organization', () => {
                   query,
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockReturnValueOnce()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   auth: {
@@ -725,16 +710,12 @@ describe('removing an organization', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Unable to verify organization. Please try again.',
-                ),
-              ]
+              const error = [new GraphQLError('Unable to verify organization. Please try again.')]
 
               expect(response.errors).toEqual(error)
 
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when clearing owners for org: 123: Error: trx step error`,
+                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
               ])
             })
           })
@@ -772,9 +753,7 @@ describe('removing an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -793,11 +772,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to verify organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to verify organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -875,8 +850,7 @@ describe('removing an organization', () => {
               verifyOrganization: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de vérifier une organisation inconnue.',
+                  description: 'Impossible de vérifier une organisation inconnue.',
                 },
               },
             },
@@ -1124,9 +1098,7 @@ describe('removing an organization', () => {
                   query,
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   auth: {
@@ -1145,11 +1117,7 @@ describe('removing an organization', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  "Impossible de vérifier l'organisation. Veuillez réessayer.",
-                ),
-              ]
+              const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
 
               expect(response.errors).toEqual(error)
 
@@ -1190,10 +1158,7 @@ describe('removing an organization', () => {
                   query,
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockReturnValueOnce()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   auth: {
@@ -1212,16 +1177,12 @@ describe('removing an organization', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  "Impossible de vérifier l'organisation. Veuillez réessayer.",
-                ),
-              ]
+              const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
 
               expect(response.errors).toEqual(error)
 
               expect(consoleOutput).toEqual([
-                `Trx step error occurred when clearing owners for org: 123: Error: trx step error`,
+                `Transaction error occurred while upserting verified org: 123, err: Error: trx step error`,
               ])
             })
           })
@@ -1259,9 +1220,7 @@ describe('removing an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -1280,11 +1239,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                "Impossible de vérifier l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
 

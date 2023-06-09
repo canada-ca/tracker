@@ -479,6 +479,7 @@ export const ORG_DETAILS_PAGE = gql`
       name
       acronym
       verified
+      userHasPermission
       summaries {
         https {
           ...RequiredSummaryFields
@@ -552,6 +553,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             rcode
             blocked
             webScanPending
+            userHasPermission
           }
         }
       }
@@ -604,6 +606,7 @@ export const PAGINATED_DOMAINS = gql`
           }
           archived
           hasDMARCReport
+          userHasPermission
           __typename
         }
         __typename

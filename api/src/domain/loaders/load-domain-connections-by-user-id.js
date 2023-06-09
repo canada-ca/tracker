@@ -333,7 +333,13 @@ export const loadDomainConnectionsByUserId =
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET collectedDomains = UNIQUE(
+        LET userAffiliations = (
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
         FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key || org.verified == true
           ${ownershipOrgsOnly}
             FILTER v.archived != true
             RETURN v
@@ -343,9 +349,17 @@ export const loadDomainConnectionsByUserId =
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET collectedDomains = UNIQUE(
-        FOR org, affiliationEdge IN 1..1 ANY ${userDBId} affiliations
-          FILTER affiliationEdge.permission != "pending"
+        LET userAffiliations = (
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
+
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key || (hasVerifiedOrgAffiliation == true && org.verified == true)
           ${ownershipOrgsOnly}
+            FILTER v.archived != true
             RETURN v
       )
     `

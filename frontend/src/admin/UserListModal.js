@@ -254,7 +254,7 @@ export function UserListModal({
                     >
                       {editingUserRole === 'PENDING' && <option value="PENDING">{t`PENDING`}</option>}
                       {(['PENDING', 'USER'].includes(editingUserRole) ||
-                        (permission === 'SUPER_ADMIN' && editingUserRole === 'ADMIN')) && (
+                        (['ADMIN', 'OWNER', 'SUPER_ADMIN'].includes(permission) && editingUserRole === 'ADMIN')) && (
                         <option value="USER">{t`USER`}</option>
                       )}
                       {['PENDING', 'USER', 'ADMIN'].includes(editingUserRole) && (

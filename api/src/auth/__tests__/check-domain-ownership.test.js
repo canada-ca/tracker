@@ -1,15 +1,27 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { setupI18n } from '@lingui/core'
 
-import {checkDomainOwnership} from '../index'
+import { checkDomainOwnership } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check domain ownership function', () => {
-  let query, drop, truncate, collections, org, domain, i18n, user
+  let query, drop, truncate, collections, org, verifiedOrg, unverifiedOrg, domain, i18n, user
+  i18n = setupI18n({
+    locale: 'en',
+    localeData: {
+      en: { plurals: {} },
+      fr: { plurals: {} },
+    },
+    locales: ['en', 'fr'],
+    messages: {
+      en: englishMessages.messages,
+      fr: frenchMessages.messages,
+    },
+  })
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
 
@@ -20,70 +32,155 @@ describe('given the check domain ownership function', () => {
     consoleOutput.length = 0
   })
 
+  beforeAll(async () => {
+    ;({ query, drop, truncate, collections } = await ensure({
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
+        rootPassword: rootPass,
+        password: rootPass,
+        url,
+      },
+
+      schema: dbschema,
+    }))
+  })
+  beforeEach(async () => {
+    user = await collections.users.save({
+      userName: 'test.account@istio.actually.exists',
+      displayName: 'Test Account',
+      preferredLang: 'french',
+      tfaValidated: false,
+      emailValidated: false,
+    })
+    org = await collections.organizations.save({
+      orgDetails: {
+        en: {
+          slug: 'treasury-board-secretariat',
+          acronym: 'TBS',
+          name: 'Treasury Board of Canada Secretariat',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+        fr: {
+          slug: 'secretariat-conseil-tresor',
+          acronym: 'SCT',
+          name: 'Secrétariat du Conseil Trésor du Canada',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+      },
+      verified: true,
+    })
+    verifiedOrg = await collections.organizations.save({
+      orgDetails: {
+        en: {
+          slug: 'other-org',
+          acronym: 'OO',
+          name: 'Other Org',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+        fr: {
+          slug: 'autre-org',
+          acronym: 'AO',
+          name: 'Autre Org',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+      },
+      verified: true,
+    })
+    unverifiedOrg = await collections.organizations.save({
+      orgDetails: {
+        en: {
+          slug: 'unverified-org',
+          acronym: 'UO',
+          name: 'Unverified Org',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+        fr: {
+          slug: 'unverified-org',
+          acronym: 'UO',
+          name: 'Unverified Org',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+      },
+    })
+    domain = await collections.domains.save({
+      domain: 'test.gc.ca',
+      slug: 'test-gc-ca',
+      lastRan: null,
+      selectors: ['selector1', 'selector2'],
+    })
+    await collections.ownership.save({
+      _to: domain._id,
+      _from: org._id,
+    })
+  })
+  afterEach(async () => {
+    await truncate()
+  })
+  afterAll(async () => {
+    await drop()
+  })
+
   describe('given a successful domain ownership call', () => {
     let permitted
-    beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
-        variables: {
-          dbname: dbNameFromFile(__filename),
-          username: 'root',
-          rootPassword: rootPass,
-          password: rootPass,
-          url,
-        },
+    i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
+    })
 
-        schema: dbschema,
-      }))
-    })
-    beforeEach(async () => {
-      user = await collections.users.save({
-        userName: 'test.account@istio.actually.exists',
-        displayName: 'Test Account',
-        preferredLang: 'french',
-        tfaValidated: false,
-        emailValidated: false,
+    describe('if the user belongs to an org which is verified and the org in question is also verified', () => {
+      beforeEach(async () => {
+        await collections.affiliations.save({
+          _from: verifiedOrg._id,
+          _to: user._id,
+          permission: 'user',
+        })
       })
-      org = await collections.organizations.save({
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      domain = await collections.domains.save({
-        domain: 'test.gc.ca',
-        slug: 'test-gc-ca',
-        lastRan: null,
-        selectors: ['selector1', 'selector2'],
-      })
-      await collections.ownership.save({
-        _to: domain._id,
-        _from: org._id,
+      it('will return true', async () => {
+        const testCheckDomainOwnerShip = checkDomainOwnership({
+          i18n,
+          query,
+          userKey: user._key,
+        })
+        permitted = await testCheckDomainOwnerShip({
+          domainId: domain._id,
+        })
+        expect(permitted).toEqual(true)
       })
     })
-    afterEach(async () => {
-      await truncate()
-    })
-    afterAll(async () => {
-      await drop()
-    })
+
     describe('if the user belongs to an org which has a ownership for a given organization', () => {
       afterEach(async () => {
         await query`
@@ -109,7 +206,7 @@ describe('given the check domain ownership function', () => {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               query,
               userKey: user._key,
-              auth: {loginRequiredBool: true},
+              auth: { loginRequiredBool: true },
             })
             permitted = await testCheckDomainOwnerShip({
               domainId: domain._id,
@@ -128,9 +225,10 @@ describe('given the check domain ownership function', () => {
         })
         it('will return true', async () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
+            i18n,
             query,
             userKey: user._key,
-            auth: {loginRequiredBool: true},
+            auth: { loginRequiredBool: true },
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -150,7 +248,7 @@ describe('given the check domain ownership function', () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query,
             userKey: user._key,
-            auth: {loginRequiredBool: true},
+            auth: { loginRequiredBool: true },
           })
           permitted = await testCheckDomainOwnerShip({
             domainId: domain._id,
@@ -166,12 +264,10 @@ describe('given the check domain ownership function', () => {
         it('will return false', async () => {
           const testCheckDomainOwnerShip = checkDomainOwnership({
             query: jest.fn().mockReturnValue({
-              next: jest
-                .fn()
-                .mockReturnValue({superAdmin: true, domainOwnership: false}),
+              next: jest.fn().mockReturnValue({ superAdmin: true, domainOwnership: false }),
             }),
             userKey: 123,
-            auth: {loginRequiredBool: true},
+            auth: { loginRequiredBool: true },
           })
           const permitted = await testCheckDomainOwnerShip({
             domainId: 'domains/123',
@@ -182,18 +278,18 @@ describe('given the check domain ownership function', () => {
     })
     describe('if the user does not belong to an org which has a ownership for a given domain', () => {
       let permitted
+      beforeEach(async () => {
+        await collections.affiliations.save({
+          _from: unverifiedOrg._id,
+          _to: user._id,
+          permission: 'user',
+        })
+      })
       it('will return false', async () => {
         const testCheckDomainOwnerShip = checkDomainOwnership({
-          query: jest
-            .fn()
-            .mockReturnValueOnce({
-              next: jest.fn().mockReturnValue({superAdmin: false}),
-            })
-            .mockReturnValue({
-              next: jest.fn().mockReturnValue([]),
-            }),
+          i18n: i18n,
+          query: query,
           userKey: '123',
-          auth: {loginRequiredBool: true},
         })
         permitted = await testCheckDomainOwnerShip({
           domainId: 'domains/123',
@@ -206,8 +302,8 @@ describe('given the check domain ownership function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -220,15 +316,13 @@ describe('given the check domain ownership function', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           const firstCursor = {
-            next: jest
-              .fn()
-              .mockRejectedValue(new Error('Cursor error occurred.')),
+            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
           }
           mockQuery = jest.fn().mockReturnValueOnce(firstCursor)
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -236,11 +330,7 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Ownership check error. Unable to request domain information.',
-              ),
-            )
+            expect(err).toEqual(new Error('Ownership check error. Unable to request domain information.'))
             expect(consoleOutput).toEqual([
               `Cursor error when retrieving super admin affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Cursor error occurred.`,
             ])
@@ -257,18 +347,13 @@ describe('given the check domain ownership function', () => {
             }),
           }
           const secondCursor = {
-            next: jest
-              .fn()
-              .mockRejectedValue(new Error('Cursor error occurred.')),
+            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
           }
-          mockQuery = jest
-            .fn()
-            .mockReturnValueOnce(firstCursor)
-            .mockReturnValue(secondCursor)
+          mockQuery = jest.fn().mockReturnValueOnce(firstCursor).mockReturnValue(secondCursor)
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -276,11 +361,7 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Ownership check error. Unable to request domain information.',
-              ),
-            )
+            expect(err).toEqual(new Error('Ownership check error. Unable to request domain information.'))
             expect(consoleOutput).toEqual([
               `Cursor error when retrieving affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Cursor error occurred.`,
             ])
@@ -290,13 +371,11 @@ describe('given the check domain ownership function', () => {
       describe('if a database error is encountered during super admin check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
-          mockQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -304,11 +383,7 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Ownership check error. Unable to request domain information.',
-              ),
-            )
+            expect(err).toEqual(new Error('Ownership check error. Unable to request domain information.'))
             expect(consoleOutput).toEqual([
               `Database error when retrieving super admin affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
@@ -332,7 +407,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -340,11 +415,7 @@ describe('given the check domain ownership function', () => {
               domainId: domain._id,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Ownership check error. Unable to request domain information.',
-              ),
-            )
+            expect(err).toEqual(new Error('Ownership check error. Unable to request domain information.'))
             expect(consoleOutput).toEqual([
               `Database error when retrieving affiliated organization ownership for user: ${user._key} and domain: ${domain._id}: Error: Database error occurred.`,
             ])
@@ -357,8 +428,8 @@ describe('given the check domain ownership function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -371,15 +442,13 @@ describe('given the check domain ownership function', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
           const firstCursor = {
-            next: jest
-              .fn()
-              .mockRejectedValue(new Error('Cursor error occurred.')),
+            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
           }
           mockQuery = jest.fn().mockReturnValueOnce(firstCursor)
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -408,18 +477,13 @@ describe('given the check domain ownership function', () => {
             }),
           }
           const secondCursor = {
-            next: jest
-              .fn()
-              .mockRejectedValue(new Error('Cursor error occurred.')),
+            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
           }
-          mockQuery = jest
-            .fn()
-            .mockReturnValueOnce(firstCursor)
-            .mockReturnValue(secondCursor)
+          mockQuery = jest.fn().mockReturnValueOnce(firstCursor).mockReturnValue(secondCursor)
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -441,13 +505,11 @@ describe('given the check domain ownership function', () => {
       describe('if a database error is encountered during super admin check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
-          mockQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
@@ -483,7 +545,7 @@ describe('given the check domain ownership function', () => {
           try {
             const testCheckDomainOwnerShip = checkDomainOwnership({
               i18n,
-              auth: {loginRequired: true},
+              auth: { loginRequired: true },
               query: mockQuery,
               userKey: user._key,
             })
