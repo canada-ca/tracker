@@ -13,19 +13,9 @@ import { AdminDomains } from '../AdminDomains'
 
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
-import {
-  rawOrgDomainListData,
-  rawOrgDomainListDataEmpty,
-} from '../../fixtures/orgDomainListData'
-import {
-  PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD,
-  FIND_AUDIT_LOGS,
-} from '../../graphql/queries'
-import {
-  CREATE_DOMAIN,
-  REMOVE_DOMAIN,
-  UPDATE_DOMAIN,
-} from '../../graphql/mutations'
+import { rawOrgDomainListData, rawOrgDomainListDataEmpty } from '../../fixtures/orgDomainListData'
+import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD, FIND_AUDIT_LOGS } from '../../graphql/queries'
+import { CREATE_DOMAIN, REMOVE_DOMAIN, UPDATE_DOMAIN } from '../../graphql/mutations'
 
 const i18n = setupI18n({
   locale: 'en',
@@ -41,7 +31,7 @@ const mocks = [
   {
     request: {
       query: FORWARD,
-      variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+      variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
     },
     result: { data: rawOrgDomainListData },
   },
@@ -51,9 +41,7 @@ describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
@@ -80,7 +68,7 @@ describe('<AdminDomains />', () => {
       {
         request: {
           query: FORWARD,
-          variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+          variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
         },
         result: { data: rawOrgDomainListDataEmpty },
       },
@@ -88,9 +76,7 @@ describe('<AdminDomains />', () => {
 
     const { getByText } = render(
       <MockedProvider mocks={mocks} cache={createCache()}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
@@ -121,7 +107,7 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -178,9 +164,7 @@ describe('<AdminDomains />', () => {
       const addDomain = await findByText(/Add Domain/i)
       fireEvent.click(addDomain)
 
-      await waitFor(() =>
-        expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Add Domain Details/)).toBeInTheDocument())
 
       const confirmBtn = getByText(/Confirm/)
       fireEvent.click(confirmBtn)
@@ -196,7 +180,7 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -271,16 +255,12 @@ describe('<AdminDomains />', () => {
       const addDomainButton = getByRole('button', { name: 'Add Domain' })
       userEvent.click(addDomainButton)
 
-      await waitFor(() =>
-        expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Add Domain Details/)).toBeInTheDocument())
 
       const confirmButton = getByRole('button', { name: /Confirm/ })
       userEvent.click(confirmButton)
 
-      await waitFor(() =>
-        expect(getByText(/Unable to create new domain./i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Unable to create new domain./i)).toBeInTheDocument())
     })
 
     it('returns a success when valid URL is given', async () => {
@@ -288,7 +268,7 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -329,30 +309,29 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByPlaceholderText, findByText, queryByText } =
-        render(
-          <MockedProvider mocks={mocks} cache={createCache()}>
-            <UserVarProvider
-              userVar={makeVar({
-                jwt: null,
-                tfaSendMethod: null,
-                userName: null,
-              })}
-            >
-              <ChakraProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
-                  <MemoryRouter initialEntries={['/']}>
-                    <AdminDomains
-                      orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                      orgSlug={'test-org.slug'}
-                      domainsPerPage={4}
-                    />
-                  </MemoryRouter>
-                </I18nProvider>
-              </ChakraProvider>
-            </UserVarProvider>
-          </MockedProvider>,
-        )
+      const { getByText, getByPlaceholderText, findByText, queryByText } = render(
+        <MockedProvider mocks={mocks} cache={createCache()}>
+          <UserVarProvider
+            userVar={makeVar({
+              jwt: null,
+              tfaSendMethod: null,
+              userName: null,
+            })}
+          >
+            <ChakraProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']}>
+                  <AdminDomains
+                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
+                    orgSlug={'test-org.slug'}
+                    domainsPerPage={4}
+                  />
+                </MemoryRouter>
+              </I18nProvider>
+            </ChakraProvider>
+          </UserVarProvider>
+        </MockedProvider>,
+      )
 
       const addDomainButton = await findByText(/Add Domain/)
 
@@ -368,13 +347,9 @@ describe('<AdminDomains />', () => {
       const confirmBtn = getByText(/Confirm/)
       fireEvent.click(confirmBtn)
 
-      await waitFor(() =>
-        expect(getByText(/Domain added/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Domain added/i)).toBeInTheDocument())
 
-      await waitFor(() =>
-        expect(queryByText('Add Domain Details')).not.toBeInTheDocument(),
-      )
+      await waitFor(() => expect(queryByText('Add Domain Details')).not.toBeInTheDocument())
     })
 
     it.skip('succeeds when DKIM selectors are added', async () => {
@@ -382,7 +357,7 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -412,14 +387,7 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const {
-        getByText,
-        getByTestId,
-        getByPlaceholderText,
-        queryAllByText,
-        findByText,
-        getByRole,
-      } = render(
+      const { getByText, getByTestId, getByPlaceholderText, queryAllByText, findByText, getByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -446,9 +414,7 @@ describe('<AdminDomains />', () => {
       const addDomainBtn = await findByText(/Add Domain/)
       userEvent.click(addDomainBtn)
 
-      await waitFor(() =>
-        expect(getByText(/Add Domain Details/)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Add Domain Details/)).toBeInTheDocument())
 
       const domainInput = getByRole('textbox', { name: /New Domain URL/ })
       expect(domainInput).toBeInTheDocument()
@@ -460,9 +426,7 @@ describe('<AdminDomains />', () => {
       const selectorInput = getByPlaceholderText(/DKIM Selector/)
       fireEvent.blur(selectorInput)
 
-      await waitFor(() =>
-        expect(getByText(/Selector cannot be empty/)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Selector cannot be empty/)).toBeInTheDocument())
 
       fireEvent.change(selectorInput, { target: { value: 'selector1.' } })
 
@@ -494,7 +458,7 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -566,7 +530,7 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '' },
+            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -624,9 +588,7 @@ describe('<AdminDomains />', () => {
       const editDomainButton = await findByTestId('edit-1')
       userEvent.click(editDomainButton)
 
-      await waitFor(() =>
-        expect(getByText(/Edit Domain Details/i)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Edit Domain Details/i)).toBeInTheDocument())
 
       const editDomainInput = getByLabelText(/Domain URL:/)
       fireEvent.change(editDomainInput, {
@@ -638,13 +600,9 @@ describe('<AdminDomains />', () => {
       const confirm = getByText('Confirm')
       fireEvent.click(confirm)
 
-      await waitFor(() =>
-        expect(getByText(/Domain updated/)).toBeInTheDocument(),
-      )
+      await waitFor(() => expect(getByText(/Domain updated/)).toBeInTheDocument())
 
-      await waitFor(() =>
-        expect(queryByText('Edit Domain Details')).not.toBeInTheDocument(),
-      )
+      await waitFor(() => expect(queryByText('Edit Domain Details')).not.toBeInTheDocument())
     })
   })
 })

@@ -38,7 +38,7 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 
-export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, refetchVariables, ...props }) {
+export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
   const {
     editingDomainId,
     editingDomainUrl,
@@ -56,7 +56,8 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ref
   const { i18n } = useLingui()
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
-    refetchQueries: [{ query: 'PaginatedOrgDomains', variables: refetchVariables }, 'FindAuditLogs'],
+    refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
+    awaitRefetchQueries: true,
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -102,8 +103,8 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ref
   })
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
-    refetchQueries: [{ query: 'PaginatedOrgDomains', variables: refetchVariables }, 'FindAuditLogs'],
-
+    refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
+    awaitRefetchQueries: true,
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -409,5 +410,5 @@ AdminDomainModal.propTypes = {
   orgSlug: string,
   mutation: string,
   orgCount: number,
-  refetchVariables: object,
+  // refetchVariables: object,
 }

@@ -51,7 +51,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
   const { i18n } = useLingui()
 
   const [newDomainUrl, setNewDomainUrl] = useState('')
-  const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [domainsPerPage, setDomainsPerPage] = useState(20)
   const [selectedRemoveProps, setSelectedRemoveProps] = useState({
     domain: '',
     domainId: '',
@@ -120,6 +120,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
       { query: FORWARD, variables: { after: endCursor, first: domainsPerPage, ...fetchVariables } },
       'FindAuditLogs',
     ],
+    awaitRefetchQueries: true,
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -186,75 +187,73 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
     </LoadingMessage>
   ) : (
     <>
-      <Box px="2" py="2">
-        <Formik
-          validationSchema={validationSchema}
-          initialValues={{
-            filterCategory: 'TAGS',
-            comparison: '',
-            filterValue: '',
-          }}
-          onSubmit={(values, { resetForm }) => {
-            setFilters([
-              ...new Map(
-                [...filters, values].map((item) => {
-                  return [item['filterValue'], item]
-                }),
-              ).values(),
-            ])
-            resetForm()
-          }}
-        >
-          {({ handleChange, handleSubmit, errors }) => {
-            return (
-              <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
-                <Flex align="center">
-                  <Text fontWeight="bold" mr="2">
-                    <Trans>Filters:</Trans>
-                  </Text>
+      <Formik
+        validationSchema={validationSchema}
+        initialValues={{
+          filterCategory: 'TAGS',
+          comparison: '',
+          filterValue: '',
+        }}
+        onSubmit={(values, { resetForm }) => {
+          setFilters([
+            ...new Map(
+              [...filters, values].map((item) => {
+                return [item['filterValue'], item]
+              }),
+            ).values(),
+          ])
+          resetForm()
+        }}
+      >
+        {({ handleChange, handleSubmit, errors }) => {
+          return (
+            <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
+              <Flex align="center">
+                <Text fontWeight="bold" mr="2">
+                  <Trans>Filters:</Trans>
+                </Text>
 
-                  <Box maxW="25%" mx="1">
-                    <Select name="comparison" borderColor="black" onChange={handleChange}>
-                      <option hidden value="">
-                        <Trans>Comparison</Trans>
-                      </option>
-                      <option value="EQUAL">
-                        <Trans>EQUALS</Trans>
-                      </option>
-                      <option value="NOT_EQUAL">
-                        <Trans>DOES NOT EQUAL</Trans>
-                      </option>
-                    </Select>
-                    <Text color="red.500" mt={0}>
-                      {errors.comparison}
-                    </Text>
-                  </Box>
-                  <Box maxW="25%" mx="1">
-                    <Select name="filterValue" borderColor="black" onChange={handleChange}>
-                      <option hidden value="">
-                        <Trans>Status or tag</Trans>
-                      </option>
-                      {filterTagOptions.map(({ value, text }, idx) => {
-                        return (
-                          <option key={idx} value={value}>
-                            {text}
-                          </option>
-                        )
-                      })}
-                    </Select>
-                    <Text color="red.500" mt={0}>
-                      {errors.filterValue}
-                    </Text>
-                  </Box>
-                  <Button ml="auto" variant="primary" type="submit">
-                    <Trans>Apply</Trans>
-                  </Button>
-                </Flex>
-              </form>
-            )
-          }}
-        </Formik>
-      </Box>{' '}
+                <Box maxW="25%" mx="1">
+                  <Select name="comparison" borderColor="black" onChange={handleChange}>
+                    <option hidden value="">
+                      <Trans>Comparison</Trans>
+                    </option>
+                    <option value="EQUAL">
+                      <Trans>EQUALS</Trans>
+                    </option>
+                    <option value="NOT_EQUAL">
+                      <Trans>DOES NOT EQUAL</Trans>
+                    </option>
+                  </Select>
+                  <Text color="red.500" mt={0}>
+                    {errors.comparison}
+                  </Text>
+                </Box>
+                <Box maxW="25%" mx="1">
+                  <Select name="filterValue" borderColor="black" onChange={handleChange}>
+                    <option hidden value="">
+                      <Trans>Status/Tag</Trans>
+                    </option>
+                    {filterTagOptions.map(({ value, text }, idx) => {
+                      return (
+                        <option key={idx} value={value}>
+                          {text}
+                        </option>
+                      )
+                    })}
+                  </Select>
+                  <Text color="red.500" mt={0}>
+                    {errors.filterValue}
+                  </Text>
+                </Box>
+                <Button ml="auto" variant="primary" type="submit">
+                  <Trans>Apply</Trans>
+                </Button>
+              </Flex>
+            </form>
+          )
+        }}
+      </Formik>
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -320,49 +319,70 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
 
   return (
     <Stack mb="6" w="100%">
-      <form
-        id="form"
-        onSubmit={async (e) => {
-          e.preventDefault() // prevents page from refreshing
-          setModalProps({
-            hidden: false,
-            archived: false,
-            mutation: 'create',
-            tagInputList: [],
-            selectorInputList: [],
-            editingDomainId: '',
-            editingDomainUrl: newDomainUrl,
-            orgCount: 0,
-          })
-          updateOnOpen()
-        }}
-      >
-        <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
-          <Text as="label" htmlFor="Search-for-domain-field" fontSize="md" fontWeight="bold" textAlign="center" mr={2}>
-            <Trans>Search: </Trans>
-          </Text>
-          <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
-            <InputLeftElement aria-hidden="true">
-              <PlusSquareIcon color="gray.300" />
-            </InputLeftElement>
-            <Input
-              id="Search-for-domain-field"
-              type="text"
-              placeholder={i18n._(t`Domain URL`)}
-              aria-label={i18n._(t`Search by Domain URL`)}
-              onChange={(e) => {
-                setNewDomainUrl(e.target.value)
-                resetToFirstPage()
-              }}
-            />
-          </InputGroup>
-          <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit">
-            <AddIcon mr={2} aria-hidden="true" />
-            <Trans>Add Domain</Trans>
-          </Button>
-        </Flex>
-      </form>
-
+      <Box bg="gray.100" p="2" mb="2" borderColor="gray.300" borderWidth="1px">
+        <form
+          id="form"
+          onSubmit={async (e) => {
+            e.preventDefault() // prevents page from refreshing
+            setModalProps({
+              hidden: false,
+              archived: false,
+              mutation: 'create',
+              tagInputList: [],
+              selectorInputList: [],
+              editingDomainId: '',
+              editingDomainUrl: newDomainUrl,
+              orgCount: 0,
+            })
+            updateOnOpen()
+          }}
+        >
+          <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
+            <Text
+              as="label"
+              htmlFor="Search-for-domain-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mr={2}
+            >
+              <Trans>Search: </Trans>
+            </Text>
+            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
+              <InputLeftElement aria-hidden="true">
+                <PlusSquareIcon color="gray.300" />
+              </InputLeftElement>
+              <Input
+                id="Search-for-domain-field"
+                type="text"
+                placeholder={i18n._(t`Domain URL`)}
+                aria-label={i18n._(t`Search by Domain URL`)}
+                onChange={(e) => {
+                  setNewDomainUrl(e.target.value)
+                  resetToFirstPage()
+                }}
+              />
+            </InputGroup>
+            <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit">
+              <AddIcon mr={2} aria-hidden="true" />
+              <Trans>Add Domain</Trans>
+            </Button>
+          </Flex>
+        </form>
+        <Divider borderBottomWidth="1px" borderBottomColor="black" />
+        <RelayPaginationControls
+          onlyPagination={false}
+          selectedDisplayLimit={domainsPerPage}
+          setSelectedDisplayLimit={setDomainsPerPage}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
+      </Box>
       <Flex align="center" mb="2">
         {filters.map(({ comparison, filterValue }, idx) => {
           return (
@@ -374,9 +394,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
           )
         })}
       </Flex>
-
       {adminDomainList}
-
       <RelayPaginationControls
         onlyPagination={false}
         selectedDisplayLimit={domainsPerPage}
@@ -389,7 +407,6 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
-
       <AdminDomainModal
         isOpen={updateIsOpen}
         onClose={updateOnClose}
@@ -400,7 +417,6 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
         permission={permission}
         refetchQuery={{ query: FORWARD, variables: { after: endCursor, first: domainsPerPage, ...fetchVariables } }}
       />
-
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">
         <ModalOverlay />
         <ModalContent pb={4}>
