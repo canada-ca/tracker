@@ -85,25 +85,15 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
     filters,
   }
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-    endCursor,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: domainsPerPage,
-    variables: fetchVariables,
-    relayRoot: 'findOrganizationBySlug.domains',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      recordsPerPage: domainsPerPage,
+      variables: fetchVariables,
+      relayRoot: 'findOrganizationBySlug.domains',
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(newDomainUrl)
@@ -116,10 +106,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
   }, [orgSlug])
 
   const [removeDomain] = useMutation(REMOVE_DOMAIN, {
-    refetchQueries: [
-      { query: FORWARD, variables: { after: endCursor, first: domainsPerPage, ...fetchVariables } },
-      'FindAuditLogs',
-    ],
+    refetchQueries: [{ query: FORWARD, variables: { first: domainsPerPage, ...fetchVariables } }, 'FindAuditLogs'],
     awaitRefetchQueries: true,
     onError(error) {
       toast({
@@ -413,9 +400,8 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
         validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
         orgId={orgId}
         orgSlug={orgSlug}
-        {...modalProps}
         permission={permission}
-        refetchQuery={{ query: FORWARD, variables: { after: endCursor, first: domainsPerPage, ...fetchVariables } }}
+        {...modalProps}
       />
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">
         <ModalOverlay />

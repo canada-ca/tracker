@@ -52,7 +52,6 @@ export function usePaginatedCollection({
     edges: currentEdges,
     nodes: currentEdges?.map((e) => e.node),
     currentPage,
-    endCursor: currentPageInfo?.endCursor,
     setCurrentPage,
     next: async () => {
       if (currentPage === totalPages) {
