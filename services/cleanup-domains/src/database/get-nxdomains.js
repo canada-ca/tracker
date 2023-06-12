@@ -7,14 +7,14 @@ const getNXDomains = async ({ query }) => {
           RETURN { "_id": domain._id, "_key": domain._key, "domain": domain.domain }
       `
   } catch (err) {
-    throw new Error(`Database error occurred while trying to find NXDOMAIN keys: ${err}`)
+    throw new Error(`Database error occurred while trying to find NXDOMAINs: ${err}`)
   }
 
   let nxdomainIds
   try {
     nxdomainIds = await cursor.all()
   } catch (err) {
-    throw new Error(`Cursor error occurred while trying to find NXDOMAIN keys: ${err}`)
+    throw new Error(`Cursor error occurred while trying to find NXDOMAINs: ${err}`)
   }
 
   return nxdomainIds
