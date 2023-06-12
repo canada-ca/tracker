@@ -409,4 +409,5 @@ AdminDomainModal.propTypes = {
   orgSlug: string,
   mutation: string,
   orgCount: number,
+  refetchVariables: object,
 }

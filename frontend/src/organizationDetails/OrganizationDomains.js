@@ -28,7 +28,6 @@ import { SearchBox } from '../components/SearchBox'
 import { Formik } from 'formik'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
-import { ABTestVariant, ABTestingWrapper } from '../app/ABTestWrapper'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -99,9 +98,6 @@ export function OrganizationDomains({ orgSlug }) {
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-  ]
-
-  const hiddenFilterOptions = [
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
   ]
@@ -194,26 +190,13 @@ export function OrganizationDomains({ orgSlug }) {
                           <Trans>Status or tag</Trans>
                         </option>
                         {values.filterCategory === 'TAGS' ? (
-                          <>
-                            {filterTagOptions.map(({ value, text }, idx) => {
-                              return (
-                                <option key={idx} value={value}>
-                                  {text}
-                                </option>
-                              )
-                            })}
-                            <ABTestingWrapper insiderVariantName="B">
-                              <ABTestVariant name="B">
-                                {hiddenFilterOptions.map(({ value, text }, idx) => {
-                                  return (
-                                    <option key={idx} value={value}>
-                                      {text}
-                                    </option>
-                                  )
-                                })}
-                              </ABTestVariant>
-                            </ABTestingWrapper>
-                          </>
+                          filterTagOptions.map(({ value, text }, idx) => {
+                            return (
+                              <option key={idx} value={value}>
+                                {text}
+                              </option>
+                            )
+                          })
                         ) : (
                           <>
                             <option value="PASS">
