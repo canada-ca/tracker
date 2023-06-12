@@ -2,7 +2,7 @@ const { getNXDomains } = require('./database')
 
 const domainCleanupService = async ({ query, log }) => {
   const cleanupDomains = await getNXDomains({ query, log })
-  console.log(`Found ${cleanupDomains.length} domains to cleanup`)
+  log(`Found ${cleanupDomains.length} domains to cleanup`)
   for (const domain of cleanupDomains) {
     // remove ownerships
     try {
@@ -86,8 +86,7 @@ const domainCleanupService = async ({ query, log }) => {
       console.error(`Error while removing domain: ${domain._key}, error: ${err})`)
       continue
     }
-
-    console.log(`Domain "${domain.domain}" and related data successfully removed`)
+    log(`Domain "${domain.domain}" and related data successfully removed`)
   }
 }
 
