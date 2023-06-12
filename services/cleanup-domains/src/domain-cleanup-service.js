@@ -1,31 +1,17 @@
-const { removeEdges } = require('./database/remove-edges')
-const { getNXDomains } = require('./database/get-nxdomains')
+const { getNXDomains } = require('./database')
 
 const domainCleanupService = async ({ query, log }) => {
   const cleanupDomains = await getNXDomains({ query, log })
-
+  console.log(`Found ${cleanupDomains.length} domains to cleanup`)
   for (const domain of cleanupDomains) {
-    console.log(domain.domain)
-    // remove claims
-    try {
-      await removeEdges({
-        query,
-        vertexSelectorId: domain._id,
-        direction: 'ANY',
-        edgeCollection: 'claims',
-      })
-    } catch (err) {
-      console.error(`Error while removing claims for domain: ${domain._key}, error: ${err})`)
-      continue
-    }
     // remove ownerships
     try {
-      await removeEdges({
-        query,
-        vertexSelectorId: domain._id,
-        edgeCollection: 'ownership',
-        direction: 'ANY',
-      })
+      await (
+        await query`
+         FOR v, e IN 1..1 ANY ${domain._id} ownership
+         REMOVE e IN ownership
+        `
+      ).all()
     } catch (err) {
       console.error(`Error while removing ownerships for domain: ${domain._key}, error: ${err})`)
       continue
@@ -33,18 +19,18 @@ const domainCleanupService = async ({ query, log }) => {
 
     // remove dmarc summaries
     try {
-      await removeEdges({
-        db,
-        vertexSelectorId: domain._id,
-        edgeCollection: 'domainsToDmarcSummaries',
-        direction: 'ANY',
-        vertexCollection: 'dmarcSummaries',
-        removeVertices: true,
-      })
+      await (
+        await query`
+          WITH dmarcSummaries
+          FOR v, e IN 1..1 ANY ${domain._id} domainsToDmarcSummaries
+            REMOVE e IN domainsToDmarcSummaries
+            REMOVE v IN dmarcSummaries`
+      ).all()
     } catch (err) {
       console.error(`Error while removing DMARC summaries for domain: ${domain._key}, error: ${err})`)
       continue
     }
+
     // remove web scans
     try {
       await (
@@ -64,20 +50,35 @@ const domainCleanupService = async ({ query, log }) => {
       console.error(`Error while removing web scans for domain: ${domain._key}, error: ${err})`)
       continue
     }
+
     // remove dns scans
     try {
-      await removeEdges({
-        db,
-        vertexSelectorId: domain._id,
-        edgeCollection: 'domainsDNS',
-        direction: 'ANY',
-        vertexCollection: 'dns',
-        removeVertices: true,
-      })
+      await (
+        await query`
+          WITH dns
+          FOR v, e IN 1..1 ANY ${domain._id} domainsDNS
+            REMOVE e IN domainsDNS
+            REMOVE v IN dns
+      `
+      ).all()
     } catch (err) {
       console.error(`Error while removing dns scans for domain: ${domain._key}, error: ${err})`)
       continue
     }
+
+    // remove claims
+    try {
+      await (
+        await query`
+        FOR v, e IN 1..1 ANY ${domain._id} claims
+          REMOVE e IN claims
+        `
+      ).all()
+    } catch (err) {
+      console.error(`Error while removing claims for domain: ${domain._key}, error: ${err})`)
+      continue
+    }
+
     // remove domain
     try {
       await (await query`REMOVE ${domain._key} IN domains`).all()
@@ -85,6 +86,7 @@ const domainCleanupService = async ({ query, log }) => {
       console.error(`Error while removing domain: ${domain._key}, error: ${err})`)
       continue
     }
+
     console.log(`Domain "${domain.domain}" and related data successfully removed`)
   }
 }
