@@ -56,7 +56,7 @@ export const updateDomain = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: { checkPermission, userRequired, verifiedRequired },
+      auth: { checkPermission, userRequired, verifiedRequired, tfaRequired },
       validators: { cleanseInput },
       loaders: { loadDomainByKey, loadOrgByKey },
     },
@@ -65,7 +65,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
-    // tfaRequired({user})
+    tfaRequired({ user })
 
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
@@ -130,7 +130,7 @@ export const updateDomain = new mutationWithClientMutationId({
     // Check permission
     const permission = await checkPermission({ orgId: org._id })
 
-    if (permission !== 'user' && permission !== 'admin' && permission !== 'super_admin') {
+    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )

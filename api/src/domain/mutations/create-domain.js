@@ -112,7 +112,7 @@ export const createDomain = new mutationWithClientMutationId({
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org._id })
 
-    if (permission !== 'user' && permission !== 'admin' && permission !== 'super_admin') {
+    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
       console.warn(
         `User: ${userKey} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
       )

@@ -4,8 +4,8 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { inviteUserToOrgUnion } from '../unions'
-import { RoleEnums } from '../../enums'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import { InvitationRoleEnums } from '../../enums'
 
 export const inviteUserToOrg = new mutationWithClientMutationId({
   name: 'InviteUserToOrg',
@@ -18,7 +18,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
       description: 'Users email that you would like to invite to your org.',
     },
     requestedRole: {
-      type: GraphQLNonNull(RoleEnums),
+      type: GraphQLNonNull(InvitationRoleEnums),
       description: 'The role which you would like this user to have.',
     },
     orgId: {
@@ -87,9 +87,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
     const permission = await checkPermission({ orgId: org._id })
 
     if (
-      typeof permission === 'undefined' ||
-      permission === 'user' ||
-      (permission === 'admin' && requestedRole === 'super_admin')
+      (['user', 'admin'].includes(requestedRole) && !['admin', 'owner', 'super_admin'].includes(permission)) ||
+      (requestedRole === 'super_admin' && permission !== 'super_admin')
     ) {
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
@@ -221,7 +220,6 @@ able to sign-up and be assigned to that organization in one mutation.`,
               _from: ${org._id},
               _to: ${requestedUser._id},
               permission: ${requestedRole},
-              owner: false
             } INTO affiliations
           `,
       )

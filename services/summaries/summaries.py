@@ -44,6 +44,21 @@ def is_domain_hidden(domain, db):
     return False
 
 
+def ignore_domain(domain):
+    """Check if a domain should be ignored
+
+    :param domain: domain to check
+    :return: True if domain should be ignored, False otherwise
+    """
+    if (
+        domain.get("archived") is True
+        or domain.get("blocked") is True
+        or domain.get("rcode") == "NXDOMAIN"
+    ):
+        return True
+    return False
+
+
 def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
     logging.info(f"Updating chart summaries...")
 
@@ -74,8 +89,7 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     maintain_count = 0
 
     for domain in db.collection("domains"):
-        archived = domain.get("archived")
-        if archived != True:
+        if ignore_domain(domain) is False:
             # Update chart summaries
             for chart_type in chartSummaries:
                 chart = chartSummaries[chart_type]
@@ -213,9 +227,8 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
-            archived = domain.get("archived")
-            hidden = claim.get("hidden")
-            if archived != True:
+            if ignore_domain(domain) is False:
+                hidden = claim.get("hidden")
                 if hidden != True:
                     domain_total = domain_total + 1
                     if domain.get("status", {}).get("dmarc") == "pass":

@@ -12,12 +12,17 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import { PAGINATED_DOMAINS as FORWARD, GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV } from '../graphql/queries'
+import {
+  PAGINATED_DOMAINS as FORWARD,
+  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
+  IS_USER_SUPER_ADMIN,
+} from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 
 export default function DomainsPage() {
+  const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
@@ -91,7 +96,7 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, status, hasDMARCReport, archived, rcode, blocked, webScanPending }, index) => (
+      {({ id, domain, status, hasDMARCReport, archived, rcode, blocked, webScanPending, userHasPermission }, index) => (
         <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
           <DomainCard
             id={id}
@@ -102,6 +107,7 @@ export default function DomainsPage() {
             rcode={rcode}
             blocked={blocked}
             webScanPending={webScanPending}
+            userHasPermission={userHasPermission}
             mb="3"
           />
         </ErrorBoundary>
@@ -116,38 +122,40 @@ export default function DomainsPage() {
           <Trans>Domains</Trans>
         </Heading>
 
-        <ExportButton
-          order={{ base: 2, md: 1 }}
-          ml="auto"
-          mt={{ base: '4', md: 0 }}
-          fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
-          dataFunction={async () => {
-            toast({
-              title: t`Getting domain statuses`,
-              description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
-              status: 'info',
-              duration: 9000,
-              isClosable: true,
-              position: 'top-left',
-            })
-            const result = await getAllOrgDomainStatuses()
-            if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+        {data?.isUserSuperAdmin && (
+          <ExportButton
+            order={{ base: 2, md: 1 }}
+            ml="auto"
+            mt={{ base: '4', md: 0 }}
+            fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+            dataFunction={async () => {
               toast({
-                title: t`No data found`,
-                description: t`No data found when retrieving all domain statuses.`,
-                status: 'error',
+                title: t`Getting domain statuses`,
+                description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+                status: 'info',
                 duration: 9000,
                 isClosable: true,
                 position: 'top-left',
               })
+              const result = await getAllOrgDomainStatuses()
+              if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+                toast({
+                  title: t`No data found`,
+                  description: t`No data found when retrieving all domain statuses.`,
+                  status: 'error',
+                  duration: 9000,
+                  isClosable: true,
+                  position: 'top-left',
+                })
 
-              throw t`No data found`
-            }
+                throw t`No data found`
+              }
 
-            return result.data?.getAllOrganizationDomainStatuses
-          }}
-          isLoading={allOrgDomainStatusesLoading}
-        />
+              return result.data?.getAllOrganizationDomainStatuses
+            }}
+            isLoading={allOrgDomainStatusesLoading}
+          />
+        )}
       </Flex>
 
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>

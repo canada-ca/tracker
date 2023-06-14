@@ -85,10 +85,13 @@ export function App() {
             <RouteLink to="/domains">
               <Trans>Domains</Trans>
             </RouteLink>
-            <RouteLink to="/dmarc-summaries">
-              <Trans>DMARC Summaries</Trans>
-            </RouteLink>
           </>
+        )}
+
+        {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
+          <RouteLink to="/dmarc-summaries">
+            <Trans>DMARC Summaries</Trans>
+          </RouteLink>
         )}
 
         {isLoggedIn() && (
@@ -225,12 +228,7 @@ export function App() {
               )}
             </PrivatePage>
 
-            <PrivatePage
-              isLoginRequired={data?.loginRequired}
-              path="/domains/:domainSlug/:activeTab?"
-              setTitle={false}
-              exact
-            >
+            <PrivatePage isLoginRequired={true} path="/domains/:domainSlug/:activeTab?" setTitle={false} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <GuidancePage />
@@ -239,7 +237,7 @@ export function App() {
             </PrivatePage>
 
             <PrivatePage
-              isLoginRequired={data?.loginRequired}
+              isLoginRequired={true}
               path="/domains/:domainSlug/dmarc-report/:period?/:year?"
               setTitle={false}
               exact
@@ -251,7 +249,7 @@ export function App() {
               )}
             </PrivatePage>
 
-            <PrivatePage isLoginRequired={data?.loginRequired} path="/dmarc-summaries" title={t`DMARC Summaries`} exact>
+            <PrivatePage isLoginRequired={true} path="/dmarc-summaries" title={t`DMARC Summaries`} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <DmarcByDomainPage />

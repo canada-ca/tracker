@@ -9,6 +9,7 @@ import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
+import { logActivity } from '../../audit-logs'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -73,7 +74,30 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'CSV formatted output of all domains in the organization including their email and web scan statuses.',
-      resolve: async ({ _id }, _args, { loaders: { loadOrganizationDomainStatuses } }) => {
+      resolve: async (
+        { _id },
+        _args,
+        {
+          i18n,
+          userKey,
+          query,
+          transaction,
+          collections,
+          auth: { checkPermission, userRequired, verifiedRequired },
+          loaders: { loadOrganizationDomainStatuses },
+        },
+      ) => {
+        const user = await userRequired()
+        verifiedRequired({ user })
+
+        const permission = await checkPermission({ orgId: _id })
+        if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
+          console.error(
+            `User "${userKey}" attempted to retrieve CSV output for organization "${_id}". Permission: ${permission}`,
+          )
+          throw new Error(t`Permission Denied: Please contact organization user for help with retrieving this domain.`)
+        }
+
         const domains = await loadOrganizationDomainStatuses({
           orgId: _id,
         })
@@ -97,6 +121,57 @@ export const organizationType = new GraphQLObjectType({
           }, '')
           csvOutput += `\n${csvLine}`
         })
+
+        // Get org names to use in activity log
+        let orgNamesCursor
+        try {
+          orgNamesCursor = await query`
+            LET org = DOCUMENT(organizations, ${_id})
+            RETURN {
+              "orgNameEN": org.orgDetails.en.name,
+              "orgNameFR": org.orgDetails.fr.name,
+            }
+          `
+        } catch (err) {
+          console.error(
+            `Database error occurred when user: ${userKey} attempted to export org: ${_id}. Error while creating cursor for retrieving organization names. error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to export organization. Please try again.`))
+        }
+
+        let orgNames
+        try {
+          orgNames = await orgNamesCursor.next()
+        } catch (err) {
+          console.error(
+            `Cursor error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to export organization. Please try again.`))
+        }
+
+        await logActivity({
+          transaction,
+          collections,
+          query,
+          initiatedBy: {
+            id: user._key,
+            userName: user.userName,
+            role: permission,
+          },
+          action: 'export',
+          target: {
+            resource: {
+              en: orgNames.orgNameEN,
+              fr: orgNames.orgNameFR,
+            },
+            organization: {
+              id: _id,
+              name: orgNames.orgNameEN,
+            }, // name of resource being acted upon
+            resourceType: 'organization',
+          },
+        })
+
         return csvOutput
       },
     },
@@ -162,14 +237,24 @@ export const organizationType = new GraphQLObjectType({
         { i18n, auth: { checkPermission }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
         const permission = await checkPermission({ orgId: _id })
-        if (permission === 'admin' || permission === 'super_admin') {
-          const affiliations = await loadAffiliationConnectionsByOrgId({
-            orgId: _id,
-            ...args,
-          })
-          return affiliations
+        if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+          throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
-        throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
+
+        const affiliations = await loadAffiliationConnectionsByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return affiliations
+      },
+    },
+    userHasPermission: {
+      type: GraphQLBoolean,
+      description:
+        'Value that determines if a user is affiliated with an organization, whether through organization affiliation, verified affiliation, or through super admin status.',
+      resolve: async ({ _id }, _args, { auth: { checkPermission } }) => {
+        const permission = await checkPermission({ orgId: _id })
+        return ['user', 'admin', 'super_admin', 'owner'].includes(permission)
       },
     },
   }),

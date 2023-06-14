@@ -1,13 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
 
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {cleanseInput, slugify} from '../../../validators'
+import { cleanseInput, slugify } from '../../../validators'
 import {
   checkPermission,
   userRequired,
@@ -15,17 +15,15 @@ import {
   saltedHash,
   verifiedRequired,
   tfaRequired,
+  checkDomainPermission,
 } from '../../../auth'
-import {loadDomainByDomain} from '../../loaders'
-import {
-  loadOrgByKey,
-  loadOrgConnectionsByDomainId,
-} from '../../../organization/loaders'
-import {loadUserByKey} from '../../../user/loaders'
+import { loadDomainByDomain } from '../../loaders'
+import { loadOrgByKey, loadOrgConnectionsByDomainId } from '../../../organization/loaders'
+import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url, HASHING_SECRET} = process.env
+const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
 
 describe('create a domain', () => {
   let query, drop, truncate, schema, collections, transaction, user, org
@@ -48,8 +46,20 @@ describe('create a domain', () => {
     consoleOutput.length = 0
   })
   describe('given a successful domain creation', () => {
+    const i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
+    })
     beforeAll(async () => {
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -160,29 +170,34 @@ describe('create a domain', () => {
               userKey: user._key,
               publish: jest.fn(),
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
-                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequiredBool: true},
+                  auth: { loginRequiredBool: true },
                 }),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -314,29 +329,34 @@ describe('create a domain', () => {
               userKey: user._key,
               publish: jest.fn(),
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
-                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 }),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -445,159 +465,34 @@ describe('create a domain', () => {
             userKey: user._key,
             publish: jest.fn(),
             auth: {
-              checkPermission: checkPermission({userKey: user._key, query}),
+              checkDomainPermission: checkDomainPermission({
+                i18n,
+                userKey: user._key,
+                query,
+              }),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               saltedHash: saltedHash(HASHING_SECRET),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               }),
-              checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
               verifiedRequired: verifiedRequired({}),
               tfaRequired: tfaRequired({}),
             },
             loaders: {
-              loadDomainByDomain: loadDomainByDomain({query}),
-              loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+              loadDomainByDomain: loadDomainByDomain({ query }),
+              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                 query,
                 language: 'en',
                 userKey: user._key,
                 cleanseInput,
-                auth: {loginRequired: true},
+                auth: { loginRequired: true },
               }),
-              loadUserByKey: loadUserByKey({query}),
+              loadUserByKey: loadUserByKey({ query }),
             },
-            validators: {cleanseInput, slugify},
-          },
-        )
-
-        const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
-        const domain = await domainCursor.next()
-
-        const expectedResponse = {
-          data: {
-            createDomain: {
-              result: {
-                id: toGlobalId('domain', domain._key),
-                domain: 'test.gc.ca',
-                lastRan: null,
-                selectors: ['selector1', 'selector2'],
-                status: {
-                  dkim: null,
-                  dmarc: null,
-                  https: null,
-                  spf: null,
-                  ssl: null,
-                },
-                organizations: {
-                  edges: [
-                    {
-                      node: {
-                        id: toGlobalId('organization', org._key),
-                        name: 'Treasury Board of Canada Secretariat',
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        }
-
-        expect(response).toEqual(expectedResponse)
-
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully created ${domain.domain} in org: treasury-board-secretariat.`,
-        ])
-      })
-    })
-    describe('user has user permission level', () => {
-      beforeEach(async () => {
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-      })
-      it('returns the domain', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              createDomain(
-                input: {
-                  orgId: "${toGlobalId('organization', org._key)}"
-                  domain: "test.gc.ca"
-                  selectors: ["selector1", "selector2"]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    status {
-                      dkim
-                      dmarc
-                      https
-                      spf
-                      ssl
-                    }
-                    organizations(first: 5) {
-                      edges {
-                        node {
-                          id
-                          name
-                        }
-                      }
-                    }
-                  }
-                  ... on DomainError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'en',
-            },
-            query,
-            collections: collectionNames,
-            transaction,
-            userKey: user._key,
-            publish: jest.fn(),
-            auth: {
-              checkPermission: checkPermission({userKey: user._key, query}),
-              saltedHash: saltedHash(HASHING_SECRET),
-              userRequired: userRequired({
-                userKey: user._key,
-                loadUserByKey: loadUserByKey({query}),
-              }),
-              checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
-              verifiedRequired: verifiedRequired({}),
-              tfaRequired: tfaRequired({}),
-            },
-            loaders: {
-              loadDomainByDomain: loadDomainByDomain({query}),
-              loadOrgByKey: loadOrgByKey({query, language: 'en'}),
-              loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                query,
-                language: 'en',
-                userKey: user._key,
-                cleanseInput,
-                auth: {loginRequired: true},
-              }),
-              loadUserByKey: loadUserByKey({query}),
-            },
-            validators: {cleanseInput, slugify},
+            validators: { cleanseInput, slugify },
           },
         )
 
@@ -748,29 +643,34 @@ describe('create a domain', () => {
               userKey: user._key,
               publish: jest.fn(),
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
-                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 }),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -895,29 +795,34 @@ describe('create a domain', () => {
               userKey: user._key,
               publish: jest.fn(),
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
-                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 }),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -1042,29 +947,34 @@ describe('create a domain', () => {
               userKey: user._key,
               publish: jest.fn(),
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
-                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 }),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -1081,12 +991,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: [
-                    'selector1',
-                    'selector2',
-                    'selector3',
-                    'selector4',
-                  ],
+                  selectors: ['selector1', 'selector2', 'selector3', 'selector4'],
                   status: {
                     dkim: null,
                     dmarc: null,
@@ -1194,29 +1099,34 @@ describe('create a domain', () => {
               userKey: user._key,
               publish: jest.fn(),
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
-                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 }),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -1341,29 +1251,34 @@ describe('create a domain', () => {
               userKey: user._key,
               publish: jest.fn(),
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 saltedHash: saltedHash(HASHING_SECRET),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
-                checkSuperAdmin: checkSuperAdmin({userKey: user._key, query}),
+                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
                 verifiedRequired: verifiedRequired({}),
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
-                loadDomainByDomain: loadDomainByDomain({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadDomainByDomain: loadDomainByDomain({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
                   userKey: user._key,
                   cleanseInput,
-                  auth: {loginRequired: true},
+                  auth: { loginRequired: true },
                 }),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -1425,8 +1340,8 @@ describe('create a domain', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1442,11 +1357,7 @@ describe('create a domain', () => {
             `
               mutation {
                 createDomain(
-                  input: {
-                    orgId: "b3JnYW5pemF0aW9uOjE="
-                    domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
-                  }
+                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", selectors: ["selector1", "selector2"] }
                 ) {
                   result {
                     ... on Domain {
@@ -1490,6 +1401,11 @@ describe('create a domain', () => {
               userKey: 123,
               publish: jest.fn(),
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: jest.fn(),
                 saltedHash: jest.fn(),
                 userRequired: jest.fn(),
@@ -1508,7 +1424,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -1517,8 +1433,7 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to create domain in unknown organization.',
+                  description: 'Unable to create domain in unknown organization.',
                 },
               },
             },
@@ -1585,6 +1500,11 @@ describe('create a domain', () => {
               userKey: 123,
               publish: jest.fn(),
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
@@ -1605,7 +1525,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -1614,8 +1534,7 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Permission Denied: Please contact organization user for help with creating domain.',
+                  description: 'Permission Denied: Please contact organization user for help with creating domain.',
                 },
               },
             },
@@ -1684,6 +1603,11 @@ describe('create a domain', () => {
               userKey: 123,
               publish: jest.fn(),
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
@@ -1704,7 +1628,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -1713,8 +1637,7 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to create domain, organization has already claimed it.',
+                  description: 'Unable to create domain, organization has already claimed it.',
                 },
               },
             },
@@ -1776,14 +1699,17 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query: jest
-                  .fn()
-                  .mockRejectedValue(new Error('Database error occurred.')),
+                query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -1804,13 +1730,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to create domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1870,15 +1794,18 @@ describe('create a domain', () => {
                   language: 'en',
                 },
                 query: jest.fn().mockReturnValue({
-                  next: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Cursor error occurred.')),
+                  next: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
                 }),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -1899,13 +1826,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to create domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1968,14 +1893,17 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce({
-                    next: jest
-                      .fn()
-                      .mockRejectedValue(new Error('cursor error')),
+                    next: jest.fn().mockRejectedValue(new Error('cursor error')),
                   }),
                 }),
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -1996,13 +1924,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to create domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2067,13 +1993,16 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -2094,13 +2023,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError('Unable to create domain. Please try again.'),
-              ]
+              const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2172,6 +2099,11 @@ describe('create a domain', () => {
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -2192,13 +2124,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError('Unable to create domain. Please try again.'),
-              ]
+              const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2262,13 +2192,16 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -2294,13 +2227,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError('Unable to create domain. Please try again.'),
-              ]
+              const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2362,14 +2293,16 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockReturnValueOnce()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -2395,13 +2328,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError('Unable to create domain. Please try again.'),
-              ]
+              const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2467,13 +2398,16 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -2499,13 +2433,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError('Unable to create domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2520,8 +2452,8 @@ describe('create a domain', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2537,11 +2469,7 @@ describe('create a domain', () => {
             `
               mutation {
                 createDomain(
-                  input: {
-                    orgId: "b3JnYW5pemF0aW9uOjE="
-                    domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
-                  }
+                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", selectors: ["selector1", "selector2"] }
                 ) {
                   result {
                     ... on Domain {
@@ -2585,6 +2513,11 @@ describe('create a domain', () => {
               userKey: 123,
               publish: jest.fn(),
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: jest.fn(),
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
@@ -2603,7 +2536,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -2612,8 +2545,7 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de créer un domaine dans une organisation inconnue.',
+                  description: 'Impossible de créer un domaine dans une organisation inconnue.',
                 },
               },
             },
@@ -2680,6 +2612,11 @@ describe('create a domain', () => {
               userKey: 123,
               publish: jest.fn(),
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: jest.fn().mockReturnValue(undefined),
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
@@ -2700,7 +2637,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -2779,6 +2716,11 @@ describe('create a domain', () => {
               userKey: 123,
               publish: jest.fn(),
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: jest.fn().mockReturnValue('admin'),
                 userRequired: jest.fn(),
                 saltedHash: jest.fn(),
@@ -2799,7 +2741,7 @@ describe('create a domain', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput, slugify},
+              validators: { cleanseInput, slugify },
             },
           )
 
@@ -2808,8 +2750,7 @@ describe('create a domain', () => {
               createDomain: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de créer le domaine, l'organisation l'a déjà réclamé.",
+                  description: "Impossible de créer le domaine, l'organisation l'a déjà réclamé.",
                 },
               },
             },
@@ -2871,14 +2812,17 @@ describe('create a domain', () => {
                 request: {
                   language: 'en',
                 },
-                query: jest
-                  .fn()
-                  .mockRejectedValue(new Error('Database error occurred.')),
+                query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -2899,15 +2843,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Impossible de créer un domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2967,15 +2907,18 @@ describe('create a domain', () => {
                   language: 'en',
                 },
                 query: jest.fn().mockReturnValue({
-                  next: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Cursor error occurred.')),
+                  next: jest.fn().mockRejectedValue(new Error('Cursor error occurred.')),
                 }),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -2996,15 +2939,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Impossible de créer un domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3067,14 +3006,17 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValueOnce({
-                    next: jest
-                      .fn()
-                      .mockRejectedValue(new Error('cursor error')),
+                    next: jest.fn().mockRejectedValue(new Error('cursor error')),
                   }),
                 }),
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -3095,15 +3037,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Impossible de créer un domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3168,13 +3106,16 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -3195,15 +3136,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Impossible de créer un domaine. Veuillez réessayer.',
-                ),
-              ]
+              const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -3275,6 +3212,11 @@ describe('create a domain', () => {
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -3295,15 +3237,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Impossible de créer un domaine. Veuillez réessayer.',
-                ),
-              ]
+              const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -3367,13 +3305,16 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -3399,15 +3340,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Impossible de créer un domaine. Veuillez réessayer.',
-                ),
-              ]
+              const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -3469,14 +3406,16 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest
-                      .fn()
-                      .mockReturnValueOnce()
-                      .mockRejectedValue(new Error('trx step error')),
+                    step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
+                    checkDomainPermission: checkDomainPermission({
+                      i18n,
+                      userKey: user._key,
+                      query,
+                    }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
                     userRequired: jest.fn(),
                     saltedHash: jest.fn(),
@@ -3502,15 +3441,11 @@ describe('create a domain', () => {
                       load: jest.fn(),
                     },
                   },
-                  validators: {cleanseInput, slugify},
+                  validators: { cleanseInput, slugify },
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'Impossible de créer un domaine. Veuillez réessayer.',
-                ),
-              ]
+              const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -3576,13 +3511,16 @@ describe('create a domain', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 publish: jest.fn(),
                 auth: {
+                  checkDomainPermission: checkDomainPermission({
+                    i18n,
+                    userKey: user._key,
+                    query,
+                  }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
                   userRequired: jest.fn(),
                   saltedHash: jest.fn(),
@@ -3608,15 +3546,11 @@ describe('create a domain', () => {
                     load: jest.fn(),
                   },
                 },
-                validators: {cleanseInput, slugify},
+                validators: { cleanseInput, slugify },
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Impossible de créer un domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

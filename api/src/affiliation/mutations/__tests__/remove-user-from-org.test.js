@@ -1,26 +1,21 @@
-import {setupI18n} from '@lingui/core'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {
-  checkPermission,
-  userRequired,
-  verifiedRequired,
-  tfaRequired,
-} from '../../../auth'
-import {loadOrgByKey} from '../../../organization/loaders'
-import {loadUserByKey} from '../../../user/loaders'
-import {loadAffiliationByKey} from '../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { checkPermission, userRequired, verifiedRequired, tfaRequired } from '../../../auth'
+import { loadOrgByKey } from '../../../organization/loaders'
+import { loadUserByKey } from '../../../user/loaders'
+import { loadAffiliationByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const orgOneData = {
   verified: true,
@@ -117,18 +112,7 @@ const userData = {
 }
 
 describe('given the removeUserFromOrg mutation', () => {
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    transaction,
-    i18n,
-    user,
-    orgOne,
-    orgTwo,
-    admin,
-    affiliation
+  let query, drop, truncate, schema, collections, transaction, i18n, user, orgOne, orgTwo, admin, affiliation
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -146,8 +130,8 @@ describe('given the removeUserFromOrg mutation', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -162,7 +146,7 @@ describe('given the removeUserFromOrg mutation', () => {
 
   describe('given a successful mutation', () => {
     beforeEach(async () => {
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -245,8 +229,8 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
-                tfaRequired: tfaRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
+                tfaRequired: tfaRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -261,7 +245,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -273,18 +257,18 @@ describe('given the removeUserFromOrg mutation', () => {
 
           const data = await loader.load(affiliation._key)
 
-          expect(data).toEqual(undefined)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
           ])
+          expect(data).toEqual(undefined)
         })
         describe('users language is set to english', () => {
           beforeAll(() => {
             i18n = setupI18n({
               locale: 'en',
               localeData: {
-                en: {plurals: {}},
-                fr: {plurals: {}},
+                en: { plurals: {} },
+                fr: { plurals: {} },
               },
               locales: ['en', 'fr'],
               messages: {
@@ -342,8 +326,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
-                  tfaRequired: tfaRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -358,7 +342,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
@@ -376,10 +360,10 @@ describe('given the removeUserFromOrg mutation', () => {
               },
             }
 
-            expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
             ])
+            expect(response).toEqual(expectedResponse)
           })
         })
         describe('users language is set to french', () => {
@@ -387,8 +371,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'fr',
               localeData: {
-                en: {plurals: {}},
-                fr: {plurals: {}},
+                en: { plurals: {} },
+                fr: { plurals: {} },
               },
               locales: ['en', 'fr'],
               messages: {
@@ -446,8 +430,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
-                  tfaRequired: tfaRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -462,7 +446,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
@@ -470,8 +454,7 @@ describe('given the removeUserFromOrg mutation', () => {
               data: {
                 removeUserFromOrg: {
                   result: {
-                    status:
-                      "L'utilisateur a été retiré de l'organisation avec succès.",
+                    status: "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
                       id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
@@ -481,15 +464,15 @@ describe('given the removeUserFromOrg mutation', () => {
               },
             }
 
-            expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
             ])
+            expect(response).toEqual(expectedResponse)
           })
         })
       })
       describe('super admin can remove a user from any org', () => {
-        it.skip('removes the user from the org', async () => {
+        it('removes the user from the org', async () => {
           await graphql(
             schema,
             `
@@ -538,8 +521,8 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
-                tfaRequired: tfaRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
+                tfaRequired: tfaRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -554,7 +537,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -566,18 +549,18 @@ describe('given the removeUserFromOrg mutation', () => {
 
           const data = await loader.load(affiliation._key)
 
-          expect(data).toEqual(undefined)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
           ])
+          expect(data).toEqual(undefined)
         })
         describe('users language is set to english', () => {
           beforeAll(() => {
             i18n = setupI18n({
               locale: 'en',
               localeData: {
-                en: {plurals: {}},
-                fr: {plurals: {}},
+                en: { plurals: {} },
+                fr: { plurals: {} },
               },
               locales: ['en', 'fr'],
               messages: {
@@ -635,8 +618,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
-                  tfaRequired: tfaRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -651,7 +634,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
@@ -669,10 +652,10 @@ describe('given the removeUserFromOrg mutation', () => {
               },
             }
 
-            expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
             ])
+            expect(response).toEqual(expectedResponse)
           })
         })
         describe('users language is set to french', () => {
@@ -680,8 +663,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'fr',
               localeData: {
-                en: {plurals: {}},
-                fr: {plurals: {}},
+                en: { plurals: {} },
+                fr: { plurals: {} },
               },
               locales: ['en', 'fr'],
               messages: {
@@ -739,8 +722,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
-                  tfaRequired: tfaRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -755,7 +738,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
@@ -763,8 +746,7 @@ describe('given the removeUserFromOrg mutation', () => {
               data: {
                 removeUserFromOrg: {
                   result: {
-                    status:
-                      "L'utilisateur a été retiré de l'organisation avec succès.",
+                    status: "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
                       id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
@@ -774,10 +756,10 @@ describe('given the removeUserFromOrg mutation', () => {
               },
             }
 
-            expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
             ])
+            expect(response).toEqual(expectedResponse)
           })
         })
       })
@@ -849,8 +831,8 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 }),
-                verifiedRequired: verifiedRequired({i18n}),
-                tfaRequired: tfaRequired({i18n}),
+                verifiedRequired: verifiedRequired({ i18n }),
+                tfaRequired: tfaRequired({ i18n }),
               },
               loaders: {
                 loadOrgByKey: loadOrgByKey({
@@ -865,7 +847,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   i18n,
                 }),
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -877,18 +859,18 @@ describe('given the removeUserFromOrg mutation', () => {
 
           const data = await loader.load(affiliation._key)
 
-          expect(data).toEqual(undefined)
           expect(consoleOutput).toEqual([
             `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
           ])
+          expect(data).toEqual(undefined)
         })
         describe('users language is set to english', () => {
           beforeAll(() => {
             i18n = setupI18n({
               locale: 'en',
               localeData: {
-                en: {plurals: {}},
-                fr: {plurals: {}},
+                en: { plurals: {} },
+                fr: { plurals: {} },
               },
               locales: ['en', 'fr'],
               messages: {
@@ -946,8 +928,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
-                  tfaRequired: tfaRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -962,7 +944,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
@@ -980,10 +962,10 @@ describe('given the removeUserFromOrg mutation', () => {
               },
             }
 
-            expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
             ])
+            expect(response).toEqual(expectedResponse)
           })
         })
         describe('users language is set to french', () => {
@@ -991,8 +973,8 @@ describe('given the removeUserFromOrg mutation', () => {
             i18n = setupI18n({
               locale: 'fr',
               localeData: {
-                en: {plurals: {}},
-                fr: {plurals: {}},
+                en: { plurals: {} },
+                fr: { plurals: {} },
               },
               locales: ['en', 'fr'],
               messages: {
@@ -1050,8 +1032,8 @@ describe('given the removeUserFromOrg mutation', () => {
                       i18n,
                     }),
                   }),
-                  verifiedRequired: verifiedRequired({i18n}),
-                  tfaRequired: tfaRequired({i18n}),
+                  verifiedRequired: verifiedRequired({ i18n }),
+                  tfaRequired: tfaRequired({ i18n }),
                 },
                 loaders: {
                   loadOrgByKey: loadOrgByKey({
@@ -1066,7 +1048,7 @@ describe('given the removeUserFromOrg mutation', () => {
                     i18n,
                   }),
                 },
-                validators: {cleanseInput},
+                validators: { cleanseInput },
               },
             )
 
@@ -1074,8 +1056,7 @@ describe('given the removeUserFromOrg mutation', () => {
               data: {
                 removeUserFromOrg: {
                   result: {
-                    status:
-                      "L'utilisateur a été retiré de l'organisation avec succès.",
+                    status: "L'utilisateur a été retiré de l'organisation avec succès.",
                     user: {
                       id: toGlobalId('user', user._key),
                       userName: 'test.account@istio.actually.exists',
@@ -1085,10 +1066,10 @@ describe('given the removeUserFromOrg mutation', () => {
               },
             }
 
-            expect(response).toEqual(expectedResponse)
             expect(consoleOutput).toEqual([
               `User: ${admin._key} successfully removed user: ${user._key} from org: ${orgOne._key}.`,
             ])
+            expect(response).toEqual(expectedResponse)
           })
         })
       })
@@ -1099,8 +1080,8 @@ describe('given the removeUserFromOrg mutation', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -1161,7 +1142,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1170,17 +1151,16 @@ describe('given the removeUserFromOrg mutation', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to remove user from unknown organization.',
+                  description: 'Unable to remove user from unknown organization.',
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 123 attempted to remove user: 456 from org: 12345, however no org with that id could be found.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requesting user is not an admin', () => {
@@ -1236,7 +1216,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1244,7 +1224,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1253,16 +1233,16 @@ describe('given the removeUserFromOrg mutation', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'Unable to remove user from organization.',
+                  description: 'Permission Denied: Please contact organization admin for help with removing users.',
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, however they do not have the permission to remove users.`,
+            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requesting user is an admin for another org', () => {
@@ -1318,7 +1298,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1326,7 +1306,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1335,16 +1315,16 @@ describe('given the removeUserFromOrg mutation', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description: 'Unable to remove user from organization.',
+                  description: 'Permission Denied: Please contact organization admin for help with removing users.',
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, however they do not have the permission to remove users.`,
+            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requested user is not found', () => {
@@ -1400,13 +1380,13 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1415,17 +1395,16 @@ describe('given the removeUserFromOrg mutation', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to remove unknown user from organization.',
+                  description: 'Unable to remove unknown user from organization.',
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 123 attempted to remove user: 456 from org: 12345, however no user with that id could be found.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requested user does not belong to this org', () => {
@@ -1478,7 +1457,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1486,7 +1465,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -1495,192 +1474,23 @@ describe('given the removeUserFromOrg mutation', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to remove a user that already does not belong to this organization.',
+                  description: 'Unable to remove a user that already does not belong to this organization.',
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 123 attempted to remove user: 456, but they do not have any affiliations to org: 12345.`,
           ])
-        })
-      })
-      describe('super admin attempts to remove another super admin', () => {
-        it('returns an error message', async () => {
-          const mockedCursor = {
-            count: 1,
-            next: jest.fn().mockReturnValue({
-              permission: 'super_admin',
-            }),
-          }
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeUserFromOrg (
-                  input: {
-                    userId: "${toGlobalId('users', 456)}"
-                    orgId: "${toGlobalId('organizations', 12345)}"
-                  }
-                ) {
-                  result {
-                    ... on RemoveUserFromOrgResult {
-                      status
-                      user {
-                        id
-                        userName
-                      }
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction,
-              userKey: 123,
-              auth: {
-                checkPermission: jest.fn().mockReturnValue('super_admin'),
-                userRequired: jest.fn().mockReturnValue({
-                  _key: '123',
-                }),
-                verifiedRequired: jest.fn(),
-                tfaRequired: jest.fn(),
-              },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
-                },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
-                },
-              },
-              validators: {cleanseInput},
-            },
-          )
-
-          const error = {
-            data: {
-              removeUserFromOrg: {
-                result: {
-                  code: 400,
-                  description:
-                    'Permission Denied: Please contact organization admin for help with removing users.',
-                },
-              },
-            },
-          }
-
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
-          ])
-        })
-      })
-      describe('admin attempts to remove another admin', () => {
-        it('returns an error message', async () => {
-          const mockedCursor = {
-            count: 1,
-            next: jest.fn().mockReturnValue({
-              permission: 'admin',
-            }),
-          }
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeUserFromOrg (
-                  input: {
-                    userId: "${toGlobalId('users', 456)}"
-                    orgId: "${toGlobalId('organizations', 12345)}"
-                  }
-                ) {
-                  result {
-                    ... on RemoveUserFromOrgResult {
-                      status
-                      user {
-                        id
-                        userName
-                      }
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction,
-              userKey: 123,
-              auth: {
-                checkPermission: jest.fn().mockReturnValue('admin'),
-                userRequired: jest.fn().mockReturnValue({
-                  _key: '123',
-                }),
-                verifiedRequired: jest.fn(),
-                tfaRequired: jest.fn(),
-              },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
-                },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
-                },
-              },
-              validators: {cleanseInput},
-            },
-          )
-
-          const error = {
-            data: {
-              removeUserFromOrg: {
-                result: {
-                  code: 400,
-                  description:
-                    'Permission Denied: Please contact organization admin for help with removing users.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
-          ])
         })
       })
     })
     describe('database error occurs', () => {
       describe('when checking requested users permission in requested org', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('database error'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('database error'))
 
           const response = await graphql(
             schema,
@@ -1725,7 +1535,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1733,20 +1543,16 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove user from this organization. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
-          expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Database error occurred when user: 123 attempted to check the current permission of user: 456 to see if they could be removed: Error: database error`,
           ])
+          expect(response.errors).toEqual(error)
         })
       })
     })
@@ -1802,7 +1608,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1810,20 +1616,16 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove user from this organization. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
-          expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Cursor error occurred when user: 123 attempted to check the current permission of user: 456 to see if they could be removed: Error: cursor error`,
           ])
+          expect(response.errors).toEqual(error)
         })
       })
     })
@@ -1832,7 +1634,7 @@ describe('given the removeUserFromOrg mutation', () => {
         it('throws an error', async () => {
           const mockedCursor = {
             count: 1,
-            next: jest.fn().mockReturnValue({permission: 'user'}),
+            next: jest.fn().mockReturnValue({ permission: 'user' }),
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -1883,7 +1685,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -1891,20 +1693,16 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove user from this organization. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
-          expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Trx step error occurred when user: 123 attempted to remove user: 456 from org: 12345, error: Error: trx step error`,
           ])
+          expect(response.errors).toEqual(error)
         })
       })
     })
@@ -1912,7 +1710,7 @@ describe('given the removeUserFromOrg mutation', () => {
       it('throws an error', async () => {
         const mockedCursor = {
           count: 1,
-          next: jest.fn().mockReturnValue({permission: 'user'}),
+          next: jest.fn().mockReturnValue({ permission: 'user' }),
         }
         const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -1964,7 +1762,7 @@ describe('given the removeUserFromOrg mutation', () => {
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({_key: 12345}),
+                load: jest.fn().mockReturnValue({ _key: 12345 }),
               },
               loadUserByKey: {
                 load: jest.fn().mockReturnValue({
@@ -1972,20 +1770,16 @@ describe('given the removeUserFromOrg mutation', () => {
                 }),
               },
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
-        const error = [
-          new GraphQLError(
-            'Unable to remove user from this organization. Please try again.',
-          ),
-        ]
+        const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
-        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
           `Trx commit error occurred when user: 123 attempted to remove user: 456 from org: 12345, error: Error: trx commit error`,
         ])
+        expect(response.errors).toEqual(error)
       })
     })
   })
@@ -1994,8 +1788,8 @@ describe('given the removeUserFromOrg mutation', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -2056,7 +1850,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   load: jest.fn(),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -2065,17 +1859,16 @@ describe('given the removeUserFromOrg mutation', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de supprimer un utilisateur d'une organisation inconnue.",
+                  description: "Impossible de supprimer un utilisateur d'une organisation inconnue.",
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 123 attempted to remove user: 456 from org: 12345, however no org with that id could be found.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requesting user is not an admin', () => {
@@ -2131,7 +1924,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2139,7 +1932,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -2149,16 +1942,16 @@ describe('given the removeUserFromOrg mutation', () => {
                 result: {
                   code: 400,
                   description:
-                    "Impossible de supprimer un utilisateur de l'organisation.",
+                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, however they do not have the permission to remove users.`,
+            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requesting user is an admin for another org', () => {
@@ -2214,7 +2007,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2222,7 +2015,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -2232,16 +2025,16 @@ describe('given the removeUserFromOrg mutation', () => {
                 result: {
                   code: 400,
                   description:
-                    "Impossible de supprimer un utilisateur de l'organisation.",
+                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, however they do not have the permission to remove users.`,
+            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requested user is not found', () => {
@@ -2297,13 +2090,13 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -2312,17 +2105,16 @@ describe('given the removeUserFromOrg mutation', () => {
               removeUserFromOrg: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de supprimer un utilisateur inconnu de l'organisation.",
+                  description: "Impossible de supprimer un utilisateur inconnu de l'organisation.",
                 },
               },
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 123 attempted to remove user: 456 from org: 12345, however no user with that id could be found.`,
           ])
+          expect(response).toEqual(error)
         })
       })
       describe('requested user does not belong to this org', () => {
@@ -2375,7 +2167,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2383,7 +2175,7 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
@@ -2399,185 +2191,17 @@ describe('given the removeUserFromOrg mutation', () => {
             },
           }
 
-          expect(response).toEqual(error)
           expect(consoleOutput).toEqual([
             `User: 123 attempted to remove user: 456, but they do not have any affiliations to org: 12345.`,
           ])
-        })
-      })
-      describe('super admin attempts to remove another super admin', () => {
-        it('returns an error message', async () => {
-          const mockedCursor = {
-            count: 1,
-            next: jest.fn().mockReturnValue({
-              permission: 'super_admin',
-            }),
-          }
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeUserFromOrg (
-                  input: {
-                    userId: "${toGlobalId('users', 456)}"
-                    orgId: "${toGlobalId('organizations', 12345)}"
-                  }
-                ) {
-                  result {
-                    ... on RemoveUserFromOrgResult {
-                      status
-                      user {
-                        id
-                        userName
-                      }
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction,
-              userKey: 123,
-              auth: {
-                checkPermission: jest.fn().mockReturnValue('super_admin'),
-                userRequired: jest.fn().mockReturnValue({
-                  _key: '123',
-                }),
-                verifiedRequired: jest.fn(),
-                tfaRequired: jest.fn(),
-              },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
-                },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
-                },
-              },
-              validators: {cleanseInput},
-            },
-          )
-
-          const error = {
-            data: {
-              removeUserFromOrg: {
-                result: {
-                  code: 400,
-                  description:
-                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
-                },
-              },
-            },
-          }
-
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
-          ])
-        })
-      })
-      describe('admin attempts to remove another admin', () => {
-        it('returns an error message', async () => {
-          const mockedCursor = {
-            count: 1,
-            next: jest.fn().mockReturnValue({
-              permission: 'admin',
-            }),
-          }
-          const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeUserFromOrg (
-                  input: {
-                    userId: "${toGlobalId('users', 456)}"
-                    orgId: "${toGlobalId('organizations', 12345)}"
-                  }
-                ) {
-                  result {
-                    ... on RemoveUserFromOrgResult {
-                      status
-                      user {
-                        id
-                        userName
-                      }
-                    }
-                    ... on AffiliationError {
-                      code
-                      description
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              i18n,
-              query: mockedQuery,
-              collections: collectionNames,
-              transaction,
-              userKey: 123,
-              auth: {
-                checkPermission: jest.fn().mockReturnValue('admin'),
-                userRequired: jest.fn().mockReturnValue({
-                  _key: '123',
-                }),
-                verifiedRequired: jest.fn(),
-                tfaRequired: jest.fn(),
-              },
-              loaders: {
-                loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
-                },
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 456,
-                  }),
-                },
-              },
-              validators: {cleanseInput},
-            },
-          )
-
-          const error = {
-            data: {
-              removeUserFromOrg: {
-                result: {
-                  code: 400,
-                  description:
-                    "Autorisation refusée : Veuillez contacter l'administrateur de l'organisation pour obtenir de l'aide sur la suppression des utilisateurs.",
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to remove user: 456 from org: 12345, but they do not have the right permission.`,
-          ])
         })
       })
     })
     describe('database error occurs', () => {
       describe('when checking requested users permission in requested org', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('database error'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('database error'))
 
           const response = await graphql(
             schema,
@@ -2622,7 +2246,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2630,20 +2254,18 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
           const error = [
-            new GraphQLError(
-              "Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer.",
-            ),
+            new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),
           ]
 
-          expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Database error occurred when user: 123 attempted to check the current permission of user: 456 to see if they could be removed: Error: database error`,
           ])
+          expect(response.errors).toEqual(error)
         })
       })
     })
@@ -2699,7 +2321,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2707,20 +2329,18 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
           const error = [
-            new GraphQLError(
-              "Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer.",
-            ),
+            new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),
           ]
 
-          expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Cursor error occurred when user: 123 attempted to check the current permission of user: 456 to see if they could be removed: Error: cursor error`,
           ])
+          expect(response.errors).toEqual(error)
         })
       })
     })
@@ -2729,7 +2349,7 @@ describe('given the removeUserFromOrg mutation', () => {
         it('throws an error', async () => {
           const mockedCursor = {
             count: 1,
-            next: jest.fn().mockReturnValue({permission: 'user'}),
+            next: jest.fn().mockReturnValue({ permission: 'user' }),
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -2780,7 +2400,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               loaders: {
                 loadOrgByKey: {
-                  load: jest.fn().mockReturnValue({_key: 12345}),
+                  load: jest.fn().mockReturnValue({ _key: 12345 }),
                 },
                 loadUserByKey: {
                   load: jest.fn().mockReturnValue({
@@ -2788,20 +2408,18 @@ describe('given the removeUserFromOrg mutation', () => {
                   }),
                 },
               },
-              validators: {cleanseInput},
+              validators: { cleanseInput },
             },
           )
 
           const error = [
-            new GraphQLError(
-              "Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer.",
-            ),
+            new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),
           ]
 
-          expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Trx step error occurred when user: 123 attempted to remove user: 456 from org: 12345, error: Error: trx step error`,
           ])
+          expect(response.errors).toEqual(error)
         })
       })
     })
@@ -2809,7 +2427,7 @@ describe('given the removeUserFromOrg mutation', () => {
       it('throws an error', async () => {
         const mockedCursor = {
           count: 1,
-          next: jest.fn().mockReturnValue({permission: 'user'}),
+          next: jest.fn().mockReturnValue({ permission: 'user' }),
         }
         const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
@@ -2861,7 +2479,7 @@ describe('given the removeUserFromOrg mutation', () => {
             },
             loaders: {
               loadOrgByKey: {
-                load: jest.fn().mockReturnValue({_key: 12345}),
+                load: jest.fn().mockReturnValue({ _key: 12345 }),
               },
               loadUserByKey: {
                 load: jest.fn().mockReturnValue({
@@ -2869,20 +2487,18 @@ describe('given the removeUserFromOrg mutation', () => {
                 }),
               },
             },
-            validators: {cleanseInput},
+            validators: { cleanseInput },
           },
         )
 
         const error = [
-          new GraphQLError(
-            "Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer.",
-          ),
+          new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),
         ]
 
-        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
           `Trx commit error occurred when user: 123 attempted to remove user: 456 from org: 12345, error: Error: trx commit error`,
         ])
+        expect(response.errors).toEqual(error)
       })
     })
   })

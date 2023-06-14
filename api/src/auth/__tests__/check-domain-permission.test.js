@@ -1,12 +1,12 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { setupI18n } from '@lingui/core'
 
-import {checkDomainPermission} from '../index'
+import { checkDomainPermission } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check domain permission function', () => {
   let query, drop, truncate, collections, org, domain, i18n
@@ -23,7 +23,7 @@ describe('given the check domain permission function', () => {
   describe('given a successful domain permission call', () => {
     let user, permitted
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -103,7 +103,7 @@ describe('given the check domain permission function', () => {
           query,
           userKey: user._key,
         })
-        permitted = await testCheckDomainPermission({domainId: domain._id})
+        permitted = await testCheckDomainPermission({ domainId: domain._id })
         expect(permitted).toEqual(true)
       })
     })
@@ -121,7 +121,7 @@ describe('given the check domain permission function', () => {
             query,
             userKey: user._key,
           })
-          permitted = await testCheckDomainPermission({domainId: domain._id})
+          permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
         })
       })
@@ -138,7 +138,7 @@ describe('given the check domain permission function', () => {
             query,
             userKey: user._key,
           })
-          permitted = await testCheckDomainPermission({domainId: domain._id})
+          permitted = await testCheckDomainPermission({ domainId: domain._id })
           expect(permitted).toEqual(true)
         })
       })
@@ -152,11 +152,11 @@ describe('given the check domain permission function', () => {
         const testCheckDomainPermission = checkDomainPermission({
           query: jest
             .fn()
-            .mockReturnValueOnce({count: 0})
-            .mockReturnValue({next: jest.fn().mockReturnValue([])}),
+            .mockReturnValueOnce({ count: 0 })
+            .mockReturnValue({ next: jest.fn().mockReturnValue(false) }),
           userKey: 123,
         })
-        permitted = await testCheckDomainPermission({domainId: 'domains/123'})
+        permitted = await testCheckDomainPermission({ domainId: 'domains/123' })
         expect(permitted).toEqual(false)
       })
     })
@@ -165,8 +165,8 @@ describe('given the check domain permission function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -178,22 +178,16 @@ describe('given the check domain permission function', () => {
       describe('if a database error is encountered during super admin permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
-          mockQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({domainId: 'domains/123'})
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Permission check error. Unable to request domain information.',
-              ),
-            )
+            expect(err).toEqual(new Error('Permission check error. Unable to request domain information.'))
             expect(consoleOutput).toEqual([
               `Database error when retrieving super admin claims for user: 123 and domain: domains/123: Error: Database error occurred.`,
             ])
@@ -205,7 +199,7 @@ describe('given the check domain permission function', () => {
         it('returns an appropriate error message', async () => {
           mockQuery = jest
             .fn()
-            .mockReturnValueOnce({count: 0})
+            .mockReturnValueOnce({ count: 0 })
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
@@ -213,13 +207,9 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({domainId: 'domains/123'})
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Permission check error. Unable to request domain information.',
-              ),
-            )
+            expect(err).toEqual(new Error('Permission check error. Unable to request domain information.'))
             expect(consoleOutput).toEqual([
               `Database error when retrieving affiliated organization claims for user: 123 and domain: domains/123: Error: Database error occurred.`,
             ])
@@ -234,23 +224,16 @@ describe('given the check domain permission function', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          mockQuery = jest
-            .fn()
-            .mockReturnValueOnce({count: 0})
-            .mockReturnValue(cursor)
+          mockQuery = jest.fn().mockReturnValueOnce({ count: 0 }).mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({domainId: 'domains/123'})
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Permission check error. Unable to request domain information.',
-              ),
-            )
+            expect(err).toEqual(new Error('Permission check error. Unable to request domain information.'))
             expect(consoleOutput).toEqual([
               `Cursor error when retrieving affiliated organization claims for user: 123 and domain: domains/123: Error: Cursor error occurred.`,
             ])
@@ -263,8 +246,8 @@ describe('given the check domain permission function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -276,16 +259,14 @@ describe('given the check domain permission function', () => {
       describe('if a database error is encountered during super admin permission check', () => {
         let mockQuery
         it('returns an appropriate error message', async () => {
-          mockQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({domainId: 'domains/123'})
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -303,7 +284,7 @@ describe('given the check domain permission function', () => {
         it('returns an appropriate error message', async () => {
           mockQuery = jest
             .fn()
-            .mockReturnValueOnce({count: 0})
+            .mockReturnValueOnce({ count: 0 })
             .mockRejectedValue(new Error('Database error occurred.'))
           try {
             const testCheckDomainPermission = checkDomainPermission({
@@ -311,7 +292,7 @@ describe('given the check domain permission function', () => {
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({domainId: 'domains/123'})
+            await testCheckDomainPermission({ domainId: 'domains/123' })
           } catch (err) {
             expect(err).toEqual(
               new Error(
@@ -332,17 +313,14 @@ describe('given the check domain permission function', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          mockQuery = jest
-            .fn()
-            .mockReturnValueOnce({count: 1})
-            .mockReturnValue(cursor)
+          mockQuery = jest.fn().mockReturnValueOnce({ count: 1 }).mockReturnValue(cursor)
           try {
             const testCheckDomainPermission = checkDomainPermission({
               i18n,
               query: mockQuery,
               userKey: 123,
             })
-            await testCheckDomainPermission({domainId: domain._id})
+            await testCheckDomainPermission({ domainId: domain._id })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
             expect(consoleOutput).toEqual([

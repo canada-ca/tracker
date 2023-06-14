@@ -45,13 +45,8 @@ import {
   loadAllOrganizationDomainStatuses,
   loadOrganizationDomainStatuses,
 } from './organization/loaders'
-import {
-  loadMyTrackerByUserId,
-  loadUserByUserName,
-  loadUserByKey,
-  loadUserConnectionsByUserId,
-} from './user/loaders'
-import { loadWebConnectionsByDomainId, loadWebScansByWebId} from './web-scan/loaders'
+import { loadMyTrackerByUserId, loadUserByUserName, loadUserByKey, loadUserConnectionsByUserId } from './user/loaders'
+import { loadWebConnectionsByDomainId, loadWebScansByWebId } from './web-scan/loaders'
 import {
   loadVerifiedDomainsById,
   loadVerifiedDomainByKey,
@@ -65,18 +60,9 @@ import {
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey } from './summaries/loaders'
-import {loadDnsConnectionsByDomainId} from "./dns-scan"
+import { loadDnsConnectionsByDomainId } from './dns-scan'
 
-export function initializeLoaders({
-  query,
-  db,
-  userKey,
-  i18n,
-  language,
-  cleanseInput,
-  loginRequiredBool,
-  moment,
-}) {
+export function initializeLoaders({ query, db, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
     loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
     loadAggregateGuidanceTagByTagId: loadAggregateGuidanceTagByTagId({
@@ -85,14 +71,13 @@ export function initializeLoaders({
       i18n,
       language,
     }),
-    loadAggregateGuidanceTagConnectionsByTagId:
-      loadAggregateGuidanceTagConnectionsByTagId({
-        query,
-        userKey,
-        i18n,
-        cleanseInput,
-        language,
-      }),
+    loadAggregateGuidanceTagConnectionsByTagId: loadAggregateGuidanceTagConnectionsByTagId({
+      query,
+      userKey,
+      i18n,
+      cleanseInput,
+      language,
+    }),
     loadAuditLogsByOrgId: loadAuditLogsByOrgId({
       query,
       userKey,
@@ -123,12 +108,11 @@ export function initializeLoaders({
         i18n,
       }),
     }),
-    loadDmarcSummaryEdgeByDomainIdAndPeriod:
-      loadDmarcSummaryEdgeByDomainIdAndPeriod({
-        query,
-        userKey,
-        i18n,
-      }),
+    loadDmarcSummaryEdgeByDomainIdAndPeriod: loadDmarcSummaryEdgeByDomainIdAndPeriod({
+      query,
+      userKey,
+      i18n,
+    }),
     loadDmarcSummaryByKey: loadDmarcSummaryByKey({ query, userKey, i18n }),
     loadFullPassConnectionsBySumId: loadFullPassConnectionsBySumId({
       query,
@@ -193,42 +177,39 @@ export function initializeLoaders({
       i18n,
       language,
     }),
-    loadDkimGuidanceTagConnectionsByTagId:
-      loadDkimGuidanceTagConnectionsByTagId({
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-        language,
-      }),
+    loadDkimGuidanceTagConnectionsByTagId: loadDkimGuidanceTagConnectionsByTagId({
+      query,
+      userKey,
+      cleanseInput,
+      i18n,
+      language,
+    }),
     loadDmarcGuidanceTagByTagId: loadDmarcGuidanceTagByTagId({
       query,
       userKey,
       i18n,
       language,
     }),
-    loadDmarcGuidanceTagConnectionsByTagId:
-      loadDmarcGuidanceTagConnectionsByTagId({
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-        language,
-      }),
+    loadDmarcGuidanceTagConnectionsByTagId: loadDmarcGuidanceTagConnectionsByTagId({
+      query,
+      userKey,
+      cleanseInput,
+      i18n,
+      language,
+    }),
     loadHttpsGuidanceTagByTagId: loadHttpsGuidanceTagByTagId({
       query,
       userKey,
       i18n,
       language,
     }),
-    loadHttpsGuidanceTagConnectionsByTagId:
-      loadHttpsGuidanceTagConnectionsByTagId({
-        query,
-        userKey,
-        cleanseInput,
-        i18n,
-        language,
-      }),
+    loadHttpsGuidanceTagConnectionsByTagId: loadHttpsGuidanceTagConnectionsByTagId({
+      query,
+      userKey,
+      cleanseInput,
+      i18n,
+      language,
+    }),
     loadSpfGuidanceTagByTagId: loadSpfGuidanceTagByTagId({
       query,
       userKey,

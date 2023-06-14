@@ -1,23 +1,17 @@
-import {
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLList,
-  GraphQLString,
-  GraphQLBoolean,
-} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
-import {setupI18n} from '@lingui/core'
+import { GraphQLNonNull, GraphQLID, GraphQLList, GraphQLString, GraphQLBoolean } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
 
-import {tokenize} from '../../../auth'
-import {organizationConnection} from '../../../organization'
-import {domainStatus} from '../domain-status'
-import {dmarcSummaryType} from '../../../dmarc-summaries'
-import {webConnection} from '../../../web-scan'
-import {domainType} from '../../index'
-import {Domain, Selectors} from '../../../scalars'
+import { tokenize } from '../../../auth'
+import { organizationConnection } from '../../../organization'
+import { domainStatus } from '../domain-status'
+import { dmarcSummaryType } from '../../../dmarc-summaries'
+import { webConnection } from '../../../web-scan'
+import { domainType } from '../../index'
+import { Domain, Selectors } from '../../../scalars'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {dnsScanConnection} from "../../../dns-scan"
+import { dnsScanConnection } from '../../../dns-scan'
 
 describe('given the domain object', () => {
   describe('testing its field definitions', () => {
@@ -67,9 +61,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('organizations')
-      expect(demoType.organizations.type).toMatchObject(
-        organizationConnection.connectionType,
-      )
+      expect(demoType.organizations.type).toMatchObject(organizationConnection.connectionType)
     })
     it('has an dnsScan field', () => {
       const demoType = domainType.getFields()
@@ -93,9 +85,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('yearlyDmarcSummaries')
-      expect(demoType.yearlyDmarcSummaries.type).toMatchObject(
-        GraphQLList(dmarcSummaryType),
-      )
+      expect(demoType.yearlyDmarcSummaries.type).toMatchObject(GraphQLList(dmarcSummaryType))
     })
   })
   describe('testing the field resolvers', () => {
@@ -113,27 +103,21 @@ describe('given the domain object', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.id.resolve({id: '1'})).toEqual(
-          toGlobalId('domain', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('domain', 1))
       })
     })
     describe('testing the domain resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        expect(demoType.domain.resolve({domain: 'test.gc.ca'})).toEqual(
-          'test.gc.ca',
-        )
+        expect(demoType.domain.resolve({ domain: 'test.gc.ca' })).toEqual('test.gc.ca')
       })
     })
     describe('testing the dmarcPhase resolver', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        expect(
-          demoType.dmarcPhase.resolve({phase: 'not implemented'}),
-        ).toEqual('not implemented')
+        expect(demoType.dmarcPhase.resolve({ phase: 'not implemented' })).toEqual('not implemented')
       })
     })
     describe('testing the hasDMARCReport resolver', () => {
@@ -146,7 +130,7 @@ describe('given the domain object', () => {
 
           await expect(
             demoType.hasDMARCReport.resolve(
-              {_id: 1},
+              { _id: 1 },
               {},
               {
                 auth: {
@@ -167,7 +151,7 @@ describe('given the domain object', () => {
 
           await expect(
             demoType.hasDMARCReport.resolve(
-              {_id: 1},
+              { _id: 1 },
               {},
               {
                 auth: {
@@ -184,9 +168,7 @@ describe('given the domain object', () => {
       it('returns the resolved value', () => {
         const demoType = domainType.getFields()
 
-        expect(
-          demoType.lastRan.resolve({lastRan: '2020-10-02T12:43:39Z'}),
-        ).toEqual('2020-10-02T12:43:39Z')
+        expect(demoType.lastRan.resolve({ lastRan: '2020-10-02T12:43:39Z' })).toEqual('2020-10-02T12:43:39Z')
       })
     })
     describe('testing the selectors resolver', () => {
@@ -195,10 +177,18 @@ describe('given the domain object', () => {
 
         const selectors = ['selector1', 'selector2']
 
-        expect(demoType.selectors.resolve({selectors})).toEqual([
-          'selector1',
-          'selector2',
-        ])
+        expect(
+          demoType.selectors.resolve(
+            { selectors },
+            {},
+            {
+              auth: {
+                userRequired: jest.fn().mockReturnValue(true),
+                checkDomainPermission: jest.fn().mockReturnValue(true),
+              },
+            },
+          ),
+        ).resolves.toEqual(['selector1', 'selector2'])
       })
     })
     describe('testing the status resolver', () => {
@@ -213,7 +203,7 @@ describe('given the domain object', () => {
           ssl: 'fail',
         }
 
-        expect(demoType.status.resolve({status})).toEqual({
+        expect(demoType.status.resolve({ status })).toEqual({
           dkim: 'pass',
           dmarc: 'pass',
           https: 'info',
@@ -272,13 +262,11 @@ describe('given the domain object', () => {
 
         await expect(
           demoType.organizations.resolve(
-            {_id: '1'},
-            {first: 1},
+            { _id: '1' },
+            { first: 1 },
             {
               loaders: {
-                loadOrgConnectionsByDomainId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+                loadOrgConnectionsByDomainId: jest.fn().mockReturnValue(expectedResult),
               },
               auth: {
                 checkSuperAdmin: jest.fn().mockReturnValue(false),
@@ -293,19 +281,19 @@ describe('given the domain object', () => {
         const demoType = domainType.getFields()
 
         const response = await demoType.web.resolve(
-            {_id: '1'},
-            {limit: 1},
-            {
-              loaders: {
-                loadWebConnectionsByDomainId: jest
-                  .fn()
-                  .mockReturnValue({"_id": "1", "_key": "1"}),
-              },
-              auth: {
-                checkSuperAdmin: jest.fn().mockReturnValue(false),
-              },
+          { _id: '1' },
+          { limit: 1 },
+          {
+            loaders: {
+              loadWebConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }),
             },
-          )
+            auth: {
+              checkDomainPermission: jest.fn().mockReturnValue(true),
+              checkSuperAdmin: jest.fn().mockReturnValue(false),
+              userRequired: jest.fn().mockReturnValue(true),
+            },
+          },
+        )
 
         expect(response).toEqual({
           _id: '1',
@@ -318,19 +306,19 @@ describe('given the domain object', () => {
         const demoType = domainType.getFields()
 
         const response = await demoType.dnsScan.resolve(
-            {_id: '1'},
-            {limit: 1},
-            {
-              loaders: {
-                loadDnsConnectionsByDomainId: jest
-                  .fn()
-                  .mockReturnValue({"_id": "1", "_key": "1"}),
-              },
-              auth: {
-                checkSuperAdmin: jest.fn().mockReturnValue(false),
-              },
+          { _id: '1' },
+          { limit: 1 },
+          {
+            loaders: {
+              loadDnsConnectionsByDomainId: jest.fn().mockReturnValue({ _id: '1', _key: '1' }),
             },
-          )
+            auth: {
+              checkDomainPermission: jest.fn().mockReturnValue(true),
+              checkSuperAdmin: jest.fn().mockReturnValue(false),
+              userRequired: jest.fn().mockReturnValue(true),
+            },
+          },
+        )
 
         expect(response).toEqual({
           _id: '1',
@@ -360,14 +348,10 @@ describe('given the domain object', () => {
               {
                 userKey: '1',
                 loaders: {
-                  loadDmarcSummaryEdgeByDomainIdAndPeriod: jest
-                    .fn()
-                    .mockReturnValue({
-                      _to: 'dmarcSummaries/1',
-                    }),
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValue('2021-01-01'),
+                  loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn().mockReturnValue({
+                    _to: 'dmarcSummaries/1',
+                  }),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
                 },
                 auth: {
                   checkDomainOwnership: jest.fn().mockReturnValue(true),
@@ -388,8 +372,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -417,9 +401,7 @@ describe('given the domain object', () => {
                   userKey: '1',
                   loaders: {
                     loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn(),
-                    loadStartDateFromPeriod: jest
-                      .fn()
-                      .mockReturnValue('2021-01-01'),
+                    loadStartDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
                   },
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
@@ -428,11 +410,7 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(
-              new Error(
-                'Unable to retrieve DMARC report information for: test1.gc.ca',
-              ),
-            )
+            ).rejects.toEqual(new Error('Unable to retrieve DMARC report information for: test1.gc.ca'))
 
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
@@ -445,8 +423,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -474,9 +452,7 @@ describe('given the domain object', () => {
                   userKey: '1',
                   loaders: {
                     loadDmarcSummaryEdgeByDomainIdAndPeriod: jest.fn(),
-                    loadStartDateFromPeriod: jest
-                      .fn()
-                      .mockReturnValue('2021-01-01'),
+                    loadStartDateFromPeriod: jest.fn().mockReturnValue('2021-01-01'),
                   },
                   auth: {
                     checkDomainOwnership: jest.fn().mockReturnValue(false),
@@ -485,11 +461,7 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(
-              new Error(
-                'Impossible de récupérer les informations du rapport DMARC pour : test1.gc.ca',
-              ),
-            )
+            ).rejects.toEqual(new Error('Impossible de récupérer les informations du rapport DMARC pour : test1.gc.ca'))
 
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
@@ -544,8 +516,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -584,11 +556,7 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(
-              new Error(
-                'Unable to retrieve DMARC report information for: test1.gc.ca',
-              ),
-            )
+            ).rejects.toEqual(new Error('Unable to retrieve DMARC report information for: test1.gc.ca'))
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
             ])
@@ -600,8 +568,8 @@ describe('given the domain object', () => {
           i18n = setupI18n({
             locale: 'fr',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -637,11 +605,7 @@ describe('given the domain object', () => {
                   },
                 },
               ),
-            ).rejects.toEqual(
-              new Error(
-                'Impossible de récupérer les informations du rapport DMARC pour : test1.gc.ca',
-              ),
-            )
+            ).rejects.toEqual(new Error('Impossible de récupérer les informations du rapport DMARC pour : test1.gc.ca'))
             expect(consoleOutput).toEqual([
               `User: 1 attempted to access dmarc report period data for 1, but does not belong to an org with ownership.`,
             ])

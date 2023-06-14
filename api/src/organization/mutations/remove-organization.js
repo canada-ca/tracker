@@ -17,8 +17,7 @@ export const removeOrganization = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: GraphQLNonNull(removeOrganizationUnion),
-      description:
-        '`RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
+      description: '`RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -48,9 +47,7 @@ export const removeOrganization = new mutationWithClientMutationId({
 
     // Check to see if org exists
     if (!organization) {
-      console.warn(
-        `User: ${userKey} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
-      )
+      console.warn(`User: ${userKey} attempted to remove org: ${orgId}, but there is no org associated with that id.`)
       return {
         _type: 'error',
         code: 400,
@@ -82,9 +79,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact super admin for help with removing organization.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact super admin for help with removing organization.`),
       }
     }
 
@@ -103,9 +98,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${userKey} while attempting to get dmarcSummaryInfo while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     let dmarcSummaryCheckList
@@ -115,9 +108,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred for user: ${userKey} while attempting to get dmarcSummaryInfo while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     for (const ownership of dmarcSummaryCheckList) {
@@ -147,9 +138,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred for user: ${userKey} while attempting to remove dmarc summaries while removing org: ${organization._key}, ${err}`,
         )
-        throw new Error(
-          i18n._(t`Unable to remove organization. Please try again.`),
-        )
+        throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
       }
 
       try {
@@ -164,9 +153,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred for user: ${userKey} while attempting to remove ownerships while removing org: ${organization._key}, ${err}`,
         )
-        throw new Error(
-          i18n._(t`Unable to remove organization. Please try again.`),
-        )
+        throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
       }
     }
 
@@ -196,9 +183,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     let domainInfo
@@ -208,9 +193,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     for (const domain of domainInfo) {
@@ -284,9 +267,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred for user: ${userKey} while attempting to remove domains while removing org: ${organization._key}, ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable to remove organization. Please try again.`),
-          )
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
       }
     }
@@ -310,10 +291,9 @@ export const removeOrganization = new mutationWithClientMutationId({
     }
 
     try {
-      await Promise.all([
-        trx.step(
-          () =>
-            query`
+      await trx.step(
+        () =>
+          query`
               WITH affiliations, organizations, users
               LET userEdges = (
                 FOR v, e IN 1..1 OUTBOUND ${organization._id} affiliations
@@ -326,23 +306,20 @@ export const removeOrganization = new mutationWithClientMutationId({
               )
               RETURN true
             `,
-        ),
-        trx.step(
-          () =>
-            query`
+      )
+      await trx.step(
+        () =>
+          query`
               WITH organizations
               REMOVE ${organization._key} IN organizations
               OPTIONS { waitForSync: true }
             `,
-        ),
-      ])
+      )
     } catch (err) {
       console.error(
         `Trx step error occurred for user: ${userKey} while attempting to remove affiliations, and the org while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     try {
@@ -351,14 +328,10 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred for user: ${userKey} while attempting remove of org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
-    console.info(
-      `User: ${userKey} successfully removed org: ${organization._key}.`,
-    )
+    console.info(`User: ${userKey} successfully removed org: ${organization._key}.`)
     await logActivity({
       transaction,
       collections,
@@ -380,9 +353,7 @@ export const removeOrganization = new mutationWithClientMutationId({
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully removed organization: ${organization.slug}.`,
-      ),
+      status: i18n._(t`Successfully removed organization: ${organization.slug}.`),
       organization,
     }
   },

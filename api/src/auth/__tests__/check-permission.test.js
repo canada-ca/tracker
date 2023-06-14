@@ -1,12 +1,12 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { setupI18n } from '@lingui/core'
 
-import {checkPermission} from '..'
+import { checkPermission } from '..'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the check permission function', () => {
   let query, drop, truncate, collections, i18n
@@ -22,7 +22,7 @@ describe('given the check permission function', () => {
 
   describe('given a successful permission call', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -102,7 +102,7 @@ describe('given the check permission function', () => {
           userKey: user._key,
           query,
         })
-        const permission = await testCheckPermission({orgId: org._id})
+        const permission = await testCheckPermission({ orgId: org._id })
         expect(permission).toEqual('super_admin')
       })
     })
@@ -135,7 +135,7 @@ describe('given the check permission function', () => {
           userKey: user._key,
           query,
         })
-        const permission = await testCheckPermission({orgId: org._id})
+        const permission = await testCheckPermission({ orgId: org._id })
         expect(permission).toEqual('admin')
       })
     })
@@ -168,7 +168,7 @@ describe('given the check permission function', () => {
           userKey: user._key,
           query,
         })
-        const permission = await testCheckPermission({orgId: org._id})
+        const permission = await testCheckPermission({ orgId: org._id })
         expect(permission).toEqual('user')
       })
     })
@@ -193,8 +193,8 @@ describe('given the check permission function', () => {
           userKey: user._key,
           query,
         })
-        const permission = await testCheckPermission({orgId: org._id})
-        expect(permission).toEqual(undefined)
+        const permission = await testCheckPermission({ orgId: org._id })
+        expect(permission).toEqual(null)
       })
     })
   })
@@ -204,8 +204,8 @@ describe('given the check permission function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -217,9 +217,7 @@ describe('given the check permission function', () => {
       describe('database error occurs', () => {
         describe('when checking if super admin', () => {
           it('throws an error', async () => {
-            query = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
+            query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
             try {
               const testCheckPermission = checkPermission({
@@ -227,11 +225,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('Authentication error. Please sign in.'),
-              )
+              expect(err).toEqual(new Error('Authentication error. Please sign in.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -256,11 +252,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('Authentication error. Please sign in.'),
-              )
+              expect(err).toEqual(new Error('Authentication error. Please sign in.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -285,11 +279,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('Unable to check permission. Please try again.'),
-              )
+              expect(err).toEqual(new Error('Unable to check permission. Please try again.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -319,11 +311,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('Unable to check permission. Please try again.'),
-              )
+              expect(err).toEqual(new Error('Unable to check permission. Please try again.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -338,8 +328,8 @@ describe('given the check permission function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -351,9 +341,7 @@ describe('given the check permission function', () => {
       describe('database error occurs', () => {
         describe('when checking if super admin', () => {
           it('throws an error', async () => {
-            query = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
+            query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
             try {
               const testCheckPermission = checkPermission({
@@ -361,13 +349,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  "Erreur d'authentification. Veuillez vous connecter.",
-                ),
-              )
+              expect(err).toEqual(new Error("Erreur d'authentification. Veuillez vous connecter."))
             }
 
             expect(consoleOutput).toEqual([
@@ -392,13 +376,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  "Erreur d'authentification. Veuillez vous connecter.",
-                ),
-              )
+              expect(err).toEqual(new Error("Erreur d'authentification. Veuillez vous connecter."))
             }
 
             expect(consoleOutput).toEqual([
@@ -423,13 +403,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  "Impossible de vérifier l'autorisation. Veuillez réessayer.",
-                ),
-              )
+              expect(err).toEqual(new Error("Impossible de vérifier l'autorisation. Veuillez réessayer."))
             }
 
             expect(consoleOutput).toEqual([
@@ -459,13 +435,9 @@ describe('given the check permission function', () => {
                 userKey: '1',
                 query,
               })
-              await testCheckPermission({orgId: 'organizations/1'})
+              await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  "Impossible de vérifier l'autorisation. Veuillez réessayer.",
-                ),
-              )
+              expect(err).toEqual(new Error("Impossible de vérifier l'autorisation. Veuillez réessayer."))
             }
 
             expect(consoleOutput).toEqual([

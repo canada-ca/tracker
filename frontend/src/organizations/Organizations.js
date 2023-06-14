@@ -99,7 +99,7 @@ export default function Organizations() {
               />
               <ABTestingWrapper insiderVariantName="B">
                 <ABTestVariant name="B">
-                  {isLoggedIn && (
+                  {isLoggedIn() && (
                     <>
                       <IconButton
                         variant="primary"

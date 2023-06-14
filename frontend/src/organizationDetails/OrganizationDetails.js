@@ -109,7 +109,7 @@ export default function OrganizationDetails() {
         </Heading>
         <ABTestingWrapper insiderVariantName="B">
           <ABTestVariant name="B">
-            {isLoggedIn && (
+            {isLoggedIn() && (
               <>
                 <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
                   <Trans>Request Invite</Trans>
@@ -165,17 +165,19 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <ExportButton
-                ml="auto"
-                my="2"
-                mt={{ base: '4', md: 0 }}
-                fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
-                dataFunction={async () => {
-                  const result = await getOrgDomainStatuses()
-                  return result.data?.findOrganizationBySlug?.toCsv
-                }}
-                isLoading={orgDomainStatusesLoading}
-              />
+              {data?.organization?.userHasPermission && (
+                <ExportButton
+                  ml="auto"
+                  my="2"
+                  mt={{ base: '4', md: 0 }}
+                  fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
+                  dataFunction={async () => {
+                    const result = await getOrgDomainStatuses()
+                    return result.data?.findOrganizationBySlug?.toCsv
+                  }}
+                  isLoading={orgDomainStatusesLoading}
+                />
+              )}
               <OrganizationDomains orgSlug={orgSlug} />
             </ErrorBoundary>
           </TabPanel>
