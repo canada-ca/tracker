@@ -8,13 +8,11 @@ import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const addOrganizationsDomains = new mutationWithClientMutationId({
   name: 'AddOrganizationsDomains',
-  description:
-    'Mutation used to create multiple new domains for an organization.',
+  description: 'Mutation used to create multiple new domains for an organization.',
   inputFields: () => ({
     orgId: {
       type: GraphQLNonNull(GraphQLID),
-      description:
-        'The global id of the organization you wish to assign this domain to.',
+      description: 'The global id of the organization you wish to assign this domain to.',
     },
     domains: {
       type: GraphQLNonNull(new GraphQLList(Domain)),
@@ -28,6 +26,10 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       type: GraphQLBoolean,
       description: 'New domains will be tagged with NEW.',
     },
+    tagStagingDomains: {
+      type: GraphQLBoolean,
+      description: 'New domains will be tagged with STAGING.',
+    },
     audit: {
       type: GraphQLBoolean,
       description: 'Audit logs will be created.',
@@ -36,8 +38,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: bulkModifyDomainsUnion,
-      description:
-        '`BulkModifyDomainsUnion` returning either a `DomainBulkResult`, or `DomainErrorType` object.',
+      description: '`BulkModifyDomainsUnion` returning either a `DomainBulkResult`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -50,13 +51,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       collections,
       transaction,
       userKey,
-      auth: {
-        checkPermission,
-        saltedHash,
-        userRequired,
-        verifiedRequired,
-        tfaRequired,
-      },
+      auth: { checkPermission, saltedHash, userRequired, verifiedRequired, tfaRequired },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
     },
@@ -90,9 +85,12 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     } else {
       tagNewDomains = false
     }
-    let tags = []
-    if (tagNewDomains) {
-      tags = [{ en: 'NEW', fr: 'NOUVEAU' }]
+
+    let tagStagingDomains
+    if (typeof args.tagStagingDomains !== 'undefined') {
+      tagStagingDomains = args.tagStagingDomains
+    } else {
+      tagStagingDomains = false
     }
 
     let audit
@@ -106,9 +104,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     const org = await loadOrgByKey.load(orgId)
 
     if (typeof org === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to add domains to an organization: ${orgId} that does not exist.`,
-      )
+      console.warn(`User: ${userKey} attempted to add domains to an organization: ${orgId} that does not exist.`)
       return {
         _type: 'error',
         code: 400,
@@ -126,10 +122,16 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Permission Denied: Please contact organization user for help with creating domains.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization user for help with creating domains.`),
       }
+    }
+
+    const tags = []
+    if (tagNewDomains) {
+      tags.push({ en: 'NEW', fr: 'NOUVEAU' })
+    }
+    if (tagStagingDomains) {
+      tags.push({ en: 'STAGING', fr: 'DÉV' })
     }
 
     const updatedProperties = []
@@ -180,9 +182,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
               RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${request.language}, org.orgDetails))
       `
       } catch (err) {
-        console.error(
-          `Database error occurred while running check to see if domain already exists in an org: ${err}`,
-        )
+        console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
         continue
       }
 
@@ -190,9 +190,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       try {
         checkOrgDomain = await checkDomainCursor.next()
       } catch (err) {
-        console.error(
-          `Cursor error occurred while running check to see if domain already exists in an org: ${err}`,
-        )
+        console.error(`Cursor error occurred while running check to see if domain already exists in an org: ${err}`)
         continue
       }
 
@@ -227,9 +225,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
             `,
           )
         } catch (err) {
-          console.error(
-            `Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`,
-          )
+          console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`)
           continue
         }
 
@@ -257,9 +253,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           `,
           )
         } catch (err) {
-          console.error(
-            `Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`,
-          )
+          console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`)
           continue
         }
       } else {
@@ -277,9 +271,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
           `,
           )
         } catch (err) {
-          console.error(
-            `Transaction step error occurred for user: ${userKey} when inserting domain edge: ${err}`,
-          )
+          console.error(`Transaction step error occurred for user: ${userKey} when inserting domain edge: ${err}`)
           continue
         }
       }
@@ -287,16 +279,12 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
       try {
         await trx.commit()
       } catch (err) {
-        console.error(
-          `Transaction commit error occurred while user: ${userKey} was creating domains: ${err}`,
-        )
+        console.error(`Transaction commit error occurred while user: ${userKey} was creating domains: ${err}`)
         throw new Error(i18n._(t`Unable to create domains. Please try again.`))
       }
 
       if (audit) {
-        console.info(
-          `User: ${userKey} successfully added domain: ${insertDomain.domain} to org: ${org.slug}.`,
-        )
+        console.info(`User: ${userKey} successfully added domain: ${insertDomain.domain} to org: ${org.slug}.`)
         await logActivity({
           transaction,
           collections,
@@ -322,9 +310,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
     }
 
     if (!audit) {
-      console.info(
-        `User: ${userKey} successfully added ${domainCount} domain(s) to org: ${org.slug}.`,
-      )
+      console.info(`User: ${userKey} successfully added ${domainCount} domain(s) to org: ${org.slug}.`)
       await logActivity({
         transaction,
         collections,
@@ -349,9 +335,7 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully added ${domainCount} domain(s) to ${org.slug}.`,
-      ),
+      status: i18n._(t`Successfully added ${domainCount} domain(s) to ${org.slug}.`),
     }
   },
 })
