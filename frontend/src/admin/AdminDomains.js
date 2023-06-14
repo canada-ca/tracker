@@ -106,8 +106,12 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
   }, [orgSlug])
 
   const [removeDomain] = useMutation(REMOVE_DOMAIN, {
-    refetchQueries: [{ query: FORWARD, variables: { first: domainsPerPage, ...fetchVariables } }, 'FindAuditLogs'],
-    awaitRefetchQueries: true,
+    refetchQueries: ['FindAuditLogs'],
+    update(cache, { data: { removeDomain } }) {
+      if (removeDomain.result.__typename === 'DomainResult') {
+        cache.evict({ id: cache.identify(removeDomain.result.domain) })
+      }
+    },
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -396,7 +400,14 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
       />
       <AdminDomainModal
         isOpen={updateIsOpen}
-        onClose={updateOnClose}
+        onClose={
+          modalProps.mutation === 'create'
+            ? () => {
+                updateOnClose()
+                resetToFirstPage()
+              }
+            : updateOnClose
+        }
         validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
         orgId={orgId}
         orgSlug={orgSlug}

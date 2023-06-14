@@ -57,7 +57,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
-    awaitRefetchQueries: true,
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -70,6 +69,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     },
     onCompleted({ createDomain }) {
       if (createDomain.result.__typename === 'Domain') {
+        onClose()
         toast({
           title: i18n._(t`Domain added`),
           description: i18n._(t`${createDomain.result.domain} was added to ${orgSlug}`),
@@ -78,7 +78,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
           isClosable: true,
           position: 'top-left',
         })
-        onClose()
       } else if (createDomain.result.__typename === 'DomainError') {
         toast({
           title: i18n._(t`Unable to create new domain.`),
@@ -103,8 +102,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
   })
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
-    refetchQueries: ['PaginatedOrgDomains', 'FindAuditLogs'],
-    awaitRefetchQueries: true,
+    refetchQueries: ['FindAuditLogs'],
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -117,6 +115,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     },
     onCompleted({ updateDomain }) {
       if (updateDomain.result.__typename === 'Domain') {
+        onClose()
         toast({
           title: i18n._(t`Domain updated`),
           description: i18n._(
@@ -127,7 +126,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
           isClosable: true,
           position: 'top-left',
         })
-        onClose()
       } else if (updateDomain.result.__typename === 'DomainError') {
         toast({
           title: i18n._(t`Unable to update domain.`),
@@ -410,4 +408,6 @@ AdminDomainModal.propTypes = {
   orgSlug: string,
   mutation: string,
   orgCount: number,
+  refetchQueries: array,
+  myOrg: object,
 }

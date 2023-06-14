@@ -1,16 +1,15 @@
-import {GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean} from 'graphql'
-import {mutationWithClientMutationId, fromGlobalId} from 'graphql-relay'
-import {t} from '@lingui/macro'
+import { GraphQLID, GraphQLNonNull, GraphQLList, GraphQLBoolean } from 'graphql'
+import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
+import { t } from '@lingui/macro'
 
-import {updateDomainUnion} from '../unions'
-import {Domain, Selectors} from '../../scalars'
+import { updateDomainUnion } from '../unions'
+import { Domain, Selectors } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
-  description:
-    'Mutation allows the modification of domains if domain is updated through out its life-cycle',
+  description: 'Mutation allows the modification of domains if domain is updated through out its life-cycle',
   inputFields: () => ({
     domainId: {
       type: GraphQLNonNull(GraphQLID),
@@ -18,8 +17,7 @@ export const updateDomain = new mutationWithClientMutationId({
     },
     orgId: {
       type: GraphQLNonNull(GraphQLID),
-      description:
-        'The global ID of the organization used for permission checks.',
+      description: 'The global ID of the organization used for permission checks.',
     },
     domain: {
       type: Domain,
@@ -27,29 +25,25 @@ export const updateDomain = new mutationWithClientMutationId({
     },
     selectors: {
       type: new GraphQLList(Selectors),
-      description:
-        'The updated DKIM selector strings corresponding to this domain.',
+      description: 'The updated DKIM selector strings corresponding to this domain.',
     },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
     },
     hidden: {
-      description:
-        "Value that determines if the domain is excluded from an organization's score.",
+      description: "Value that determines if the domain is excluded from an organization's score.",
       type: GraphQLBoolean,
     },
     archived: {
-      description:
-        'Value that determines if the domain is excluded from the scanning process.',
+      description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
     },
   }),
   outputFields: () => ({
     result: {
       type: updateDomainUnion,
-      description:
-        '`UpdateDomainUnion` returning either a `Domain`, or `DomainError` object.',
+      description: '`UpdateDomainUnion` returning either a `Domain`, or `DomainError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -58,22 +52,23 @@ export const updateDomain = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      language,
       collections,
       transaction,
       userKey,
-      auth: {checkPermission, userRequired, verifiedRequired, tfaRequired},
-      validators: {cleanseInput},
-      loaders: {loadDomainByKey, loadOrgByKey},
+      auth: { checkPermission, userRequired, verifiedRequired },
+      validators: { cleanseInput },
+      loaders: { loadDomainByKey, loadOrgByKey },
     },
   ) => {
     // Get User
     const user = await userRequired()
 
-    verifiedRequired({user})
-    tfaRequired({user})
+    verifiedRequired({ user })
+    // tfaRequired({user})
 
-    const {id: domainId} = fromGlobalId(cleanseInput(args.domainId))
-    const {id: orgId} = fromGlobalId(cleanseInput(args.orgId))
+    const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
+    const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const updatedDomain = cleanseInput(args.domain)
 
     let selectors
@@ -133,22 +128,16 @@ export const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check permission
-    const permission = await checkPermission({orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
-    if (
-      permission !== 'user' &&
-      permission !== 'admin' &&
-      permission !== 'super_admin'
-    ) {
+    if (permission !== 'user' && permission !== 'admin' && permission !== 'super_admin') {
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact organization user for help with updating this domain.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization user for help with updating this domain.`),
       }
     }
 
@@ -175,9 +164,7 @@ export const updateDomain = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to update domain that does not belong to the given organization.`,
-        ),
+        description: i18n._(t`Unable to update domain that does not belong to the given organization.`),
       }
     }
 
@@ -219,17 +206,13 @@ export const updateDomain = new mutationWithClientMutationId({
           RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
       `
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
-      )
+      console.error(`Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
     }
     let claim
     try {
       claim = await claimCursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
-      )
+      console.error(`Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
     }
 
     const claimToInsert = {
@@ -252,9 +235,7 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to update domain edge. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to update domain edge. Please try again.`))
     }
 
     // Commit transaction
@@ -283,8 +264,7 @@ export const updateDomain = new mutationWithClientMutationId({
     }
     if (
       typeof selectors !== 'undefined' &&
-      JSON.stringify(domainToInsert.selectors) !==
-        JSON.stringify(domain.selectors)
+      JSON.stringify(domainToInsert.selectors) !== JSON.stringify(domain.selectors)
     ) {
       updatedProperties.push({
         name: 'selectors',
@@ -293,10 +273,7 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (
-      typeof tags !== 'undefined' &&
-      JSON.stringify(claim.tags) !== JSON.stringify(tags)
-    ) {
+    if (typeof tags !== 'undefined' && JSON.stringify(claim.tags) !== JSON.stringify(tags)) {
       updatedProperties.push({
         name: 'tags',
         oldValue: claim.tags,
@@ -349,15 +326,19 @@ export const updateDomain = new mutationWithClientMutationId({
         target: {
           resource: domain.domain,
           resourceType: 'domain', // user, org, domain
-          updatedProperties: [
-            { name: 'archived', oldValue: domain.archived, newValue: archived },
-          ],
+          updatedProperties: [{ name: 'archived', oldValue: domain.archived, newValue: archived }],
         },
       })
     }
 
     returnDomain.id = returnDomain._key
 
-    return returnDomain
+    return {
+      ...returnDomain,
+      claimTags: tags.map((tag) => {
+        return tag[language]
+      }),
+      hidden,
+    }
   },
 })
