@@ -335,7 +335,7 @@ export const updateDomain = new mutationWithClientMutationId({
 
     return {
       ...returnDomain,
-      claimTags: tags.map((tag) => {
+      claimTags: claimToInsert.tags.map((tag) => {
         return tag[language]
       }),
       hidden,
