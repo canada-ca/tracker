@@ -14,7 +14,7 @@ import { AdminDomains } from '../AdminDomains'
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { rawOrgDomainListData, rawOrgDomainListDataEmpty } from '../../fixtures/orgDomainListData'
-import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD, FIND_AUDIT_LOGS } from '../../graphql/queries'
+import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../../graphql/queries'
 import { CREATE_DOMAIN, REMOVE_DOMAIN, UPDATE_DOMAIN } from '../../graphql/mutations'
 
 const i18n = setupI18n({
@@ -31,7 +31,13 @@ const mocks = [
   {
     request: {
       query: FORWARD,
-      variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+      variables: {
+        first: 20,
+        orgSlug: 'test-org.slug',
+        search: '',
+        orderBy: { field: 'DOMAIN', direction: 'ASC' },
+        filters: [],
+      },
     },
     result: { data: rawOrgDomainListData },
   },
@@ -68,7 +74,13 @@ describe('<AdminDomains />', () => {
       {
         request: {
           query: FORWARD,
-          variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+          variables: {
+            first: 20,
+            orgSlug: 'test-org.slug',
+            search: '',
+            orderBy: { field: 'DOMAIN', direction: 'ASC' },
+            filters: [],
+          },
         },
         result: { data: rawOrgDomainListDataEmpty },
       },
@@ -107,7 +119,13 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+            variables: {
+              first: 20,
+              orgSlug: 'test-org.slug',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
+            },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -180,7 +198,13 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+            variables: {
+              first: 20,
+              orgSlug: 'test-org.slug',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
+            },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -188,9 +212,11 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 4,
+              first: 20,
               orgSlug: 'test-org.slug',
-              search: 'test-domain.gc.ca',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
             },
           },
           result: { data: rawOrgDomainListData },
@@ -268,7 +294,13 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+            variables: {
+              first: 20,
+              orgSlug: 'test-org.slug',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
+            },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -276,9 +308,11 @@ describe('<AdminDomains />', () => {
           request: {
             query: FORWARD,
             variables: {
-              first: 4,
+              first: 20,
               orgSlug: 'test-org.slug',
-              search: 'test.domain.gc.ca',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
             },
           },
           result: { data: rawOrgDomainListData },
@@ -357,7 +391,13 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+            variables: {
+              first: 20,
+              orgSlug: 'test-org.slug',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
+            },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -458,7 +498,13 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+            variables: {
+              first: 20,
+              orgSlug: 'test-org.slug',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
+            },
           },
           result: { data: rawOrgDomainListData },
         },
@@ -530,7 +576,13 @@ describe('<AdminDomains />', () => {
         {
           request: {
             query: FORWARD,
-            variables: { first: 4, orgSlug: 'test-org.slug', search: '', filters: [] },
+            variables: {
+              first: 20,
+              orgSlug: 'test-org.slug',
+              search: '',
+              orderBy: { field: 'DOMAIN', direction: 'ASC' },
+              filters: [],
+            },
           },
           result: { data: rawOrgDomainListData },
         },
