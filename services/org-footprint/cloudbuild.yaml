@@ -46,7 +46,7 @@ steps:
     args:
       - '-c'
       - |
-        echo "gcr.io/$PROJECT_ID/org-footprint:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/services/org-footprint:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-if-master
