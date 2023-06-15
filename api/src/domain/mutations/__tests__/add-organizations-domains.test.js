@@ -8,13 +8,7 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import {
-  checkPermission,
-  userRequired,
-  saltedHash,
-  verifiedRequired,
-  tfaRequired,
-} from '../../../auth'
+import { checkPermission, userRequired, saltedHash, verifiedRequired, tfaRequired } from '../../../auth'
 import { loadDomainByDomain } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
@@ -128,6 +122,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                   domains: ["test.domain.gov", "test.domain2.gov"]
                   hideNewDomains: false
                   tagNewDomains: false
+                  tagStagingDomains: false
                   audit: false
                 }
               ) {
@@ -197,6 +192,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                   domains: ["test.domain.gov", "test.domain2.gov"]
                   hideNewDomains: false
                   tagNewDomains: false
+                  tagStagingDomains: false
                   audit: true
                 }
               ) {
@@ -343,6 +339,7 @@ describe('given the addOrganizationsDomains mutation', () => {
                   domains: ["test.domain.gov", "test.domain2.gov"]
                   hideNewDomains: false
                   tagNewDomains: false
+                  tagStagingDomains: false
                   audit: false
                 }
               ) {
