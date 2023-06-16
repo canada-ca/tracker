@@ -32,7 +32,6 @@ import { RadialBarChart } from '../summaries/RadialBarChart'
 import { ExportButton } from '../components/ExportButton'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
-import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export default function OrganizationDetails() {
   const { isLoggedIn } = useUserVar()
@@ -107,24 +106,20 @@ export default function OrganizationDetails() {
             {data?.organization?.verified && <CheckCircleIcon ml="1" color="blue.500" boxSize="icons.lg" />}
           </Flex>
         </Heading>
-        <ABTestingWrapper insiderVariantName="B">
-          <ABTestVariant name="B">
-            {isLoggedIn() && (
-              <>
-                <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
-                  <Trans>Request Invite</Trans>
-                  <UserIcon ml="1" color="white" boxSize="icons.md" />
-                </Button>
-                <RequestOrgInviteModal
-                  onClose={onClose}
-                  isOpen={isOpen}
-                  orgId={data?.organization?.id}
-                  orgName={data?.organization?.name}
-                />
-              </>
-            )}
-          </ABTestVariant>
-        </ABTestingWrapper>
+        {isLoggedIn() && (
+          <>
+            <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
+              <Trans>Request Invite</Trans>
+              <UserIcon ml="1" color="white" boxSize="icons.md" />
+            </Button>
+            <RequestOrgInviteModal
+              onClose={onClose}
+              isOpen={isOpen}
+              orgId={data?.organization?.id}
+              orgName={data?.organization?.name}
+            />
+          </>
+        )}
       </Flex>
       <Tabs
         isFitted
