@@ -28,7 +28,6 @@ import { SearchBox } from '../components/SearchBox'
 import { Formik } from 'formik'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
-import { ABTestVariant, ABTestingWrapper } from '../app/ABTestWrapper'
 
 export function OrganizationDomains({ orgSlug }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -202,17 +201,13 @@ export function OrganizationDomains({ orgSlug }) {
                                 </option>
                               )
                             })}
-                            <ABTestingWrapper insiderVariantName="B">
-                              <ABTestVariant name="B">
-                                {hiddenFilterOptions.map(({ value, text }, idx) => {
-                                  return (
-                                    <option key={idx} value={value}>
-                                      {text}
-                                    </option>
-                                  )
-                                })}
-                              </ABTestVariant>
-                            </ABTestingWrapper>
+                            {hiddenFilterOptions.map(({ value, text }, idx) => {
+                              return (
+                                <option key={idx} value={value}>
+                                  {text}
+                                </option>
+                              )
+                            })}
                           </>
                         ) : (
                           <>

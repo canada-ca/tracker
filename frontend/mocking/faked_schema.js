@@ -791,6 +791,8 @@ export const getTypeNames = () => gql`
     # CSV formatted output of all domains in the organization including their email and web scan statuses.
     toCsv: String
 
+    userHasPermission: Boolean
+
     # The domains which are associated with this organization.
     domains(
       # Ordering options for domain connections.
