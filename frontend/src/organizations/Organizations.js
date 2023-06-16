@@ -17,7 +17,6 @@ import { SearchBox } from '../components/SearchBox'
 import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
-import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export default function Organizations() {
   const { isLoggedIn } = useUserVar()
@@ -97,28 +96,24 @@ export default function Organizations() {
                 mr="2"
                 w="100%"
               />
-              <ABTestingWrapper insiderVariantName="B">
-                <ABTestVariant name="B">
-                  {isLoggedIn() && (
-                    <>
-                      <IconButton
-                        variant="primary"
-                        icon={<UserIcon color="white" boxSize="icons.md" />}
-                        onClick={() => {
-                          setOrgInfo({ id, name })
-                          onOpen()
-                        }}
-                      />
-                      <RequestOrgInviteModal
-                        isOpen={inviteRequestIsOpen}
-                        onClose={onClose}
-                        orgId={orgInfo.id}
-                        orgName={orgInfo.name}
-                      />
-                    </>
-                  )}
-                </ABTestVariant>
-              </ABTestingWrapper>
+              {isLoggedIn() && (
+                <>
+                  <IconButton
+                    variant="primary"
+                    icon={<UserIcon color="white" boxSize="icons.md" />}
+                    onClick={() => {
+                      setOrgInfo({ id, name })
+                      onOpen()
+                    }}
+                  />
+                  <RequestOrgInviteModal
+                    isOpen={inviteRequestIsOpen}
+                    onClose={onClose}
+                    orgId={orgInfo.id}
+                    orgName={orgInfo.name}
+                  />
+                </>
+              )}
             </Flex>
           </ErrorBoundary>
         )}
