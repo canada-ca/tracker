@@ -1,10 +1,10 @@
-FROM rust:1.67.1 AS crlite-builder
-RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev b19e5aa
+FROM rust:1.70.0-bookworm AS crlite-builder
+RUN cargo install --git https://github.com/mozilla/crlite rust-query-crlite --rev a0efc15 --features=rustls/dangerous_configuration
 
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.10.11-slim-bullseye AS python-builder
+FROM python:3.11.4-slim-bookworm AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -26,7 +26,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.10.11-slim-bullseye
+FROM python:3.11.4-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
