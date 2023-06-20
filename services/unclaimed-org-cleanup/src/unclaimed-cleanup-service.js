@@ -2,7 +2,7 @@ const { UNCLAIMED_ORG_ID } = process.env
 const { findDomainClaims, findUnclaimedDomains } = require('./database')
 
 const unclaimedCleanupService = async ({ query, log }) => {
-  const unclaimedDomains = await findUnclaimedDomains({ query })
+  const unclaimedDomains = await findUnclaimedDomains({ query, orgId: UNCLAIMED_ORG_ID })
   unclaimedDomains.forEach(async ({ domain, _id }) => {
     const claims = await findDomainClaims({ query, domainId: _id })
     if (claims.length > 1) {

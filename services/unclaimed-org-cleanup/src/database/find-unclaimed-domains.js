@@ -1,11 +1,9 @@
-const { UNCLAIMED_ORG_ID } = process.env
-
-const findUnclaimedDomains = async ({ query }) => {
+const findUnclaimedDomains = async ({ query, orgId }) => {
   // get domains in unclaimed org
   let cursor
   try {
     cursor = await query`
-    FOR v, e IN 1..1 ANY ${UNCLAIMED_ORG_ID} claims
+    FOR v, e IN 1..1 ANY ${orgId} claims
         RETURN v
     `
   } catch (err) {
