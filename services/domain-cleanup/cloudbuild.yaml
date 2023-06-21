@@ -14,44 +14,38 @@ steps:
 
   - name: node:alpine
     id: install-dependencies
-    dir: services/org-footprint
+    dir: services/domain-cleanup
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - name: node:alpine
     id: run-eslint
-    dir: services/org-footprint
+    dir: services/domain-cleanup
     entrypoint: npm
     args: ['run', lint]
 
   - name: node:alpine
     id: test
-    dir: services/org-footprint
+    dir: services/domain-cleanup
     entrypoint: npm
     args: ['test']
     env:
       - DB_URL=$_DB_URL
       - DB_PASS=$_DB_PASS
       - DB_NAME=$_DB_NAME
-      - NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY
-      - NOTIFICATION_API_URL=$_NOTIFICATION_API_URL
-      - NOTIFICATION_ORG_FOOTPRINT_EN=$_NOTIFICATION_TEST_TEMPLATE_ID
-      - NOTIFICATION_ORG_FOOTPRINT_FR=$_NOTIFICATION_TEST_TEMPLATE_ID
-      - SERVICE_ACCOUNT_EMAIL=$_SERVICE_ACCOUNT_EMAIL
-      - REDIRECT_TO_SERVICE_ACCOUNT_EMAIL=$_REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: services/org-footprint
+    dir: services/domain-cleanup
     args:
       - '-c'
       - |
-        echo "gcr.io/$PROJECT_ID/services/org-footprint:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/services/domain-cleanup:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-if-master
     entrypoint: 'bash'
-    dir: services/org-footprint
+    dir: services/domain-cleanup
     args:
       - '-c'
       - |
@@ -66,7 +60,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: push-if-master
     entrypoint: 'bash'
-    dir: services/org-footprint
+    dir: services/domain-cleanup
     args:
       - '-c'
       - |

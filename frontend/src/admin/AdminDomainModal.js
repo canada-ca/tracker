@@ -25,7 +25,6 @@ import {
   Tag,
   TagCloseButton,
   TagLabel,
-  TagRightIcon,
   Text,
   Tooltip,
   useToast,
@@ -165,20 +164,21 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     const difference = tagOptions.filter((label) => !stringValues?.includes(label[i18n.locale]))
     return difference?.map((label, idx) => {
       return (
-        <Tag
+        <Button
           key={idx}
           id={`add-tag-${label[i18n.locale]}`}
-          as="button"
           _hover={{ bg: 'gray.200' }}
           borderRadius="full"
-          onClick={(e) => {
-            e.preventDefault()
+          onClick={() => {
             helper.push(label)
           }}
+          bg="#f2f2f2"
+          fontWeight="normal"
+          size="sm"
         >
-          <TagLabel>{label[i18n.locale]}</TagLabel>
-          <TagRightIcon as={AddIcon} color="gray.500" ml="auto" />
-        </Tag>
+          {label[i18n.locale]}
+          <AddIcon color="gray.500" ml="auto" />
+        </Button>
       )
     })
   }
@@ -307,7 +307,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                         <SimpleGrid columns={3} spacing={2}>
                           {values.tags?.map((label, idx) => {
                             return (
-                              <Tag key={idx} borderRadius="full">
+                              <Tag key={idx} borderRadius="full" py="2" px="3">
                                 <TagLabel>{label[i18n.locale]}</TagLabel>
                                 <TagCloseButton
                                   ml="auto"
