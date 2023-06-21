@@ -1,0 +1,33 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: domain-cleanup
+  namespace: api
+spec:
+  schedule: "30 10 * * *"
+  concurrencyPolicy: Replace
+  startingDeadlineSeconds: 180
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: domain-cleanup
+              image: gcr.io/track-compliance/services/domain-cleanup:master-001 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              env:
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_PASS
+                - name: DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_URL
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_NAME
+          restartPolicy: OnFailure

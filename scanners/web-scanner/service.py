@@ -7,7 +7,7 @@ import signal
 import sys
 
 from dotenv import load_dotenv
-from concurrent.futures import TimeoutError
+from concurrent.futures import TimeoutError, ProcessPoolExecutor
 from scan.web_scanner import scan_web
 import nats
 
@@ -98,7 +98,11 @@ async def scan_service():
 
         try:
             logger.info(f"Starting web scan on '{domain}' at IP address '{ip_address}'")
-            scan_results = scan_web(domain=domain, ip_address=ip_address)
+            with ProcessPoolExecutor(max_workers=1) as executor:
+                scan_results = await loop.run_in_executor(
+                    executor, functools.partial(scan_web, domain=domain, ip_address=ip_address)
+                )
+
         except TimeoutError:
             scan_results = {"results": {"error": "unreachable"}}
 
