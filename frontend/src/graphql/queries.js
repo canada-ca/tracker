@@ -175,11 +175,11 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
 `
 
 export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
-  query PaginatedOrgDomains($orgSlug: Slug!, $first: Int, $after: String, $search: String) {
+  query PaginatedOrgDomains($orgSlug: Slug!, $first: Int, $after: String, $search: String, $filters: [DomainFilter]) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
       name
-      domains(first: $first, after: $after, search: $search) {
+      domains(first: $first, after: $after, search: $search, filters: $filters) {
         edges {
           node {
             id

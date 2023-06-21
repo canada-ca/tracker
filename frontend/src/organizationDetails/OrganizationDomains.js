@@ -98,9 +98,6 @@ export function OrganizationDomains({ orgSlug }) {
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-  ]
-
-  const hiddenFilterOptions = [
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
   ]
@@ -193,22 +190,13 @@ export function OrganizationDomains({ orgSlug }) {
                           <Trans>Status or tag</Trans>
                         </option>
                         {values.filterCategory === 'TAGS' ? (
-                          <>
-                            {filterTagOptions.map(({ value, text }, idx) => {
-                              return (
-                                <option key={idx} value={value}>
-                                  {text}
-                                </option>
-                              )
-                            })}
-                            {hiddenFilterOptions.map(({ value, text }, idx) => {
-                              return (
-                                <option key={idx} value={value}>
-                                  {text}
-                                </option>
-                              )
-                            })}
-                          </>
+                          filterTagOptions.map(({ value, text }, idx) => {
+                            return (
+                              <option key={idx} value={value}>
+                                {text}
+                              </option>
+                            )
+                          })
                         ) : (
                           <>
                             <option value="PASS">

@@ -196,7 +196,14 @@ export const CREATE_DOMAIN = gql`
     ) {
       result {
         ... on Domain {
+          id
           domain
+          lastRan
+          selectors
+          claimTags
+          hidden
+          archived
+          rcode
         }
         ... on DomainError {
           code
@@ -213,6 +220,9 @@ export const REMOVE_DOMAIN = gql`
       result {
         ... on DomainResult {
           status
+          domain {
+            id
+          }
         }
         ... on DomainError {
           code
@@ -281,7 +291,14 @@ export const UPDATE_DOMAIN = gql`
     ) {
       result {
         ... on Domain {
+          id
           domain
+          lastRan
+          selectors
+          claimTags
+          hidden
+          archived
+          rcode
         }
         ... on DomainError {
           code

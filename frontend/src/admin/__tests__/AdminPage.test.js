@@ -236,7 +236,13 @@ function mocks() {
     {
       request: {
         query: PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
-        variables: { orgSlug: 'Wolf-Group', first: 10, search: '' },
+        variables: {
+          first: 20,
+          orgSlug: 'Wolf-Group',
+          search: '',
+          orderBy: { field: 'DOMAIN', direction: 'ASC' },
+          filters: [],
+        },
       },
       result: {
         data: {
