@@ -97,6 +97,10 @@ summaries:
 		kubectl delete job summaries-manual -n scanners --ignore-not-found &&
 		kubectl create job summaries-manual --from=cronjob/summaries -n scanners
 
+.PHONY: domain-cleanup
+		kubectl delete job domain-cleanup-manual -n api --ignore-not-found &&
+		kubectl create job domain-cleanup-manual --from=cronjob/domain-cleanup -n api
+
 .PHONY: reports
 reports:
 		kubectl delete job dmarc-report-manual -n scanners --ignore-not-found &&

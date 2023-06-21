@@ -8,3 +8,4 @@ resources:
   - virtual-service.yaml
   - database-configmap.yaml
   - org-footprint-cronjob.yaml
+  - domain-cleanup-cronjob.yaml
