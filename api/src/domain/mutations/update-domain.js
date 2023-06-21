@@ -52,6 +52,7 @@ export const updateDomain = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      language,
       collections,
       transaction,
       userKey,
@@ -332,6 +333,12 @@ export const updateDomain = new mutationWithClientMutationId({
 
     returnDomain.id = returnDomain._key
 
-    return returnDomain
+    return {
+      ...returnDomain,
+      claimTags: claimToInsert.tags.map((tag) => {
+        return tag[language]
+      }),
+      hidden,
+    }
   },
 })

@@ -49,11 +49,12 @@ export const createDomain = new mutationWithClientMutationId({
       i18n,
       request,
       query,
+      language,
       collections,
       transaction,
       userKey,
       publish,
-      auth: { checkPermission, saltedHash, userRequired, verifiedRequired, tfaRequired },
+      auth: { checkPermission, saltedHash, userRequired, verifiedRequired },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
     },
@@ -62,7 +63,7 @@ export const createDomain = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
-    tfaRequired({ user })
+    // tfaRequired({ user })
 
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
@@ -352,6 +353,10 @@ export const createDomain = new mutationWithClientMutationId({
 
     return {
       ...returnDomain,
+      claimTags: tags.map((tag) => {
+        return tag[language]
+      }),
+      hidden,
     }
   },
 })

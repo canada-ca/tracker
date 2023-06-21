@@ -104,6 +104,7 @@ describe('updating a domain', () => {
       await collections.claims.save({
         _to: domain._id,
         _from: org._id,
+        tags: [],
       })
     })
     afterEach(async () => {
