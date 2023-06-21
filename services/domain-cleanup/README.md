@@ -1,6 +1,9 @@
 # Domain Cleanup Service
 
-The purpose of this service is to search the database for domains returning a status of "NXDOMAIN", indicating they are not registered on the DNS, and removes them.
+The purpose of this service is to retain data quality by performing two function:
+
+1. To search the database for domains returning a status of "NXDOMAIN", indicating they are not registered on the DNS, and removes them.
+2. To remove domains from the "Unclaimed" org that have been claimed by other orgs.
 
 ## Install dependencies
 
