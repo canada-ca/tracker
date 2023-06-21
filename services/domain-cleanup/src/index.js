@@ -1,7 +1,7 @@
-const { domainCleanupService } = require('./domain-cleanup-service')
+const { removeNXDomainService } = require('./remove-nxdomain-service')
 const { unclaimedCleanupService } = require('./unclaimed-cleanup-service')
 
 module.exports = {
-  domainCleanupService,
+  removeNXDomainService,
   unclaimedCleanupService,
 }

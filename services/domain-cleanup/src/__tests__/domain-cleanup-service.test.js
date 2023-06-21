@@ -2,9 +2,9 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ensure, dbNameFromFile } = require('arango-tools')
 const { databaseOptions } = require('../../database-options')
-const { domainCleanupService } = require('../domain-cleanup-service')
+const { removeNXDomainService } = require('../remove-nxdomain-service')
 
-describe('given the domainCleanupService', () => {
+describe('given the removeNXDomainService', () => {
   const consoleErrorOutput = []
   const consoleInfoOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
@@ -92,7 +92,7 @@ describe('given the domainCleanupService', () => {
       })
     })
     it('removes all domains with an rcode of NXDOMAIN', async () => {
-      await domainCleanupService({ query, log: console.info })
+      await removeNXDomainService({ query, log: console.info })
 
       const domainCursor = await query`
             FOR domain IN domains

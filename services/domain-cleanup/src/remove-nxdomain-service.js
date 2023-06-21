@@ -1,6 +1,6 @@
 const { getNXDomains } = require('./database')
 
-const domainCleanupService = async ({ query, log }) => {
+const removeNXDomainService = async ({ query, log }) => {
   const cleanupDomains = await getNXDomains({ query, log })
   log(`Found ${cleanupDomains.length} domains to cleanup`)
   for (const domain of cleanupDomains) {
@@ -91,5 +91,5 @@ const domainCleanupService = async ({ query, log }) => {
 }
 
 module.exports = {
-  domainCleanupService,
+  removeNXDomainService,
 }
