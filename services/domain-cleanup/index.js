@@ -8,7 +8,7 @@ const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 const { ensure } = require('arango-tools')
 const { databaseOptions } = require('./database-options')
 
-const { domainCleanupService } = require('./src')
+const { domainCleanupService, unclaimedCleanupService } = require('./src')
 
 ;(async () => {
   // Generate Database information
@@ -21,4 +21,5 @@ const { domainCleanupService } = require('./src')
   })
 
   await domainCleanupService({ query, log: console.log })
+  await unclaimedCleanupService({ query, log: console.log })
 })()
