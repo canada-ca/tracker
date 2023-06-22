@@ -3269,7 +3269,7 @@ msgstr "Statut ou étiquette"
 
 #: src/admin/AdminDomains.js:226
 msgid "Status/Tag"
-msgstr ""
+msgstr "Statut/étiquette"
 
 #: src/guidance/WebConnectionResults.js:61
 msgid "Status:"
