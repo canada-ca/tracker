@@ -194,6 +194,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_AUTHENTICATE_TEXT_ID
+            - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL
             - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
               valueFrom:
                 secretKeyRef:
