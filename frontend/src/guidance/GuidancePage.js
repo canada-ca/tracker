@@ -62,7 +62,7 @@ function GuidancePage() {
     userHasPermission,
   } = data.findDomainByDomain
 
-  if (userHasPermission) {
+  if (!userHasPermission) {
     return (
       <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="2xl" fontWeight="bold">
