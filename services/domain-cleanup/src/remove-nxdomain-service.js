@@ -8,7 +8,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-          WITH ownership
+          WITH ownership, domains
           FOR v, e IN 1..1 ANY ${domain._id} ownership
             REMOVE e IN ownership
         `
@@ -22,7 +22,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-          WITH dmarcSummaries, domainsToDmarcSummaries
+          WITH dmarcSummaries, domainsToDmarcSummaries, domains
           FOR v, e IN 1..1 ANY ${domain._id} domainsToDmarcSummaries
             REMOVE e IN domainsToDmarcSummaries
             REMOVE v IN dmarcSummaries`
@@ -36,7 +36,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-        WITH web, webScan, domains
+        WITH web, webScan, domainsWeb, webToWebScans, domains
         FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
           FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
             REMOVE webScanV IN webScan
@@ -56,7 +56,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-          WITH dns, domainsDNS
+          WITH dns, domainsDNS, domains
           FOR v, e IN 1..1 ANY ${domain._id} domainsDNS
             REMOVE e IN domainsDNS
             REMOVE v IN dns
@@ -71,7 +71,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-        WITH claims
+        WITH claims, domains
         FOR v, e IN 1..1 ANY ${domain._id} claims
           REMOVE e IN claims
         `
