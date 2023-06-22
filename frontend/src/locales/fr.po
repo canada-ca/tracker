@@ -1200,7 +1200,7 @@ msgstr "Erreur lors de la récupération des données DMARC pour {domainSlug}. <
 
 #: src/guidance/GuidancePage.js:69
 msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
-msgstr "Erreur lors de la récupération des données d'analyse pour {nom de domaine}. <Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système."
+msgstr "Erreur lors de la récupération des données d'analyse pour {domainName}. <Cela peut être dû à des privilèges d'utilisateur insuffisants ou au fait que le domaine n'existe pas dans le système."
 
 #: src/guidance/WebConnectionResults.js:143
 #: src/guidance/WebConnectionResults.js:184
