@@ -33,6 +33,7 @@ steps:
       - DB_URL=$_DB_URL
       - DB_PASS=$_DB_PASS
       - DB_NAME=$_DB_NAME
+      - UNCLAIMED_ORG_ID=$_UNCLAIMED_ORG_ID
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'

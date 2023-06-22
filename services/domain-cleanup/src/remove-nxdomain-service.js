@@ -1,6 +1,6 @@
 const { getNXDomains } = require('./database')
 
-const domainCleanupService = async ({ query, log }) => {
+const removeNXDomainService = async ({ query, log }) => {
   const cleanupDomains = await getNXDomains({ query, log })
   log(`Found ${cleanupDomains.length} domains to cleanup`)
   for (const domain of cleanupDomains) {
@@ -8,8 +8,9 @@ const domainCleanupService = async ({ query, log }) => {
     try {
       await (
         await query`
-         FOR v, e IN 1..1 ANY ${domain._id} ownership
-         REMOVE e IN ownership
+          WITH ownership, domains
+          FOR v, e IN 1..1 ANY ${domain._id} ownership
+            REMOVE e IN ownership
         `
       ).all()
     } catch (err) {
@@ -21,7 +22,7 @@ const domainCleanupService = async ({ query, log }) => {
     try {
       await (
         await query`
-          WITH dmarcSummaries
+          WITH dmarcSummaries, domainsToDmarcSummaries, domains
           FOR v, e IN 1..1 ANY ${domain._id} domainsToDmarcSummaries
             REMOVE e IN domainsToDmarcSummaries
             REMOVE v IN dmarcSummaries`
@@ -35,7 +36,7 @@ const domainCleanupService = async ({ query, log }) => {
     try {
       await (
         await query`
-        WITH web, webScan, domains
+        WITH web, webScan, domainsWeb, webToWebScans, domains
         FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
           FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
             REMOVE webScanV IN webScan
@@ -55,7 +56,7 @@ const domainCleanupService = async ({ query, log }) => {
     try {
       await (
         await query`
-          WITH dns
+          WITH dns, domainsDNS, domains
           FOR v, e IN 1..1 ANY ${domain._id} domainsDNS
             REMOVE e IN domainsDNS
             REMOVE v IN dns
@@ -70,6 +71,7 @@ const domainCleanupService = async ({ query, log }) => {
     try {
       await (
         await query`
+        WITH claims, domains
         FOR v, e IN 1..1 ANY ${domain._id} claims
           REMOVE e IN claims
         `
@@ -81,7 +83,12 @@ const domainCleanupService = async ({ query, log }) => {
 
     // remove domain
     try {
-      await (await query`REMOVE ${domain._key} IN domains`).all()
+      await (
+        await query`
+        WITH domains
+        REMOVE ${domain._key} IN domains
+      `
+      ).all()
     } catch (err) {
       console.error(`Error while removing domain: ${domain._key}, error: ${err})`)
       continue
@@ -91,5 +98,5 @@ const domainCleanupService = async ({ query, log }) => {
 }
 
 module.exports = {
-  domainCleanupService,
+  removeNXDomainService,
 }

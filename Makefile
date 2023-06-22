@@ -98,6 +98,7 @@ summaries:
 		kubectl create job summaries-manual --from=cronjob/summaries -n scanners
 
 .PHONY: domain-cleanup
+domain-cleanup:
 		kubectl delete job domain-cleanup-manual -n api --ignore-not-found &&
 		kubectl create job domain-cleanup-manual --from=cronjob/domain-cleanup -n api
 
