@@ -58,7 +58,7 @@ export const removeOrganization = new mutationWithClientMutationId({
     // Get users permission
     const permission = await checkPermission({ orgId: organization._id })
 
-    if (permission !== 'super_admin' && permission !== 'admin') {
+    if (['owner', 'super_admin'].includes(permission) === false) {
       console.warn(
         `User: ${userKey} attempted to remove org: ${organization._key}, however the user does not have permission to this organization.`,
       )
