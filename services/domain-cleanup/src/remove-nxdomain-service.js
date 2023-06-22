@@ -8,8 +8,9 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-         FOR v, e IN 1..1 ANY ${domain._id} ownership
-         REMOVE e IN ownership
+          WITH ownership
+          FOR v, e IN 1..1 ANY ${domain._id} ownership
+            REMOVE e IN ownership
         `
       ).all()
     } catch (err) {
@@ -21,7 +22,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-          WITH dmarcSummaries
+          WITH dmarcSummaries, domainsToDmarcSummaries
           FOR v, e IN 1..1 ANY ${domain._id} domainsToDmarcSummaries
             REMOVE e IN domainsToDmarcSummaries
             REMOVE v IN dmarcSummaries`
@@ -55,7 +56,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
-          WITH dns
+          WITH dns, domainsDNS
           FOR v, e IN 1..1 ANY ${domain._id} domainsDNS
             REMOVE e IN domainsDNS
             REMOVE v IN dns
@@ -70,6 +71,7 @@ const removeNXDomainService = async ({ query, log }) => {
     try {
       await (
         await query`
+        WITH claims
         FOR v, e IN 1..1 ANY ${domain._id} claims
           REMOVE e IN claims
         `
@@ -81,7 +83,12 @@ const removeNXDomainService = async ({ query, log }) => {
 
     // remove domain
     try {
-      await (await query`REMOVE ${domain._key} IN domains`).all()
+      await (
+        await query`
+        WITH domains
+        REMOVE ${domain._key} IN domains
+      `
+      ).all()
     } catch (err) {
       console.error(`Error while removing domain: ${domain._key}, error: ${err})`)
       continue
