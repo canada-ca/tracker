@@ -224,8 +224,7 @@ describe('removing an organization', () => {
 
             const testDomainsToDmarcSumCursor =
               await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
-            const testDomainsToDmarcSum =
-              await testDomainsToDmarcSumCursor.next()
+            const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
             expect(testDomainsToDmarcSum).toEqual(undefined)
           })
           it('removes the ownership edge', async () => {
@@ -281,8 +280,7 @@ describe('removing an organization', () => {
 
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
 
-            const testOwnershipCursor =
-              await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+            const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
             const testOwnership = await testOwnershipCursor.next()
             expect(testOwnership).toEqual(undefined)
           })
@@ -349,8 +347,7 @@ describe('removing an organization', () => {
 
             const testDomainsToDmarcSumCursor =
               await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
-            const testDomainsToDmarcSum =
-              await testDomainsToDmarcSumCursor.next()
+            const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
             expect(testDomainsToDmarcSum).toBeDefined()
           })
         })
@@ -408,8 +405,7 @@ describe('removing an organization', () => {
 
             await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
 
-            const testWebScanCursor =
-              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScanCursor = await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
             const testWebScan = await testWebScanCursor.next()
             expect(testWebScan).toEqual(undefined)
           })
@@ -467,13 +463,11 @@ describe('removing an organization', () => {
             await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
             await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
 
-            const testDNSCursor =
-              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
             const testDNS = await testDNSCursor.next()
             expect(testDNS).toEqual(undefined)
 
-            const testWebCursor =
-              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
             const testWeb = await testWebCursor.next()
             expect(testWeb).toEqual(undefined)
           })
@@ -531,8 +525,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor =
-              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+            const domainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
@@ -716,16 +709,13 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDNSCursor =
-              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
             expect(testDNS).toEqual(true)
 
-            const testWebCursor =
-              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
             const testWeb = await testWebCursor.next()
             expect(testWeb).toEqual(true)
-
           })
           it('does not remove the domain', async () => {
             await graphql(
@@ -780,8 +770,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor =
-              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+            const domainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
           })
@@ -969,8 +958,7 @@ describe('removing an organization', () => {
 
             const testDomainsToDmarcSumCursor =
               await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
-            const testDomainsToDmarcSum =
-              await testDomainsToDmarcSumCursor.next()
+            const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
             expect(testDomainsToDmarcSum).toEqual(undefined)
           })
           it('removes the ownership edge', async () => {
@@ -1026,8 +1014,7 @@ describe('removing an organization', () => {
 
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
 
-            const testOwnershipCursor =
-              await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+            const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
             const testOwnership = await testOwnershipCursor.next()
             expect(testOwnership).toEqual(undefined)
           })
@@ -1094,8 +1081,7 @@ describe('removing an organization', () => {
 
             const testDomainsToDmarcSumCursor =
               await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
-            const testDomainsToDmarcSum =
-              await testDomainsToDmarcSumCursor.next()
+            const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
             expect(testDomainsToDmarcSum).toBeDefined()
           })
         })
@@ -1151,11 +1137,9 @@ describe('removing an organization', () => {
               },
             )
 
-            const testWebScanCursor =
-              await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
+            const testWebScanCursor = await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
             const testWebScan = await testWebScanCursor.next()
             expect(testWebScan).toEqual(undefined)
-
           })
           it('removes the scan data', async () => {
             await graphql(
@@ -1208,16 +1192,13 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDNSCursor =
-              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
+            const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
             const testDNS = await testDNSCursor.next()
             expect(testDNS).toEqual(undefined)
 
-            const testWebCursor =
-              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
+            const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
             const testWeb = await testWebCursor.next()
             expect(testWeb).toEqual(undefined)
-
           })
           it('removes the domain', async () => {
             await graphql(
@@ -1272,8 +1253,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor =
-              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+            const domainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
@@ -1405,7 +1385,6 @@ describe('removing an organization', () => {
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
             const testWebScan = await testWebScanCursor.next()
             expect(testWebScan).toEqual(true)
-
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -1458,16 +1437,13 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDNSCursor =
-              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
             expect(testDNS).toEqual(true)
 
-            const testWebCursor =
-              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
             const testWeb = await testWebCursor.next()
             expect(testWeb).toEqual(true)
-
           })
           it('does not remove the domain', async () => {
             await graphql(
@@ -1522,8 +1498,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor =
-              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+            const domainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
           })
@@ -1594,7 +1569,7 @@ describe('removing an organization', () => {
         })
       })
     })
-    describe('users permission is admin', () => {
+    describe('users permission is owner', () => {
       beforeEach(async () => {
         org = await collections.organizations.save({
           verified: false,
@@ -1624,7 +1599,7 @@ describe('removing an organization', () => {
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
-          permission: 'admin',
+          permission: 'owner',
         })
         await collections.claims.save({
           _from: org._id,
@@ -1700,8 +1675,7 @@ describe('removing an organization', () => {
 
             const testDomainsToDmarcSumCursor =
               await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
-            const testDomainsToDmarcSum =
-              await testDomainsToDmarcSumCursor.next()
+            const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
             expect(testDomainsToDmarcSum).toEqual(undefined)
           })
           it('removes the ownership edge', async () => {
@@ -1757,8 +1731,7 @@ describe('removing an organization', () => {
 
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
 
-            const testOwnershipCursor =
-              await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
+            const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
             const testOwnership = await testOwnershipCursor.next()
             expect(testOwnership).toEqual(undefined)
           })
@@ -1825,8 +1798,7 @@ describe('removing an organization', () => {
 
             const testDomainsToDmarcSumCursor =
               await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
-            const testDomainsToDmarcSum =
-              await testDomainsToDmarcSumCursor.next()
+            const testDomainsToDmarcSum = await testDomainsToDmarcSumCursor.next()
             expect(testDomainsToDmarcSum).toBeDefined()
           })
         })
@@ -1886,7 +1858,6 @@ describe('removing an organization', () => {
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
             const testWebScan = await testWebScanCursor.next()
             expect(testWebScan).toEqual(undefined)
-
           })
           it('removes the scan data', async () => {
             await graphql(
@@ -1939,16 +1910,13 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDNSCursor =
-              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
             expect(testDNS).toEqual(undefined)
 
-            const testWebCursor =
-              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
             const testWeb = await testWebCursor.next()
             expect(testWeb).toEqual(undefined)
-
           })
           it('removes the domain', async () => {
             await graphql(
@@ -2003,8 +1971,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor =
-              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+            const domainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toEqual(undefined)
           })
@@ -2136,7 +2103,6 @@ describe('removing an organization', () => {
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
             const testWebScan = await testWebScanCursor.next()
             expect(testWebScan).toEqual(true)
-
           })
           it('does not remove the scan data', async () => {
             await graphql(
@@ -2189,16 +2155,13 @@ describe('removing an organization', () => {
               },
             )
 
-            const testDNSCursor =
-              await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
+            const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
             expect(testDNS).toEqual(true)
 
-            const testWebCursor =
-              await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
+            const testWebCursor = await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult.web`
             const testWeb = await testWebCursor.next()
             expect(testWeb).toEqual(true)
-
           })
           it('does not remove the domain', async () => {
             await graphql(
@@ -2253,8 +2216,7 @@ describe('removing an organization', () => {
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
-            const domainCursor =
-              await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
+            const domainCursor = await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
             const domainCheck = await domainCursor.next()
             expect(domainCheck).toBeDefined()
           })
@@ -2408,7 +2370,7 @@ describe('removing an organization', () => {
       })
       describe('given an incorrect permission', () => {
         describe('users belong to the org', () => {
-          describe('users role is admin', () => {
+          describe('users role is owner', () => {
             describe('user attempts to remove a verified org', () => {
               it('returns an error', async () => {
                 const response = await graphql(
@@ -2443,7 +2405,7 @@ describe('removing an organization', () => {
                     transaction,
                     userKey: 123,
                     auth: {
-                      checkPermission: jest.fn().mockReturnValue('admin'),
+                      checkPermission: jest.fn().mockReturnValue('owner'),
                       userRequired: jest.fn(),
                       verifiedRequired: jest.fn(),
                     },
@@ -2597,9 +2559,7 @@ describe('removing an organization', () => {
       describe('given a database error', () => {
         describe('when getting the ownership information', () => {
           it('throws an error', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValue(new Error('Database Error'))
+            const mockedQuery = jest.fn().mockRejectedValue(new Error('Database Error'))
 
             const response = await graphql(
               schema,
@@ -2633,7 +2593,7 @@ describe('removing an organization', () => {
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -2671,11 +2631,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2726,7 +2682,7 @@ describe('removing an organization', () => {
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -2764,11 +2720,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2821,7 +2773,7 @@ describe('removing an organization', () => {
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -2859,11 +2811,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2874,10 +2822,7 @@ describe('removing an organization', () => {
         describe('when getting getting domain claim count', () => {
           it('throws an error', async () => {
             const mockedCursor = {
-              all: jest
-                .fn()
-                .mockReturnValueOnce([])
-                .mockRejectedValue(new Error('Cursor Error')),
+              all: jest.fn().mockReturnValueOnce([]).mockRejectedValue(new Error('Cursor Error')),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -2914,7 +2859,7 @@ describe('removing an organization', () => {
                 transaction: jest.fn(),
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -2952,11 +2897,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3010,7 +2951,7 @@ describe('removing an organization', () => {
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -3048,11 +2989,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3069,10 +3006,7 @@ describe('removing an organization', () => {
             const mockedQuery = jest.fn().mockReturnValueOnce(mockedCursor)
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
+              step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
             })
 
             const response = await graphql(
@@ -3107,7 +3041,7 @@ describe('removing an organization', () => {
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -3145,11 +3079,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3163,7 +3093,7 @@ describe('removing an organization', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1, domain: "test.gc.ca" }]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
@@ -3204,7 +3134,7 @@ describe('removing an organization', () => {
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -3242,11 +3172,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3260,16 +3186,13 @@ describe('removing an organization', () => {
               all: jest
                 .fn()
                 .mockReturnValueOnce([])
-                .mockReturnValue([{ count: 1, domain: "test.gc.ca" }]),
+                .mockReturnValue([{ count: 1, domain: 'test.gc.ca' }]),
             }
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
+              step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
             })
 
             const response = await graphql(
@@ -3304,7 +3227,7 @@ describe('removing an organization', () => {
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -3342,11 +3265,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3366,11 +3285,7 @@ describe('removing an organization', () => {
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockReturnValueOnce({})
-                .mockReturnValueOnce({})
-                .mockRejectedValue(new Error('Trx Step')),
+              step: jest.fn().mockReturnValueOnce({}).mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
             })
 
             const response = await graphql(
@@ -3405,7 +3320,7 @@ describe('removing an organization', () => {
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -3443,11 +3358,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3507,7 +3418,7 @@ describe('removing an organization', () => {
                 transaction: mockedTransaction,
                 userKey: 123,
                 auth: {
-                  checkPermission: jest.fn().mockReturnValue('admin'),
+                  checkPermission: jest.fn().mockReturnValue('owner'),
                   userRequired: jest.fn(),
                   verifiedRequired: jest.fn(),
                 },
@@ -3545,11 +3456,7 @@ describe('removing an organization', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3603,7 +3510,7 @@ describe('removing an organization', () => {
               transaction: mockedTransaction,
               userKey: 123,
               auth: {
-                checkPermission: jest.fn().mockReturnValue('admin'),
+                checkPermission: jest.fn().mockReturnValue('owner'),
                 userRequired: jest.fn(),
                 verifiedRequired: jest.fn(),
               },
@@ -3641,11 +3548,7 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove organization. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
