@@ -229,6 +229,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       }
       dmarcPhase
       hasDMARCReport
+      userHasPermission
       dnsScan(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
         edges {
           cursor
