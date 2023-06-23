@@ -34,6 +34,7 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
   }
 
   const exportsToCsv = auditLogs.filter((log) => log.action === 'export')
+  const scansToCsv = auditLogs.filter((log) => log.action === 'scan')
 
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
@@ -50,6 +51,7 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
         remove_domains_count: domainsRemoved.length,
         remove_domains_list: removeDomainsList,
         export_count: exportsToCsv.length,
+        scan_count: scansToCsv.length,
       },
     })
   } catch (err) {
