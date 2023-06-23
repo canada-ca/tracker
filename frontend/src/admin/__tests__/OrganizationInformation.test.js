@@ -14,10 +14,7 @@ import { OrganizationInformation } from '../OrganizationInformation'
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
 import { ORGANIZATION_INFORMATION } from '../../graphql/queries'
-import {
-  REMOVE_ORGANIZATION,
-  UPDATE_ORGANIZATION,
-} from '../../graphql/mutations'
+import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../../graphql/mutations'
 
 i18n.loadLocaleData('en', { plurals: en })
 i18n.load('en', { en: {} })
@@ -116,10 +113,7 @@ describe('<OrganizationInformation />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation
-                      orgSlug="test-org"
-                      removeOrgCallback={() => {}}
-                    />
+                    <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -129,7 +123,7 @@ describe('<OrganizationInformation />', () => {
 
         await findByText(/Org Name/)
 
-        expect(queryByText(/org sector/)).toBeInTheDocument()
+        expect(queryByText(/org country/)).toBeInTheDocument()
       })
 
       it('organization editing area is hidden', async () => {
@@ -145,10 +139,7 @@ describe('<OrganizationInformation />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation
-                      orgSlug="test-org"
-                      removeOrgCallback={() => {}}
-                    />
+                    <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -158,9 +149,7 @@ describe('<OrganizationInformation />', () => {
 
         await findByText(/Org Name/)
 
-        expect(
-          queryByText(/Blank fields will not be included/),
-        ).not.toBeVisible()
+        expect(queryByText(/Blank fields will not be included/)).not.toBeVisible()
       })
 
       it('org editing error can be opened', async () => {
@@ -223,10 +212,7 @@ describe('<OrganizationInformation />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation
-                      orgSlug="test-org"
-                      removeOrgCallback={() => {}}
-                    />
+                    <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -235,9 +221,7 @@ describe('<OrganizationInformation />', () => {
         )
         await findByText(/Org Name/)
 
-        expect(
-          queryByText(/Blank fields will not be included/),
-        ).not.toBeVisible()
+        expect(queryByText(/Blank fields will not be included/)).not.toBeVisible()
 
         const editOrgButton = await findByRole('button', {
           name: /Edit Organization/,
@@ -249,9 +233,7 @@ describe('<OrganizationInformation />', () => {
         userEvent.click(editOrgButton)
 
         // ensure editing area is open
-        await waitFor(() =>
-          expect(getByText(/Blank fields will not be included/)).toBeVisible(),
-        )
+        await waitFor(() => expect(getByText(/Blank fields will not be included/)).toBeVisible())
       })
 
       it('can remove the organization', async () => {
@@ -314,10 +296,7 @@ describe('<OrganizationInformation />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation
-                      orgSlug="test-org"
-                      removeOrgCallback={() => {}}
-                    />
+                    <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -343,19 +322,13 @@ describe('<OrganizationInformation />', () => {
 
         await waitFor(() => expect(removeOrgInput).toBeVisible())
 
-        expect(
-          getByText(
-            /Are you sure you want to permanently remove the organization "Org Name"?/,
-          ),
-        ).toBeVisible()
+        expect(getByText(/Are you sure you want to permanently remove the organization "Org Name"?/)).toBeVisible()
 
         userEvent.type(removeOrgInput, 'Org Name')
 
         userEvent.click(confirmOrganizationRemovalButton)
 
-        const successfullyRemoveToastText = await findByText(
-          /You have successfully removed Org Name/,
-        )
+        const successfullyRemoveToastText = await findByText(/You have successfully removed Org Name/)
 
         await waitFor(() => expect(successfullyRemoveToastText).toBeVisible())
       })
@@ -447,10 +420,7 @@ describe('<OrganizationInformation />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation
-                      orgSlug="test-org"
-                      removeOrgCallback={() => {}}
-                    />
+                    <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -476,19 +446,13 @@ describe('<OrganizationInformation />', () => {
 
         await waitFor(() => expect(removeOrgInput).toBeVisible())
 
-        expect(
-          getByText(
-            /Are you sure you want to permanently remove the organization "Org Name"?/,
-          ),
-        ).toBeVisible()
+        expect(getByText(/Are you sure you want to permanently remove the organization "Org Name"?/)).toBeVisible()
 
         userEvent.type(removeOrgInput, 'Org Name')
 
         userEvent.click(confirmOrganizationRemovalButton)
 
-        const successfullyRemoveToastText = await findByText(
-          /Could not remove this organization/,
-        )
+        const successfullyRemoveToastText = await findByText(/Could not remove this organization/)
 
         await waitFor(() => expect(successfullyRemoveToastText).toBeVisible())
       })
@@ -506,10 +470,7 @@ describe('<OrganizationInformation />', () => {
               <ChakraProvider theme={theme}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <OrganizationInformation
-                      orgSlug="test-org"
-                      removeOrgCallback={() => {}}
-                    />
+                    <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -534,11 +495,7 @@ describe('<OrganizationInformation />', () => {
 
         await waitFor(() => expect(removeOrgInput).toBeVisible())
 
-        expect(
-          getByText(
-            /Are you sure you want to permanently remove the organization "Org Name"?/,
-          ),
-        ).toBeVisible()
+        expect(getByText(/Are you sure you want to permanently remove the organization "Org Name"?/)).toBeVisible()
 
         userEvent.click(confirmOrganizationRemovalButton)
 
@@ -560,10 +517,7 @@ describe('<OrganizationInformation />', () => {
                   <ChakraProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                        <OrganizationInformation
-                          orgSlug="test-org"
-                          removeOrgCallback={() => {}}
-                        />
+                        <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                       </MemoryRouter>
                     </I18nProvider>
                   </ChakraProvider>
@@ -579,11 +533,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(editOrgButton)
 
-            await waitFor(() =>
-              expect(
-                getByText(/Blank fields will not be included/),
-              ).toBeVisible(),
-            )
+            await waitFor(() => expect(getByText(/Blank fields will not be included/)).toBeVisible())
 
             const acronymENInput = await findByRole('textbox', {
               name: 'Acronym (EN)',
@@ -604,9 +554,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(confrimOrganizationUpdateButton)
 
-            const successfulUpdateToastText = await findByText(
-              /You have successfully updated Org Name/,
-            )
+            const successfulUpdateToastText = await findByText(/You have successfully updated Org Name/)
 
             await waitFor(() => expect(successfulUpdateToastText).toBeVisible())
 
@@ -697,10 +645,7 @@ describe('<OrganizationInformation />', () => {
                   <ChakraProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                        <OrganizationInformation
-                          orgSlug="test-org"
-                          removeOrgCallback={() => {}}
-                        />
+                        <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                       </MemoryRouter>
                     </I18nProvider>
                   </ChakraProvider>
@@ -716,11 +661,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(editOrgButton)
 
-            await waitFor(() =>
-              expect(
-                getByText(/Blank fields will not be included/),
-              ).toBeVisible(),
-            )
+            await waitFor(() => expect(getByText(/Blank fields will not be included/)).toBeVisible())
 
             const acronymENInput = await findByRole('textbox', {
               name: 'Acronym (EN)',
@@ -741,9 +682,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(confrimOrganizationUpdateButton)
 
-            const successfulUpdateToastText = await findByText(
-              /Unable to update this organization error/,
-            )
+            const successfulUpdateToastText = await findByText(/Unable to update this organization error/)
 
             await waitFor(() => expect(successfulUpdateToastText).toBeVisible())
 
@@ -766,10 +705,7 @@ describe('<OrganizationInformation />', () => {
                   <ChakraProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                        <OrganizationInformation
-                          orgSlug="test-org"
-                          removeOrgCallback={() => {}}
-                        />
+                        <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                       </MemoryRouter>
                     </I18nProvider>
                   </ChakraProvider>
@@ -785,11 +721,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(editOrgButton)
 
-            await waitFor(() =>
-              expect(
-                getByText(/Blank fields will not be included/),
-              ).toBeVisible(),
-            )
+            await waitFor(() => expect(getByText(/Blank fields will not be included/)).toBeVisible())
 
             const confrimOrganizationUpdateButton = getByRole('button', {
               name: 'Confirm',
@@ -797,9 +729,7 @@ describe('<OrganizationInformation />', () => {
 
             userEvent.click(confrimOrganizationUpdateButton)
 
-            const noValuesSuppliedToastText = await findByText(
-              /No values were supplied/,
-            )
+            const noValuesSuppliedToastText = await findByText(/No values were supplied/)
 
             await waitFor(() => expect(noValuesSuppliedToastText).toBeVisible())
           })
