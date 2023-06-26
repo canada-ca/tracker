@@ -204,21 +204,19 @@ export function DomainCard({
           justifyContent="center"
           ml={{ base: 0, md: '4' }}
         >
-          {isEmailValidated() && userHasPermission && (
-            <Button
-              variant="primary"
-              as={RouteLink}
-              to={{
-                pathname: `/domains/${url}`,
-                state: { from: location.pathname },
-              }}
-              px="10"
-            >
-              <Text whiteSpace="noWrap">
-                <Trans>View Results</Trans>
-              </Text>
-            </Button>
-          )}
+          <Button
+            variant="primary"
+            as={RouteLink}
+            to={{
+              pathname: isLoggedIn() ? `/domains/${url}` : '/sign-in',
+              state: { from: location.pathname },
+            }}
+            px="10"
+          >
+            <Text whiteSpace="noWrap">
+              <Trans>View Results</Trans>
+            </Text>
+          </Button>
           {hasDMARCReport && (
             <Button
               variant="primary"

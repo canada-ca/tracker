@@ -59,7 +59,21 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
+    userHasPermission,
   } = data.findDomainByDomain
+
+  if (!userHasPermission) {
+    return (
+      <Box align="center" w="100%" px={4}>
+        <Text textAlign="center" fontSize="2xl" fontWeight="bold">
+          <Trans>
+            Error while retrieving scan data for {domainName}. <br />
+            This could be due to insufficient user privileges or the domain does not exist in the system.
+          </Trans>
+        </Text>
+      </Box>
+    )
+  }
 
   let guidanceResults
   if (rcode !== 'NOERROR') {

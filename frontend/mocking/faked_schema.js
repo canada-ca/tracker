@@ -675,6 +675,8 @@ export const getTypeNames = () => gql`
 
     # Value that determines if a domain is excluded from an organization's results.
     hidden: Boolean
+
+    userHasPermission: Boolean
   }
 
   # String that conforms to a domain structure.
