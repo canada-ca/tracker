@@ -59,6 +59,14 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'scan-pending',
       description: 'Label for tagging domains that have a pending web scan.',
     },
+    OUTSIDE: {
+      value: 'OUTSIDE',
+      description: 'English label for tagging domains that are outside the scope of the project.',
+    },
+    EXTERIEUR: {
+      value: 'EXTÉRIEUR',
+      description: 'French label for tagging domains that are outside the scope of the project.',
+    },
   },
   description: 'An enum used to assign and test user-generated domain tags',
 })
