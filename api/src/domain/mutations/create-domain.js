@@ -54,7 +54,7 @@ export const createDomain = new mutationWithClientMutationId({
       transaction,
       userKey,
       publish,
-      auth: { checkPermission, saltedHash, userRequired, verifiedRequired },
+      auth: { checkPermission, saltedHash, userRequired, tfaRequired, verifiedRequired },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
     },
@@ -63,7 +63,7 @@ export const createDomain = new mutationWithClientMutationId({
     const user = await userRequired()
 
     verifiedRequired({ user })
-    // tfaRequired({ user })
+    tfaRequired({ user })
 
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
