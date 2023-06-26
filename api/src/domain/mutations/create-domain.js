@@ -109,7 +109,7 @@ export const createDomain = new mutationWithClientMutationId({
       outsideComment = ''
     }
 
-    if (tags.includes({ en: 'OUTSIDE', fr: 'EXTERIEUR' })) {
+    if (tags?.includes({ en: 'OUTSIDE', fr: 'EXTERIEUR' })) {
       if (outsideComment === '') {
         console.warn(`User: ${userKey} attempted to create a domain with the OUTSIDE tag without providing a comment.`)
         return {
