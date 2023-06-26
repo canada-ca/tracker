@@ -155,6 +155,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     { en: 'TEST', fr: 'TEST' },
     { en: 'WEB', fr: 'WEB' },
     { en: 'INACTIVE', fr: 'INACTIF' },
+    { en: 'OUTSIDE', fr: 'EXTERIEUR' },
   ]
 
   const addableTags = (values, helper) => {

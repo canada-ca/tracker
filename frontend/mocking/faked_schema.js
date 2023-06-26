@@ -572,6 +572,8 @@ export const getTypeNames = () => gql`
     # Value that determines if a domain has a web scan pending.
     webScanPending: Boolean
 
+    userHasPermission: Boolean
+
     # The organization that this domain belongs to.
     organizations(
       # Ordering options for organization connections
