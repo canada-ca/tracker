@@ -2,14 +2,20 @@ import { t } from '@lingui/macro'
 
 export const loadOrganizationDomainStatuses =
   ({ query, userKey, i18n }) =>
-  async ({ orgId }) => {
+  async ({ orgId, blocked }) => {
     let domains
+
+    let blockedFilter = ''
+    if (blocked) {
+      blockedFilter = 'FILTER v.blocked == true'
+    }
 
     try {
       domains = (
         await query`
         WITH claims, domains, organizations
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
+          ${blockedFilter}
           RETURN {
             domain: v.domain,
             status: v.status

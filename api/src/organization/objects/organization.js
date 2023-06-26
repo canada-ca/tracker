@@ -74,9 +74,15 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'CSV formatted output of all domains in the organization including their email and web scan statuses.',
+      args: {
+        blocked: {
+          type: GraphQLBoolean,
+          description: 'Filters domains by blocked status.',
+        },
+      },
       resolve: async (
         { _id },
-        _args,
+        args,
         {
           i18n,
           userKey,
@@ -100,6 +106,7 @@ export const organizationType = new GraphQLObjectType({
 
         const domains = await loadOrganizationDomainStatuses({
           orgId: _id,
+          ...args,
         })
         const headers = [
           'domain',
