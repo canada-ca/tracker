@@ -38,7 +38,7 @@ describe('given the removeNXDomainService', () => {
 
   describe('given a successful query', () => {
     // eslint-disable-next-line no-unused-vars
-    let domain, org, claim, ownership, dmarcSummary, web, webScan, webToWebScan, dns, domainToDns
+    let domain, org, claim, favourite, ownership, dmarcSummary, web, webScan, webToWebScan, dns, domainToDns
     beforeEach(async () => {
       domain = await collections.domains.save({
         domain: 'test.domain.gc.ca',
@@ -60,6 +60,10 @@ describe('given the removeNXDomainService', () => {
       })
       claim = await collections.claims.save({
         _from: org._id,
+        _to: domain._id,
+      })
+      favourite = await collections.favourites.save({
+        _from: 'users/1',
         _to: domain._id,
       })
       ownership = await collections.ownership.save({

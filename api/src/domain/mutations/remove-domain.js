@@ -248,6 +248,23 @@ export const removeDomain = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
+      // remove favourites
+      try {
+        await trx.step(async () => {
+          await query`
+            WITH favourites, domains
+            FOR fav IN favourites
+              FILTER fav._to == ${domain._id}
+              REMOVE fav IN favourites
+          `
+        })
+      } catch (err) {
+        console.error(
+          `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+      }
+
       try {
         // Remove domain
         await trx.step(async () => {

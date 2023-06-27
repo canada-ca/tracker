@@ -17,6 +17,11 @@ const databaseOptions = ({ rootPass }) => [
   },
   {
     type: 'edgecollection',
+    name: 'favourites',
+    options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
+  },
+  {
+    type: 'edgecollection',
     name: 'ownership',
     options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
   },
