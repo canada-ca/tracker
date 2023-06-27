@@ -317,7 +317,6 @@ export const loadDomainConnectionsByUserId =
       LET collectedDomains = (
         FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
           OPTIONS {order: "bfs"}
-          FILTER v
           RETURN v
       )
       `

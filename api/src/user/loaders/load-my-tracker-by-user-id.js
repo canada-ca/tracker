@@ -12,7 +12,6 @@ export const loadMyTrackerByUserId =
         LET favDomains = (
             FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
                 OPTIONS {order: "bfs"}
-                FILTER v
                 RETURN { "id": v._key, "phase": v.phase, "https": v.status.https, "dmarc": v.status.dmarc, "_type": "domain" }
         )
         RETURN { "domains": favDomains }
