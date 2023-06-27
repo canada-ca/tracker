@@ -4,6 +4,20 @@ const removeNXDomainService = async ({ query, log }) => {
   const cleanupDomains = await getNXDomains({ query, log })
   log(`Found ${cleanupDomains.length} domains to cleanup`)
   for (const domain of cleanupDomains) {
+    // remove favourites
+    try {
+      await (
+        await query`
+          WITH favourites, domains
+          FOR v, e IN 1..1 ANY ${domain._id} favourites
+            REMOVE e IN favourites
+        `
+      ).all()
+    } catch (err) {
+      console.error(`Error while removing favourites for domain: ${domain._key}, error: ${err})`)
+      continue
+    }
+
     // remove ownerships
     try {
       await (
