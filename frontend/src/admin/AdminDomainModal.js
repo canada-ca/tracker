@@ -9,6 +9,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormLabel,
   Grid,
   IconButton,
   Input,
@@ -19,6 +20,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   SimpleGrid,
   Stack,
   Switch,
@@ -200,6 +202,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
             }),
             archiveDomain: archived,
             hideDomain: hidden,
+            outsideComment: null,
           }}
           initialTouched={{
             domainUrl: true,
@@ -217,6 +220,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
+                  outsideComment: values.outsideComment,
                 },
               })
             } else if (mutation === 'create') {
@@ -228,6 +232,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
+                  outsideComment: values.outsideComment,
                 },
               })
             }
@@ -378,6 +383,28 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   <Text>
                     <Trans>Please allow up to 24 hours for summaries to reflect any changes.</Trans>
                   </Text>
+
+                  {values.tags?.includes('outside') && (
+                    <FormControl>
+                      <FormLabel htmlFor="outsideComment" fontWeight="bold">
+                        <Trans>Reason</Trans>
+                      </FormLabel>
+                      <Select name="outsideComment" id="outsideComment" borderColor="black" onChange={handleChange}>
+                        <option hidden value="">
+                          <Trans>Select a reason for adding this outside domain</Trans>
+                        </option>
+                        <option value="OWNERSHIP">
+                          <Trans>Organization owns this domain, but it is outside the allowed scope</Trans>
+                        </option>
+                        <option value="INVESTMENT">
+                          <Trans>Organization is invested in the outside domain</Trans>
+                        </option>
+                        <option value="OTHER">
+                          <Trans>Other</Trans>
+                        </option>
+                      </Select>
+                    </FormControl>
+                  )}
                 </Stack>
               </ModalBody>
 
