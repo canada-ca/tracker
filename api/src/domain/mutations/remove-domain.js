@@ -252,7 +252,7 @@ export const removeDomain = new mutationWithClientMutationId({
       try {
         await trx.step(async () => {
           await query`
-            WITH favorites, domains
+            WITH favourites, domains
             FOR fav IN favourites
               FILTER fav._to == ${domain._id}
               REMOVE fav IN favourites
