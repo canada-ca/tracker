@@ -331,8 +331,8 @@ export const updateDomain = new mutationWithClientMutationId({
           }, // name of resource being acted upon
           resourceType: 'domain', // user, org, domain
           updatedProperties,
-          reason: outsideComment !== '' ? outsideComment : null,
         },
+        reason: outsideComment !== '' ? outsideComment : null,
       })
     }
 
