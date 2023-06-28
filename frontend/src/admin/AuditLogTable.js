@@ -131,12 +131,16 @@ export function AuditLogTable({ orgId = null }) {
               }
               const resourceType = resourceFilters.find(({ value }) => target.resourceType.toUpperCase() === value)
               action = actionFilters.find(({ value }) => action.toUpperCase() === value)
-              if (typeof reason !== 'undefined') {
-                if (reason === 'NONEXISTENT') {
-                  reason = <Trans>This domain no longer exists</Trans>
-                } else if (reason === 'WRONG_ORG') {
-                  reason = <Trans>This domain does not belong to this organization</Trans>
-                }
+              if (reason === 'NONEXISTENT') {
+                reason = <Trans>This domain no longer exists</Trans>
+              } else if (reason === 'WRONG_ORG') {
+                reason = <Trans>This domain does not belong to this organization</Trans>
+              } else if (reason === 'INVESTMENT') {
+                reason = <Trans>Organization is invested in the outside domain</Trans>
+              } else if (reason === 'OWNERSHIP') {
+                reason = <Trans>Organization owns this domain, but it is outside the allowed scope</Trans>
+              } else if (reason === 'OTHER') {
+                reason = <Trans>Other</Trans>
               }
               return (
                 <Tr key={id}>
