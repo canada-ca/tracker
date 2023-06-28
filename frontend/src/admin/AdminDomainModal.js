@@ -350,6 +350,9 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                           <Trans>Other</Trans>
                         </option>
                       </Select>
+                      <Text>
+                        <Trans>Note: Domains from outside the GC scope may not be able to be scanned right away</Trans>
+                      </Text>
                     </FormControl>
                   )}
                   <Flex align="center">
