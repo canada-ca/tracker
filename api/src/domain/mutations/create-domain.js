@@ -295,7 +295,6 @@ export const createDomain = new mutationWithClientMutationId({
               _to: ${checkDomain._id},
               tags: ${tags},
               hidden: ${hidden},
-              outsideComment: ${outsideComment}
             } INTO claims
           `,
         )
@@ -343,14 +342,6 @@ export const createDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof outsideComment !== 'undefined' && outsideComment !== '') {
-      updatedProperties.push({
-        name: 'outsideComment',
-        oldValue: null,
-        newValue: outsideComment,
-      })
-    }
-
     await logActivity({
       transaction,
       collections,
@@ -370,6 +361,7 @@ export const createDomain = new mutationWithClientMutationId({
         }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
       },
+      reason: outsideComment !== '' ? outsideComment : null,
     })
 
     await publish({

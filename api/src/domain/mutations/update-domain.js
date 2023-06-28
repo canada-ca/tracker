@@ -241,7 +241,6 @@ export const updateDomain = new mutationWithClientMutationId({
     const claimToInsert = {
       tags: tags || claim?.tags,
       hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
-      outsideComment: outsideComment || claim?.outsideComment,
     }
 
     try {
@@ -313,14 +312,6 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof outsideComment !== 'undefined' && outsideComment !== '' && claim.outsideComment !== outsideComment) {
-      updatedProperties.push({
-        name: 'outsideComment',
-        oldValue: claim?.outsideComment,
-        newValue: outsideComment,
-      })
-    }
-
     if (updatedProperties.length > 0) {
       await logActivity({
         transaction,
@@ -340,6 +331,7 @@ export const updateDomain = new mutationWithClientMutationId({
           }, // name of resource being acted upon
           resourceType: 'domain', // user, org, domain
           updatedProperties,
+          reason: outsideComment !== '' ? outsideComment : null,
         },
       })
     }
