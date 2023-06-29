@@ -165,6 +165,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
     { value: t`TEST`, text: t`Test` },
     { value: t`WEB`, text: t`Web` },
     { value: t`INACTIVE`, text: t`Inactive` },
+    { value: t`OUTSIDE`, text: t`Outside` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },

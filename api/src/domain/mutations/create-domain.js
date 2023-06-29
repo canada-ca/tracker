@@ -6,6 +6,7 @@ import { createDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
+import { OutsideDomainCommentEnum } from '../../enums'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -34,6 +35,10 @@ export const createDomain = new mutationWithClientMutationId({
     archived: {
       description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
+    },
+    outsideComment: {
+      description: 'Comment describing reason for adding out-of-scope domain.',
+      type: OutsideDomainCommentEnum,
     },
   }),
   outputFields: () => ({
@@ -95,6 +100,24 @@ export const createDomain = new mutationWithClientMutationId({
       hidden = args.hidden
     } else {
       hidden = false
+    }
+
+    let outsideComment
+    if (typeof args.outsideComment !== 'undefined') {
+      outsideComment = cleanseInput(args.outsideComment)
+    } else {
+      outsideComment = ''
+    }
+
+    if (tags?.find(({ en }) => en === 'OUTSIDE')) {
+      if (outsideComment === '') {
+        console.warn(`User: ${userKey} attempted to create a domain with the OUTSIDE tag without providing a comment.`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Please provide a comment when adding an outside domain.`),
+        }
+      }
     }
 
     // Check to see if org exists
@@ -223,7 +246,8 @@ export const createDomain = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${insertedDomain._id},
               tags: ${tags},
-              hidden: ${hidden}
+              hidden: ${hidden},
+              outsideComment: ${outsideComment}
             } INTO claims
           `,
         )
@@ -270,7 +294,7 @@ export const createDomain = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${checkDomain._id},
               tags: ${tags},
-              hidden: ${hidden}
+              hidden: ${hidden},
             } INTO claims
           `,
         )
@@ -337,6 +361,7 @@ export const createDomain = new mutationWithClientMutationId({
         }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
       },
+      reason: outsideComment !== '' ? outsideComment : null,
     })
 
     await publish({

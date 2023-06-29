@@ -6,6 +6,7 @@ import { updateDomainUnion } from '../unions'
 import { Domain, Selectors } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
+import { OutsideDomainCommentEnum } from '../../enums'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -38,6 +39,10 @@ export const updateDomain = new mutationWithClientMutationId({
     archived: {
       description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
+    },
+    outsideComment: {
+      description: 'Comment describing reason for adding out-of-scope domain.',
+      type: OutsideDomainCommentEnum,
     },
   }),
   outputFields: () => ({
@@ -97,6 +102,24 @@ export const updateDomain = new mutationWithClientMutationId({
       hidden = args.hidden
     } else {
       hidden = null
+    }
+
+    let outsideComment
+    if (typeof args.outsideComment !== 'undefined') {
+      outsideComment = cleanseInput(args.outsideComment)
+    } else {
+      outsideComment = ''
+    }
+
+    if (tags?.find(({ en }) => en === 'OUTSIDE')) {
+      if (outsideComment === '') {
+        console.warn(`User: ${userKey} attempted to create a domain with the OUTSIDE tag without providing a comment.`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Please provide a comment when adding an outside domain.`),
+        }
+      }
     }
 
     // Check to see if domain exists
@@ -309,6 +332,7 @@ export const updateDomain = new mutationWithClientMutationId({
           resourceType: 'domain', // user, org, domain
           updatedProperties,
         },
+        reason: outsideComment !== '' ? outsideComment : null,
       })
     }
 

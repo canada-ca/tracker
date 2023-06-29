@@ -417,7 +417,7 @@ msgstr "Par défaut, nos scanners vérifient les domaines se terminant par \".gc
 
 #: src/app/ReadGuidancePage.js:313
 #~ msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
-#~ msgstr "Par défaut, nos analyseurs vérifient les domaines se terminant par « .gc.ca » et « .canada.ca ». Si votre domaine se termine autrement, vous devez communiquer avec nous pour nous en aviser. Envoyez un courriel à l’équipe responsable de la cybersécurité du SCT pour confirmer que ce domaine vous appartient. "
+#~ msgstr "Par défaut, nos analyseurs vérifient les domaines se terminant par « .gc.ca » et « .canada.ca ». Si votre domaine se termine autrement, vous devez communiquer avec nous pour nous en aviser. Envoyez un courriel à l’équipe responsable de la cybersécurité du SCT pour confirmer que ce domaine vous appartient. "
 
 #: src/guidance/ScanDetails.js:102
 #~ msgid "CCS Injection Vulnerability:"
@@ -1657,7 +1657,7 @@ msgstr "Immédiatement"
 
 #: src/app/ReadGuidancePage.js:596
 msgid "Implementation guidance: email domain protection (ITSP.40.065 v1.1) - Canadian Centre for Cyber Security"
-msgstr "Directives de mise en œuvre – protection du domaine de courrier (ITSP.40.065 v1.1) – Centre canadien pour la cybersécurité"
+msgstr "Directives de mise en œuvre – protection du domaine de courrier (ITSP.40.065 v1.1) – Centre canadien pour la cybersécurité"
 
 #: src/guidance/ScanDetails.js:67
 #~ msgid "Implementation:"
@@ -2332,7 +2332,7 @@ msgstr "Obtenir des certificats d’une source de certificats approuvée par le 
 
 #: src/app/ReadGuidancePage.js:242
 msgid "Obtain the configuration guidance for the appropriate endpoints (e.g., web server, network/security appliances, etc.) and implement recommended configurations."
-msgstr "Obtenir une orientation en matière de configuration pour les points terminaux appropriés (p. ex., serveur Web, dispositifs de réseau ou de sécurité) et mettre en œuvre les configurations recommandées."
+msgstr "Obtenir une orientation en matière de configuration pour les points terminaux appropriés (p. ex., serveur Web, dispositifs de réseau ou de sécurité) et mettre en œuvre les configurations recommandées."
 
 #: src/components/MonthSelect.js:47
 #: src/utilities/months.js:13
@@ -2484,7 +2484,7 @@ msgstr "Les mots de passe doivent correspondre"
 
 #: src/app/ReadGuidancePage.js:106
 #~ msgid "Perform an inventory of all organizational domains and subdomains. Sources of information include:"
-#~ msgstr "Dresser la liste de tous les domaines et sous-domaines organisationnels. Les sources d’information comprennent :"
+#~ msgstr "Dresser la liste de tous les domaines et sous-domaines organisationnels. Les sources d’information comprennent :"
 
 #: src/app/ReadGuidancePage.js:189
 #~ msgid "Perform another assessment of the applicable domains and sub-domains to confirm that the configuration has been updated and that HTTPS is enforced in accordance with the ITPIN. Results will appear in the Tracker Dashboard within 24 hours."
@@ -2677,7 +2677,7 @@ msgstr "Record :"
 
 #: src/app/ReadGuidancePage.js:555
 msgid "References:"
-msgstr "Références :"
+msgstr "Références :"
 
 #: src/auth/CreateUserPage.js:177
 msgid "Register"
@@ -3643,7 +3643,7 @@ msgstr "Texte du logo du Suivi"
 
 #: src/app/ReadGuidancePage.js:205
 msgid "Tracker results refresh every 24 hours."
-msgstr "Les résultats de Suivi sont actualisés toutes les 24 heures."
+msgstr "Les résultats de Suivi sont actualisés toutes les 24 heures."
 
 #: src/app/ReadGuidancePage.js:256
 msgid "Tracker:"
@@ -3851,7 +3851,7 @@ msgstr "Faire passer la stratégie DMARC à Rejeter (Reject) (l’appliquer prog
 
 #: src/app/ReadGuidancePage.js:141
 #~ msgid "Use Tracker and <0>ITSP.40.062 Transport Layer Security (TLS) guidance</0> to monitor the domains and sub-domains of your organization. Other tools available to support this activity include, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc.."
-#~ msgstr "Utiliser Tracker et <0>l’orientation du protocole de sécurité de la couche transport (TLS) ITSP.40.062</0> pour surveiller les domaines et sous-domaines de votre organisation. Les autres outils disponibles pour appuyer cette activité incluent <1>Laboratoires SSL</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
+#~ msgstr "Utiliser Tracker et <0>l’orientation du protocole de sécurité de la couche transport (TLS) ITSP.40.062</0> pour surveiller les domaines et sous-domaines de votre organisation. Les autres outils disponibles pour appuyer cette activité incluent <1>Laboratoires SSL</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
 
 #: src/app/ReadGuidancePage.js:346
 #~ msgid "Use Tracker to monitor the domains and sub-domains of your organization."
@@ -4054,7 +4054,7 @@ msgstr "Bienvenue, vous êtes connecté avec succès!"
 
 #: src/app/ReadGuidancePage.js:487
 msgid "What does it mean if a domain is “unreachable”?"
-msgstr "Que veut dire le message « inaccessible » en parlant d’un domaine?"
+msgstr "Que veut dire le message « inaccessible » en parlant d’un domaine?"
 
 #: src/app/ReadGuidancePage.js:514
 msgid "Where can I get a GC-approved TLS certificate?"
@@ -4070,7 +4070,7 @@ msgstr "Au besoin, adapter les plans de la TI et les estimations budgétaires l�
 
 #: src/app/ReadGuidancePage.js:441
 msgid "While other tools are useful to work alongside Tracker, they do not specifically adhere to the configuration requirements specified in the <0>Email Management Service Configuration Requirements</0> and the <1>Web Site and Service Management Configuration Requirements</1>. For a list of allowed protocols, ciphers, and curves review the <2>ITSP.40.062 TLS guidance</2>."
-msgstr "Même si d’autres outils sont utiles en complément de Suivi, ils ne respectent pas précisément les exigences de configuration indiquées dans les <0>Exigences en matière de configuration des services de gestion des courriels</0> et les <1>Exigences de configuration de la gestion des sites Web et des services</1>. Pour une liste des protocoles, chiffrements et courbes autorisés, veuillez consulter les <2>Directives du protocole TLS ITSP.40.062</2>."
+msgstr "Même si d’autres outils sont utiles en complément de Suivi, ils ne respectent pas précisément les exigences de configuration indiquées dans les <0>Exigences en matière de configuration des services de gestion des courriels</0> et les <1>Exigences de configuration de la gestion des sites Web et des services</1>. Pour une liste des protocoles, chiffrements et courbes autorisés, veuillez consulter les <2>Directives du protocole TLS ITSP.40.062</2>."
 
 #: src/app/ReadGuidancePage.js:250
 #~ msgid "Why do other tools (<0>Hardenize</0>, <1>SSL Labs</1>, etc.) show positive results for a domain while Tracker shows negative results?"

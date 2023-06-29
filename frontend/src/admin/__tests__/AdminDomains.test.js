@@ -139,6 +139,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              outsideComment: null,
             },
           },
           result: {
@@ -231,6 +232,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              outsideComment: null,
             },
           },
           result: {
@@ -327,6 +329,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              outsideComment: null,
             },
           },
           result: {
@@ -411,6 +414,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              outsideComment: null,
             },
           },
           result: {
@@ -597,6 +601,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
+              outsideComment: null,
             },
           },
           result: {

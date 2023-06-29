@@ -1,13 +1,19 @@
-import { GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLString } from 'graphql'
 
 import { t } from '@lingui/macro'
 
 export const getAllOrganizationDomainStatuses = {
   type: GraphQLString,
   description: 'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
+  args: {
+    blocked: {
+      type: GraphQLBoolean,
+      description: 'Whether to include blocked domains in the output.',
+    },
+  },
   resolve: async (
     _,
-    _args,
+    args,
     {
       userKey,
       i18n,
@@ -27,7 +33,7 @@ export const getAllOrganizationDomainStatuses = {
       throw new Error(i18n._(t`Permissions error. You do not have sufficient permissions to access this data.`))
     }
 
-    const domainStatuses = await loadAllOrganizationDomainStatuses()
+    const domainStatuses = await loadAllOrganizationDomainStatuses({ ...args })
 
     console.info(`User ${userKey} successfully retrieved all domain statuses.`)
 

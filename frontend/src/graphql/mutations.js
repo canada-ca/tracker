@@ -183,6 +183,7 @@ export const CREATE_DOMAIN = gql`
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
+    $outsideComment: OutsideDomainCommentEnum
   ) {
     createDomain(
       input: {
@@ -192,6 +193,7 @@ export const CREATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         hidden: $hidden
+        outsideComment: $outsideComment
       }
     ) {
       result {
@@ -277,6 +279,7 @@ export const UPDATE_DOMAIN = gql`
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
+    $outsideComment: OutsideDomainCommentEnum
   ) {
     updateDomain(
       input: {
@@ -287,6 +290,7 @@ export const UPDATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         hidden: $hidden
+        outsideComment: $outsideComment
       }
     ) {
       result {
