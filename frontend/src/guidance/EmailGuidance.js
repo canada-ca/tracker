@@ -57,13 +57,18 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
       break
   }
 
+  const formatTimestamp = (ts) => {
+    const dateTime = ts.split('T')
+    return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
+  }
+
   const dmarcStepList = !dmarcSteps
     ? undefined
     : dmarcSteps.map((step, idx) => {
         return <ListItem key={idx}>{step}</ListItem>
       })
 
-  const { dkim, dmarc, spf } = dnsResults
+  const { dkim, dmarc, spf, timestamp } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
   let emailPassCount = 0
   let emailInfoCount = 0
@@ -145,6 +150,9 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
   )
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
+      <Text fontsize="lg">
+        <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+      </Text>
       {emailSummary}
       <Box mb={4} ml="4">
         <Text fontWeight="bold" fontSize="2xl">

@@ -15,8 +15,9 @@ import { Trans } from '@lingui/macro'
 import { WebTLSResults } from './WebTLSResults'
 import { WebConnectionResults } from './WebConnectionResults'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
+import { string } from 'prop-types'
 
-export function WebGuidance({ webResults }) {
+export function WebGuidance({ webResults, timestamp }) {
   const [selectedEndpoint, setSelectedEndpoint] = useState(webResults[0].ipAddress)
 
   let totalWebPass = 0
@@ -117,9 +118,17 @@ export function WebGuidance({ webResults }) {
     return ipAddress === selectedEndpoint
   }).results
 
+  const formatTimestamp = (ts) => {
+    const dateTime = ts.split('T')
+    return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
+  }
+
   return (
     <>
       <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
+        <Text fontsize="lg">
+          <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+        </Text>
         {!isWebHosting && (
           <Flex
             fontSize="lg"
@@ -150,4 +159,5 @@ export function WebGuidance({ webResults }) {
 
 WebGuidance.propTypes = {
   webResults: array,
+  timestamp: string,
 }
