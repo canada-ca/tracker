@@ -95,7 +95,7 @@ function GuidancePage() {
       </Box>
     )
   } else {
-    const { results: webResults } = webScan?.edges[0]?.node
+    const { results: webResults, timestamp } = webScan?.edges[0]?.node
     const { node: dnsResults } = dnsScan?.edges[0]
 
     const noScanData = (
@@ -121,7 +121,11 @@ function GuidancePage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            {webResults.length === 0 ? noScanData : <WebGuidance webResults={webResults} status={status} />}
+            {webResults.length === 0 ? (
+              noScanData
+            ) : (
+              <WebGuidance webResults={webResults} status={status} timestamp={timestamp} />
+            )}
           </TabPanel>
           <TabPanel>
             {dnsScan.edges.length === 0 ? (
