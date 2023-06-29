@@ -48,10 +48,9 @@ const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } = useUserVar()
+  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, isAffiliated } = useUserVar()
   const { i18n } = useLingui()
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
-  // const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true })
   const location = useLocation()
 
   // Close websocket on user jwt change (refresh/logout)
@@ -62,6 +61,57 @@ export function App() {
       wsClient.close()
     }
   }, [currentUser.jwt])
+
+  const notificationBanner = () => {
+    if (isLoggedIn()) {
+      if (isEmailValidated()) {
+        if (currentTFAMethod() === 'NONE') {
+          return (
+            <NotificationBanner bg="yellow.250">
+              <Text fontWeight="medium">
+                <Trans>
+                  To maximize your account's security,{' '}
+                  <Link textDecoration="underline" as={RouteLink} to="/user">
+                    please activate a multi-factor authentication option
+                  </Link>
+                  .
+                </Trans>
+              </Text>
+            </NotificationBanner>
+          )
+        }
+        if (!isAffiliated()) {
+          return (
+            <NotificationBanner bg="yellow.250">
+              <Text fontWeight="medium">
+                <Trans>
+                  To view detailed scan results and other functionality,{' '}
+                  <Link textDecoration="underline" as={RouteLink} to="/organizations">
+                    please affiliate with an organization
+                  </Link>
+                  .
+                </Trans>
+              </Text>
+            </NotificationBanner>
+          )
+        }
+      } else {
+        return (
+          <NotificationBanner bg="yellow.250">
+            <Text fontWeight="medium">
+              <Trans>
+                To enable full app functionality and maximize your account's security,{' '}
+                <Link textDecoration="underline" as={RouteLink} to="/user">
+                  please verify your account
+                </Link>
+                .
+              </Trans>
+            </Text>
+          </NotificationBanner>
+        )
+      }
+    }
+  }
 
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
@@ -115,33 +165,7 @@ export function App() {
         )}
       </Navigation>
 
-      {isLoggedIn() && !isEmailValidated() && (
-        <NotificationBanner bg="yellow.250">
-          <Text fontWeight="medium">
-            <Trans>
-              To enable full app functionality and maximize your account's security,{' '}
-              <Link textDecoration="underline" as={RouteLink} to="/user">
-                please verify your account
-              </Link>
-              .
-            </Trans>
-          </Text>
-        </NotificationBanner>
-      )}
-
-      {isLoggedIn() && isEmailValidated() && currentTFAMethod() === 'NONE' && (
-        <NotificationBanner bg="yellow.250">
-          <Text fontWeight="medium">
-            <Trans>
-              To maximize your account's security,{' '}
-              <Link textDecoration="underline" as={RouteLink} to="/user">
-                please activate a multi-factor authentication option
-              </Link>
-              .
-            </Trans>
-          </Text>
-        </NotificationBanner>
-      )}
+      {notificationBanner()}
 
       <Main mb={{ base: '40px', md: 'none' }}>
         <Suspense fallback={<LoadingMessage />}>
