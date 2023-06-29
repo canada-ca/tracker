@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createRoot } from 'react-dom/client'
-import {
-  BrowserRouter as Router,
-  useHistory,
-  useLocation,
-} from 'react-router-dom'
+import { BrowserRouter as Router, useHistory, useLocation } from 'react-router-dom'
 import { ApolloProvider, useMutation } from '@apollo/client'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
@@ -32,10 +28,8 @@ const I18nApp = () => {
       if (refreshTokens.result.__typename === 'AuthResult') {
         if (!currentUser.jwt) {
           // User not logged in yet, set up environment (redirect and lang)
-          if (refreshTokens.result.user.preferredLang === 'ENGLISH')
-            activate('en')
-          else if (refreshTokens.result.user.preferredLang === 'FRENCH')
-            activate('fr')
+          if (refreshTokens.result.user.preferredLang === 'ENGLISH') activate('en')
+          else if (refreshTokens.result.user.preferredLang === 'FRENCH') activate('fr')
         }
         login({
           jwt: refreshTokens.result.authToken,
@@ -43,6 +37,7 @@ const I18nApp = () => {
           userName: refreshTokens.result.user.userName,
           emailValidated: refreshTokens.result.user.emailValidated,
           insideUser: refreshTokens.result.user.insideUser,
+          affiliations: refreshTokens.result.user.affiliations,
         })
         if (from.pathname !== '/') history.replace(from)
       }
