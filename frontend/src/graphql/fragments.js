@@ -12,6 +12,9 @@ export const Authorization = {
           preferredLang
           emailValidated
           insideUser
+          affiliations(first: 1) {
+            totalCount
+          }
         }
       }
     `,
