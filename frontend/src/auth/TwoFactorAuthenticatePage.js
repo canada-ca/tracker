@@ -27,9 +27,7 @@ export default function TwoFactorAuthenticatePage() {
     onError() {
       toast({
         title: i18n._(t`An error occurred.`),
-        description: i18n._(
-          t`Unable to sign in to your account, please try again.`,
-        ),
+        description: i18n._(t`Unable to sign in to your account, please try again.`),
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -46,10 +44,10 @@ export default function TwoFactorAuthenticatePage() {
           userName: authenticate.result.user.userName,
           emailValidated: authenticate.result.user.emailValidated,
           insideUser: authenticate.result.user.insideUser,
+          affiliations: authenticate.result.user.affiliations,
         })
         if (authenticate.result.user.preferredLang === 'ENGLISH') activate('en')
-        else if (authenticate.result.user.preferredLang === 'FRENCH')
-          activate('fr')
+        else if (authenticate.result.user.preferredLang === 'FRENCH') activate('fr')
         // redirect to the home page.
         history.replace(from)
         // Display a welcome message
@@ -65,9 +63,7 @@ export default function TwoFactorAuthenticatePage() {
       // Non server error occurs
       else if (authenticate.result.__typename === 'AuthenticateError') {
         toast({
-          title: i18n._(
-            t`Unable to sign in to your account, please try again.`,
-          ),
+          title: i18n._(t`Unable to sign in to your account, please try again.`),
           description: authenticate.result.description,
           status: 'error',
           duration: 9000,
@@ -110,12 +106,7 @@ export default function TwoFactorAuthenticatePage() {
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
-          <form
-            onSubmit={handleSubmit}
-            role="form"
-            aria-label="form"
-            name="form"
-          >
+          <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
             <Heading as="h1" fontSize="2xl" mb="12" textAlign="center">
               <Trans>Two Factor Authentication</Trans>
             </Heading>

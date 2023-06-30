@@ -14,6 +14,7 @@ export function UserVarProvider({
     userName: null,
     emailValidated: null,
     insideUser: null,
+    affiliations: null,
   }),
   children,
 }) {
@@ -26,7 +27,8 @@ export function UserVarProvider({
       currentUser?.userName ||
       currentUser?.tfaSendMethod ||
       currentUser?.emailValidated ||
-      currentUser?.insideUser
+      currentUser?.insideUser ||
+      currentUser?.affiliations
     )
   }
 
@@ -36,6 +38,10 @@ export function UserVarProvider({
 
   const currentTFAMethod = () => {
     return currentUser?.tfaSendMethod
+  }
+
+  const isAffiliated = () => {
+    return currentUser?.affiliations.totalCount > 0
   }
 
   const login = (newUserState) => {
@@ -49,6 +55,7 @@ export function UserVarProvider({
       tfaSendMethod: null,
       emailValidated: null,
       insideUser: null,
+      affiliations: null,
     })
     await client.resetStore()
   }
@@ -58,6 +65,7 @@ export function UserVarProvider({
     isLoggedIn,
     isEmailValidated,
     currentTFAMethod,
+    isAffiliated,
     login,
     logout,
   }

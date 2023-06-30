@@ -1,24 +1,10 @@
 import React, { useState } from 'react'
-import {
-  Box,
-  Button,
-  Divider,
-  Heading,
-  Stack,
-  Text,
-  useToast,
-  Checkbox,
-  Link,
-} from '@chakra-ui/react'
+import { Box, Button, Divider, Heading, Stack, Text, useToast, Checkbox, Link } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { Link as RouteLink, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import {
-  ArrowForwardIcon,
-  CheckCircleIcon,
-  ExternalLinkIcon,
-} from '@chakra-ui/icons'
+import { ArrowForwardIcon, CheckCircleIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { LanguageSelect } from './LanguageSelect'
 
@@ -56,6 +42,7 @@ export default function CreateUserPage() {
           userName: signUp.result.user.userName,
           emailValidated: signUp.result.user.emailValidated,
           insideUser: signUp.result.user.insideUser,
+          affiliations: signUp.result.user.affiliations,
         })
         if (signUp.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signUp.result.user.preferredLang === 'FRENCH') activate('fr')
@@ -100,17 +87,12 @@ export default function CreateUserPage() {
         <Stack isInline align="center">
           <CheckCircleIcon color="strong" />
           <Text fontWeight="bold" fontSize="2xl" textAlign="center">
-            <Trans>
-              A verification link has been sent to your email account
-            </Trans>
+            <Trans>A verification link has been sent to your email account</Trans>
           </Text>
         </Stack>
         <Divider />
         <Text fontSize="lg">
-          <Trans>
-            Please follow the link in order to verify your account and start
-            using Tracker.
-          </Trans>
+          <Trans>Please follow the link in order to verify your account and start using Tracker.</Trans>
         </Text>
         <Divider />
         <Button
@@ -128,10 +110,7 @@ export default function CreateUserPage() {
     )
 
   const addUserToOrgText = userOrgToken ? (
-    <Text fontSize="md">
-      Your account will automatically be linked to the organization that invited
-      you.
-    </Text>
+    <Text fontSize="md">Your account will automatically be linked to the organization that invited you.</Text>
   ) : (
     ''
   )
@@ -139,13 +118,7 @@ export default function CreateUserPage() {
   return (
     <Box px="4" mx="auto" overflow="hidden" w="100%">
       <Formik
-        validationSchema={createValidationSchema([
-          'email',
-          'displayName',
-          'password',
-          'confirmPassword',
-          'lang',
-        ])}
+        validationSchema={createValidationSchema(['email', 'displayName', 'password', 'confirmPassword', 'lang'])}
         initialValues={{
           email: '',
           displayName: '',
@@ -168,12 +141,7 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Heading
-              as="h1"
-              fontSize="3xl"
-              mb="8"
-              textAlign={{ lg: 'left', md: 'center' }}
-            >
+            <Heading as="h1" fontSize="3xl" mb="8" textAlign={{ lg: 'left', md: 'center' }}>
               <Trans>Register</Trans>
             </Heading>
 
@@ -182,49 +150,27 @@ export default function CreateUserPage() {
                 <Trans>Welcome to Tracker, please enter your details.</Trans>
               </Text>
               <Text>
-                <Trans>
-                  Let's get you set up so you can verify your account
-                  information and begin using Tracker.
-                </Trans>
+                <Trans>Let's get you set up so you can verify your account information and begin using Tracker.</Trans>
               </Text>
               {addUserToOrgText}
             </Box>
 
-            <Stack
-              direction={['column', 'row']}
-              mb="4"
-              w={{ lg: '50%', md: '100%' }}
-            >
+            <Stack direction={['column', 'row']} mb="4" w={{ lg: '50%', md: '100%' }}>
               <EmailField />
               <DisplayNameField />
             </Stack>
 
-            <PasswordConfirmation
-              direction={['column', 'row']}
-              w={{ lg: '50%', md: '100%' }}
-              mb="2"
-            />
+            <PasswordConfirmation direction={['column', 'row']} w={{ lg: '50%', md: '100%' }} mb="2" />
 
             <LanguageSelect name="lang" w={{ lg: '25%', md: '50%' }} mb="6" />
 
             <Box ml={{ lg: '12', md: '0' }} mb="4">
               {/* <Flex align="center"> */}
-              <Checkbox
-                colorScheme="orange"
-                isRequired
-                mb="4"
-                borderColor="black"
-              >
+              <Checkbox colorScheme="orange" isRequired mb="4" borderColor="black">
                 <Trans>
                   I agree to all{' '}
-                  <Link
-                    color="blue.600"
-                    as={RouteLink}
-                    isExternal
-                    to="/terms-and-conditions"
-                  >
-                    Terms, Privacy Policy & Code of Conduct Guidelines{' '}
-                    <ExternalLinkIcon />
+                  <Link color="blue.600" as={RouteLink} isExternal to="/terms-and-conditions">
+                    Terms, Privacy Policy & Code of Conduct Guidelines <ExternalLinkIcon />
                   </Link>
                 </Trans>
               </Checkbox>
