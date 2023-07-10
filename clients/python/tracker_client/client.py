@@ -7,10 +7,10 @@ from gql.transport.exceptions import (
 )
 from graphql.error import GraphQLError
 
-from core import create_client, get_auth_token
-from domain import Domain
-from organization import Organization
-import queries
+from tracker_client.core import create_client, get_auth_token
+from tracker_client.domain import Domain
+from tracker_client.organization import Organization
+from tracker_client import queries
 
 
 class Client:
