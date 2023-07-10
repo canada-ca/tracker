@@ -2,9 +2,9 @@
 and offers methods to get data about domains."""
 import json
 
-import formatting
-import organization as org
-import queries
+from tracker_client import organization as org
+from tracker_client import queries
+from tracker_client import formatting
 
 
 class Domain:

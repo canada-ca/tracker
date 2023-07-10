@@ -4,9 +4,9 @@ import json
 
 from slugify import slugify
 
-import domain as dom
-from formatting import format_summary
-import queries
+from tracker_client import domain as dom
+from tracker_client import queries
+from tracker_client.formatting import format_summary
 
 
 class Organization:
