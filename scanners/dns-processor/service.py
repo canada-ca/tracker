@@ -1,23 +1,23 @@
+import asyncio
 import datetime
 import functools
 import json
-import asyncio
-import os
-import signal
 import logging
+import nats
+import os
+import re
+import signal
 import sys
 import traceback
-import re
-
-from dotenv import load_dotenv
 from arango import ArangoClient
-import nats
+from dotenv import load_dotenv
 
 from dns_processor.dns_processor import process_results
 
 load_dotenv()
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
+logging.basicConfig(stream=sys.stdout, level=logging.INFO,
+                    format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "dns-processor")
@@ -161,19 +161,17 @@ async def run(loop):
 
                 # If we have no IPs, we can't do web scans. Set all web statuses to info
                 if not results.get("resolve_ips", None):
-                    domain.update(
+                    domain.update({"webScanPending": False})
+                    domain["status"].update(
                         {
-                            "status": {
-                                "https": "info",
-                                "ssl": "info",
-                                "certificates": "info",
-                                "ciphers": "info",
-                                "curves": "info",
-                                "hsts": "info",
-                                "policy": "info",
-                                "protocols": "info",
-                            },
-                            "webScanPending": False,
+                            "https": "info",
+                            "ssl": "info",
+                            "certificates": "info",
+                            "ciphers": "info",
+                            "curves": "info",
+                            "hsts": "info",
+                            "policy": "info",
+                            "protocols": "info",
                         }
                     )
 
