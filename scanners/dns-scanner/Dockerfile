@@ -1,4 +1,4 @@
-FROM python:3.11.2-slim-bullseye AS python-builder
+FROM python:3.11.2-slim-bookworm AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONWARNINGS ignore
@@ -21,7 +21,7 @@ RUN pip3 install --prefix=/working/install -r /requirements.txt
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.11.2-slim-bullseye
+FROM python:3.11.2-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
