@@ -9,7 +9,7 @@ FROM base AS builder
 
 COPY package*.json .babelrc ./
 
-RUN npm install
+RUN npm ci
 
 COPY ./src ./src
 COPY ./index.js .
