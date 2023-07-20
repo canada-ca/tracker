@@ -45,6 +45,7 @@ spec:
   single:
     volumeClaimTemplate:
       spec:
+        storageClassName: fast-delete
         accessModes:
         - ReadWriteOnce
         resources:
