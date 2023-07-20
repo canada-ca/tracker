@@ -4,7 +4,7 @@ metadata:
   name: arangodb
   namespace: db
 spec:
-  dbservers:
+  single:
     volumeClaimTemplate:
       spec:
         storageClassName: fast-retain
