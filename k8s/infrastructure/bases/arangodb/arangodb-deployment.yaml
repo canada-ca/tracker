@@ -8,7 +8,7 @@ metadata:
 spec:
   image: arangodb/arangodb:3.10.5
   environment: Production
-  mode: Cluster
+  mode: Single
   tls:
     caSecretName: None
   externalAccess:
@@ -49,7 +49,6 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 10Gi
+            storage: 80Gi
         volumeMode: Filesystem
-    storageClassName: standard2
-
+        persistentVolumeReclaimPolicy: Delete
