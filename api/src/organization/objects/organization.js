@@ -119,6 +119,10 @@ export const organizationType = new GraphQLObjectType({
           'spf',
           'dkim',
           'dmarc',
+          'tags',
+          'hidden',
+          'nxdomain',
+          'blocked',
         ]
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
