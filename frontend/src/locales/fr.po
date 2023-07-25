@@ -59,7 +59,7 @@ msgstr "404 - Page non trouvée"
 
 #: src/guidance/EmailGuidance.js:318
 msgid "<0>Hostname:</0> {hostname}"
-msgstr "<0>Nom d'hôte:</0> {nom d'hôte}"
+msgstr "<0>Nom d'hôte:</0> {hostname}"
 
 #: src/guidance/EmailGuidance.js:323
 msgid "<0>IPs:</0> {0}"
