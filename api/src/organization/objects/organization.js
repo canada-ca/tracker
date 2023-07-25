@@ -75,9 +75,9 @@ export const organizationType = new GraphQLObjectType({
       description:
         'CSV formatted output of all domains in the organization including their email and web scan statuses.',
       args: {
-        blocked: {
-          type: GraphQLBoolean,
-          description: 'Filters domains by blocked status.',
+        filters: {
+          type: new GraphQLList(domainFilter),
+          description: 'Filters used to limit domains returned.',
         },
       },
       resolve: async (
