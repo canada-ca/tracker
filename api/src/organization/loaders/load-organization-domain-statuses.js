@@ -5,7 +5,7 @@ export const loadOrganizationDomainStatuses =
   ({ query, userKey, i18n, language }) =>
   async ({ orgId, filters }) => {
     let domains
-    let domainFilters = aql``
+    let domainFilters = aql`FILTER v.archived != true`
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
