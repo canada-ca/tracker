@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { aql } from 'arangojs'
 
 export const loadOrganizationDomainStatuses =
-  ({ query, userKey, i18n }) =>
+  ({ query, userKey, i18n, language }) =>
   async ({ orgId, filters }) => {
     let domains
     let domainFilters
@@ -77,7 +77,7 @@ export const loadOrganizationDomainStatuses =
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION(e.claimTags, ${filterValue}) ${comparison} true
+            FILTER POSITION(claimTags, ${filterValue}) ${comparison} true
           `
           }
         }
@@ -89,10 +89,21 @@ export const loadOrganizationDomainStatuses =
         await query`
           WITH claims, domains, organizations
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
+            LET claimTags = (
+                LET translatedTags = (
+                  FOR tag IN e.tags || []
+                    RETURN TRANSLATE(${language}, tag)
+                )
+                RETURN translatedTags
+            )[0]
             ${domainFilters}
             RETURN {
               domain: v.domain,
               status: v.status
+              tags: claimTags,
+              hidden: e.hidden,
+              rcode: v.rcode,
+              blocked: v.blocked
             }
           `
       ).all()

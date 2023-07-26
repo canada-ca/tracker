@@ -121,7 +121,7 @@ export const organizationType = new GraphQLObjectType({
           'dmarc',
           'tags',
           'hidden',
-          'nxdomain',
+          'rcode',
           'blocked',
         ]
         let csvOutput = headers.join(',')
