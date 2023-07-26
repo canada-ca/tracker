@@ -5,7 +5,7 @@ export const loadOrganizationDomainStatuses =
   ({ query, userKey, i18n, language }) =>
   async ({ orgId, filters }) => {
     let domains
-    let domainFilters
+    let domainFilters = aql``
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -99,11 +99,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             RETURN {
               domain: v.domain,
-              status: v.status
+              status: v.status,
               tags: claimTags,
               hidden: e.hidden,
               rcode: v.rcode,
-              blocked: v.blocked
+              blocked: v.blocked,
             }
           `
       ).all()
