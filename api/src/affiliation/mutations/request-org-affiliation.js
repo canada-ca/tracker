@@ -5,6 +5,8 @@ import { t } from '@lingui/macro'
 import { inviteUserToOrgUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
+const { SERVICE_ACCOUNT_EMAIL } = process.env
+
 export const requestOrgAffiliation = new mutationWithClientMutationId({
   name: 'RequestOrgAffiliation',
   description: `This mutation allows users to request to join an organization.`,
@@ -145,6 +147,14 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       )
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
+
+    if (typeof SERVICE_ACCOUNT_EMAIL !== 'undefined')
+      orgAdmins.push({
+        userName: SERVICE_ACCOUNT_EMAIL,
+        displayName: 'Service Account',
+        preferredLang: 'en',
+        _key: 'service-account',
+      })
 
     if (orgAdmins.length > 0) {
       const adminLink = `https://${request.get('host')}/admin/organizations`
