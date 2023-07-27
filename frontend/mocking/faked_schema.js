@@ -156,7 +156,10 @@ export const getTypeNames = () => gql`
     ): Organization
 
     # CSV formatted output of all domains in all organizations including their email and web scan statuses.
-    getAllOrganizationDomainStatuses: String
+    getAllOrganizationDomainStatuses(
+      # Whether to include blocked domains in the output.
+      blocked: Boolean
+    ): String
 
     # DKIM summary computed values, used to build summary cards.
     dkimSummary: CategorizedSummary
@@ -179,7 +182,7 @@ export const getTypeNames = () => gql`
     # SSL summary computed values, used to build summary cards.
     sslSummary: CategorizedSummary
 
-    # SSL summary computed values, used to build summary cards.
+    # Web connections (HTTPS + HSTS) summary computed values, used to build summary cards.
     webConnectionsSummary: CategorizedSummary
 
     # Web summary computed values, used to build summary cards.
@@ -326,8 +329,8 @@ export const getTypeNames = () => gql`
     # The ID of an object
     id: ID!
 
-    # Datetime string the activity occurred.
-    timestamp: DateTime
+    # Date string the activity occurred.
+    timestamp: Date
 
     # Username of admin that initiated the activity.
     initiatedBy: InitiatedBy
@@ -343,7 +346,7 @@ export const getTypeNames = () => gql`
   }
 
   # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the 'date-time' format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-  scalar DateTime
+  scalar Date
 
   # Information on the user that initiated the logged action
   type InitiatedBy {
@@ -374,6 +377,9 @@ export const getTypeNames = () => gql`
     # A user who has the same access as a user write account, but can define new user read/write accounts.
     ADMIN
 
+    # A user who has the same access as an admin, but can define new admins, and delete the organization.
+    OWNER
+
     # A user who has the same access as an admin, but can define new admins.
     SUPER_ADMIN
   }
@@ -394,6 +400,12 @@ export const getTypeNames = () => gql`
 
     # An affiliation between resources was deleted.
     REMOVE
+
+    # A scan was requested on a resource.
+    SCAN
+
+    # A resource was exported.
+    EXPORT
   }
 
   # Resource that was the target of a specified action by a user.
@@ -572,8 +584,6 @@ export const getTypeNames = () => gql`
     # Value that determines if a domain has a web scan pending.
     webScanPending: Boolean
 
-    userHasPermission: Boolean
-
     # The organization that this domain belongs to.
     organizations(
       # Ordering options for organization connections
@@ -604,10 +614,10 @@ export const getTypeNames = () => gql`
     # DNS scan results.
     dnsScan(
       # Start date for date filter.
-      startDate: DateTime
+      startDate: Date
 
       # End date for date filter.
-      endDate: DateTime
+      endDate: Date
 
       # Ordering options for DNS connections.
       orderBy: DNSOrder
@@ -631,10 +641,10 @@ export const getTypeNames = () => gql`
     # HTTPS, and TLS scan results.
     web(
       # Start date for date filter.
-      startDate: DateTime
+      startDate: Date
 
       # End date for date filter.
-      endDate: DateTime
+      endDate: Date
 
       # Ordering options for web connections.
       orderBy: WebOrder
@@ -676,6 +686,7 @@ export const getTypeNames = () => gql`
     # Value that determines if a domain is excluded from an organization's results.
     hidden: Boolean
 
+    # Value that determines if a user is affiliated with a domain, whether through organization affiliation, verified organization network affiliation, or through super admin status.
     userHasPermission: Boolean
   }
 
@@ -793,9 +804,10 @@ export const getTypeNames = () => gql`
     domainCount: Int
 
     # CSV formatted output of all domains in the organization including their email and web scan statuses.
-    toCsv: String
-
-    userHasPermission: Boolean
+    toCsv(
+      # Filters domains by blocked status.
+      blocked: Boolean
+    ): String
 
     # The domains which are associated with this organization.
     domains(
@@ -847,6 +859,9 @@ export const getTypeNames = () => gql`
       # Returns the last n items from the list.
       last: Int
     ): AffiliationConnection
+
+    # Value that determines if a user is affiliated with an organization, whether through organization affiliation, verified affiliation, or through super admin status.
+    userHasPermission: Boolean
   }
 
   # A field whose value consists of upper case or lower case letters or underscores with a length between 1 and 50.
@@ -1047,6 +1062,21 @@ export const getTypeNames = () => gql`
 
     # English label for tagging domains that are archived.
     ARCHIVED
+
+    # Label for tagging domains that have an rcode status of NXDOMAIN.
+    NXDOMAIN
+
+    # Label for tagging domains that are possibly blocked by a firewall.
+    BLOCKED
+
+    # Label for tagging domains that have a pending web scan.
+    SCAN_PENDING
+
+    # English label for tagging domains that are outside the scope of the project.
+    OUTSIDE
+
+    # French label for tagging domains that are outside the scope of the project.
+    EXTERIEUR
   }
 
   # A connection to a list of items.
@@ -1302,7 +1332,7 @@ export const getTypeNames = () => gql`
     domain: String
 
     # The time when the scan was initiated.
-    timestamp: DateTime
+    timestamp: Date
 
     # String of the base domain the scan was run on.
     baseDomain: String
@@ -1560,7 +1590,7 @@ export const getTypeNames = () => gql`
     domain: String
 
     # The time when the scan was initiated.
-    timestamp: DateTime
+    timestamp: Date
 
     # Results of the web scan at each IP address.
     results: [WebScan]
@@ -1581,7 +1611,7 @@ export const getTypeNames = () => gql`
   # Results of TLS and HTTP connection scans on the given domain.
   type WebScanResult {
     # The time when the scan was initiated.
-    timestamp: DateTime
+    timestamp: Date
 
     # The result for the TLS scan for the scanned server.
     tlsResult: TLSResult
@@ -2563,7 +2593,7 @@ export const getTypeNames = () => gql`
     domain: DomainScalar
 
     # The last time that a scan was ran on this domain.
-    lastRan: DateTime
+    lastRan: Date
 
     # The domains scan status, based on the latest scan data.
     status: DomainStatus
@@ -2805,7 +2835,7 @@ export const getTypeNames = () => gql`
     # This mutation allows the removal of unused domains.
     removeOrganizationsDomains(input: RemoveOrganizationsDomainsInput!): RemoveOrganizationsDomainsPayload
 
-    # This mutation is used to step a manual scan on a requested domain.
+    # This mutation is used to start a manual scan on a requested domain.
     requestScan(input: RequestScanInput!): RequestScanPayload
 
     # Mutation to remove domain from user's personal myTracker view.
@@ -2813,6 +2843,9 @@ export const getTypeNames = () => gql`
 
     # Mutation allows the modification of domains if domain is updated through out its life-cycle
     updateDomain(input: UpdateDomainInput!): UpdateDomainPayload
+
+    # This mutation allows the archival of unused organizations.
+    archiveOrganization(input: ArchiveOrganizationInput!): ArchiveOrganizationPayload
 
     # This mutation allows the creation of an organization inside the database.
     createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload
@@ -2901,12 +2934,23 @@ export const getTypeNames = () => gql`
     userName: EmailAddress!
 
     # The role which you would like this user to have.
-    requestedRole: RoleEnums!
+    requestedRole: InvitationRoleEnums!
 
     # The organization you wish to invite the user to.
     orgId: ID!
-
     clientMutationId: String
+  }
+
+  # An enum used when inviting users to an organization to assign their role.
+  enum InvitationRoleEnums {
+    # A user who has been given access to view an organization.
+    USER
+
+    # A user who has the same access as a user write account, but can define new user read/write accounts.
+    ADMIN
+
+    # A user who has the same access as an admin, but can define new admins.
+    SUPER_ADMIN
   }
 
   type LeaveOrganizationPayload {
@@ -3063,6 +3107,9 @@ export const getTypeNames = () => gql`
     # New domains will be tagged with NEW.
     tagNewDomains: Boolean
 
+    # New domains will be tagged with STAGING.
+    tagStagingDomains: Boolean
+
     # Audit logs will be created.
     audit: Boolean
     clientMutationId: String
@@ -3097,6 +3144,9 @@ export const getTypeNames = () => gql`
 
     # Value that determines if the domain is excluded from the scanning process.
     archived: Boolean
+
+    # Comment describing reason for adding out-of-scope domain.
+    outsideComment: OutsideDomainCommentEnum
     clientMutationId: String
   }
 
@@ -3143,6 +3193,33 @@ export const getTypeNames = () => gql`
 
     # English label for tagging domains that are archived.
     ARCHIVED
+
+    # Label for tagging domains that have an rcode status of NXDOMAIN.
+    NXDOMAIN
+
+    # Label for tagging domains that are possibly blocked by a firewall.
+    BLOCKED
+
+    # Label for tagging domains that have a pending web scan.
+    SCAN_PENDING
+
+    # English label for tagging domains that are outside the scope of the project.
+    OUTSIDE
+
+    # French label for tagging domains that are outside the scope of the project.
+    EXTERIEUR
+  }
+
+  # Reason why an outside domain was added to the organization.
+  enum OutsideDomainCommentEnum {
+    # Organization is invested in the outside domain.
+    INVESTMENT
+
+    # Organization owns this domain, but it is outside the allowed scope.
+    OWNERSHIP
+
+    # Other reason.
+    OTHER
   }
 
   type FavouriteDomainPayload {
@@ -3266,6 +3343,44 @@ export const getTypeNames = () => gql`
 
     # Value that determines if the domain is excluded from the scanning process.
     archived: Boolean
+
+    # Comment describing reason for adding out-of-scope domain.
+    outsideComment: OutsideDomainCommentEnum
+    clientMutationId: String
+  }
+
+  type ArchiveOrganizationPayload {
+    # 'RemoveOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
+    result: RemoveOrganizationUnion!
+    clientMutationId: String
+  }
+
+  # This union is used with the 'RemoveOrganization' mutation,
+  # allowing for users to remove an organization they belong to,
+  # and support any errors that may occur
+  union RemoveOrganizationUnion = OrganizationError | OrganizationResult
+
+  # This object is used to inform the user if any errors occurred while using an organization mutation.
+  type OrganizationError {
+    # Error code to inform user what the issue is related to.
+    code: Int
+
+    # Description of the issue that was encountered.
+    description: String
+  }
+
+  # This object is used to inform the user that no errors were encountered while running organization mutations.
+  type OrganizationResult {
+    # Informs the user if the organization mutation was successful.
+    status: String
+
+    # The organization that was being affected by the mutation.
+    organization: Organization
+  }
+
+  input ArchiveOrganizationInput {
+    # The global id of the organization you wish you archive.
+    orgId: ID!
     clientMutationId: String
   }
 
@@ -3278,15 +3393,6 @@ export const getTypeNames = () => gql`
   # This union is used with the 'CreateOrganization' mutation,
   # allowing for users to create an organization, and support any errors that may occur
   union CreateOrganizationUnion = OrganizationError | Organization
-
-  # This object is used to inform the user if any errors occurred while using an organization mutation.
-  type OrganizationError {
-    # Error code to inform user what the issue is related to.
-    code: Int
-
-    # Description of the issue that was encountered.
-    description: String
-  }
 
   input CreateOrganizationInput {
     # The English acronym of the organization.
@@ -3337,20 +3443,6 @@ export const getTypeNames = () => gql`
     # 'RemoveOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     result: RemoveOrganizationUnion!
     clientMutationId: String
-  }
-
-  # This union is used with the 'RemoveOrganization' mutation,
-  # allowing for users to remove an organization they belong to,
-  # and support any errors that may occur
-  union RemoveOrganizationUnion = OrganizationError | OrganizationResult
-
-  # This object is used to inform the user that no errors were encountered while running organization mutations.
-  type OrganizationResult {
-    # Informs the user if the organization mutation was successful.
-    status: String
-
-    # The organization that was being affected by the mutation.
-    organization: Organization
   }
 
   input RemoveOrganizationInput {
@@ -3806,7 +3898,6 @@ export const getTypeNames = () => gql`
 
     # The updated boolean which represents if the user wants to receive update emails.
     receiveUpdateEmails: Boolean
-
     clientMutationId: String
   }
 
