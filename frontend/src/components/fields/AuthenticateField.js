@@ -25,7 +25,7 @@ function AuthenticateField({ name = 'twoFactorCode', sendMethod }) {
           <FormLabel htmlFor={name} fontWeight="bold" textAlign="center">
             {codeSendMessage + ' ' + t`Please enter your two factor code below.`}
           </FormLabel>
-          <HStack justify="center" mb="4">
+          <HStack justify="center">
             <PinInput
               id={name}
               otp
@@ -34,12 +34,12 @@ function AuthenticateField({ name = 'twoFactorCode', sendMethod }) {
               name={name}
               onChange={(val) => form.setFieldValue(field.name, val)}
             >
-              <PinInputField borderColor="black" />
-              <PinInputField borderColor="black" />
-              <PinInputField borderColor="black" />
-              <PinInputField borderColor="black" />
-              <PinInputField borderColor="black" />
-              <PinInputField borderColor="black" />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
             </PinInput>
           </HStack>
         </FormControl>
