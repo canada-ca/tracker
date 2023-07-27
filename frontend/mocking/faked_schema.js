@@ -2833,7 +2833,7 @@ export const getTypeNames = () => gql`
     closeAccount(input: CloseAccountInput!): CloseAccountPayload
 
     # This mutation allows users to give their current auth token, and refresh token, and receive a freshly updated auth token.
-    refreshTokens(input: RefreshTokensInput!): RefreshTokensPayload
+    refreshTokens: RefreshTokensPayload
 
     # This mutation allows for users to remove a phone number from their account.
     removePhoneNumber(input: RemovePhoneNumberInput!): RemovePhoneNumberPayload
