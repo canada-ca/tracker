@@ -1,21 +1,10 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Heading,
-  HStack,
-  PinInput,
-  PinInputField,
-  Stack,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
-import { Formik, Field } from 'formik'
+import { Formik } from 'formik'
 
 import { LoadingMessage } from '../components/LoadingMessage'
 import { AuthenticateField } from '../components/fields/AuthenticateField'
@@ -97,18 +86,6 @@ export default function TwoFactorAuthenticatePage() {
     },
   })
 
-  const codeSendMessage =
-    sendMethod.toLowerCase() === 'email'
-      ? t`
-        We've sent you an email with an authentication code to sign into Tracker.`
-      : sendMethod.toLowerCase() === 'phone'
-      ? t`
-        We've sent an SMS to your registered phone number with an authentication code to sign into Tracker.`
-      : sendMethod.toLowerCase() === 'verifyphone'
-      ? t`
-        We've sent an SMS to your new phone number with an authentication code to confirm this change.`
-      : ''
-
   if (loading) return <LoadingMessage />
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -121,13 +98,13 @@ export default function TwoFactorAuthenticatePage() {
           authenticateToken: authenticateToken,
         }}
         onSubmit={async (values) => {
-          alert(JSON.stringify(values, null, 2))
-          // authenticate({
-          //   variables: {
-          //     authenticationCode: parseInt(values.twoFactorCode),
-          //     authenticateToken: values.authenticateToken,
-          //   },
-          // })
+          // alert(JSON.stringify(values, null, 2))
+          authenticate({
+            variables: {
+              authenticationCode: parseInt(values.twoFactorCode),
+              authenticateToken: values.authenticateToken,
+            },
+          })
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
@@ -136,35 +113,9 @@ export default function TwoFactorAuthenticatePage() {
               <Trans>Two Factor Authentication</Trans>
             </Heading>
 
-            {/* <AuthenticateField sendMethod={sendMethod} mb="4" /> */}
+            <AuthenticateField sendMethod={sendMethod} mb="4" />
 
             <Stack align="center">
-              <Field name="prefixo">
-                {({ field, form }) => (
-                  <FormControl id="twoFactorCode">
-                    <FormLabel htmlFor="twoFactorCode" fontWeight="bold" textAlign="center">
-                      {codeSendMessage + ' ' + t`Please enter your two factor code below.`}
-                    </FormLabel>
-                    <HStack justify="center" mb="4">
-                      <PinInput
-                        id="twoFactorCode"
-                        otp
-                        type="number"
-                        autoFocus
-                        name="twoFactorCode"
-                        onChange={(val) => form.setFieldValue(field.name, val)}
-                      >
-                        <PinInputField borderColor="black" />
-                        <PinInputField borderColor="black" />
-                        <PinInputField borderColor="black" />
-                        <PinInputField borderColor="black" />
-                        <PinInputField borderColor="black" />
-                        <PinInputField borderColor="black" />
-                      </PinInput>
-                    </HStack>
-                  </FormControl>
-                )}
-              </Field>
               <Button variant="primary" isLoading={isSubmitting} type="submit">
                 <Trans>Submit</Trans>
               </Button>
