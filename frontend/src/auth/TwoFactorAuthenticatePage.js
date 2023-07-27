@@ -22,7 +22,6 @@ export default function TwoFactorAuthenticatePage() {
   const { i18n } = useLingui()
   const { sendMethod, authenticateToken } = useParams()
   const { from } = location.state || { from: { pathname: '/' } }
-  // const [field, meta] = useField('twoFactorCode')
 
   const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
     onError() {
@@ -98,7 +97,6 @@ export default function TwoFactorAuthenticatePage() {
           authenticateToken: authenticateToken,
         }}
         onSubmit={async (values) => {
-          // alert(JSON.stringify(values, null, 2))
           authenticate({
             variables: {
               authenticationCode: parseInt(values.twoFactorCode),
