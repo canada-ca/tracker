@@ -95,9 +95,9 @@ export const LANDING_PAGE_SUMMARIES = gql`
 `
 
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!) {
+  query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!, $filters: [DomainFilter]) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
-      toCsv
+      toCsv(filters: $filters)
     }
   }
 `

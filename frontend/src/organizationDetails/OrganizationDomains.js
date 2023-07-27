@@ -13,7 +13,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { number, string } from 'prop-types'
+import { bool, string } from 'prop-types'
 
 import { DomainCard } from '../domains/DomainCard'
 import { ListOf } from '../components/ListOf'
@@ -23,13 +23,19 @@ import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { PAGINATED_ORG_DOMAINS as FORWARD, MY_TRACKER_DOMAINS } from '../graphql/queries'
+import {
+  PAGINATED_ORG_DOMAINS as FORWARD,
+  GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
+  MY_TRACKER_DOMAINS,
+} from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { Formik } from 'formik'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { CheckCircleIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons'
+import { useLazyQuery } from '@apollo/client'
+import { ExportButton } from '../components/ExportButton'
 
-export function OrganizationDomains({ orgSlug }) {
+export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
@@ -71,6 +77,13 @@ export function OrganizationDomains({ orgSlug }) {
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
     })
+
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+    GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
+    {
+      variables: { orgSlug, filters },
+    },
+  )
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -274,6 +287,19 @@ export function OrganizationDomains({ orgSlug }) {
 
   return (
     <Box>
+      {userHasPermission && (
+        <ExportButton
+          ml="auto"
+          my="2"
+          mt={{ base: '4', md: 0 }}
+          fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
+          dataFunction={async () => {
+            const result = await getOrgDomainStatuses()
+            return result.data?.findOrganizationBySlug?.toCsv
+          }}
+          isLoading={orgDomainStatusesLoading}
+        />
+      )}
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
         {/* Web statuses */}
@@ -401,4 +427,4 @@ export function OrganizationDomains({ orgSlug }) {
   )
 }
 
-OrganizationDomains.propTypes = { domainsPerPage: number, orgSlug: string }
+OrganizationDomains.propTypes = { orgSlug: string, orgName: string, userHasPermission: bool }
