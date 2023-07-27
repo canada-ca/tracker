@@ -481,7 +481,7 @@ describe('authenticate user account', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
                 sameSite: true,
                 secure: true,
               },
@@ -937,7 +937,7 @@ describe('authenticate user account', () => {
               'token',
               {
                 httpOnly: true,
-                maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
                 sameSite: true,
                 secure: true,
               },
