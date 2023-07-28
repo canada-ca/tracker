@@ -313,7 +313,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
         <AccordionPanel>
           {mxRecords.hosts.map(({ preference, hostname, addresses }, idx) => {
             return (
-              <Flex key={idx} p="2">
+              <Flex key={idx} px="2">
                 <Text fontSize="lg" w="50%">
                   <Trans>
                     <b>Hostname:</b> {hostname}
@@ -333,9 +333,9 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
             )
           })}
           {mxRecords.warnings.length > 0 && (
-            <Box px="2" py="2" bg="weakMuted" borderWidth="1px" borderColor="weak" rounded="md" mb="1">
+            <Box px="2" py="2" rounded="md" mb="1">
               <Text fontWeight="bold" fontSize="lg">
-                <Trans>Warnings</Trans>
+                <Trans>Warnings:</Trans>
               </Text>
               {mxRecords.warnings.map((warning, idx) => {
                 return (
