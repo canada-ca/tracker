@@ -404,9 +404,25 @@ export const VERIFY_ACCOUNT = gql`
   }
 `
 
-export const CLOSE_ACCOUNT = gql`
-  mutation CloseAccount($userId: ID) {
-    closeAccount(input: { userId: $userId }) {
+export const CLOSE_ACCOUNT_OTHER = gql`
+  mutation CloseAccountOther($userId: ID) {
+    closeAccountOther(input: { userId: $userId }) {
+      result {
+        ... on CloseAccountError {
+          code
+          description
+        }
+        ... on CloseAccountResult {
+          status
+        }
+      }
+    }
+  }
+`
+
+export const CLOSE_ACCOUNT_SELF = gql`
+  mutation CloseAccountSelf($userId: ID) {
+    closeAccountSelf(input: {}) {
       result {
         ... on CloseAccountError {
           code
