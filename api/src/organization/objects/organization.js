@@ -75,9 +75,9 @@ export const organizationType = new GraphQLObjectType({
       description:
         'CSV formatted output of all domains in the organization including their email and web scan statuses.',
       args: {
-        blocked: {
-          type: GraphQLBoolean,
-          description: 'Filters domains by blocked status.',
+        filters: {
+          type: new GraphQLList(domainFilter),
+          description: 'Filters used to limit domains returned.',
         },
       },
       resolve: async (
@@ -119,13 +119,18 @@ export const organizationType = new GraphQLObjectType({
           'spf',
           'dkim',
           'dmarc',
+          'tags',
+          'hidden',
+          'rcode',
+          'blocked',
         ]
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
           let csvLine = `${domain.domain}`
-          csvLine += headers.slice(1).reduce((previousValue, currentHeader) => {
+          csvLine += headers.slice(1, 10).reduce((previousValue, currentHeader) => {
             return `${previousValue},${domain.status[currentHeader]}`
           }, '')
+          csvLine += `,${domain.tags.join('|')},${domain.hidden},${domain.rcode},${domain.blocked}`
           csvOutput += `\n${csvLine}`
         })
 
