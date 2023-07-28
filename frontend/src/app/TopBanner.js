@@ -6,8 +6,8 @@ import { useMutation } from '@apollo/client'
 
 import sigEn from '../images/goc-header-logo-dark-en.svg'
 import sigFr from '../images/goc-header-logo-dark-fr.svg'
-import trackerLogo from '../images/Asset6.svg'
-import trackerText from '../images/Asset3.svg'
+import trackerLogo from '../images/tracker_v-03-transparent 2.svg'
+import trackerText from '../images/trackerlogo 1.svg'
 
 import { LocaleSwitcher } from './LocaleSwitcher'
 
@@ -66,10 +66,10 @@ export const TopBanner = (props) => {
 
         <Link as={RouteLink} to="/">
           <Flex align="center">
-            <Box my="4" ml="4" width={{ base: 0, md: 125 }} display={{ base: 'none', md: 'initial' }}>
+            <Box my="4" mx="2" width={{ base: 0, md: 125 }} display={{ base: 'none', md: 'initial' }}>
               <Image src={trackerLogo} alt={t`Tracker logo outline`} />
             </Box>
-            <Box mr="4" my="4" width={{ base: 0, md: 125 }} display={{ base: 'none', md: 'initial' }}>
+            <Box mx="2" mt="0" width={{ base: 0, md: 200 }} display={{ base: 'none', md: 'initial' }}>
               <Image src={trackerText} alt={t`Tracker logo text`} />
             </Box>
           </Flex>
@@ -81,9 +81,7 @@ export const TopBanner = (props) => {
               <ABTestVariant name="A">
                 <Trans>BETA</Trans>
               </ABTestVariant>
-              <ABTestVariant name="B">
-                <Trans>PREVIEW</Trans>
-              </ABTestVariant>
+              <ABTestVariant name="B">INSIDER</ABTestVariant>
             </ABTestingWrapper>
           }
           ml={{ base: '0', md: 'auto' }}
