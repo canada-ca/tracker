@@ -1,10 +1,10 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Box, Button, Heading, Stack, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
-import { Formik } from 'formik'
+import { ErrorMessage, Formik } from 'formik'
 
 import { LoadingMessage } from '../components/LoadingMessage'
 import { AuthenticateField } from '../components/fields/AuthenticateField'
@@ -111,9 +111,11 @@ export default function TwoFactorAuthenticatePage() {
               <Trans>Two Factor Authentication</Trans>
             </Heading>
 
-            <AuthenticateField sendMethod={sendMethod} mb="4" />
-
             <Stack align="center">
+              <AuthenticateField sendMethod={sendMethod} />
+              <Text color="red">
+                <ErrorMessage name="twoFactorCode" />
+              </Text>
               <Button variant="primary" isLoading={isSubmitting} type="submit">
                 <Trans>Submit</Trans>
               </Button>
