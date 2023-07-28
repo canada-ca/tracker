@@ -63,6 +63,29 @@ export default extendTheme({
       fail: '#22485B',
       pass: '#F15E6B',
     },
+    tracker: {
+      logo: {
+        yellow: '#fdb73f',
+        lightOrange: '#f8991f',
+        orange: '#f06e25',
+        darkOrange: '#e65225',
+        red: '#b93b26',
+        brown: '#5b2719',
+        black: '#2e1f1b',
+      },
+      cool: {
+        gray: '#dcdbdb',
+        dark: '#131042',
+        medium: '#159fce',
+        light: '#96d9ee',
+      },
+      warm: {
+        brown: '#aa6e29',
+        light: '#fcd8a4',
+        medium: '#ea986f',
+        dark: '#ef3c23',
+      },
+    },
     green: {
       50: '#F2FFF0',
       100: '#C3EEBF',
