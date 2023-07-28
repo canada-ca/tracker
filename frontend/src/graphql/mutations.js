@@ -548,7 +548,7 @@ export const UPDATE_ORGANIZATION = gql`
 
 export const REFRESH_TOKENS = gql`
   mutation RefreshTokens {
-    refreshTokens {
+    refreshTokens(input: {}) {
       result {
         ... on AuthResult {
           ...RequiredAuthResultFields
