@@ -30,7 +30,7 @@ const Toggler = (props) => {
         borderWidth="1px"
         borderColor="gray.300"
         aria-hidden
-        d="flex"
+        display="flex"
         color="primary"
         textTransform="uppercase"
         fontWeight="bold"

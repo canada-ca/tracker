@@ -142,7 +142,9 @@ export function DomainCard({
               </Badge>
             )}
           </Flex>
-          <Text isTruncated>{url}</Text>
+          <Text noOfLines={1} wordBreak="break-all">
+            {url}
+          </Text>
 
           <Flex flexWrap="wrap">
             {tags?.map((tag, idx) => {

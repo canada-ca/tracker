@@ -58,7 +58,7 @@ export function OrganizationCard({ name, acronym, slug, domainCount, verified, s
           maxWidth="100%"
         >
           <Stack isInline align="center">
-            <Text fontSize="lg" fontWeight="semibold" textDecoration="underline" isTruncated>
+            <Text fontSize="lg" fontWeight="semibold" textDecoration="underline" noOfLines={1} wordBreak="break-all">
               {name}
             </Text>
             <Text fontSize="lg" fontWeight="semibold">

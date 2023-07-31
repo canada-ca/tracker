@@ -210,7 +210,9 @@ export function ScanDomain() {
                     <Text fontWeight="semibold">
                       <Trans>Domain:</Trans>
                     </Text>
-                    <Text isTruncated>{mergedScan.domain}</Text>
+                    <Text noOfLines={1} wordBreak="break-all">
+                      {mergedScan.domain}
+                    </Text>
                   </Box>
                   <Flex flexDirection={{ base: 'column', md: 'row' }} flexGrow={{ base: 0, md: '1' }}>
                     <Flex {...statusGroupingProps}>
