@@ -1,7 +1,6 @@
 import subprocess
 import logging
 import os
-import shutil
 from arango import ArangoClient
 from dotenv import load_dotenv
 
@@ -108,7 +107,7 @@ def domain_discovery(domain="", orgId=""):
         logging.info("Running domain discovery for {domain}".format(domain=domain))
         subdomain_enumeration(domain)
         results = process_subdomains(domain, orgId)
-        shutil.rm("{domain}.txt".format(domain=domain))
+        os.remove("{domain}.txt".format(domain=domain))
         return results
 
 
