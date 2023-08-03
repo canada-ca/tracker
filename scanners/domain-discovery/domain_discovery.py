@@ -101,15 +101,14 @@ def domain_discovery(domain="", orgId=""):
         os.chdir("domains")
 
     if domain == "":
-        print("No domain provided")
+        logging.info("No domain provided")
     elif orgId == "":
-        print("No orgId provided")
+        logging.info("No orgId provided")
     else:
-        print("Running domain discovery for {domain}".format(domain=domain))
+        logging.info("Running domain discovery for {domain}".format(domain=domain))
         subdomain_enumeration(domain)
         results = process_subdomains(domain, orgId)
-        os.chdir("../")
-        shutil.rmtree("domains")
+        shutil.rm("{domain}.txt".format(domain=domain))
         return results
 
 
@@ -147,7 +146,7 @@ async def run(loop):
         orgId = payload.get("orgId")
 
         results = domain_discovery(domain, orgId)
-
+        logging.info(f"New subdomains inserted into database: {json.dumps(results)}")
         for domain in results:
             domain_key = domain["_key"]
             try:
@@ -167,10 +166,6 @@ async def run(loop):
                     f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 return
-
-            # logging.info(
-            #     f"DNS Scans inserted into database: {json.dumps(processed_results)}"
-            # )
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
