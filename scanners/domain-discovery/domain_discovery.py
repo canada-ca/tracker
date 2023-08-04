@@ -18,16 +18,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
-DB_NAME = os.getenv("DB_NAME")
-DB_URL = os.getenv("DB_URL")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASS = os.getenv("DB_PASS", "test")
+DB_NAME = os.getenv("DB_NAME", "track_dmarc")
+DB_URL = os.getenv("DB_URL", "http://localhost:8529")
 
 NAME = os.getenv("NAME", "domain-discovery")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
-PUBLISH_TO = os.getenv("PUBLISH_TO")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP")
-SERVERLIST = os.getenv("NATS_SERVERS")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.discovery")
+PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP", "domain-discovery")
+SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
 # Establish DB connection
@@ -76,7 +76,7 @@ def process_subdomains(base_domain, orgId):
                     "_from": orgId,
                     "_to": domainInsert["_id"],
                     "hidden": False,
-                    "tags": [],
+                    "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
                 }
             )
     return domains_to_scan
