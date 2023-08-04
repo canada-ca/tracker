@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: guidance
-              image: gcr.io/track-compliance/services/guidance:master-a80d47c-1689344401 # {"$imagepolicy": "flux-system:guidance"}
+              image: gcr.io/track-compliance/services/guidance:master-0411bd1-1690372034 # {"$imagepolicy": "flux-system:guidance"}
               env:
                 - name: DB_USER
                   valueFrom:

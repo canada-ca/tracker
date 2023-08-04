@@ -58,16 +58,16 @@ const I18nApp = () => {
       // using seconds as that's what the api uses
       const currentTimeSeconds = Math.floor(new Date().getTime() / 1000)
       const jwtExpiresAfterSeconds = jwtExpiryTimeSeconds - currentTimeSeconds
-      const timeoutID = setTimeout(() => {
+      const timeoutID = setInterval(() => {
         refreshTokens()
-      }, (jwtExpiresAfterSeconds - 60) * 1000)
+      }, (jwtExpiresAfterSeconds - 10) * 1000)
       return () => {
-        clearTimeout(timeoutID)
+        clearInterval(timeoutID)
       }
     } else {
       refreshTokens()
     }
-  }, [currentUser, refreshTokens])
+  }, [currentUser?.jwt])
 
   return (
     <I18nProvider i18n={i18n}>

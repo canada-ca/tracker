@@ -221,7 +221,7 @@ export function EditableUserPhoneNumber({ detailValue, ...props }) {
           }}
         >
           {({ handleSubmit, isSubmitting }) => (
-            <form id="form" onSubmit={handleSubmit}>
+            <form id="form" role="form" onSubmit={handleSubmit}>
               <ModalHeader>
                 <Trans>Verify</Trans>
               </ModalHeader>

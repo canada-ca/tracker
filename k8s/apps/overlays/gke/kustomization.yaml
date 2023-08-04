@@ -17,7 +17,7 @@ replicas:
   - name: tracker-frontend
     count: 2
   - name: dns-scanner
-    count: 3
+    count: 6
   - name: web-scanner
     count: 13
 patchesStrategicMerge:

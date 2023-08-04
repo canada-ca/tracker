@@ -127,7 +127,7 @@ export const signUp = new mutationWithClientMutationId({
       refreshInfo: {
         refreshId,
         rememberMe,
-        expiresAt: new Date(new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000),
+        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
       },
     }
 
@@ -247,7 +247,7 @@ export const signUp = new mutationWithClientMutationId({
     // if user wants to stay logged in create normal http cookie
     if (rememberMe) {
       cookieData = {
-        maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+        maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
         httpOnly: true,
         secure: true,
         sameSite: true,

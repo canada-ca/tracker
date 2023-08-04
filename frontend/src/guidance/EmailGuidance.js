@@ -16,7 +16,6 @@ import { t, Trans } from '@lingui/macro'
 import { object, string } from 'prop-types'
 import { GuidanceTagList } from './GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
-import { InfoIcon } from '@chakra-ui/icons'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
 
 export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
@@ -68,7 +67,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
         return <ListItem key={idx}>{step}</ListItem>
       })
 
-  const { dkim, dmarc, spf, timestamp } = dnsResults
+  const { dkim, dmarc, spf, timestamp, mxRecords } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
   let emailPassCount = 0
   let emailInfoCount = 0
@@ -149,7 +148,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
     </AccordionItem>
   )
   return (
-    <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
+    <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4]}>
       <Text fontsize="lg">
         <b>Last Scanned:</b> {formatTimestamp(timestamp)}
       </Text>
@@ -252,31 +251,11 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
               },
             )
           ) : (
-            <Box>
-              <Flex
-                px="2"
-                py="1"
-                bg="weakMuted"
-                borderWidth="1px"
-                borderColor="weak"
-                rounded="md"
-                align="center"
-                mb="1"
-              >
-                <InfoIcon color="weak" mr="2" />
-                <Text fontWeight="bold">
-                  <Trans>
-                    No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated
-                    organization to add selectors.
-                  </Trans>
-                </Text>
-              </Flex>
-              <GuidanceTagList
-                positiveTags={dkim.positiveTags}
-                neutralTags={dkim.neutralTags}
-                negativeTags={dkim.negativeTags}
-              />
-            </Box>
+            <GuidanceTagList
+              positiveTags={dkim.positiveTags}
+              neutralTags={dkim.neutralTags}
+              negativeTags={dkim.negativeTags}
+            />
           )}
         </AccordionPanel>
       </AccordionItem>
@@ -322,6 +301,53 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
             neutralTags={dmarc.neutralTags}
             negativeTags={dmarc.negativeTags}
           />
+        </AccordionPanel>
+      </AccordionItem>
+      <AccordionItem>
+        <Flex as={AccordionButton}>
+          <Text fontSize="2xl" ml="2">
+            MX
+          </Text>
+          <AccordionIcon boxSize="icons.xl" />
+        </Flex>
+        <AccordionPanel>
+          {mxRecords.hosts.map(({ preference, hostname, addresses }, idx) => {
+            return (
+              <Flex key={idx} px="2">
+                <Text fontSize="lg" w="50%">
+                  <Trans>
+                    <b>Hostname:</b> {hostname}
+                  </Trans>
+                </Text>
+                <Text fontSize="lg" w="40%">
+                  <Trans>
+                    <b>IPs:</b> {addresses.join(', ')}
+                  </Trans>
+                </Text>
+                <Text fontSize="lg" w="10%" ml="auto">
+                  <Trans>
+                    <b>Preference:</b> {preference}
+                  </Trans>
+                </Text>
+              </Flex>
+            )
+          })}
+          {mxRecords.warnings.length > 0 && (
+            <Box px="2" py="2" rounded="md" mb="1">
+              <Text fontWeight="bold" fontSize="lg">
+                <Trans>Warnings:</Trans>
+              </Text>
+              {mxRecords.warnings.map((warning, idx) => {
+                return (
+                  <Box key={idx} px="2">
+                    <Text fontsize="lg">
+                      <b>{idx + 1}.</b> {warning}
+                    </Text>
+                  </Box>
+                )
+              })}
+            </Box>
+          )}
         </AccordionPanel>
       </AccordionItem>
     </Accordion>

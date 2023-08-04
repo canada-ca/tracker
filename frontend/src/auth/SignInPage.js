@@ -125,7 +125,7 @@ export default function SignInPage() {
             </Box>
 
             <Box w={{ md: '100%', lg: '33%' }}>
-              <EmailField name="email" mb={4} />
+              <EmailField inputProps={{ autoFocus: true }} name="email" mb={4} />
 
               <PasswordField name="password" mb={2} />
 

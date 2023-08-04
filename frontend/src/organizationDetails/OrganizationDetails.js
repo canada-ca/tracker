@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
   Box,
@@ -27,9 +27,8 @@ import { TieredSummaries } from '../summaries/TieredSummaries'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
-import { GET_ORGANIZATION_DOMAINS_STATUSES_CSV, ORG_DETAILS_PAGE } from '../graphql/queries'
+import { ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
-import { ExportButton } from '../components/ExportButton'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 
@@ -47,13 +46,6 @@ export default function OrganizationDetails() {
     variables: { slug: orgSlug },
     // errorPolicy: 'ignore', // allow partial success
   })
-
-  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
-    GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
-    {
-      variables: { orgSlug: orgSlug },
-    },
-  )
 
   useEffect(() => {
     if (!activeTab) {
@@ -160,20 +152,11 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              {data?.organization?.userHasPermission && (
-                <ExportButton
-                  ml="auto"
-                  my="2"
-                  mt={{ base: '4', md: 0 }}
-                  fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
-                  dataFunction={async () => {
-                    const result = await getOrgDomainStatuses()
-                    return result.data?.findOrganizationBySlug?.toCsv
-                  }}
-                  isLoading={orgDomainStatusesLoading}
-                />
-              )}
-              <OrganizationDomains orgSlug={orgSlug} />
+              <OrganizationDomains
+                orgSlug={orgSlug}
+                orgName={orgName}
+                userHasPermission={data?.organization?.userHasPermission}
+              />
             </ErrorBoundary>
           </TabPanel>
           {!isNaN(data?.organization?.affiliations?.totalCount) && (

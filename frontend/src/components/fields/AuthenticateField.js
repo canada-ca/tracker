@@ -2,17 +2,10 @@ import React from 'react'
 import { func, object, oneOfType, shape, string } from 'prop-types'
 import { t } from '@lingui/macro'
 
-import { FormField } from './FormField'
+import { Field } from 'formik'
+import { FormControl, FormLabel, HStack, PinInput, PinInputField } from '@chakra-ui/react'
 
-import { TwoFactorIcon } from '../../theme/Icons'
-
-function AuthenticateField({
-  name,
-  forwardedRef,
-  sendMethod,
-  inputProps,
-  ...props
-}) {
+function AuthenticateField({ name = 'twoFactorCode', sendMethod }) {
   const codeSendMessage =
     sendMethod.toLowerCase() === 'email'
       ? t`
@@ -26,22 +19,32 @@ function AuthenticateField({
       : ''
 
   return (
-    <FormField
-      name={name}
-      label={
-        codeSendMessage + ' ' + t`Please enter your two factor code below.`
-      }
-      leftElement={<TwoFactorIcon color="gray.300" size="1.25rem" />}
-      placeholder={t`Enter two factor code`}
-      ref={forwardedRef}
-      autoFocus
-      autoComplete="off"
-      inputMode="numeric"
-      w="auto"
-      align="center"
-      inputProps={inputProps}
-      {...props}
-    />
+    <Field name={name}>
+      {({ field, form }) => (
+        <FormControl id={name}>
+          <FormLabel htmlFor={name} fontWeight="bold" textAlign="center">
+            {codeSendMessage + ' ' + t`Please enter your two factor code below.`}
+          </FormLabel>
+          <HStack justify="center">
+            <PinInput
+              id={name}
+              otp
+              type="number"
+              autoFocus
+              name={name}
+              onChange={(val) => form.setFieldValue(field.name, val)}
+            >
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+              <PinInputField borderColor="black" isRequired={true} />
+            </PinInput>
+          </HStack>
+        </FormControl>
+      )}
+    </Field>
   )
 }
 
