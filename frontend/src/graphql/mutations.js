@@ -688,4 +688,12 @@ export const REQUEST_INVITE_TO_ORG = gql`
   }
 `
 
+export const REQUEST_DISCOVERY = gql`
+  mutation RequestScan($domainUrl: DomainScalar, $orgId: ID) {
+    requestScan(input: { domain: $domainUrl, orgId: $orgId }) {
+      status
+    }
+  }
+`
+
 export default ''
