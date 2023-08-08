@@ -92,26 +92,24 @@ def get_claimed_domains(orgId):
     return [document for document in cursor]
 
 
-def domain_discovery(domain="", orgId=""):
+def domain_discovery(domain, orgId):
     try:
         os.mkdir("domains")
         os.chdir("domains")
     except FileExistsError:
         os.chdir("domains")
 
-    if domain == "":
-        logging.info("No domain provided")
-    elif orgId == "":
-        logging.info("No orgId provided")
-    else:
-        logging.info("Running domain discovery for {domain}".format(domain=domain))
-        subdomain_enumeration(domain)
-        results = process_subdomains(domain, orgId)
-        os.remove("{domain}.txt".format(domain=domain))
-        return results
+    logging.info("Running domain discovery for {domain}".format(domain=domain))
+    subdomain_enumeration(domain)
+    results = process_subdomains(domain, orgId)
+    os.remove("{domain}.txt".format(domain=domain))
+    os.chdir("..")
+    return results
 
 
-async def run(loop):
+async def run():
+    loop = asyncio.get_running_loop()
+
     async def error_cb(error):
         logger.error(error)
 
@@ -144,8 +142,17 @@ async def run(loop):
         domain = payload.get("domain")
         orgId = payload.get("orgId")
 
-        results = domain_discovery(domain, orgId)
+        try:
+            results = domain_discovery(domain, orgId)
+        except Exception as e:
+            logging.error(
+                f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+            )
+            os.remove("{domain}.txt".format(domain=domain))
+            os.chdir("..")
+            return
         logging.info(f"New subdomains inserted into database: {json.dumps(results)}")
+
         for domain in results:
             domain_key = domain["_key"]
             try:
@@ -179,15 +186,8 @@ async def run(loop):
             getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
         )
 
-
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+    await asyncio.Future()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())
