@@ -35,11 +35,6 @@ arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
-def subdomain_enumeration(domain):
-    logging.info("Running findomain for {domain}".format(domain=domain))
-    subprocess.run(["findomain", "-t", domain, "-o"])
-
-
 def process_subdomains(base_domain, orgId):
     f = open("{domain}.txt".format(domain=base_domain), "r")
     subdomains = f.readlines()
@@ -49,7 +44,12 @@ def process_subdomains(base_domain, orgId):
     for subdomain in subdomains:
         if subdomain not in claimed_domains:
             logging.info("Adding {subdomain} to DB".format(subdomain=subdomain))
-            checkDomain = db.collection("domains").find({"domain": subdomain}).next()
+            try:
+                checkDomain = (
+                    db.collection("domains").find({"domain": subdomain}).next()
+                )
+            except StopIteration:
+                checkDomain = None
             if not checkDomain:
                 domainInsert = db.collection("domains").insert(
                     {
@@ -68,6 +68,7 @@ def process_subdomains(base_domain, orgId):
                         "archived": False,
                     }
                 )
+                domainInsert["domain"] = subdomain
                 domains_to_scan.append(domainInsert)
             else:
                 domainInsert = checkDomain
@@ -99,17 +100,14 @@ def domain_discovery(domain, orgId):
     except FileExistsError:
         os.chdir("domains")
 
-    logging.info("Running domain discovery for {domain}".format(domain=domain))
-    subdomain_enumeration(domain)
+    subprocess.run(["findomain", "-t", domain, "-o"])
     results = process_subdomains(domain, orgId)
     os.remove("{domain}.txt".format(domain=domain))
     os.chdir("..")
     return results
 
 
-async def run():
-    loop = asyncio.get_running_loop()
-
+async def run(loop):
     async def error_cb(error):
         logger.error(error)
 
@@ -143,35 +141,40 @@ async def run():
         orgId = payload.get("orgId")
 
         try:
+            logger.info(f"Starting subdomain scan on '{domain}'")
             results = domain_discovery(domain, orgId)
+
+            logging.info(f"{len(results)} new subdomains found for {domain}")
+
+            for newDomain in results:
+                domain_key = newDomain["_key"]
+                try:
+                    await nc.publish(
+                        f"{PUBLISH_TO}.{domain_key}",
+                        json.dumps(
+                            {
+                                "domain": newDomain["domain"],
+                                "selectors": [],
+                                "domain_key": domain_key,
+                            }
+                        ).encode(),
+                    )
+
+                except Exception as e:
+                    logging.error(
+                        f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                    )
+                    return
         except Exception as e:
             logging.error(
                 f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
             )
-            os.remove("{domain}.txt".format(domain=domain))
-            os.chdir("..")
-            return
-        logging.info(f"New subdomains inserted into database: {json.dumps(results)}")
-
-        for domain in results:
-            domain_key = domain["_key"]
             try:
-                await nc.publish(
-                    f"{PUBLISH_TO}.{domain_key}",
-                    json.dumps(
-                        {
-                            "domain": domain["domain"],
-                            "selectors": domain["selectors"],
-                            "domain_key": domain_key,
-                        }
-                    ).encode(),
-                )
-
-            except Exception as e:
-                logging.error(
-                    f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-                )
-                return
+                os.remove("{domain}.txt".format(domain=domain))
+                os.chdir("..")
+            except FileNotFoundError:
+                pass
+            return
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
@@ -186,8 +189,15 @@ async def run():
             getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
         )
 
-    await asyncio.Future()
+
+def main():
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(run(loop))
+    try:
+        loop.run_forever()
+    finally:
+        loop.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    main()
