@@ -34,7 +34,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
       i18n,
       userKey,
       publish,
-      auth: { checkDomainPermission, userRequired, verifiedRequired },
+      auth: { checkDomainPermission, userRequired, verifiedRequired, checkSuperAdmin, superAdminRequired },
       loaders: { loadDomainByDomain, loadOrgByKey },
       validators: { cleanseInput },
     },
@@ -42,6 +42,9 @@ export const requestDiscovery = new mutationWithClientMutationId({
     // Get User
     const user = await userRequired()
     verifiedRequired({ user })
+
+    const isSuperAdmin = await checkSuperAdmin()
+    superAdminRequired({ user, isSuperAdmin })
 
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
