@@ -45,6 +45,8 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
+import { SubdomainDiscoveryButton } from '../domains/SubdomainDiscoveryButton'
+import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export function AdminDomains({ orgSlug, orgId, permission }) {
   const toast = useToast()
@@ -301,6 +303,11 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
                 flexGrow={1}
                 fontSize={{ base: '75%', sm: '100%' }}
               />
+              <ABTestWrapper>
+                <ABTestVariant name="B">
+                  <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
+                </ABTestVariant>
+              </ABTestWrapper>
             </Flex>
             <Divider borderBottomColor="gray.400" />
           </>
