@@ -44,6 +44,7 @@ const {
   const jsm = await nc.jetstreamManager()
 
   await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
+  await jsm.streams.add({ name: 'domain-discovery', subjects: ['domains.*.discovery'] })
 
   // create a jetstream client:
   const js = nc.jetstream()
