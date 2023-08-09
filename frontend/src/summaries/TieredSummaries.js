@@ -17,7 +17,7 @@ import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
 import { Trans, t } from '@lingui/macro'
 import { object } from 'prop-types'
-import { ABTestingWrapper, ABTestVariant } from '../app/ABTestWrapper'
+import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export function TieredSummaries({ summaries }) {
   const [show, setShow] = useState(false)
@@ -32,7 +32,7 @@ export function TieredSummaries({ summaries }) {
 
   return (
     <Box>
-      <ABTestingWrapper insiderVariantName="B">
+      <ABTestWrapper insiderVariantName="B">
         <ABTestVariant name="A">
           <Box>
             <Flex align="center" justify="flex-end" mb="2">
@@ -112,7 +112,7 @@ export function TieredSummaries({ summaries }) {
             </AccordionItem>
           </Accordion>
         </ABTestVariant>
-      </ABTestingWrapper>
+      </ABTestWrapper>
     </Box>
   )
 }
