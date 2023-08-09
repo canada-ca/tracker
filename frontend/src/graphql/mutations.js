@@ -688,4 +688,14 @@ export const REQUEST_INVITE_TO_ORG = gql`
   }
 `
 
+export const REQUEST_DISCOVERY = gql`
+  mutation RequestDiscovery($domainUrl: DomainScalar, $orgId: ID) {
+    requestDiscovery(input: { domain: $domainUrl, orgId: $orgId }) {
+      ... on RequestDiscoveryPayload {
+        status
+      }
+    }
+  }
+`
+
 export default ''

@@ -10,3 +10,4 @@ resources:
   - scanners/dmarc-report-cronjob
   - scanners/domain-dispatcher-cronjob
   - scanners/summaries-cronjob
+  - scanners/domain-discovery
