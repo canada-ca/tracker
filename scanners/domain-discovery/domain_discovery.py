@@ -18,10 +18,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASS = os.getenv("DB_PASS", "test")
-DB_NAME = os.getenv("DB_NAME", "track_dmarc")
-DB_URL = os.getenv("DB_URL", "http://localhost:8529")
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
+DB_NAME = os.getenv("DB_NAME")
+DB_URL = os.getenv("DB_URL")
 
 NAME = os.getenv("NAME", "domain-discovery")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.discovery")
