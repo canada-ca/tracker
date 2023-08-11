@@ -100,7 +100,7 @@ def domain_discovery(domain, orgId):
     except FileExistsError:
         os.chdir("domains")
 
-    subprocess.run(["findomain", "-t", domain, "-o"])
+    subprocess.run(["findomain", "-t", domain, "-o", "-q"])
     results = process_subdomains(domain, orgId)
     os.remove("{domain}.txt".format(domain=domain))
     os.chdir("..")
