@@ -43,12 +43,24 @@ export const requestDiscovery = new mutationWithClientMutationId({
     const user = await userRequired()
     verifiedRequired({ user })
 
+    // Keep feature to super admins while in beta
     const isSuperAdmin = await checkSuperAdmin()
     superAdminRequired({ user, isSuperAdmin })
 
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const domainInput = cleanseInput(args.domain)
+
+    // Check to see if domain is valid for subdomain discovery
+    // Discovery should not be performed on a domain that is not a subdomain of canada.ca or gc.ca, or on the root domains themselves
+    const regex = /^[A-Za-z0-9](?:[A-Za-z0-9\-.]+[A-Za-z0-9])?.(canada|gc).ca$/gm
+    const found = domainInput.match(regex)
+    if (typeof found === 'undefined' || found?.length !== 1) {
+      console.warn(
+        `User: ${userKey} attempted to start a subdomain discovery scan on: ${domainInput} however domain is not a valid domain.`,
+      )
+      throw new Error(i18n._(t`Unable to request a subdomain discovery scan on an invalid domain.`))
+    }
 
     // Check to see if domain exists
     const domain = await loadDomainByDomain.load(domainInput)

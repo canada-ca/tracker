@@ -16,7 +16,7 @@ import { useUserVar } from '../utilities/userState'
 import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
-import { ABTestingWrapper, ABTestVariant } from './ABTestWrapper'
+import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
 
 export const TopBanner = (props) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -77,14 +77,14 @@ export const TopBanner = (props) => {
 
         <PhaseBanner
           phase={
-            <ABTestingWrapper insiderVariantName="B">
+            <ABTestWrapper insiderVariantName="B">
               <ABTestVariant name="A">
                 <Trans>BETA</Trans>
               </ABTestVariant>
               <ABTestVariant name="B">
                 <Trans>PREVIEW</Trans>
               </ABTestVariant>
-            </ABTestingWrapper>
+            </ABTestWrapper>
           }
           ml={{ base: '0', md: 'auto' }}
           mr="2"
