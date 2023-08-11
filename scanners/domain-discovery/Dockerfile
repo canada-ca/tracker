@@ -44,6 +44,8 @@ COPY --from=python-builder /working/install/lib /usr/local/lib
 COPY domain_discovery.py ./
 
 RUN useradd -ms /bin/bash discovery
+RUN mkdir -p /domains
+RUN chown discovery /domains
 USER discovery
 
 CMD ["python3", "domain_discovery.py"]
