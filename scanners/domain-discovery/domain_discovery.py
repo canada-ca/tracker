@@ -36,14 +36,24 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
 def process_subdomains(base_domain, orgId):
-    f = open("{domain}.txt".format(domain=base_domain), "r")
+    try:
+        f = open("/tmp/{domain}.txt".format(domain=base_domain), "r")
+    except FileNotFoundError as e:
+        logging.error(
+            f"Opening {base_domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+        )
+        return []
     subdomains = f.readlines()
     subdomains = [domain.strip() for domain in subdomains]
     claimed_domains = get_claimed_domains(orgId)
     domains_to_scan = []
     for subdomain in subdomains:
-        if subdomain not in claimed_domains:
-            logging.info("Adding {subdomain} to DB".format(subdomain=subdomain))
+        if subdomain not in claimed_domains and subdomain.strip():
+            logging.info(
+                "Adding {subdomain} to org: {orgId}".format(
+                    subdomain=subdomain, orgId=orgId
+                )
+            )
             try:
                 checkDomain = (
                     db.collection("domains").find({"domain": subdomain}).next()
@@ -95,15 +105,29 @@ def get_claimed_domains(orgId):
 
 def domain_discovery(domain, orgId):
     try:
-        os.mkdir("domains")
-        os.chdir("domains")
-    except FileExistsError:
-        os.chdir("domains")
-
-    subprocess.run(["findomain", "-t", domain, "-o", "-q"])
+        subprocess.run(
+            [
+                "findomain",
+                "-t",
+                domain,
+                "-u",
+                "/tmp/{domain}.txt".format(domain=domain),
+                "-q",
+            ]
+        )
+    except Exception as e:
+        logging.error(
+            f"Running findomain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+        )
+        return []
     results = process_subdomains(domain, orgId)
-    os.remove("{domain}.txt".format(domain=domain))
-    os.chdir("..")
+    try:
+        os.remove("/tmp/{domain}.txt".format(domain=domain))
+    except FileNotFoundError as e:
+        logging.error(
+            f"Removing {domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+        )
+        pass
     return results
 
 
@@ -170,9 +194,11 @@ async def run(loop):
                 f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
             )
             try:
-                os.remove("{domain}.txt".format(domain=domain))
-                os.chdir("..")
-            except FileNotFoundError:
+                os.remove("/tmp/{domain}.txt".format(domain=domain))
+            except FileNotFoundError as e:
+                logging.error(
+                    f"Removing {domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                )
                 pass
             return
 
