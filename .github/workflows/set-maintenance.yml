@@ -16,7 +16,7 @@ on:
           - staging
           - production
           - gke
-          
+
       on_off:
         # Turning the maintenance page on or off
         description: 'Turn the maintenance page on or off'
@@ -51,3 +51,5 @@ jobs:
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: Set maintenance page ${{ inputs.on_off }} for ${{ inputs.deployment }}
+        commit_author: ${{ github.triggering_actor }} <${{ github.triggering_actor }}@users.noreply.github.com>
+        file_pattern: 'k8s/apps/overlays/${{ inputs.deployment }}/kustomization.yaml'
