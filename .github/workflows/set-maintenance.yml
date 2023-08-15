@@ -6,8 +6,6 @@ on:
       deployment:
         # Which deployment to adjust maintenance page
         description: 'Which deployment to adjust'
-        # Default value if no value is explicitly provided
-        default: 'staging'
         # Input has to be provided for the workflow to run
         required: true
         # The data type of the input
@@ -20,8 +18,6 @@ on:
       onOff:
         # Turning the maintenance page on or off
         description: 'Turn the maintenance page on or off'
-        # Default value if no value is explicitly provided
-        default: 'on'
         # Input has to be provided for the workflow to run
         required: true
         # The data type of the input
