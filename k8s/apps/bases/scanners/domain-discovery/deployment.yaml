@@ -34,6 +34,8 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
+            - name: DOMAINS_TXT_PATH
+              value: /tmp
             - name: PUBLISH_TO
               value: domains
             - name: SUBSCRIBE_TO
