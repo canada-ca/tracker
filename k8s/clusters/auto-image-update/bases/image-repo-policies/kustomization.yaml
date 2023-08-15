@@ -6,6 +6,7 @@ resources:
   - dns-processor-image-repo-policy.yaml
   - dns-scanner-image-repo-policy.yaml
   - domain-cleanup-image-repo-policy.yaml
+  - domain-discovery-image-repo-policy.yaml
   - domain-dispatcher-image-repo-policy.yaml
   - frontend-image-repo-policy.yaml
   - guidance-image-repo-policy.yaml

@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react'
 
 import { FIND_MY_USERS } from '../graphql/queries'
-import { CLOSE_ACCOUNT, SIGN_OUT } from '../graphql/mutations'
+import { CLOSE_ACCOUNT_OTHER } from '../graphql/mutations'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
@@ -70,7 +70,7 @@ export function SuperAdminUserList({ permission }) {
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
   const [closeAccount, { loading: loadingCloseAccount }] = useMutation(
-    CLOSE_ACCOUNT,
+    CLOSE_ACCOUNT_OTHER,
     {
       refetchQueries: ['FindMyUsers'],
       awaitRefetchQueries: true,

@@ -36,7 +36,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { useUserVar } from '../utilities/userState'
-import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT, SIGN_OUT } from '../graphql/mutations'
+import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT_SELF, SIGN_OUT } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
 import { InsideUserSwitch } from './InsideUserSwitch'
 import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
@@ -71,7 +71,7 @@ export default function UserPage() {
     },
   })
 
-  const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT, {
+  const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT_SELF, {
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),

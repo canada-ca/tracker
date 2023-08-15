@@ -11,6 +11,7 @@ resources:
   - ../../bases/scanners/dmarc-report-cronjob
   - ../../bases/scanners/domain-dispatcher-cronjob
   - ../../bases/scanners/summaries-cronjob
+  - ../../bases/scanners/domain-discovery
 replicas:
   - name: tracker-api
     count: 2

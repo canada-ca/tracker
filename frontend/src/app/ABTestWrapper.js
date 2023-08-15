@@ -12,7 +12,7 @@ export function ABTestVariant({ children }) {
   return <>{children}</>
 }
 
-export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
+export function ABTestWrapper({ children, insiderVariantName = 'B' }) {
   const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const { currentUser } = useUserVar()
   let childIndex = 0
@@ -49,7 +49,7 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
 ABTestVariant.propTypes = {
   children: any,
 }
-ABTestingWrapper.propTypes = {
+ABTestWrapper.propTypes = {
   insiderVariantName: string,
   children: any,
 }

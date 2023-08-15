@@ -329,8 +329,8 @@ export const getTypeNames = () => gql`
     # The ID of an object
     id: ID!
 
-    # Date string the activity occurred.
-    timestamp: Date
+    # Datetime string the activity occurred.
+    timestamp: DateTime
 
     # Username of admin that initiated the activity.
     initiatedBy: InitiatedBy
@@ -346,7 +346,7 @@ export const getTypeNames = () => gql`
   }
 
   # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the 'date-time' format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-  scalar Date
+  scalar DateTime
 
   # Information on the user that initiated the logged action
   type InitiatedBy {
@@ -614,10 +614,10 @@ export const getTypeNames = () => gql`
     # DNS scan results.
     dnsScan(
       # Start date for date filter.
-      startDate: Date
+      startDate: DateTime
 
       # End date for date filter.
-      endDate: Date
+      endDate: DateTime
 
       # Ordering options for DNS connections.
       orderBy: DNSOrder
@@ -641,10 +641,10 @@ export const getTypeNames = () => gql`
     # HTTPS, and TLS scan results.
     web(
       # Start date for date filter.
-      startDate: Date
+      startDate: DateTime
 
       # End date for date filter.
-      endDate: Date
+      endDate: DateTime
 
       # Ordering options for web connections.
       orderBy: WebOrder
@@ -805,8 +805,8 @@ export const getTypeNames = () => gql`
 
     # CSV formatted output of all domains in the organization including their email and web scan statuses.
     toCsv(
-      # Filters domains by blocked status.
-      blocked: Boolean
+      # Filters used to limit domains returned.
+      filters: [DomainFilter]
     ): String
 
     # The domains which are associated with this organization.
@@ -929,34 +929,16 @@ export const getTypeNames = () => gql`
     percentage: Float
   }
 
-  # A connection to a list of items.
-  type DomainConnection {
-    # Information to aid in pagination.
-    pageInfo: PageInfo!
+  # This object is used to provide filtering options when querying org-claimed domains.
+  input DomainFilter {
+    # Category of filter to be applied.
+    filterCategory: DomainOrderField
 
-    # A list of edges.
-    edges: [DomainEdge]
+    # First value equals or does not equal second value.
+    comparison: ComparisonEnums
 
-    # The total amount of domains the user has access to.
-    totalCount: Int
-  }
-
-  # An edge in a connection.
-  type DomainEdge {
-    # The item at the end of the edge
-    node: Domain
-
-    # A cursor for use in pagination
-    cursor: String!
-  }
-
-  # Ordering options for domain connections.
-  input DomainOrder {
-    # The field to order domains by.
-    field: DomainOrderField!
-
-    # The ordering direction.
-    direction: OrderDirection!
+    # Status type or tag label.
+    filterValue: filterValueEnums
   }
 
   # Properties by which domain connections can be ordered.
@@ -996,18 +978,6 @@ export const getTypeNames = () => gql`
 
     # Order domains by tags.
     TAGS
-  }
-
-  # This object is used to provide filtering options when querying org-claimed domains.
-  input DomainFilter {
-    # Category of filter to be applied.
-    filterCategory: DomainOrderField
-
-    # First value equals or does not equal second value.
-    comparison: ComparisonEnums
-
-    # Status type or tag label.
-    filterValue: filterValueEnums
   }
 
   #
@@ -1077,6 +1047,36 @@ export const getTypeNames = () => gql`
 
     # French label for tagging domains that are outside the scope of the project.
     EXTERIEUR
+  }
+
+  # A connection to a list of items.
+  type DomainConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [DomainEdge]
+
+    # The total amount of domains the user has access to.
+    totalCount: Int
+  }
+
+  # An edge in a connection.
+  type DomainEdge {
+    # The item at the end of the edge
+    node: Domain
+
+    # A cursor for use in pagination
+    cursor: String!
+  }
+
+  # Ordering options for domain connections.
+  input DomainOrder {
+    # The field to order domains by.
+    field: DomainOrderField!
+
+    # The ordering direction.
+    direction: OrderDirection!
   }
 
   # A connection to a list of items.
@@ -1332,7 +1332,7 @@ export const getTypeNames = () => gql`
     domain: String
 
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
     # String of the base domain the scan was run on.
     baseDomain: String
@@ -1590,7 +1590,7 @@ export const getTypeNames = () => gql`
     domain: String
 
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
     # Results of the web scan at each IP address.
     results: [WebScan]
@@ -1611,7 +1611,7 @@ export const getTypeNames = () => gql`
   # Results of TLS and HTTP connection scans on the given domain.
   type WebScanResult {
     # The time when the scan was initiated.
-    timestamp: Date
+    timestamp: DateTime
 
     # The result for the TLS scan for the scanned server.
     tlsResult: TLSResult
@@ -2593,7 +2593,7 @@ export const getTypeNames = () => gql`
     domain: DomainScalar
 
     # The last time that a scan was ran on this domain.
-    lastRan: Date
+    lastRan: DateTime
 
     # The domains scan status, based on the latest scan data.
     status: DomainStatus
@@ -2835,6 +2835,9 @@ export const getTypeNames = () => gql`
     # This mutation allows the removal of unused domains.
     removeOrganizationsDomains(input: RemoveOrganizationsDomainsInput!): RemoveOrganizationsDomainsPayload
 
+    # This mutation is used to start a subdomain discovery scan on a requested domain.
+    requestDiscovery(input: RequestDiscoveryInput!): RequestDiscoveryPayload
+
     # This mutation is used to start a manual scan on a requested domain.
     requestScan(input: RequestScanInput!): RequestScanPayload
 
@@ -2862,8 +2865,11 @@ export const getTypeNames = () => gql`
     # This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.
     authenticate(input: AuthenticateInput!): AuthenticatePayload
 
-    # This mutation allows a user to close their account, or a super admin to close another user's account.
-    closeAccount(input: CloseAccountInput!): CloseAccountPayload
+    # This mutation allows a super admin to close another user's account.
+    closeAccountOther(input: CloseAccountOtherInput!): CloseAccountOtherPayload
+
+    # This mutation allows a user to close their account.
+    closeAccountSelf(input: CloseAccountSelfInput!): CloseAccountSelfPayload
 
     # This mutation allows users to give their current auth token, and refresh token, and receive a freshly updated auth token.
     refreshTokens(input: RefreshTokensInput!): RefreshTokensPayload
@@ -3287,6 +3293,21 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
+  type RequestDiscoveryPayload {
+    # Informs the user if the scan was dispatched successfully.
+    status: String
+    clientMutationId: String
+  }
+
+  input RequestDiscoveryInput {
+    # The base domain that the subdomain scan will be ran on.
+    domain: DomainScalar
+
+    # The global id of the organization you wish to assign new found domains to.
+    orgId: ID!
+    clientMutationId: String
+  }
+
   type RequestScanPayload {
     # Informs the user if the scan was dispatched successfully.
     status: String
@@ -3562,7 +3583,7 @@ export const getTypeNames = () => gql`
     clientMutationId: String
   }
 
-  type CloseAccountPayload {
+  type CloseAccountOtherPayload {
     # 'CloseAccountUnion' returning either a 'CloseAccountResult', or 'CloseAccountError' object.
     result: CloseAccountUnion
     clientMutationId: String
@@ -3586,9 +3607,19 @@ export const getTypeNames = () => gql`
     description: String
   }
 
-  input CloseAccountInput {
+  input CloseAccountOtherInput {
     # The user id of a user you want to close the account of.
     userId: ID
+    clientMutationId: String
+  }
+
+  type CloseAccountSelfPayload {
+    # 'CloseAccountUnion' returning either a 'CloseAccountResult', or 'CloseAccountError' object.
+    result: CloseAccountUnion
+    clientMutationId: String
+  }
+
+  input CloseAccountSelfInput {
     clientMutationId: String
   }
 

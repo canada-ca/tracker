@@ -44,6 +44,7 @@ const {
   const jsm = await nc.jetstreamManager()
 
   await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
+  await jsm.streams.add({ name: 'domain-discovery', subjects: ['domains.*.discovery'] })
 
   // create a jetstream client:
   const js = nc.jetstream()
@@ -51,8 +52,8 @@ const {
   // eslint-disable-next-line new-cap
   const jc = JSONCodec()
 
-  const publish = async ({ channel, msg }) => {
-    await js.publish(channel, jc.encode(msg))
+  const publish = async ({ channel, msg, options = {} }) => {
+    await js.publish(channel, jc.encode(msg), options)
   }
 
   const server = await Server({
@@ -89,9 +90,7 @@ const {
     tracing,
   })
 
-  console.log(
-    `Starting server with "LOGIN_REQUIRED" set to "${LOGIN_REQUIRED}"`,
-  )
+  console.log(`Starting server with "LOGIN_REQUIRED" set to "${LOGIN_REQUIRED}"`)
 
   await server.listen(PORT, (err) => {
     if (err) throw err

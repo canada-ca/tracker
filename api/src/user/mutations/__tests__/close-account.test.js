@@ -143,7 +143,7 @@ describe('given the closeAccount mutation', () => {
           schema,
           `
             mutation {
-              closeAccount(input: {}) {
+              closeAccountSelf(input: {}) {
                 result {
                   ... on CloseAccountResult {
                     status
@@ -221,7 +221,7 @@ describe('given the closeAccount mutation', () => {
             schema,
             `
               mutation {
-                closeAccount(input: {}) {
+                closeAccountSelf(input: {}) {
                   result {
                     ... on CloseAccountResult {
                       status
@@ -271,7 +271,7 @@ describe('given the closeAccount mutation', () => {
 
           const expectedResponse = {
             data: {
-              closeAccount: {
+              closeAccountSelf: {
                 result: {
                   status: 'Successfully closed account.',
                 },
@@ -303,7 +303,7 @@ describe('given the closeAccount mutation', () => {
             schema,
             `
               mutation {
-                closeAccount(input: {}) {
+                closeAccountSelf(input: {}) {
                   result {
                     ... on CloseAccountResult {
                       status
@@ -353,7 +353,7 @@ describe('given the closeAccount mutation', () => {
 
           const expectedResponse = {
             data: {
-              closeAccount: {
+              closeAccountSelf: {
                 result: {
                   status: 'Le compte a été fermé avec succès.',
                 },
@@ -370,7 +370,7 @@ describe('given the closeAccount mutation', () => {
           schema,
           `
             mutation {
-              closeAccount(input: {}) {
+              closeAccountSelf(input: {}) {
                 result {
                   ... on CloseAccountResult {
                     status
@@ -538,7 +538,7 @@ describe('given the closeAccount mutation', () => {
           schema,
           `
             mutation {
-              closeAccount(input: {}) {
+              closeAccountSelf(input: {}) {
                 result {
                   ... on CloseAccountResult {
                     status
@@ -622,7 +622,7 @@ describe('given the closeAccount mutation', () => {
             schema,
             `
               mutation {
-                closeAccount(input: {}) {
+                closeAccountSelf(input: {}) {
                   result {
                     ... on CloseAccountResult {
                       status
@@ -677,7 +677,7 @@ describe('given the closeAccount mutation', () => {
 
           const expectedResponse = {
             data: {
-              closeAccount: {
+              closeAccountSelf: {
                 result: {
                   status: 'Successfully closed account.',
                 },
@@ -709,7 +709,7 @@ describe('given the closeAccount mutation', () => {
             schema,
             `
               mutation {
-                closeAccount(input: {}) {
+                closeAccountSelf(input: {}) {
                   result {
                     ... on CloseAccountResult {
                       status
@@ -764,7 +764,7 @@ describe('given the closeAccount mutation', () => {
 
           const expectedResponse = {
             data: {
-              closeAccount: {
+              closeAccountSelf: {
                 result: {
                   status: 'Le compte a été fermé avec succès.',
                 },
@@ -781,7 +781,7 @@ describe('given the closeAccount mutation', () => {
           schema,
           `
             mutation {
-              closeAccount(input: {
+              closeAccountOther(input:{
                 userId: "${toGlobalId('user', user._key)}"
               }) {
                 result {
@@ -867,7 +867,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {
+                  closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
@@ -907,7 +907,7 @@ describe('given the closeAccount mutation', () => {
 
             const expectedResponse = {
               data: {
-                closeAccount: {
+                closeAccountOther: {
                   result: {
                     code: 400,
                     description: "Permission error: Unable to close other user's account.",
@@ -928,7 +928,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {
+                  closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
@@ -971,7 +971,7 @@ describe('given the closeAccount mutation', () => {
 
             const expectedResponse = {
               data: {
-                closeAccount: {
+                closeAccountOther: {
                   result: {
                     code: 400,
                     description: 'Unable to close account of an undefined user.',
@@ -1005,7 +1005,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {}) {
+                  closeAccountSelf(input: {}) {
                     result {
                       ... on CloseAccountResult {
                         status
@@ -1069,7 +1069,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {}) {
+                  closeAccountSelf(input: {}) {
                     result {
                       ... on CloseAccountResult {
                         status
@@ -1134,7 +1134,7 @@ describe('given the closeAccount mutation', () => {
             schema,
             `
               mutation {
-                closeAccount(input: {}) {
+                closeAccountSelf(input: {}) {
                   result {
                     ... on CloseAccountResult {
                       status
@@ -1204,7 +1204,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {
+                  closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
@@ -1244,7 +1244,7 @@ describe('given the closeAccount mutation', () => {
 
             const expectedResponse = {
               data: {
-                closeAccount: {
+                closeAccountOther: {
                   result: {
                     code: 400,
                     description: "Erreur de permission: Impossible de fermer le compte d'un autre utilisateur.",
@@ -1265,7 +1265,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {
+                  closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
                   }) {
                     result {
@@ -1308,7 +1308,7 @@ describe('given the closeAccount mutation', () => {
 
             const expectedResponse = {
               data: {
-                closeAccount: {
+                closeAccountOther: {
                   result: {
                     code: 400,
                     description: "Impossible de fermer le compte d'un utilisateur non défini.",
@@ -1342,7 +1342,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {}) {
+                  closeAccountSelf(input: {}) {
                     result {
                       ... on CloseAccountResult {
                         status
@@ -1406,7 +1406,7 @@ describe('given the closeAccount mutation', () => {
               schema,
               `
                 mutation {
-                  closeAccount(input: {}) {
+                  closeAccountSelf(input: {}) {
                     result {
                       ... on CloseAccountResult {
                         status
@@ -1471,7 +1471,7 @@ describe('given the closeAccount mutation', () => {
             schema,
             `
               mutation {
-                closeAccount(input: {}) {
+                closeAccountSelf(input: {}) {
                   result {
                     ... on CloseAccountResult {
                       status
