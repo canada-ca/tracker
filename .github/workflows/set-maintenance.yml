@@ -46,4 +46,8 @@ jobs:
     - name: Update maintenance value
       run: |
         if [ "${{ inputs.on_off }}" == "on" ]; then PREFIX=""; else PREFIX="#"; fi
-        sed "s/\s*#\{0,1\}\s*\(- \.\.\/\.\.\/bases\/frontend\/maintenance-override-component\)/${PREFIX}  \1/g" k8s/apps/overlays/${{ inputs.deployment }}/kustomization.yaml
+        sed -i "s/\s*#\{0,1\}\s*\(- \.\.\/\.\.\/bases\/frontend\/maintenance-override-component\)/${PREFIX}  \1/g" k8s/apps/overlays/${{ inputs.deployment }}/kustomization.yaml
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Set maintenance page ${{ inputs.on_off }} for ${{ inputs.deployment }}
