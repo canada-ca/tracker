@@ -1,6 +1,9 @@
 name: Set/Remove Maintenance Page
 
 on:
+  push:
+    branches:
+      - add-maintenance-page
   workflow_dispatch:
     inputs:
       deployment:
@@ -42,7 +45,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+      with:
+        ref: add-maintenance-page
+
     - name: Update maintenance value
       run: |
         if [ "${{ inputs.on_off }}" == "on" ]; then PREFIX=""; else PREFIX="#"; fi
