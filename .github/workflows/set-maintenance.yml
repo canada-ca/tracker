@@ -11,9 +11,9 @@ on:
         # The data type of the input
         type: choice
         options:
-          - staging
-          - production
-          - gke
+          - 'staging'
+          - 'production'
+          - 'gke'
 
       onOff:
         # Turning the maintenance page on or off
@@ -23,8 +23,8 @@ on:
         # The data type of the input
         type: choice
         options:
-          - on
-          - off
+          - 'on'
+          - 'off'
 
 jobs:
   update_value:
