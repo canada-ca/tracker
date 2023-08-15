@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       deployment:
-        # Which deployement to adjust maintenance page
+        # Which deployment to adjust maintenance page
         description: 'Which deployment to adjust'
         # Default value if no value is explicitly provided
         default: 'staging'
@@ -17,7 +17,7 @@ on:
           - production
           - gke
 
-      on_off:
+      onOff:
         # Turning the maintenance page on or off
         description: 'Turn the maintenance page on or off'
         # Default value if no value is explicitly provided
@@ -45,11 +45,11 @@ jobs:
 
     - name: Update maintenance value
       run: |
-        if [ "${{ inputs.on_off }}" == "on" ]; then PREFIX=""; else PREFIX="#"; fi
+        if [ "${{ inputs.onOff }}" == "on" ]; then PREFIX=""; else PREFIX="#"; fi
         sed -i "s/\s*#\{0,1\}\s*\(- \.\.\/\.\.\/bases\/frontend\/maintenance-override-component\)/${PREFIX}  \1/g" k8s/apps/overlays/${{ inputs.deployment }}/kustomization.yaml
 
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: Set maintenance page ${{ inputs.on_off }} for ${{ inputs.deployment }}
+        commit_message: Set maintenance page ${{ inputs.onOff }} for ${{ inputs.deployment }}
         commit_author: ${{ github.triggering_actor }} <${{ github.triggering_actor }}@users.noreply.github.com>
         file_pattern: 'k8s/apps/overlays/${{ inputs.deployment }}/kustomization.yaml'
