@@ -30,6 +30,8 @@ QUEUE_GROUP = os.getenv("QUEUE_GROUP", "domain-discovery")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
+DOMAIN_TXT_PATH = os.getenv("DOMAIN_TXT_PATH", "/tmp")
+
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
@@ -37,7 +39,9 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 def process_subdomains(base_domain, orgId):
     try:
-        f = open("/tmp/{domain}.txt".format(domain=base_domain), "r")
+        f = open(
+            "{path}/{domain}.txt".format(domain=base_domain, path=DOMAIN_TXT_PATH), "r"
+        )
     except FileNotFoundError as e:
         logging.error(
             f"Opening {base_domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
@@ -111,7 +115,7 @@ def domain_discovery(domain, orgId):
                 "-t",
                 domain,
                 "-u",
-                "/tmp/{domain}.txt".format(domain=domain),
+                "{path}/{domain}.txt".format(domain=domain, path=DOMAIN_TXT_PATH),
                 "-q",
             ]
         )
@@ -122,7 +126,7 @@ def domain_discovery(domain, orgId):
         return []
     results = process_subdomains(domain, orgId)
     try:
-        os.remove("/tmp/{domain}.txt".format(domain=domain))
+        os.remove("{path}/{domain}.txt".format(domain=domain, path=DOMAIN_TXT_PATH))
     except FileNotFoundError as e:
         logging.error(
             f"Removing {domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
@@ -194,7 +198,9 @@ async def run(loop):
                 f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
             )
             try:
-                os.remove("/tmp/{domain}.txt".format(domain=domain))
+                os.remove(
+                    "{path}/{domain}.txt".format(domain=domain, path=DOMAIN_TXT_PATH)
+                )
             except FileNotFoundError as e:
                 logging.error(
                     f"Removing {domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
