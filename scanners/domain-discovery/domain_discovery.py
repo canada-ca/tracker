@@ -11,6 +11,8 @@ import json
 import signal
 import traceback
 
+import dns.resolver
+
 load_dotenv()
 
 logging.basicConfig(
@@ -52,7 +54,11 @@ def process_subdomains(base_domain, orgId):
     claimed_domains = get_claimed_domains(orgId)
     domains_to_scan = []
     for subdomain in subdomains:
-        if subdomain not in claimed_domains and subdomain.strip():
+        if (
+            subdomain not in claimed_domains
+            and subdomain.strip()
+            and check_live(subdomain)
+        ):
             logging.info(
                 "Adding {subdomain} to org: {orgId}".format(
                     subdomain=subdomain, orgId=orgId
@@ -105,6 +111,23 @@ def get_claimed_domains(orgId):
         count=True,
     )
     return [document for document in cursor]
+
+
+def check_live(domain):
+    try:
+        dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
+        return True
+    except (
+        dns.resolver.NoAnswer,
+        dns.resolver.NXDOMAIN,
+        dns.resolver.NoNameservers,
+        dns.exception.Timeout,
+        dns.name.EmptyLabel,
+        dns.name.LabelTooLong,
+    ):
+        return False
+    except Exception:
+        return False
 
 
 def domain_discovery(domain, orgId):
