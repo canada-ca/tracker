@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: domain-discovery
-          image: gcr.io/track-compliance/domain-discovery:master-46dfb23-1692123439 # {"$imagepolicy": "flux-system:domain-discovery"}
+          image: gcr.io/track-compliance/domain-discovery:master-46dfb23-1692125204 # {"$imagepolicy": "flux-system:domain-discovery"}
           env:
             - name: DB_NAME
               value: track_dmarc
