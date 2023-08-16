@@ -7,8 +7,6 @@ COPY ./html /usr/share/nginx/html
 
 WORKDIR /app
 
-#USER nginx
-
 EXPOSE 8080
 
 CMD ["nginx-debug", "-g", "daemon off;"]
