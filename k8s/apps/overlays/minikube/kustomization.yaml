@@ -25,3 +25,5 @@ replicas:
     count: 1
   - name: web-processor
     count: 1
+components:
+#  - ../../bases/frontend/maintenance-override-component

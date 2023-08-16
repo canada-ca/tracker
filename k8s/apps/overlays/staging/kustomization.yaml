@@ -23,3 +23,5 @@ replicas:
     count: 13
 patchesStrategicMerge:
   - domain-dispatcher-suspend-patch.yaml
+components:
+#  - ../../bases/frontend/maintenance-override-component

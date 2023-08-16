@@ -9,6 +9,7 @@ resources:
   - domain-discovery-image-repo-policy.yaml
   - domain-dispatcher-image-repo-policy.yaml
   - frontend-image-repo-policy.yaml
+  - frontend-maintenance-image-repo-policy.yaml
   - guidance-image-repo-policy.yaml
   - log4shell-processor-image-repo-policy.yaml
   - log4shell-scanner-image-repo-policy.yaml
