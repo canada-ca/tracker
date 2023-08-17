@@ -22,7 +22,9 @@ const getNewAuditLogs = async ({ query, orgKey, days = 1 }) => {
     throw new Error(`Cursor error occurred while trying to find audit logs: ${err}`)
   }
 
-  return auditLogs
+  // do not send out emails if only scans and exports
+  if (auditLogs.length === auditLogs.filter((log) => ['scan', 'export'].includes(log.action))) return []
+  else return auditLogs
 }
 
 module.exports = {
