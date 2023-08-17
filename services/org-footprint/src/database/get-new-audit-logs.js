@@ -23,7 +23,7 @@ const getNewAuditLogs = async ({ query, orgKey, days = 1 }) => {
   }
 
   // do not send out emails if only scans and exports
-  if (auditLogs.length === auditLogs.filter((log) => ['scan', 'export'].includes(log.action))) return []
+  if (auditLogs.length === auditLogs.filter((log) => ['scan', 'export'].includes(log.action)).length) return []
   else return auditLogs
 }
 
