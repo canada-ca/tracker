@@ -65,7 +65,7 @@
     "@lingui/loader": "^3.13.0",
     "@lingui/macro": "^3.13.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^27.4.6",
+    "babel-jest": "^29.6.3",
     "babel-plugin-macros": "^3.1.0",
     "babel-polyfill": "^6.26.0",
     "eslint": "^7.32.0",
