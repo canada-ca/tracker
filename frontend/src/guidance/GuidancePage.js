@@ -158,6 +158,11 @@ function GuidancePage() {
             <Trans>Scan Pending</Trans>
           </Badge>
         )}
+        {data.findDomainByDomain.wildcardSibling && (
+          <Badge colorScheme="red" alignSelf="center" fontSize="md">
+            <Trans>Wildcard</Trans>*
+          </Badge>
+        )}
         {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={domainName} ml="2" />}
         {data.findDomainByDomain.hasDMARCReport && (
           <Button
