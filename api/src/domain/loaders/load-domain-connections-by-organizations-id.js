@@ -390,6 +390,11 @@ export const loadDomainConnectionsByOrgId =
             ${domainFilters}
             FILTER domain.blocked ${comparison} true
           `
+          } else if (filterValue === 'wildcard-sibling') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.wildcardSibling ${comparison} true
+          `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`
             ${domainFilters}

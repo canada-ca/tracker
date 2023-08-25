@@ -74,6 +74,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.blocked ${comparison} true
           `
+          } else if (filterValue === 'wildcard-sibling') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.wildcardSibling ${comparison} true
+          `
           } else {
             domainFilters = aql`
             ${domainFilters}
@@ -104,6 +109,7 @@ export const loadOrganizationDomainStatuses =
               hidden: e.hidden,
               rcode: v.rcode,
               blocked: v.blocked,
+              wildcardSibling: v.wildcardSibling,
             }
           `
       ).all()
