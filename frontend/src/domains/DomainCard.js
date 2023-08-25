@@ -22,6 +22,7 @@ import { StarIcon } from '@chakra-ui/icons'
 import { FAVOURITE_DOMAIN, UNFAVOURITE_DOMAIN } from '../graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserVar } from '../utilities/userState'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function DomainCard({
   id,
@@ -138,9 +139,13 @@ export function DomainCard({
               </Badge>
             )}
             {wildcardSibling && (
-              <Badge colorScheme="red" mr="auto" alignSelf="center">
-                <Trans>Wildcard</Trans>*
-              </Badge>
+              <ABTestWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  <Badge colorScheme="red" mr="auto" alignSelf="center">
+                    <Trans>Wildcard</Trans>*
+                  </Badge>
+                </ABTestVariant>
+              </ABTestWrapper>
             )}
             {webScanPending && (
               <Badge color="info" mr="auto" alignSelf="center">
