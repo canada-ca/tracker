@@ -8,7 +8,8 @@ import { SummaryCard } from './SummaryCard'
 import theme from '../theme/canada'
 
 export function SummaryGroup({ summaries }) {
-  const { fail, pass } = theme.colors.summaries
+  const { darkOrange: pass } = theme.colors.tracker.logo
+  const { dark: fail } = theme.colors.tracker.cool
   const webCategoryDisplay = {
     fail: {
       name: t`Non-compliant`,
