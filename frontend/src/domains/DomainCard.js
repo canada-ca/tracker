@@ -33,6 +33,7 @@ export function DomainCard({
   isArchived,
   rcode,
   blocked,
+  wildcardSibling,
   webScanPending,
   userHasPermission,
   ...rest
@@ -134,6 +135,11 @@ export function DomainCard({
             {blocked && (
               <Badge colorScheme="red" mr="auto" alignSelf="center">
                 <Trans>Blocked</Trans>
+              </Badge>
+            )}
+            {wildcardSibling && (
+              <Badge colorScheme="red" mr="auto" alignSelf="center">
+                <Trans>Wildcard</Trans>*
               </Badge>
             )}
             {webScanPending && (
@@ -267,6 +273,7 @@ DomainCard.propTypes = {
   isHidden: bool,
   isArchived: bool,
   blocked: bool,
+  wildcardSibling: bool,
   webScanPending: bool,
   userHasPermission: bool,
 }

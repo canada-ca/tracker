@@ -601,6 +601,7 @@ export const PAGINATED_DOMAINS = gql`
           domain
           rcode
           blocked
+          wildcardSibling
           webScanPending
           status {
             ...RequiredDomainStatusFields

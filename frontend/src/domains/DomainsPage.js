@@ -96,7 +96,21 @@ export default function DomainsPage() {
       )}
       mb="4"
     >
-      {({ id, domain, status, hasDMARCReport, archived, rcode, blocked, webScanPending, userHasPermission }, index) => (
+      {(
+        {
+          id,
+          domain,
+          status,
+          hasDMARCReport,
+          archived,
+          rcode,
+          blocked,
+          wildcardSibling,
+          webScanPending,
+          userHasPermission,
+        },
+        index,
+      ) => (
         <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
           <DomainCard
             id={id}
@@ -106,6 +120,7 @@ export default function DomainsPage() {
             isArchived={archived}
             rcode={rcode}
             blocked={blocked}
+            wildcardSibling={wildcardSibling}
             webScanPending={webScanPending}
             userHasPermission={userHasPermission}
             mb="3"

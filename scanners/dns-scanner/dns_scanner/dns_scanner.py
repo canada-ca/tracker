@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import time
+import re
 
 import dns.resolver
 from checkdmarc import *
@@ -26,6 +27,7 @@ class DNSScanResult:
     dkim: dict = None
     spf: dict = None
     dmarc: dict = None
+    wildcard_sibling: bool = None
 
 
 def scan_domain(domain, dkim_selectors=None):
@@ -66,6 +68,14 @@ def scan_domain(domain, dkim_selectors=None):
     else:
         scan_result.resolve_ips = None
         scan_result.resolve_chain = None
+
+    # Check for wildcard sibling domains
+    try:
+        wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
+        dns.resolver.resolve(wildcard_sibling_domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False)
+        scan_result.wildcard_sibling = True
+    except NXDOMAIN:
+        scan_result.wildcard_sibling = False
 
     # Get first CNAME record (in case there is no A record in chain). Checking if chain is valid.
     try:

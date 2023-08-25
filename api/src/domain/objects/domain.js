@@ -76,6 +76,11 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLBoolean,
       resolve: ({ blocked }) => blocked,
     },
+    wildcardSibling: {
+      description: 'Value that determines if a domain has a wildcard sibling.',
+      type: GraphQLBoolean,
+      resolve: ({ wildcardSibling }) => wildcardSibling,
+    },
     webScanPending: {
       description: 'Value that determines if a domain has a web scan pending.',
       type: GraphQLBoolean,
