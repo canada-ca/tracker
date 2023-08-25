@@ -214,6 +214,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       lastRan
       rcode
       blocked
+      wildcardSibling
       webScanPending
       status {
         ...RequiredDomainStatusFields
@@ -553,6 +554,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             archived
             rcode
             blocked
+            wildcardSibling
             webScanPending
             userHasPermission
           }
@@ -601,6 +603,7 @@ export const PAGINATED_DOMAINS = gql`
           domain
           rcode
           blocked
+          wildcardSibling
           webScanPending
           status {
             ...RequiredDomainStatusFields
@@ -1062,6 +1065,7 @@ export const MY_TRACKER_DOMAINS = gql`
             }
             archived
             blocked
+            wildcardSibling
             webScanPending
           }
           cursor

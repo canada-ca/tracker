@@ -123,6 +123,7 @@ export const organizationType = new GraphQLObjectType({
           'hidden',
           'rcode',
           'blocked',
+          'wildcardSibling',
         ]
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
@@ -130,7 +131,9 @@ export const organizationType = new GraphQLObjectType({
           csvLine += headers.slice(1, 10).reduce((previousValue, currentHeader) => {
             return `${previousValue},${domain.status[currentHeader]}`
           }, '')
-          csvLine += `,${domain.tags.join('|')},${domain.hidden},${domain.rcode},${domain.blocked}`
+          csvLine += `,${domain.tags.join('|')},${domain.hidden},${domain.rcode},${domain.blocked},${
+            domain.wildcardSibling
+          }`
           csvOutput += `\n${csvLine}`
         })
 

@@ -170,6 +170,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
     { value: t`OUTSIDE`, text: t`Outside` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },

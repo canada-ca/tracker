@@ -581,6 +581,9 @@ export const getTypeNames = () => gql`
     # Value that determines if a domain is possibly blocked.
     blocked: Boolean
 
+    # Value that determines if a domain has a wildcard sibling.
+    wildcardSibling: Boolean
+
     # Value that determines if a domain has a web scan pending.
     webScanPending: Boolean
 

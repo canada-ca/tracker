@@ -154,8 +154,10 @@ async def run(loop):
                     domain["status"][key] = val
 
                 dmarc_phase = processed_results.get("dmarc").get("phase")
+                wildcard_sibling = processed_results.get("wildcard_sibling")
 
                 domain.update({"phase": dmarc_phase})
+                domain.update({"wildcardSibling": wildcard_sibling})
                 domain.update({"rcode": rcode})
                 domain.update({"webScanPending": True})
 

@@ -111,6 +111,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: t`OUTSIDE`, text: t`Outside` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
@@ -259,6 +260,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             archived,
             rcode,
             blocked,
+            wildcardSibling,
             webScanPending,
             userHasPermission,
           },
@@ -275,6 +277,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               rcode={rcode}
               isArchived={archived}
               blocked={blocked}
+              wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
               mb="3"
@@ -336,6 +339,10 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         />
         <InfoBox title={`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
         <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
+        <InfoBox
+          title={t`WILDCARD`}
+          info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
+        />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
       </InfoPanel>
 
