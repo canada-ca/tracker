@@ -26,6 +26,7 @@ import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 function GuidancePage() {
   const { domainSlug: domain } = useParams()
@@ -159,9 +160,13 @@ function GuidancePage() {
           </Badge>
         )}
         {data.findDomainByDomain.wildcardSibling && (
-          <Badge colorScheme="red" alignSelf="center" fontSize="md">
-            <Trans>Wildcard</Trans>*
-          </Badge>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <Badge colorScheme="red" alignSelf="center" fontSize="md">
+                <Trans>Wildcard</Trans>*
+              </Badge>
+            </ABTestVariant>
+          </ABTestWrapper>
         )}
         {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={domainName} ml="2" />}
         {data.findDomainByDomain.hasDMARCReport && (
