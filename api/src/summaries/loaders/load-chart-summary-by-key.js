@@ -1,35 +1,32 @@
 import DataLoader from 'dataloader'
-import {t} from '@lingui/macro'
+import { t } from '@lingui/macro'
+import { aql } from 'arangojs'
 
-export const loadChartSummaryByKey = ({query, userKey, i18n}) =>
-  new DataLoader(async (keys) => {
+export const loadChartSummaryByKey = ({ query, userKey, i18n }) =>
+  new DataLoader(async (key) => {
+    const today = aql`${new Date().toISOString().split('T')[0]}`
+
     let cursor
 
     try {
       cursor = await query`
         WITH chartSummaries
         FOR summary IN chartSummaries
-          FILTER summary._key IN ${keys}
-          RETURN MERGE({ id: summary._key }, summary)
+          FILTER summary.date == ${today}
+          RETURN summary
       `
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`,
-      )
+      console.error(`Database error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`)
       throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }
 
-    const summaryMap = {}
+    let summaries
     try {
-      await cursor.forEach((summary) => {
-        summaryMap[summary._key] = summary
-      })
+      summaries = await cursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`,
-      )
+      console.error(`Cursor error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`)
       throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }
 
-    return keys.map((key) => summaryMap[key])
+    return summaries[key]
   })
