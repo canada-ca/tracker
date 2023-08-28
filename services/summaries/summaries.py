@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+from datetime import date
 from arango import ArangoClient
 from dotenv import load_dotenv
 
@@ -50,8 +51,10 @@ def ignore_domain(domain):
     :param domain: domain to check
     :return: True if domain should be ignored, False otherwise
     """
+
     if (
-        domain.get("archived") is True
+        domain == None
+        or domain.get("archived") is True
         or domain.get("blocked") is True
         or domain.get("rcode") == "NXDOMAIN"
     ):
@@ -71,9 +74,9 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     for chart_type, scan_types in CHARTS.items():
         chartSummaries[chart_type] = {
             "scan_types": scan_types,
-            "pass_count": 0,
-            "fail_count": 0,
-            "domain_total": 0,
+            "pass": 0,
+            "fail": 0,
+            "total": 0,
         }
 
     # DMARC phases:
@@ -97,11 +100,11 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
                 for scan_type in chart["scan_types"]:
                     category_status.append(domain.get("status", {}).get(scan_type))
                 if "fail" in category_status:
-                    chart["fail_count"] += 1
-                    chart["domain_total"] += 1
+                    chart["fail"] += 1
+                    chart["total"] += 1
                 elif "info" not in category_status:
-                    chart["pass_count"] += 1
-                    chart["domain_total"] += 1
+                    chart["pass"] += 1
+                    chart["total"] += 1
 
             # Update DMARC phase summaries
             phase = domain.get("phase")
@@ -122,68 +125,28 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
             elif phase == "maintain":
                 maintain_count = maintain_count + 1
 
-    # Update chart summaries in DB
-    for chart_type in chartSummaries:
-        chart = chartSummaries[chart_type]
-        current_summary = db.collection("chartSummaries").get({"_key": chart_type})
-
-        summary_exists = current_summary is not None
-
-        if not summary_exists:
-            db.collection("chartSummaries").insert(
-                {
-                    "_key": chart_type,
-                    "pass": chart["pass_count"],
-                    "fail": chart["fail_count"],
-                    "total": chart["domain_total"],
-                }
-            )
-        else:
-            db.collection("chartSummaries").update_match(
-                {"_key": chart_type},
-                {
-                    "pass": chart["pass_count"],
-                    "fail": chart["fail_count"],
-                    "total": chart["domain_total"],
-                },
-            )
-
     # Update DMARC phase summaries in DB
-    domain_total = (
-        not_implemented_count
+    dmarc_phase_summary = {
+        "not_implemented": not_implemented_count,
+        "assess": assess_count,
+        "deploy": deploy_count,
+        "enforce": enforce_count,
+        "maintain": maintain_count,
+        "total": not_implemented_count
         + assess_count
         + deploy_count
         + enforce_count
-        + maintain_count
+        + maintain_count,
+    }
+
+    # Update chart summaries in DB
+    db.collection("chartSummaries").insert(
+        {
+            "date": date.today().isoformat(),
+            **chartSummaries,
+            "dmarc_phase": dmarc_phase_summary,
+        }
     )
-    current_summary = db.collection("chartSummaries").get({"_key": "dmarc_phase"})
-    summary_exists = current_summary is not None
-
-    if not summary_exists:
-        db.collection("chartSummaries").insert(
-            {
-                "_key": "dmarc_phase",
-                "not_implemented": not_implemented_count,
-                "assess": assess_count,
-                "deploy": deploy_count,
-                "enforce": enforce_count,
-                "maintain": maintain_count,
-                "total": domain_total,
-            }
-        )
-    else:
-        db.collection("chartSummaries").update_match(
-            {"_key": "dmarc_phase"},
-            {
-                "not_implemented": not_implemented_count,
-                "assess": assess_count,
-                "deploy": deploy_count,
-                "enforce": enforce_count,
-                "maintain": maintain_count,
-                "total": domain_total,
-            },
-        )
-
     logging.info(f"Chart summary update completed.")
 
 
