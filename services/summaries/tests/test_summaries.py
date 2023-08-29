@@ -1,5 +1,5 @@
 import pytest
-import datetime
+from datetime import date
 from arango import ArangoClient
 from summaries import *
 from test_data import *
@@ -44,6 +44,7 @@ org = orgs.insert(
                 "maintain": 0,
             },
         },
+        "hist_summaries": [],
         "orgDetails": {
             "en": {
                 "slug": "communications-security-establishment",
@@ -123,41 +124,45 @@ claims.insert({"_from": org["_id"], "_to": domain3["_id"], "hidden": False})
 def test_update_chart_summaries():
     update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
 
-    httpsSummary = db.collection("chartSummaries").get({"_key": "https"})
+    httpsSummary = (
+        db.collection("chartSummaries")
+        .get({"date": date.today().isoformat()})
+        .get("https")
+    )
     assert httpsSummary == {
-        "_id": "chartSummaries/https",
-        "_rev": httpsSummary["_rev"],
-        "_key": "https",
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
-    webSummary = db.collection("chartSummaries").get({"_key": "web"})
+    webSummary = (
+        db.collection("chartSummaries")
+        .get({"date": date.today().isoformat()})
+        .get("web")
+    )
     assert webSummary == {
-        "_id": "chartSummaries/web",
-        "_rev": webSummary["_rev"],
-        "_key": "web",
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
-    mailSummary = db.collection("chartSummaries").get({"_key": "mail"})
+    mailSummary = (
+        db.collection("chartSummaries")
+        .get({"date": date.today().isoformat()})
+        .get("mail")
+    )
     assert mailSummary == {
-        "_id": "chartSummaries/mail",
-        "_rev": mailSummary["_rev"],
-        "_key": "mail",
         "pass": 1,
         "fail": 2,
         "total": 3,
     }
 
-    dmarcPhaseSummary = db.collection("chartSummaries").get({"_key": "dmarc_phase"})
+    dmarcPhaseSummary = (
+        db.collection("chartSummaries")
+        .get({"date": date.today().isoformat()})
+        .get("dmarc_phase")
+    )
     assert dmarcPhaseSummary == {
-        "_id": "chartSummaries/dmarc_phase",
-        "_rev": dmarcPhaseSummary["_rev"],
-        "_key": "dmarc_phase",
         "not_implemented": 1,
         "assess": 0,
         "deploy": 0,
@@ -180,10 +185,6 @@ def test_update_org_summaries():
         "ssl": {"pass": 2, "fail": 1, "total": 3},
         "dkim": {"pass": 1, "fail": 2, "total": 3},
         "spf": {"pass": 2, "fail": 1, "total": 3},
-        "hidden": {
-            "https": {"pass": 0, "fail": 0, "total": 0},
-            "dmarc": {"pass": 0, "fail": 0, "total": 0},
-        },
         "dmarc_phase": {
             "not_implemented": 1,
             "assess": 0,
