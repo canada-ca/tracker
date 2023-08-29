@@ -124,45 +124,26 @@ claims.insert({"_from": org["_id"], "_to": domain3["_id"], "hidden": False})
 def test_update_chart_summaries():
     update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
 
-    httpsSummary = (
-        db.collection("chartSummaries")
-        .get({"date": date.today().isoformat()})
-        .get("https")
-    )
-    assert httpsSummary == {
+    summary = db.collection("chartSummaries").get({"date": date.today().isoformat()})
+    assert summary["https"] == {
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
-    webSummary = (
-        db.collection("chartSummaries")
-        .get({"date": date.today().isoformat()})
-        .get("web")
-    )
-    assert webSummary == {
+    assert summary["web"] == {
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
-    mailSummary = (
-        db.collection("chartSummaries")
-        .get({"date": date.today().isoformat()})
-        .get("mail")
-    )
-    assert mailSummary == {
+    assert summary["mail"] == {
         "pass": 1,
         "fail": 2,
         "total": 3,
     }
 
-    dmarcPhaseSummary = (
-        db.collection("chartSummaries")
-        .get({"date": date.today().isoformat()})
-        .get("dmarc_phase")
-    )
-    assert dmarcPhaseSummary == {
+    assert summary["dmarc_phase"] == {
         "not_implemented": 1,
         "assess": 0,
         "deploy": 0,
