@@ -1,15 +1,15 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {loadChartSummaryByKey} from '../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { loadChartSummaryByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given httpsSummary query', () => {
   let query, drop, truncate, schema, collections, i18n
@@ -30,8 +30,8 @@ describe('given httpsSummary query', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -48,7 +48,7 @@ describe('given httpsSummary query', () => {
   describe('given successful https summary retrieval', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -62,10 +62,12 @@ describe('given httpsSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'https',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        https: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
@@ -93,7 +95,7 @@ describe('given httpsSummary query', () => {
         {
           i18n,
           loaders: {
-            loadChartSummaryByKey: loadChartSummaryByKey({query}),
+            loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
       )
@@ -126,8 +128,8 @@ describe('given httpsSummary query', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -164,14 +166,10 @@ describe('given httpsSummary query', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`Unable to load HTTPS summary. Please try again.`),
-          ]
+          const error = [new GraphQLError(`Unable to load HTTPS summary. Please try again.`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve HTTPS summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve HTTPS summary.`])
         })
       })
     })
@@ -181,8 +179,8 @@ describe('given httpsSummary query', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -219,16 +217,10 @@ describe('given httpsSummary query', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Impossible de charger le résumé HTTPS. Veuillez réessayer.',
-            ),
-          ]
+          const error = [new GraphQLError('Impossible de charger le résumé HTTPS. Veuillez réessayer.')]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve HTTPS summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve HTTPS summary.`])
         })
       })
     })

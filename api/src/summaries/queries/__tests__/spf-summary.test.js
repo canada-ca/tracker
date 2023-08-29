@@ -61,10 +61,12 @@ describe('given spfSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'spf',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        spf: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
