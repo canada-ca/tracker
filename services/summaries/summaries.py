@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
-DB_NAME = os.getenv("DB_NAME")
-DB_URL = os.getenv("DB_URL")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASS = os.getenv("DB_PASS", "test")
+DB_NAME = os.getenv("DB_NAME", "track_dmarc")
+DB_URL = os.getenv("DB_URL", "http://localhost:8529")
 
 CHARTS = {
     # tier 1
@@ -263,63 +263,74 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                     dmarc_phase_maintain = dmarc_phase_maintain + 1
 
         summary_data = {
-            "summaries": {
-                "dmarc": {
-                    "pass": dmarc_pass,
-                    "fail": dmarc_fail,
-                    "total": dmarc_pass + dmarc_fail,
-                },
-                "web": {
-                    "pass": web_pass,
-                    "fail": web_fail,
-                    "total": web_pass + web_fail,
-                    # Don't count non web-hosting domains
-                },
-                "mail": {
-                    "pass": mail_pass,
-                    "fail": mail_fail,
-                    "total": domain_total,
-                },
-                "dmarc_phase": {
-                    "not_implemented": dmarc_phase_not_implemented,
-                    "assess": dmarc_phase_assess,
-                    "deploy": dmarc_phase_deploy,
-                    "enforce": dmarc_phase_enforce,
-                    "maintain": dmarc_phase_maintain,
-                    "total": domain_total,
-                },
-                "https": {
-                    "pass": https_pass,
-                    "fail": https_fail,
-                    "total": https_pass + https_fail
-                    # Don't count non web-hosting domains
-                },
-                "ssl": {
-                    "pass": ssl_pass,
-                    "fail": ssl_fail,
-                    "total": ssl_pass + ssl_fail
-                    # Don't count non web-hosting domains
-                },
-                "spf": {
-                    "pass": spf_pass,
-                    "fail": spf_fail,
-                    "total": spf_pass + spf_fail,
-                },
-                "dkim": {
-                    "pass": dkim_pass,
-                    "fail": dkim_fail,
-                    "total": dkim_pass + dkim_fail,
-                },
-                "web_connections": {
-                    "pass": web_connections_pass,
-                    "fail": web_connections_fail,
-                    "total": web_connections_pass + web_connections_fail
-                    # Don't count non web-hosting domains
-                },
-            }
+            "date": date.today().isoformat(),
+            "dmarc": {
+                "pass": dmarc_pass,
+                "fail": dmarc_fail,
+                "total": dmarc_pass + dmarc_fail,
+            },
+            "web": {
+                "pass": web_pass,
+                "fail": web_fail,
+                "total": web_pass + web_fail,
+                # Don't count non web-hosting domains
+            },
+            "mail": {
+                "pass": mail_pass,
+                "fail": mail_fail,
+                "total": domain_total,
+            },
+            "dmarc_phase": {
+                "not_implemented": dmarc_phase_not_implemented,
+                "assess": dmarc_phase_assess,
+                "deploy": dmarc_phase_deploy,
+                "enforce": dmarc_phase_enforce,
+                "maintain": dmarc_phase_maintain,
+                "total": domain_total,
+            },
+            "https": {
+                "pass": https_pass,
+                "fail": https_fail,
+                "total": https_pass + https_fail
+                # Don't count non web-hosting domains
+            },
+            "ssl": {
+                "pass": ssl_pass,
+                "fail": ssl_fail,
+                "total": ssl_pass + ssl_fail
+                # Don't count non web-hosting domains
+            },
+            "spf": {
+                "pass": spf_pass,
+                "fail": spf_fail,
+                "total": spf_pass + spf_fail,
+            },
+            "dkim": {
+                "pass": dkim_pass,
+                "fail": dkim_fail,
+                "total": dkim_pass + dkim_fail,
+            },
+            "web_connections": {
+                "pass": web_connections_pass,
+                "fail": web_connections_fail,
+                "total": web_connections_pass + web_connections_fail
+                # Don't count non web-hosting domains
+            },
         }
 
-        org.update(summary_data)
+        hist_summaries = org.get("hist_summaries", [])
+        current_summary = org.get("summaries")
+        summary_replaced = False
+        # if old summary with same date found, replace with current summary
+        for i, n in enumerate(hist_summaries):
+            if n.get("date") == current_summary.get("date"):
+                hist_summaries[i] = current_summary
+                summary_replaced = True
+                break
+        if summary_replaced is False:
+            hist_summaries.append(current_summary)
+
+        org.update({"summaries": summary_data, "hist_summaries": hist_summaries})
         db.collection("organizations").update(org)
 
     logging.info(f"Organization summary value update completed.")
