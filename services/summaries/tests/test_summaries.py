@@ -177,6 +177,7 @@ def test_update_org_summaries():
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
+        "date": date.today().isoformat(),
         "dmarc": {"pass": 2, "fail": 1, "total": 3},
         "https": {"pass": 2, "fail": 1, "total": 3},
         "web": {"pass": 2, "fail": 1, "total": 3},
