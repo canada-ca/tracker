@@ -126,18 +126,21 @@ def test_update_chart_summaries():
 
     summary = db.collection("chartSummaries").all().next()
     assert summary["https"] == {
+        "scan_types": ["https"],
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
     assert summary["web"] == {
+        "scan_types": ["https", "hsts", "ssl"],
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
     assert summary["mail"] == {
+        "scan_types": ["dmarc", "spf", "dkim"],
         "pass": 1,
         "fail": 2,
         "total": 3,
