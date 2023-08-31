@@ -124,7 +124,7 @@ claims.insert({"_from": org["_id"], "_to": domain3["_id"], "hidden": False})
 def test_update_chart_summaries():
     update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
 
-    summary = db.collection("chartSummaries").get({"_key": "testorg"})
+    summary = db.collection("chartSummaries").find({"date": date.today()})
     assert summary["https"] == {
         "pass": 2,
         "fail": 1,
