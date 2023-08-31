@@ -48,7 +48,7 @@ const earliestScan = db
   )
   .toArray()[0];
 
-const currentDay = new Date("2023-04-30T23:00:00.000Z");
+const currentDay = new Date();
 while (currentDay.toLocaleDateString() !== earliestScan.split(" ")[0]) {
   console.log(currentDay.toLocaleDateString());
 
@@ -203,9 +203,10 @@ while (currentDay.toLocaleDateString() !== earliestScan.split(" ")[0]) {
     total: not_implemented_count + assess_count + deploy_count + enforce_count + maintain_count,
   };
 
-  console.log(
-    JSON.stringify({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries })
-  );
+  // console.log(
+  //   JSON.stringify({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries })
+  // );
+  db.chartSummaries.save({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries });
 
   // proceed to previous day
   currentDay.setDate(currentDay.getDate() - 1);
