@@ -17,6 +17,22 @@ const charts = {
   mail: ["dmarc", "spf", "dkim"],
   web: ["https", "hsts", "ssl"],
 };
+
+const removeDuplicates = ({ array, key }) => {
+  let newArray = [];
+  let uniqueObject = {};
+
+  for (let i in array) {
+    objDomain = array[i][key];
+    uniqueObject[objDomain] = array[i];
+  }
+
+  for (i in uniqueObject) {
+    newArray.push(uniqueObject[i]);
+  }
+  return newArray;
+};
+
 // get earliest timestamp for a scan
 const earliestScan = db
   ._query(
@@ -34,6 +50,7 @@ const allOrgs = db
   ._query(
     aql`
         FOR org IN organizations
+            FILTER org.verified == true
             RETURN org
         `
   )
@@ -72,13 +89,19 @@ allOrgs.forEach((org) => {
 
     console.log("DAILY SCANS ACQUIRED: ", dailyScans.length);
     // if no dns scans found, move on to next org
-    if (dailyScans.length === 0) break;
+    if (dailyScans.length === 0) {
+      // proceed to previous day
+      currentDay.setDate(currentDay.getDate() - 1);
+      continue;
+    }
 
     // remove duplicate domains
+    const uniqueDomains = removeDuplicates({ array: dailyScans, key: "domain" });
+    console.log("UNIQUE DOMAINS: ", uniqueDomains.length);
 
     // format list of unique domains
     let scanList = {};
-    dailyScans.forEach(({ dmarc, dkim, spf, domain, rcode }) => {
+    uniqueDomains.forEach(({ dmarc, dkim, spf, domain, rcode }) => {
       if (rcode !== "NXDOMAIN") {
         scanList[domain] = {
           dmarcPhase: dmarc.phase || "info",
@@ -116,8 +139,9 @@ allOrgs.forEach((org) => {
       .filter((scan) => scan.status !== "pending");
 
     // remove duplicate domains
+    const uniqueWebDomains = removeDuplicates({ array: dailyWebScans, key: "domain" });
 
-    dailyWebScans.forEach((scan) => {
+    uniqueWebDomains.forEach((scan) => {
       try {
         const { httpsStatus = "info", hstsStatus = "info" } = scan.results.connectionResults;
         const {
@@ -208,14 +232,10 @@ allOrgs.forEach((org) => {
       total: not_implemented_count + assess_count + deploy_count + enforce_count + maintain_count,
     };
 
-    // console.log(
-    //   JSON.stringify({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries })
-    // );
     hist_summaries.push({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries });
 
     // proceed to previous day
     currentDay.setDate(currentDay.getDate() - 1);
   }
-  //   console.log(hist_summaries);
-  //   db.organizations.update(org, { hist_summaries });
+  db.organizations.update(org, { hist_summaries });
 });

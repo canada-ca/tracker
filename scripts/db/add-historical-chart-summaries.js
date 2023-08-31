@@ -19,8 +19,7 @@ const charts = {
   web: ["https", "hsts", "ssl"],
 };
 
-const removeDuplicates = (array, key) => {
-  console.log(array);
+const removeDuplicates = ({ array, key }) => {
   let newArray = [];
   let uniqueObject = {};
 
@@ -32,7 +31,6 @@ const removeDuplicates = (array, key) => {
   for (i in uniqueObject) {
     newArray.push(uniqueObject[i]);
   }
-  console.log(newArray);
   return newArray;
 };
 
@@ -64,13 +62,19 @@ while (currentDay.toLocaleDateString() !== earliestScan.split(" ")[0]) {
     .toArray();
 
   console.log("DAILY SCANS ACQUIRED: ", dailyScans.length);
+  if (dailyScans.length === 0) {
+    // proceed to previous day
+    currentDay.setDate(currentDay.getDate() - 1);
+    continue;
+  }
 
   // filter out duplicate domains
-  // const uniqueDomains = removeDuplicates(dailyScans, "domain");
+  const uniqueDomains = removeDuplicates({ array: dailyScans, key: "domain" });
+  console.log("UNIQUE DOMAINS: ", uniqueDomains.length);
 
   // format list of unique domains
   let scanList = {};
-  dailyScans.forEach(({ dmarc, dkim, spf, domain, rcode }) => {
+  uniqueDomains.forEach(({ dmarc, dkim, spf, domain, rcode }) => {
     if (rcode !== "NXDOMAIN") {
       scanList[domain] = {
         dmarcPhase: dmarc.phase || "info",
@@ -107,10 +111,9 @@ while (currentDay.toLocaleDateString() !== earliestScan.split(" ")[0]) {
     .toArray()
     .filter((scan) => scan.status !== "pending");
 
-  // const uniqueWebDomains = removeDuplicates(dailyWebScans, "domain");
+  const uniqueWebDomains = removeDuplicates(dailyWebScans, "domain");
 
-  dailyWebScans.forEach((scan) => {
-    // console.log(scan);
+  uniqueWebDomains.forEach((scan) => {
     try {
       const { httpsStatus = "info", hstsStatus = "info" } = scan.results.connectionResults;
       const {
@@ -132,11 +135,9 @@ while (currentDay.toLocaleDateString() !== earliestScan.split(" ")[0]) {
           ssl: sslStatus || "info",
         };
     } catch (err) {
-      console.log(scan);
+      console.error(err);
     }
   });
-
-  // console.log(scanList);
 
   const chartSummaries = {};
   // generate chart summaries
@@ -203,9 +204,6 @@ while (currentDay.toLocaleDateString() !== earliestScan.split(" ")[0]) {
     total: not_implemented_count + assess_count + deploy_count + enforce_count + maintain_count,
   };
 
-  // console.log(
-  //   JSON.stringify({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries })
-  // );
   db.chartSummaries.save({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries });
 
   // proceed to previous day
