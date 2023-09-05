@@ -60,15 +60,17 @@ def process_dkim(dkim_results):
     if dkim_err:
         return get_dkim_tag_status(dkim_tags)
 
-    for selector in dkim_results.keys():
+    dkim_records = dkim_results.get("records", None)
+
+    for selector in dkim_records.keys():
         dkim_tags[selector] = []
 
-        if dkim_results[selector].get("record", None) is None:
+        if dkim_records[selector].get("record", None) is None:
             dkim_tags[selector].append("dkim2")
             continue
 
-        key_size = dkim_results[selector].get("key_size", None)
-        key_type = dkim_results[selector].get("key_type", None)
+        key_size = dkim_records[selector].get("key_size", None)
+        key_type = dkim_records[selector].get("key_type", None)
 
         if key_size is None:
             dkim_tags[selector].append("dkim9")
@@ -91,14 +93,14 @@ def process_dkim(dkim_results):
 
         # Dkim value invalid
         # Check if v and p exist in txt_record
-        v_tag = dkim_results[selector].get("parsed", {}).get("v", None)
-        p_tag = dkim_results[selector].get("parsed", {}).get("p", None)
+        v_tag = dkim_records[selector].get("parsed", {}).get("v", None)
+        p_tag = dkim_records[selector].get("parsed", {}).get("p", None)
 
         if p_tag is None:
             dkim_tags[selector].append("dkim15")
 
         # Testing Enabled
-        t_enabled = dkim_results[selector].get("parsed", {}).get("t", "")
+        t_enabled = dkim_records[selector].get("parsed", {}).get("t", "")
         if t_enabled.lower() == "y":
             dkim_tags[selector].append("dkim13")
 
@@ -429,18 +431,19 @@ def process_results(results):
         "positive_tags": dkim_tags["positive_tags"],
         "neutral_tags": dkim_tags["neutral_tags"],
         "negative_tags": dkim_tags["negative_tags"],
+        "found_selectors": results["dkim"].get("found_selectors", None),
         "selectors": {},
     }
 
     if not dkim.get("error", None):
-        for selector in dkim.keys():
+        for selector in dkim["records"].keys():
             dkim_results["selectors"][selector] = {
                 "status": dkim_selector_tags[selector].get("status", None),
-                "record": results["dkim"][selector].get("record", None),
-                "parsed": results["dkim"][selector].get("parsed", None),
-                "key_length": results["dkim"][selector].get("key_size", None),
-                "key_type": results["dkim"][selector].get("key_type", None),
-                "public_exponent": results["dkim"][selector].get(
+                "record": results["dkim"]["records"][selector].get("record", None),
+                "parsed": results["dkim"]["records"][selector].get("parsed", None),
+                "key_length": results["dkim"]["records"][selector].get("key_size", None),
+                "key_type": results["dkim"]["records"][selector].get("key_type", None),
+                "public_exponent": results["dkim"]["records"][selector].get(
                     "public_exponent", None
                 ),
                 "neutral_tags": dkim_selector_tags[selector]["neutral_tags"],
@@ -449,7 +452,7 @@ def process_results(results):
             }
 
             # store key_modulus as string, ArangoDB is not capable or storing numbers this size
-            key_modulus = results["dkim"][selector].get("public_key_modulus", None)
+            key_modulus = results["dkim"]["records"][selector].get("public_key_modulus", None)
             if key_modulus:
                 dkim_results["selectors"][selector]["key_modulus"] = str(key_modulus)
 

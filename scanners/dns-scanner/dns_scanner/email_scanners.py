@@ -2,8 +2,10 @@ import base64
 import logging
 import os
 import json
+from dataclasses import dataclass
 
 import dkim
+import dns
 import nacl
 import tldextract
 from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
@@ -11,11 +13,20 @@ from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
 from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 from dns import resolver
-from dns.resolver import NoAnswer
+from dns.resolver import NoAnswer, NXDOMAIN
 
 logger = logging.getLogger(__name__)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
+
+
+def check_if_domain_exists(domain):
+    # Check if domain exists, only return True if DNS returns NOERROR
+    try:
+        exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
+        return exist_response.response.rcode() == dns.rcode.NOERROR
+    except NXDOMAIN:
+        return False
 
 
 class DMARCScanner:
@@ -150,6 +161,12 @@ class DMARCScanner:
         return scan_result
 
 
+@dataclass
+class DKIMScanResult:
+    records: dict = None
+    found_selectors: list[str] = None
+
+
 class DKIMScanner:
     domain = None
     selectors = None
@@ -248,4 +265,18 @@ class DKIMScanner:
                 )
                 record[selector] = {"error": "missing"}
 
-        return record
+        # Attempt to find more selectors using brute force
+        common_selectors = [
+            "selector1",
+            "selector2",
+            "mail",
+            "email",
+        ]
+        selectors_to_check = [selector for selector in common_selectors if selector not in self.selectors]
+        found_selectors = []
+        for selector in selectors_to_check:
+            if check_if_domain_exists(f"{selector}._domainkey.{self.domain}"):
+                found_selectors.append(selector)
+
+        return DKIMScanResult(records=record, found_selectors=found_selectors).__dict__
+
