@@ -60,7 +60,6 @@ const allOrgs = db
 allOrgs.forEach((org) => {
   console.log(org.orgDetails.en.name);
   // get all claimed domains for the org
-  const { hist_summaries } = org;
   const orgId = aql`${org._id}`;
   const orgDomainIds = db
     ._query(
@@ -232,10 +231,15 @@ allOrgs.forEach((org) => {
       total: not_implemented_count + assess_count + deploy_count + enforce_count + maintain_count,
     };
 
-    hist_summaries.push({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries });
+    // add summary to the database
+    db.organizationSummaries.save({
+      date: currentDay.toLocaleDateString(),
+      organization: orgId,
+      dmarcPhase: dmarcPhaseSummary,
+      ...chartSummaries,
+    });
 
     // proceed to previous day
     currentDay.setDate(currentDay.getDate() - 1);
   }
-  db.organizations.update(org, { hist_summaries });
 });
