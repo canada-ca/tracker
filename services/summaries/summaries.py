@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from datetime import date
+from datetime import date, timedelta
 from arango import ArangoClient
 from dotenv import load_dotenv
 
@@ -318,19 +318,15 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             },
         }
 
-        hist_summaries = org.get("hist_summaries", [])
         current_summary = org.get("summaries")
-        summary_replaced = False
-        # if old summary with same date found, replace with current summary
-        for i, n in enumerate(hist_summaries):
-            if n.get("date") == current_summary.get("date"):
-                hist_summaries[i] = current_summary
-                summary_replaced = True
-                break
-        if summary_replaced is False:
-            hist_summaries.append(current_summary)
-
-        org.update({"summaries": summary_data, "hist_summaries": hist_summaries})
+        if current_summary.get("date") is None:
+            current_summary.update(
+                {"date": (date.today() - timedelta(days=1)).isoformat()}
+            )
+        db.collection("organizationSummaries").insert(
+            {"organization": org.get("_id"), **current_summary}
+        )
+        org.update({"summaries": summary_data})
         db.collection("organizations").update(org)
 
     logging.info(f"Organization summary value update completed.")
