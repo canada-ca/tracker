@@ -72,9 +72,8 @@ allOrgs.forEach((org) => {
     .toArray();
 
   const currentDay = new Date();
-  const currentDateString = currentDay.toISOString().split("T")[0];
-  while (currentDateString !== earliestScan.split(" ")[0]) {
-    console.log(currentDateString);
+  while (currentDay.toISOString().split("T")[0] !== earliestScan.split(" ")[0]) {
+    console.log(currentDay.toISOString().split("T")[0]);
     // get all scans for the current day
     const dailyScans = db
       ._query(
@@ -234,7 +233,7 @@ allOrgs.forEach((org) => {
 
     // add summary to the database
     db.organizationSummaries.save({
-      date: currentDateString,
+      date: currentDay.toISOString().split("T")[0],
       organization: org._id,
       dmarcPhase: dmarcPhaseSummary,
       ...chartSummaries,
