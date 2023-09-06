@@ -47,8 +47,9 @@ const earliestScan = db
   .toArray()[0];
 
 const currentDay = new Date();
-while (currentDay.toLocaleDateString() !== new Date(earliestScan.split(" ")[0]).toLocaleDateString()) {
-  console.log(currentDay.toLocaleDateString());
+const currentDateString = currentDay.toISOString().split("T")[0];
+while (currentDateString !== earliestScan.split(" ")[0]) {
+  console.log(currentDateString);
 
   // get all scans for the current day
   const dailyScans = db
@@ -204,7 +205,7 @@ while (currentDay.toLocaleDateString() !== new Date(earliestScan.split(" ")[0]).
     total: not_implemented_count + assess_count + deploy_count + enforce_count + maintain_count,
   };
 
-  db.chartSummaries.save({ date: currentDay.toLocaleDateString(), dmarcPhase: dmarcPhaseSummary, ...chartSummaries });
+  db.chartSummaries.save({ date: currentDateString, dmarcPhase: dmarcPhaseSummary, ...chartSummaries });
 
   // proceed to previous day
   currentDay.setDate(currentDay.getDate() - 1);
