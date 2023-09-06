@@ -234,7 +234,7 @@ allOrgs.forEach((org) => {
     // add summary to the database
     db.organizationSummaries.save({
       date: currentDay.toLocaleDateString(),
-      organization: orgId,
+      organization: org._id,
       dmarcPhase: dmarcPhaseSummary,
       ...chartSummaries,
     });
