@@ -72,7 +72,7 @@ allOrgs.forEach((org) => {
     .toArray();
 
   const currentDay = new Date();
-  while (currentDay.toLocaleDateString() !== earliestScan.split(" ")[0]) {
+  while (currentDay.toLocaleDateString() !== new Date(earliestScan.split(" ")[0]).toLocaleDateString()) {
     console.log(currentDay.toLocaleDateString());
     // get all scans for the current day
     const dailyScans = db
