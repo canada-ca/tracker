@@ -171,6 +171,15 @@
         "numberofshards": 6
       }
     },
+     {
+      "type": "documentcollection",
+      "name": "organizationSummaries",
+      "options": {
+        "replicationfactor": 3,
+        "writeconcern": 1,
+        "numberofshards": 6
+      }
+    },
     {
       "type": "edgecollection",
       "name": "affiliations",
