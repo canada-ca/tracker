@@ -160,6 +160,48 @@ export const domainType = new GraphQLObjectType({
         })
       },
     },
+    mxRecordDiff: {
+      type: '',
+      description: 'List of MX record diffs for a given domain.',
+      args: {
+        startDate: {
+          type: GraphQLDateTime,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDateTime,
+          description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: dnsOrder,
+          description: 'Ordering options for MX connections.',
+        },
+        limit: {
+          type: GraphQLInt,
+          description: 'Number of MX scans to retrieve.',
+        },
+        ...connectionArgs,
+      },
+      resolve: async (
+        { _id },
+        args,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadMxRecordDiffByDomainId } },
+      ) => {
+        await userRequired()
+        const permitted = await checkDomainPermission({ domainId: _id })
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
+          )
+          throw new Error(t`Cannot query web scan results without permission.`)
+        }
+
+        return await loadMxRecordDiffByDomainId({
+          domainId: _id,
+          ...args,
+        })
+      },
+    },
     web: {
       type: webConnection.connectionType,
       description: 'HTTPS, and TLS scan results.',
