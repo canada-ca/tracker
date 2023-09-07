@@ -274,9 +274,14 @@ class DKIMScanner:
         ]
         selectors_to_check = [selector for selector in common_selectors if selector not in self.selectors]
         found_selectors = []
-        for selector in selectors_to_check:
-            if check_if_domain_exists(f"{selector}._domainkey.{self.domain}"):
-                found_selectors.append(selector)
+
+        # Check if wildcard selector exists before checking other selectors
+        if check_if_domain_exists(f"*._domainkey.{self.domain}"):
+            found_selectors.append("*")
+        else:
+            for selector in selectors_to_check:
+                if check_if_domain_exists(f"{selector}._domainkey.{self.domain}"):
+                    found_selectors.append(selector)
 
         return DKIMScanResult(records=record, found_selectors=found_selectors).__dict__
 
