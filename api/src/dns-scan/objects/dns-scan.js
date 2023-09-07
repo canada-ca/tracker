@@ -41,6 +41,7 @@ export const dnsScanType = new GraphQLObjectType({
       type: mxRecordType,
       description: `The MX records for the domain (if they exist).`,
     },
+
     nsRecords: {
       type: nsRecordType,
       description: `The NS records for the domain.`,
@@ -91,6 +92,10 @@ export const mxRecordType = new GraphQLObjectType({
     warnings: {
       type: GraphQLList(GraphQLString),
       description: `Additional warning info about the MX record.`,
+    },
+    diff: {
+      type: GraphQLBoolean,
+      description: `Whether or not the MX record is different from the previous scan.`,
     },
   }),
 })
