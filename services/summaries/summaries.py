@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+from datetime import date, timedelta
 from arango import ArangoClient
 from dotenv import load_dotenv
 
@@ -50,8 +51,10 @@ def ignore_domain(domain):
     :param domain: domain to check
     :return: True if domain should be ignored, False otherwise
     """
+
     if (
-        domain.get("archived") is True
+        domain == None
+        or domain.get("archived") is True
         or domain.get("blocked") is True
         or domain.get("rcode") == "NXDOMAIN"
     ):
@@ -71,9 +74,9 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     for chart_type, scan_types in CHARTS.items():
         chartSummaries[chart_type] = {
             "scan_types": scan_types,
-            "pass_count": 0,
-            "fail_count": 0,
-            "domain_total": 0,
+            "pass": 0,
+            "fail": 0,
+            "total": 0,
         }
 
     # DMARC phases:
@@ -97,11 +100,11 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
                 for scan_type in chart["scan_types"]:
                     category_status.append(domain.get("status", {}).get(scan_type))
                 if "fail" in category_status:
-                    chart["fail_count"] += 1
-                    chart["domain_total"] += 1
+                    chart["fail"] += 1
+                    chart["total"] += 1
                 elif "info" not in category_status:
-                    chart["pass_count"] += 1
-                    chart["domain_total"] += 1
+                    chart["pass"] += 1
+                    chart["total"] += 1
 
             # Update DMARC phase summaries
             phase = domain.get("phase")
@@ -122,68 +125,28 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
             elif phase == "maintain":
                 maintain_count = maintain_count + 1
 
-    # Update chart summaries in DB
-    for chart_type in chartSummaries:
-        chart = chartSummaries[chart_type]
-        current_summary = db.collection("chartSummaries").get({"_key": chart_type})
-
-        summary_exists = current_summary is not None
-
-        if not summary_exists:
-            db.collection("chartSummaries").insert(
-                {
-                    "_key": chart_type,
-                    "pass": chart["pass_count"],
-                    "fail": chart["fail_count"],
-                    "total": chart["domain_total"],
-                }
-            )
-        else:
-            db.collection("chartSummaries").update_match(
-                {"_key": chart_type},
-                {
-                    "pass": chart["pass_count"],
-                    "fail": chart["fail_count"],
-                    "total": chart["domain_total"],
-                },
-            )
-
     # Update DMARC phase summaries in DB
-    domain_total = (
-        not_implemented_count
+    dmarc_phase_summary = {
+        "not_implemented": not_implemented_count,
+        "assess": assess_count,
+        "deploy": deploy_count,
+        "enforce": enforce_count,
+        "maintain": maintain_count,
+        "total": not_implemented_count
         + assess_count
         + deploy_count
         + enforce_count
-        + maintain_count
+        + maintain_count,
+    }
+
+    # Update chart summaries in DB
+    db.collection("chartSummaries").insert(
+        {
+            "date": date.today().isoformat(),
+            **chartSummaries,
+            "dmarc_phase": dmarc_phase_summary,
+        }
     )
-    current_summary = db.collection("chartSummaries").get({"_key": "dmarc_phase"})
-    summary_exists = current_summary is not None
-
-    if not summary_exists:
-        db.collection("chartSummaries").insert(
-            {
-                "_key": "dmarc_phase",
-                "not_implemented": not_implemented_count,
-                "assess": assess_count,
-                "deploy": deploy_count,
-                "enforce": enforce_count,
-                "maintain": maintain_count,
-                "total": domain_total,
-            }
-        )
-    else:
-        db.collection("chartSummaries").update_match(
-            {"_key": "dmarc_phase"},
-            {
-                "not_implemented": not_implemented_count,
-                "assess": assess_count,
-                "deploy": deploy_count,
-                "enforce": enforce_count,
-                "maintain": maintain_count,
-                "total": domain_total,
-            },
-        )
-
     logging.info(f"Chart summary update completed.")
 
 
@@ -217,175 +180,153 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         dmarc_phase_enforce = 0
         dmarc_phase_maintain = 0
 
-        hidden_https_pass = 0
-        hidden_https_fail = 0
-        hidden_dmarc_pass = 0
-        hidden_dmarc_fail = 0
-
         domain_total = 0
 
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
             if ignore_domain(domain) is False:
-                hidden = claim.get("hidden")
-                if hidden != True:
-                    domain_total = domain_total + 1
-                    if domain.get("status", {}).get("dmarc") == "pass":
-                        dmarc_pass = dmarc_pass + 1
-                    else:
-                        dmarc_fail = dmarc_fail + 1
-
-                    if (
-                        domain.get("status", {}).get("ssl") == "pass"
-                        and domain.get("status", {}).get("https") == "pass"
-                    ):
-                        web_pass = web_pass + 1
-                    elif (
-                        domain.get("status", {}).get("ssl") == "fail"
-                        or domain.get("status", {}).get("https") == "fail"
-                    ):
-                        web_fail = web_fail + 1
-
-                    if domain.get("status", {}).get("https") == "pass":
-                        https_pass = https_pass + 1
-                    if domain.get("status", {}).get("https") == "fail":
-                        https_fail = https_fail + 1
-
-                    if (
-                        domain.get("status", {}).get("dmarc") == "pass"
-                        and domain.get("status", {}).get("spf") == "pass"
-                        and domain.get("status", {}).get("dkim") == "pass"
-                    ):
-                        mail_pass = mail_pass + 1
-                    else:
-                        mail_fail = mail_fail + 1
-
-                    if domain.get("status", {}).get("spf") == "pass":
-                        spf_pass = spf_pass + 1
-                    else:
-                        spf_fail = spf_fail + 1
-
-                    if domain.get("status", {}).get("dkim") == "pass":
-                        dkim_pass = dkim_pass + 1
-                    else:
-                        dkim_fail = dkim_fail + 1
-
-                    if domain.get("status", {}).get("ssl") == "pass":
-                        ssl_pass = ssl_pass + 1
-                    elif domain.get("status", {}).get("ssl") == "fail":
-                        ssl_fail = ssl_fail + 1
-
-                    if (
-                        domain.get("status", {}).get("https") == "pass"
-                        and domain.get("status", {}).get("hsts") == "pass"
-                    ):
-                        web_connections_pass = web_connections_pass + 1
-                    elif (
-                        domain.get("status", {}).get("https") == "fail"
-                        or domain.get("status", {}).get("hsts") == "fail"
-                    ):
-                        web_connections_fail = web_connections_fail + 1
-
-                    phase = domain.get("phase")
-
-                    if phase is None:
-                        logging.info(
-                            f"Property \"phase\" does not exist for domain \"${domain['domain']}\"."
-                        )
-                        continue
-
-                    if phase == "not implemented":
-                        dmarc_phase_not_implemented = dmarc_phase_not_implemented + 1
-                    elif phase == "assess":
-                        dmarc_phase_assess = dmarc_phase_assess + 1
-                    elif phase == "deploy":
-                        dmarc_phase_deploy = dmarc_phase_deploy + 1
-                    elif phase == "enforce":
-                        dmarc_phase_enforce = dmarc_phase_enforce + 1
-                    elif phase == "maintain":
-                        dmarc_phase_maintain = dmarc_phase_maintain + 1
+                domain_total = domain_total + 1
+                if domain.get("status", {}).get("dmarc") == "pass":
+                    dmarc_pass = dmarc_pass + 1
                 else:
-                    if domain.get("status", {}).get("dmarc") == "pass":
-                        hidden_dmarc_pass = hidden_dmarc_pass + 1
-                    else:
-                        hidden_dmarc_fail = hidden_dmarc_fail + 1
+                    dmarc_fail = dmarc_fail + 1
 
-                    if domain.get("status", {}).get("https") == "pass":
-                        hidden_https_pass = hidden_https_pass + 1
-                    elif domain.get("status", {}).get("https") == "fail":
-                        hidden_https_fail = hidden_https_fail + 1
+                if (
+                    domain.get("status", {}).get("ssl") == "pass"
+                    and domain.get("status", {}).get("https") == "pass"
+                ):
+                    web_pass = web_pass + 1
+                elif (
+                    domain.get("status", {}).get("ssl") == "fail"
+                    or domain.get("status", {}).get("https") == "fail"
+                ):
+                    web_fail = web_fail + 1
+
+                if domain.get("status", {}).get("https") == "pass":
+                    https_pass = https_pass + 1
+                if domain.get("status", {}).get("https") == "fail":
+                    https_fail = https_fail + 1
+
+                if (
+                    domain.get("status", {}).get("dmarc") == "pass"
+                    and domain.get("status", {}).get("spf") == "pass"
+                    and domain.get("status", {}).get("dkim") == "pass"
+                ):
+                    mail_pass = mail_pass + 1
+                else:
+                    mail_fail = mail_fail + 1
+
+                if domain.get("status", {}).get("spf") == "pass":
+                    spf_pass = spf_pass + 1
+                else:
+                    spf_fail = spf_fail + 1
+
+                if domain.get("status", {}).get("dkim") == "pass":
+                    dkim_pass = dkim_pass + 1
+                else:
+                    dkim_fail = dkim_fail + 1
+
+                if domain.get("status", {}).get("ssl") == "pass":
+                    ssl_pass = ssl_pass + 1
+                elif domain.get("status", {}).get("ssl") == "fail":
+                    ssl_fail = ssl_fail + 1
+
+                if (
+                    domain.get("status", {}).get("https") == "pass"
+                    and domain.get("status", {}).get("hsts") == "pass"
+                ):
+                    web_connections_pass = web_connections_pass + 1
+                elif (
+                    domain.get("status", {}).get("https") == "fail"
+                    or domain.get("status", {}).get("hsts") == "fail"
+                ):
+                    web_connections_fail = web_connections_fail + 1
+
+                phase = domain.get("phase")
+
+                if phase is None:
+                    logging.info(
+                        f"Property \"phase\" does not exist for domain \"${domain['domain']}\"."
+                    )
+                    continue
+
+                if phase == "not implemented":
+                    dmarc_phase_not_implemented = dmarc_phase_not_implemented + 1
+                elif phase == "assess":
+                    dmarc_phase_assess = dmarc_phase_assess + 1
+                elif phase == "deploy":
+                    dmarc_phase_deploy = dmarc_phase_deploy + 1
+                elif phase == "enforce":
+                    dmarc_phase_enforce = dmarc_phase_enforce + 1
+                elif phase == "maintain":
+                    dmarc_phase_maintain = dmarc_phase_maintain + 1
 
         summary_data = {
-            "summaries": {
-                "dmarc": {
-                    "pass": dmarc_pass,
-                    "fail": dmarc_fail,
-                    "total": dmarc_pass + dmarc_fail,
-                },
-                "web": {
-                    "pass": web_pass,
-                    "fail": web_fail,
-                    "total": web_pass + web_fail,
-                    # Don't count non web-hosting domains
-                },
-                "mail": {
-                    "pass": mail_pass,
-                    "fail": mail_fail,
-                    "total": domain_total,
-                },
-                "dmarc_phase": {
-                    "not_implemented": dmarc_phase_not_implemented,
-                    "assess": dmarc_phase_assess,
-                    "deploy": dmarc_phase_deploy,
-                    "enforce": dmarc_phase_enforce,
-                    "maintain": dmarc_phase_maintain,
-                    "total": domain_total,
-                },
-                "https": {
-                    "pass": https_pass,
-                    "fail": https_fail,
-                    "total": https_pass + https_fail
-                    # Don't count non web-hosting domains
-                },
-                "ssl": {
-                    "pass": ssl_pass,
-                    "fail": ssl_fail,
-                    "total": ssl_pass + ssl_fail
-                    # Don't count non web-hosting domains
-                },
-                "spf": {
-                    "pass": spf_pass,
-                    "fail": spf_fail,
-                    "total": spf_pass + spf_fail,
-                },
-                "dkim": {
-                    "pass": dkim_pass,
-                    "fail": dkim_fail,
-                    "total": dkim_pass + dkim_fail,
-                },
-                "web_connections": {
-                    "pass": web_connections_pass,
-                    "fail": web_connections_fail,
-                    "total": web_connections_pass + web_connections_fail
-                    # Don't count non web-hosting domains
-                },
-                "hidden": {
-                    "dmarc": {
-                        "pass": hidden_dmarc_pass,
-                        "fail": hidden_dmarc_fail,
-                        "total": hidden_dmarc_pass + hidden_dmarc_fail,
-                    },
-                    "https": {
-                        "pass": hidden_https_pass,
-                        "fail": hidden_https_fail,
-                        "total": hidden_https_pass + hidden_https_fail,
-                    },
-                },
-            }
+            "date": date.today().isoformat(),
+            "dmarc": {
+                "pass": dmarc_pass,
+                "fail": dmarc_fail,
+                "total": dmarc_pass + dmarc_fail,
+            },
+            "web": {
+                "pass": web_pass,
+                "fail": web_fail,
+                "total": web_pass + web_fail,
+                # Don't count non web-hosting domains
+            },
+            "mail": {
+                "pass": mail_pass,
+                "fail": mail_fail,
+                "total": domain_total,
+            },
+            "dmarc_phase": {
+                "not_implemented": dmarc_phase_not_implemented,
+                "assess": dmarc_phase_assess,
+                "deploy": dmarc_phase_deploy,
+                "enforce": dmarc_phase_enforce,
+                "maintain": dmarc_phase_maintain,
+                "total": domain_total,
+            },
+            "https": {
+                "pass": https_pass,
+                "fail": https_fail,
+                "total": https_pass + https_fail
+                # Don't count non web-hosting domains
+            },
+            "ssl": {
+                "pass": ssl_pass,
+                "fail": ssl_fail,
+                "total": ssl_pass + ssl_fail
+                # Don't count non web-hosting domains
+            },
+            "spf": {
+                "pass": spf_pass,
+                "fail": spf_fail,
+                "total": spf_pass + spf_fail,
+            },
+            "dkim": {
+                "pass": dkim_pass,
+                "fail": dkim_fail,
+                "total": dkim_pass + dkim_fail,
+            },
+            "web_connections": {
+                "pass": web_connections_pass,
+                "fail": web_connections_fail,
+                "total": web_connections_pass + web_connections_fail
+                # Don't count non web-hosting domains
+            },
         }
 
-        org.update(summary_data)
+        current_summary = org.get("summaries")
+        if current_summary.get("date") is None:
+            current_summary.update(
+                {"date": (date.today() - timedelta(days=1)).isoformat()}
+            )
+        db.collection("organizationSummaries").insert(
+            {"organization": org.get("_id"), **current_summary}
+        )
+        org.update({"summaries": summary_data})
         db.collection("organizations").update(org)
 
     logging.info(f"Organization summary value update completed.")

@@ -307,6 +307,18 @@ export const removeOrganization = new mutationWithClientMutationId({
               RETURN true
             `,
       )
+
+      await trx.step(
+        () =>
+          query`
+              WITH organizations, organizationSummaries
+              FOR summary in organizationSummaries
+                FILTER summary.organization == ${organization._id}
+                REMOVE summary._key IN organizationSummaries
+                OPTIONS { waitForSync: true }
+            `,
+      )
+
       await trx.step(
         () =>
           query`

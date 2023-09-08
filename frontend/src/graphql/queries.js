@@ -489,12 +489,6 @@ export const ORG_DETAILS_PAGE = gql`
         dmarc {
           ...RequiredSummaryFields
         }
-        httpsIncludeHidden {
-          ...RequiredSummaryFields
-        }
-        dmarcIncludeHidden {
-          ...RequiredSummaryFields
-        }
         dkim {
           ...RequiredSummaryFields
         }

@@ -1,57 +1,21 @@
-import React, { useState } from 'react'
-import {
-  Flex,
-  IconButton,
-  Box,
-  Tooltip,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-} from '@chakra-ui/react'
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import React from 'react'
+import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
 
 import { TierOneSummaries } from './TierOneSummaries'
 import { TierTwoSummaries } from './TierTwoSummaries'
 import { TierThreeSummaries } from './TierThreeSummaries'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { object } from 'prop-types'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
 export function TieredSummaries({ summaries }) {
-  const [show, setShow] = useState(false)
   const { https, dmarc, webConnections, ssl, spf, dkim, dmarcPhase, web, mail } = summaries
-
-  let hidden = null
-  if (typeof summaries?.httpsIncludeHidden !== 'undefined')
-    hidden = {
-      https: summaries?.httpsIncludeHidden,
-      dmarc: summaries?.dmarcIncludeHidden,
-    }
 
   return (
     <Box>
       <ABTestWrapper insiderVariantName="B">
         <ABTestVariant name="A">
-          <Box>
-            <Flex align="center" justify="flex-end" mb="2">
-              {hidden && (
-                <Tooltip label={t`Include hidden domains in summaries.`}>
-                  <IconButton
-                    aria-label={t`Include hidden domains in summaries.`}
-                    variant="primaryOutline"
-                    onClick={() => setShow(!show)}
-                    icon={show ? <ViewOffIcon /> : <ViewIcon />}
-                  />
-                </Tooltip>
-              )}
-            </Flex>
-            <TierOneSummaries
-              https={show && hidden ? hidden.https : https}
-              dmarc={show && hidden ? hidden.dmarc : dmarc}
-            />
-          </Box>
+          <TierOneSummaries https={https} dmarc={dmarc} />
         </ABTestVariant>
         <ABTestVariant name="B">
           <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
@@ -63,23 +27,7 @@ export function TieredSummaries({ summaries }) {
                 <AccordionIcon boxSize="icons.xl" />
               </AccordionButton>
               <AccordionPanel>
-                <Flex align="center" justify="flex-end" mb="2">
-                  {hidden && (
-                    <Tooltip label={t`Include hidden domains in summaries.`}>
-                      <IconButton
-                        aria-label={t`Include hidden domains in summaries.`}
-                        variant="primaryOutline"
-                        onClick={() => setShow(!show)}
-                        icon={show ? <ViewOffIcon /> : <ViewIcon />}
-                      />
-                    </Tooltip>
-                  )}
-                </Flex>
-
-                <TierOneSummaries
-                  https={show && hidden ? hidden.https : https}
-                  dmarc={show && hidden ? hidden.dmarc : dmarc}
-                />
+                <TierOneSummaries https={https} dmarc={dmarc} />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem>

@@ -61,10 +61,8 @@ describe('given dkimSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'dkim',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        dkim: { total: 1000, fail: 500, pass: 500 },
       })
     })
     afterEach(async () => {

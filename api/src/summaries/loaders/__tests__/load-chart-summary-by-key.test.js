@@ -1,12 +1,12 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {loadChartSummaryByKey} from '../../index'
+import { loadChartSummaryByKey } from '../../index'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadChartSummaryByKey function', () => {
   let query, drop, truncate, collections, i18n
@@ -19,8 +19,8 @@ describe('given the loadChartSummaryByKey function', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -35,7 +35,7 @@ describe('given the loadChartSummaryByKey function', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -49,16 +49,17 @@ describe('given the loadChartSummaryByKey function', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'web',
-        total: 1000,
-        fail: 500,
-        pass: 500,
-      })
-      await collections.chartSummaries.save({
-        _key: 'mail',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        web: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
+        mail: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
@@ -71,12 +72,12 @@ describe('given the loadChartSummaryByKey function', () => {
       it('returns a single summary', async () => {
         const expectedCursor = await query`
           FOR summary IN chartSummaries
-            FILTER summary._key == "web"
-            RETURN MERGE({ id: summary._key }, summary)
+            SORT summary.date DESC LIMIT 1
+            RETURN summary.web
         `
         const expectedSummary = await expectedCursor.next()
 
-        const loader = loadChartSummaryByKey({query, i18n})
+        const loader = loadChartSummaryByKey({ query, i18n })
         const webSummary = await loader.load('web')
 
         expect(webSummary).toEqual(expectedSummary)
@@ -88,7 +89,8 @@ describe('given the loadChartSummaryByKey function', () => {
         const expectedSummaries = []
         const expectedCursor = await query`
           FOR summary IN chartSummaries
-            RETURN MERGE({ id: summary._key }, summary)
+            SORT summary.date DESC LIMIT 1
+            RETURN summary
         `
 
         while (expectedCursor.hasMore) {
@@ -97,7 +99,7 @@ describe('given the loadChartSummaryByKey function', () => {
           expectedSummaries.push(tempSummary)
         }
 
-        const loader = loadChartSummaryByKey({query, i18n})
+        const loader = loadChartSummaryByKey({ query, i18n })
         const chartSummaries = await loader.loadMany(summaryKeys)
         expect(chartSummaries).toEqual(expectedSummaries)
       })
@@ -109,8 +111,8 @@ describe('given the loadChartSummaryByKey function', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -121,17 +123,13 @@ describe('given the loadChartSummaryByKey function', () => {
       })
       describe('given a database error', () => {
         it('raises an error', async () => {
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-          const loader = loadChartSummaryByKey({query, userKey: '1234', i18n})
+          query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load summary. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load summary. Please try again.'))
           }
 
           expect(consoleErrorOutput).toEqual([
@@ -142,19 +140,17 @@ describe('given the loadChartSummaryByKey function', () => {
       describe('given a cursor error', () => {
         it('raises an error', async () => {
           const cursor = {
-            forEach() {
+            next() {
               throw new Error('Cursor error occurred.')
             },
           }
           query = jest.fn().mockReturnValue(cursor)
-          const loader = loadChartSummaryByKey({query, userKey: '1234', i18n})
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load summary. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load summary. Please try again.'))
           }
 
           expect(consoleErrorOutput).toEqual([
@@ -168,8 +164,8 @@ describe('given the loadChartSummaryByKey function', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -180,17 +176,13 @@ describe('given the loadChartSummaryByKey function', () => {
       })
       describe('given a database error', () => {
         it('raises an error', async () => {
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-          const loader = loadChartSummaryByKey({query, userKey: '1234', i18n})
+          query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Impossible de charger le résumé. Veuillez réessayer.'),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le résumé. Veuillez réessayer.'))
           }
 
           expect(consoleErrorOutput).toEqual([
@@ -201,19 +193,17 @@ describe('given the loadChartSummaryByKey function', () => {
       describe('given a cursor error', () => {
         it('raises an error', async () => {
           const cursor = {
-            forEach() {
+            next() {
               throw new Error('Cursor error occurred.')
             },
           }
           query = jest.fn().mockReturnValue(cursor)
-          const loader = loadChartSummaryByKey({query, userKey: '1234', i18n})
+          const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Impossible de charger le résumé. Veuillez réessayer.'),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le résumé. Veuillez réessayer.'))
           }
 
           expect(consoleErrorOutput).toEqual([
