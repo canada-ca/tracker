@@ -231,6 +231,24 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       dmarcPhase
       hasDMARCReport
       userHasPermission
+      mxRecordDiff(limit: 5, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        edges {
+          cursor
+          node {
+            id
+            timestamp
+            mxRecords {
+              hosts {
+                preference
+                hostname
+                addresses
+              }
+              warnings
+            }
+          }
+        }
+        totalCount
+      }
       dnsScan(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
         edges {
           cursor

@@ -109,18 +109,18 @@ export const loadMxRecordDiffByDomainId =
       WITH dns, domains
       LET dnsScansPlusOne = (
         FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
-          FILTER dnsScan.mxRecord.diff == true
+          FILTER dnsScan.mxRecords.diff == true
           ${startDateFilter}
           ${endDateFilter}
           ${before ? relayBeforeTemplate : relayAfterTemplate}
           ${sortTemplate}
           LIMIT ${limit + 1}
-          RETURN { id: dnsScan._key, _type: "dnsScan", timestamp: dnsScan.timestamp, mxRecord: dnsScan.mxRecord }
+          RETURN { id: dnsScan._key, _type: "dnsScan", timestamp: dnsScan.timestamp, mxRecords: dnsScan.mxRecords }
       )
       LET hasMoreRelayPage = LENGTH(dnsScansPlusOne) == ${limit} + 1
       LET hasReversePage = ${!usingRelayExplicitly} ? false : (LENGTH(
           FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
-            FILTER dnsScan.mxRecord.diff == true
+            FILTER dnsScan.mxRecords.diff == true
             ${startDateFilter}
             ${endDateFilter}
             ${before ? relayAfterTemplate : relayBeforeTemplate}
@@ -129,7 +129,7 @@ export const loadMxRecordDiffByDomainId =
         ) > 0) ? true : false
       LET totalCount = COUNT(
           FOR dnsScan, e IN 1 OUTBOUND ${domainId} domainsDNS
-            FILTER dnsScan.mxRecord.diff == true
+            FILTER dnsScan.mxRecords.diff == true
             ${startDateFilter}
             ${endDateFilter}
             RETURN true
