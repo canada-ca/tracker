@@ -14,6 +14,7 @@ import { organizationConnection } from '../../organization/objects'
 import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
+import { mxRecordConnection } from '../../dns-scan/objects/mx-record-connection'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -161,7 +162,7 @@ export const domainType = new GraphQLObjectType({
       },
     },
     mxRecordDiff: {
-      type: '',
+      type: mxRecordConnection.connectionType,
       description: 'List of MX record diffs for a given domain.',
       args: {
         startDate: {
