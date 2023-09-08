@@ -67,7 +67,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
         return <ListItem key={idx}>{step}</ListItem>
       })
 
-  const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords, mxRecordDiff } = dnsResults
+  const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
   let emailPassCount = 0
   let emailInfoCount = 0
@@ -351,10 +351,6 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
               })}
             </Box>
           )}
-          <Text>
-            <Trans>Diff</Trans>
-          </Text>
-          <Box>{JSON.stringify(mxRecordDiff)}</Box>
         </AccordionPanel>
       </AccordionItem>
       <AccordionItem>
