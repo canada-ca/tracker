@@ -1,4 +1,6 @@
-import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLDateTime } from 'graphql-scalars'
+import { globalIdField } from 'graphql-relay'
 
 export const mxHostType = new GraphQLObjectType({
   name: 'MXHost',
@@ -30,9 +32,22 @@ export const mxRecordType = new GraphQLObjectType({
       type: GraphQLList(GraphQLString),
       description: `Additional warning info about the MX record.`,
     },
-    diff: {
-      type: GraphQLBoolean,
-      description: `Whether or not the MX record is different from the previous scan.`,
+  }),
+})
+
+export const mxRecordDiffType = new GraphQLObjectType({
+  name: 'MXRecordDiff',
+  fields: () => ({
+    id: globalIdField('dns'),
+    timestamp: {
+      type: GraphQLDateTime,
+      description: `The time when the scan was initiated.`,
+      resolve: ({ timestamp }) => new Date(timestamp),
+    },
+    mxRecords: {
+      type: mxRecordType,
+      description: `The MX records for the domain (if they exist).`,
+      resolve: ({ mxRecords }) => mxRecords,
     },
   }),
 })

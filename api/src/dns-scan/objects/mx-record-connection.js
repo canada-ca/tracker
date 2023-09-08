@@ -1,11 +1,11 @@
 import { GraphQLInt } from 'graphql'
 import { connectionDefinitions } from 'graphql-relay'
 
-import { mxRecordType } from './mx-record'
+import { mxRecordDiffType } from './mx-record'
 
 export const mxRecordConnection = connectionDefinitions({
-  name: 'DNSScan',
-  nodeType: mxRecordType,
+  name: 'MXRecordDiff',
+  nodeType: mxRecordDiffType,
   connectionFields: () => ({
     totalCount: {
       type: GraphQLInt,

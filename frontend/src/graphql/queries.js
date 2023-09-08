@@ -232,8 +232,8 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       hasDMARCReport
       userHasPermission
       mxRecordDiff(limit: 5, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        totalCount
         edges {
-          cursor
           node {
             id
             timestamp
@@ -247,7 +247,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             }
           }
         }
-        totalCount
       }
       dnsScan(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
         edges {
