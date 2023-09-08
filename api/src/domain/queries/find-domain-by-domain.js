@@ -1,8 +1,8 @@
-import {GraphQLNonNull} from 'graphql'
-import {t} from '@lingui/macro'
-import {Domain} from '../../scalars'
+import { GraphQLNonNull } from 'graphql'
+import { t } from '@lingui/macro'
+import { Domain } from '../../scalars'
 
-import {domainType} from '../objects'
+import { domainType } from '../objects'
 
 export const findDomainByDomain = {
   type: domainType,
@@ -19,20 +19,15 @@ export const findDomainByDomain = {
     {
       i18n,
       userKey,
-      auth: {
-        checkDomainPermission,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
-      loaders: {loadDomainByDomain},
-      validators: {cleanseInput},
+      auth: { checkDomainPermission, userRequired, verifiedRequired, loginRequiredBool },
+      loaders: { loadDomainByDomain },
+      validators: { cleanseInput },
     },
   ) => {
     if (loginRequiredBool) {
       // Get User
       const user = await userRequired()
-      verifiedRequired({user})
+      verifiedRequired({ user })
     }
 
     // Cleanse input
@@ -48,21 +43,17 @@ export const findDomainByDomain = {
 
     if (loginRequiredBool) {
       // Check user permission for domain access
-      const permitted = await checkDomainPermission({domainId: domain._id})
+      const permitted = await checkDomainPermission({ domainId: domain._id })
 
       if (!permitted) {
         console.warn(`User ${userKey} could not retrieve domain.`)
         throw new Error(
-          i18n._(
-            t`Permission Denied: Please contact organization user for help with retrieving this domain.`,
-          ),
+          i18n._(t`Permission Denied: Please contact organization user for help with retrieving this domain.`),
         )
       }
     }
 
-    console.info(
-      `User ${userKey} successfully retrieved domain ${domain._key}.`,
-    )
+    console.info(`User ${userKey} successfully retrieved domain ${domain._key}.`)
 
     return domain
   },
