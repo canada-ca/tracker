@@ -271,6 +271,8 @@ class DKIMScanner:
             "selector2",
             "mail",
             "email",
+            "k1,"
+            "k2",
         ]
         selectors_to_check = [selector for selector in common_selectors if selector not in self.selectors]
         found_selectors = []

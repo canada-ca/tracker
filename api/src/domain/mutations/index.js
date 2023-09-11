@@ -1,4 +1,7 @@
 export * from './add-organizations-domains'
+export * from './add-selector'
+export * from './block-selector'
+export * from './remove-selector'
 export * from './create-domain'
 export * from './favourite-domain'
 export * from './remove-domain'

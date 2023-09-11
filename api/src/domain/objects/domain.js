@@ -47,18 +47,48 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLString,
       description: `The status code when performing a DNS lookup for this domain.`,
     },
-    selectors: {
+    activeSelectors: {
       type: new GraphQLList(Selectors),
       description: 'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async ({ _id, selectors }, _, { userKey, auth: { checkDomainPermission, userRequired } }) => {
+      resolve: async (
+        { _id },
+        _,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDkimSelectorsByDomainId } },
+      ) => {
         await userRequired()
         const permitted = await checkDomainPermission({ domainId: _id })
         if (!permitted) {
           console.warn(`User: ${userKey} attempted to access selectors for ${_id}, but does not have permission.`)
-          throw new Error(t`Cannot query domain selectors without permission.`)
+          throw new Error(t`Cannot query active domain selectors without permission.`)
         }
 
-        return selectors
+        return await loadDkimSelectorsByDomainId({
+          domainId: _id,
+          edgeStatus: 'active',
+        })
+      },
+    },
+    blockedSelectors: {
+      type: new GraphQLList(Selectors),
+      description: 'Domain Keys Identified Mail (DKIM) selector strings blocked from being added to this domain.',
+      resolve: async (
+        { _id },
+        _,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDkimSelectorsByDomainId } },
+      ) => {
+        await userRequired()
+        const permitted = await checkDomainPermission({ domainId: _id })
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access blocked selectors for ${_id}, but does not have permission.`,
+          )
+          throw new Error(t`Cannot query blocked domain selectors without permission.`)
+        }
+
+        return await loadDkimSelectorsByDomainId({
+          domainId: _id,
+          edgeStatus: 'blocked',
+        })
       },
     },
     status: {

@@ -24,9 +24,13 @@ export const updateDomain = new mutationWithClientMutationId({
       type: Domain,
       description: 'The new url of the of the old domain.',
     },
-    selectors: {
+    activeSelectors: {
       type: new GraphQLList(Selectors),
-      description: 'The updated DKIM selector strings corresponding to this domain.',
+      description: 'The updated active DKIM selector strings corresponding to this domain.',
+    },
+    blockedSelectors: {
+      type: new GraphQLList(Selectors),
+      description: 'The updated blocked DKIM selector strings corresponding to this domain.',
     },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
@@ -76,11 +80,46 @@ export const updateDomain = new mutationWithClientMutationId({
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const updatedDomain = cleanseInput(args.domain)
 
-    let selectors
-    if (typeof args.selectors !== 'undefined') {
-      selectors = args.selectors.map((selector) => cleanseInput(selector))
-    } else {
-      selectors = null
+    const checkArrayDuplicates = (array) => {
+      return new Set(array).size !== array.length
+    }
+
+    let activeSelectors = []
+    if (typeof args.activeSelectors !== 'undefined') {
+      activeSelectors = args.activeSelectors.map((selector) => cleanseInput(selector))
+    }
+
+    if (checkArrayDuplicates(activeSelectors)) {
+      console.warn(`User: ${userKey} attempted to add duplicate selectors to ${domainId}.`)
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to add duplicate selectors to domain.`),
+      }
+    }
+
+    let blockedSelectors = []
+    if (typeof args.blockedSelectors !== 'undefined') {
+      blockedSelectors = args.blockedSelectors.map((selector) => cleanseInput(selector))
+    }
+
+    if (checkArrayDuplicates(blockedSelectors)) {
+      console.warn(`User: ${userKey} attempted to block duplicate selectors for ${domainId}.`)
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to block duplicate selectors for domain.`),
+      }
+    }
+
+    // Check to see if active and blocked selectors are the same
+    if (checkArrayDuplicates([...activeSelectors, ...blockedSelectors])) {
+      console.warn(`User: ${userKey} attempted to add duplicate selectors to ${domainId}.`)
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Unable to add duplicate selectors to domain.`),
+      }
     }
 
     let tags
@@ -198,7 +237,6 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
       lastRan: domain.lastRan,
-      selectors: selectors || domain.selectors,
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
     }
 
@@ -220,14 +258,168 @@ export const updateDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
+    // Update selectors
+    const updateSelector = async ({ selector, status }) => {
+      // Ensure selector exists
+      let selectorCursor
+      try {
+        selectorCursor = await trx.step(
+          () =>
+            query`
+            WITH selectors
+            UPSERT { selector: ${selector} }
+              INSERT { selector: ${selector} }
+              UPDATE { }
+              IN selectors
+            RETURN NEW
+          `,
+        )
+      } catch (err) {
+        console.error(
+          `Transaction step error occurred when user: ${userKey} attempted to update domain while ensuring selector ${selector} exists: ${domainId}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      }
+
+      let newSelector
+      try {
+        newSelector = await selectorCursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error occurred when user: ${userKey} attempted to update domain while ensuring selector ${selector} exists: ${domainId}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      }
+
+      // Add selector to domain
+      try {
+        await trx.step(
+          () =>
+            query`
+            UPSERT { _from: ${domain._id}, _to: ${newSelector._id} }
+              INSERT { _from: ${domain._id}, _to: ${newSelector._id}, status: ${status} }
+              UPDATE { status: ${status} }
+              IN domainsToSelectors
+          `,
+        )
+      } catch (err) {
+        console.error(
+          `Transaction step error occurred when user: ${userKey} attempted to update domain while adding selector ${selector} to domain: ${domainId}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      }
+    }
+
+    // Get active selectors
+    let currentActiveSelectorsCursor
+    try {
+      currentActiveSelectorsCursor = await trx.step(
+        () =>
+          query`
+            WITH domains, domainsToSelectors, selectors
+            FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToSelectors
+              FILTER e.status == "active"
+              RETURN v.selector
+          `,
+      )
+    } catch (err) {
+      console.error(
+        `Transaction step error occurred when user: ${userKey} attempted to update domain while retrieving active selectors: ${domainId}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    let currentActiveSelectors
+    try {
+      currentActiveSelectors = await currentActiveSelectorsCursor.all()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred when user: ${userKey} attempted to update domain while retrieving active selectors: ${domainId}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    // Add new active selectors
+    const activeSelectorsToAdd = activeSelectors.filter((selector) => {
+      return !currentActiveSelectors.includes(selector)
+    })
+
+    for (const selector of activeSelectorsToAdd) {
+      await updateSelector({ domain, selector, status: 'active' })
+    }
+
+    // Get blocked selectors
+    let currentBlockedSelectorsCursor
+    try {
+      currentBlockedSelectorsCursor = await trx.step(
+        () =>
+          query`
+            WITH domains, domainsToSelectors, selectors
+            FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToSelectors
+              FILTER e.status == "blocked"
+              RETURN v.selector
+          `,
+      )
+    } catch (err) {
+      console.error(
+        `Transaction step error occurred when user: ${userKey} attempted to update domain while retrieving blocked selectors: ${domainId}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    let currentBlockedSelectors
+    try {
+      currentBlockedSelectors = await currentBlockedSelectorsCursor.all()
+    } catch (err) {
+      console.error(
+        `Cursor error occurred when user: ${userKey} attempted to update domain while retrieving blocked selectors: ${domainId}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+    }
+
+    // Add new blocked selectors
+    const blockedSelectorsToAdd = blockedSelectors.filter((selector) => {
+      return !currentBlockedSelectors.includes(selector)
+    })
+
+    for (const selector of blockedSelectorsToAdd) {
+      await updateSelector({ selector, status: 'blocked' })
+    }
+
+    // Remove old selectors
+    const selectorsToRemove = [...currentActiveSelectors, ...currentBlockedSelectors].filter((selector) => {
+      return !activeSelectors.includes(selector) && !blockedSelectors.includes(selector)
+    })
+
+    for (const selector of selectorsToRemove) {
+      try {
+        await trx.step(
+          () =>
+            query`
+            WITH domains, domainsToSelectors, selectors
+            FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToSelectors
+              FILTER v.selector == ${selector}
+              REMOVE e IN domainsToSelectors
+          `,
+        )
+      } catch (err) {
+        console.error(
+          `Transaction step error occurred when user: ${userKey} attempted to update domain while removing selector ${selector} from domain: ${domainId}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+      }
+    }
+
     let claimCursor
     try {
-      claimCursor = await query`
+      claimCursor = await trx.step(
+        () => query`
         WITH claims
         FOR claim IN claims
           FILTER claim._from == ${org._id} && claim._to == ${domain._id}
           RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
-      `
+      `,
+      )
     } catch (err) {
       console.error(`Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
     }
@@ -283,16 +475,6 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'domain',
         oldValue: domain.domain,
         newValue: domainToInsert.domain,
-      })
-    }
-    if (
-      typeof selectors !== 'undefined' &&
-      JSON.stringify(domainToInsert.selectors) !== JSON.stringify(domain.selectors)
-    ) {
-      updatedProperties.push({
-        name: 'selectors',
-        oldValue: domain.selectors,
-        newValue: domainToInsert.selectors,
       })
     }
 

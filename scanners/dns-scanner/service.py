@@ -12,6 +12,8 @@ from concurrent.futures import TimeoutError
 from dns_scanner.dns_scanner import scan_domain
 import nats
 
+from dns_scanner.email_scanners import check_if_domain_exists
+
 load_dotenv()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
@@ -74,47 +76,96 @@ async def run():
         payload = json.loads(msg.data)
 
         domain = payload.get("domain")
-        domain_key = payload.get("domain_key")
         user_key = payload.get("user_key")
         shared_id = payload.get("shared_id")
 
-        # Get domain from DB
-        domain_doc = db.collection("domains").get(domain_key)
-        selectors = domain_doc.get("selectors")
-
-        # Get DKIM selectors from DMARC summaries in DB
-        domain_id = f"domains/{domain_key}"
-
-        summary_selectors_cursor = db.aql.execute(
-            """
-            LET selsSplit = (
-                FOR dmarcSumm, e IN 1 ANY @domain domainsToDmarcSummaries
-                    LIMIT 1
-                    LET sels = (
-                        FOR s in dmarcSumm.detailTables.fullPass[*].dkimSelectors
-                            RETURN SPLIT(s, ",")
-                    )
-                    RETURN sels
-            )[***]
-
-            FOR sel IN selsSplit
-                RETURN DISTINCT sel
-            """,
-            bind_vars={"domain": domain_id},
-        )
-        summary_selectors = [sel for sel in summary_selectors_cursor]
-
-        for sel in summary_selectors:
-            if sel not in selectors:
-                selectors.append(sel)
-
-        # Update domain with newly found DKIM selectors
-        domain.update({"selectors": selectors})
-        db.collection("domains").update(domain)
+        # Check if domain exists in DB
+        domain_doc_cursor = db.collection("domains").find({"domain": domain}, limit=1)
 
         try:
-            logger.info(f"Starting DNS scan on '{domain}' with DKIM selectors '{str(selectors)}'")
-            scan_results = scan_domain(domain=domain, dkim_selectors=selectors)
+            domain_doc = [doc for doc in domain_doc_cursor][0]
+        except IndexError:
+            logger.error(f"Domain '{domain}' not found in DB")
+            return
+
+        domain_key = domain_doc.get("_key")
+        domain_id = domain_doc.get("_id")
+
+        # Get DKIM selectors from DB
+        try:
+            selectors_cursor = db.aql.execute(
+                """
+                FOR selector, e IN 1 ANY @domain domainsToSelectors
+                    RETURN selector.selector
+                """,
+                bind_vars={"domain": domain_id},
+            )
+            selectors = [sel for sel in selectors_cursor]
+            active_selectors = [sel for sel in selectors_cursor if sel.status == "active"]
+        except Exception as e:
+            logger.error(f"Error getting selectors for domain '{domain}': {e}")
+            return
+
+        # Get DKIM selectors from DMARC summaries in DB
+        try:
+            summary_selectors_cursor = db.aql.execute(
+                """
+                LET selsSplit = (
+                    FOR dmarcSumm, e IN 1 ANY @domain domainsToDmarcSummaries
+                        LIMIT 1
+                        LET sels = (
+                            FOR s in dmarcSumm.detailTables.fullPass[*].dkimSelectors
+                                RETURN SPLIT(s, ",")
+                        )
+                        RETURN sels
+                )[***]
+
+                FOR sel IN selsSplit
+                    RETURN DISTINCT sel
+                """,
+                bind_vars={"domain": domain_id},
+            )
+        except Exception as e:
+            logger.error(f"Error getting selectors from DMARC summaries for domain '{domain}': {e}")
+            return
+        summary_selectors = [sel for sel in summary_selectors_cursor]
+
+        for selector in summary_selectors:
+            if selector not in selectors and selector != "":
+                if not check_if_domain_exists(f"{selector}._domainkey.{domain}"):
+                    continue
+
+                # Insert new domain/selector connection into DB
+                try:
+                    db.aql.execute(
+                        """
+                        // First ensure selector exists
+                        LET selector = (
+                            UPSERT { selector: @selector }
+                                INSERT { selector: @selector }
+                                UPDATE { }
+                                IN selectors
+                            RETURN NEW
+                        )[0]
+
+                        // Create domain/selector connection
+                        UPSERT { _from: @domain, _to: selector._id }
+                            INSERT { _from: @domain, _to: selector._id, status: "active" }
+                            UPDATE { }
+                            IN domainsToSelectors
+                        """,
+                        bind_vars={"domain": domain_id, "selector": selector}
+                    )
+                except Exception as e:
+                    logger.error(f"Error inserting new domain/selector connection for domain '{domain}' and selector '{selector}': {e}")
+                    return
+
+                logger.info(f"Inserted new domain/selector connection for domain '{domain}' and selector '{selector}'")
+                active_selectors.append(selector)
+
+        try:
+            logger.info(f"Starting DNS scan on '{domain}' with DKIM selectors '{str(active_selectors)}'")
+            scan_results = scan_domain(domain=domain, dkim_selectors=active_selectors)
 
             await nc.publish(
                 f"{PUBLISH_TO}.{domain_key}.dns",
@@ -131,7 +182,7 @@ async def run():
             )
         except TimeoutError:
             logger.error(
-                f"Timeout while scanning {domain} with DKIM selectors '{str(selectors)}'"
+                f"Timeout while scanning {domain} with DKIM selectors '{str(active_selectors)}'"
             )
             await nc.publish(
                 f"{PUBLISH_TO}.{domain_key}.dns",

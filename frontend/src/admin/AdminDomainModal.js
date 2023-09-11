@@ -43,7 +43,8 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
   const {
     editingDomainId,
     editingDomainUrl,
-    selectorInputList,
+    activeSelectorInputList,
+    blockedSelectorInputList,
     tagInputList,
     orgSlug,
     archived,
@@ -193,7 +194,8 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
         <Formik
           initialValues={{
             domainUrl: editingDomainUrl,
-            selectors: selectorInputList,
+            activeSelectors: activeSelectorInputList,
+            blockedSelectors: blockedSelectorInputList,
             // convert initial tags to input type
             tags: tagInputList?.map((label) => {
               return tagOptions.filter((option) => {
@@ -216,7 +218,8 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   domainId: editingDomainId,
                   orgId: orgId,
                   domain: values.domainUrl,
-                  selectors: values.selectors,
+                  activeSelectors: values.activeSelectors,
+                  blockedSelectors: values.blockedSelectors,
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
@@ -228,7 +231,8 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 variables: {
                   orgId: orgId,
                   domain: values.domainUrl,
-                  selectors: values.selectors,
+                  activeSelectors: values.activeSelectors,
+                  blockedSelectors: values.blockedSelectors,
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
@@ -249,20 +253,20 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   <DomainField name="domainUrl" label={t`New Domain URL:`} placeholder={t`New Domain URL`} />
 
                   <FieldArray
-                    name="selectors"
+                    name="activeSelectors"
                     render={(arrayHelpers) => (
                       <Box>
                         <Text fontWeight="bold">
-                          <Trans>DKIM Selectors:</Trans>
+                          <Trans>Active DKIM Selectors:</Trans>
                         </Text>
-                        {values.selectors.map((_selector, index) => (
+                        {values.activeSelectors.map((_selector, index) => (
                           <FormControl
                             key={index}
                             isInvalid={
-                              errors.selectors &&
-                              errors.selectors[index] &&
-                              touched.selectors &&
-                              touched.selectors[index]
+                              errors.activeSelectors &&
+                              errors.activeSelectors[index] &&
+                              touched.activeSelectors &&
+                              touched.activeSelectors[index]
                             }
                           >
                             <Grid gridTemplateColumns="auto 1fr" gap="0.5em" alignItems="center" mb="0.5em">
@@ -275,20 +279,78 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                                 onClick={() => arrayHelpers.remove(index)}
                                 aria-label="remove-dkim-selector"
                               />
-                              <Field id={`selectors.${index}`} name={`selectors.${index}`} h="1.5rem">
+                              <Field id={`activeSelectors.${index}`} name={`activeSelectors.${index}`} h="1.5rem">
                                 {({ field }) => (
                                   <Input
                                     {...field}
-                                    id={`selectors.${index}`}
-                                    name={`selectors.${index}`}
-                                    placeholder={i18n._(t`DKIM Selector`)}
+                                    id={`activeSelectors.${index}`}
+                                    name={`activeSelectors.${index}`}
+                                    placeholder={i18n._(t`Active DKIM Selector`)}
                                     ref={initialFocusRef}
                                   />
                                 )}
                               </Field>
 
                               <FormErrorMessage gridColumn="2 / 3" mt={0}>
-                                {errors && errors.selectors && errors.selectors[index]}
+                                {errors && errors.activeSelectors && errors.activeSelectors[index]}
+                              </FormErrorMessage>
+                            </Grid>
+                          </FormControl>
+                        ))}
+                        <IconButton
+                          variant="primary"
+                          icon={<SmallAddIcon size="icons.md" />}
+                          data-testid="add-dkim-selector"
+                          type="button"
+                          px="2"
+                          onClick={() => arrayHelpers.push('')}
+                          aria-label="add-dkim-selector"
+                        />
+                      </Box>
+                    )}
+                  />
+
+                  <FieldArray
+                    name="blockedSelectors"
+                    render={(arrayHelpers) => (
+                      <Box>
+                        <Text fontWeight="bold">
+                          <Trans>Blocked DKIM Selectors:</Trans>
+                        </Text>
+                        {values.blockedSelectors.map((_selector, index) => (
+                          <FormControl
+                            key={index}
+                            isInvalid={
+                              errors.blockedSelectors &&
+                              errors.blockedSelectors[index] &&
+                              touched.blockedSelectors &&
+                              touched.blockedSelectors[index]
+                            }
+                          >
+                            <Grid gridTemplateColumns="auto 1fr" gap="0.5em" alignItems="center" mb="0.5em">
+                              <IconButton
+                                variant="danger"
+                                icon={<MinusIcon size="icons.xs" />}
+                                data-testid="remove-dkim-selector"
+                                type="button"
+                                p="3"
+                                onClick={() => arrayHelpers.remove(index)}
+                                aria-label="remove-dkim-selector"
+                              />
+                              <Field id={`blockedSelectors.${index}`} name={`blockedSelectors.${index}`} h="1.5rem">
+                                {({ field }) => (
+                                  <Input
+                                    {...field}
+                                    id={`blockedSelectors.${index}`}
+                                    name={`blockedSelectors.${index}`}
+                                    placeholder={i18n._(t`Blocked DKIM Selector`)}
+                                    ref={initialFocusRef}
+                                  />
+                                )}
+                              </Field>
+
+                              <FormErrorMessage gridColumn="2 / 3" mt={0}>
+                                {errors && errors.blockedSelectors && errors.blockedSelectors[index]}
                               </FormErrorMessage>
                             </Grid>
                           </FormControl>
@@ -432,7 +494,8 @@ AdminDomainModal.propTypes = {
   orgId: string,
   editingDomainId: string,
   editingDomainUrl: string,
-  selectorInputList: array,
+  activeSelectorInputList: array,
+  blockedSelectorInputList: array,
   tagInputList: array,
   archived: bool,
   hidden: bool,

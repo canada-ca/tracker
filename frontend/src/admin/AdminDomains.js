@@ -65,7 +65,8 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
     archived: false,
     mutation: '',
     tagInputList: [],
-    selectorInputList: [],
+    activeSelectorInputList: [],
+    blockedSelectorInputList: [],
     editingDomainId: '',
     editingDomainUrl: '',
   })
@@ -257,7 +258,20 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
           </Text>
         )}
       >
-        {({ id: domainId, domain, selectors, claimTags, hidden, archived, rcode, organizations }, index) => (
+        {(
+          {
+            id: domainId,
+            domain,
+            activeSelectors,
+            blockedSelectors,
+            claimTags,
+            hidden,
+            archived,
+            rcode,
+            organizations,
+          },
+          index,
+        ) => (
           <>
             {index === 0 && <Divider borderBottomColor="gray.400" />}
             <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
@@ -283,7 +297,8 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
                       archived,
                       mutation: 'update',
                       tagInputList: claimTags,
-                      selectorInputList: selectors,
+                      activeSelectorInputList: activeSelectors,
+                      blockedSelectorInputList: blockedSelectors,
                       editingDomainId: domainId,
                       editingDomainUrl: domain,
                       orgCount: organizations.totalCount,
@@ -329,7 +344,8 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
               archived: false,
               mutation: 'create',
               tagInputList: [],
-              selectorInputList: [],
+              activeSelectorInputList: [],
+              blockedSelectorInputList: [],
               editingDomainId: '',
               editingDomainUrl: newDomainUrl,
               orgCount: 0,
@@ -417,7 +433,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
               }
             : updateOnClose
         }
-        validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
+        validationSchema={createValidationSchema(['domainUrl', 'activeSelectors', 'blockedSelectors'])}
         orgId={orgId}
         orgSlug={orgSlug}
         permission={permission}

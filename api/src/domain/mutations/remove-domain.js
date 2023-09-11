@@ -265,6 +265,22 @@ export const removeDomain = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
+      // remove DKIM selectors
+      try {
+        await trx.step(async () => {
+          await query`
+            FOR e IN domainsToSelectors
+              FILTER e._from == ${domain._id}
+              REMOVE e IN domainsToSelectors
+          `
+        })
+      } catch (err) {
+        console.error(
+          `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+      }
+
       try {
         // Remove domain
         await trx.step(async () => {
