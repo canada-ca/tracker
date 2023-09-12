@@ -11,11 +11,11 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
   description: 'This mutation allows the removal of unused domains.',
   inputFields: () => ({
     domains: {
-      type: GraphQLNonNull(new GraphQLList(Domain)),
+      type: new GraphQLNonNull(new GraphQLList(Domain)),
       description: 'Domains you wish to remove from the organization.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to remove the domain from.',
     },
     archiveDomains: {
@@ -29,7 +29,7 @@ export const removeOrganizationsDomains = new mutationWithClientMutationId({
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(bulkModifyDomainsUnion),
+      type: new GraphQLNonNull(bulkModifyDomainsUnion),
       description: '`BulkModifyDomainsUnion` returning either a `DomainBulkResult`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },

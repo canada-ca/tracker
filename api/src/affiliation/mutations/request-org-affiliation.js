@@ -12,7 +12,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
   description: `This mutation allows users to request to join an organization.`,
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to invite the user to.',
     },
   }),

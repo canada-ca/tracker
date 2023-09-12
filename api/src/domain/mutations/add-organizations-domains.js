@@ -11,11 +11,11 @@ export const addOrganizationsDomains = new mutationWithClientMutationId({
   description: 'Mutation used to create multiple new domains for an organization.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the organization you wish to assign this domain to.',
     },
     domains: {
-      type: GraphQLNonNull(new GraphQLList(Domain)),
+      type: new GraphQLNonNull(new GraphQLList(Domain)),
       description: 'Url that you would like to be added to the database.',
     },
     hideNewDomains: {

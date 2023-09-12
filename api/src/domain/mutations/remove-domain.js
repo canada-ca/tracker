@@ -11,21 +11,21 @@ export const removeDomain = new mutationWithClientMutationId({
   description: 'This mutation allows the removal of unused domains.',
   inputFields: () => ({
     domainId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the domain you wish to remove.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to remove the domain from.',
     },
     reason: {
-      type: GraphQLNonNull(DomainRemovalReasonEnum),
+      type: new GraphQLNonNull(DomainRemovalReasonEnum),
       description: 'The reason given for why this domain is being removed from the organization.',
     },
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(removeDomainUnion),
+      type: new GraphQLNonNull(removeDomainUnion),
       description: '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },

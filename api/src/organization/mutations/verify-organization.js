@@ -9,7 +9,7 @@ export const verifyOrganization = new mutationWithClientMutationId({
   description: 'Mutation allows the verification of an organization.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the organization to be verified.',
     },
   }),

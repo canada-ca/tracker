@@ -9,7 +9,7 @@ export const leaveOrganization = new mutationWithClientMutationId({
   description: 'This mutation allows users to leave a given organization.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'Id of the organization the user is looking to leave.',
     },
   }),

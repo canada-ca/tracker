@@ -7,11 +7,11 @@ export const dmarcSummaryOrder = new GraphQLInputObjectType({
   description: 'Ordering options for dmarc summary connections.',
   fields: () => ({
     field: {
-      type: GraphQLNonNull(DmarcSummaryOrderField),
+      type: new GraphQLNonNull(DmarcSummaryOrderField),
       description: 'The field to order dmarc summaries by.',
     },
     direction: {
-      type: GraphQLNonNull(OrderDirection),
+      type: new GraphQLNonNull(OrderDirection),
       description: 'The ordering direction.',
     },
   }),

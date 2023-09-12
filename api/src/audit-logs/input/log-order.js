@@ -6,11 +6,11 @@ export const logOrder = new GraphQLInputObjectType({
   description: 'Ordering options for audit logs.',
   fields: () => ({
     field: {
-      type: GraphQLNonNull(LogOrderField),
+      type: new GraphQLNonNull(LogOrderField),
       description: 'The field to order logs by.',
     },
     direction: {
-      type: GraphQLNonNull(OrderDirection),
+      type: new GraphQLNonNull(OrderDirection),
       description: 'The ordering direction.',
     },
   }),

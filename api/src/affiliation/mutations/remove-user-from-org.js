@@ -10,11 +10,11 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
   description: 'This mutation allows admins or higher to remove users from any organizations they belong to.',
   inputFields: () => ({
     userId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The user id of the user to be removed.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization that the user is to be removed from.',
     },
   }),
@@ -143,8 +143,9 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
     const trx = await transaction(collections)
 
     try {
-      await trx.step( () =>
-        query`
+      await trx.step(
+        () =>
+          query`
             WITH affiliations, organizations, users
             FOR aff IN affiliations
               FILTER aff._from == ${requestedOrg._id}
