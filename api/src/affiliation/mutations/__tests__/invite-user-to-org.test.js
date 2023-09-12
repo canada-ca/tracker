@@ -134,9 +134,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -157,8 +157,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -188,7 +188,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -3230,9 +3230,9 @@ describe('invite user to org', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3253,8 +3253,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'fr',
@@ -3288,7 +3288,7 @@ describe('invite user to org', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = {
               data: {

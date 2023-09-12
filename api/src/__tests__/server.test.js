@@ -1,6 +1,6 @@
 import request from 'supertest'
-import {Server} from '../server'
-import {ensure, dbNameFromFile} from 'arango-tools'
+import { Server } from '../server'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import dbschema from '../../database.json'
 
 const {
@@ -23,7 +23,7 @@ describe('parse server', () => {
     console.log = mockedLog
     console.warn = mockedWarn
     // create the database so that middleware can connect
-    ;({drop} = await ensure({
+    ;({ drop } = await ensure({
       variables: {
         dbname: name,
         username: 'root',
@@ -88,7 +88,7 @@ describe('parse server', () => {
         )
           .post('/graphql')
           .set('Accept', 'application/json')
-          .send({query: '{__schema {types {kind}}}'})
+          .send({ query: '{__schema {types {kind}}}' })
 
         expect(response.status).toEqual(200)
       })
@@ -112,12 +112,10 @@ describe('parse server', () => {
           )
             .post('/graphql')
             .set('Accept', 'application/json')
-            .send({query: '{__schema {types {kind}}}'})
+            .send({ query: '{__schema {types {kind}}}' })
 
           expect(response.status).toEqual(400)
-          expect(response.text).toEqual(
-            expect.stringContaining('Query error, query is too complex.'),
-          )
+          expect(response.text).toEqual(expect.stringContaining('Query error, query is too complex.'))
         })
       })
 
@@ -144,9 +142,7 @@ describe('parse server', () => {
             })
 
           expect(response.status).toEqual(400)
-          expect(response.text).toEqual(
-            expect.stringContaining('exceeds maximum operation depth'),
-          )
+          expect(response.text).toEqual(expect.stringContaining('exceeds maximum operation depth'))
         })
       })
     })

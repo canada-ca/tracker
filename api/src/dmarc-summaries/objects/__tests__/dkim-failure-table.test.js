@@ -1,10 +1,4 @@
-import {
-  GraphQLID,
-  GraphQLBoolean,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLNonNull,
-} from 'graphql'
+import { GraphQLID, GraphQLBoolean, GraphQLString, GraphQLInt, GraphQLNonNull } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { dkimFailureTableType } from '../dkim-failure-table'
@@ -16,7 +10,7 @@ describe('given the dkimFailureTable gql object', () => {
       const demoType = dkimFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a dkimAligned field', () => {
       const demoType = dkimFailureTableType.getFields()
@@ -90,79 +84,63 @@ describe('given the dkimFailureTable gql object', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('dkimFail', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('dkimFail', 1))
       })
     })
     describe('testing the dkimAligned resolver', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(demoType.dkimAligned.resolve({ dkimAligned: true })).toEqual(
-          true,
-        )
+        expect(demoType.dkimAligned.resolve({ dkimAligned: true })).toEqual(true)
       })
     })
     describe('testing the dkimDomains resolver', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(
-          demoType.dkimDomains.resolve({ dkimDomains: 'dkimDomains' }),
-        ).toEqual('dkimDomains')
+        expect(demoType.dkimDomains.resolve({ dkimDomains: 'dkimDomains' })).toEqual('dkimDomains')
       })
     })
     describe('testing the dkimResults resolver', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(
-          demoType.dkimResults.resolve({ dkimResults: 'dkimResults' }),
-        ).toEqual('dkimResults')
+        expect(demoType.dkimResults.resolve({ dkimResults: 'dkimResults' })).toEqual('dkimResults')
       })
     })
     describe('testing the dkimSelectors resolver', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(
-          demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
-        ).toEqual('dkimSelectors')
+        expect(demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' })).toEqual('dkimSelectors')
       })
     })
     describe('testing the dnsHost resolver', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual(
-          'dnsHost',
-        )
+        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual('dnsHost')
       })
     })
     describe('testing the envelopeFrom resolver', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(
-          demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' }),
-        ).toEqual('envelopeFrom')
+        expect(demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' })).toEqual('envelopeFrom')
       })
     })
     describe('testing the guidance resolver', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual(
-          'guidance',
-        )
+        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual('guidance')
       })
     })
     describe('testing the guidanceTag resolver', () => {
       describe('guidance is not null', () => {
         it('returns resolved value', async () => {
           const demoType = dkimFailureTableType.getFields()
-  
+
           const expectedResults = {
             _id: 'aggregateGuidanceTags/agg1',
             _key: 'agg1',
@@ -170,9 +148,7 @@ describe('given the dkimFailureTable gql object', () => {
             _type: 'guidanceTag',
             guidance: 'cool guidance for issue',
             id: 'agg1',
-            refLinksGuide: [
-              { description: 'Link Description', ref_link: 'www.link.ca' },
-            ],
+            refLinksGuide: [{ description: 'Link Description', ref_link: 'www.link.ca' }],
             refLinksTechnical: [
               {
                 description: 'Tech link description',
@@ -182,7 +158,7 @@ describe('given the dkimFailureTable gql object', () => {
             tagId: 'agg1',
             tagName: 'cool-tag-name',
           }
-  
+
           expect(
             await demoType.guidanceTag.resolve(
               { guidance: 'agg1' },
@@ -201,9 +177,9 @@ describe('given the dkimFailureTable gql object', () => {
       describe('guidance is null', () => {
         it('returns an empty obj', async () => {
           const demoType = dkimFailureTableType.getFields()
-  
+
           const expectedResults = {}
-  
+
           expect(
             await demoType.guidanceTag.resolve(
               { guidance: null },
@@ -224,9 +200,7 @@ describe('given the dkimFailureTable gql object', () => {
       it('returns resolved value', () => {
         const demoType = dkimFailureTableType.getFields()
 
-        expect(
-          demoType.headerFrom.resolve({ headerFrom: 'headerFrom' }),
-        ).toEqual('headerFrom')
+        expect(demoType.headerFrom.resolve({ headerFrom: 'headerFrom' })).toEqual('headerFrom')
       })
     })
     describe('testing test sourceIpAddress resolver', () => {

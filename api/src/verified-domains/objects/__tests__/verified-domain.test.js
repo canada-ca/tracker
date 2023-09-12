@@ -13,7 +13,7 @@ describe('given the verified domains object', () => {
       const demoType = verifiedDomainType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a domain field', () => {
       const demoType = verifiedDomainType.getFields()

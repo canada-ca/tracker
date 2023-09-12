@@ -1,9 +1,4 @@
-import {
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLString,
-  GraphQLBoolean,
-} from 'graphql'
+import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLBoolean } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { Acronym, Slug } from '../../../scalars'
@@ -15,7 +10,7 @@ describe('given the web-check-organization object', () => {
       const demoType = webCheckType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has an acronym field', () => {
       const demoType = webCheckType.getFields()
@@ -61,9 +56,7 @@ describe('given the web-check-organization object', () => {
       it('returns the resolved value', () => {
         const demoType = webCheckType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('organization', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('organization', 1))
       })
     })
     describe('testing the acronym resolver', () => {
@@ -84,9 +77,7 @@ describe('given the web-check-organization object', () => {
       it('returns the resolved value', () => {
         const demoType = webCheckType.getFields()
 
-        expect(demoType.slug.resolve({ slug: 'organization-name' })).toEqual(
-          'organization-name',
-        )
+        expect(demoType.slug.resolve({ slug: 'organization-name' })).toEqual('organization-name')
       })
     })
     describe('testing the verified resolver', () => {
@@ -102,9 +93,7 @@ describe('given the web-check-organization object', () => {
 
         const domainType = demoType.domains.type.getFields()
 
-        await expect(domainType.totalCount.resolve({ totalCount: 1 })).toEqual(
-          1,
-        )
+        await expect(domainType.totalCount.resolve({ totalCount: 1 })).toEqual(1)
       })
     })
     describe('testing the tags resolver', () => {
@@ -128,9 +117,7 @@ describe('given the web-check-organization object', () => {
             {}, // empty args object
             {
               loaders: {
-                loadDomainTagsByOrgId: jest
-                  .fn()
-                  .mockReturnValue(expectedResults),
+                loadDomainTagsByOrgId: jest.fn().mockReturnValue(expectedResults),
               },
             },
           ),
