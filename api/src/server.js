@@ -4,7 +4,6 @@ import express from 'express'
 import { json } from 'body-parser'
 
 import http from 'http'
-// import { ApolloServerPluginLandingPageGraphQLPlayground as enablePlayground } from '@apollo/server-plugin-landing-page-graphql-playground'
 import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 
@@ -48,7 +47,6 @@ export const Server = async ({
   context = {},
 }) => {
   const app = express()
-
   app.use('*', cors())
 
   app.use(cookieParser())
