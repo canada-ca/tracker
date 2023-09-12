@@ -4,7 +4,7 @@ import express from 'express'
 import { json } from 'body-parser'
 
 import http from 'http'
-import { ApolloServerPluginLandingPageGraphQLPlayground as enablePlayground } from '@apollo/server-plugin-landing-page-graphql-playground'
+// import { ApolloServerPluginLandingPageGraphQLPlayground as enablePlayground } from '@apollo/server-plugin-landing-page-graphql-playground'
 import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 
@@ -98,7 +98,6 @@ export const Server = async ({
     validationRules: createValidationRules(maxDepth, complexityCost, scalarCost, objectCost, listFactor),
     introspection: true,
     tracing,
-    plugins: [enablePlayground()],
   })
 
   await server.start()

@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@apollo/server": "^4.9.3",
-    "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
     "@lingui/core": "^3.13.0",
     "arango-tools": "^0.6.0",
     "arangojs": "^8.0.0",
