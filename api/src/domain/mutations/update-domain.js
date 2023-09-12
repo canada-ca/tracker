@@ -494,6 +494,28 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
+    // Check active selectors were updated
+    activeSelectors.sort()
+    currentActiveSelectors.sort()
+    if (JSON.stringify(activeSelectors) !== JSON.stringify(currentActiveSelectors)) {
+      updatedProperties.push({
+        name: 'activeSelectors',
+        oldValue: currentActiveSelectors,
+        newValue: activeSelectors,
+      })
+    }
+
+    // Check blocked selectors were updated
+    blockedSelectors.sort()
+    currentBlockedSelectors.sort()
+    if (JSON.stringify(blockedSelectors) !== JSON.stringify(currentBlockedSelectors)) {
+      updatedProperties.push({
+        name: 'blockedSelectors',
+        oldValue: currentBlockedSelectors,
+        newValue: blockedSelectors,
+      })
+    }
+
     if (updatedProperties.length > 0) {
       await logActivity({
         transaction,
