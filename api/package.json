@@ -36,7 +36,6 @@
     "express-request-language": "^1.1.15",
     "graphql": "^16.8.0",
     "graphql-depth-limit": "^1.1.0",
-    "graphql-playground-middleware-express": "^1.7.23",
     "graphql-redis-subscriptions": "^2.6.0",
     "graphql-relay": "^0.10.0",
     "graphql-scalars": "^1.22.2",

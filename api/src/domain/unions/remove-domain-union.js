@@ -1,5 +1,5 @@
-import {GraphQLUnionType} from 'graphql'
-import {domainErrorType, domainResultType} from '../objects'
+import { GraphQLUnionType } from 'graphql'
+import { domainErrorType, domainResultType } from '../objects'
 
 export const removeDomainUnion = new GraphQLUnionType({
   name: 'RemoveDomainUnion',
@@ -7,11 +7,11 @@ export const removeDomainUnion = new GraphQLUnionType({
 allowing for users to remove a domain belonging to their org,
 and support any errors that may occur`,
   types: [domainErrorType, domainResultType],
-  resolveType({_type}) {
+  resolveType({ _type }) {
     if (_type === 'result') {
-      return domainResultType
+      return domainResultType.name
     } else {
-      return domainErrorType
+      return domainErrorType.name
     }
   },
 })
