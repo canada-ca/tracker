@@ -155,6 +155,10 @@ const mocks = {
     // gives date in format "2020-12-31 15:30:20.262Z"
     return new Date(faker.date.between('2019-01-01', '2022-01-01')).toISOString().replace('T', ' ')
   },
+  DateTime: () => {
+    // gives date in format "2020-12-31 15:30:20.262Z"
+    return new Date(faker.date.between('2019-01-01', '2022-01-01')).toISOString()
+  },
   DkimFailureTable: () => {
     const dkimDomains = getStringOfDomains(0, 2)
     const dkimResults = getDmarcTableResults()
@@ -557,6 +561,11 @@ const mocks = {
       min: 2019,
       max: 2021,
     }),
+  MXHost: () => ({
+    addresses: [...new Array(faker.datatype.number({ min: 1, max: 2 }))].map(() => faker.internet.ip()),
+    hostname: faker.internet.domainName(),
+    preference: faker.datatype.number({ min: 1, max: 10 }),
+  }),
   ...mockOverrides,
 }
 
