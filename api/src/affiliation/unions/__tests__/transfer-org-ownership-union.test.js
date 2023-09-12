@@ -1,8 +1,5 @@
-import {
-  affiliationError,
-  transferOrgOwnershipResult,
-} from '../../objects/index'
-import {transferOrgOwnershipUnion} from '../transfer-org-ownership-union'
+import { affiliationError, transferOrgOwnershipResult } from '../../objects/index'
+import { transferOrgOwnershipUnion } from '../transfer-org-ownership-union'
 
 describe('given the transferOrgOwnershipUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the transferOrgOwnershipUnion', () => {
           authResult: {},
         }
 
-        expect(transferOrgOwnershipUnion.resolveType(obj)).toMatchObject(
-          transferOrgOwnershipResult,
-        )
+        expect(transferOrgOwnershipUnion.resolveType(obj)).toMatch(transferOrgOwnershipResult.name)
       })
     })
     describe('testing the affiliationError', () => {
@@ -39,9 +34,7 @@ describe('given the transferOrgOwnershipUnion', () => {
           description: 'text',
         }
 
-        expect(transferOrgOwnershipUnion.resolveType(obj)).toMatchObject(
-          affiliationError,
-        )
+        expect(transferOrgOwnershipUnion.resolveType(obj)).toMatch(affiliationError.name)
       })
     })
   })

@@ -1,8 +1,5 @@
-import {
-  verifyAccountErrorType,
-  verifyAccountResultType,
-} from '../../objects/index'
-import {verifyAccountUnion} from '../verify-account-union'
+import { verifyAccountErrorType, verifyAccountResultType } from '../../objects/index'
+import { verifyAccountUnion } from '../verify-account-union'
 
 describe('given the verifyAccountUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the verifyAccountUnion', () => {
           authResult: {},
         }
 
-        expect(verifyAccountUnion.resolveType(obj)).toMatchObject(
-          verifyAccountResultType,
-        )
+        expect(verifyAccountUnion.resolveType(obj)).toMatch(verifyAccountResultType.name)
       })
     })
     describe('testing the verifyAccountErrorType', () => {
@@ -39,9 +34,7 @@ describe('given the verifyAccountUnion', () => {
           description: 'text',
         }
 
-        expect(verifyAccountUnion.resolveType(obj)).toMatchObject(
-          verifyAccountErrorType,
-        )
+        expect(verifyAccountUnion.resolveType(obj)).toMatch(verifyAccountErrorType.name)
       })
     })
   })

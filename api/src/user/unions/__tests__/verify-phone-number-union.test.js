@@ -1,8 +1,5 @@
-import {
-  verifyPhoneNumberErrorType,
-  verifyPhoneNumberResultType,
-} from '../../objects/index'
-import {verifyPhoneNumberUnion} from '../index'
+import { verifyPhoneNumberErrorType, verifyPhoneNumberResultType } from '../../objects/index'
+import { verifyPhoneNumberUnion } from '../index'
 
 describe('given the verifyPhoneNumberUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the verifyPhoneNumberUnion', () => {
           authResult: {},
         }
 
-        expect(verifyPhoneNumberUnion.resolveType(obj)).toMatchObject(
-          verifyPhoneNumberResultType,
-        )
+        expect(verifyPhoneNumberUnion.resolveType(obj)).toMatch(verifyPhoneNumberResultType.name)
       })
     })
     describe('testing the verifyPhoneNumberErrorType', () => {
@@ -38,9 +33,7 @@ describe('given the verifyPhoneNumberUnion', () => {
           description: 'text',
         }
 
-        expect(verifyPhoneNumberUnion.resolveType(obj)).toMatchObject(
-          verifyPhoneNumberErrorType,
-        )
+        expect(verifyPhoneNumberUnion.resolveType(obj)).toMatch(verifyPhoneNumberErrorType.name)
       })
     })
   })

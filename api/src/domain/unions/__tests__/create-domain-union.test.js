@@ -1,5 +1,5 @@
-import {domainErrorType, domainType} from '../../objects/index'
-import {createDomainUnion} from '../create-domain-union'
+import { domainErrorType, domainType } from '../../objects/index'
+import { createDomainUnion } from '../create-domain-union'
 
 describe('given the createDomainUnion', () => {
   describe('testing the field types', () => {
@@ -22,7 +22,7 @@ describe('given the createDomainUnion', () => {
           domain: {},
         }
 
-        expect(createDomainUnion.resolveType(obj)).toMatchObject(domainType)
+        expect(createDomainUnion.resolveType(obj)).toMatch(domainType.name)
       })
     })
     describe('testing the domainErrorType', () => {
@@ -34,9 +34,7 @@ describe('given the createDomainUnion', () => {
           description: 'text',
         }
 
-        expect(createDomainUnion.resolveType(obj)).toMatchObject(
-          domainErrorType,
-        )
+        expect(createDomainUnion.resolveType(obj)).toMatchObject(domainErrorType)
       })
     })
   })

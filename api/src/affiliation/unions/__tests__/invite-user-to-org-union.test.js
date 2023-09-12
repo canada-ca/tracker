@@ -1,8 +1,5 @@
-import {
-  affiliationError,
-  inviteUserToOrgResultType,
-} from '../../objects/index'
-import {inviteUserToOrgUnion} from '../invite-user-to-org-union'
+import { affiliationError, inviteUserToOrgResultType } from '../../objects/index'
+import { inviteUserToOrgUnion } from '../invite-user-to-org-union'
 
 describe('given the inviteUserToOrgUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the inviteUserToOrgUnion', () => {
           authResult: {},
         }
 
-        expect(inviteUserToOrgUnion.resolveType(obj)).toMatchObject(
-          inviteUserToOrgResultType,
-        )
+        expect(inviteUserToOrgUnion.resolveType(obj)).toMatch(inviteUserToOrgResultType.name)
       })
     })
     describe('testing the affiliationError', () => {
@@ -39,9 +34,7 @@ describe('given the inviteUserToOrgUnion', () => {
           description: 'text',
         }
 
-        expect(inviteUserToOrgUnion.resolveType(obj)).toMatchObject(
-          affiliationError,
-        )
+        expect(inviteUserToOrgUnion.resolveType(obj)).toMatch(affiliationError.name)
       })
     })
   })
