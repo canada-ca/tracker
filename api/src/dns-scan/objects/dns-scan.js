@@ -1,4 +1,4 @@
-import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 import { GraphQLDateTime } from 'graphql-scalars'
 
@@ -6,6 +6,7 @@ import { nodeInterface } from '../../node'
 import { dmarcType } from './dmarc'
 import { spfType } from './spf'
 import { dkimType } from './dkim'
+import { mxRecordType } from './mx-record'
 
 export const dnsScanType = new GraphQLObjectType({
   name: 'DNSScan',
@@ -60,39 +61,6 @@ export const dnsScanType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
   description: `Results of DKIM, DMARC, and SPF scans on the given domain.`,
-})
-
-export const mxHostType = new GraphQLObjectType({
-  name: 'MXHost',
-  fields: () => ({
-    preference: {
-      type: GraphQLInt,
-      description: `The preference (or priority) of the host.`,
-    },
-    hostname: {
-      type: GraphQLString,
-      description: `The hostname of the given host.`,
-    },
-    addresses: {
-      type: new GraphQLList(GraphQLString),
-      description: `The IP addresses for the given host.`,
-    },
-  }),
-  description: `Hosts listed in the domain's MX record.`,
-})
-
-export const mxRecordType = new GraphQLObjectType({
-  name: 'MXRecord',
-  fields: () => ({
-    hosts: {
-      type: new GraphQLList(mxHostType),
-      description: `Hosts listed in the domain's MX record.`,
-    },
-    warnings: {
-      type: new GraphQLList(GraphQLString),
-      description: `Additional warning info about the MX record.`,
-    },
-  }),
 })
 
 export const nsRecordType = new GraphQLObjectType({
