@@ -69,7 +69,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         return <ListItem key={idx}>{step}</ListItem>
       })
 
-  const { dkim, dmarc, spf, timestamp, mxRecords } = dnsResults
+  const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
   let emailPassCount = 0
   let emailInfoCount = 0
@@ -308,11 +308,14 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
       <AccordionItem>
         <Flex as={AccordionButton}>
           <Text fontSize="2xl" ml="2">
-            MX
+            <Trans>Mail Servers (MX)</Trans>
           </Text>
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
+          <Text>
+            <Trans>Latest Scan:</Trans>
+          </Text>
           {mxRecords.hosts.map(({ preference, hostname, addresses }, idx) => {
             return (
               <Flex key={idx} px="2">
@@ -376,6 +379,43 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                 })}
               </ABTestVariant>
             </ABTestWrapper>
+          )}
+        </AccordionPanel>
+      </AccordionItem>
+      <AccordionItem>
+        <Flex as={AccordionButton}>
+          <Text fontSize="2xl" ml="2">
+            <Trans>Name Servers (NS)</Trans>
+          </Text>
+          <AccordionIcon boxSize="icons.xl" />
+        </Flex>
+        <AccordionPanel>
+          {nsRecords.hostnames.map((hostname, idx) => {
+            return (
+              <Flex key={idx} px="2">
+                <Text fontSize="lg" w="50%">
+                  <Trans>
+                    <b>Hostname:</b> {hostname}
+                  </Trans>
+                </Text>
+              </Flex>
+            )
+          })}
+          {nsRecords.warnings.length > 0 && (
+            <Box px="2" py="2" rounded="md" mb="1">
+              <Text fontWeight="bold" fontSize="lg">
+                <Trans>Warnings:</Trans>
+              </Text>
+              {nsRecords.warnings.map((warning, idx) => {
+                return (
+                  <Box key={idx} px="2">
+                    <Text fontsize="lg">
+                      <b>{idx + 1}.</b> {warning}
+                    </Text>
+                  </Box>
+                )
+              })}
+            </Box>
           )}
         </AccordionPanel>
       </AccordionItem>
