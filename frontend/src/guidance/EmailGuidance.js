@@ -17,8 +17,10 @@ import { object, string } from 'prop-types'
 import { GuidanceTagList } from './GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
+import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued'
 
-export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
+export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) {
   let dmarcSteps
   switch (dmarcPhase) {
     case 'assess':
@@ -148,7 +150,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
     </AccordionItem>
   )
   return (
-    <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4]}>
+    <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4]} w="100%">
       <Text fontsize="lg">
         <b>Last Scanned:</b> {formatTimestamp(timestamp)}
       </Text>
@@ -336,7 +338,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
             )
           })}
           {mxRecords.warnings.length > 0 && (
-            <Box px="2" py="2" rounded="md" mb="1">
+            <Box px="2" py="2" rounded="md" mb="4">
               <Text fontWeight="bold" fontSize="lg">
                 <Trans>Warnings:</Trans>
               </Text>
@@ -350,6 +352,33 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
                 )
               })}
             </Box>
+          )}
+          {mxRecordDiff.edges.length > 1 && (
+            <ABTestWrapper>
+              <ABTestVariant name="B">
+                <Text fontSize="xl" fontWeight="bold">
+                  <Trans>Changes:</Trans>
+                </Text>
+                {mxRecordDiff.edges.map(({ node }, idx) => {
+                  if (idx !== mxRecordDiff.edges.length - 1) {
+                    const nextNode = mxRecordDiff.edges[idx + 1].node
+                    return (
+                      <ReactDiffViewer
+                        key={idx}
+                        oldValue={node.mxRecords.hosts}
+                        newValue={nextNode.mxRecords.hosts}
+                        leftTitle={node.timestamp}
+                        rightTitle={nextNode.timestamp}
+                        splitView={true}
+                        compareMethod={DiffMethod.JSON}
+                        hideLineNumbers={true}
+                        showDiffOnly={true}
+                      />
+                    )
+                  }
+                })}
+              </ABTestVariant>
+            </ABTestWrapper>
           )}
         </AccordionPanel>
       </AccordionItem>
@@ -398,4 +427,5 @@ EmailGuidance.propTypes = {
   dnsResults: object,
   dmarcPhase: string,
   status: object,
+  mxRecordDiff: object,
 }

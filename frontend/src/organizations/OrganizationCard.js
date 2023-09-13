@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Flex, ListItem, Progress, Stack, Text, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Flex, ListItem, Progress, Stack, Text } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
@@ -32,9 +32,6 @@ export function OrganizationCard({ name, acronym, slug, domainCount, verified, s
     dmarcValue = Math.floor(dmarcValue)
   }
 
-  // 'as' property does not accept responsive values, this works as a replacement
-  const hasButton = useBreakpointValue({ base: true, md: false })
-
   return (
     <ListItem {...rest}>
       <Flex
@@ -46,7 +43,7 @@ export function OrganizationCard({ name, acronym, slug, domainCount, verified, s
         alignItems={{ base: 'flex-start', md: 'center' }}
         _hover={{ md: { bg: ['', 'gray.100'] } }}
         p="4"
-        as={hasButton ? Flex : RouteLink}
+        as={RouteLink}
         to={`${path}/${slug}`}
       >
         <Box
@@ -95,13 +92,6 @@ export function OrganizationCard({ name, acronym, slug, domainCount, verified, s
           <Text>{dmarcValue}%</Text>
           <Progress value={dmarcValue} bg="gray.300" aria-hidden="true" />
         </Box>
-        {hasButton && (
-          <Button variant="primary" as={RouteLink} to={`${path}/${slug}`} w="100%" mt={2}>
-            <Text whiteSpace="noWrap">
-              <Trans>View Details</Trans>
-            </Text>
-          </Button>
-        )}
       </Flex>
     </ListItem>
   )
