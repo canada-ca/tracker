@@ -113,9 +113,9 @@ describe('removing an organization', () => {
       })
       describe('super admin is able to verify organization', () => {
         it('returns a status message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyOrganization(
                   input: {
@@ -137,8 +137,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -176,7 +176,7 @@ describe('removing an organization', () => {
                 }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -222,9 +222,9 @@ describe('removing an organization', () => {
       })
       describe('super admin is able to verify organization', () => {
         it('returns a status message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyOrganization(
                   input: {
@@ -246,8 +246,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -285,7 +285,7 @@ describe('removing an organization', () => {
                 }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -333,9 +333,9 @@ describe('removing an organization', () => {
       })
       describe('organization is not found', () => {
         it('throws an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyOrganization(
                   input: {
@@ -357,8 +357,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -376,7 +376,7 @@ describe('removing an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -398,9 +398,9 @@ describe('removing an organization', () => {
       describe('user permission is not super admin', () => {
         describe('users permission level is admin', () => {
           it('throws an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyOrganization(
                     input: {
@@ -422,8 +422,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -443,7 +443,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -465,9 +465,9 @@ describe('removing an organization', () => {
         })
         describe('users permission level is user', () => {
           it('throws an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyOrganization(
                     input: {
@@ -489,8 +489,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -510,7 +510,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -533,9 +533,9 @@ describe('removing an organization', () => {
       })
       describe('organization is already verified', () => {
         it('throws an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyOrganization(
                   input: {
@@ -557,8 +557,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -578,7 +578,7 @@ describe('removing an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -601,9 +601,9 @@ describe('removing an organization', () => {
         describe('when stepping transaction', () => {
           describe('when upserting org information', () => {
             it('throws an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     verifyOrganization(
                       input: {
@@ -625,8 +625,8 @@ describe('removing an organization', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -648,7 +648,7 @@ describe('removing an organization', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to verify organization. Please try again.')]
 
@@ -661,9 +661,9 @@ describe('removing an organization', () => {
           })
           describe('when clearing owners', () => {
             it('throws an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     verifyOrganization(
                       input: {
@@ -685,8 +685,8 @@ describe('removing an organization', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -708,7 +708,7 @@ describe('removing an organization', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to verify organization. Please try again.')]
 
@@ -722,9 +722,9 @@ describe('removing an organization', () => {
         })
         describe('when committing transaction', () => {
           it('throws an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyOrganization(
                     input: {
@@ -746,8 +746,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -770,7 +770,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to verify organization. Please try again.')]
 
@@ -800,9 +800,9 @@ describe('removing an organization', () => {
       })
       describe('organization is not found', () => {
         it('throws an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyOrganization(
                   input: {
@@ -824,8 +824,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -843,7 +843,7 @@ describe('removing an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -865,9 +865,9 @@ describe('removing an organization', () => {
       describe('user permission is not super admin', () => {
         describe('users permission level is admin', () => {
           it('throws an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyOrganization(
                     input: {
@@ -889,8 +889,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -910,7 +910,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -932,9 +932,9 @@ describe('removing an organization', () => {
         })
         describe('users permission level is user', () => {
           it('throws an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyOrganization(
                     input: {
@@ -956,8 +956,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -977,7 +977,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1000,9 +1000,9 @@ describe('removing an organization', () => {
       })
       describe('organization is already verified', () => {
         it('throws an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyOrganization(
                   input: {
@@ -1024,8 +1024,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1045,7 +1045,7 @@ describe('removing an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1068,9 +1068,9 @@ describe('removing an organization', () => {
         describe('when stepping transaction', () => {
           describe('when upserting org information', () => {
             it('throws an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     verifyOrganization(
                       input: {
@@ -1092,8 +1092,8 @@ describe('removing an organization', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1115,7 +1115,7 @@ describe('removing an organization', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
 
@@ -1128,9 +1128,9 @@ describe('removing an organization', () => {
           })
           describe('when clearing owners', () => {
             it('throws an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     verifyOrganization(
                       input: {
@@ -1152,8 +1152,8 @@ describe('removing an organization', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1175,7 +1175,7 @@ describe('removing an organization', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
 
@@ -1189,9 +1189,9 @@ describe('removing an organization', () => {
         })
         describe('when committing transaction', () => {
           it('throws an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyOrganization(
                     input: {
@@ -1213,8 +1213,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1237,7 +1237,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError("Impossible de vérifier l'organisation. Veuillez réessayer.")]
 

@@ -33,7 +33,7 @@ describe('given the authenticateUnion', () => {
           description: 'text',
         }
 
-        expect(authenticateUnion.resolveType(obj)).toMatchObject(authenticateError)
+        expect(authenticateUnion.resolveType(obj)).toMatch(authenticateError.name)
       })
     })
   })

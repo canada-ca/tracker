@@ -1,34 +1,25 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import {graphql, GraphQLError, GraphQLSchema} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
-import {setupI18n} from '@lingui/core'
-import {v4 as uuidv4} from 'uuid'
+import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {tokenize, verifyToken} from '../../../auth'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {loadUserByUserName, loadUserByKey} from '../../loaders'
-import {loadOrgByKey} from '../../../organization/loaders'
+import { tokenize, verifyToken } from '../../../auth'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
+import { loadOrgByKey } from '../../../organization/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY} = process.env
+const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 
 describe('testing user sign up', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    transaction,
-    schema,
-    i18n,
-    mockTokenize,
-    mockNotify,
-    request
+  let query, drop, truncate, collections, transaction, schema, i18n, mockTokenize, mockNotify, request
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -58,7 +49,7 @@ describe('testing user sign up', () => {
 
   describe('given a successful sign up', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -81,8 +72,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -96,11 +87,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -131,8 +122,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -147,14 +138,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                   FOR user IN users
@@ -182,24 +173,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  expires: 0,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                expires: 0,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -230,8 +217,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -245,14 +232,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -271,11 +258,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -307,8 +294,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -323,14 +310,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                   FOR user IN users
@@ -358,24 +345,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -406,8 +389,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -421,14 +404,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -483,11 +466,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -519,8 +502,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -530,21 +513,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                 FOR user IN users
@@ -572,24 +555,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  expires: 0,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                expires: 0,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('creates affiliation', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -621,8 +600,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -631,21 +610,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                 FOR user IN users
@@ -670,9 +649,9 @@ describe('testing user sign up', () => {
               expect(checkAffiliation).toMatchObject(expectedAffiliation)
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -704,8 +683,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -714,21 +693,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -747,11 +726,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -784,8 +763,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -795,21 +774,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                 FOR user IN users
@@ -837,24 +816,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('creates affiliation', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -886,8 +861,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -896,21 +871,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                 FOR user IN users
@@ -935,9 +910,9 @@ describe('testing user sign up', () => {
               expect(checkAffiliation).toMatchObject(expectedAffiliation)
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -969,8 +944,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -979,21 +954,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -1017,8 +992,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1032,11 +1007,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -1067,8 +1042,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1083,14 +1058,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                             FOR user IN users
@@ -1118,24 +1093,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  expires: 0,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                expires: 0,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -1166,8 +1137,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1181,14 +1152,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -1207,11 +1178,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -1243,8 +1214,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1259,14 +1230,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                 FOR user IN users
@@ -1294,24 +1265,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     signUp(
                       input: {
@@ -1342,8 +1309,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1357,14 +1324,14 @@ describe('testing user sign up', () => {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -1419,11 +1386,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       signUp(
                         input: {
@@ -1455,8 +1422,8 @@ describe('testing user sign up', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1466,21 +1433,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                   FOR user IN users
@@ -1508,24 +1475,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  expires: 0,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                expires: 0,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('creates affiliation', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       signUp(
                         input: {
@@ -1557,8 +1520,8 @@ describe('testing user sign up', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1567,21 +1530,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                   FOR user IN users
@@ -1606,9 +1569,9 @@ describe('testing user sign up', () => {
               expect(checkAffiliation).toMatchObject(expectedAffiliation)
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       signUp(
                         input: {
@@ -1640,8 +1603,8 @@ describe('testing user sign up', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1650,21 +1613,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -1683,11 +1646,11 @@ describe('testing user sign up', () => {
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
               const mockedCookie = jest.fn()
-              const mockedResponse = {cookie: mockedCookie}
+              const mockedResponse = { cookie: mockedCookie }
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       signUp(
                         input: {
@@ -1720,8 +1683,8 @@ describe('testing user sign up', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1731,21 +1694,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                   FOR user IN users
@@ -1773,24 +1736,20 @@ describe('testing user sign up', () => {
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith(
-                'refresh_token',
-                'token',
-                {
-                  httpOnly: true,
-                  maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                  sameSite: true,
-                  secure: true,
-                },
-              )
+              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+                sameSite: true,
+                secure: true,
+              })
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account.',
               ])
             })
             it('creates affiliation', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       signUp(
                         input: {
@@ -1822,8 +1781,8 @@ describe('testing user sign up', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1832,21 +1791,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const cursor = await query`
                   FOR user IN users
@@ -1871,9 +1830,9 @@ describe('testing user sign up', () => {
               expect(checkAffiliation).toMatchObject(expectedAffiliation)
             })
             it('sends verification email', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       signUp(
                         input: {
@@ -1905,8 +1864,8 @@ describe('testing user sign up', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   request,
                   query,
                   collections: collectionNames,
@@ -1915,21 +1874,21 @@ describe('testing user sign up', () => {
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
-                    verifyToken: verifyToken({i18n: {}}),
+                    verifyToken: verifyToken({ i18n: {} }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
-                    loadOrgByKey: loadOrgByKey({query, language: 'fr'}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
+                    loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
                     sendVerificationEmail: mockNotify,
                   },
                 },
-              )
+              })
 
               const user = await loadUserByUserName({
                 query,
@@ -1955,8 +1914,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1967,9 +1926,9 @@ describe('testing user sign up', () => {
       })
       describe('when the password is not strong enough', () => {
         it('returns a password too short error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signUp(
                   input: {
@@ -2000,8 +1959,8 @@ describe('testing user sign up', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -2026,7 +1985,7 @@ describe('testing user sign up', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2047,9 +2006,9 @@ describe('testing user sign up', () => {
       })
       describe('when the passwords do not match', () => {
         it('returns a password not matching error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signUp(
                   input: {
@@ -2080,8 +2039,8 @@ describe('testing user sign up', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -2106,7 +2065,7 @@ describe('testing user sign up', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2127,9 +2086,9 @@ describe('testing user sign up', () => {
       })
       describe('when the user name (email) already in use', () => {
         it('returns an email already in use error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signUp(
                   input: {
@@ -2160,8 +2119,8 @@ describe('testing user sign up', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -2192,7 +2151,7 @@ describe('testing user sign up', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2224,9 +2183,9 @@ describe('testing user sign up', () => {
             })
           })
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                   mutation {
                     signUp(
                       input: {
@@ -2258,8 +2217,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2272,7 +2231,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -2316,15 +2275,14 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
                 signUp: {
                   result: {
                     code: 400,
-                    description:
-                      'Unable to sign up, please contact org admin for a new invite.',
+                    description: 'Unable to sign up, please contact org admin for a new invite.',
                   },
                 },
               },
@@ -2348,9 +2306,9 @@ describe('testing user sign up', () => {
             })
           })
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                   mutation {
                     signUp(
                       input: {
@@ -2382,8 +2340,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2396,7 +2354,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -2416,15 +2374,14 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
                 signUp: {
                   result: {
                     code: 400,
-                    description:
-                      'Unable to sign up, please contact org admin for a new invite.',
+                    description: 'Unable to sign up, please contact org admin for a new invite.',
                   },
                 },
               },
@@ -2440,9 +2397,9 @@ describe('testing user sign up', () => {
       describe('given a cursor error', () => {
         describe('when gathering inserted user', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -2473,8 +2430,8 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2487,7 +2444,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -2531,11 +2488,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign up. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -2548,9 +2503,9 @@ describe('testing user sign up', () => {
       describe('given a transaction error', () => {
         describe('when inserting user', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -2581,8 +2536,8 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2593,7 +2548,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -2637,11 +2592,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign up. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -2662,9 +2615,9 @@ describe('testing user sign up', () => {
             })
           })
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -2696,22 +2649,19 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce({next: jest.fn()})
-                    .mockRejectedValue('Transaction Step Error'),
+                  step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
                 }),
                 uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -2755,11 +2705,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign up. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -2770,9 +2718,9 @@ describe('testing user sign up', () => {
         })
         describe('when committing transaction', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -2803,22 +2751,20 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({next: jest.fn()}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue('Transaction Commit Error'),
+                  step: jest.fn().mockReturnValue({ next: jest.fn() }),
+                  commit: jest.fn().mockRejectedValue('Transaction Commit Error'),
                 }),
                 uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -2862,11 +2808,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign up. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign up. Please try again.')]
 
             expect(response.errors).toEqual(error)
 
@@ -2882,8 +2826,8 @@ describe('testing user sign up', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2894,9 +2838,9 @@ describe('testing user sign up', () => {
       })
       describe('when the password is not strong enough', () => {
         it('returns a password too short error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signUp(
                   input: {
@@ -2927,8 +2871,8 @@ describe('testing user sign up', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -2953,7 +2897,7 @@ describe('testing user sign up', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2974,9 +2918,9 @@ describe('testing user sign up', () => {
       })
       describe('when the passwords do not match', () => {
         it('returns a password not matching error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signUp(
                   input: {
@@ -3007,8 +2951,8 @@ describe('testing user sign up', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -3033,7 +2977,7 @@ describe('testing user sign up', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -3054,9 +2998,9 @@ describe('testing user sign up', () => {
       })
       describe('when the user name (email) already in use', () => {
         it('returns an email already in use error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signUp(
                   input: {
@@ -3087,8 +3031,8 @@ describe('testing user sign up', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -3119,7 +3063,7 @@ describe('testing user sign up', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -3151,9 +3095,9 @@ describe('testing user sign up', () => {
             })
           })
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                   mutation {
                     signUp(
                       input: {
@@ -3185,8 +3129,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3199,7 +3143,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -3243,7 +3187,7 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3275,9 +3219,9 @@ describe('testing user sign up', () => {
             })
           })
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                   mutation {
                     signUp(
                       input: {
@@ -3309,8 +3253,8 @@ describe('testing user sign up', () => {
                     }
                   }
                 `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3323,7 +3267,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -3343,7 +3287,7 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3367,9 +3311,9 @@ describe('testing user sign up', () => {
       describe('given a cursor error', () => {
         describe('when gathering inserted user', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -3400,8 +3344,8 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3414,7 +3358,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -3458,11 +3402,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
-            ]
+            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
 
@@ -3475,9 +3417,9 @@ describe('testing user sign up', () => {
       describe('given a transaction error', () => {
         describe('when inserting user', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -3508,8 +3450,8 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3520,7 +3462,7 @@ describe('testing user sign up', () => {
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -3564,11 +3506,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
-            ]
+            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
 
@@ -3589,9 +3529,9 @@ describe('testing user sign up', () => {
             })
           })
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -3623,22 +3563,19 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce({next: jest.fn()})
-                    .mockRejectedValue('Transaction Step Error'),
+                  step: jest.fn().mockReturnValueOnce({ next: jest.fn() }).mockRejectedValue('Transaction Step Error'),
                 }),
                 uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -3682,11 +3619,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
-            ]
+            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
 
@@ -3697,9 +3632,9 @@ describe('testing user sign up', () => {
         })
         describe('when committing transaction', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signUp(
                     input: {
@@ -3730,22 +3665,20 @@ describe('testing user sign up', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue({next: jest.fn()}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue('Transaction Commit Error'),
+                  step: jest.fn().mockReturnValue({ next: jest.fn() }),
+                  commit: jest.fn().mockRejectedValue('Transaction Commit Error'),
                 }),
                 uuidv4,
                 auth: {
                   bcrypt,
                   tokenize: mockTokenize,
-                  verifyToken: verifyToken({i18n}),
+                  verifyToken: verifyToken({ i18n }),
                 },
                 validators: {
                   cleanseInput,
@@ -3789,11 +3722,9 @@ describe('testing user sign up', () => {
                   sendVerificationEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError("Impossible de s'inscrire. Veuillez réessayer."),
-            ]
+            const error = [new GraphQLError("Impossible de s'inscrire. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
 

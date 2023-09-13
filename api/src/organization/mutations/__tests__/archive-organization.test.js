@@ -131,9 +131,9 @@ describe('archiving an organization', () => {
 
         describe('org is the only one claiming the domain', () => {
           it('archives the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   archiveOrganization(
                     input: {
@@ -155,8 +155,8 @@ describe('archiving an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -179,7 +179,7 @@ describe('archiving an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -197,9 +197,9 @@ describe('archiving an organization', () => {
             })
           })
           it('does not archive the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   archiveOrganization(
                     input: {
@@ -221,8 +221,8 @@ describe('archiving an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -245,7 +245,7 @@ describe('archiving an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -275,9 +275,9 @@ describe('archiving an organization', () => {
       })
       describe('the requested org is undefined', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 archiveOrganization(
                   input: {
@@ -299,8 +299,8 @@ describe('archiving an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -318,7 +318,7 @@ describe('archiving an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -342,9 +342,9 @@ describe('archiving an organization', () => {
           describe('users role is admin', () => {
             describe('user attempts to archive an org', () => {
               it('returns an error', async () => {
-                const response = await graphql(
+                const response = await graphql({
                   schema,
-                  `
+                  source: `
                     mutation {
                       archiveOrganization(
                         input: {
@@ -366,8 +366,8 @@ describe('archiving an organization', () => {
                       }
                     }
                   `,
-                  null,
-                  {
+                  rootValue: null,
+                  contextValue: {
                     i18n,
                     query,
                     collections: collectionNames,
@@ -410,7 +410,7 @@ describe('archiving an organization', () => {
                       },
                     },
                   },
-                )
+                })
 
                 const expectedResponse = {
                   data: {
@@ -446,9 +446,9 @@ describe('archiving an organization', () => {
             commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               archiveOrganization(
                 input: {
@@ -470,8 +470,8 @@ describe('archiving an organization', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -514,7 +514,7 @@ describe('archiving an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to archive organization. Please try again.')]
 

@@ -1,16 +1,16 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
-import {userRequired} from '../../../auth'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {loadAffiliationConnectionsByUserId} from '../../../affiliation/loaders'
-import {loadUserByKey} from '../../loaders'
-import {cleanseInput} from '../../../validators'
+import { userRequired } from '../../../auth'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { loadAffiliationConnectionsByUserId } from '../../../affiliation/loaders'
+import { loadUserByKey } from '../../loaders'
+import { cleanseInput } from '../../../validators'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the findMe query', () => {
   let query, drop, truncate, schema, collections, user
@@ -22,7 +22,7 @@ describe('given the findMe query', () => {
       mutation: createMutationSchema(),
     })
     // Generate DB Items
-    ;({query, drop, truncate, collections} = await ensure({
+    ;({ query, drop, truncate, collections } = await ensure({
       variables: {
         dbname: dbNameFromFile(__filename),
         username: 'root',
@@ -65,33 +65,32 @@ describe('given the findMe query', () => {
 
   describe('users successfully performs query', () => {
     it('will return specified user', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             findMe {
               id
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           auth: {
             userRequired: userRequired({
               userKey: user._key,
-              loadUserByKey: loadUserByKey({query}),
+              loadUserByKey: loadUserByKey({ query }),
             }),
           },
           loaders: {
-            loadAffiliationConnectionsByUserId:
-              loadAffiliationConnectionsByUserId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-              }),
+            loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({
+              query,
+              userKey: user._key,
+              cleanseInput,
+            }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {

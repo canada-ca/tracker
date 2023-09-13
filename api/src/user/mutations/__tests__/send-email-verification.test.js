@@ -1,21 +1,20 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import {graphql, GraphQLSchema} from 'graphql'
-import {setupI18n} from '@lingui/core'
+import { graphql, GraphQLSchema } from 'graphql'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {loadUserByUserName} from '../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { loadUserByUserName } from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 const mockNotify = jest.fn()
 
 describe('user send password reset email', () => {
-
   let query, drop, truncate, collections, schema, request, i18n
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -39,7 +38,7 @@ describe('user send password reset email', () => {
 
   describe('successfully sends verification email', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -62,8 +61,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -82,9 +81,9 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               sendEmailVerification(
                 input: { userName: "test.account@istio.actually.exists" }
@@ -93,8 +92,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             query,
@@ -106,13 +105,13 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendVerificationEmail: mockNotify,
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -136,9 +135,7 @@ describe('user send password reset email', () => {
           user,
           verifyUrl,
         })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully sent a verification email.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully sent a verification email.`])
       })
     })
     describe('users preferred language is french', () => {
@@ -146,8 +143,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -166,9 +163,9 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               sendEmailVerification(
                 input: { userName: "test.account@istio.actually.exists" }
@@ -177,8 +174,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             query,
@@ -190,13 +187,13 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByUserName: loadUserByUserName({query}),
+              loadUserByUserName: loadUserByUserName({ query }),
             },
             notify: {
               sendVerificationEmail: mockNotify,
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -220,9 +217,7 @@ describe('user send password reset email', () => {
           user,
           verifyUrl,
         })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully sent a verification email.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully sent a verification email.`])
       })
     })
   })
@@ -232,8 +227,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -244,9 +239,9 @@ describe('user send password reset email', () => {
       })
       describe('no user associated with account', () => {
         it('returns status text', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 sendEmailVerification(
                   input: {
@@ -257,8 +252,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               query,
@@ -278,7 +273,7 @@ describe('user send password reset email', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
@@ -301,8 +296,8 @@ describe('user send password reset email', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -313,9 +308,9 @@ describe('user send password reset email', () => {
       })
       describe('no user associated with account', () => {
         it('returns status text', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 sendEmailVerification(
                   input: {
@@ -326,8 +321,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               query,
@@ -347,7 +342,7 @@ describe('user send password reset email', () => {
                 sendVerificationEmail: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResult = {
             data: {

@@ -188,15 +188,15 @@ describe('given getAllOrganizationDomainStatuses', () => {
     })
     describe('the user is not a super admin', () => {
       it('returns a permission error', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               getAllOrganizationDomainStatuses
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             auth: {
@@ -225,7 +225,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
               }),
             },
           },
-        )
+        })
         const error = [
           new GraphQLError('Permissions error. You do not have sufficient permissions to access this data.'),
         ]
@@ -245,15 +245,15 @@ describe('given getAllOrganizationDomainStatuses', () => {
       })
 
       it('returns all domain status results', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               getAllOrganizationDomainStatuses
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             auth: {
@@ -282,7 +282,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
               }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -303,15 +303,15 @@ describe('given getAllOrganizationDomainStatuses', () => {
     })
     describe('the user is not a super admin', () => {
       it('returns a permission error', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               getAllOrganizationDomainStatuses
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             auth: {
@@ -340,7 +340,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
               }),
             },
           },
-        )
+        })
         const error = [
           new GraphQLError('Permissions error. You do not have sufficient permissions to access this data.'),
         ]
@@ -361,15 +361,15 @@ describe('given getAllOrganizationDomainStatuses', () => {
       })
 
       it('returns all domain status results', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               getAllOrganizationDomainStatuses
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             auth: {
@@ -398,7 +398,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
               }),
             },
           },
-        )
+        })
         const expectedResponse = {
           data: {
             getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC

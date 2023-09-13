@@ -181,9 +181,9 @@ describe('given the removeUserFromOrg mutation', () => {
       })
       describe('super admin can remove an admin from any org', () => {
         it('removes the admin from the org', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -207,8 +207,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -247,7 +247,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const loader = loadAffiliationByKey({
             query,
@@ -278,9 +278,9 @@ describe('given the removeUserFromOrg mutation', () => {
             })
           })
           it('returns a status message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeUserFromOrg (
                     input: {
@@ -304,8 +304,8 @@ describe('given the removeUserFromOrg mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -344,7 +344,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -382,9 +382,9 @@ describe('given the removeUserFromOrg mutation', () => {
             })
           })
           it('returns a status message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeUserFromOrg (
                     input: {
@@ -408,8 +408,8 @@ describe('given the removeUserFromOrg mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -448,7 +448,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -473,9 +473,9 @@ describe('given the removeUserFromOrg mutation', () => {
       })
       describe('super admin can remove a user from any org', () => {
         it('removes the user from the org', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -499,8 +499,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -539,7 +539,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const loader = loadAffiliationByKey({
             query,
@@ -570,9 +570,9 @@ describe('given the removeUserFromOrg mutation', () => {
             })
           })
           it('returns a status message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeUserFromOrg (
                     input: {
@@ -596,8 +596,8 @@ describe('given the removeUserFromOrg mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -636,7 +636,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -674,9 +674,9 @@ describe('given the removeUserFromOrg mutation', () => {
             })
           })
           it('returns a status message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeUserFromOrg (
                     input: {
@@ -700,8 +700,8 @@ describe('given the removeUserFromOrg mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -740,7 +740,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -783,9 +783,9 @@ describe('given the removeUserFromOrg mutation', () => {
       })
       describe('admin can remove a user from the shared org', () => {
         it('removes the user from the org', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -809,8 +809,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -849,7 +849,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const loader = loadAffiliationByKey({
             query,
@@ -880,9 +880,9 @@ describe('given the removeUserFromOrg mutation', () => {
             })
           })
           it('returns a status message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeUserFromOrg (
                     input: {
@@ -906,8 +906,8 @@ describe('given the removeUserFromOrg mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -946,7 +946,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -984,9 +984,9 @@ describe('given the removeUserFromOrg mutation', () => {
             })
           })
           it('returns a status message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeUserFromOrg (
                     input: {
@@ -1010,8 +1010,8 @@ describe('given the removeUserFromOrg mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1050,7 +1050,7 @@ describe('given the removeUserFromOrg mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1093,9 +1093,9 @@ describe('given the removeUserFromOrg mutation', () => {
     describe('given an unsuccessful removal', () => {
       describe('org is not found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1119,8 +1119,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1144,7 +1144,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1173,9 +1173,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1199,8 +1199,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1226,7 +1226,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1255,9 +1255,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1281,8 +1281,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1308,7 +1308,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1337,9 +1337,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1363,8 +1363,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1388,7 +1388,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1414,9 +1414,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1440,8 +1440,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1467,7 +1467,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1492,9 +1492,9 @@ describe('given the removeUserFromOrg mutation', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockRejectedValue(new Error('database error'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1518,8 +1518,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1545,7 +1545,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
@@ -1565,9 +1565,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1591,8 +1591,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1618,7 +1618,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
@@ -1642,9 +1642,9 @@ describe('given the removeUserFromOrg mutation', () => {
             step: jest.fn().mockRejectedValue(new Error('trx step error')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1668,8 +1668,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1695,7 +1695,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
@@ -1719,9 +1719,9 @@ describe('given the removeUserFromOrg mutation', () => {
           commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
         })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               removeUserFromOrg (
                 input: {
@@ -1745,8 +1745,8 @@ describe('given the removeUserFromOrg mutation', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query: mockedQuery,
             collections: collectionNames,
@@ -1772,7 +1772,7 @@ describe('given the removeUserFromOrg mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         const error = [new GraphQLError('Unable to remove user from this organization. Please try again.')]
 
@@ -1801,9 +1801,9 @@ describe('given the removeUserFromOrg mutation', () => {
     describe('given an unsuccessful removal', () => {
       describe('org is not found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1827,8 +1827,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1852,7 +1852,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1881,9 +1881,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1907,8 +1907,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1934,7 +1934,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1964,9 +1964,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -1990,8 +1990,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -2017,7 +2017,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2047,9 +2047,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -2073,8 +2073,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -2098,7 +2098,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2124,9 +2124,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -2150,8 +2150,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -2177,7 +2177,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2203,9 +2203,9 @@ describe('given the removeUserFromOrg mutation', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockRejectedValue(new Error('database error'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -2229,8 +2229,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -2256,7 +2256,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [
             new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),
@@ -2278,9 +2278,9 @@ describe('given the removeUserFromOrg mutation', () => {
           }
           const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -2304,8 +2304,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -2331,7 +2331,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [
             new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),
@@ -2357,9 +2357,9 @@ describe('given the removeUserFromOrg mutation', () => {
             step: jest.fn().mockRejectedValue(new Error('trx step error')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeUserFromOrg (
                   input: {
@@ -2383,8 +2383,8 @@ describe('given the removeUserFromOrg mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -2410,7 +2410,7 @@ describe('given the removeUserFromOrg mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [
             new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),
@@ -2436,9 +2436,9 @@ describe('given the removeUserFromOrg mutation', () => {
           commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
         })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               removeUserFromOrg (
                 input: {
@@ -2462,8 +2462,8 @@ describe('given the removeUserFromOrg mutation', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query: mockedQuery,
             collections: collectionNames,
@@ -2489,7 +2489,7 @@ describe('given the removeUserFromOrg mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         const error = [
           new GraphQLError("Impossible de supprimer l'utilisateur de cette organisation. Veuillez réessayer."),

@@ -85,9 +85,7 @@ describe('given findMyWebCheckOrganizations', () => {
       domainOne = await collections.domains.save({
         domain: 'domain.test',
         lastRan: 'datetime',
-        tags: [
-          { id: 'CVE-2022-12345', firstDetected: 'datetime', severity: 'high' },
-        ],
+        tags: [{ id: 'CVE-2022-12345', firstDetected: 'datetime', severity: 'high' }],
       })
     })
     afterEach(async () => {
@@ -126,9 +124,9 @@ describe('given findMyWebCheckOrganizations', () => {
         describe('user queries for their organizations', () => {
           describe('in english', () => {
             it('returns web check organizations', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   query {
                     findMyWebCheckOrganizations(first: 5) {
                       totalCount
@@ -166,8 +164,8 @@ describe('given findMyWebCheckOrganizations', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   userKey: user._key,
                   auth: {
@@ -188,17 +186,16 @@ describe('given findMyWebCheckOrganizations', () => {
                     verifiedRequired: verifiedRequired({}),
                   },
                   loaders: {
-                    loadWebCheckConnectionsByUserId:
-                      loadWebCheckConnectionsByUserId({
-                        query,
-                        userKey: user._key,
-                        cleanseInput,
-                        language: 'en',
-                        i18n,
-                      }),
+                    loadWebCheckConnectionsByUserId: loadWebCheckConnectionsByUserId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      language: 'en',
+                      i18n,
+                    }),
                   },
                 },
-              )
+              })
               const expectedResponse = {
                 data: {
                   findMyWebCheckOrganizations: {
@@ -244,9 +241,7 @@ describe('given findMyWebCheckOrganizations', () => {
                 },
               }
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User ${user._key} successfully retrieved their organizations.`,
-              ])
+              expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved their organizations.`])
             })
           })
         })
@@ -271,13 +266,11 @@ describe('given findMyWebCheckOrganizations', () => {
         })
         describe('database error occurs', () => {
           it('returns an error message', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValueOnce(new Error('Database error occurred.'))
+            const mockedQuery = jest.fn().mockRejectedValueOnce(new Error('Database error occurred.'))
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findMyWebCheckOrganizations(first: 5) {
                     totalCount
@@ -322,8 +315,8 @@ describe('given findMyWebCheckOrganizations', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: user._key,
                 auth: {
@@ -332,23 +325,18 @@ describe('given findMyWebCheckOrganizations', () => {
                   verifiedRequired: jest.fn(),
                 },
                 loaders: {
-                  loadWebCheckConnectionsByUserId:
-                    loadWebCheckConnectionsByUserId({
-                      query: mockedQuery,
-                      userKey: user._key,
-                      cleanseInput,
-                      language: 'en',
-                      i18n,
-                    }),
+                  loadWebCheckConnectionsByUserId: loadWebCheckConnectionsByUserId({
+                    query: mockedQuery,
+                    userKey: user._key,
+                    cleanseInput,
+                    language: 'en',
+                    i18n,
+                  }),
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to load organization(s). Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to load organization(s). Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

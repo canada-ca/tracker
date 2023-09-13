@@ -76,9 +76,9 @@ describe('given webSummary query', () => {
       await drop()
     })
     it('returns web summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             webSummary {
               total
@@ -90,14 +90,14 @@ describe('given webSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -140,9 +140,9 @@ describe('given webSummary query', () => {
     describe('given unsuccessful web summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 webSummary {
                   total
@@ -154,8 +154,8 @@ describe('given webSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -163,7 +163,7 @@ describe('given webSummary query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError(`Unable to load web summary. Please try again.`)]
 
@@ -191,9 +191,9 @@ describe('given webSummary query', () => {
     describe('given unsuccessful web summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 webSummary {
                   total
@@ -205,8 +205,8 @@ describe('given webSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -214,7 +214,7 @@ describe('given webSummary query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Impossible de charger le résumé web. Veuillez réessayer.')]
 

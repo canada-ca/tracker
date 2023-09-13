@@ -1,20 +1,20 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
+import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {setupI18n} from '@lingui/core'
-import {v4 as uuidv4} from 'uuid'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {loadUserByUserName} from '../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { loadUserByUserName } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY} = process.env
+const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 
 const mockNotify = jest.fn()
 
@@ -42,7 +42,7 @@ describe('authenticate user account', () => {
   describe('given a successful login', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, transaction} = await ensure({
+      ;({ query, drop, truncate, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -56,9 +56,9 @@ describe('authenticate user account', () => {
       tokenize = jest.fn().mockReturnValue('token')
     })
     beforeEach(async () => {
-      await graphql(
+      await graphql({
         schema,
-        `
+        source: `
           mutation {
             signUp(
               input: {
@@ -79,8 +79,8 @@ describe('authenticate user account', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           query,
           collections: collectionNames,
           transaction,
@@ -94,7 +94,7 @@ describe('authenticate user account', () => {
             cleanseInput,
           },
           loaders: {
-            loadUserByUserName: loadUserByUserName({query}),
+            loadUserByUserName: loadUserByUserName({ query }),
           },
           notify: {
             sendVerificationEmail: jest.fn(),
@@ -104,7 +104,7 @@ describe('authenticate user account', () => {
             get: (text) => text,
           },
         },
-      )
+      })
     })
     afterEach(async () => {
       await truncate()
@@ -117,8 +117,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -141,9 +141,9 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'phone' } IN users
           `
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -163,8 +163,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -178,13 +178,13 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -206,11 +206,9 @@ describe('authenticate user account', () => {
 
           expect(response).toEqual(expectedResponse)
 
-          expect(mockNotify).toHaveBeenCalledWith({user})
+          expect(mockNotify).toHaveBeenCalledWith({ user })
 
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
         })
       })
       describe('user has send method set to email', () => {
@@ -227,9 +225,9 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -249,8 +247,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -264,13 +262,13 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -291,10 +289,8 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
-          expect(mockNotify).toHaveBeenCalledWith({user})
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
+          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
         })
       })
       describe('user has send method set to none', () => {
@@ -313,11 +309,11 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = {cookie: mockedCookie}
+            const mockedResponse = { cookie: mockedCookie }
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -337,8 +333,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -353,13 +349,13 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -379,19 +375,13 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith(
-              'refresh_token',
-              'token',
-              {
-                httpOnly: true,
-                expires: 0,
-                sameSite: true,
-                secure: true,
-              },
-            )
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully signed in, and sent auth msg.`,
-            ])
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+              httpOnly: true,
+              expires: 0,
+              sameSite: true,
+              secure: true,
+            })
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
           })
         })
         describe('user has rememberMe set to true', () => {
@@ -409,11 +399,11 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = {cookie: mockedCookie}
+            const mockedResponse = { cookie: mockedCookie }
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -434,8 +424,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -450,13 +440,13 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -476,19 +466,13 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith(
-              'refresh_token',
-              'token',
-              {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                sameSite: true,
-                secure: true,
-              },
-            )
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully signed in, and sent auth msg.`,
-            ])
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+              httpOnly: true,
+              maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+              sameSite: true,
+              secure: true,
+            })
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
           })
         })
       })
@@ -506,9 +490,9 @@ describe('authenticate user account', () => {
                 UPDATE ${user._key} WITH { phoneValidated: false, failedLoginAttempts: 5 } IN users
             `
 
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -528,8 +512,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -543,13 +527,13 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           cursor = await query`
               FOR user IN users
@@ -567,8 +551,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -591,9 +575,9 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'phone' } IN users
           `
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -617,8 +601,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -632,13 +616,13 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthTextMsg: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -659,10 +643,8 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
-          expect(mockNotify).toHaveBeenCalledWith({user})
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
+          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
         })
       })
       describe('user has send method set to email', () => {
@@ -679,9 +661,9 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -705,8 +687,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -720,13 +702,13 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -747,10 +729,8 @@ describe('authenticate user account', () => {
           user = await cursor.next()
 
           expect(response).toEqual(expectedResponse)
-          expect(mockNotify).toHaveBeenCalledWith({user})
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully signed in, and sent auth msg.`,
-          ])
+          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
         })
       })
       describe('user has send method set to none', () => {
@@ -769,11 +749,11 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = {cookie: mockedCookie}
+            const mockedResponse = { cookie: mockedCookie }
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -793,8 +773,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -809,13 +789,13 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -835,19 +815,13 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith(
-              'refresh_token',
-              'token',
-              {
-                httpOnly: true,
-                expires: 0,
-                sameSite: true,
-                secure: true,
-              },
-            )
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully signed in, and sent auth msg.`,
-            ])
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+              httpOnly: true,
+              expires: 0,
+              sameSite: true,
+              secure: true,
+            })
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
           })
         })
         describe('user has rememberMe set to true', () => {
@@ -865,11 +839,11 @@ describe('authenticate user account', () => {
             `
 
             const mockedCookie = jest.fn()
-            const mockedResponse = {cookie: mockedCookie}
+            const mockedResponse = { cookie: mockedCookie }
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -890,8 +864,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -906,13 +880,13 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
                 },
                 notify: {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -932,19 +906,13 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith(
-              'refresh_token',
-              'token',
-              {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                sameSite: true,
-                secure: true,
-              },
-            )
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully signed in, and sent auth msg.`,
-            ])
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+              httpOnly: true,
+              maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+              sameSite: true,
+              secure: true,
+            })
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
           })
         })
       })
@@ -962,9 +930,9 @@ describe('authenticate user account', () => {
                 UPDATE ${user._key} WITH { phoneValidated: false, failedLoginAttempts: 5 } IN users
             `
 
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -988,8 +956,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1003,13 +971,13 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
               },
               notify: {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           cursor = await query`
               FOR user IN users
@@ -1029,8 +997,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1041,9 +1009,9 @@ describe('authenticate user account', () => {
       })
       describe('user cannot be found in database', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -1067,8 +1035,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1089,15 +1057,14 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               signIn: {
                 result: {
                   code: 400,
-                  description:
-                    'Incorrect username or password. Please try again.',
+                  description: 'Incorrect username or password. Please try again.',
                 },
               },
             },
@@ -1111,9 +1078,9 @@ describe('authenticate user account', () => {
       })
       describe('login credentials are invalid', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -1137,14 +1104,12 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
-              transaction: jest
-                .fn()
-                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
+              transaction: jest.fn().mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -1168,24 +1133,21 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               signIn: {
                 result: {
                   code: 400,
-                  description:
-                    'Incorrect username or password. Please try again.',
+                  description: 'Incorrect username or password. Please try again.',
                 },
               },
             },
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to authenticate: 123 with invalid credentials.`,
-          ])
+          expect(consoleOutput).toEqual([`User attempted to authenticate: 123 with invalid credentials.`])
         })
         it('increases the failed attempt counter', async () => {
           const user = {
@@ -1195,9 +1157,9 @@ describe('authenticate user account', () => {
             failedLoginAttempts: 0,
           }
 
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -1221,14 +1183,12 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn(),
               collections: collectionNames,
-              transaction: jest
-                .fn()
-                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
+              transaction: jest.fn().mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -1248,16 +1208,16 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           expect(user.failedLoginAttempts).toEqual(1)
         })
       })
       describe('user has reached maximum amount of login attempts', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -1281,14 +1241,12 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
-              transaction: jest
-                .fn()
-                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
+              transaction: jest.fn().mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -1313,32 +1271,29 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               signIn: {
                 result: {
                   code: 401,
-                  description:
-                    'Too many failed login attempts, please reset your password, and try again.',
+                  description: 'Too many failed login attempts, please reset your password, and try again.',
                 },
               },
             },
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 tried to sign in, but has too many login attempts.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 123 tried to sign in, but has too many login attempts.`])
         })
       })
       describe('transaction step error occurs', () => {
         describe('when resetting failed login attempts', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -1362,15 +1317,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -1397,11 +1350,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign in, please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1411,9 +1362,9 @@ describe('authenticate user account', () => {
         })
         describe('when inserting tfa code', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -1437,16 +1388,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -1473,11 +1421,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign in, please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1487,9 +1433,9 @@ describe('authenticate user account', () => {
         })
         describe('when setting refresh id', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -1513,16 +1459,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -1550,11 +1493,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign in, please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1564,9 +1505,9 @@ describe('authenticate user account', () => {
         })
         describe('when incrementing failed login attempts', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -1590,15 +1531,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -1626,10 +1565,8 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
-            const error = [
-              new GraphQLError('Unable to sign in, please try again.'),
-            ]
+            })
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1641,9 +1578,9 @@ describe('authenticate user account', () => {
       describe('transaction commit error occurs', () => {
         describe('during tfa sign in', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -1667,16 +1604,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Commit Error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
                 }),
                 uuidv4,
                 auth: {
@@ -1703,11 +1638,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign in, please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1717,9 +1650,9 @@ describe('authenticate user account', () => {
         })
         describe('during regular sign in', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -1743,16 +1676,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Commit Error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
                 }),
                 uuidv4,
                 auth: {
@@ -1779,11 +1710,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to sign in, please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1793,9 +1722,9 @@ describe('authenticate user account', () => {
         })
         describe('during failed login', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -1819,16 +1748,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Commit Error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
                 }),
                 uuidv4,
                 auth: {
@@ -1855,10 +1782,8 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
-            const error = [
-              new GraphQLError('Unable to sign in, please try again.'),
-            ]
+            })
+            const error = [new GraphQLError('Unable to sign in, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1873,8 +1798,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1885,9 +1810,9 @@ describe('authenticate user account', () => {
       })
       describe('user cannot be found in database', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -1911,8 +1836,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1933,15 +1858,14 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               signIn: {
                 result: {
                   code: 400,
-                  description:
-                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
+                  description: "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
@@ -1955,9 +1879,9 @@ describe('authenticate user account', () => {
       })
       describe('login credentials are invalid', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -1981,14 +1905,12 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
-              transaction: jest
-                .fn()
-                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
+              transaction: jest.fn().mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -2012,24 +1934,21 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               signIn: {
                 result: {
                   code: 400,
-                  description:
-                    "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
+                  description: "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez réessayer.",
                 },
               },
             },
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to authenticate: 123 with invalid credentials.`,
-          ])
+          expect(consoleOutput).toEqual([`User attempted to authenticate: 123 with invalid credentials.`])
         })
         it('increases the failed attempt counter', async () => {
           const user = {
@@ -2039,9 +1958,9 @@ describe('authenticate user account', () => {
             failedLoginAttempts: 0,
           }
 
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -2065,14 +1984,12 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn(),
               collections: collectionNames,
-              transaction: jest
-                .fn()
-                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
+              transaction: jest.fn().mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -2092,16 +2009,16 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           expect(user.failedLoginAttempts).toEqual(1)
         })
       })
       describe('user has reached maximum amount of login attempts', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 signIn(
                   input: {
@@ -2125,14 +2042,12 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
-              transaction: jest
-                .fn()
-                .mockReturnValue({step: jest.fn(), commit: jest.fn()}),
+              transaction: jest.fn().mockReturnValue({ step: jest.fn(), commit: jest.fn() }),
               uuidv4,
               auth: {
                 bcrypt: {
@@ -2157,7 +2072,7 @@ describe('authenticate user account', () => {
                 sendAuthEmail: mockNotify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2172,17 +2087,15 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 tried to sign in, but has too many login attempts.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 123 tried to sign in, but has too many login attempts.`])
         })
       })
       describe('transaction step error occurs', () => {
         describe('when resetting failed login attempts', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -2206,15 +2119,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -2241,13 +2152,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de se connecter, veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2257,9 +2164,9 @@ describe('authenticate user account', () => {
         })
         describe('when inserting tfa code', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -2283,16 +2190,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -2319,13 +2223,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de se connecter, veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2335,9 +2235,9 @@ describe('authenticate user account', () => {
         })
         describe('when setting refresh id', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -2361,16 +2261,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockReturnValueOnce()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -2398,13 +2295,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de se connecter, veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2414,9 +2307,9 @@ describe('authenticate user account', () => {
         })
         describe('when incrementing failed login attempts', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -2440,15 +2333,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Step Error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction Step Error')),
                   commit: jest.fn(),
                 }),
                 uuidv4,
@@ -2476,12 +2367,8 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
-            const error = [
-              new GraphQLError(
-                'Impossible de se connecter, veuillez réessayer.',
-              ),
-            ]
+            })
+            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2493,9 +2380,9 @@ describe('authenticate user account', () => {
       describe('transaction commit error occurs', () => {
         describe('during tfa sign in', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -2519,16 +2406,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Commit Error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
                 }),
                 uuidv4,
                 auth: {
@@ -2555,13 +2440,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de se connecter, veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2571,9 +2452,9 @@ describe('authenticate user account', () => {
         })
         describe('during regular sign in', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -2597,16 +2478,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Commit Error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
                 }),
                 uuidv4,
                 auth: {
@@ -2633,13 +2512,9 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de se connecter, veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2649,9 +2524,9 @@ describe('authenticate user account', () => {
         })
         describe('during failed login', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   signIn(
                     input: {
@@ -2675,16 +2550,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction Commit Error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction Commit Error')),
                 }),
                 uuidv4,
                 auth: {
@@ -2711,12 +2584,8 @@ describe('authenticate user account', () => {
                   sendAuthEmail: mockNotify,
                 },
               },
-            )
-            const error = [
-              new GraphQLError(
-                'Impossible de se connecter, veuillez réessayer.',
-              ),
-            ]
+            })
+            const error = [new GraphQLError('Impossible de se connecter, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

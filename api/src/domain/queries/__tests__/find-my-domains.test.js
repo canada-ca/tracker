@@ -129,9 +129,9 @@ describe('given findMyDomainsQuery', () => {
     })
     describe('user queries for their domains', () => {
       it('returns domains', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               findMyDomains(first: 5) {
                 edges {
@@ -153,8 +153,8 @@ describe('given findMyDomainsQuery', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             auth: {
@@ -188,7 +188,7 @@ describe('given findMyDomainsQuery', () => {
               }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -248,9 +248,9 @@ describe('given findMyDomainsQuery', () => {
         it('returns domains', async () => {
           const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDomains(first: 5) {
                   edges {
@@ -272,8 +272,8 @@ describe('given findMyDomainsQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 1,
               auth: {
@@ -291,7 +291,7 @@ describe('given findMyDomainsQuery', () => {
                 }),
               },
             },
-          )
+          })
 
           const error = [new GraphQLError(`Unable to query domain(s). Please try again.`)]
 
@@ -323,9 +323,9 @@ describe('given findMyDomainsQuery', () => {
         it('returns domains', async () => {
           const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDomains(first: 5) {
                   edges {
@@ -347,8 +347,8 @@ describe('given findMyDomainsQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 1,
               auth: {
@@ -366,7 +366,7 @@ describe('given findMyDomainsQuery', () => {
                 }),
               },
             },
-          )
+          })
 
           const error = [new GraphQLError("Impossible d'interroger le(s) domaine(s). Veuillez réessayer.")]
 

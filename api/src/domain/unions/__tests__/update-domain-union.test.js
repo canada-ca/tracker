@@ -34,7 +34,7 @@ describe('given the updateDomainUnion', () => {
           description: 'text',
         }
 
-        expect(updateDomainUnion.resolveType(obj)).toMatchObject(domainErrorType)
+        expect(updateDomainUnion.resolveType(obj)).toMatch(domainErrorType.name)
       })
     })
   })

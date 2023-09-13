@@ -1,19 +1,19 @@
-import {setupI18n} from '@lingui/core'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLError, GraphQLSchema} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
 
-import {checkPermission, userRequired} from '../../../auth'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {loadUserByKey} from '../../loaders'
-import {cleanseInput} from '../../../validators'
-import {loadOrgByKey} from '../../../organization/loaders'
+import { checkPermission, userRequired } from '../../../auth'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { loadUserByKey } from '../../loaders'
+import { cleanseInput } from '../../../validators'
+import { loadOrgByKey } from '../../../organization/loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the isUserAdmin query', () => {
   let query, drop, truncate, schema, collections, org, user
@@ -39,7 +39,7 @@ describe('given the isUserAdmin query', () => {
   describe('given a successful query', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -109,33 +109,33 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({query}),
-                loadOrgByKey: loadOrgByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query }),
               },
               validators: {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -156,33 +156,33 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({query}),
-                loadOrgByKey: loadOrgByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query }),
               },
               validators: {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -203,33 +203,33 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return false', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({query}),
-                loadOrgByKey: loadOrgByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query }),
               },
               validators: {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -252,33 +252,33 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
               validators: {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -299,33 +299,33 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
               validators: {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -346,33 +346,33 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return false', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission: checkPermission({userKey: user._key, query}),
+                checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               loaders: {
-                loadUserByKey: loadUserByKey({query}),
-                loadOrgByKey: loadOrgByKey({query, language: 'en'}),
+                loadUserByKey: loadUserByKey({ query }),
+                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               },
               validators: {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -391,8 +391,8 @@ describe('given the isUserAdmin query', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en'],
           messages: {
@@ -402,20 +402,18 @@ describe('given the isUserAdmin query', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -432,12 +430,8 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
-          const error = [
-            new GraphQLError(
-              `Unable to verify if user is an admin, please try again.`,
-            ),
-          ]
+          })
+          const error = [new GraphQLError(`Unable to verify if user is an admin, please try again.`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -452,7 +446,7 @@ describe('given the isUserAdmin query', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            fr: {plurals: {}},
+            fr: { plurals: {} },
           },
           locales: ['fr'],
           messages: {
@@ -462,20 +456,18 @@ describe('given the isUserAdmin query', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -492,12 +484,10 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = [
-            new GraphQLError(
-              `Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer.`,
-            ),
+            new GraphQLError(`Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer.`),
           ]
 
           expect(response.errors).toEqual(error)

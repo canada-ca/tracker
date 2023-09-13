@@ -123,9 +123,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -145,8 +145,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -175,7 +175,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -196,9 +196,9 @@ describe('updating a domain', () => {
       })
       describe('user updates selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -221,8 +221,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -251,7 +251,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -272,9 +272,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain and selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -298,8 +298,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -328,7 +328,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -358,9 +358,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -380,8 +380,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -410,7 +410,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -431,9 +431,9 @@ describe('updating a domain', () => {
       })
       describe('user updates selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -456,8 +456,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -486,7 +486,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -507,9 +507,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain and selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -533,8 +533,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -563,7 +563,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -593,9 +593,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -615,8 +615,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -645,7 +645,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -666,9 +666,9 @@ describe('updating a domain', () => {
       })
       describe('user updates selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -691,8 +691,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -721,7 +721,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -742,9 +742,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain and selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -768,8 +768,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
@@ -798,7 +798,7 @@ describe('updating a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -838,9 +838,9 @@ describe('updating a domain', () => {
       })
       describe('domain cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -868,8 +868,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -895,7 +895,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -916,9 +916,9 @@ describe('updating a domain', () => {
       })
       describe('organization cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -946,8 +946,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -973,7 +973,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -994,9 +994,9 @@ describe('updating a domain', () => {
       })
       describe('user does not belong to org', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1024,8 +1024,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1051,7 +1051,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1073,9 +1073,9 @@ describe('updating a domain', () => {
       })
       describe('domain and org do not have any edges', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1103,8 +1103,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
@@ -1130,7 +1130,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1152,9 +1152,9 @@ describe('updating a domain', () => {
       describe('database error occurs', () => {
         describe('while checking for edge connections', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1182,8 +1182,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -1209,7 +1209,7 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
@@ -1223,9 +1223,9 @@ describe('updating a domain', () => {
       describe('transaction step error occurs', () => {
         describe('when running domain upsert', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1253,8 +1253,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
@@ -1282,7 +1282,7 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
@@ -1295,9 +1295,9 @@ describe('updating a domain', () => {
       })
       describe('transaction commit error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1325,8 +1325,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
@@ -1355,7 +1355,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
@@ -1380,9 +1380,9 @@ describe('updating a domain', () => {
       })
       describe('domain cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1410,8 +1410,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1437,7 +1437,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1458,9 +1458,9 @@ describe('updating a domain', () => {
       })
       describe('organization cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1488,8 +1488,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1515,7 +1515,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1536,9 +1536,9 @@ describe('updating a domain', () => {
       })
       describe('user does not belong to org', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1566,8 +1566,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1593,7 +1593,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1615,9 +1615,9 @@ describe('updating a domain', () => {
       })
       describe('domain and org do not have any edges', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1645,8 +1645,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
@@ -1672,7 +1672,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1694,9 +1694,9 @@ describe('updating a domain', () => {
       describe('database error occurs', () => {
         describe('while checking for edge connections', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1724,8 +1724,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -1751,7 +1751,7 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
@@ -1765,9 +1765,9 @@ describe('updating a domain', () => {
       describe('transaction step error occurs', () => {
         describe('when running domain upsert', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1795,8 +1795,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
@@ -1824,7 +1824,7 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
@@ -1837,9 +1837,9 @@ describe('updating a domain', () => {
       })
       describe('transaction commit error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1867,8 +1867,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
@@ -1897,7 +1897,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 

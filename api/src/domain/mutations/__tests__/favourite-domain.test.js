@@ -66,14 +66,11 @@ describe('favourite a domain', () => {
     describe('user is logged in and verified', () => {
       describe('user favourites a domain', () => {
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
-                favouriteDomain(input: { domainId: "${toGlobalId(
-                  'domain',
-                  domain1._key,
-                )}" }) {
+                favouriteDomain(input: { domainId: "${toGlobalId('domain', domain1._key)}" }) {
                   result {
                     ... on Domain {
                       domain
@@ -86,8 +83,8 @@ describe('favourite a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -110,7 +107,7 @@ describe('favourite a domain', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const domainCursor = await query`
             FOR domain IN domains
@@ -127,9 +124,7 @@ describe('favourite a domain', () => {
 
           expect(response).toEqual(expectedResponse)
 
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully favourited domain ${domain.domain}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully favourited domain ${domain.domain}.`])
         })
       })
     })
