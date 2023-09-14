@@ -55,7 +55,8 @@ export const Server = async ({
     validationRules: createValidationRules(maxDepth, complexityCost, scalarCost, objectCost, listFactor),
     introspection: true,
     tracing,
-    plugins: [ApolloServerPluginLandingPageLocalDefault],
+    // eslint-disable-next-line new-cap
+    plugins: [ApolloServerPluginLandingPageLocalDefault()],
   })
   await server.start()
   app.use(
