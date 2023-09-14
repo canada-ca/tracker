@@ -31,7 +31,7 @@ export const dnsScanType = new GraphQLObjectType({
       description: `Whether or not there are DNS records for the domain scanned.`,
     },
     resolveChain: {
-      type: GraphQLList(GraphQLList(GraphQLString)),
+      type: new GraphQLList(new GraphQLList(GraphQLString)),
       description: `The chain CNAME/IP addresses for the domain.`,
     },
     cnameRecord: {
@@ -67,11 +67,11 @@ export const nsRecordType = new GraphQLObjectType({
   name: 'NSRecord',
   fields: () => ({
     hostnames: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: `Hostnames for the nameservers for the domain.`,
     },
     warnings: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: `Additional warning info about the NS record.`,
     },
   }),

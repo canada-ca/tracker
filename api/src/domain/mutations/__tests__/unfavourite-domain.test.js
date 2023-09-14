@@ -17,16 +17,7 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
 
 describe('favourite a domain', () => {
-  let query,
-    drop,
-    i18n,
-    truncate,
-    schema,
-    collections,
-    transaction,
-    user,
-    domain1,
-    favourite1
+  let query, drop, i18n, truncate, schema, collections, transaction, user, domain1, favourite1
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -96,14 +87,11 @@ describe('favourite a domain', () => {
           })
         })
         it('returns the success status', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
-                unfavouriteDomain(input: { domainId: "${toGlobalId(
-                  'domain',
-                  domain1._key,
-                )}" }) {
+                unfavouriteDomain(input: { domainId: "${toGlobalId('domain', domain1._key)}" }) {
                   result {
                     ... on DomainResult {
                       status
@@ -116,8 +104,8 @@ describe('favourite a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -141,14 +129,13 @@ describe('favourite a domain', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
               unfavouriteDomain: {
                 result: {
-                  status:
-                    'Successfully removed domain: test.gc.ca from favourites.',
+                  status: 'Successfully removed domain: test.gc.ca from favourites.',
                 },
               },
             },
@@ -157,9 +144,7 @@ describe('favourite a domain', () => {
           expect(response).toEqual(expectedResponse)
           expect(favourite1).not.toEqual(null)
 
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully removed domain test.gc.ca from favourites.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully removed domain test.gc.ca from favourites.`])
         })
       })
     })

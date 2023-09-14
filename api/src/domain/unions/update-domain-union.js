@@ -1,5 +1,5 @@
-import {GraphQLUnionType} from 'graphql'
-import {domainErrorType, domainType} from '../objects'
+import { GraphQLUnionType } from 'graphql'
+import { domainErrorType, domainType } from '../objects'
 
 export const updateDomainUnion = new GraphQLUnionType({
   name: 'UpdateDomainUnion',
@@ -7,11 +7,11 @@ export const updateDomainUnion = new GraphQLUnionType({
 allowing for users to update a domain belonging to their org,
 and support any errors that may occur`,
   types: [domainErrorType, domainType],
-  resolveType({_type}) {
+  resolveType({ _type }) {
     if (_type === 'domain') {
-      return domainType
+      return domainType.name
     } else {
-      return domainErrorType
+      return domainErrorType.name
     }
   },
 })

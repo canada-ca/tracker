@@ -63,9 +63,9 @@ describe('create an organization', () => {
     })
     describe('language is set to english', () => {
       it('returns the organizations information', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               createOrganization(
                 input: {
@@ -102,8 +102,8 @@ describe('create an organization', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'en',
             },
@@ -127,7 +127,7 @@ describe('create an organization', () => {
               slugify,
             },
           },
-        )
+        })
 
         const orgCursor = await query`
           FOR org IN organizations
@@ -157,16 +157,14 @@ describe('create an organization', () => {
         }
 
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully created a new organization: ${org.slug}`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully created a new organization: ${org.slug}`])
       })
     })
     describe('language is set to french', () => {
       it('returns the organizations information', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               createOrganization(
                 input: {
@@ -203,8 +201,8 @@ describe('create an organization', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'fr',
             },
@@ -228,7 +226,7 @@ describe('create an organization', () => {
               slugify,
             },
           },
-        )
+        })
 
         const orgCursor = await query`
           FOR org IN organizations
@@ -283,9 +281,9 @@ describe('create an organization', () => {
       })
       describe('organization already exists', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createOrganization(
                   input: {
@@ -326,8 +324,8 @@ describe('create an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -353,15 +351,14 @@ describe('create an organization', () => {
                 slugify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               createOrganization: {
                 result: {
                   code: 400,
-                  description:
-                    'Organization name already in use. Please try again with a different name.',
+                  description: 'Organization name already in use. Please try again with a different name.',
                 },
               },
             },
@@ -376,9 +373,9 @@ describe('create an organization', () => {
       describe('transaction error occurs', () => {
         describe('when inserting organization', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createOrganization(
                     input: {
@@ -419,8 +416,8 @@ describe('create an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -428,9 +425,7 @@ describe('create an organization', () => {
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -450,13 +445,9 @@ describe('create an organization', () => {
                   slugify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to create organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to create organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -466,9 +457,9 @@ describe('create an organization', () => {
         })
         describe('when inserting edge', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createOrganization(
                     input: {
@@ -509,8 +500,8 @@ describe('create an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -541,13 +532,9 @@ describe('create an organization', () => {
                   slugify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to create organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to create organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -557,9 +544,9 @@ describe('create an organization', () => {
         })
         describe('when committing information to db', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createOrganization(
                     input: {
@@ -600,8 +587,8 @@ describe('create an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -610,9 +597,7 @@ describe('create an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -632,13 +617,9 @@ describe('create an organization', () => {
                   slugify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to create organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to create organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -665,9 +646,9 @@ describe('create an organization', () => {
       })
       describe('organization already exists', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createOrganization(
                   input: {
@@ -708,8 +689,8 @@ describe('create an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -735,15 +716,14 @@ describe('create an organization', () => {
                 slugify,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               createOrganization: {
                 result: {
                   code: 400,
-                  description:
-                    "Le nom de l'organisation est déjà utilisé. Veuillez réessayer avec un nom différent.",
+                  description: "Le nom de l'organisation est déjà utilisé. Veuillez réessayer avec un nom différent.",
                 },
               },
             },
@@ -758,9 +738,9 @@ describe('create an organization', () => {
       describe('transaction error occurs', () => {
         describe('when inserting organization', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createOrganization(
                     input: {
@@ -801,8 +781,8 @@ describe('create an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -810,9 +790,7 @@ describe('create an organization', () => {
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -832,13 +810,9 @@ describe('create an organization', () => {
                   slugify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de créer une organisation. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de créer une organisation. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -848,9 +822,9 @@ describe('create an organization', () => {
         })
         describe('when inserting edge', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createOrganization(
                     input: {
@@ -891,8 +865,8 @@ describe('create an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -923,13 +897,9 @@ describe('create an organization', () => {
                   slugify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de créer une organisation. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de créer une organisation. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -939,9 +909,9 @@ describe('create an organization', () => {
         })
         describe('when committing information to db', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createOrganization(
                     input: {
@@ -982,8 +952,8 @@ describe('create an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -992,9 +962,7 @@ describe('create an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({ next: jest.fn() }),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -1014,13 +982,9 @@ describe('create an organization', () => {
                   slugify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de créer une organisation. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de créer une organisation. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

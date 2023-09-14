@@ -132,9 +132,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendInviteRequestEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     requestOrgAffiliation(input: { orgId: "${toGlobalId('organizations', org._key)}" }) {
                       result {
@@ -149,8 +149,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -176,7 +176,7 @@ describe('invite user to org', () => {
                   notify: { sendInviteRequestEmail: sendInviteRequestEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -289,9 +289,9 @@ describe('invite user to org', () => {
       })
       describe('user attempts to request an invite to an org that does not exist', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                    mutation {
                     requestOrgAffiliation(input: { orgId: "${toGlobalId('organizations', 1)}" }) {
                       result {
@@ -306,8 +306,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -336,7 +336,7 @@ describe('invite user to org', () => {
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -364,9 +364,9 @@ describe('invite user to org', () => {
           })
         })
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                 requestOrgAffiliation(input: { orgId: "${toGlobalId('organizations', org._key)}" }) {
                   result {
@@ -381,8 +381,8 @@ describe('invite user to org', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -410,7 +410,7 @@ describe('invite user to org', () => {
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -439,9 +439,9 @@ describe('invite user to org', () => {
           })
         })
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                 requestOrgAffiliation(input: { orgId: "${toGlobalId('organizations', org._key)}" }) {
                   result {
@@ -456,8 +456,8 @@ describe('invite user to org', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -485,7 +485,7 @@ describe('invite user to org', () => {
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -508,9 +508,9 @@ describe('invite user to org', () => {
     describe('transaction error occurs', () => {
       describe('when creating affiliation', () => {
         it('returns an error message', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
                    mutation {
                     requestOrgAffiliation(input: { orgId: "${toGlobalId('organizations', org._key)}" }) {
                       result {
@@ -525,8 +525,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -554,7 +554,7 @@ describe('invite user to org', () => {
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           expect(consoleOutput).toEqual([
             `Transaction step error occurred while user: 123 attempted to request invite to org: treasury-board-secretariat, error: trx step err`,
@@ -563,9 +563,9 @@ describe('invite user to org', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error message', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `  mutation {
+            source: `  mutation {
                     requestOrgAffiliation(input: { orgId: "${toGlobalId('organizations', org._key)}" }) {
                       result {
                         ... on InviteUserToOrgResult {
@@ -579,8 +579,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -608,7 +608,7 @@ describe('invite user to org', () => {
               notify: { sendInviteRequestEmail: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           expect(consoleOutput).toEqual([
             `Transaction step error occurred while user: 123 attempted to request invite to org: treasury-board-secretariat, error: trx commit err`,

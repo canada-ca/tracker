@@ -7,11 +7,11 @@ export const verifiedOrganizationOrder = new GraphQLInputObjectType({
   description: 'Ordering options for verified organization connections.',
   fields: () => ({
     field: {
-      type: GraphQLNonNull(VerifiedOrganizationOrderField),
+      type: new GraphQLNonNull(VerifiedOrganizationOrderField),
       description: 'The field to order verified organizations by.',
     },
     direction: {
-      type: GraphQLNonNull(OrderDirection),
+      type: new GraphQLNonNull(OrderDirection),
       description: 'The ordering direction.',
     },
   }),

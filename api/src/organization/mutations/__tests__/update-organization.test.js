@@ -98,9 +98,9 @@ describe('updating an organization', () => {
       describe('users language is english', () => {
         describe('updating the acronym', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -126,8 +126,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -152,7 +152,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -171,16 +171,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the name', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -206,8 +204,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -232,7 +230,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -251,16 +249,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the zone', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -286,8 +282,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -312,7 +308,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -331,16 +327,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the sector', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -366,8 +360,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -392,7 +386,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -411,16 +405,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the country', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -446,8 +438,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -472,7 +464,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -491,16 +483,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the province', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -526,8 +516,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -552,7 +542,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -571,16 +561,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the city', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -606,8 +594,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -632,7 +620,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -651,16 +639,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating all organizational fields', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -699,8 +685,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -725,7 +711,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -744,18 +730,16 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
       })
       describe('users language is french', () => {
         describe('updating the acronym', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -781,8 +765,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -807,7 +791,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -826,16 +810,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the name', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -861,8 +843,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -887,7 +869,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -906,16 +888,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the zone', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -941,8 +921,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -967,7 +947,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -986,16 +966,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the sector', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1021,8 +999,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1047,7 +1025,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1066,16 +1044,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the country', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1101,8 +1077,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1127,7 +1103,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1146,16 +1122,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the province', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1181,8 +1155,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1207,7 +1181,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1226,16 +1200,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the city', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1261,8 +1233,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1287,7 +1259,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1306,16 +1278,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating all organizational fields', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1354,8 +1324,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1380,7 +1350,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1399,9 +1369,7 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
       })
@@ -1417,9 +1385,9 @@ describe('updating an organization', () => {
       describe('users language is english', () => {
         describe('updating the acronym', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1445,8 +1413,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1471,7 +1439,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1490,16 +1458,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the name', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1525,8 +1491,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1551,7 +1517,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1570,16 +1536,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the zone', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1605,8 +1569,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1631,7 +1595,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1650,16 +1614,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the sector', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1685,8 +1647,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1711,7 +1673,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1730,16 +1692,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the country', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1765,8 +1725,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1791,7 +1751,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1810,16 +1770,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the province', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1845,8 +1803,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1871,7 +1829,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1890,16 +1848,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the city', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -1925,8 +1881,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -1951,7 +1907,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1970,16 +1926,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating all organizational fields', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2018,8 +1972,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2044,7 +1998,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2063,18 +2017,16 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
       })
       describe('users language is french', () => {
         describe('updating the acronym', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2100,8 +2052,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2126,7 +2078,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2145,16 +2097,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the name', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2180,8 +2130,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2206,7 +2156,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2225,16 +2175,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the zone', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2260,8 +2208,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2286,7 +2234,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2305,16 +2253,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the sector', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2340,8 +2286,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2366,7 +2312,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2385,16 +2331,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the country', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2420,8 +2364,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2446,7 +2390,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2465,16 +2409,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the province', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2500,8 +2442,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2526,7 +2468,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2545,16 +2487,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating the city', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2580,8 +2520,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2606,7 +2546,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2625,16 +2565,14 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
         describe('updating all organizational fields', () => {
           it('returns the updated organization', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateOrganization (
                   input: {
@@ -2673,8 +2611,8 @@ describe('updating an organization', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 query,
                 collections: collectionNames,
                 transaction,
@@ -2699,7 +2637,7 @@ describe('updating an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -2718,9 +2656,7 @@ describe('updating an organization', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key}, successfully updated org ${org._key}.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key}, successfully updated org ${org._key}.`])
           })
         })
       })
@@ -2746,15 +2682,12 @@ describe('updating an organization', () => {
       describe('organization cannot be found', () => {
         describe('organization does not exist in database', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId(
-                      'organization',
-                      1,
-                    )}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', 1)}", cityEN: "A New City" }
                   ) {
                     result {
                       ... on Organization {
@@ -2774,8 +2707,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2799,7 +2732,7 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2823,9 +2756,9 @@ describe('updating an organization', () => {
         describe('user does not have the proper permissions', () => {
           describe('user has user level permission', () => {
             it('returns an error', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateOrganization (
                     input: {
@@ -2851,8 +2784,8 @@ describe('updating an organization', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2869,16 +2802,14 @@ describe('updating an organization', () => {
                   },
                   loaders: {
                     loadOrgByKey: {
-                      load: jest
-                        .fn()
-                        .mockReturnValue({ _id: 'organizations/123' }),
+                      load: jest.fn().mockReturnValue({ _id: 'organizations/123' }),
                     },
                     loadUserByKey: {
                       load: jest.fn(),
                     },
                   },
                 },
-              )
+              })
 
               const error = {
                 data: {
@@ -2900,9 +2831,9 @@ describe('updating an organization', () => {
           })
           describe('user does not belong to that organization', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateOrganization (
                     input: {
@@ -2928,8 +2859,8 @@ describe('updating an organization', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2946,16 +2877,14 @@ describe('updating an organization', () => {
                   },
                   loaders: {
                     loadOrgByKey: {
-                      load: jest
-                        .fn()
-                        .mockReturnValue({ _id: 'organizations/123' }),
+                      load: jest.fn().mockReturnValue({ _id: 'organizations/123' }),
                     },
                     loadUserByKey: {
                       load: jest.fn(),
                     },
                   },
                 },
-              )
+              })
 
               const error = {
                 data: {
@@ -2979,9 +2908,9 @@ describe('updating an organization', () => {
       })
       describe('organization name is already in use', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateOrganization(
                   input: {
@@ -3007,8 +2936,8 @@ describe('updating an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
@@ -3035,15 +2964,14 @@ describe('updating an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateOrganization: {
                 result: {
                   code: 400,
-                  description:
-                    'Organization name already in use, please choose another and try again.',
+                  description: 'Organization name already in use, please choose another and try again.',
                 },
               },
             },
@@ -3058,9 +2986,9 @@ describe('updating an organization', () => {
       describe('cursor error occurs', () => {
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -3086,8 +3014,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   next() {
@@ -3118,13 +3046,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to update organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3136,9 +3060,9 @@ describe('updating an organization', () => {
       describe('database error occurs', () => {
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -3164,12 +3088,10 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
-                query: jest
-                  .fn()
-                  .mockRejectedValue(new Error('Database error occurred.')),
+                query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -3194,13 +3116,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to update organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3210,9 +3128,9 @@ describe('updating an organization', () => {
         })
         describe('when checking to see if orgName is already in use', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -3238,12 +3156,10 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
-                query: jest
-                  .fn()
-                  .mockRejectedValue(new Error('Database error occurred.')),
+                query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -3268,13 +3184,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to update organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3286,9 +3198,9 @@ describe('updating an organization', () => {
       describe('transaction error occurs', () => {
         describe('when updating/inserting new org details', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -3314,8 +3226,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   next: jest.fn().mockReturnValue({
@@ -3345,9 +3257,7 @@ describe('updating an organization', () => {
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -3371,13 +3281,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to update organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3387,9 +3293,9 @@ describe('updating an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -3415,8 +3321,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   next: jest.fn().mockReturnValue({
@@ -3447,9 +3353,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -3473,13 +3377,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to update organization. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3507,15 +3407,12 @@ describe('updating an organization', () => {
       describe('organization cannot be found', () => {
         describe('organization does not exist in database', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId(
-                      'organization',
-                      1,
-                    )}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', 1)}", cityEN: "A New City" }
                   ) {
                     result {
                       ... on Organization {
@@ -3535,8 +3432,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3560,15 +3457,14 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
                 updateOrganization: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de mettre à jour une organisation inconnue.',
+                    description: 'Impossible de mettre à jour une organisation inconnue.',
                   },
                 },
               },
@@ -3585,9 +3481,9 @@ describe('updating an organization', () => {
         describe('user does not have the proper permissions', () => {
           describe('user has user level permission', () => {
             it('returns an error', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateOrganization (
                     input: {
@@ -3613,8 +3509,8 @@ describe('updating an organization', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -3631,16 +3527,14 @@ describe('updating an organization', () => {
                   },
                   loaders: {
                     loadOrgByKey: {
-                      load: jest
-                        .fn()
-                        .mockReturnValue({ _id: 'organizations/123' }),
+                      load: jest.fn().mockReturnValue({ _id: 'organizations/123' }),
                     },
                     loadUserByKey: {
                       load: jest.fn(),
                     },
                   },
                 },
-              )
+              })
 
               const error = {
                 data: {
@@ -3662,9 +3556,9 @@ describe('updating an organization', () => {
           })
           describe('user does not belong to that organization', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateOrganization (
                     input: {
@@ -3690,8 +3584,8 @@ describe('updating an organization', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -3708,16 +3602,14 @@ describe('updating an organization', () => {
                   },
                   loaders: {
                     loadOrgByKey: {
-                      load: jest
-                        .fn()
-                        .mockReturnValue({ _id: 'organizations/123' }),
+                      load: jest.fn().mockReturnValue({ _id: 'organizations/123' }),
                     },
                     loadUserByKey: {
                       load: jest.fn(),
                     },
                   },
                 },
-              )
+              })
 
               const error = {
                 data: {
@@ -3741,9 +3633,9 @@ describe('updating an organization', () => {
       })
       describe('organization name is already in use', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateOrganization(
                   input: {
@@ -3769,8 +3661,8 @@ describe('updating an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 1 }),
               collections: collectionNames,
@@ -3797,15 +3689,14 @@ describe('updating an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateOrganization: {
                 result: {
                   code: 400,
-                  description:
-                    "Le nom de l'organisation est déjà utilisé, veuillez en choisir un autre et réessayer.",
+                  description: "Le nom de l'organisation est déjà utilisé, veuillez en choisir un autre et réessayer.",
                 },
               },
             },
@@ -3820,9 +3711,9 @@ describe('updating an organization', () => {
       describe('cursor error occurs', () => {
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -3848,8 +3739,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   next() {
@@ -3880,13 +3771,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de mettre à jour l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3898,9 +3785,9 @@ describe('updating an organization', () => {
       describe('database error occurs', () => {
         describe('when gathering comparison org details', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -3926,12 +3813,10 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
-                query: jest
-                  .fn()
-                  .mockRejectedValue(new Error('Database error occurred.')),
+                query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -3956,13 +3841,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de mettre à jour l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -3972,9 +3853,9 @@ describe('updating an organization', () => {
         })
         describe('when checking to see if orgName is already in use', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -4000,12 +3881,10 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
-                query: jest
-                  .fn()
-                  .mockRejectedValue(new Error('Database error occurred.')),
+                query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
                 collections: collectionNames,
                 transaction,
                 userKey: 123,
@@ -4030,13 +3909,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de mettre à jour l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -4048,9 +3923,9 @@ describe('updating an organization', () => {
       describe('transaction error occurs', () => {
         describe('when updating/inserting new org details', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -4076,8 +3951,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   next: jest.fn().mockReturnValue({
@@ -4107,9 +3982,7 @@ describe('updating an organization', () => {
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -4133,13 +4006,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de mettre à jour l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -4149,9 +4018,9 @@ describe('updating an organization', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateOrganization(
                     input: {
@@ -4177,8 +4046,8 @@ describe('updating an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   next: jest.fn().mockReturnValue({
@@ -4209,9 +4078,7 @@ describe('updating an organization', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -4235,13 +4102,9 @@ describe('updating an organization', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de mettre à jour l'organisation. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de mettre à jour l'organisation. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

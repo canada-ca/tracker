@@ -1,5 +1,5 @@
-import {authResultType, authenticateError} from '../../objects/index'
-import {authenticateUnion} from '../authenticate-union'
+import { authResultType, authenticateError } from '../../objects/index'
+import { authenticateUnion } from '../authenticate-union'
 
 describe('given the authenticateUnion', () => {
   describe('testing the field types', () => {
@@ -22,7 +22,7 @@ describe('given the authenticateUnion', () => {
           authResult: {},
         }
 
-        expect(authenticateUnion.resolveType(obj)).toMatchObject(authResultType)
+        expect(authenticateUnion.resolveType(obj)).toMatch(authResultType.name)
       })
     })
     describe('testing the authenticateError type', () => {
@@ -33,9 +33,7 @@ describe('given the authenticateUnion', () => {
           description: 'text',
         }
 
-        expect(authenticateUnion.resolveType(obj)).toMatchObject(
-          authenticateError,
-        )
+        expect(authenticateUnion.resolveType(obj)).toMatch(authenticateError.name)
       })
     })
   })

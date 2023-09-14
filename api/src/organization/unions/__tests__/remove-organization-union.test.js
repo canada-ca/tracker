@@ -22,9 +22,7 @@ describe('given the removeOrganizationUnion', () => {
           status: 'status',
         }
 
-        expect(removeOrganizationUnion.resolveType(obj)).toMatchObject(
-          organizationResultType,
-        )
+        expect(removeOrganizationUnion.resolveType(obj)).toMatch(organizationResultType.name)
       })
     })
     describe('testing the organizationErrorType', () => {
@@ -36,9 +34,7 @@ describe('given the removeOrganizationUnion', () => {
           description: 'text',
         }
 
-        expect(removeOrganizationUnion.resolveType(obj)).toMatchObject(
-          organizationErrorType,
-        )
+        expect(removeOrganizationUnion.resolveType(obj)).toMatch(organizationErrorType.name)
       })
     })
   })

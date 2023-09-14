@@ -7,11 +7,11 @@ export const verifiedDomainOrder = new GraphQLInputObjectType({
   description: 'Ordering options for verified domain connections.',
   fields: () => ({
     field: {
-      type: GraphQLNonNull(VerifiedDomainOrderField),
+      type: new GraphQLNonNull(VerifiedDomainOrderField),
       description: 'The field to order verified domains by.',
     },
     direction: {
-      type: GraphQLNonNull(OrderDirection),
+      type: new GraphQLNonNull(OrderDirection),
       description: 'The ordering direction.',
     },
   }),

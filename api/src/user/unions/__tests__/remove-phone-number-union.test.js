@@ -1,8 +1,5 @@
-import {
-  removePhoneNumberErrorType,
-  removePhoneNumberResultType,
-} from '../../objects/index'
-import {removePhoneNumberUnion} from '../remove-phone-number-union'
+import { removePhoneNumberErrorType, removePhoneNumberResultType } from '../../objects/index'
+import { removePhoneNumberUnion } from '../remove-phone-number-union'
 
 describe('given the removePhoneNumberUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the removePhoneNumberUnion', () => {
           authResult: {},
         }
 
-        expect(removePhoneNumberUnion.resolveType(obj)).toMatchObject(
-          removePhoneNumberResultType,
-        )
+        expect(removePhoneNumberUnion.resolveType(obj)).toMatch(removePhoneNumberResultType.name)
       })
     })
     describe('testing the removePhoneNumberErrorType', () => {
@@ -39,9 +34,7 @@ describe('given the removePhoneNumberUnion', () => {
           description: 'text',
         }
 
-        expect(removePhoneNumberUnion.resolveType(obj)).toMatchObject(
-          removePhoneNumberErrorType,
-        )
+        expect(removePhoneNumberUnion.resolveType(obj)).toMatch(removePhoneNumberErrorType.name)
       })
     })
   })

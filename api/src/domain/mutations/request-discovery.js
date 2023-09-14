@@ -14,7 +14,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
       description: 'The base domain that the subdomain scan will be ran on.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the organization you wish to assign new found domains to.',
     },
   }),

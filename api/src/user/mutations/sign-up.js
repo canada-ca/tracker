@@ -14,23 +14,23 @@ export const signUp = new mutationWithClientMutationId({
   description: 'This mutation allows for new users to sign up for our sites services.',
   inputFields: () => ({
     displayName: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The name that will be displayed to other users.',
     },
     userName: {
-      type: GraphQLNonNull(GraphQLEmailAddress),
+      type: new GraphQLNonNull(GraphQLEmailAddress),
       description: 'Email address that the user will use to authenticate with.',
     },
     password: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The password the user will authenticate with.',
     },
     confirmPassword: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'A secondary password field used to confirm the user entered the correct password.',
     },
     preferredLang: {
-      type: GraphQLNonNull(LanguageEnums),
+      type: new GraphQLNonNull(LanguageEnums),
       description: 'The users preferred language.',
     },
     signUpToken: {

@@ -51,16 +51,16 @@ describe('given findVerifiedDomains query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       org = await collections.organizations.save({
@@ -112,9 +112,9 @@ describe('given findVerifiedDomains query', () => {
       await drop()
     })
     it('returns domain', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             findVerifiedDomains(first: 5) {
               edges {
@@ -133,8 +133,8 @@ describe('given findVerifiedDomains query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           query: query,
           validators: {
@@ -145,11 +145,10 @@ describe('given findVerifiedDomains query', () => {
               query,
               cleanseInput,
             }),
-            loadVerifiedOrgConnectionsByDomainId:
-              loadVerifiedOrgConnectionsByDomainId(query, 'en', cleanseInput),
+            loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(query, 'en', cleanseInput),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -179,9 +178,9 @@ describe('given findVerifiedDomains query', () => {
     describe('given unsuccessful domain retrieval', () => {
       describe('domain cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedDomains(first: 5) {
                   edges {
@@ -200,8 +199,8 @@ describe('given findVerifiedDomains query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: query,
               validators: {
@@ -220,7 +219,7 @@ describe('given findVerifiedDomains query', () => {
                 }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {

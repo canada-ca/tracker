@@ -1,24 +1,22 @@
-import {GraphQLNonNull, GraphQLString} from 'graphql'
-import {mutationWithClientMutationId} from 'graphql-relay'
-import {t} from '@lingui/macro'
+import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { mutationWithClientMutationId } from 'graphql-relay'
+import { t } from '@lingui/macro'
 
-import {verifyAccountUnion} from '../unions'
+import { verifyAccountUnion } from '../unions'
 
 export const verifyAccount = new mutationWithClientMutationId({
   name: 'VerifyAccount',
-  description:
-    'This mutation allows the user to verify their account through a token sent in an email.',
+  description: 'This mutation allows the user to verify their account through a token sent in an email.',
   inputFields: () => ({
     verifyTokenString: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'Token sent via email, and located in url.',
     },
   }),
   outputFields: () => ({
     result: {
       type: verifyAccountUnion,
-      description:
-        '`VerifyAccountUnion` returning either a `VerifyAccountResult`, or `VerifyAccountError` object.',
+      description: '`VerifyAccountUnion` returning either a `VerifyAccountResult`, or `VerifyAccountError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -29,16 +27,16 @@ export const verifyAccount = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: {verifyToken},
-      loaders: {loadUserByKey},
-      validators: {cleanseInput},
+      auth: { verifyToken },
+      loaders: { loadUserByKey },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse Input
     const verifyTokenString = cleanseInput(args.verifyTokenString)
 
     // Get info from token
-    const tokenParameters = verifyToken({token: verifyTokenString})
+    const tokenParameters = verifyToken({ token: verifyTokenString })
 
     // Check to see if userKey exists in tokenParameters
     if (!tokenParameters?.userKey) {
@@ -48,27 +46,21 @@ export const verifyAccount = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to verify account. Please request a new email.`,
-        ),
+        description: i18n._(t`Unable to verify account. Please request a new email.`),
       }
     }
 
     // Auth shouldn't be needed with this
     // Check if user exists
-    const {userKey} = tokenParameters
+    const { userKey } = tokenParameters
     const user = await loadUserByKey.load(userKey)
 
     if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to verify account, however no account is associated with this id.`,
-      )
+      console.warn(`User: ${userKey} attempted to verify account, however no account is associated with this id.`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to verify account. Please request a new email.`,
-        ),
+        description: i18n._(t`Unable to verify account. Please request a new email.`),
       }
     }
 
@@ -87,30 +79,22 @@ export const verifyAccount = new mutationWithClientMutationId({
         `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred when upserting email validation for user: ${user._key}: ${err}`,
-      )
+      console.error(`Trx step error occurred when upserting email validation for user: ${user._key}: ${err}`)
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred when upserting email validation for user: ${user._key}: ${err}`,
-      )
+      console.error(`Trx commit error occurred when upserting email validation for user: ${user._key}: ${err}`)
       throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
-    console.info(
-      `User: ${user._key} successfully email validated their account.`,
-    )
+    console.info(`User: ${user._key} successfully email validated their account.`)
 
     return {
       _type: 'success',
-      status: i18n._(
-        t`Successfully email verified account, and set TFA send method to email.`,
-      ),
+      status: i18n._(t`Successfully email verified account, and set TFA send method to email.`),
     }
   },
 })

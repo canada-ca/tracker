@@ -19,7 +19,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a domain field', () => {
       const demoType = domainType.getFields()
@@ -49,7 +49,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('selectors')
-      expect(demoType.selectors.type).toMatchObject(GraphQLList(Selectors))
+      expect(demoType.selectors.type).toMatchObject(new GraphQLList(Selectors))
     })
     it('has a status field', () => {
       const demoType = domainType.getFields()
@@ -85,7 +85,7 @@ describe('given the domain object', () => {
       const demoType = domainType.getFields()
 
       expect(demoType).toHaveProperty('yearlyDmarcSummaries')
-      expect(demoType.yearlyDmarcSummaries.type).toMatchObject(GraphQLList(dmarcSummaryType))
+      expect(demoType.yearlyDmarcSummaries.type).toMatchObject(new GraphQLList(dmarcSummaryType))
     })
   })
   describe('testing the field resolvers', () => {

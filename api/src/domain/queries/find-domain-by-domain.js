@@ -9,7 +9,7 @@ export const findDomainByDomain = {
   description: 'Retrieve a specific domain by providing a domain.',
   args: {
     domain: {
-      type: GraphQLNonNull(Domain),
+      type: new GraphQLNonNull(Domain),
       description: 'The domain you wish to retrieve information for.',
     },
   },

@@ -1,8 +1,5 @@
-import {
-  affiliationError,
-  leaveOrganizationResultType,
-} from '../../objects/index'
-import {leaveOrganizationUnion} from '../leave-organization-union'
+import { affiliationError, leaveOrganizationResultType } from '../../objects/index'
+import { leaveOrganizationUnion } from '../leave-organization-union'
 
 describe('given the leaveOrganizationUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the leaveOrganizationUnion', () => {
           authResult: {},
         }
 
-        expect(leaveOrganizationUnion.resolveType(obj)).toMatchObject(
-          leaveOrganizationResultType,
-        )
+        expect(leaveOrganizationUnion.resolveType(obj)).toMatch(leaveOrganizationResultType.name)
       })
     })
     describe('testing the affiliationError', () => {
@@ -39,9 +34,7 @@ describe('given the leaveOrganizationUnion', () => {
           description: 'text',
         }
 
-        expect(leaveOrganizationUnion.resolveType(obj)).toMatchObject(
-          affiliationError,
-        )
+        expect(leaveOrganizationUnion.resolveType(obj)).toMatch(affiliationError.name)
       })
     })
   })

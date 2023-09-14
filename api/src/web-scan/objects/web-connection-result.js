@@ -66,21 +66,21 @@ export const webConnectionResultType = new GraphQLObjectType({
       resolve: async ({ httpsChainResult }) => httpsChainResult,
     },
     positiveTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned server from this scan.`,
       resolve: async ({ positiveTags }, _, { loaders: { loadHttpsGuidanceTagByTagId } }) => {
         return await loadHttpsGuidanceTagByTagId({ tags: positiveTags })
       },
     },
     neutralTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned server from this scan.`,
       resolve: async ({ neutralTags }, _, { loaders: { loadHttpsGuidanceTagByTagId } }) => {
         return await loadHttpsGuidanceTagByTagId({ tags: neutralTags })
       },
     },
     negativeTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned server from this scan.`,
       resolve: async ({ negativeTags }, _, { loaders: { loadHttpsGuidanceTagByTagId } }) => {
         return await loadHttpsGuidanceTagByTagId({ tags: negativeTags })
@@ -180,7 +180,7 @@ export const connectionChainResultType = new GraphQLObjectType({
       description: `Whether or not a redirection loop is created (causing endless redirects).`,
     },
     connections: {
-      type: GraphQLList(connectionType),
+      type: new GraphQLList(connectionType),
       description: `The connection chain created when following redirects.`,
     },
   }),

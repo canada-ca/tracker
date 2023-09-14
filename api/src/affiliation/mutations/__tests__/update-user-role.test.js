@@ -132,9 +132,9 @@ describe('update a users role', () => {
           })
           describe('to super admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -158,8 +158,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -186,7 +186,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -209,9 +209,9 @@ describe('update a users role', () => {
           })
           describe('to user', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -235,8 +235,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -263,7 +263,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -295,9 +295,9 @@ describe('update a users role', () => {
           })
           describe('to super admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -321,8 +321,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -349,7 +349,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -372,9 +372,9 @@ describe('update a users role', () => {
           })
           describe('to admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -398,8 +398,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -426,7 +426,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -467,9 +467,9 @@ describe('update a users role', () => {
           })
           describe('to admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -493,8 +493,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -521,7 +521,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -610,9 +610,9 @@ describe('update a users role', () => {
           })
           describe('to super admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -636,8 +636,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -664,7 +664,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -687,9 +687,9 @@ describe('update a users role', () => {
           })
           describe('to user', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -713,8 +713,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -741,7 +741,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -773,9 +773,9 @@ describe('update a users role', () => {
           })
           describe('to super admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -799,8 +799,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -827,7 +827,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -850,9 +850,9 @@ describe('update a users role', () => {
           })
           describe('to admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -876,8 +876,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -904,7 +904,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -945,9 +945,9 @@ describe('update a users role', () => {
           })
           describe('to admin', () => {
             it('returns status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -971,8 +971,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -999,7 +999,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1043,9 +1043,9 @@ describe('update a users role', () => {
       describe('given an unsuccessful role update', () => {
         describe('user attempts to update their own role', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1066,8 +1066,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1093,7 +1093,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1112,9 +1112,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a user that does not exist', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1135,8 +1135,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1162,7 +1162,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1183,9 +1183,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a users role in an org that does not exist', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1206,8 +1206,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1235,7 +1235,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1256,9 +1256,9 @@ describe('update a users role', () => {
         })
         describe('requesting user permission is user', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1279,8 +1279,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1310,7 +1310,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1332,9 +1332,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1355,8 +1355,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
@@ -1386,7 +1386,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1408,9 +1408,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a user that does not belong to the requested org', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1431,8 +1431,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
@@ -1462,7 +1462,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1484,9 +1484,9 @@ describe('update a users role', () => {
         describe('requesting users role is admin', () => {
           describe('requested users role is super admin', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -1507,8 +1507,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
@@ -1541,7 +1541,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const error = {
                 data: {
@@ -1566,9 +1566,9 @@ describe('update a users role', () => {
       describe('database error occurs', () => {
         describe('when getting current affiliation', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1589,8 +1589,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -1620,7 +1620,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
@@ -1634,9 +1634,9 @@ describe('update a users role', () => {
       describe('cursor error occur', () => {
         describe('when gathering affiliation info', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1657,8 +1657,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
@@ -1691,7 +1691,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
@@ -1705,9 +1705,9 @@ describe('update a users role', () => {
       describe('transaction error occurs', () => {
         describe('when running transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1728,8 +1728,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
@@ -1764,7 +1764,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
@@ -1776,9 +1776,9 @@ describe('update a users role', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1799,8 +1799,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
@@ -1836,7 +1836,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError(`Unable to update user's role. Please try again.`)]
 
@@ -1866,9 +1866,9 @@ describe('update a users role', () => {
       describe('given an unsuccessful role update', () => {
         describe('user attempts to update their own role', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1889,8 +1889,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1916,7 +1916,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -1935,9 +1935,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a user that does not exist', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -1958,8 +1958,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1985,7 +1985,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2006,9 +2006,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a users role in an org that does not exist', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2029,8 +2029,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2058,7 +2058,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2079,9 +2079,9 @@ describe('update a users role', () => {
         })
         describe('requesting user permission is user', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2102,8 +2102,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2133,7 +2133,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2155,9 +2155,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a users role in an org that the requesting user does not belong to', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2178,8 +2178,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
@@ -2209,7 +2209,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2231,9 +2231,9 @@ describe('update a users role', () => {
         })
         describe('user attempts to update a user that does not belong to the requested org', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2254,8 +2254,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 0 }),
                 collections: collectionNames,
@@ -2285,7 +2285,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2309,9 +2309,9 @@ describe('update a users role', () => {
         describe('requesting users role is admin', () => {
           describe('requested users role is super admin', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   updateUserRole (
                     input: {
@@ -2332,8 +2332,8 @@ describe('update a users role', () => {
                   }
                 }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
@@ -2366,7 +2366,7 @@ describe('update a users role', () => {
                     cleanseInput,
                   },
                 },
-              )
+              })
 
               const error = {
                 data: {
@@ -2391,9 +2391,9 @@ describe('update a users role', () => {
       describe('database error occurs', () => {
         describe('when getting current affiliation', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2414,8 +2414,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -2445,7 +2445,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [
               new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),
@@ -2461,9 +2461,9 @@ describe('update a users role', () => {
       describe('cursor error occur', () => {
         describe('when gathering affiliation info', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2484,8 +2484,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
@@ -2518,7 +2518,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [
               new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),
@@ -2534,9 +2534,9 @@ describe('update a users role', () => {
       describe('transaction error occurs', () => {
         describe('when running transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2557,8 +2557,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
@@ -2593,7 +2593,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [
               new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),
@@ -2607,9 +2607,9 @@ describe('update a users role', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateUserRole (
                   input: {
@@ -2630,8 +2630,8 @@ describe('update a users role', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({
                   count: 1,
@@ -2667,7 +2667,7 @@ describe('update a users role', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const error = [
               new GraphQLError(`Impossible de mettre à jour le rôle de l'utilisateur. Veuillez réessayer.`),

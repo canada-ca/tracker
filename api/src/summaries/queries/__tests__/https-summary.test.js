@@ -77,9 +77,9 @@ describe('given httpsSummary query', () => {
       await drop()
     })
     it('returns https summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             httpsSummary {
               total
@@ -91,14 +91,14 @@ describe('given httpsSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -141,9 +141,9 @@ describe('given httpsSummary query', () => {
     describe('given unsuccessful https summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 httpsSummary {
                   total
@@ -155,8 +155,8 @@ describe('given httpsSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -164,7 +164,7 @@ describe('given httpsSummary query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError(`Unable to load HTTPS summary. Please try again.`)]
 
@@ -192,9 +192,9 @@ describe('given httpsSummary query', () => {
     describe('given unsuccessful https summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 httpsSummary {
                   total
@@ -206,8 +206,8 @@ describe('given httpsSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -215,7 +215,7 @@ describe('given httpsSummary query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Impossible de charger le résumé HTTPS. Veuillez réessayer.')]
 

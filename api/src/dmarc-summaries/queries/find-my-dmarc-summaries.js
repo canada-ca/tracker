@@ -15,11 +15,11 @@ export const findMyDmarcSummaries = {
       description: 'Ordering options for dmarc summaries connections',
     },
     month: {
-      type: GraphQLNonNull(PeriodEnums),
+      type: new GraphQLNonNull(PeriodEnums),
       description: 'The month in which the returned data is relevant to.',
     },
     year: {
-      type: GraphQLNonNull(Year),
+      type: new GraphQLNonNull(Year),
       description: 'The year in which the returned data is relevant to.',
     },
     search: {

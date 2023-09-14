@@ -1,5 +1,5 @@
-import {domainErrorType, domainResultType} from '../../objects'
-import {removeDomainUnion} from '../remove-domain-union'
+import { domainErrorType, domainResultType } from '../../objects'
+import { removeDomainUnion } from '../remove-domain-union'
 
 describe('given the removeDomainUnion', () => {
   describe('testing the field types', () => {
@@ -22,9 +22,7 @@ describe('given the removeDomainUnion', () => {
           status: 'status',
         }
 
-        expect(removeDomainUnion.resolveType(obj)).toMatchObject(
-          domainResultType,
-        )
+        expect(removeDomainUnion.resolveType(obj)).toMatch(domainResultType.name)
       })
     })
     describe('testing the domainErrorType', () => {
@@ -36,9 +34,7 @@ describe('given the removeDomainUnion', () => {
           description: 'text',
         }
 
-        expect(removeDomainUnion.resolveType(obj)).toMatchObject(
-          domainErrorType,
-        )
+        expect(removeDomainUnion.resolveType(obj)).toMatch(domainErrorType.name)
       })
     })
   })

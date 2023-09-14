@@ -1,7 +1,7 @@
-import {GraphQLNonNull} from 'graphql'
+import { GraphQLNonNull } from 'graphql'
 
-import {guidanceTagOrder} from '../guidance-tag-order'
-import {OrderDirection, GuidanceTagOrderField} from '../../../enums'
+import { guidanceTagOrder } from '../guidance-tag-order'
+import { OrderDirection, GuidanceTagOrderField } from '../../../enums'
 
 describe('given the guidanceTagOrder input object', () => {
   describe('testing fields', () => {
@@ -9,17 +9,13 @@ describe('given the guidanceTagOrder input object', () => {
       const demoType = guidanceTagOrder.getFields()
 
       expect(demoType).toHaveProperty('direction')
-      expect(demoType.direction.type).toMatchObject(
-        GraphQLNonNull(OrderDirection),
-      )
+      expect(demoType.direction.type).toMatchObject(new GraphQLNonNull(OrderDirection))
     })
     it('has a field field', () => {
       const demoType = guidanceTagOrder.getFields()
 
       expect(demoType).toHaveProperty('field')
-      expect(demoType.field.type).toMatchObject(
-        GraphQLNonNull(GuidanceTagOrderField),
-      )
+      expect(demoType.field.type).toMatchObject(new GraphQLNonNull(GuidanceTagOrderField))
     })
   })
 })

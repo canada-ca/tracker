@@ -14,7 +14,7 @@ export const mxHostType = new GraphQLObjectType({
       description: `The hostname of the given host.`,
     },
     addresses: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: `The IP addresses for the given host.`,
     },
   }),
@@ -25,11 +25,11 @@ export const mxRecordType = new GraphQLObjectType({
   name: 'MXRecord',
   fields: () => ({
     hosts: {
-      type: GraphQLList(mxHostType),
+      type: new GraphQLList(mxHostType),
       description: `Hosts listed in the domain's MX record.`,
     },
     warnings: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: `Additional warning info about the MX record.`,
     },
   }),

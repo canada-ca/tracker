@@ -118,9 +118,9 @@ describe('create a domain', () => {
           })
         })
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: {
@@ -159,8 +159,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -199,7 +199,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const domainCursor = await query`
             FOR domain IN domains
@@ -277,9 +277,9 @@ describe('create a domain', () => {
           })
         })
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: {
@@ -318,8 +318,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -358,7 +358,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const domainCursor = await query`
             FOR domain IN domains
@@ -413,9 +413,9 @@ describe('create a domain', () => {
         })
       })
       it('returns the domain', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               createDomain(
                 input: {
@@ -454,8 +454,8 @@ describe('create a domain', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'en',
             },
@@ -494,7 +494,7 @@ describe('create a domain', () => {
             },
             validators: { cleanseInput, slugify },
           },
-        )
+        })
 
         const domainCursor = await query`
           FOR domain IN domains
@@ -592,9 +592,9 @@ describe('create a domain', () => {
           })
         })
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               createDomain(
                 input: {
@@ -632,8 +632,8 @@ describe('create a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -672,7 +672,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const domainCursor = await query`
           FOR domain IN domains
@@ -743,9 +743,9 @@ describe('create a domain', () => {
           })
         })
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               createDomain(
                 input: {
@@ -784,8 +784,8 @@ describe('create a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -824,7 +824,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const domainCursor = await query`
           FOR domain IN domains
@@ -895,9 +895,9 @@ describe('create a domain', () => {
           })
         })
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               createDomain(
                 input: {
@@ -936,8 +936,8 @@ describe('create a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -976,7 +976,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const domainCursor = await query`
             FOR domain IN domains
@@ -1047,9 +1047,9 @@ describe('create a domain', () => {
           })
         })
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               createDomain(
                 input: {
@@ -1088,8 +1088,8 @@ describe('create a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -1128,7 +1128,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const domainCursor = await query`
           FOR domain IN domains
@@ -1199,9 +1199,9 @@ describe('create a domain', () => {
           })
         })
         it('returns the domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               createDomain(
                 input: {
@@ -1240,8 +1240,8 @@ describe('create a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -1280,7 +1280,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const domainCursor = await query`
           FOR domain IN domains
@@ -1352,9 +1352,9 @@ describe('create a domain', () => {
       })
       describe('org does not exist', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", selectors: ["selector1", "selector2"] }
@@ -1389,8 +1389,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -1426,7 +1426,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1447,9 +1447,9 @@ describe('create a domain', () => {
       })
       describe('user does not belong to organization', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: {
@@ -1488,8 +1488,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -1527,7 +1527,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1548,9 +1548,9 @@ describe('create a domain', () => {
       })
       describe('the domain already exists in the given organization', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: {
@@ -1589,8 +1589,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -1630,7 +1630,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1652,9 +1652,9 @@ describe('create a domain', () => {
       describe('database error occurs', () => {
         describe('when checking to see if org already contains domain', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createDomain(
                     input: {
@@ -1693,8 +1693,8 @@ describe('create a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -1732,7 +1732,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -1746,9 +1746,9 @@ describe('create a domain', () => {
       describe('cursor error occurs', () => {
         describe('when checking to see if org already contains domain', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createDomain(
                     input: {
@@ -1787,8 +1787,8 @@ describe('create a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -1828,7 +1828,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -1840,9 +1840,9 @@ describe('create a domain', () => {
         })
         describe('when gathering inserted domain', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createDomain(
                     input: {
@@ -1881,8 +1881,8 @@ describe('create a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -1926,7 +1926,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -1941,9 +1941,9 @@ describe('create a domain', () => {
         describe('when creating a new domain', () => {
           describe('when inserting new domain', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -1982,8 +1982,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -2025,7 +2025,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -2037,9 +2037,9 @@ describe('create a domain', () => {
           })
           describe('when inserting new edge', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -2078,8 +2078,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -2126,7 +2126,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -2140,9 +2140,9 @@ describe('create a domain', () => {
         describe('when domain already exists', () => {
           describe('when upserting domain', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -2181,8 +2181,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -2229,7 +2229,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -2241,9 +2241,9 @@ describe('create a domain', () => {
           })
           describe('when inserting edge to new org', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -2282,8 +2282,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -2330,7 +2330,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -2345,9 +2345,9 @@ describe('create a domain', () => {
       describe('transaction commit error occurs', () => {
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                   mutation {
                     createDomain(
                       input: {
@@ -2386,8 +2386,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -2435,7 +2435,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to create domain. Please try again.')]
 
@@ -2464,9 +2464,9 @@ describe('create a domain', () => {
       })
       describe('org does not exist', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", selectors: ["selector1", "selector2"] }
@@ -2501,8 +2501,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -2538,7 +2538,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2559,9 +2559,9 @@ describe('create a domain', () => {
       })
       describe('user does not belong to organization', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: {
@@ -2600,8 +2600,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -2639,7 +2639,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2661,9 +2661,9 @@ describe('create a domain', () => {
       })
       describe('the domain already exists in the given organization', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 createDomain(
                   input: {
@@ -2702,8 +2702,8 @@ describe('create a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'en',
@@ -2743,7 +2743,7 @@ describe('create a domain', () => {
               },
               validators: { cleanseInput, slugify },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2765,9 +2765,9 @@ describe('create a domain', () => {
       describe('database error occurs', () => {
         describe('when checking to see if org already contains domain', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createDomain(
                     input: {
@@ -2806,8 +2806,8 @@ describe('create a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -2845,7 +2845,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
@@ -2859,9 +2859,9 @@ describe('create a domain', () => {
       describe('cursor error occurs', () => {
         describe('when checking to see if org already contains domain', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createDomain(
                     input: {
@@ -2900,8 +2900,8 @@ describe('create a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -2941,7 +2941,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
@@ -2953,9 +2953,9 @@ describe('create a domain', () => {
         })
         describe('when gathering inserted domain', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   createDomain(
                     input: {
@@ -2994,8 +2994,8 @@ describe('create a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -3039,7 +3039,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
@@ -3054,9 +3054,9 @@ describe('create a domain', () => {
         describe('when creating a new domain', () => {
           describe('when inserting new domain', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -3095,8 +3095,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -3138,7 +3138,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
@@ -3150,9 +3150,9 @@ describe('create a domain', () => {
           })
           describe('when inserting new edge', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -3191,8 +3191,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -3239,7 +3239,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
@@ -3253,9 +3253,9 @@ describe('create a domain', () => {
         describe('when domain already exists', () => {
           describe('when upserting domain', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -3294,8 +3294,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -3342,7 +3342,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
@@ -3354,9 +3354,9 @@ describe('create a domain', () => {
           })
           describe('when inserting edge to new org', () => {
             it('returns an error message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     createDomain(
                       input: {
@@ -3395,8 +3395,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -3443,7 +3443,7 @@ describe('create a domain', () => {
                   },
                   validators: { cleanseInput, slugify },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 
@@ -3458,9 +3458,9 @@ describe('create a domain', () => {
       describe('transaction commit error occurs', () => {
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                   mutation {
                     createDomain(
                       input: {
@@ -3499,8 +3499,8 @@ describe('create a domain', () => {
                     }
                   }
                 `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'en',
@@ -3548,7 +3548,7 @@ describe('create a domain', () => {
                 },
                 validators: { cleanseInput, slugify },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de créer un domaine. Veuillez réessayer.')]
 

@@ -164,9 +164,9 @@ describe('removing an organization', () => {
             })
           })
           it('removes the dmarc summary data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -188,8 +188,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -212,7 +212,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
@@ -228,9 +228,9 @@ describe('removing an organization', () => {
             expect(testDomainsToDmarcSum).toEqual(undefined)
           })
           it('removes the ownership edge', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -252,8 +252,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -276,7 +276,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
 
@@ -287,9 +287,9 @@ describe('removing an organization', () => {
         })
         describe('it does not own the dmarc summary data', () => {
           it('does not remove the dmarc summary data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -311,8 +311,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -335,7 +335,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
@@ -353,9 +353,9 @@ describe('removing an organization', () => {
         })
         describe('org is the only one claiming the domain', () => {
           it('removes the web scan result data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -377,8 +377,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -401,7 +401,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
 
@@ -410,9 +410,9 @@ describe('removing an organization', () => {
             expect(testWebScan).toEqual(undefined)
           })
           it('removes the scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -434,8 +434,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -458,7 +458,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
             await query`FOR webResult IN web OPTIONS { waitForSync: true } RETURN webResult`
@@ -473,9 +473,9 @@ describe('removing an organization', () => {
           })
 
           it('removes the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -497,8 +497,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -521,7 +521,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -530,9 +530,9 @@ describe('removing an organization', () => {
             expect(domainCheck).toEqual(undefined)
           })
           it('removes the affiliations, and org', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -554,8 +554,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -578,7 +578,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
             await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
@@ -603,9 +603,9 @@ describe('removing an organization', () => {
             })
           })
           it('does not remove the web scan result data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -627,8 +627,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -651,7 +651,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor =
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
@@ -659,9 +659,9 @@ describe('removing an organization', () => {
             expect(testWebScan).toEqual(true)
           })
           it('does not remove the scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -683,8 +683,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -707,7 +707,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
@@ -718,9 +718,9 @@ describe('removing an organization', () => {
             expect(testWeb).toEqual(true)
           })
           it('does not remove the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -742,8 +742,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -766,7 +766,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -775,9 +775,9 @@ describe('removing an organization', () => {
             expect(domainCheck).toBeDefined()
           })
           it('removes the affiliations, and org', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -799,8 +799,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -823,7 +823,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
             await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
@@ -898,9 +898,9 @@ describe('removing an organization', () => {
             })
           })
           it('removes the dmarc summary data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -922,8 +922,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -946,7 +946,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
@@ -962,9 +962,9 @@ describe('removing an organization', () => {
             expect(testDomainsToDmarcSum).toEqual(undefined)
           })
           it('removes the ownership edge', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -986,8 +986,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1010,7 +1010,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
 
@@ -1021,9 +1021,9 @@ describe('removing an organization', () => {
         })
         describe('it does not own the dmarc summary data', () => {
           it('does not remove the dmarc summary data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1045,8 +1045,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1069,7 +1069,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
@@ -1087,9 +1087,9 @@ describe('removing an organization', () => {
         })
         describe('org is the only one claiming the domain', () => {
           it('removes the web scan result data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1111,8 +1111,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1135,16 +1135,16 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor = await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
             const testWebScan = await testWebScanCursor.next()
             expect(testWebScan).toEqual(undefined)
           })
           it('removes the scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1166,8 +1166,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1190,7 +1190,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
             const testDNS = await testDNSCursor.next()
@@ -1201,9 +1201,9 @@ describe('removing an organization', () => {
             expect(testWeb).toEqual(undefined)
           })
           it('removes the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1225,8 +1225,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1249,7 +1249,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -1258,9 +1258,9 @@ describe('removing an organization', () => {
             expect(domainCheck).toEqual(undefined)
           })
           it('removes the affiliations, and org', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1282,8 +1282,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1306,7 +1306,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
             await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
@@ -1331,9 +1331,9 @@ describe('removing an organization', () => {
             })
           })
           it('does not remove the web scan result data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1355,8 +1355,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1379,7 +1379,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor =
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
@@ -1387,9 +1387,9 @@ describe('removing an organization', () => {
             expect(testWebScan).toEqual(true)
           })
           it('does not remove the scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1411,8 +1411,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1435,7 +1435,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
@@ -1446,9 +1446,9 @@ describe('removing an organization', () => {
             expect(testWeb).toEqual(true)
           })
           it('does not remove the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1470,8 +1470,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1494,7 +1494,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -1503,9 +1503,9 @@ describe('removing an organization', () => {
             expect(domainCheck).toBeDefined()
           })
           it('removes the affiliations, and org', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1527,8 +1527,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1551,7 +1551,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
             await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
@@ -1615,9 +1615,9 @@ describe('removing an organization', () => {
             })
           })
           it('removes the dmarc summary data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1639,8 +1639,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1663,7 +1663,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
@@ -1679,9 +1679,9 @@ describe('removing an organization', () => {
             expect(testDomainsToDmarcSum).toEqual(undefined)
           })
           it('removes the ownership edge', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1703,8 +1703,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1727,7 +1727,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
 
@@ -1738,9 +1738,9 @@ describe('removing an organization', () => {
         })
         describe('it does not own the dmarc summary data', () => {
           it('does not remove the dmarc summary data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1762,8 +1762,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1786,7 +1786,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR dmarcSum IN dmarcSummaries OPTIONS { waitForSync: true } RETURN dmarcSum`
             await query`FOR item IN domainsToDmarcSummaries OPTIONS { waitForSync: true } RETURN item`
@@ -1804,9 +1804,9 @@ describe('removing an organization', () => {
         })
         describe('org is the only one claiming the domain', () => {
           it('removes the web scan result data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1828,8 +1828,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1852,7 +1852,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor =
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
@@ -1860,9 +1860,9 @@ describe('removing an organization', () => {
             expect(testWebScan).toEqual(undefined)
           })
           it('removes the scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1884,8 +1884,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1908,7 +1908,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
@@ -1919,9 +1919,9 @@ describe('removing an organization', () => {
             expect(testWeb).toEqual(undefined)
           })
           it('removes the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -1943,8 +1943,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1967,7 +1967,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -1976,9 +1976,9 @@ describe('removing an organization', () => {
             expect(domainCheck).toEqual(undefined)
           })
           it('removes the affiliations, and org', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2000,8 +2000,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2024,7 +2024,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
             await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
@@ -2049,9 +2049,9 @@ describe('removing an organization', () => {
             })
           })
           it('does not remove the web scan result data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2073,8 +2073,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2097,7 +2097,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor =
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
@@ -2105,9 +2105,9 @@ describe('removing an organization', () => {
             expect(testWebScan).toEqual(true)
           })
           it('does not remove the scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2129,8 +2129,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2153,7 +2153,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testDNSCursor = await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult.dns`
             const testDNS = await testDNSCursor.next()
@@ -2164,9 +2164,9 @@ describe('removing an organization', () => {
             expect(testWeb).toEqual(true)
           })
           it('does not remove the domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2188,8 +2188,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2212,7 +2212,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR domain IN domains OPTIONS { waitForSync: true } RETURN domain`
 
@@ -2221,9 +2221,9 @@ describe('removing an organization', () => {
             expect(domainCheck).toBeDefined()
           })
           it('removes the affiliations, and org', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2245,8 +2245,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2269,7 +2269,7 @@ describe('removing an organization', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
             await query`FOR org IN organizations OPTIONS { waitForSync: true } RETURN org`
@@ -2306,9 +2306,9 @@ describe('removing an organization', () => {
       })
       describe('the requested org is undefined', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeOrganization(
                   input: {
@@ -2330,8 +2330,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -2349,7 +2349,7 @@ describe('removing an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -2373,9 +2373,9 @@ describe('removing an organization', () => {
           describe('users role is owner', () => {
             describe('user attempts to remove a verified org', () => {
               it('returns an error', async () => {
-                const response = await graphql(
+                const response = await graphql({
                   schema,
-                  `
+                  source: `
                     mutation {
                       removeOrganization(
                         input: {
@@ -2397,8 +2397,8 @@ describe('removing an organization', () => {
                       }
                     }
                   `,
-                  null,
-                  {
+                  rootValue: null,
+                  contextValue: {
                     i18n,
                     query,
                     collections: collectionNames,
@@ -2441,7 +2441,7 @@ describe('removing an organization', () => {
                       },
                     },
                   },
-                )
+                })
 
                 const expectedResponse = {
                   data: {
@@ -2465,9 +2465,9 @@ describe('removing an organization', () => {
           describe('users role is user', () => {
             describe('they attempt to remove the org', () => {
               it('returns an error', async () => {
-                const response = await graphql(
+                const response = await graphql({
                   schema,
-                  `
+                  source: `
                     mutation {
                       removeOrganization(
                         input: {
@@ -2489,8 +2489,8 @@ describe('removing an organization', () => {
                       }
                     }
                   `,
-                  null,
-                  {
+                  rootValue: null,
+                  contextValue: {
                     i18n,
                     query,
                     collections: collectionNames,
@@ -2533,7 +2533,7 @@ describe('removing an organization', () => {
                       },
                     },
                   },
-                )
+                })
 
                 const expectedResponse = {
                   data: {
@@ -2561,9 +2561,9 @@ describe('removing an organization', () => {
           it('throws an error', async () => {
             const mockedQuery = jest.fn().mockRejectedValue(new Error('Database Error'))
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2585,8 +2585,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -2629,7 +2629,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -2650,9 +2650,9 @@ describe('removing an organization', () => {
               .mockReturnValueOnce(mockedCursor)
               .mockRejectedValue(new Error('Database Error'))
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2674,8 +2674,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -2718,7 +2718,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -2741,9 +2741,9 @@ describe('removing an organization', () => {
               .mockReturnValueOnce(mockedCursor)
               .mockRejectedValue(new Error('Database Error'))
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2765,8 +2765,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -2809,7 +2809,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -2827,9 +2827,9 @@ describe('removing an organization', () => {
 
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2851,8 +2851,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -2895,7 +2895,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -2919,9 +2919,9 @@ describe('removing an organization', () => {
               step: jest.fn().mockRejectedValue(new Error('Trx Step')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -2943,8 +2943,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -2987,7 +2987,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -3009,9 +3009,9 @@ describe('removing an organization', () => {
               step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -3033,8 +3033,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -3077,7 +3077,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -3102,9 +3102,9 @@ describe('removing an organization', () => {
               step: jest.fn().mockRejectedValue(new Error('Trx Step')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -3126,8 +3126,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -3170,7 +3170,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -3195,9 +3195,9 @@ describe('removing an organization', () => {
               step: jest.fn().mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeOrganization(
                     input: {
@@ -3219,8 +3219,8 @@ describe('removing an organization', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -3263,7 +3263,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -3288,9 +3288,9 @@ describe('removing an organization', () => {
               step: jest.fn().mockReturnValueOnce({}).mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeOrganization(
                   input: {
@@ -3312,8 +3312,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -3356,7 +3356,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -3386,9 +3386,9 @@ describe('removing an organization', () => {
                 .mockRejectedValue(new Error('Trx Step')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeOrganization(
                   input: {
@@ -3410,8 +3410,8 @@ describe('removing an organization', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -3454,7 +3454,7 @@ describe('removing an organization', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 
@@ -3478,9 +3478,9 @@ describe('removing an organization', () => {
             commit: jest.fn().mockRejectedValue(new Error('Commit Error')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               removeOrganization(
                 input: {
@@ -3502,8 +3502,8 @@ describe('removing an organization', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -3546,7 +3546,7 @@ describe('removing an organization', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to remove organization. Please try again.')]
 

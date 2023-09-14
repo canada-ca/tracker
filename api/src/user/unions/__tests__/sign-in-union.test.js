@@ -1,9 +1,5 @@
-import {
-  authResultType,
-  signInError,
-  tfaSignInResult,
-} from '../../objects/index'
-import {signInUnion} from '../sign-in-union'
+import { authResultType, signInError, tfaSignInResult } from '../../objects/index'
+import { signInUnion } from '../sign-in-union'
 
 describe('given the sign in union', () => {
   describe('testing the field types', () => {
@@ -31,7 +27,7 @@ describe('given the sign in union', () => {
           authResult: {},
         }
 
-        expect(signInUnion.resolveType(obj)).toMatchObject(authResultType)
+        expect(signInUnion.resolveType(obj)).toMatch(authResultType.name)
       })
     })
     describe('testing the signInError type', () => {
@@ -43,7 +39,7 @@ describe('given the sign in union', () => {
           description: 'text',
         }
 
-        expect(signInUnion.resolveType(obj)).toMatchObject(signInError)
+        expect(signInUnion.resolveType(obj)).toMatch(signInError.name)
       })
     })
     describe('testing the tfaSignInResult type', () => {
@@ -54,7 +50,7 @@ describe('given the sign in union', () => {
           authenticateToken: 'token',
         }
 
-        expect(signInUnion.resolveType(obj)).toMatchObject(tfaSignInResult)
+        expect(signInUnion.resolveType(obj)).toMatch(tfaSignInResult.name)
       })
     })
   })

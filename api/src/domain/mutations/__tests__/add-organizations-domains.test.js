@@ -112,9 +112,9 @@ describe('given the addOrganizationsDomains mutation', () => {
         })
       })
       it('creates domains', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               addOrganizationsDomains(
                 input: {
@@ -138,8 +138,8 @@ describe('given the addOrganizationsDomains mutation', () => {
               }
             }
         `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'en',
             },
@@ -164,7 +164,7 @@ describe('given the addOrganizationsDomains mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
         const expectedResponse = {
           data: {
             addOrganizationsDomains: {
@@ -182,9 +182,9 @@ describe('given the addOrganizationsDomains mutation', () => {
       })
       describe('audit flag is true', () => {
         it('creates additional logs for each domain added', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               addOrganizationsDomains(
                 input: {
@@ -208,8 +208,8 @@ describe('given the addOrganizationsDomains mutation', () => {
               }
             }
         `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -234,7 +234,7 @@ describe('given the addOrganizationsDomains mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
           const expectedResponse = {
             data: {
               addOrganizationsDomains: {
@@ -329,9 +329,9 @@ describe('given the addOrganizationsDomains mutation', () => {
         })
       })
       it('returns an error message', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               addOrganizationsDomains(
                 input: {
@@ -355,8 +355,8 @@ describe('given the addOrganizationsDomains mutation', () => {
               }
             }
         `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'en',
             },
@@ -381,7 +381,7 @@ describe('given the addOrganizationsDomains mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
         const expectedResponse = {
           data: {
             addOrganizationsDomains: {

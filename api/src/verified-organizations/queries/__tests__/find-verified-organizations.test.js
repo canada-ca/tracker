@@ -39,16 +39,16 @@ describe('given findVerifiedOrganizations', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       orgOne = await collections.organizations.save({
@@ -125,9 +125,9 @@ describe('given findVerifiedOrganizations', () => {
       })
       describe('user queries for verified organizations', () => {
         it('returns organizations', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizations(first: 5) {
                   edges {
@@ -146,8 +146,8 @@ describe('given findVerifiedOrganizations', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadVerifiedOrgConnections: loadVerifiedOrgConnections({
@@ -156,15 +156,14 @@ describe('given findVerifiedOrganizations', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId:
-                  loadVerifiedDomainConnectionsByOrgId({
-                    query,
-                    cleanseInput,
-                    i18n,
-                  }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
+                  query,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -199,9 +198,9 @@ describe('given findVerifiedOrganizations', () => {
       describe('no organizations are found', () => {
         it('returns empty connection fields', async () => {
           await truncate()
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizations(first: 5) {
                   edges {
@@ -220,8 +219,8 @@ describe('given findVerifiedOrganizations', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadVerifiedOrgConnections: loadVerifiedOrgConnections({
@@ -230,15 +229,14 @@ describe('given findVerifiedOrganizations', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId:
-                  loadVerifiedDomainConnectionsByOrgId({
-                    query,
-                    cleanseInput,
-                    i18n,
-                  }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
+                  query,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -275,9 +273,9 @@ describe('given findVerifiedOrganizations', () => {
       })
       describe('user queries for verified organizations', () => {
         it('returns organizations', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizations(first: 5) {
                   edges {
@@ -296,8 +294,8 @@ describe('given findVerifiedOrganizations', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadVerifiedOrgConnections: loadVerifiedOrgConnections({
@@ -306,15 +304,14 @@ describe('given findVerifiedOrganizations', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId:
-                  loadVerifiedDomainConnectionsByOrgId({
-                    query,
-                    cleanseInput,
-                    i18n,
-                  }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
+                  query,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -349,9 +346,9 @@ describe('given findVerifiedOrganizations', () => {
       describe('no organizations are found', () => {
         it('returns empty connection fields', async () => {
           await truncate()
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizations(first: 5) {
                   edges {
@@ -370,8 +367,8 @@ describe('given findVerifiedOrganizations', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadVerifiedOrgConnections: loadVerifiedOrgConnections({
@@ -380,15 +377,14 @@ describe('given findVerifiedOrganizations', () => {
                   cleanseInput,
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId:
-                  loadVerifiedDomainConnectionsByOrgId({
-                    query,
-                    cleanseInput,
-                    i18n,
-                  }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
+                  query,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {

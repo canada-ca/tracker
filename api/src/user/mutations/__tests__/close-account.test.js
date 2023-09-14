@@ -139,9 +139,9 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('removes the users affiliations', async () => {
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               closeAccountSelf(input: {}) {
                 result {
@@ -156,8 +156,8 @@ describe('given the closeAccount mutation', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -189,7 +189,7 @@ describe('given the closeAccount mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
 
@@ -217,9 +217,9 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 closeAccountSelf(input: {}) {
                   result {
@@ -234,8 +234,8 @@ describe('given the closeAccount mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -267,7 +267,7 @@ describe('given the closeAccount mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -299,9 +299,9 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 closeAccountSelf(input: {}) {
                   result {
@@ -316,8 +316,8 @@ describe('given the closeAccount mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -349,7 +349,7 @@ describe('given the closeAccount mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -366,9 +366,9 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('closes the users account', async () => {
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               closeAccountSelf(input: {}) {
                 result {
@@ -383,8 +383,8 @@ describe('given the closeAccount mutation', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -416,7 +416,7 @@ describe('given the closeAccount mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         await query`FOR user IN users OPTIONS { waitForSync: true } RETURN user`
 
@@ -534,9 +534,9 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('removes the users affiliations', async () => {
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               closeAccountSelf(input: {}) {
                 result {
@@ -551,8 +551,8 @@ describe('given the closeAccount mutation', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -589,7 +589,7 @@ describe('given the closeAccount mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         await query`FOR aff IN affiliations OPTIONS { waitForSync: true } RETURN aff`
 
@@ -618,9 +618,9 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 closeAccountSelf(input: {}) {
                   result {
@@ -635,8 +635,8 @@ describe('given the closeAccount mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -673,7 +673,7 @@ describe('given the closeAccount mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -705,9 +705,9 @@ describe('given the closeAccount mutation', () => {
           })
         })
         it('returns a status message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 closeAccountSelf(input: {}) {
                   result {
@@ -722,8 +722,8 @@ describe('given the closeAccount mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -760,7 +760,7 @@ describe('given the closeAccount mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -777,9 +777,9 @@ describe('given the closeAccount mutation', () => {
         })
       })
       it('closes the users account', async () => {
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               closeAccountOther(input:{
                 userId: "${toGlobalId('user', user._key)}"
@@ -796,8 +796,8 @@ describe('given the closeAccount mutation', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -828,7 +828,7 @@ describe('given the closeAccount mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         await query`FOR user IN users OPTIONS { waitForSync: true } RETURN user`
 
@@ -863,9 +863,9 @@ describe('given the closeAccount mutation', () => {
       describe('user attempts to close another users account', () => {
         describe('requesting user is not a super admin', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
@@ -882,8 +882,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -903,7 +903,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -924,9 +924,9 @@ describe('given the closeAccount mutation', () => {
         })
         describe('requested user is undefined', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
@@ -943,8 +943,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -967,7 +967,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1001,9 +1001,9 @@ describe('given the closeAccount mutation', () => {
               commit: jest.fn(),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountSelf(input: {}) {
                     result {
@@ -1018,8 +1018,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -1042,7 +1042,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to close account. Please try again.')]
 
@@ -1065,9 +1065,9 @@ describe('given the closeAccount mutation', () => {
               commit: jest.fn(),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountSelf(input: {}) {
                     result {
@@ -1082,8 +1082,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -1106,7 +1106,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to close account. Please try again.')]
 
@@ -1130,9 +1130,9 @@ describe('given the closeAccount mutation', () => {
             commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 closeAccountSelf(input: {}) {
                   result {
@@ -1147,8 +1147,8 @@ describe('given the closeAccount mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1171,7 +1171,7 @@ describe('given the closeAccount mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to close account. Please try again.')]
 
@@ -1200,9 +1200,9 @@ describe('given the closeAccount mutation', () => {
       describe('user attempts to close another users account', () => {
         describe('requesting user is not a super admin', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
@@ -1219,8 +1219,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1240,7 +1240,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1261,9 +1261,9 @@ describe('given the closeAccount mutation', () => {
         })
         describe('requested user is undefined', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountOther(input:{
                     userId: "${toGlobalId('user', '456')}"
@@ -1280,8 +1280,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1304,7 +1304,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1338,9 +1338,9 @@ describe('given the closeAccount mutation', () => {
               commit: jest.fn(),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountSelf(input: {}) {
                     result {
@@ -1355,8 +1355,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -1379,7 +1379,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de fermer le compte. Veuillez réessayer.')]
 
@@ -1402,9 +1402,9 @@ describe('given the closeAccount mutation', () => {
               commit: jest.fn(),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   closeAccountSelf(input: {}) {
                     result {
@@ -1419,8 +1419,8 @@ describe('given the closeAccount mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: mockedQuery,
                 collections: collectionNames,
@@ -1443,7 +1443,7 @@ describe('given the closeAccount mutation', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de fermer le compte. Veuillez réessayer.')]
 
@@ -1467,9 +1467,9 @@ describe('given the closeAccount mutation', () => {
             commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 closeAccountSelf(input: {}) {
                   result {
@@ -1484,8 +1484,8 @@ describe('given the closeAccount mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: collectionNames,
@@ -1508,7 +1508,7 @@ describe('given the closeAccount mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [new GraphQLError('Impossible de fermer le compte. Veuillez réessayer.')]
 
