@@ -101,7 +101,7 @@ async def run():
                 bind_vars={"domain": domain_id},
             )
             selectors = [sel for sel in selectors_cursor]
-            active_selectors = [sel for sel in selectors_cursor if sel.status == "active"]
+            active_selectors = [sel for sel in selectors if sel.status == "active"]
         except Exception as e:
             logger.error(f"Error getting selectors for domain '{domain}': {e}")
             return

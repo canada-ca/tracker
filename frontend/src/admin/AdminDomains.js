@@ -262,6 +262,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
           {
             id: domainId,
             domain,
+            foundSelectors,
             activeSelectors,
             blockedSelectors,
             claimTags,
@@ -319,6 +320,23 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
                 flexGrow={1}
                 fontSize={{ base: '75%', sm: '100%' }}
               />
+              {foundSelectors.length > 0 && (
+                <Flex flexDirection="column">
+                  <Text as="span" fontWeight="bold">
+                    Found Selectors:
+                  </Text>
+                  {foundSelectors.map((selector, idx) => {
+                    return (
+                      <Flex flexDirection="row" key={idx} justifyContent="space-between" alignItems="center">
+                        <Text key={idx} as="span">
+                          {selector}
+                        </Text>
+                        <IconButton variant="primary" px="2" icon={<PlusSquareIcon size="icons.sm" />} size="sm" />
+                      </Flex>
+                    )
+                  })}
+                </Flex>
+              )}
               <ABTestWrapper>
                 <ABTestVariant name="B">
                   <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />

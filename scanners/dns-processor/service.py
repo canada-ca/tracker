@@ -177,6 +177,8 @@ async def run(loop):
                         }
                     )
 
+                domain.update({"foundSelectors": processed_results.get("dkim").get("found_selectors")})
+
                 db.collection("domains").update(domain)
 
                 for ip in results.get("resolve_ips", None) or []:
@@ -202,8 +204,6 @@ async def run(loop):
                             }
                         ).encode(),
                     )
-
-
 
             except Exception as e:
                 logging.error(

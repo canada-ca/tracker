@@ -47,6 +47,11 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLString,
       description: `The status code when performing a DNS lookup for this domain.`,
     },
+    foundSelectors: {
+      type: new GraphQLList(Selectors),
+      description: 'Domain Keys Identified Mail (DKIM) selector strings found in DNS.',
+      resolve: ({ selectors }) => selectors,
+    },
     activeSelectors: {
       type: new GraphQLList(Selectors),
       description: 'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
