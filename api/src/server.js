@@ -47,16 +47,43 @@ export const Server = async ({
   context = {},
 }) => {
   const app = express()
-  app.use('*', cors())
-
-  app.use(cookieParser())
-
-  app.use(json())
-
+  const httpServer = http.createServer(app)
+  const schema = createSchema()
+  const server = new ApolloServer({
+    schema,
+    validationRules: createValidationRules(maxDepth, complexityCost, scalarCost, objectCost, listFactor),
+    introspection: true,
+    tracing,
+  })
+  await server.start()
   app.use(
+    '/graphql',
+    cors(),
+    cookieParser(),
+    json(),
     requestLanguage({
       languages: ['en', 'fr'],
     }),
+    expressMiddleware(server, {
+      context,
+    }),
+    function (err, _req, res, _next) {
+      res.status(200).json({
+        error: {
+          errors: [
+            {
+              message: err,
+              locations: [
+                {
+                  line: 1,
+                  column: 1,
+                },
+              ],
+            },
+          ],
+        },
+      })
+    },
   )
 
   app.get('/alive', (_req, res) => {
@@ -66,44 +93,6 @@ export const Server = async ({
   app.get('/ready', (_req, res) => {
     res.json({ ok: 'yes' })
   })
-
-  // default error handler
-  app.use(function (err, _req, res, _next) {
-    res.status(200).json({
-      error: {
-        errors: [
-          {
-            message: err,
-            locations: [
-              {
-                line: 1,
-                column: 1,
-              },
-            ],
-          },
-        ],
-      },
-    })
-  })
-
-  const httpServer = http.createServer(app)
-
-  const schema = createSchema()
-
-  const server = new ApolloServer({
-    schema,
-    context,
-    validationRules: createValidationRules(maxDepth, complexityCost, scalarCost, objectCost, listFactor),
-    introspection: true,
-    tracing,
-  })
-
-  await server.start()
-  app.use(
-    expressMiddleware(server, {
-      context,
-    }),
-  )
 
   SubscriptionServer.create(
     {

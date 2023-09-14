@@ -79,10 +79,8 @@ describe('parse server', () => {
             objectCost,
             listFactor,
             tracing: false,
-            context: {
-              query: jest.fn(),
-              collections: jest.fn(),
-              transaction: jest.fn(),
+            context: () => {
+              return { query: jest.fn(), collections: jest.fn(), transaction: jest.fn() }
             },
           }),
         )
@@ -103,10 +101,8 @@ describe('parse server', () => {
               scalarCost: 100,
               objectCost: 100,
               listFactor: 100,
-              context: {
-                query: jest.fn(),
-                collections: jest.fn(),
-                transaction: jest.fn(),
+              context: () => {
+                return { query: jest.fn(), collections: jest.fn(), transaction: jest.fn() }
               },
             }),
           )
@@ -128,10 +124,8 @@ describe('parse server', () => {
               scalarCost: 1,
               objectCost: 1,
               listFactor: 1,
-              context: {
-                query: jest.fn(),
-                collections: jest.fn(),
-                transaction: jest.fn(),
+              context: () => {
+                return { query: jest.fn(), collections: jest.fn(), transaction: jest.fn() }
               },
             }),
           )
