@@ -24,4 +24,4 @@ replicas:
 patchesStrategicMerge:
   - domain-dispatcher-suspend-patch.yaml
 components:
-  - ../../bases/frontend/maintenance-override-component
+#  - ../../bases/frontend/maintenance-override-component
