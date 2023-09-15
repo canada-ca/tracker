@@ -127,9 +127,7 @@ def mx_record_diff(processed_results):
 
     # send alerts if true
     if mx_record_diff:
-        send_mx_diff_email_alerts(
-            domain=domain, mx_records=new_mx, mx_records_old=last_mx, logger=logger
-        )
+        send_mx_diff_email_alerts(domain=domain, logger=logger, db=db)
 
     processed_results["mx_records"].update({"diff": mx_record_diff})
     return processed_results

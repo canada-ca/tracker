@@ -5,19 +5,24 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_stakeholders(domain: str) -> list:
+def get_stakeholders(db) -> list:
     """
     Gets the stakeholders for a domain.
 
-    :param domain: The domain to get the stakeholders for.
-    :return: A list of email addresses.
+    :param db: The database object.
+    :return: A list of user objects.
     """
-    return []
+
+    user_emails = os.getenv("ALERT_SUBS").split(",")
+    users = []
+    try:
+        users = db.users.find({"username": {"$in": user_emails}}).all()
+    except Exception as e:
+        raise Exception(f"Failed to get users from database with error: {e}")
+    return users
 
 
-def send_mx_diff_email_alerts(
-    domain: str, mx_records: list, mx_records_old: list, logger: object
-) -> None:
+def send_mx_diff_email_alerts(domain: str, logger: object, db: object) -> None:
     """
     Sends an email to the user when the MX records for a domain have changed.
 
@@ -27,26 +32,17 @@ def send_mx_diff_email_alerts(
     :param email: The email address to send the email to.
     """
 
-    # Build the message to send.
-    message = f"""
-    The MX records for {domain} have changed.
-
-    Old MX records:
-    {mx_records_old}
-
-    New MX records:
-    {mx_records}
-    """
-
-    stakeholders = get_stakeholders(domain)
-
+    stakeholders = get_stakeholders(db)
     for user in stakeholders:
         email = user.get("username")
         try:
             response = notify_client.send_email_notification(
                 email_address=email,
                 template_id=os.getenv("NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL"),
-                personalisation={"message": message},
+                personalisation={
+                    "domain": domain,
+                    "display_name": user.get("displayName"),
+                },
             )
             logger.info(f"Email sent to {email} with response: {response}")
         except Exception as e:

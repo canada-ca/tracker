@@ -57,5 +57,10 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL
+            - name: ALERT_SUBS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ALERT_SUBS
           resources: {}
 status: {}
