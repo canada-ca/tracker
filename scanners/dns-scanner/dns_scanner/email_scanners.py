@@ -170,10 +170,12 @@ class DKIMScanResult:
 class DKIMScanner:
     domain = None
     selectors = None
+    additional_selectors_to_check = None
 
-    def __init__(self, target_domain, target_selectors):
+    def __init__(self, target_domain, target_selectors, additional_selectors_to_check=None):
         self.domain = target_domain
         self.selectors = target_selectors
+        self.additional_selectors_to_check = additional_selectors_to_check
 
     @staticmethod
     def bitsize(x):
@@ -275,6 +277,9 @@ class DKIMScanner:
             "k2",
         ]
         selectors_to_check = [selector for selector in common_selectors if selector not in self.selectors]
+        if self.additional_selectors_to_check:
+            selectors_to_check += self.additional_selectors_to_check
+            selectors_to_check = list(set(selectors_to_check))
         found_selectors = []
 
         # Check if wildcard selector exists before checking other selectors
@@ -286,4 +291,3 @@ class DKIMScanner:
                     found_selectors.append(selector)
 
         return DKIMScanResult(records=record, found_selectors=found_selectors).__dict__
-

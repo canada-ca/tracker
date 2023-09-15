@@ -30,7 +30,7 @@ class DNSScanResult:
     wildcard_sibling: bool = None
 
 
-def scan_domain(domain, dkim_selectors=None):
+def scan_domain(domain, dkim_selectors=None, additional_selectors_to_check=None):
     """
     Scan a domain for DNS records
     :param str domain: Name of domain to scan
@@ -103,7 +103,7 @@ def scan_domain(domain, dkim_selectors=None):
         # Run DKIM scan
         dkim_start_time = time.time()
         logger.info(f"Starting DKIM scanner for '{domain}'")
-        dkim_scanner = DKIMScanner(domain, dkim_selectors)
+        dkim_scanner = DKIMScanner(domain, dkim_selectors, additional_selectors_to_check)
         scan_result.dkim = dkim_scanner.run()
         logger.info(f"DKIM scan elapsed time: {time.monotonic() - dkim_start_time}")
     except TimeoutError:

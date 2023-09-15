@@ -177,7 +177,65 @@ async def run(loop):
                         }
                     )
 
-                domain.update({"foundSelectors": processed_results.get("dkim").get("found_selectors")})
+                if processed_results.get("dkim").get("found_selectors"):
+                    # Get connected selectors
+                    try:
+                        connected_selector_docs_cursor = db.aql.execute(
+                            """
+                            FOR selector, e IN OUTBOUND @domain domainsToSelectors
+                                RETURN MERGE(selector, { status: e.status })
+                            """,
+                            bind_vars={"domain": domain["_id"]},
+                        )
+                        connected_selector_docs = [sel for sel in connected_selector_docs_cursor]
+                    except Exception as e:
+                        logging.error(f"Error getting connected selectors for domain '{domain}': {e}")
+                        return
+
+                    # Insert new domain/selector connection if current connection is not 'blocked' or 'active'
+                    blocked_and_active_selector_strings = [sel["selector"] for sel in connected_selector_docs if
+                                                           sel["status"] in ["blocked", "active"]]
+                    for found_selector_string in processed_results.get("dkim").get("found_selectors"):
+                        if found_selector_string not in blocked_and_active_selector_strings and found_selector_string != "":
+                            # Ensure selector exists in DB
+                            try:
+                                selector_doc_cursor = db.aql.execute(
+                                    """
+                                    UPSERT { selector: @selector }
+                                        INSERT { selector: @selector }
+                                        UPDATE { }
+                                        IN selectors
+                                    RETURN NEW
+                                    """,
+                                    bind_vars={"selector": found_selector_string}
+                                )
+                            except Exception as e:
+                                logging.error(f"Error while ensuring selector '{found_selector_string}' exists in DB: {e}")
+                                return
+
+                            # Get selector doc
+                            try:
+                                selector_doc = [doc for doc in selector_doc_cursor][0]
+                            except IndexError:
+                                logging.error(f"Selector '{found_selector_string}' not found in DB")
+                                return
+
+                            # Insert new domain/selector connection into DB
+                            try:
+                                db.aql.execute(
+                                    """
+                                    UPSERT { _from: @domain, _to: @selector_id }
+                                        INSERT { _from: @domain, _to: @selector_id, status: "found" }
+                                        UPDATE { }
+                                        IN domainsToSelectors
+                                    """,
+                                    bind_vars={"domain": domain["_id"], "selector_id": selector_doc["_id"]},
+                                )
+                            except Exception as e:
+                                logging.error(f"Error inserting new domain/selector connection for domain '{domain}' and selector '{found_selector_string}': {e}")
+                                return
+
+                            logging.info(f"Inserted new domain/selector connection for domain '{domain}' and selector '{found_selector_string}'")
 
                 db.collection("domains").update(domain)
 

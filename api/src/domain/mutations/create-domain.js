@@ -353,6 +353,9 @@ export const createDomain = new mutationWithClientMutationId({
         domain: returnDomain.domain,
         domain_key: returnDomain._key,
         selectors: returnDomain.selectors ? returnDomain.selectors : [],
+        config: {
+          checkAllSelectors: true,
+        },
         hash: returnDomain.hash,
         user_key: null, // only used for One Time Scans
         shared_id: null, // only used for One Time Scans

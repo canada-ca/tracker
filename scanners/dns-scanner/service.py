@@ -77,6 +77,7 @@ async def run():
 
         domain = payload.get("domain")
         user_key = payload.get("user_key")
+        config = payload.get("config", {})
         shared_id = payload.get("shared_id")
 
         # Check if domain exists in DB
@@ -93,15 +94,15 @@ async def run():
 
         # Get DKIM selectors from DB
         try:
-            selectors_cursor = db.aql.execute(
+            connected_selectors_cursor = db.aql.execute(
                 """
                 FOR selector, e IN 1 ANY @domain domainsToSelectors
-                    RETURN selector.selector
+                    RETURN MERGE(selector, { status: e.status })
                 """,
                 bind_vars={"domain": domain_id},
             )
-            selectors = [sel for sel in selectors_cursor]
-            active_selectors = [sel for sel in selectors if sel.status == "active"]
+            connected_selector_docs = [sel for sel in connected_selectors_cursor]
+            active_selector_strings = [sel["selector"] for sel in connected_selector_docs if sel["status"] == "active"]
         except Exception as e:
             logger.error(f"Error getting selectors for domain '{domain}': {e}")
             return
@@ -125,47 +126,86 @@ async def run():
                 """,
                 bind_vars={"domain": domain_id},
             )
+            summary_selector_strings = [sel for sel in summary_selectors_cursor]
         except Exception as e:
             logger.error(f"Error getting selectors from DMARC summaries for domain '{domain}': {e}")
             return
-        summary_selectors = [sel for sel in summary_selectors_cursor]
 
-        for selector in summary_selectors:
-            if selector not in selectors and selector != "":
-                if not check_if_domain_exists(f"{selector}._domainkey.{domain}"):
+        # Add/update selector connection if current connection is not 'blocked' or 'active'
+        blocked_and_active_selector_strings = [sel["selector"] for sel in connected_selector_docs if
+                                               sel["status"] in ["blocked", "active"]]
+        for selector_string in summary_selector_strings:
+            if selector_string not in blocked_and_active_selector_strings and selector_string != "":
+                if not check_if_domain_exists(f"{selector_string}._domainkey.{domain}"):
                     continue
+
+                # Ensure selector exists in DB
+                try:
+                    selector_doc_cursor = db.aql.execute(
+                        """
+                        UPSERT { selector: @selector }
+                            INSERT { selector: @selector }
+                            UPDATE { }
+                            IN selectors
+                        RETURN NEW
+                        """,
+                        bind_vars={"selector": selector_string}
+                    )
+                except Exception as e:
+                    logger.error(f"Error while ensuring selector '{selector_string}' exists in DB: {e}")
+                    return
+
+                # Get selector doc
+                try:
+                    selector_doc = [doc for doc in selector_doc_cursor][0]
+                except IndexError:
+                    logger.error(f"Selector '{selector_string}' not found in DB")
+                    return
 
                 # Insert new domain/selector connection into DB
                 try:
                     db.aql.execute(
                         """
-                        // First ensure selector exists
-                        LET selector = (
-                            UPSERT { selector: @selector }
-                                INSERT { selector: @selector }
-                                UPDATE { }
-                                IN selectors
-                            RETURN NEW
-                        )[0]
-
-                        // Create domain/selector connection
-                        UPSERT { _from: @domain, _to: selector._id }
-                            INSERT { _from: @domain, _to: selector._id, status: "active" }
-                            UPDATE { }
+                        UPSERT { _from: @domain, _to: @selector_id }
+                            INSERT { _from: @domain, _to: @selector_id, status: "active" }
+                            UPDATE { "status": "active" }
                             IN domainsToSelectors
                         """,
-                        bind_vars={"domain": domain_id, "selector": selector}
+                        bind_vars={"domain": domain_id, "selector_id": selector_doc["_id"]},
                     )
                 except Exception as e:
-                    logger.error(f"Error inserting new domain/selector connection for domain '{domain}' and selector '{selector}': {e}")
+                    logger.error(f"Error inserting new domain/selector connection for domain '{domain}' and selector '{selector_string}': {e}")
                     return
 
-                logger.info(f"Inserted new domain/selector connection for domain '{domain}' and selector '{selector}'")
-                active_selectors.append(selector)
+                logger.info(f"Inserted new domain/selector connection for domain '{domain}' and selector '{selector_string}'")
+                connected_selector_docs.append(selector_doc)
+                active_selector_strings.append(selector_string)
+
+        # Check all selectors in DB if set in config, ignoring already connected selectors
+        all_selector_strings = []
+        if config.get("checkAllSelectors"):
+            connected_selector_strings = [sel["selector"] for sel in connected_selector_docs]
+            try:
+                all_selector_strings_cursor = db.aql.execute(
+                    """
+                    FOR selector IN selectors
+                        FILTER selector.selector NOT IN @selectors
+                        RETURN selector.selector
+                    """,
+                    bind_vars={"selectors": connected_selector_strings},
+                )
+                all_selector_strings = [sel for sel in all_selector_strings_cursor]
+            except Exception as e:
+                logger.error(f"Error getting all selectors from DB: {e}")
+                return
 
         try:
-            logger.info(f"Starting DNS scan on '{domain}' with DKIM selectors '{str(active_selectors)}'")
-            scan_results = scan_domain(domain=domain, dkim_selectors=active_selectors)
+            if config.get("checkAllSelectors"):
+                logger.info(f"Scanning {domain} with all selectors")
+            else:
+                logger.info(f"Scanning {domain} with DKIM selectors '{str(active_selector_strings)}'")
+
+            scan_results = scan_domain(domain=domain, dkim_selectors=active_selector_strings, additional_selectors_to_check=all_selector_strings)
 
             await nc.publish(
                 f"{PUBLISH_TO}.{domain_key}.dns",
@@ -182,7 +222,7 @@ async def run():
             )
         except TimeoutError:
             logger.error(
-                f"Timeout while scanning {domain} with DKIM selectors '{str(active_selectors)}'"
+                f"Timeout while scanning {domain}"
             )
             await nc.publish(
                 f"{PUBLISH_TO}.{domain_key}.dns",
