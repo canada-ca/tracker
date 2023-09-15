@@ -45,7 +45,7 @@ def send_mx_diff_email_alerts(
         try:
             response = notify_client.send_email_notification(
                 email_address=email,
-                template_id=os.getenv("MX_DIFF_ALERT_EMAIL_TEMPLATE_ID"),
+                template_id=os.getenv("NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL"),
                 personalisation={"message": message},
             )
             logger.info(f"Email sent to {email} with response: {response}")
