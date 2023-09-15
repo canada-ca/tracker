@@ -13,6 +13,7 @@ from arango import ArangoClient
 from dotenv import load_dotenv
 
 from dns_processor.dns_processor import process_results
+from notify.send_mx_diff_email_alerts import send_mx_diff_email_alerts
 
 load_dotenv()
 
@@ -123,6 +124,12 @@ def mx_record_diff(processed_results):
                             # print("addresses changed")
                             mx_record_diff = True
                             break
+
+    # send alerts if true
+    if mx_record_diff:
+        send_mx_diff_email_alerts(
+            domain=domain, mx_records=new_mx, mx_records_old=last_mx, logger=logger
+        )
 
     processed_results["mx_records"].update({"diff": mx_record_diff})
     return processed_results
