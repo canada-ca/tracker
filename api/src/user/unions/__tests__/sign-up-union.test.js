@@ -1,5 +1,5 @@
-import {authResultType, signUpError} from '../../objects/index'
-import {signUpUnion} from '../sign-up-union'
+import { authResultType, signUpError } from '../../objects/index'
+import { signUpUnion } from '../sign-up-union'
 
 describe('given the sign up union', () => {
   describe('testing the field types', () => {
@@ -22,7 +22,7 @@ describe('given the sign up union', () => {
           authResult: {},
         }
 
-        expect(signUpUnion.resolveType(obj)).toMatchObject(authResultType)
+        expect(signUpUnion.resolveType(obj)).toMatch(authResultType.name)
       })
     })
     describe('testing the signUpError type', () => {
@@ -34,7 +34,7 @@ describe('given the sign up union', () => {
           description: 'text',
         }
 
-        expect(signUpUnion.resolveType(obj)).toMatchObject(signUpError)
+        expect(signUpUnion.resolveType(obj)).toMatch(signUpError.name)
       })
     })
   })

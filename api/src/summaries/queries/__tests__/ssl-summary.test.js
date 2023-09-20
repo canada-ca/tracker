@@ -61,10 +61,12 @@ describe('given sslSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'ssl',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        ssl: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
@@ -74,9 +76,9 @@ describe('given sslSummary query', () => {
       await drop()
     })
     it('returns ssl summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             sslSummary {
               total
@@ -88,14 +90,14 @@ describe('given sslSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -138,9 +140,9 @@ describe('given sslSummary query', () => {
     describe('given unsuccessful ssl summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 sslSummary {
                   total
@@ -152,8 +154,8 @@ describe('given sslSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -161,7 +163,7 @@ describe('given sslSummary query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError(`Unable to load SSL summary. Please try again.`)]
 

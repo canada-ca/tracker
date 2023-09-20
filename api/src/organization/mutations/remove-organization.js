@@ -10,13 +10,13 @@ export const removeOrganization = new mutationWithClientMutationId({
   description: 'This mutation allows the removal of unused organizations.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the organization you wish you remove.',
     },
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(removeOrganizationUnion),
+      type: new GraphQLNonNull(removeOrganizationUnion),
       description: '`RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
       resolve: (payload) => payload,
     },
@@ -340,6 +340,18 @@ export const removeOrganization = new mutationWithClientMutationId({
               RETURN true
             `,
       )
+
+      await trx.step(
+        () =>
+          query`
+              WITH organizations, organizationSummaries
+              FOR summary in organizationSummaries
+                FILTER summary.organization == ${organization._id}
+                REMOVE summary._key IN organizationSummaries
+                OPTIONS { waitForSync: true }
+            `,
+      )
+
       await trx.step(
         () =>
           query`

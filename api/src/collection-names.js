@@ -27,4 +27,5 @@ export const collectionNames = [
   'webToWebScans',
   'selectors',
   'domainsToSelectors',
+  'organizationSummaries',
 ]

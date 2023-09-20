@@ -9,11 +9,11 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
   description: 'This mutation allows a user to transfer org ownership to another user in the given org.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'Id of the organization the user is looking to transfer ownership of.',
     },
     userId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'Id of the user that the org ownership is being transferred to.',
     },
   }),

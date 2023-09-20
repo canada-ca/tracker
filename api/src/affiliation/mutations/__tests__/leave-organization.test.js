@@ -161,9 +161,9 @@ describe('given a successful leave', () => {
           })
         })
         it('returns status success message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   leaveOrganization (
                     input: {
@@ -182,8 +182,8 @@ describe('given a successful leave', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -216,7 +216,7 @@ describe('given a successful leave', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
@@ -248,9 +248,9 @@ describe('given a successful leave', () => {
           })
         })
         it('returns status success message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   leaveOrganization (
                     input: {
@@ -269,8 +269,8 @@ describe('given a successful leave', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -303,7 +303,7 @@ describe('given a successful leave', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
@@ -369,9 +369,9 @@ describe('given a successful leave', () => {
           })
         })
         it('returns status success message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   leaveOrganization (
                     input: {
@@ -390,8 +390,8 @@ describe('given a successful leave', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -424,7 +424,7 @@ describe('given a successful leave', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
@@ -456,9 +456,9 @@ describe('given a successful leave', () => {
           })
         })
         it('returns status success message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   leaveOrganization (
                     input: {
@@ -477,8 +477,8 @@ describe('given a successful leave', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -511,7 +511,7 @@ describe('given a successful leave', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
@@ -567,9 +567,9 @@ describe('given an unsuccessful leave', () => {
     })
     describe('org cannot be found', () => {
       it('returns an error message', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
               mutation {
                 leaveOrganization (
                   input: {
@@ -588,8 +588,8 @@ describe('given an unsuccessful leave', () => {
                 }
               }
             `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query: jest.fn(),
             collections: jest.fn(),
@@ -610,7 +610,7 @@ describe('given an unsuccessful leave', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -639,9 +639,9 @@ describe('given an unsuccessful leave', () => {
             step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   leaveOrganization (
                     input: {
@@ -660,8 +660,8 @@ describe('given an unsuccessful leave', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: jest.fn({ property: 'string' }),
@@ -682,7 +682,7 @@ describe('given an unsuccessful leave', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
@@ -707,9 +707,9 @@ describe('given an unsuccessful leave', () => {
           commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
         })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
               mutation {
                 leaveOrganization (
                   input: {
@@ -728,8 +728,8 @@ describe('given an unsuccessful leave', () => {
                 }
               }
             `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query: mockedQuery,
             collections: jest.fn({ property: 'string' }),
@@ -750,7 +750,7 @@ describe('given an unsuccessful leave', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         const error = [new GraphQLError('Unable leave organization. Please try again.')]
 
@@ -778,9 +778,9 @@ describe('given an unsuccessful leave', () => {
     })
     describe('org cannot be found', () => {
       it('returns an error message', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
               mutation {
                 leaveOrganization (
                   input: {
@@ -799,8 +799,8 @@ describe('given an unsuccessful leave', () => {
                 }
               }
             `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query: jest.fn(),
             collections: jest.fn(),
@@ -821,7 +821,7 @@ describe('given an unsuccessful leave', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -850,9 +850,9 @@ describe('given an unsuccessful leave', () => {
             step: jest.fn().mockRejectedValue(new Error('Step error occurred.')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   leaveOrganization (
                     input: {
@@ -871,8 +871,8 @@ describe('given an unsuccessful leave', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: mockedQuery,
               collections: jest.fn({ property: 'string' }),
@@ -893,7 +893,7 @@ describe('given an unsuccessful leave', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 
@@ -918,9 +918,9 @@ describe('given an unsuccessful leave', () => {
           commit: jest.fn().mockRejectedValue(new Error('Trx Commit Error')),
         })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
               mutation {
                 leaveOrganization (
                   input: {
@@ -939,8 +939,8 @@ describe('given an unsuccessful leave', () => {
                 }
               }
             `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query: mockedQuery,
             collections: jest.fn({ property: 'string' }),
@@ -961,7 +961,7 @@ describe('given an unsuccessful leave', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
 
         const error = [new GraphQLError("Impossible de quitter l'organisation. Veuillez réessayer.")]
 

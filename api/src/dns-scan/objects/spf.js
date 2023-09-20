@@ -1,5 +1,5 @@
-import {GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql'
-import {guidanceTagType} from '../../guidance-tag/objects'
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const spfType = new GraphQLObjectType({
   name: 'SPF',
@@ -7,42 +7,42 @@ export const spfType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: `The compliance status for SPF for the scanned domain.`,
-      resolve: async ({status}) => status,
+      resolve: async ({ status }) => status,
     },
     record: {
       type: GraphQLString,
       description: `SPF record retrieved during the scan of the given domain.`,
-      resolve: ({record}) => record,
+      resolve: ({ record }) => record,
     },
     lookups: {
       type: GraphQLInt,
       description: `The amount of DNS lookups.`,
-      resolve: ({lookups}) => lookups,
+      resolve: ({ lookups }) => lookups,
     },
     spfDefault: {
       type: GraphQLString,
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
-      resolve: ({spfDefault}) => spfDefault,
+      resolve: ({ spfDefault }) => spfDefault,
     },
     positiveTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({positiveTags}, _, {loaders: {loadSpfGuidanceTagByTagId}}) => {
-        return await loadSpfGuidanceTagByTagId({tags: positiveTags})
+      resolve: async ({ positiveTags }, _, { loaders: { loadSpfGuidanceTagByTagId } }) => {
+        return await loadSpfGuidanceTagByTagId({ tags: positiveTags })
       },
     },
     neutralTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({neutralTags}, _, {loaders: {loadSpfGuidanceTagByTagId}}) => {
-        return await loadSpfGuidanceTagByTagId({tags: neutralTags})
+      resolve: async ({ neutralTags }, _, { loaders: { loadSpfGuidanceTagByTagId } }) => {
+        return await loadSpfGuidanceTagByTagId({ tags: neutralTags })
       },
     },
     negativeTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({negativeTags}, _, {loaders: {loadSpfGuidanceTagByTagId}}) => {
-        return await loadSpfGuidanceTagByTagId({tags: negativeTags})
+      resolve: async ({ negativeTags }, _, { loaders: { loadSpfGuidanceTagByTagId } }) => {
+        return await loadSpfGuidanceTagByTagId({ tags: negativeTags })
       },
     },
   }),

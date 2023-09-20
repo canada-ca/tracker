@@ -14,15 +14,15 @@ organizations, if the invited user does not have an account, they will be
 able to sign-up and be assigned to that organization in one mutation.`,
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(GraphQLEmailAddress),
+      type: new GraphQLNonNull(GraphQLEmailAddress),
       description: 'Users email that you would like to invite to your org.',
     },
     requestedRole: {
-      type: GraphQLNonNull(InvitationRoleEnums),
+      type: new GraphQLNonNull(InvitationRoleEnums),
       description: 'The role which you would like this user to have.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to invite the user to.',
     },
   }),

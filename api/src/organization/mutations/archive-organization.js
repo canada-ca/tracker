@@ -10,13 +10,13 @@ export const archiveOrganization = new mutationWithClientMutationId({
   description: 'This mutation allows the archival of unused organizations.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the organization you wish you archive.',
     },
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(removeOrganizationUnion),
+      type: new GraphQLNonNull(removeOrganizationUnion),
       description: '`RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
       resolve: (payload) => payload,
     },

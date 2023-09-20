@@ -14,15 +14,15 @@ update the permission level of a given user that already belongs to the
 given organization.`,
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(GraphQLEmailAddress),
+      type: new GraphQLNonNull(GraphQLEmailAddress),
       description: 'The username of the user you wish to update their role to.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization that the admin, and the user both belong to.',
     },
     role: {
-      type: GraphQLNonNull(RoleEnums),
+      type: new GraphQLNonNull(RoleEnums),
       description: 'The role that the admin wants to give to the selected user.',
     },
   }),

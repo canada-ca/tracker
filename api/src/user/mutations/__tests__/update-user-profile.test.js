@@ -1,20 +1,20 @@
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {tokenize, userRequired} from '../../../auth'
-import {loadUserByUserName, loadUserByKey} from '../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { tokenize, userRequired } from '../../../auth'
+import { loadUserByUserName, loadUserByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {DB_PASS: rootPass, DB_URL: url, CIPHER_KEY} = process.env
+const { DB_PASS: rootPass, DB_URL: url, CIPHER_KEY } = process.env
 
 describe('authenticate user account', () => {
   let query, drop, truncate, collections, transaction, schema, i18n
@@ -41,7 +41,7 @@ describe('authenticate user account', () => {
   describe('given a successful update', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -72,8 +72,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -91,9 +91,9 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(input: { displayName: "John Doe" }) {
                   result {
@@ -111,8 +111,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -123,19 +123,19 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              notify: {sendVerificationEmail: jest.fn()},
+              notify: { sendVerificationEmail: jest.fn() },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -151,9 +151,7 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
         })
       })
       describe('user updates their user name', () => {
@@ -165,9 +163,9 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
@@ -187,8 +185,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -202,19 +200,19 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              notify: {sendVerificationEmail: jest.fn()},
+              notify: { sendVerificationEmail: jest.fn() },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -230,9 +228,7 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
         })
         it('sends new verify email link', async () => {
           const cursor = await query`
@@ -244,9 +240,9 @@ describe('authenticate user account', () => {
 
           const mockNotify = jest.fn()
 
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
@@ -266,8 +262,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -281,19 +277,19 @@ describe('authenticate user account', () => {
                 tokenize: jest.fn().mockReturnValue('token'),
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              notify: {sendVerificationEmail: mockNotify},
+              notify: { sendVerificationEmail: mockNotify },
             },
-          )
+          })
 
           const updatedCursor = await query`
             FOR user IN users
@@ -323,9 +319,9 @@ describe('authenticate user account', () => {
             `
             const user = await cursor.next()
 
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: { userName: "john.doe@istio.actually.works" }
@@ -345,8 +341,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -360,19 +356,19 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
             const checkCursor = await query`
               FOR user IN users
@@ -395,9 +391,9 @@ describe('authenticate user account', () => {
             `
             const user = await cursor.next()
 
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: { userName: "john.doe@istio.actually.works" }
@@ -417,8 +413,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -432,19 +428,19 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
             const checkCursor = await query`
               FOR user IN users
@@ -465,9 +461,9 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(input: { preferredLang: ENGLISH }) {
                   result {
@@ -485,8 +481,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -497,19 +493,19 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              notify: {sendVerificationEmail: jest.fn()},
+              notify: { sendVerificationEmail: jest.fn() },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -525,9 +521,7 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
         })
       })
       describe('user attempts to update their tfa send method', () => {
@@ -543,7 +537,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                {authTagLength: 16},
+                { authTagLength: 16 },
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -568,9 +562,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
                       result {
@@ -588,8 +582,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -600,19 +594,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -628,9 +622,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
           describe('user is not phone validated', () => {
@@ -644,7 +636,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                {authTagLength: 16},
+                { authTagLength: 16 },
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -669,9 +661,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
                       result {
@@ -689,8 +681,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -701,19 +693,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -729,9 +721,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
         })
@@ -755,9 +745,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
                       result {
@@ -775,8 +765,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -787,19 +777,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -815,9 +805,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
           describe('user is not email validated', () => {
@@ -839,9 +827,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
                       result {
@@ -859,8 +847,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -871,19 +859,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -899,9 +887,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
         })
@@ -924,9 +910,9 @@ describe('authenticate user account', () => {
               `
             const user = await cursor.next()
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(input: { tfaSendMethod: NONE }) {
                     result {
@@ -944,8 +930,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -956,19 +942,19 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -984,9 +970,7 @@ describe('authenticate user account', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully updated their profile.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
           })
         })
       })
@@ -996,8 +980,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1015,9 +999,9 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(input: { displayName: "John Doe" }) {
                   result {
@@ -1035,8 +1019,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1047,19 +1031,19 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              notify: {sendVerificationEmail: jest.fn()},
+              notify: { sendVerificationEmail: jest.fn() },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -1075,9 +1059,7 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
         })
       })
       describe('user updates their user name', () => {
@@ -1090,9 +1072,9 @@ describe('authenticate user account', () => {
             `
             const user = await cursor.next()
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: { userName: "john.doe@istio.actually.works" }
@@ -1112,8 +1094,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1127,19 +1109,19 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1155,9 +1137,7 @@ describe('authenticate user account', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully updated their profile.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
           })
           it('sends new verify email link', async () => {
             const cursor = await query`
@@ -1169,9 +1149,9 @@ describe('authenticate user account', () => {
 
             const mockNotify = jest.fn()
 
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: { userName: "john.doe@istio.actually.works" }
@@ -1191,8 +1171,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1206,19 +1186,19 @@ describe('authenticate user account', () => {
                   tokenize: jest.fn().mockReturnValue('token'),
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
-                notify: {sendVerificationEmail: mockNotify},
+                notify: { sendVerificationEmail: mockNotify },
               },
-            )
+            })
 
             const updatedCursor = await query`
               FOR user IN users
@@ -1248,9 +1228,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(
                       input: { userName: "john.doe@istio.actually.works" }
@@ -1270,8 +1250,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1285,19 +1265,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const checkCursor = await query`
                 FOR user IN users
@@ -1320,9 +1300,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(
                       input: { userName: "john.doe@istio.actually.works" }
@@ -1342,8 +1322,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1357,19 +1337,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const checkCursor = await query`
                 FOR user IN users
@@ -1391,9 +1371,9 @@ describe('authenticate user account', () => {
           `
           const user = await cursor.next()
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(input: { preferredLang: ENGLISH }) {
                   result {
@@ -1411,8 +1391,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1423,19 +1403,19 @@ describe('authenticate user account', () => {
                 tokenize,
                 userRequired: userRequired({
                   userKey: user._key,
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 }),
               },
               validators: {
                 cleanseInput,
               },
               loaders: {
-                loadUserByUserName: loadUserByUserName({query}),
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByUserName: loadUserByUserName({ query }),
+                loadUserByKey: loadUserByKey({ query }),
               },
-              notify: {sendVerificationEmail: jest.fn()},
+              notify: { sendVerificationEmail: jest.fn() },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -1451,9 +1431,7 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated their profile.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
         })
       })
       describe('user attempts to update their tfa send method', () => {
@@ -1469,7 +1447,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                {authTagLength: 16},
+                { authTagLength: 16 },
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -1494,9 +1472,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
                       result {
@@ -1514,8 +1492,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1526,19 +1504,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1554,9 +1532,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
           describe('user is not phone validated', () => {
@@ -1570,7 +1546,7 @@ describe('authenticate user account', () => {
                 'aes-256-ccm',
                 String(CIPHER_KEY),
                 Buffer.from(updatedPhoneDetails.iv, 'hex'),
-                {authTagLength: 16},
+                { authTagLength: 16 },
               )
               let encrypted = cipher.update('+12345678998', 'utf8', 'hex')
               encrypted += cipher.final('hex')
@@ -1595,9 +1571,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: PHONE }) {
                       result {
@@ -1615,8 +1591,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1627,19 +1603,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1655,9 +1631,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
         })
@@ -1681,9 +1655,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
                       result {
@@ -1701,8 +1675,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1713,19 +1687,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1741,9 +1715,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
           describe('user is not email validated', () => {
@@ -1765,9 +1737,9 @@ describe('authenticate user account', () => {
               `
               const user = await cursor.next()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     updateUserProfile(input: { tfaSendMethod: EMAIL }) {
                       result {
@@ -1785,8 +1757,8 @@ describe('authenticate user account', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1797,19 +1769,19 @@ describe('authenticate user account', () => {
                     tokenize,
                     userRequired: userRequired({
                       userKey: user._key,
-                      loadUserByKey: loadUserByKey({query}),
+                      loadUserByKey: loadUserByKey({ query }),
                     }),
                   },
                   validators: {
                     cleanseInput,
                   },
                   loaders: {
-                    loadUserByUserName: loadUserByUserName({query}),
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByUserName: loadUserByUserName({ query }),
+                    loadUserByKey: loadUserByKey({ query }),
                   },
-                  notify: {sendVerificationEmail: jest.fn()},
+                  notify: { sendVerificationEmail: jest.fn() },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1825,9 +1797,7 @@ describe('authenticate user account', () => {
               }
 
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully updated their profile.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
             })
           })
         })
@@ -1850,9 +1820,9 @@ describe('authenticate user account', () => {
               `
             const user = await cursor.next()
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(input: { tfaSendMethod: NONE }) {
                     result {
@@ -1870,8 +1840,8 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1882,19 +1852,19 @@ describe('authenticate user account', () => {
                   tokenize,
                   userRequired: userRequired({
                     userKey: user._key,
-                    loadUserByKey: loadUserByKey({query}),
+                    loadUserByKey: loadUserByKey({ query }),
                   }),
                 },
                 validators: {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByUserName: loadUserByUserName({query}),
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByUserName: loadUserByUserName({ query }),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -1910,9 +1880,7 @@ describe('authenticate user account', () => {
             }
 
             expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully updated their profile.`,
-            ])
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their profile.`])
           })
         })
       })
@@ -1924,8 +1892,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -1936,9 +1904,9 @@ describe('authenticate user account', () => {
       })
       describe('user attempts to set email to one that is already in use', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
@@ -1958,8 +1926,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1983,9 +1951,9 @@ describe('authenticate user account', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              notify: {sendVerificationEmail: jest.fn()},
+              notify: { sendVerificationEmail: jest.fn() },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2007,9 +1975,9 @@ describe('authenticate user account', () => {
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: {
@@ -2033,15 +2001,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -2062,13 +2028,11 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to update profile. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update profile. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2080,9 +2044,9 @@ describe('authenticate user account', () => {
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: {
@@ -2106,16 +2070,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -2136,13 +2098,11 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to update profile. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update profile. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2157,8 +2117,8 @@ describe('authenticate user account', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -2169,9 +2129,9 @@ describe('authenticate user account', () => {
       })
       describe('user attempts to set email to one that is already in use', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserProfile(
                   input: { userName: "john.doe@istio.actually.works" }
@@ -2191,8 +2151,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -2216,17 +2176,16 @@ describe('authenticate user account', () => {
                   load: jest.fn().mockReturnValue(undefined),
                 },
               },
-              notify: {sendVerificationEmail: jest.fn()},
+              notify: { sendVerificationEmail: jest.fn() },
             },
-          )
+          })
 
           const error = {
             data: {
               updateUserProfile: {
                 result: {
                   code: 400,
-                  description:
-                    "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre.",
+                  description: "Le nom d'utilisateur n'est pas disponible, veuillez en essayer un autre.",
                 },
               },
             },
@@ -2241,9 +2200,9 @@ describe('authenticate user account', () => {
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: {
@@ -2267,15 +2226,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -2296,15 +2253,11 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le profil. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le profil. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2316,9 +2269,9 @@ describe('authenticate user account', () => {
       describe('given a transaction step error', () => {
         describe('when updating profile', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserProfile(
                     input: {
@@ -2342,16 +2295,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -2372,15 +2323,11 @@ describe('authenticate user account', () => {
                     load: jest.fn().mockReturnValue(undefined),
                   },
                 },
-                notify: {sendVerificationEmail: jest.fn()},
+                notify: { sendVerificationEmail: jest.fn() },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le profil. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le profil. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

@@ -1,8 +1,5 @@
-import {
-  updateUserProfileResultType,
-  updateUserProfileErrorType,
-} from '../../objects/index'
-import {updateUserProfileUnion} from '../update-user-profile-union'
+import { updateUserProfileResultType, updateUserProfileErrorType } from '../../objects/index'
+import { updateUserProfileUnion } from '../update-user-profile-union'
 
 describe('given the updateUserProfileUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the updateUserProfileUnion', () => {
           authResult: {},
         }
 
-        expect(updateUserProfileUnion.resolveType(obj)).toMatchObject(
-          updateUserProfileResultType,
-        )
+        expect(updateUserProfileUnion.resolveType(obj)).toMatch(updateUserProfileResultType.name)
       })
     })
     describe('testing the updateUserProfileErrorType', () => {
@@ -38,9 +33,7 @@ describe('given the updateUserProfileUnion', () => {
           description: 'text',
         }
 
-        expect(updateUserProfileUnion.resolveType(obj)).toMatchObject(
-          updateUserProfileErrorType,
-        )
+        expect(updateUserProfileUnion.resolveType(obj)).toMatch(updateUserProfileErrorType.name)
       })
     })
   })

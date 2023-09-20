@@ -1,5 +1,5 @@
 import pytest
-import datetime
+from datetime import date
 from arango import ArangoClient
 from summaries import *
 from test_data import *
@@ -13,6 +13,7 @@ sys_db.create_database("test")
 db = arango_client.db("test", username="", password="")
 db.create_collection("scanSummaries")
 db.create_collection("chartSummaries")
+db.create_collection("organizationSummaries")
 graph = db.create_graph("compliance")
 domains = graph.create_vertex_collection("domains")
 orgs = graph.create_vertex_collection("organizations")
@@ -44,6 +45,7 @@ org = orgs.insert(
                 "maintain": 0,
             },
         },
+        "hist_summaries": [],
         "orgDetails": {
             "en": {
                 "slug": "communications-security-establishment",
@@ -123,41 +125,29 @@ claims.insert({"_from": org["_id"], "_to": domain3["_id"], "hidden": False})
 def test_update_chart_summaries():
     update_chart_summaries(host="http://testdb:8529", name="test", user="", password="")
 
-    httpsSummary = db.collection("chartSummaries").get({"_key": "https"})
-    assert httpsSummary == {
-        "_id": "chartSummaries/https",
-        "_rev": httpsSummary["_rev"],
-        "_key": "https",
+    summary = db.collection("chartSummaries").all().next()
+    assert summary["https"] == {
+        "scan_types": ["https"],
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
-    webSummary = db.collection("chartSummaries").get({"_key": "web"})
-    assert webSummary == {
-        "_id": "chartSummaries/web",
-        "_rev": webSummary["_rev"],
-        "_key": "web",
+    assert summary["web"] == {
+        "scan_types": ["https", "hsts", "ssl"],
         "pass": 2,
         "fail": 1,
         "total": 3,
     }
 
-    mailSummary = db.collection("chartSummaries").get({"_key": "mail"})
-    assert mailSummary == {
-        "_id": "chartSummaries/mail",
-        "_rev": mailSummary["_rev"],
-        "_key": "mail",
+    assert summary["mail"] == {
+        "scan_types": ["dmarc", "spf", "dkim"],
         "pass": 1,
         "fail": 2,
         "total": 3,
     }
 
-    dmarcPhaseSummary = db.collection("chartSummaries").get({"_key": "dmarc_phase"})
-    assert dmarcPhaseSummary == {
-        "_id": "chartSummaries/dmarc_phase",
-        "_rev": dmarcPhaseSummary["_rev"],
-        "_key": "dmarc_phase",
+    assert summary["dmarc_phase"] == {
         "not_implemented": 1,
         "assess": 0,
         "deploy": 0,
@@ -172,6 +162,7 @@ def test_update_org_summaries():
 
     organization = db.collection("organizations").get({"_key": "testorg"})
     assert organization["summaries"] == {
+        "date": date.today().isoformat(),
         "dmarc": {"pass": 2, "fail": 1, "total": 3},
         "https": {"pass": 2, "fail": 1, "total": 3},
         "web": {"pass": 2, "fail": 1, "total": 3},
@@ -180,10 +171,6 @@ def test_update_org_summaries():
         "ssl": {"pass": 2, "fail": 1, "total": 3},
         "dkim": {"pass": 1, "fail": 2, "total": 3},
         "spf": {"pass": 2, "fail": 1, "total": 3},
-        "hidden": {
-            "https": {"pass": 0, "fail": 0, "total": 0},
-            "dmarc": {"pass": 0, "fail": 0, "total": 0},
-        },
         "dmarc_phase": {
             "not_implemented": 1,
             "assess": 0,

@@ -1,33 +1,30 @@
-import {GraphQLNonNull, GraphQLString} from 'graphql'
-import {mutationWithClientMutationId} from 'graphql-relay'
-import {t} from '@lingui/macro'
+import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { mutationWithClientMutationId } from 'graphql-relay'
+import { t } from '@lingui/macro'
 
-import {resetPasswordUnion} from '../unions'
+import { resetPasswordUnion } from '../unions'
 
 export const resetPassword = new mutationWithClientMutationId({
   name: 'ResetPassword',
-  description:
-    'This mutation allows the user to take the token they received in their email to reset their password.',
+  description: 'This mutation allows the user to take the token they received in their email to reset their password.',
   inputFields: () => ({
     password: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The users new password.',
     },
     confirmPassword: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'A confirmation password to confirm the new password.',
     },
     resetToken: {
-      type: GraphQLNonNull(GraphQLString),
-      description:
-        'The JWT found in the url, redirected from the email they received.',
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'The JWT found in the url, redirected from the email they received.',
     },
   }),
   outputFields: () => ({
     result: {
       type: resetPasswordUnion,
-      description:
-        '`ResetPasswordUnion` returning either a `ResetPasswordResult`, or `ResetPasswordError` object.',
+      description: '`ResetPasswordUnion` returning either a `ResetPasswordResult`, or `ResetPasswordError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -38,9 +35,9 @@ export const resetPassword = new mutationWithClientMutationId({
       query,
       collections,
       transaction,
-      auth: {verifyToken, bcrypt},
-      loaders: {loadUserByKey},
-      validators: {cleanseInput},
+      auth: { verifyToken, bcrypt },
+      loaders: { loadUserByKey },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse input
@@ -49,22 +46,17 @@ export const resetPassword = new mutationWithClientMutationId({
     const resetToken = cleanseInput(args.resetToken)
 
     // Check if reset token is valid
-    const tokenParameters = verifyToken({token: resetToken})
+    const tokenParameters = verifyToken({ token: resetToken })
 
     // Check to see if user id exists in token params !!!
-    if (
-      tokenParameters.userKey === 'undefined' ||
-      typeof tokenParameters.userKey === 'undefined'
-    ) {
+    if (tokenParameters.userKey === 'undefined' || typeof tokenParameters.userKey === 'undefined') {
       console.warn(
         `When resetting password user attempted to verify account, but userKey is not located in the token parameters.`,
       )
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Incorrect token value. Please request a new email.`,
-        ),
+        description: i18n._(t`Incorrect token value. Please request a new email.`),
       }
     }
 
@@ -91,9 +83,7 @@ export const resetPassword = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to reset password. Please request a new email.`,
-        ),
+        description: i18n._(t`Unable to reset password. Please request a new email.`),
       }
     }
 
@@ -140,18 +130,14 @@ export const resetPassword = new mutationWithClientMutationId({
         `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred when user: ${user._key} attempted to reset their password: ${err}`,
-      )
+      console.error(`Trx step error occurred when user: ${user._key} attempted to reset their password: ${err}`)
       throw new Error(i18n._(t`Unable to reset password. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`,
-      )
+      console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
       throw new Error(i18n._(t`Unable to reset password. Please try again.`))
     }
 

@@ -51,16 +51,16 @@ describe('given findVerifiedDomainByDomain query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       org = await collections.organizations.save({
@@ -112,17 +112,17 @@ describe('given findVerifiedDomainByDomain query', () => {
       await drop()
     })
     it('returns domain', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             findVerifiedDomainByDomain(domain: "test.gc.ca") {
               id
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           query: query,
           validators: {
@@ -130,11 +130,10 @@ describe('given findVerifiedDomainByDomain query', () => {
           },
           loaders: {
             loadVerifiedDomainsById: loadVerifiedDomainsById({ query }),
-            loadVerifiedOrgConnectionsByDomainId:
-              loadVerifiedOrgConnectionsByDomainId(query, 'en', cleanseInput),
+            loadVerifiedOrgConnectionsByDomainId: loadVerifiedOrgConnectionsByDomainId(query, 'en', cleanseInput),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -165,17 +164,17 @@ describe('given findVerifiedDomainByDomain query', () => {
       describe('given unsuccessful domain retrieval', () => {
         describe('domain cannot be found', () => {
           it('returns an appropriate error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findVerifiedDomainByDomain(domain: "not-test.gc.ca") {
                     id
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: query,
                 validators: {
@@ -187,13 +186,9 @@ describe('given findVerifiedDomainByDomain query', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                `No verified domain with the provided domain could be found.`,
-              ),
-            ]
+            const error = [new GraphQLError(`No verified domain with the provided domain could be found.`)]
 
             expect(response.errors).toEqual(error)
           })
@@ -218,17 +213,17 @@ describe('given findVerifiedDomainByDomain query', () => {
       describe('given unsuccessful domain retrieval', () => {
         describe('domain cannot be found', () => {
           it('returns an appropriate error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findVerifiedDomainByDomain(domain: "not-test.gc.ca") {
                     id
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: query,
                 validators: {
@@ -240,13 +235,9 @@ describe('given findVerifiedDomainByDomain query', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                `Aucun domaine vérifié avec le domaine fourni n'a pu être trouvé.`,
-              ),
-            ]
+            const error = [new GraphQLError(`Aucun domaine vérifié avec le domaine fourni n'a pu être trouvé.`)]
 
             expect(response.errors).toEqual(error)
           })

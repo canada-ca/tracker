@@ -61,10 +61,12 @@ describe('given spfSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'spf',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        spf: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
@@ -74,9 +76,9 @@ describe('given spfSummary query', () => {
       await drop()
     })
     it('returns spf summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             spfSummary {
               total
@@ -88,14 +90,14 @@ describe('given spfSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -138,9 +140,9 @@ describe('given spfSummary query', () => {
     describe('given unsuccessful spf summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 spfSummary {
                   total
@@ -152,8 +154,8 @@ describe('given spfSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -161,7 +163,7 @@ describe('given spfSummary query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError(`Unable to load SPF summary. Please try again.`)]
 

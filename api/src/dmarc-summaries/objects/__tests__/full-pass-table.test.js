@@ -9,7 +9,7 @@ describe('given the fullPassTable gql object', () => {
       const demoType = fullPassTableType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a dkimDomains field', () => {
       const demoType = fullPassTableType.getFields()
@@ -66,54 +66,42 @@ describe('given the fullPassTable gql object', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('fullPass', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('fullPass', 1))
       })
     })
     describe('testing the dkimDomains resolver', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(
-          demoType.dkimDomains.resolve({ dkimDomains: 'dkimDomains' }),
-        ).toEqual('dkimDomains')
+        expect(demoType.dkimDomains.resolve({ dkimDomains: 'dkimDomains' })).toEqual('dkimDomains')
       })
     })
     describe('testing the dkimSelectors resolvers', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(
-          demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' }),
-        ).toEqual('dkimSelectors')
+        expect(demoType.dkimSelectors.resolve({ dkimSelectors: 'dkimSelectors' })).toEqual('dkimSelectors')
       })
     })
     describe('testing the dnsHost resolver', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual(
-          'dnsHost',
-        )
+        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual('dnsHost')
       })
     })
     describe('testing the envelopeFrom resolver', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(
-          demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' }),
-        ).toEqual('envelopeFrom')
+        expect(demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' })).toEqual('envelopeFrom')
       })
     })
     describe('testing the headerFrom resolver', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(
-          demoType.headerFrom.resolve({ headerFrom: 'headerFrom' }),
-        ).toEqual('headerFrom')
+        expect(demoType.headerFrom.resolve({ headerFrom: 'headerFrom' })).toEqual('headerFrom')
       })
     })
     describe('testing the sourceIpAddress resolver', () => {
@@ -131,18 +119,14 @@ describe('given the fullPassTable gql object', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(
-          demoType.spfDomains.resolve({ spfDomains: 'spfDomains' }),
-        ).toEqual('spfDomains')
+        expect(demoType.spfDomains.resolve({ spfDomains: 'spfDomains' })).toEqual('spfDomains')
       })
     })
     describe('testing the totalMessages resolver', () => {
       it('returns the resolved value', () => {
         const demoType = fullPassTableType.getFields()
 
-        expect(demoType.totalMessages.resolve({ totalMessages: 10 })).toEqual(
-          10,
-        )
+        expect(demoType.totalMessages.resolve({ totalMessages: 10 })).toEqual(10)
       })
     })
   })

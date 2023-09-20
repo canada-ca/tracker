@@ -1,8 +1,5 @@
-import {
-  updateUserPasswordErrorType,
-  updateUserPasswordResultType,
-} from '../../objects/index'
-import {updateUserPasswordUnion} from '../update-user-password-union'
+import { updateUserPasswordErrorType, updateUserPasswordResultType } from '../../objects/index'
+import { updateUserPasswordUnion } from '../update-user-password-union'
 
 describe('given the updateUserPasswordUnion', () => {
   describe('testing the field types', () => {
@@ -25,9 +22,7 @@ describe('given the updateUserPasswordUnion', () => {
           authResult: {},
         }
 
-        expect(updateUserPasswordUnion.resolveType(obj)).toMatchObject(
-          updateUserPasswordResultType,
-        )
+        expect(updateUserPasswordUnion.resolveType(obj)).toMatch(updateUserPasswordResultType.name)
       })
     })
     describe('testing the updateUserPasswordErrorType', () => {
@@ -39,9 +34,7 @@ describe('given the updateUserPasswordUnion', () => {
           description: 'text',
         }
 
-        expect(updateUserPasswordUnion.resolveType(obj)).toMatchObject(
-          updateUserPasswordErrorType,
-        )
+        expect(updateUserPasswordUnion.resolveType(obj)).toMatch(updateUserPasswordErrorType.name)
       })
     })
   })

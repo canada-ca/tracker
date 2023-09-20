@@ -46,26 +46,26 @@ export const tlsResultType = new GraphQLObjectType({
       resolve: async ({ acceptedCipherSuites }) => acceptedCipherSuites,
     },
     acceptedEllipticCurves: {
-      type: GraphQLList(ellipticCurveType),
+      type: new GraphQLList(ellipticCurveType),
       description: `List of the scanned servers accepted elliptic curves and their strength.`,
       resolve: async ({ acceptedEllipticCurves }) => acceptedEllipticCurves,
     },
     positiveTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned server from this scan.`,
       resolve: async ({ positiveTags }, _, { loaders: { loadSslGuidanceTagByTagId } }) => {
         return await loadSslGuidanceTagByTagId({ tags: positiveTags })
       },
     },
     neutralTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned server from this scan.`,
       resolve: async ({ neutralTags }, _, { loaders: { loadSslGuidanceTagByTagId } }) => {
         return await loadSslGuidanceTagByTagId({ tags: neutralTags })
       },
     },
     negativeTags: {
-      type: GraphQLList(guidanceTagType),
+      type: new GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned server from this scan.`,
       resolve: async ({ negativeTags }, _, { loaders: { loadSslGuidanceTagByTagId } }) => {
         return await loadSslGuidanceTagByTagId({ tags: negativeTags })
@@ -185,7 +185,7 @@ export const certificateType = new GraphQLObjectType({
       description: `The status of the certificate revocation check.`,
     },
     commonNames: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: `The list of common names for the given certificate.`,
     },
     serialNumber: {
@@ -197,7 +197,7 @@ export const certificateType = new GraphQLObjectType({
       description: `The hashing algorithm used to validate this certificate.`,
     },
     sanList: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: `The list of all alternative (domain)names which can use this certificate.`,
     },
   }),
@@ -208,7 +208,7 @@ export const certificateChainInfoType = new GraphQLObjectType({
   description: ``,
   fields: () => ({
     pathValidationResults: {
-      type: GraphQLList(pathValidationResultsType),
+      type: new GraphQLList(pathValidationResultsType),
       description: `Validation results from each trust store.`,
     },
     badHostname: {
@@ -240,7 +240,7 @@ export const certificateChainInfoType = new GraphQLObjectType({
       description: `Whether or not the certificate chain includes a distrusted Symantec certificate.`,
     },
     certificateChain: {
-      type: GraphQLList(certificateType),
+      type: new GraphQLList(certificateType),
       description: `The certificate chain which was used to create the TLS connection.`,
     },
   }),
@@ -251,27 +251,27 @@ export const acceptedCipherSuitesType = new GraphQLObjectType({
   description: `List of accepted cipher suites separated by TLS version.`,
   fields: () => ({
     ssl2_0CipherSuites: {
-      type: GraphQLList(cipherSuiteType),
+      type: new GraphQLList(cipherSuiteType),
       description: `Accepted cipher suites for SSL2.`,
     },
     ssl3_0CipherSuites: {
-      type: GraphQLList(cipherSuiteType),
+      type: new GraphQLList(cipherSuiteType),
       description: `Accepted cipher suites for SSL3.`,
     },
     tls1_0CipherSuites: {
-      type: GraphQLList(cipherSuiteType),
+      type: new GraphQLList(cipherSuiteType),
       description: `Accepted cipher suites for TLS1.0.`,
     },
     tls1_1CipherSuites: {
-      type: GraphQLList(cipherSuiteType),
+      type: new GraphQLList(cipherSuiteType),
       description: `Accepted cipher suites for TLS1.1.`,
     },
     tls1_2CipherSuites: {
-      type: GraphQLList(cipherSuiteType),
+      type: new GraphQLList(cipherSuiteType),
       description: `Accepted cipher suites for TLS1.2.`,
     },
     tls1_3CipherSuites: {
-      type: GraphQLList(cipherSuiteType),
+      type: new GraphQLList(cipherSuiteType),
       description: `Accepted cipher suites for TLS1.3.`,
     },
   }),

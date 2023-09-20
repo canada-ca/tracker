@@ -192,9 +192,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -218,8 +218,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -244,7 +244,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -281,9 +281,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -307,8 +307,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -333,7 +333,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -355,9 +355,9 @@ describe('removing a domain', () => {
             })
           })
           it('does not remove domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -381,8 +381,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -407,7 +407,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const domainCursor = await query`
               FOR domain IN domains
@@ -419,9 +419,9 @@ describe('removing a domain', () => {
             expect(domainCheck._key).toEqual(domain._key)
           })
           it('does not remove all scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -445,8 +445,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -471,7 +471,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor =
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
@@ -494,9 +494,9 @@ describe('removing a domain', () => {
               })
             })
             it('removes dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -520,8 +520,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -546,7 +546,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -571,9 +571,9 @@ describe('removing a domain', () => {
               })
             })
             it('does not remove dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -597,8 +597,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -623,7 +623,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -689,9 +689,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -715,8 +715,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -741,7 +741,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -778,9 +778,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
               mutation {
                 removeDomain(
                   input: {
@@ -804,8 +804,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -830,7 +830,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -852,9 +852,9 @@ describe('removing a domain', () => {
             })
           })
           it('does not remove domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -878,8 +878,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -904,7 +904,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const domainCursor = await query`
               FOR domain IN domains
@@ -916,9 +916,9 @@ describe('removing a domain', () => {
             expect(domainCheck._key).toEqual(domain._key)
           })
           it('does not remove all scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -942,8 +942,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -968,7 +968,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
             await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
@@ -995,9 +995,9 @@ describe('removing a domain', () => {
               })
             })
             it('removes dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -1021,8 +1021,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1047,7 +1047,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -1072,9 +1072,9 @@ describe('removing a domain', () => {
               })
             })
             it('does not remove dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -1098,8 +1098,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1124,7 +1124,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -1167,9 +1167,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -1193,8 +1193,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1219,7 +1219,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1256,9 +1256,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
               mutation {
                 removeDomain(
                   input: {
@@ -1282,8 +1282,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1308,7 +1308,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1330,9 +1330,9 @@ describe('removing a domain', () => {
             })
           })
           it('removes domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -1356,8 +1356,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1382,7 +1382,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const domainCursor = await query`
               FOR domain IN domains
@@ -1394,9 +1394,9 @@ describe('removing a domain', () => {
             expect(domainCheck).toEqual(undefined)
           })
           it('removes all scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -1420,8 +1420,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1446,7 +1446,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
             await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
@@ -1472,9 +1472,9 @@ describe('removing a domain', () => {
               })
             })
             it('removes dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -1498,8 +1498,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1524,7 +1524,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -1549,9 +1549,9 @@ describe('removing a domain', () => {
               })
             })
             it('does not remove dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -1575,8 +1575,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1601,7 +1601,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -1636,9 +1636,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -1662,8 +1662,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1688,7 +1688,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1725,9 +1725,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -1751,8 +1751,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1777,7 +1777,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1799,9 +1799,9 @@ describe('removing a domain', () => {
             })
           })
           it('removes domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -1825,8 +1825,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1851,7 +1851,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const domainCursor = await query`
               FOR domain IN domains
@@ -1863,9 +1863,9 @@ describe('removing a domain', () => {
             expect(domainCheck).toEqual(undefined)
           })
           it('removes all scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -1889,8 +1889,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1915,7 +1915,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
             await query`FOR dnsResult IN dns OPTIONS { waitForSync: true } RETURN dnsResult`
@@ -1941,9 +1941,9 @@ describe('removing a domain', () => {
               })
             })
             it('removes dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -1967,8 +1967,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -1993,7 +1993,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -2018,9 +2018,9 @@ describe('removing a domain', () => {
               })
             })
             it('does not remove dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -2044,8 +2044,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2070,7 +2070,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -2210,9 +2210,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2236,8 +2236,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2262,7 +2262,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -2299,9 +2299,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2325,8 +2325,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2351,7 +2351,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -2373,9 +2373,9 @@ describe('removing a domain', () => {
             })
           })
           it('does not remove domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2399,8 +2399,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2425,7 +2425,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const domainCursor = await query`
               FOR domain IN domains
@@ -2437,9 +2437,9 @@ describe('removing a domain', () => {
             expect(domainCheck._key).toEqual(domain._key)
           })
           it('does not remove all scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2463,8 +2463,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2489,7 +2489,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor =
               await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan.webScan`
@@ -2512,9 +2512,9 @@ describe('removing a domain', () => {
               })
             })
             it('removes dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -2538,8 +2538,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2564,7 +2564,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -2589,9 +2589,9 @@ describe('removing a domain', () => {
               })
             })
             it('does not remove dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -2615,8 +2615,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2641,7 +2641,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -2678,9 +2678,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2704,8 +2704,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2730,7 +2730,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -2767,9 +2767,9 @@ describe('removing a domain', () => {
               })
             })
             it('returns a status message', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2793,8 +2793,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -2819,7 +2819,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -2841,9 +2841,9 @@ describe('removing a domain', () => {
             })
           })
           it('removes domain', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2867,8 +2867,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2893,7 +2893,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const domainCursor = await query`
               FOR domain IN domains
@@ -2905,9 +2905,9 @@ describe('removing a domain', () => {
             expect(domainCheck).toEqual(undefined)
           })
           it('removes all scan data', async () => {
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -2931,8 +2931,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -2957,7 +2957,7 @@ describe('removing a domain', () => {
                   loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const testWebScanCursor = await query`FOR wScan IN webScan OPTIONS { waitForSync: true } RETURN wScan`
             const testWebScan = await testWebScanCursor.next()
@@ -2979,9 +2979,9 @@ describe('removing a domain', () => {
               })
             })
             it('removes dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -3005,8 +3005,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -3031,7 +3031,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -3056,9 +3056,9 @@ describe('removing a domain', () => {
               })
             })
             it('does not remove dmarc summary data', async () => {
-              await graphql(
+              await graphql({
                 schema,
-                `
+                source: `
                   mutation {
                     removeDomain(
                       input: {
@@ -3082,8 +3082,8 @@ describe('removing a domain', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query,
                   collections: collectionNames,
@@ -3108,7 +3108,7 @@ describe('removing a domain', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                 },
-              )
+              })
 
               const testOwnershipCursor = await query`FOR owner IN ownership OPTIONS { waitForSync: true } RETURN owner`
               const testOwnership = await testOwnershipCursor.next()
@@ -3147,9 +3147,9 @@ describe('removing a domain', () => {
       })
       describe('domain does not exist', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               removeDomain(
                 input: {
@@ -3173,8 +3173,8 @@ describe('removing a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -3195,7 +3195,7 @@ describe('removing a domain', () => {
                 loadUserByKey: jest.fn(),
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -3216,9 +3216,9 @@ describe('removing a domain', () => {
       })
       describe('organization does not exist', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               removeDomain(
                 input: {
@@ -3242,8 +3242,8 @@ describe('removing a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -3266,7 +3266,7 @@ describe('removing a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -3288,9 +3288,9 @@ describe('removing a domain', () => {
       describe('user attempts to remove domain from verified check org', () => {
         describe('users permission is admin', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3314,8 +3314,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3342,7 +3342,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3363,9 +3363,9 @@ describe('removing a domain', () => {
         })
         describe('users permission is user', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3389,8 +3389,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3417,7 +3417,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3438,9 +3438,9 @@ describe('removing a domain', () => {
         })
         describe('user does not belong to org', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3464,8 +3464,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3492,7 +3492,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3515,9 +3515,9 @@ describe('removing a domain', () => {
       describe('user attempts to remove domain from a regular org', () => {
         describe('users permission is user', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3541,8 +3541,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3569,7 +3569,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3590,9 +3590,9 @@ describe('removing a domain', () => {
         })
         describe('user does not belong to org', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3616,8 +3616,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -3644,7 +3644,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3667,9 +3667,9 @@ describe('removing a domain', () => {
       describe('database error occurs', () => {
         describe('when checking to see how many edges there are', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3693,8 +3693,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -3721,7 +3721,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -3733,9 +3733,9 @@ describe('removing a domain', () => {
         })
         describe('when checking to see if domain has dmarc summary data', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3759,8 +3759,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest
                   .fn()
@@ -3794,7 +3794,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -3813,9 +3813,9 @@ describe('removing a domain', () => {
                 step: jest.fn().mockRejectedValue(new Error('trx step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3839,8 +3839,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     all: jest.fn().mockReturnValue([{ _id: toGlobalId('organization', 456) }]),
@@ -3872,7 +3872,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -3888,9 +3888,9 @@ describe('removing a domain', () => {
                 step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3914,8 +3914,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
@@ -3947,7 +3947,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -3968,9 +3968,9 @@ describe('removing a domain', () => {
                 .mockRejectedValue(new Error('Transaction error occurred.')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -3994,8 +3994,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest
                   .fn()
@@ -4030,7 +4030,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -4054,9 +4054,9 @@ describe('removing a domain', () => {
                   .mockRejectedValue(new Error('Step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -4080,8 +4080,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
@@ -4113,7 +4113,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -4134,9 +4134,9 @@ describe('removing a domain', () => {
                 step: jest.fn().mockRejectedValue(new Error('Step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -4160,8 +4160,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: mockedQuery,
                   collections: collectionNames,
@@ -4189,7 +4189,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -4208,9 +4208,9 @@ describe('removing a domain', () => {
             commit: jest.fn().mockRejectedValue(new Error('Transaction error occurred.')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4234,8 +4234,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({
                 count: 2,
@@ -4266,7 +4266,7 @@ describe('removing a domain', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Unable to remove domain. Please try again.')]
 
@@ -4294,9 +4294,9 @@ describe('removing a domain', () => {
       })
       describe('domain does not exist', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               removeDomain(
                 input: {
@@ -4320,8 +4320,8 @@ describe('removing a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -4342,7 +4342,7 @@ describe('removing a domain', () => {
                 loadUserByKey: jest.fn(),
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -4363,9 +4363,9 @@ describe('removing a domain', () => {
       })
       describe('organization does not exist', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               removeDomain(
                 input: {
@@ -4389,8 +4389,8 @@ describe('removing a domain', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -4413,7 +4413,7 @@ describe('removing a domain', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -4435,9 +4435,9 @@ describe('removing a domain', () => {
       describe('user attempts to remove domain from verified check org', () => {
         describe('users permission is admin', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4461,8 +4461,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -4489,7 +4489,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -4511,9 +4511,9 @@ describe('removing a domain', () => {
         })
         describe('users permission is user', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4537,8 +4537,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -4565,7 +4565,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -4587,9 +4587,9 @@ describe('removing a domain', () => {
         })
         describe('user does not belong to org', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4613,8 +4613,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -4641,7 +4641,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -4665,9 +4665,9 @@ describe('removing a domain', () => {
       describe('user attempts to remove domain from a regular org', () => {
         describe('users permission is user', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4691,8 +4691,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -4719,7 +4719,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -4741,9 +4741,9 @@ describe('removing a domain', () => {
         })
         describe('user does not belong to org', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4767,8 +4767,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -4795,7 +4795,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -4819,9 +4819,9 @@ describe('removing a domain', () => {
       describe('database error occurs', () => {
         describe('when checking to see how many edges there are', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4845,8 +4845,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -4873,7 +4873,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 
@@ -4885,9 +4885,9 @@ describe('removing a domain', () => {
         })
         describe('when checking to see if domain has dmarc summary data', () => {
           it('returns an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4911,8 +4911,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest
                   .fn()
@@ -4945,7 +4945,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 
@@ -4964,9 +4964,9 @@ describe('removing a domain', () => {
                 step: jest.fn().mockRejectedValue(new Error('trx step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
               mutation {
                 removeDomain(
                   input: {
@@ -4990,8 +4990,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
@@ -5022,7 +5022,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 
@@ -5038,9 +5038,9 @@ describe('removing a domain', () => {
                 step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
               mutation {
                 removeDomain(
                   input: {
@@ -5064,8 +5064,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
@@ -5096,7 +5096,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 
@@ -5117,9 +5117,9 @@ describe('removing a domain', () => {
                 .mockRejectedValue(new Error('Transaction error occurred.')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 removeDomain(
                   input: {
@@ -5143,8 +5143,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest
                   .fn()
@@ -5178,7 +5178,7 @@ describe('removing a domain', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 
@@ -5202,9 +5202,9 @@ describe('removing a domain', () => {
                   .mockRejectedValue(new Error('Step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -5228,8 +5228,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: jest.fn().mockReturnValue({
                     count: 1,
@@ -5260,7 +5260,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 
@@ -5283,9 +5283,9 @@ describe('removing a domain', () => {
                 step: jest.fn().mockRejectedValue(new Error('Step error')),
               })
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                 mutation {
                   removeDomain(
                     input: {
@@ -5309,8 +5309,8 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   query: mockedQuery,
                   collections: collectionNames,
@@ -5338,7 +5338,7 @@ describe('removing a domain', () => {
                     },
                   },
                 },
-              )
+              })
 
               const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 
@@ -5357,9 +5357,9 @@ describe('removing a domain', () => {
             commit: jest.fn().mockRejectedValue(new Error('Transaction error occurred.')),
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removeDomain(
                   input: {
@@ -5383,8 +5383,8 @@ describe('removing a domain', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({
                 count: 2,
@@ -5415,7 +5415,7 @@ describe('removing a domain', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError('Impossible de supprimer le domaine. Veuillez réessayer.')]
 

@@ -1,37 +1,21 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {toGlobalId} from 'graphql-relay'
-import {setupI18n} from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { toGlobalId } from 'graphql-relay'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {
-  checkSuperAdmin,
-  superAdminRequired,
-  userRequired,
-  verifiedRequired,
-} from '../../../auth'
-import {loadUserByKey, loadUserConnectionsByUserId} from '../../loaders'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { checkSuperAdmin, superAdminRequired, userRequired, verifiedRequired } from '../../../auth'
+import { loadUserByKey, loadUserConnectionsByUserId } from '../../loaders'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findMyUsersQuery', () => {
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    saOrg,
-    orgOne,
-    orgTwo,
-    i18n,
-    superAdmin,
-    user1,
-    user2
+  let query, drop, truncate, schema, collections, saOrg, orgOne, orgTwo, i18n, superAdmin, user1, user2
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -53,7 +37,7 @@ describe('given findMyUsersQuery', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -171,8 +155,8 @@ describe('given findMyUsersQuery', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -207,9 +191,9 @@ describe('given findMyUsersQuery', () => {
         describe('super admin queries for their users', () => {
           describe('in english', () => {
             it('returns users with affiliations', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   query {
                     findMyUsers(first: 10) {
                       edges {
@@ -230,8 +214,8 @@ describe('given findMyUsersQuery', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   userKey: superAdmin._key,
                   auth: {
@@ -257,12 +241,12 @@ describe('given findMyUsersQuery', () => {
                       query,
                       userKey: superAdmin._key,
                       cleanseInput,
-                      auth: {loginRequired: true},
+                      auth: { loginRequired: true },
                       language: 'en',
                     }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -306,9 +290,7 @@ describe('given findMyUsersQuery', () => {
                 },
               }
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${superAdmin._key} successfully retrieved their users.`,
-              ])
+              expect(consoleOutput).toEqual([`User: ${superAdmin._key} successfully retrieved their users.`])
             })
           })
         })
@@ -321,8 +303,8 @@ describe('given findMyUsersQuery', () => {
           i18n = setupI18n({
             locale: 'en',
             localeData: {
-              en: {plurals: {}},
-              fr: {plurals: {}},
+              en: { plurals: {} },
+              fr: { plurals: {} },
             },
             locales: ['en', 'fr'],
             messages: {
@@ -333,13 +315,11 @@ describe('given findMyUsersQuery', () => {
         })
         describe('database error occurs', () => {
           it('returns an error message', async () => {
-            const mockedQuery = jest
-              .fn()
-              .mockRejectedValueOnce(new Error('Database error occurred.'))
+            const mockedQuery = jest.fn().mockRejectedValueOnce(new Error('Database error occurred.'))
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findMyUsers(first: 10) {
                     edges {
@@ -360,8 +340,8 @@ describe('given findMyUsersQuery', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: superAdmin._key,
                 auth: {
@@ -375,17 +355,15 @@ describe('given findMyUsersQuery', () => {
                     query: mockedQuery,
                     userKey: superAdmin._key,
                     cleanseInput,
-                    auth: {loginRequired: true},
+                    auth: { loginRequired: true },
                     language: 'en',
                     i18n,
                   }),
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to query user(s). Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to query user(s). Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

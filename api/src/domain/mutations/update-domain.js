@@ -13,11 +13,11 @@ export const updateDomain = new mutationWithClientMutationId({
   description: 'Mutation allows the modification of domains if domain is updated through out its life-cycle',
   inputFields: () => ({
     domainId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the domain that is being updated.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global ID of the organization used for permission checks.',
     },
     domain: {

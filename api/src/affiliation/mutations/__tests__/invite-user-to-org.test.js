@@ -134,9 +134,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -157,8 +157,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -188,7 +188,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -229,9 +229,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -252,8 +252,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -283,7 +283,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -324,9 +324,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -347,8 +347,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -378,7 +378,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -412,9 +412,9 @@ describe('invite user to org', () => {
           describe('requested role is super_admin', () => {
             it('returns status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -435,8 +435,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -468,7 +468,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -506,9 +506,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -529,8 +529,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -562,7 +562,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -601,9 +601,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -624,8 +624,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -657,7 +657,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -715,9 +715,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -738,8 +738,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -769,7 +769,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -810,9 +810,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -833,8 +833,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -864,7 +864,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -899,9 +899,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -922,8 +922,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -955,7 +955,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -994,9 +994,9 @@ describe('invite user to org', () => {
             it('returns status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -1017,8 +1017,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'en',
@@ -1050,7 +1050,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1156,9 +1156,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1179,8 +1179,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1210,7 +1210,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1252,9 +1252,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1275,8 +1275,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1306,7 +1306,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1348,9 +1348,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1371,8 +1371,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1402,7 +1402,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1438,9 +1438,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1461,8 +1461,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1494,7 +1494,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1531,9 +1531,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1554,8 +1554,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1587,7 +1587,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1624,9 +1624,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1647,8 +1647,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1680,7 +1680,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1736,9 +1736,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1759,8 +1759,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1790,7 +1790,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1832,9 +1832,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1855,8 +1855,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1886,7 +1886,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteEmail: sendOrgInviteEmail },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -1922,9 +1922,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1945,8 +1945,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -1978,7 +1978,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -2015,9 +2015,9 @@ describe('invite user to org', () => {
             it('returns a status message', async () => {
               const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source:`
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -2038,8 +2038,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                null,
-                {
+                rootValue:null,
+                contextValue:{
                   i18n,
                   request: {
                     language: 'fr',
@@ -2071,7 +2071,7 @@ describe('invite user to org', () => {
                   notify: { sendOrgInviteCreateAccount },
                   validators: { cleanseInput },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -2197,9 +2197,9 @@ describe('invite user to org', () => {
       })
       describe('user attempts to invite themselves', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2220,8 +2220,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2249,7 +2249,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2268,9 +2268,9 @@ describe('invite user to org', () => {
       })
       describe('user attempts to invite to an org that does not exist', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2291,8 +2291,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2326,7 +2326,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2347,9 +2347,9 @@ describe('invite user to org', () => {
       })
       describe('user with undefined permission attempts to invite a user', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2370,8 +2370,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2405,7 +2405,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2427,9 +2427,9 @@ describe('invite user to org', () => {
       })
       describe('user with user level permission attempts to invite a user', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2450,8 +2450,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2485,7 +2485,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2507,9 +2507,9 @@ describe('invite user to org', () => {
       })
       describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2530,8 +2530,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2565,7 +2565,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2588,9 +2588,9 @@ describe('invite user to org', () => {
       describe('transaction error occurs', () => {
         describe('when creating affiliation', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2611,8 +2611,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue:null,
+              contextValue:{
                 i18n,
                 request: {
                   language: 'fr',
@@ -2642,7 +2642,7 @@ describe('invite user to org', () => {
                 notify: { sendOrgInviteCreateAccount: jest.fn() },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2663,9 +2663,9 @@ describe('invite user to org', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2686,8 +2686,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue:null,
+              contextValue:{
                 i18n,
                 request: {
                   language: 'fr',
@@ -2721,7 +2721,7 @@ describe('invite user to org', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -2759,9 +2759,9 @@ describe('invite user to org', () => {
       })
       describe('user attempts to invite themselves', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2782,8 +2782,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2819,7 +2819,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2838,9 +2838,9 @@ describe('invite user to org', () => {
       })
       describe('user attempts to invite to an org that does not exist', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2861,8 +2861,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2896,7 +2896,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2917,9 +2917,9 @@ describe('invite user to org', () => {
       })
       describe('user with undefined permission attempts to invite a user', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2940,8 +2940,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -2975,7 +2975,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -2996,9 +2996,9 @@ describe('invite user to org', () => {
       })
       describe('user with user level permission attempts to invite a user', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3019,8 +3019,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -3054,7 +3054,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -3075,9 +3075,9 @@ describe('invite user to org', () => {
       })
       describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3098,8 +3098,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue:null,
+            contextValue:{
               i18n,
               request: {
                 language: 'fr',
@@ -3133,7 +3133,7 @@ describe('invite user to org', () => {
               notify: { sendOrgInviteCreateAccount: jest.fn() },
               validators: { cleanseInput },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -3155,9 +3155,9 @@ describe('invite user to org', () => {
       describe('transaction error occurs', () => {
         describe('when creating affiliation', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source:`
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3178,8 +3178,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue:null,
+              contextValue:{
                 i18n,
                 request: {
                   language: 'fr',
@@ -3209,7 +3209,7 @@ describe('invite user to org', () => {
                 notify: { sendOrgInviteCreateAccount: jest.fn() },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = {
               data: {
@@ -3230,9 +3230,9 @@ describe('invite user to org', () => {
         })
         describe('when committing transaction', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3253,8 +3253,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'fr',
@@ -3288,7 +3288,7 @@ describe('invite user to org', () => {
                 },
                 validators: { cleanseInput },
               },
-            )
+            })
 
             const error = {
               data: {

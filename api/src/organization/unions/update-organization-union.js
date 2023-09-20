@@ -8,9 +8,9 @@ allowing for users to update an organization, and support any errors that may oc
   types: [organizationErrorType, organizationType],
   resolveType({ _type }) {
     if (_type === 'organization') {
-      return organizationType
+      return organizationType.name
     } else {
-      return organizationErrorType
+      return organizationErrorType.name
     }
   },
 })

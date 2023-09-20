@@ -16,8 +16,11 @@ from dns_processor.dns_processor import process_results
 
 load_dotenv()
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO,
-                    format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO,
+    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+)
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "dns-processor")
@@ -40,13 +43,13 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 def to_camelcase(string):
     string = string
     # remove underscore and uppercase following letter
-    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    string = re.sub("_([a-z])", lambda match: match.group(1).upper(), string)
     # keep numbers seperated with hyphen
-    string = re.sub('([0-9])_([0-9])', r'\1-\2', string)
+    string = re.sub("([0-9])_([0-9])", r"\1-\2", string)
     # remove underscore before numbers
-    string = re.sub('_([0-9])', r'\1', string)
+    string = re.sub("_([0-9])", r"\1", string)
     # convert snakecase to camel
-    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    string = re.sub("_([a-z])", lambda match: match.group(1).upper(), string)
     return string
 
 
@@ -56,7 +59,73 @@ def snake_to_camel(d):
     if isinstance(d, list):
         return [snake_to_camel(entry) for entry in d]
     if isinstance(d, dict):
-        return {to_camelcase(a): snake_to_camel(b) if isinstance(b, (dict, list)) else b for a, b in d.items()}
+        return {
+            to_camelcase(a): snake_to_camel(b) if isinstance(b, (dict, list)) else b
+            for a, b in d.items()
+        }
+
+
+def mx_record_diff(processed_results):
+    domain = process_results.get("domain")
+    new_mx = processed_results.get("mx_records").get("hosts")
+    mx_record_diff = False
+    # fetch most recent scan of domain
+    last_mx = (
+        db.aql.execute(
+            """
+            FOR scan IN dns
+                FILTER scan.domain == @domain
+                SORT scan.timestamp DESC
+                LIMIT 1
+                RETURN scan
+            """,
+            bind_vars={"domain": domain},
+        )
+        .next()
+        .get("mx_records")
+        .get("hosts")
+    )
+    # compare mx_records to most recent scan
+    # if different, set mx_records_diff to True
+    # check number of hosts
+
+    if len(new_mx) != len(last_mx):
+        if len(new_mx) > len(last_mx):
+            # print("host added")
+            mx_record_diff = True
+        else:
+            # print("host removed")
+            mx_record_diff = True
+    else:
+        # check hostnames
+        hostnames_new = []
+        hostnames_last = []
+        for i in range(len(new_mx)):
+            hostnames_new.append(new_mx[i]["hostname"])
+            hostnames_last.append(last_mx[i]["hostname"])
+
+        if set(hostnames_new) != set(hostnames_last):
+            # print("host changed")
+            mx_record_diff = True
+        else:
+            # check hostname preferences and addresses
+            for i in range(len(new_mx)):
+                # find hostname in last_mx
+                for j in range(len(last_mx)):
+                    if new_mx[i]["hostname"] == last_mx[j]["hostname"]:
+                        # check preference
+                        if new_mx[i]["preference"] != last_mx[j]["preference"]:
+                            # print("preference changed")
+                            mx_record_diff = True
+                            break
+                        # check addresses
+                        if set(new_mx[i]["addresses"]) != set(last_mx[j]["addresses"]):
+                            # print("addresses changed")
+                            mx_record_diff = True
+                            break
+
+    processed_results["mx_records"].update({"diff": mx_record_diff})
+    return processed_results
 
 
 async def run(loop):
@@ -95,6 +164,7 @@ async def run(loop):
         shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
+        processed_results = mx_record_diff(processed_results)
 
         dmarc_status = processed_results.get("dmarc").get("status")
         spf_status = processed_results.get("spf").get("status")
@@ -104,26 +174,30 @@ async def run(loop):
 
         if user_key is None:
             try:
-                dns_entry = db.collection("dns").insert(snake_to_camel(processed_results))
+                dns_entry = db.collection("dns").insert(
+                    snake_to_camel(processed_results)
+                )
 
                 domain = db.collection("domains").get({"_key": domain_key})
                 db.collection("domainsDNS").insert(
                     {
                         "_from": domain["_id"],
                         "timestamp": processed_results["timestamp"],
-                        "_to": dns_entry["_id"]
+                        "_to": dns_entry["_id"],
                     }
                 )
 
-                web_entry = db.collection("web").insert({
-                    "timestamp": str(datetime.datetime.now().astimezone()),
-                    "domain": processed_results["domain"]
-                })
+                web_entry = db.collection("web").insert(
+                    {
+                        "timestamp": str(datetime.datetime.now().astimezone()),
+                        "domain": processed_results["domain"],
+                    }
+                )
                 db.collection("domainsWeb").insert(
                     {
                         "_from": domain["_id"],
                         "timestamp": processed_results["timestamp"],
-                        "_to": web_entry["_id"]
+                        "_to": web_entry["_id"],
                     }
                 )
 
@@ -240,14 +314,15 @@ async def run(loop):
                 db.collection("domains").update(domain)
 
                 for ip in results.get("resolve_ips", None) or []:
-                    web_scan = db.collection("webScan").insert({
-                        "status": "pending",
-                        "ipAddress": ip
-                    })
-                    db.collection("webToWebScans").insert({
-                        "_from": web_entry["_id"],
-                        "_to": web_scan["_id"],
-                    })
+                    web_scan = db.collection("webScan").insert(
+                        {"status": "pending", "ipAddress": ip}
+                    )
+                    db.collection("webToWebScans").insert(
+                        {
+                            "_from": web_entry["_id"],
+                            "_to": web_scan["_id"],
+                        }
+                    )
 
                     await nc.publish(
                         f"{PUBLISH_TO}.{domain_key}.web",
@@ -258,7 +333,7 @@ async def run(loop):
                                 "domain_key": domain_key,
                                 "shared_id": shared_id,
                                 "ip_address": ip,
-                                "web_scan_key": web_scan["_key"]
+                                "web_scan_key": web_scan["_key"],
                             }
                         ).encode(),
                     )
@@ -269,7 +344,9 @@ async def run(loop):
                 )
                 return
 
-            logging.info(f"DNS Scans inserted into database: {json.dumps(processed_results)}")
+            logging.info(
+                f"DNS Scans inserted into database: {json.dumps(processed_results)}"
+            )
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
@@ -279,10 +356,10 @@ async def run(loop):
             return
         loop.create_task(nc.close())
 
-    for signal_name in {'SIGINT', 'SIGTERM'}:
+    for signal_name in {"SIGINT", "SIGTERM"}:
         loop.add_signal_handler(
-            getattr(signal, signal_name),
-            functools.partial(ask_exit, signal_name))
+            getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
+        )
 
 
 def main():

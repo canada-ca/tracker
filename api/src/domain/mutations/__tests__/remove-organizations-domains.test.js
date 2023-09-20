@@ -188,9 +188,9 @@ describe('given the addOrganizationsDomains mutation', () => {
         })
       })
       it.skip('removes domains', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
               mutation {
                 removeOrganizationsDomains(
                   input: {
@@ -212,8 +212,8 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               }
             `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'en',
             },
@@ -238,7 +238,7 @@ describe('given the addOrganizationsDomains mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
         const expectedResponse = {
           data: {
             removeOrganizationsDomains: {
@@ -255,9 +255,9 @@ describe('given the addOrganizationsDomains mutation', () => {
         ])
       })
       it.skip(`"audit" flag is true`, async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
               mutation {
                 removeOrganizationsDomains(
                   input: {
@@ -279,8 +279,8 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               }
             `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'en',
             },
@@ -305,7 +305,7 @@ describe('given the addOrganizationsDomains mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
         const expectedResponse = {
           data: {
             removeOrganizationsDomains: {
@@ -323,9 +323,9 @@ describe('given the addOrganizationsDomains mutation', () => {
         ])
       })
       it.skip(`"archive" flag is true`, async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
               mutation {
                 removeOrganizationsDomains(
                   input: {
@@ -347,8 +347,8 @@ describe('given the addOrganizationsDomains mutation', () => {
                 }
               }
             `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             request: {
               language: 'en',
             },
@@ -373,7 +373,7 @@ describe('given the addOrganizationsDomains mutation', () => {
             },
             validators: { cleanseInput },
           },
-        )
+        })
         const expectedResponse = {
           data: {
             removeOrganizationsDomains: {
@@ -522,9 +522,9 @@ describe('given the addOrganizationsDomains mutation', () => {
       })
       describe('org is verified', () => {
         it.skip('returns error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               removeOrganizationsDomains(
                 input: {
@@ -546,8 +546,8 @@ describe('given the addOrganizationsDomains mutation', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -572,7 +572,7 @@ describe('given the addOrganizationsDomains mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
           const expectedResponse = {
             data: {
               removeOrganizationsDomains: {
@@ -588,9 +588,9 @@ describe('given the addOrganizationsDomains mutation', () => {
       })
       describe('archive flag is true', () => {
         it.skip('returns error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               removeOrganizationsDomains(
                 input: {
@@ -612,8 +612,8 @@ describe('given the addOrganizationsDomains mutation', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               request: {
                 language: 'en',
               },
@@ -638,7 +638,7 @@ describe('given the addOrganizationsDomains mutation', () => {
               },
               validators: { cleanseInput },
             },
-          )
+          })
           const expectedResponse = {
             data: {
               removeOrganizationsDomains: {

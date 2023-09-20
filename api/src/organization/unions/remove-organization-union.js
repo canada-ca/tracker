@@ -9,9 +9,9 @@ and support any errors that may occur`,
   types: [organizationErrorType, organizationResultType],
   resolveType({ _type }) {
     if (_type === 'result') {
-      return organizationResultType
+      return organizationResultType.name
     } else {
-      return organizationErrorType
+      return organizationErrorType.name
     }
   },
 })

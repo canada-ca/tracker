@@ -641,6 +641,33 @@ export const getTypeNames = () => gql`
       last: Int
     ): DNSScanConnection
 
+    # List of MX record diffs for a given domain.
+    mxRecordDiff(
+      # Start date for date filter.
+      startDate: DateTime
+
+      # End date for date filter.
+      endDate: DateTime
+
+      # Ordering options for MX connections.
+      orderBy: DNSOrder
+
+      # Number of MX scans to retrieve.
+      limit: Int
+
+      # Returns the items in the list that come after the specified cursor.
+      after: String
+
+      # Returns the first n items from the list.
+      first: Int
+
+      # Returns the items in the list that come before the specified cursor.
+      before: String
+
+      # Returns the last n items from the list.
+      last: Int
+    ): MXRecordDiffConnection
+
     # HTTPS, and TLS scan results.
     web(
       # Start date for date filter.
@@ -1041,6 +1068,9 @@ export const getTypeNames = () => gql`
 
     # Label for tagging domains that are possibly blocked by a firewall.
     BLOCKED
+
+    # Label for tagging domains that have a wildcard sibling.
+    WILDCARD_SIBLING
 
     # Label for tagging domains that have a pending web scan.
     SCAN_PENDING
@@ -1561,6 +1591,38 @@ export const getTypeNames = () => gql`
   enum DNSOrderField {
     # Order DNS edges by timestamp.
     TIMESTAMP
+  }
+
+  # A connection to a list of items.
+  type MXRecordDiffConnection {
+    # Information to aid in pagination.
+    pageInfo: PageInfo!
+
+    # A list of edges.
+    edges: [MXRecordDiffEdge]
+
+    # The total amount of DNS scans related to a given domain.
+    totalCount: Int
+  }
+
+  # An edge in a connection.
+  type MXRecordDiffEdge {
+    # The item at the end of the edge
+    node: MXRecordDiff
+
+    # A cursor for use in pagination
+    cursor: String!
+  }
+
+  type MXRecordDiff {
+    # The ID of an object
+    id: ID!
+
+    # The time when the scan was initiated.
+    timestamp: DateTime
+
+    # The MX records for the domain (if they exist).
+    mxRecords: MXRecord
   }
 
   # A connection to a list of items.
@@ -3208,6 +3270,9 @@ export const getTypeNames = () => gql`
 
     # Label for tagging domains that are possibly blocked by a firewall.
     BLOCKED
+
+    # Label for tagging domains that have a wildcard sibling.
+    WILDCARD_SIBLING
 
     # Label for tagging domains that have a pending web scan.
     SCAN_PENDING

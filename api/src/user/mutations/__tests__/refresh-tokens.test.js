@@ -1,25 +1,20 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLSchema, GraphQLError} from 'graphql'
-import {setupI18n} from '@lingui/core'
-import {v4 as uuidv4} from 'uuid'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
+import { setupI18n } from '@lingui/core'
+import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {cleanseInput} from '../../../validators'
-import {loadUserByKey} from '../../loaders'
-import {tokenize} from '../../../auth'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { cleanseInput } from '../../../validators'
+import { loadUserByKey } from '../../loaders'
+import { tokenize } from '../../../auth'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const {
-  DB_PASS: rootPass,
-  DB_URL: url,
-  REFRESH_KEY,
-  REFRESH_TOKEN_EXPIRY,
-} = process.env
+const { DB_PASS: rootPass, DB_URL: url, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
 
 describe('refresh users tokens', () => {
   let query, drop, truncate, schema, collections, transaction, user
@@ -44,7 +39,7 @@ describe('refresh users tokens', () => {
 
   describe('given a successful refresh', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections, transaction} = await ensure({
+      ;({ query, drop, truncate, collections, transaction } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -80,11 +75,11 @@ describe('refresh users tokens', () => {
       })
       it('returns a new auth, and refresh token', async () => {
         const refreshToken = tokenize({
-          parameters: {userKey: user._key, uuid: '1234'},
+          parameters: { userKey: user._key, uuid: '1234' },
           expPeriod: 168,
           secret: String(REFRESH_KEY),
         })
-        const mockedRequest = {cookies: {refresh_token: refreshToken}}
+        const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
         const mockedFormat = jest
           .fn()
@@ -96,11 +91,11 @@ describe('refresh users tokens', () => {
         })
 
         const mockedCookie = jest.fn()
-        const mockedResponse = {cookie: mockedCookie}
+        const mockedResponse = { cookie: mockedCookie }
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               refreshTokens(input: {}) {
                 result {
@@ -118,8 +113,8 @@ describe('refresh users tokens', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             query,
             collections: collectionNames,
             transaction,
@@ -135,10 +130,10 @@ describe('refresh users tokens', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({query}),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -160,9 +155,7 @@ describe('refresh users tokens', () => {
           sameSite: true,
           secure: true,
         })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully refreshed their tokens.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully refreshed their tokens.`])
       })
     })
     describe('user has rememberMe enabled', () => {
@@ -183,11 +176,11 @@ describe('refresh users tokens', () => {
       })
       it('returns a new auth, and refresh token', async () => {
         const refreshToken = tokenize({
-          parameters: {userKey: user._key, uuid: '1234'},
+          parameters: { userKey: user._key, uuid: '1234' },
           expPeriod: 168,
           secret: String(REFRESH_KEY),
         })
-        const mockedRequest = {cookies: {refresh_token: refreshToken}}
+        const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
         const mockedFormat = jest
           .fn()
@@ -199,11 +192,11 @@ describe('refresh users tokens', () => {
         })
 
         const mockedCookie = jest.fn()
-        const mockedResponse = {cookie: mockedCookie}
+        const mockedResponse = { cookie: mockedCookie }
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               refreshTokens(input: {}) {
                 result {
@@ -221,8 +214,8 @@ describe('refresh users tokens', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             query,
             collections: collectionNames,
             transaction,
@@ -238,10 +231,10 @@ describe('refresh users tokens', () => {
               cleanseInput,
             },
             loaders: {
-              loadUserByKey: loadUserByKey({query}),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -263,9 +256,7 @@ describe('refresh users tokens', () => {
           sameSite: true,
           secure: true,
         })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully refreshed their tokens.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully refreshed their tokens.`])
       })
     })
   })
@@ -276,8 +267,8 @@ describe('refresh users tokens', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -289,7 +280,7 @@ describe('refresh users tokens', () => {
       describe('given an unsuccessful refresh', () => {
         describe('refresh token is undefined', () => {
           it('returns an error', async () => {
-            const mockedRequest = {cookies: {}}
+            const mockedRequest = { cookies: {} }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -299,9 +290,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -319,8 +310,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -336,10 +327,10 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -353,19 +344,17 @@ describe('refresh users tokens', () => {
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User attempted to refresh tokens without refresh_token set.`,
-            ])
+            expect(consoleOutput).toEqual([`User attempted to refresh tokens without refresh_token set.`])
           })
         })
         describe('refresh token is invalid', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: 'invalid-token',
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -375,9 +364,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -395,8 +384,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -412,10 +401,10 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -437,11 +426,11 @@ describe('refresh users tokens', () => {
         describe('user is undefined', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: '1234', uuid: '1234'},
+              parameters: { userKey: '1234', uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -451,9 +440,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -471,8 +460,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -493,7 +482,7 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -507,19 +496,17 @@ describe('refresh users tokens', () => {
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User: 1234 attempted to refresh tokens with an invalid user id.`,
-            ])
+            expect(consoleOutput).toEqual([`User: 1234 attempted to refresh tokens with an invalid user id.`])
           })
         })
         describe('if the token is expired', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -529,9 +516,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(true),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -549,8 +536,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -575,7 +562,7 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -589,19 +576,17 @@ describe('refresh users tokens', () => {
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User: 123 attempted to refresh tokens with an expired uuid.`,
-            ])
+            expect(consoleOutput).toEqual([`User: 123 attempted to refresh tokens with an expired uuid.`])
           })
         })
         describe('if the uuids do not match', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '5678'},
+              parameters: { userKey: 123, uuid: '5678' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -611,9 +596,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -631,8 +616,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -657,7 +642,7 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -671,9 +656,7 @@ describe('refresh users tokens', () => {
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User: 123 attempted to refresh tokens with non matching uuids.`,
-            ])
+            expect(consoleOutput).toEqual([`User: 123 attempted to refresh tokens with non matching uuids.`])
           })
         })
       })
@@ -681,17 +664,15 @@ describe('refresh users tokens', () => {
         describe('when upserting new refreshId', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
+              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
             })
 
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -701,9 +682,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -721,8 +702,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -748,11 +729,9 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to refresh tokens, please sign in.'),
-            ]
+            const error = [new GraphQLError('Unable to refresh tokens, please sign in.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -766,17 +745,15 @@ describe('refresh users tokens', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
+              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
             })
 
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
             const mockedFormat = jest
               .fn()
@@ -787,9 +764,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -807,8 +784,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -834,11 +811,9 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to refresh tokens, please sign in.'),
-            ]
+            const error = [new GraphQLError('Unable to refresh tokens, please sign in.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -854,8 +829,8 @@ describe('refresh users tokens', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -867,7 +842,7 @@ describe('refresh users tokens', () => {
       describe('given an unsuccessful refresh', () => {
         describe('refresh token is undefined', () => {
           it('returns an error', async () => {
-            const mockedRequest = {cookies: {}}
+            const mockedRequest = { cookies: {} }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -877,9 +852,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -897,8 +872,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -914,37 +889,34 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
                 refreshTokens: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+                    description: 'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                   },
                 },
               },
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User attempted to refresh tokens without refresh_token set.`,
-            ])
+            expect(consoleOutput).toEqual([`User attempted to refresh tokens without refresh_token set.`])
           })
         })
         describe('refresh token is invalid', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: 'invalid-token',
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -954,9 +926,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -974,8 +946,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -991,18 +963,17 @@ describe('refresh users tokens', () => {
                   cleanseInput,
                 },
                 loaders: {
-                  loadUserByKey: loadUserByKey({query}),
+                  loadUserByKey: loadUserByKey({ query }),
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
                 refreshTokens: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+                    description: 'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                   },
                 },
               },
@@ -1017,11 +988,11 @@ describe('refresh users tokens', () => {
         describe('user is undefined', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: '1234', uuid: '1234'},
+              parameters: { userKey: '1234', uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1031,9 +1002,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -1051,8 +1022,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1073,34 +1044,31 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
                 refreshTokens: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+                    description: 'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                   },
                 },
               },
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User: 1234 attempted to refresh tokens with an invalid user id.`,
-            ])
+            expect(consoleOutput).toEqual([`User: 1234 attempted to refresh tokens with an invalid user id.`])
           })
         })
         describe('if the token is expired', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1110,9 +1078,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(true),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -1130,8 +1098,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1156,34 +1124,31 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
                 refreshTokens: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+                    description: 'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                   },
                 },
               },
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User: 123 attempted to refresh tokens with an expired uuid.`,
-            ])
+            expect(consoleOutput).toEqual([`User: 123 attempted to refresh tokens with an expired uuid.`])
           })
         })
         describe('if the uuids do not match', () => {
           it('returns an error', async () => {
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '5678'},
+              parameters: { userKey: 123, uuid: '5678' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1193,9 +1158,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -1213,8 +1178,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1239,24 +1204,21 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
                 refreshTokens: {
                   result: {
                     code: 400,
-                    description:
-                      'Impossible de rafraîchir les jetons, veuillez vous connecter.',
+                    description: 'Impossible de rafraîchir les jetons, veuillez vous connecter.',
                   },
                 },
               },
             }
 
             expect(response).toEqual(expectedResult)
-            expect(consoleOutput).toEqual([
-              `User: 123 attempted to refresh tokens with non matching uuids.`,
-            ])
+            expect(consoleOutput).toEqual([`User: 123 attempted to refresh tokens with non matching uuids.`])
           })
         })
       })
@@ -1264,17 +1226,15 @@ describe('refresh users tokens', () => {
         describe('when upserting new refreshId', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
+              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
             })
 
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
             const mockedFormat = jest
               .fn()
               .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -1284,9 +1244,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -1304,8 +1264,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1331,13 +1291,9 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de rafraîchir les jetons, veuillez vous connecter.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de rafraîchir les jetons, veuillez vous connecter.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1351,17 +1307,15 @@ describe('refresh users tokens', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
+              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
             })
 
             const refreshToken = tokenize({
-              parameters: {userKey: 123, uuid: '1234'},
+              parameters: { userKey: 123, uuid: '1234' },
               expPeriod: 168,
               secret: String(REFRESH_KEY),
             })
-            const mockedRequest = {cookies: {refresh_token: refreshToken}}
+            const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
             const mockedFormat = jest
               .fn()
@@ -1372,9 +1326,9 @@ describe('refresh users tokens', () => {
               isAfter: jest.fn().mockReturnValue(false),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   refreshTokens(input: {}) {
                     result {
@@ -1392,8 +1346,8 @@ describe('refresh users tokens', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
@@ -1419,13 +1373,9 @@ describe('refresh users tokens', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de rafraîchir les jetons, veuillez vous connecter.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de rafraîchir les jetons, veuillez vous connecter.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

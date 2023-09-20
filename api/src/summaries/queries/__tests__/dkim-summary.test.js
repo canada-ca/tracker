@@ -61,10 +61,8 @@ describe('given dkimSummary query', () => {
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'dkim',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        dkim: { total: 1000, fail: 500, pass: 500 },
       })
     })
     afterEach(async () => {
@@ -74,9 +72,9 @@ describe('given dkimSummary query', () => {
       await drop()
     })
     it('returns dkim summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             dkimSummary {
               total
@@ -88,14 +86,14 @@ describe('given dkimSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -138,9 +136,9 @@ describe('given dkimSummary query', () => {
     describe('given unsuccessful dkim summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 dkimSummary {
                   total
@@ -152,8 +150,8 @@ describe('given dkimSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -161,7 +159,7 @@ describe('given dkimSummary query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [new GraphQLError(`Unable to load DKIM summary. Please try again.`)]
 

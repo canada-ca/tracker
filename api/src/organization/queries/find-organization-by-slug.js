@@ -9,7 +9,7 @@ export const findOrganizationBySlug = {
   description: 'Select all information on a selected organization that a user has access to.',
   args: {
     orgSlug: {
-      type: GraphQLNonNull(Slug),
+      type: new GraphQLNonNull(Slug),
       description: 'The slugified organization name you want to retrieve data for.',
     },
   },

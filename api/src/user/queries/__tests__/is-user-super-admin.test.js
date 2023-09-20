@@ -1,16 +1,16 @@
-import {setupI18n} from '@lingui/core'
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {graphql, GraphQLError, GraphQLSchema} from 'graphql'
+import { setupI18n } from '@lingui/core'
+import { ensure, dbNameFromFile } from 'arango-tools'
+import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 
-import {checkPermission, userRequired} from '../../../auth'
-import {createQuerySchema} from '../../../query'
-import {createMutationSchema} from '../../../mutation'
-import {loadUserByKey} from '../../loaders'
+import { checkPermission, userRequired } from '../../../auth'
+import { createQuerySchema } from '../../../query'
+import { createMutationSchema } from '../../../mutation'
+import { loadUserByKey } from '../../loaders'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the isUserSuperAdmin query', () => {
   let query, drop, truncate, schema, collections, org, i18n, user
@@ -36,7 +36,7 @@ describe('given the isUserSuperAdmin query', () => {
   describe('given a successful query', () => {
     beforeAll(async () => {
       // Generate DB Items
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -104,29 +104,29 @@ describe('given the isUserSuperAdmin query', () => {
         `
       })
       it('will return true', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               isUserSuperAdmin
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({userKey: user._key, query}),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({query}),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -147,29 +147,29 @@ describe('given the isUserSuperAdmin query', () => {
         `
       })
       it('will return false', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               isUserSuperAdmin
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({userKey: user._key, query}),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({query}),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -190,29 +190,29 @@ describe('given the isUserSuperAdmin query', () => {
         `
       })
       it('will return false', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               isUserSuperAdmin
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             userKey: user._key,
             query: query,
             auth: {
-              checkPermission: checkPermission({userKey: user._key, query}),
+              checkPermission: checkPermission({ userKey: user._key, query }),
               userRequired: userRequired({
                 userKey: user._key,
-                loadUserByKey: loadUserByKey({query}),
+                loadUserByKey: loadUserByKey({ query }),
               }),
             },
             loaders: {
-              loadUserByKey: loadUserByKey({query}),
+              loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -229,8 +229,8 @@ describe('given the isUserSuperAdmin query', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -241,20 +241,18 @@ describe('given the isUserSuperAdmin query', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserSuperAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -263,13 +261,9 @@ describe('given the isUserSuperAdmin query', () => {
                 }),
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              `Unable to verify if user is a super admin, please try again.`,
-            ),
-          ]
+          const error = [new GraphQLError(`Unable to verify if user is a super admin, please try again.`)]
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Database error occurred when user: 123 was seeing if they were a super admin, err: Error: Database error occurred.`,
@@ -282,8 +276,8 @@ describe('given the isUserSuperAdmin query', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -294,20 +288,18 @@ describe('given the isUserSuperAdmin query', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserSuperAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -316,7 +308,7 @@ describe('given the isUserSuperAdmin query', () => {
                 }),
               },
             },
-          )
+          })
 
           const error = [
             new GraphQLError(

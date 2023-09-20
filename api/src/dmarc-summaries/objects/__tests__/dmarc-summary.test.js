@@ -16,7 +16,7 @@ describe('testing the period gql object', () => {
       const demoType = dmarcSummaryType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a domain field', () => {
       const demoType = dmarcSummaryType.getFields()
@@ -40,9 +40,7 @@ describe('testing the period gql object', () => {
       const demoType = dmarcSummaryType.getFields()
 
       expect(demoType).toHaveProperty('categoryPercentages')
-      expect(demoType.categoryPercentages.type).toMatchObject(
-        categoryPercentagesType,
-      )
+      expect(demoType.categoryPercentages.type).toMatchObject(categoryPercentagesType)
     })
     it('has a categoryTotals field', () => {
       const demoType = dmarcSummaryType.getFields()
@@ -62,9 +60,7 @@ describe('testing the period gql object', () => {
       it('returns the resolved value', () => {
         const demoType = dmarcSummaryType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('dmarcSummary', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('dmarcSummary', 1))
       })
     })
     describe('testing the domain resolver', () => {
@@ -108,22 +104,14 @@ describe('testing the period gql object', () => {
         it('returns the resolved value', () => {
           const demoType = dmarcSummaryType.getFields()
 
-          expect(
-            demoType.month.resolve(
-              { startDate: 'thirtyDays' },
-              {},
-              { moment: mockedMoment },
-            ),
-          ).toEqual('january')
+          expect(demoType.month.resolve({ startDate: 'thirtyDays' }, {}, { moment: mockedMoment })).toEqual('january')
         })
       })
       describe('startDate is not set to thirty days', () => {
         it('returns the resolved value', () => {
           const demoType = dmarcSummaryType.getFields()
 
-          expect(
-            demoType.month.resolve({ startDate: '2021-01-01' }, {}, { moment }),
-          ).toEqual('january')
+          expect(demoType.month.resolve({ startDate: '2021-01-01' }, {}, { moment })).toEqual('january')
         })
       })
     })
@@ -140,22 +128,14 @@ describe('testing the period gql object', () => {
         it('returns the resolved value', () => {
           const demoType = dmarcSummaryType.getFields()
 
-          expect(
-            demoType.year.resolve(
-              { startDate: 'thirtyDays' },
-              {},
-              { moment: mockedMoment },
-            ),
-          ).toEqual('2020')
+          expect(demoType.year.resolve({ startDate: 'thirtyDays' }, {}, { moment: mockedMoment })).toEqual('2020')
         })
       })
       describe('start date is not set to thirty days', () => {
         it('returns the resolved value', () => {
           const demoType = dmarcSummaryType.getFields()
 
-          expect(
-            demoType.year.resolve({ startDate: '2020-01-01' }, {}, { moment }),
-          ).toEqual('2020')
+          expect(demoType.year.resolve({ startDate: '2020-01-01' }, {}, { moment })).toEqual('2020')
         })
       })
     })

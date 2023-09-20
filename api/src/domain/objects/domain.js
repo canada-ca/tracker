@@ -14,6 +14,7 @@ import { organizationConnection } from '../../organization/objects'
 import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
+import { mxRecordConnection } from '../../dns-scan/objects/mx-record-connection'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -213,6 +214,48 @@ export const domainType = new GraphQLObjectType({
         })
       },
     },
+    mxRecordDiff: {
+      type: mxRecordConnection.connectionType,
+      description: 'List of MX record diffs for a given domain.',
+      args: {
+        startDate: {
+          type: GraphQLDateTime,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDateTime,
+          description: 'End date for date filter.',
+        },
+        orderBy: {
+          type: dnsOrder,
+          description: 'Ordering options for MX connections.',
+        },
+        limit: {
+          type: GraphQLInt,
+          description: 'Number of MX scans to retrieve.',
+        },
+        ...connectionArgs,
+      },
+      resolve: async (
+        { _id },
+        args,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadMxRecordDiffByDomainId } },
+      ) => {
+        await userRequired()
+        const permitted = await checkDomainPermission({ domainId: _id })
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
+          )
+          throw new Error(t`Cannot query web scan results without permission.`)
+        }
+
+        return await loadMxRecordDiffByDomainId({
+          domainId: _id,
+          ...args,
+        })
+      },
+    },
     web: {
       type: webConnection.connectionType,
       description: 'HTTPS, and TLS scan results.',
@@ -263,11 +306,11 @@ export const domainType = new GraphQLObjectType({
       description: 'Summarized DMARC aggregate reports.',
       args: {
         month: {
-          type: GraphQLNonNull(PeriodEnums),
+          type: new GraphQLNonNull(PeriodEnums),
           description: 'The month in which the returned data is relevant to.',
         },
         year: {
-          type: GraphQLNonNull(Year),
+          type: new GraphQLNonNull(Year),
           description: 'The year in which the returned data is relevant to.',
         },
       },

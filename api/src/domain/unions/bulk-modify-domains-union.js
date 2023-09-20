@@ -9,9 +9,9 @@ export const bulkModifyDomainsUnion = new GraphQLUnionType({
   types: [domainErrorType, domainBulkResultType],
   resolveType({ _type }) {
     if (_type === 'result') {
-      return domainBulkResultType
+      return domainBulkResultType.name
     } else {
-      return domainErrorType
+      return domainErrorType.name
     }
   },
 })

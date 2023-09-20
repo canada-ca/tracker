@@ -1,9 +1,9 @@
-import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql'
-import {mutationWithClientMutationId} from 'graphql-relay'
-import {t} from '@lingui/macro'
-import {authenticateUnion} from '../unions'
+import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
+import { mutationWithClientMutationId } from 'graphql-relay'
+import { t } from '@lingui/macro'
+import { authenticateUnion } from '../unions'
 
-const {SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY} = process.env
+const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -11,19 +11,18 @@ export const authenticate = new mutationWithClientMutationId({
     'This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.',
   inputFields: () => ({
     authenticationCode: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt),
       description: 'Security code found in text msg, or email inbox.',
     },
     authenticateToken: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The JWT that is retrieved from the sign in mutation.',
     },
   }),
   outputFields: () => ({
     result: {
       type: authenticateUnion,
-      description:
-        'Authenticate union returning either a `authResult` or `authenticateError` object.',
+      description: 'Authenticate union returning either a `authResult` or `authenticateError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -36,9 +35,9 @@ export const authenticate = new mutationWithClientMutationId({
       collections,
       transaction,
       uuidv4,
-      auth: {tokenize, verifyToken},
-      loaders: {loadUserByKey},
-      validators: {cleanseInput},
+      auth: { tokenize, verifyToken },
+      loaders: { loadUserByKey },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse Inputs
@@ -51,10 +50,7 @@ export const authenticate = new mutationWithClientMutationId({
       secret: String(SIGN_IN_KEY),
     })
 
-    if (
-      tokenParameters.userKey === 'undefined' ||
-      typeof tokenParameters.userKey === 'undefined'
-    ) {
+    if (tokenParameters.userKey === 'undefined' || typeof tokenParameters.userKey === 'undefined') {
       console.warn(`Authentication token does not contain the userKey`)
       return {
         _type: 'error',
@@ -68,9 +64,7 @@ export const authenticate = new mutationWithClientMutationId({
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`,
-      )
+      console.warn(`User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`)
       return {
         _type: 'error',
         code: 400,
@@ -85,9 +79,7 @@ export const authenticate = new mutationWithClientMutationId({
       const refreshInfo = {
         refreshId,
         rememberMe: user.refreshInfo.rememberMe,
-        expiresAt: new Date(
-          new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-        ),
+        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
       }
 
       // Setup Transaction
@@ -120,15 +112,13 @@ export const authenticate = new mutationWithClientMutationId({
       try {
         await trx.commit()
       } catch (err) {
-        console.error(
-          `Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`,
-        )
+        console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
-      const token = tokenize({parameters: {userKey: user._key}})
+      const token = tokenize({ parameters: { userKey: user._key } })
       const refreshToken = tokenize({
-        parameters: {userKey: user._key, uuid: refreshId},
+        parameters: { userKey: user._key, uuid: refreshId },
         expPeriod: 168,
         secret: String(REFRESH_KEY),
       })
@@ -153,9 +143,7 @@ export const authenticate = new mutationWithClientMutationId({
 
       response.cookie('refresh_token', refreshToken, cookieData)
 
-      console.info(
-        `User: ${user._key} successfully authenticated their account.`,
-      )
+      console.info(`User: ${user._key} successfully authenticated their account.`)
 
       return {
         _type: 'authResult',
@@ -163,9 +151,7 @@ export const authenticate = new mutationWithClientMutationId({
         user,
       }
     } else {
-      console.warn(
-        `User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`,
-      )
+      console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
       throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
     }
   },

@@ -1,10 +1,4 @@
-import {
-  GraphQLInt,
-  GraphQLBoolean,
-  GraphQLString,
-  GraphQLNonNull,
-  GraphQLID,
-} from 'graphql'
+import { GraphQLInt, GraphQLBoolean, GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { verifiedDomainConnection } from '../../../verified-domains/objects'
@@ -18,7 +12,7 @@ describe('given the verified organization object', () => {
       const demoType = verifiedOrganizationType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has an acronym field', () => {
       const demoType = verifiedOrganizationType.getFields()
@@ -90,9 +84,7 @@ describe('given the verified organization object', () => {
       const demoType = verifiedOrganizationType.getFields()
 
       expect(demoType).toHaveProperty('domains')
-      expect(demoType.domains.type).toMatchObject(
-        verifiedDomainConnection.connectionType,
-      )
+      expect(demoType.domains.type).toMatchObject(verifiedDomainConnection.connectionType)
     })
   })
 
@@ -101,9 +93,7 @@ describe('given the verified organization object', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedOrganizationType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('verifiedOrganization', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('verifiedOrganization', 1))
       })
     })
     describe('testing the acronym resolver', () => {
@@ -124,9 +114,7 @@ describe('given the verified organization object', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedOrganizationType.getFields()
 
-        expect(demoType.slug.resolve({ slug: 'organization-name' })).toEqual(
-          'organization-name',
-        )
+        expect(demoType.slug.resolve({ slug: 'organization-name' })).toEqual('organization-name')
       })
     })
     describe('testing the zone resolver', () => {
@@ -147,18 +135,14 @@ describe('given the verified organization object', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedOrganizationType.getFields()
 
-        expect(demoType.country.resolve({ country: 'Canada' })).toEqual(
-          'Canada',
-        )
+        expect(demoType.country.resolve({ country: 'Canada' })).toEqual('Canada')
       })
     })
     describe('testing the province resolver', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedOrganizationType.getFields()
 
-        expect(demoType.province.resolve({ province: 'province' })).toEqual(
-          'province',
-        )
+        expect(demoType.province.resolve({ province: 'province' })).toEqual('province')
       })
     })
     describe('testing the city resolver', () => {
@@ -250,9 +234,7 @@ describe('given the verified organization object', () => {
             { first: 1 },
             {
               loaders: {
-                loadVerifiedDomainConnectionsByOrgId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+                loadVerifiedDomainConnectionsByOrgId: jest.fn().mockReturnValue(expectedResult),
               },
             },
           ),

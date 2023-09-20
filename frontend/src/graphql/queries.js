@@ -233,6 +233,23 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       dmarcPhase
       hasDMARCReport
       userHasPermission
+      mxRecordDiff(limit: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        totalCount
+        edges {
+          node {
+            id
+            timestamp
+            mxRecords {
+              hosts {
+                preference
+                hostname
+                addresses
+              }
+              warnings
+            }
+          }
+        }
+      }
       dnsScan(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
         edges {
           cursor
@@ -489,12 +506,6 @@ export const ORG_DETAILS_PAGE = gql`
           ...RequiredSummaryFields
         }
         dmarc {
-          ...RequiredSummaryFields
-        }
-        httpsIncludeHidden {
-          ...RequiredSummaryFields
-        }
-        dmarcIncludeHidden {
           ...RequiredSummaryFields
         }
         dkim {

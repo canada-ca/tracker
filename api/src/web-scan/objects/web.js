@@ -19,7 +19,7 @@ export const webType = new GraphQLObjectType({
       resolve: ({ timestamp }) => new Date(timestamp),
     },
     results: {
-      type: GraphQLList(webScanType),
+      type: new GraphQLList(webScanType),
       description: `Results of the web scan at each IP address.`,
       resolve: async ({ _id }, args, { loaders: { loadWebScansByWebId } }) => {
         return await loadWebScansByWebId({

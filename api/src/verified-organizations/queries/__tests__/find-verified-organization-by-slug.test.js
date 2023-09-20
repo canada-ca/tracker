@@ -39,16 +39,16 @@ describe('given findOrganizationBySlugQuery', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       org = await collections.organizations.save({
@@ -105,9 +105,9 @@ describe('given findOrganizationBySlugQuery', () => {
       })
       describe('authorized user queries organization by slug', () => {
         it('returns organization', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizationBySlug(
                   orgSlug: "treasury-board-secretariat"
@@ -116,8 +116,8 @@ describe('given findOrganizationBySlugQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: query,
               validators: {
@@ -129,15 +129,14 @@ describe('given findOrganizationBySlugQuery', () => {
                   language: 'en',
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId:
-                  loadVerifiedDomainConnectionsByOrgId({
-                    query,
-                    cleanseInput,
-                    i18n,
-                  }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
+                  query,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -167,9 +166,9 @@ describe('given findOrganizationBySlugQuery', () => {
       })
       describe('authorized user queries organization by slug', () => {
         it('returns organization', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizationBySlug(
                   orgSlug: "secretariat-conseil-tresor"
@@ -178,8 +177,8 @@ describe('given findOrganizationBySlugQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: query,
               validators: {
@@ -191,15 +190,14 @@ describe('given findOrganizationBySlugQuery', () => {
                   language: 'fr',
                   i18n,
                 }),
-                loadVerifiedDomainConnectionsByOrgId:
-                  loadVerifiedDomainConnectionsByOrgId({
-                    query,
-                    cleanseInput,
-                    i18n,
-                  }),
+                loadVerifiedDomainConnectionsByOrgId: loadVerifiedDomainConnectionsByOrgId({
+                  query,
+                  cleanseInput,
+                  i18n,
+                }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -232,9 +230,9 @@ describe('given findOrganizationBySlugQuery', () => {
       })
       describe('organization can not be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizationBySlug(
                   orgSlug: "not-treasury-board-secretariat"
@@ -243,8 +241,8 @@ describe('given findOrganizationBySlugQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn(),
               validators: {
@@ -256,13 +254,9 @@ describe('given findOrganizationBySlugQuery', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              `No verified organization with the provided slug could be found.`,
-            ),
-          ]
+          const error = [new GraphQLError(`No verified organization with the provided slug could be found.`)]
 
           expect(response.errors).toEqual(error)
         })
@@ -285,9 +279,9 @@ describe('given findOrganizationBySlugQuery', () => {
       })
       describe('organization can not be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findVerifiedOrganizationBySlug(
                   orgSlug: "ne-pas-secretariat-conseil-tresor"
@@ -296,8 +290,8 @@ describe('given findOrganizationBySlugQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn(),
               validators: {
@@ -309,13 +303,9 @@ describe('given findOrganizationBySlugQuery', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              `Aucune organisation vérifiée avec le slug fourni n'a pu être trouvée.`,
-            ),
-          ]
+          const error = [new GraphQLError(`Aucune organisation vérifiée avec le slug fourni n'a pu être trouvée.`)]
 
           expect(response.errors).toEqual(error)
         })
