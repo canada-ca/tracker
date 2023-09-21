@@ -10,11 +10,11 @@ export const removeSelector = new mutationWithClientMutationId({
   description: 'This mutation allows the user to remove a selector from a domain.',
   inputFields: () => ({
     domain: {
-      type: GraphQLNonNull(Domain),
+      type: new GraphQLNonNull(Domain),
       description: 'The domain string to remove the selector from.',
     },
     selector: {
-      type: GraphQLNonNull(Selectors),
+      type: new GraphQLNonNull(Selectors),
       description: 'The selector string to remove from the domain.',
     },
   }),

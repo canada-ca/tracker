@@ -149,7 +149,6 @@ export const createDomain = new mutationWithClientMutationId({
     const insertDomain = {
       domain: domain.toLowerCase(),
       lastRan: null,
-      selectors: selectors,
       hash: saltedHash(domain.toLowerCase()),
       status: {
         certificates: null,
@@ -248,9 +247,9 @@ export const createDomain = new mutationWithClientMutationId({
 
     for (const selector of selectors) {
       // Ensure selector exists in database
-      let selectorDoc
+      let selectorDocCursor
       try {
-        selectorDoc = await trx.step(
+        selectorDocCursor = await trx.step(
           () =>
             query`
             UPSERT { selector: ${selector} }
@@ -263,6 +262,16 @@ export const createDomain = new mutationWithClientMutationId({
       } catch (err) {
         console.error(
           `Database error occurred while user: ${userKey} was creating domain: ${insertDomain.domain} while ensuring selector exists: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+      }
+
+      let selectorDoc
+      try {
+        selectorDoc = await selectorDocCursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error occurred while user: ${userKey} was creating domain: ${insertDomain.domain} while ensuring selector exists: ${err}`,
         )
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }

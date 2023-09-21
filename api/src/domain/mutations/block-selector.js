@@ -10,11 +10,11 @@ export const blockSelector = new mutationWithClientMutationId({
   description: 'This mutation allows the user to block a selector from a domain.',
   inputFields: () => ({
     domain: {
-      type: GraphQLNonNull(Domain),
+      type: new GraphQLNonNull(Domain),
       description: 'The domain string to block the selector from.',
     },
     selector: {
-      type: GraphQLNonNull(Selectors),
+      type: new GraphQLNonNull(Selectors),
       description: 'The selector string to block from the domain.',
     },
   }),

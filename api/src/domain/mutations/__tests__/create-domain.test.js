@@ -134,7 +134,7 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
+                      activeSelectors
                       status {
                         dkim
                         dmarc
@@ -168,6 +168,7 @@ describe('create a domain', () => {
               collections: collectionNames,
               transaction,
               userKey: user._key,
+              i18n,
               publish: jest.fn(),
               auth: {
                 checkDomainPermission: checkDomainPermission({
@@ -213,7 +214,7 @@ describe('create a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
                   lastRan: null,
-                  selectors: ['selector1', 'selector2'],
+                  activeSelectors: ['selector1', 'selector2'],
                   status: {
                     dkim: null,
                     dmarc: null,
@@ -293,7 +294,6 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
                       status {
                         dkim
                         dmarc
@@ -429,7 +429,6 @@ describe('create a domain', () => {
                     id
                     domain
                     lastRan
-                    selectors
                     status {
                       dkim
                       dmarc
@@ -607,7 +606,6 @@ describe('create a domain', () => {
                     id
                     domain
                     lastRan
-                    selectors
                     status {
                       dkim
                       dmarc
@@ -759,7 +757,6 @@ describe('create a domain', () => {
                     id
                     domain
                     lastRan
-                    selectors
                     status {
                       dkim
                       dmarc
@@ -911,7 +908,6 @@ describe('create a domain', () => {
                     id
                     domain
                     lastRan
-                    selectors
                     status {
                       dkim
                       dmarc
@@ -1063,7 +1059,6 @@ describe('create a domain', () => {
                     id
                     domain
                     lastRan
-                    selectors
                     status {
                       dkim
                       dmarc
@@ -1215,7 +1210,6 @@ describe('create a domain', () => {
                     id
                     domain
                     lastRan
-                    selectors
                     status {
                       dkim
                       dmarc
@@ -1364,7 +1358,6 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
                       status {
                         dkim
                         dmarc
@@ -1463,7 +1456,6 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
                       status {
                         dkim
                         dmarc
@@ -1564,7 +1556,6 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
                       status {
                         dkim
                         dmarc
@@ -1668,7 +1659,6 @@ describe('create a domain', () => {
                         id
                         domain
                         lastRan
-                        selectors
                         status {
                           dkim
                           dmarc
@@ -1762,7 +1752,6 @@ describe('create a domain', () => {
                         id
                         domain
                         lastRan
-                        selectors
                         status {
                           dkim
                           dmarc
@@ -1856,7 +1845,6 @@ describe('create a domain', () => {
                         id
                         domain
                         lastRan
-                        selectors
                         status {
                           dkim
                           dmarc
@@ -1957,7 +1945,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -2053,7 +2040,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -2156,7 +2142,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -2257,7 +2242,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -2361,7 +2345,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -2476,7 +2459,6 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
                       status {
                         dkim
                         dmarc
@@ -2575,7 +2557,6 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
                       status {
                         dkim
                         dmarc
@@ -2677,7 +2658,6 @@ describe('create a domain', () => {
                       id
                       domain
                       lastRan
-                      selectors
                       status {
                         dkim
                         dmarc
@@ -2781,7 +2761,6 @@ describe('create a domain', () => {
                         id
                         domain
                         lastRan
-                        selectors
                         status {
                           dkim
                           dmarc
@@ -2875,7 +2854,6 @@ describe('create a domain', () => {
                         id
                         domain
                         lastRan
-                        selectors
                         status {
                           dkim
                           dmarc
@@ -2969,7 +2947,6 @@ describe('create a domain', () => {
                         id
                         domain
                         lastRan
-                        selectors
                         status {
                           dkim
                           dmarc
@@ -3070,7 +3047,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -3166,7 +3142,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -3269,7 +3244,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -3370,7 +3344,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc
@@ -3474,7 +3447,6 @@ describe('create a domain', () => {
                           id
                           domain
                           lastRan
-                          selectors
                           status {
                             dkim
                             dmarc

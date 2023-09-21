@@ -10,11 +10,11 @@ export const addSelector = new mutationWithClientMutationId({
   description: 'This mutation allows the user to add a selector to a domain.',
   inputFields: () => ({
     domain: {
-      type: GraphQLNonNull(Domain),
+      type: new GraphQLNonNull(Domain),
       description: 'The domain string to add the selector to.',
     },
     selector: {
-      type: GraphQLNonNull(Selectors),
+      type: new GraphQLNonNull(Selectors),
       description: 'The selector string to add to the domain.',
     },
   }),

@@ -4051,6 +4051,7 @@ describe('removing a domain', () => {
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
+                  .mockReturnValueOnce()
                   .mockRejectedValue(new Error('Step error')),
               })
 

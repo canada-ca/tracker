@@ -173,10 +173,10 @@ export const removeOrganization = new mutationWithClientMutationId({
               RETURN 1
           )
           RETURN {
-            _id: domain._id,
-            _key: domain._key,
-            domain: domain.domain,
-            count
+            "_id": domain._id,
+            "_key": domain._key,
+            "domain": domain.domain,
+            "count": count
           }
       `
     } catch (err) {
@@ -252,7 +252,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
-          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
         // remove DKIM selectors
@@ -268,7 +268,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
-          throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
         try {
