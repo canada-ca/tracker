@@ -91,7 +91,10 @@ const inviteList = csv2json(content, ",");
 for await (const [key, inv] of inviteList.entries()) {
   try {
     const data = await getOrg(inv.orgSlug);
-    if (!data.findOrganizationBySlug.verified) {
+    if (
+      !data.findOrganizationBySlug.verified &&
+      data.findOrganizationBySlug.slug !== "unclaimed"
+    ) {
       console.error(`Organization ${inv.orgSlug} is not verified: `, inv);
       inviteList[key].success = false;
       inviteList[key].error = `Organization ${inv.orgSlug} is not verified`;
