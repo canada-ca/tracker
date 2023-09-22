@@ -1,6 +1,5 @@
-const AUTH_TOKEN =
-  "";
-const TRACKER_GRAPHQL_URI = "https://tracker.alpha.canada.ca/graphql";
+const AUTH_TOKEN = "";
+const TRACKER_GRAPHQL_URI = "";
 
 if (!AUTH_TOKEN) {
   console.error("You must enter your auth token!");
@@ -99,9 +98,18 @@ for await (const [key, inv] of inviteList.entries()) {
       continue;
     }
     inviteList[key].orgId = data.findOrganizationBySlug.id;
-    const inviteRes = await inviteUser({ email: inv.email, orgId: inv.orgId, role: inv.role });
-    if (inviteRes.data.inviteUserToOrg.result["__typename"] === "AffiliationError") {
-      console.error(`Error while inviting ${inv.email} to ${inv.orgSlug}: `, inv);
+    const inviteRes = await inviteUser({
+      email: inv.email,
+      orgId: inv.orgId,
+      role: inv.role,
+    });
+    if (
+      inviteRes.data.inviteUserToOrg.result["__typename"] === "AffiliationError"
+    ) {
+      console.error(
+        `Error while inviting ${inv.email} to ${inv.orgSlug}: `,
+        inv
+      );
       inviteList[key].success = false;
       inviteList[key].error = inviteRes.data.inviteUserToOrg.result.description;
       continue;
