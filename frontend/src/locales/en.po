@@ -21,23 +21,23 @@ msgstr ", and"
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 
-#: src/summaries/RadialBarChart.js:25
+#: src/summaries/RadialBarChart.js:31
 msgid "0. Not Implemented"
 msgstr "0. Not Implemented"
 
-#: src/summaries/RadialBarChart.js:27
+#: src/summaries/RadialBarChart.js:33
 msgid "1. Assess"
 msgstr "1. Assess"
 
-#: src/summaries/RadialBarChart.js:31
+#: src/summaries/RadialBarChart.js:37
 msgid "2. Deploy"
 msgstr "2. Deploy"
 
-#: src/summaries/RadialBarChart.js:35
+#: src/summaries/RadialBarChart.js:41
 msgid "3. Enforce"
 msgstr "3. Enforce"
 
-#: src/summaries/RadialBarChart.js:39
+#: src/summaries/RadialBarChart.js:45
 msgid "4. Maintain"
 msgstr "4. Maintain"
 
@@ -57,11 +57,12 @@ msgstr "404 - Page Not Found"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 
-#: src/guidance/EmailGuidance.js:318
+#: src/guidance/EmailGuidance.js:323
+#: src/guidance/EmailGuidance.js:397
 msgid "<0>Hostname:</0> {hostname}"
 msgstr "<0>Hostname:</0> {hostname}"
 
-#: src/guidance/EmailGuidance.js:323
+#: src/guidance/EmailGuidance.js:328
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
@@ -69,11 +70,11 @@ msgstr "<0>IPs:</0> {0}"
 msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 msgstr "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 
-#: src/guidance/EmailGuidance.js:328
+#: src/guidance/EmailGuidance.js:333
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Preference:</0> {preference}"
 
-#: src/guidance/GuidancePage.js:85
+#: src/guidance/GuidancePage.js:86
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "A DNS request for this service has resulted in the following error code:"
 
@@ -93,7 +94,7 @@ msgstr "A more detailed breakdown of each domain can be found by clicking on its
 msgid "A verification link has been sent to your email account"
 msgstr "A verification link has been sent to your email account"
 
-#: src/admin/UserListModal.js:261
+#: src/admin/UserListModal.js:262
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -368,7 +369,7 @@ msgstr "Are you sure you want to permanently remove the organization \"{0}\"?"
 #~ msgstr "Are you sure you wish to leave {orgName}? You will have to be invited back in to access it."
 
 #: src/domains/ScanDomain.js:115
-#: src/guidance/EmailGuidance.js:27
+#: src/guidance/EmailGuidance.js:29
 msgid "Assess current state;"
 msgstr "Assess current state;"
 
@@ -509,6 +510,10 @@ msgstr "Changes Required for ITPIN Compliance"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 
+#: src/guidance/EmailGuidance.js:360
+msgid "Changes:"
+msgstr "Changes:"
+
 #: src/user/UserPage.js:64
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Check your associated Tracker email for the verification link"
@@ -563,7 +568,7 @@ msgid "Code field must not be empty"
 msgstr "Code field must not be empty"
 
 #: src/domains/ScanDomain.js:117
-#: src/guidance/EmailGuidance.js:29
+#: src/guidance/EmailGuidance.js:31
 msgid "Collect and analyze DMARC reports."
 msgstr "Collect and analyze DMARC reports."
 
@@ -572,7 +577,7 @@ msgstr "Collect and analyze DMARC reports."
 msgid "Comparison"
 msgstr "Comparison"
 
-#: src/summaries/SummaryGroup.js:18
+#: src/summaries/SummaryGroup.js:19
 msgid "Compliant"
 msgstr "Compliant"
 
@@ -589,7 +594,7 @@ msgstr "Configuration requirements for web sites and services completely met"
 #: src/admin/OrganizationInformation.js:349
 #: src/admin/OrganizationInformation.js:440
 #: src/admin/SuperAdminUserList.js:443
-#: src/admin/UserListModal.js:274
+#: src/admin/UserListModal.js:278
 #: src/domains/SubdomainDiscoveryButton.js:91
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/user/EditableUserDisplayName.js:168
@@ -654,7 +659,7 @@ msgid "Copyright Act"
 msgstr "Copyright Act"
 
 #: src/domains/ScanDomain.js:132
-#: src/guidance/EmailGuidance.js:50
+#: src/guidance/EmailGuidance.js:52
 msgid "Correct misconfigurations and update records as required; and"
 msgstr "Correct misconfigurations and update records as required; and"
 
@@ -801,7 +806,7 @@ msgstr "DMARC Configuration"
 msgid "DMARC Configuration Summary"
 msgstr "DMARC Configuration Summary"
 
-#: src/organizations/OrganizationCard.js:93
+#: src/organizations/OrganizationCard.js:90
 msgid "DMARC Configured"
 msgstr "DMARC Configured"
 
@@ -816,7 +821,7 @@ msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
 #: src/domains/ScanDomain.js:322
-#: src/guidance/EmailGuidance.js:158
+#: src/guidance/EmailGuidance.js:160
 msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
@@ -827,7 +832,7 @@ msgstr "DMARC Phases"
 
 #: src/dmarc/DmarcReportPage.js:81
 #: src/domains/DomainCard.js:238
-#: src/guidance/GuidancePage.js:180
+#: src/guidance/GuidancePage.js:186
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -869,7 +874,7 @@ msgstr "DMARC policy of quarantine or reject, and all messages from non-mail dom
 msgid "DNS Host"
 msgstr "DNS Host"
 
-#: src/guidance/EmailGuidance.js:94
+#: src/guidance/EmailGuidance.js:96
 msgid "DNS Result Summary"
 msgstr "DNS Result Summary"
 
@@ -903,7 +908,7 @@ msgstr "Data Security and Use"
 msgid "December"
 msgstr "December"
 
-#: src/guidance/EmailGuidance.js:191
+#: src/guidance/EmailGuidance.js:193
 msgid "Default:"
 msgstr "Default:"
 
@@ -916,17 +921,17 @@ msgstr "Delete"
 #~ msgstr "Departmental business units"
 
 #: src/domains/ScanDomain.js:122
-#: src/guidance/EmailGuidance.js:36
+#: src/guidance/EmailGuidance.js:38
 msgid "Deploy DKIM records and keys for all domains and senders; and"
 msgstr "Deploy DKIM records and keys for all domains and senders; and"
 
 #: src/domains/ScanDomain.js:121
-#: src/guidance/EmailGuidance.js:35
+#: src/guidance/EmailGuidance.js:37
 msgid "Deploy SPF records for all domains;"
 msgstr "Deploy SPF records for all domains;"
 
 #: src/domains/ScanDomain.js:116
-#: src/guidance/EmailGuidance.js:28
+#: src/guidance/EmailGuidance.js:30
 msgid "Deploy initial DMARC records with policy of none; and"
 msgstr "Deploy initial DMARC records with policy of none; and"
 
@@ -1115,7 +1120,7 @@ msgid "Email"
 msgstr "Email"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:120
+#: src/guidance/GuidancePage.js:121
 msgid "Email Guidance"
 msgstr "Email Guidance"
 
@@ -1247,7 +1252,7 @@ msgstr "Envelope From"
 msgid "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 msgstr "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 
-#: src/guidance/GuidancePage.js:70
+#: src/guidance/GuidancePage.js:71
 msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 msgstr "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 
@@ -1539,7 +1544,7 @@ msgstr "HTTPS (443) Chain"
 msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
-#: src/organizations/OrganizationCard.js:85
+#: src/organizations/OrganizationCard.js:82
 #: src/organizations/Organizations.js:137
 msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
@@ -1658,12 +1663,12 @@ msgstr "ITPIN Compliant"
 #~ msgstr "ITPIN Status"
 
 #: src/domains/ScanDomain.js:120
-#: src/guidance/EmailGuidance.js:34
+#: src/guidance/EmailGuidance.js:36
 msgid "Identify all authorized senders;"
 msgstr "Identify all authorized senders;"
 
 #: src/domains/ScanDomain.js:114
-#: src/guidance/EmailGuidance.js:26
+#: src/guidance/EmailGuidance.js:28
 msgid "Identify all domains and subdomains used to send mail;"
 msgstr "Identify all domains and subdomains used to send mail;"
 
@@ -1691,7 +1696,7 @@ msgstr "If at any time you or your representatives wish to adjust or cancel thes
 #~ msgid "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
 #~ msgstr "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
 
-#: src/guidance/GuidancePage.js:90
+#: src/guidance/GuidancePage.js:91
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 
@@ -1732,7 +1737,7 @@ msgstr "Implementation: <0>Guidance on securely configuring network protocols (I
 msgid "Implementation: <0>Implementation guidance: email domain protection (ITSP.40.065 v1.1)</0>"
 msgstr "Implementation: <0>Implementation guidance: email domain protection (ITSP.40.065 v1.1)</0>"
 
-#: src/summaries/SummaryGroup.js:29
+#: src/summaries/SummaryGroup.js:30
 msgid "Implemented"
 msgstr "Implemented"
 
@@ -1745,8 +1750,8 @@ msgstr "Inactive"
 #: src/summaries/TieredSummaries.js:42
 #: src/summaries/TieredSummaries.js:68
 #: src/summaries/TieredSummaries.js:70
-msgid "Include hidden domains in summaries."
-msgstr "Include hidden domains in summaries."
+#~ msgid "Include hidden domains in summaries."
+#~ msgstr "Include hidden domains in summaries."
 
 #: src/auth/TwoFactorAuthenticatePage.js:77
 msgid "Incorrect authenticate.result typename."
@@ -1996,11 +2001,11 @@ msgstr "June"
 msgid "Jurisdiction"
 msgstr "Jurisdiction"
 
-#: src/guidance/EmailGuidance.js:237
+#: src/guidance/EmailGuidance.js:239
 msgid "Key length:"
 msgstr "Key length:"
 
-#: src/guidance/EmailGuidance.js:231
+#: src/guidance/EmailGuidance.js:233
 msgid "Key type:"
 msgstr "Key type:"
 
@@ -2025,6 +2030,10 @@ msgstr "Last 30 Days"
 #: src/admin/WebCheckPage.js:136
 msgid "Last Scanned:"
 msgstr "Last Scanned:"
+
+#: src/guidance/EmailGuidance.js:317
+msgid "Latest Scan:"
+msgstr "Latest Scan:"
 
 #: src/guidance/WebTLSResults.js:308
 msgid "Leaf Certificate is EV"
@@ -2069,9 +2078,13 @@ msgstr "Login"
 msgid "Login to your account"
 msgstr "Login to your account"
 
-#: src/guidance/EmailGuidance.js:185
+#: src/guidance/EmailGuidance.js:187
 msgid "Lookups:"
 msgstr "Lookups:"
+
+#: src/guidance/EmailGuidance.js:311
+msgid "Mail Servers (MX)"
+msgstr "Mail Servers (MX)"
 
 #: src/app/ReadGuidancePage.js:117
 msgid "Managing Your Domains:"
@@ -2097,12 +2110,12 @@ msgstr "Menu"
 #~ msgstr "Menu:"
 
 #: src/domains/ScanDomain.js:123
-#: src/guidance/EmailGuidance.js:37
+#: src/guidance/EmailGuidance.js:39
 msgid "Monitor DMARC reports and correct misconfigurations."
 msgstr "Monitor DMARC reports and correct misconfigurations."
 
 #: src/domains/ScanDomain.js:131
-#: src/guidance/EmailGuidance.js:49
+#: src/guidance/EmailGuidance.js:51
 msgid "Monitor DMARC reports;"
 msgstr "Monitor DMARC reports;"
 
@@ -2146,6 +2159,10 @@ msgstr "Name (EN)"
 #: src/admin/OrganizationInformation.js:305
 msgid "Name (FR)"
 msgstr "Name (FR)"
+
+#: src/guidance/EmailGuidance.js:388
+msgid "Name Servers (NS)"
+msgstr "Name Servers (NS)"
 
 #: src/admin/AuditLogTable.js:158
 msgid "Name:"
@@ -2317,7 +2334,7 @@ msgstr "No known weak protocols used."
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
-#: src/guidance/GuidancePage.js:105
+#: src/guidance/GuidancePage.js:106
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
@@ -2330,7 +2347,7 @@ msgstr "No users"
 msgid "No values were supplied when attempting to update organization details."
 msgstr "No values were supplied when attempting to update organization details."
 
-#: src/summaries/SummaryGroup.js:14
+#: src/summaries/SummaryGroup.js:15
 msgid "Non-compliant"
 msgstr "Non-compliant"
 
@@ -2347,7 +2364,7 @@ msgstr "Not After:"
 msgid "Not Before:"
 msgstr "Not Before:"
 
-#: src/summaries/SummaryGroup.js:25
+#: src/summaries/SummaryGroup.js:26
 msgid "Not Implemented"
 msgstr "Not Implemented"
 
@@ -2388,6 +2405,10 @@ msgstr "November"
 #: src/organizationDetails/OrganizationDomains.js:335
 msgid "OUTSIDE"
 msgstr "OUTSIDE"
+
+#: src/admin/UserListModal.js:265
+msgid "OWNER"
+msgstr "OWNER"
 
 #: src/app/ReadGuidancePage.js:173
 #~ msgid "Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS Server Certificates for GC Public Facing Web Services"
@@ -2471,7 +2492,7 @@ msgstr "Organization not updated"
 msgid "Organization owns this domain, but it is outside the allowed scope"
 msgstr "Organization owns this domain, but it is outside the allowed scope"
 
-#: src/guidance/GuidancePage.js:187
+#: src/guidance/GuidancePage.js:193
 msgid "Organization(s):"
 msgstr "Organization(s):"
 
@@ -2765,9 +2786,9 @@ msgstr "Received Chain Contains Anchor Certificate"
 msgid "Received Chain Has Valid Order"
 msgstr "Received Chain Has Valid Order"
 
-#: src/guidance/EmailGuidance.js:179
-#: src/guidance/EmailGuidance.js:225
-#: src/guidance/EmailGuidance.js:275
+#: src/guidance/EmailGuidance.js:181
+#: src/guidance/EmailGuidance.js:227
+#: src/guidance/EmailGuidance.js:277
 msgid "Record:"
 msgstr "Record:"
 
@@ -2780,7 +2801,7 @@ msgid "Register"
 msgstr "Register"
 
 #: src/domains/ScanDomain.js:128
-#: src/guidance/EmailGuidance.js:44
+#: src/guidance/EmailGuidance.js:46
 msgid "Reject all messages from non-mail domains."
 msgstr "Reject all messages from non-mail domains."
 
@@ -2900,7 +2921,7 @@ msgid "Role:"
 msgstr "Role:"
 
 #: src/domains/ScanDomain.js:133
-#: src/guidance/EmailGuidance.js:51
+#: src/guidance/EmailGuidance.js:53
 msgid "Rotate DKIM keys annually."
 msgstr "Rotate DKIM keys annually."
 
@@ -2976,7 +2997,7 @@ msgstr "SPF record is deployed and valid"
 msgid "STAGING"
 msgstr "STAGING"
 
-#: src/admin/UserListModal.js:265
+#: src/admin/UserListModal.js:269
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
@@ -2999,7 +3020,7 @@ msgstr "Scan Domain"
 
 #: src/admin/AdminDomains.js:174
 #: src/domains/DomainCard.js:152
-#: src/guidance/GuidancePage.js:159
+#: src/guidance/GuidancePage.js:165
 #: src/organizationDetails/OrganizationDomains.js:115
 msgid "Scan Pending"
 msgstr "Scan Pending"
@@ -3129,7 +3150,7 @@ msgstr "Serial:"
 msgid "Services"
 msgstr "Services"
 
-#: src/organizations/OrganizationCard.js:79
+#: src/organizations/OrganizationCard.js:76
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
@@ -3684,15 +3705,15 @@ msgstr "This service is not web-hosting and does not require compliance with the
 msgid "This user is not affiliated with any organizations"
 msgstr "This user is not affiliated with any organizations"
 
-#: src/summaries/TieredSummaries.js:61
+#: src/summaries/TieredSummaries.js:25
 msgid "Tier 1: Minimum Requirements"
 msgstr "Tier 1: Minimum Requirements"
 
-#: src/summaries/TieredSummaries.js:88
+#: src/summaries/TieredSummaries.js:36
 msgid "Tier 2: Improved Posture"
 msgstr "Tier 2: Improved Posture"
 
-#: src/summaries/TieredSummaries.js:105
+#: src/summaries/TieredSummaries.js:53
 msgid "Tier 3: Compliance"
 msgstr "Tier 3: Compliance"
 
@@ -3944,7 +3965,7 @@ msgstr "Unfavourited Domain"
 msgid "Unknown"
 msgstr "Unknown"
 
-#: src/summaries/RadialBarChart.js:43
+#: src/summaries/RadialBarChart.js:49
 msgid "Unscanned"
 msgstr "Unscanned"
 
@@ -3964,11 +3985,11 @@ msgstr "Updated Properties"
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
 msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%);"
 
-#: src/guidance/EmailGuidance.js:42
+#: src/guidance/EmailGuidance.js:44
 msgid "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;"
 msgstr "Upgrade DMARC policy to quarantine (gradually increment enforcement from 25% to 100%;"
 
-#: src/guidance/EmailGuidance.js:43
+#: src/guidance/EmailGuidance.js:45
 msgid "Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and"
 msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and"
 
@@ -4067,8 +4088,8 @@ msgstr "Verify Account"
 #~ msgstr "Vertical View"
 
 #: src/organizations/OrganizationCard.js:101
-msgid "View Details"
-msgstr "View Details"
+#~ msgid "View Details"
+#~ msgstr "View Details"
 
 #: src/domains/DomainCard.js:228
 msgid "View Results"
@@ -4101,7 +4122,8 @@ msgstr "WILDCARD"
 #~ msgid "Warnings"
 #~ msgstr "Warnings"
 
-#: src/guidance/EmailGuidance.js:338
+#: src/guidance/EmailGuidance.js:343
+#: src/guidance/EmailGuidance.js:407
 msgid "Warnings:"
 msgstr "Warnings:"
 
@@ -4155,7 +4177,7 @@ msgid "Web Connections Summary"
 msgstr "Web Connections Summary"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:117
+#: src/guidance/GuidancePage.js:118
 msgid "Web Guidance"
 msgstr "Web Guidance"
 
@@ -4242,7 +4264,7 @@ msgstr "Wiki"
 
 #: src/admin/AdminDomains.js:173
 #: src/domains/DomainCard.js:145
-#: src/guidance/GuidancePage.js:166
+#: src/guidance/GuidancePage.js:172
 #: src/organizationDetails/OrganizationDomains.js:114
 msgid "Wildcard"
 msgstr "Wildcard"
@@ -4419,7 +4441,7 @@ msgstr "myTracker"
 msgid "our Terms and Conditions on the TBS website"
 msgstr "our Terms and Conditions on the TBS website"
 
-#: src/guidance/EmailGuidance.js:281
+#: src/guidance/EmailGuidance.js:283
 msgid "p:"
 msgstr "p:"
 
@@ -4427,11 +4449,11 @@ msgstr "p:"
 #~ msgid "pPolicy:"
 #~ msgstr "pPolicy:"
 
-#: src/guidance/EmailGuidance.js:293
+#: src/guidance/EmailGuidance.js:295
 msgid "pct:"
 msgstr "pct:"
 
-#: src/guidance/EmailGuidance.js:287
+#: src/guidance/EmailGuidance.js:289
 msgid "sp:"
 msgstr "sp:"
 
