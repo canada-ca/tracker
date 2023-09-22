@@ -236,7 +236,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
 
     await sendOrgInviteEmail({
       user: requestedUser,
-      orgName: requestedUser.preferredLang === 'english' ? orgNames.orgNameEN : orgNames.orgNameFR,
+      orgNameEN: orgNames.orgNameEN,
+      orgNameFR: orgNames.orgNameFR,
     })
 
     // Commit affiliation
