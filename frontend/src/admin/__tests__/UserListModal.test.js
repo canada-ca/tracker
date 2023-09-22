@@ -371,6 +371,44 @@ describe('<UserListModal />', () => {
             expect(getAllByText(/The user's role has been successfully updated/)[0]).toBeInTheDocument()
           })
         })
+        it('admin can not change user role to "OWNER"', async () => {
+          const { getByRole, queryByText } = render(
+            <MockedProvider mocks={[]} cache={createCache()}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: null,
+                  tfaSendMethod: null,
+                  userName: null,
+                })}
+              >
+                <ChakraProvider theme={canada}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter initialEntries={['/']}>
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="ADMIN" />
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ChakraProvider>
+              </UserVarProvider>
+            </MockedProvider>,
+          )
+
+          // modal closed
+          const openModalButton = getByRole('button', { name: /Open Modal/ })
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+          // modal opened
+          userEvent.click(openModalButton)
+
+          // get select element, verify options
+          const roleChangeSelect = getByRole('combobox', {
+            name: /Role:/,
+          })
+          expect(roleChangeSelect.options.length).toEqual(2)
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
+          expect(roleChangeSelect).not.toHaveTextContent(/OWNER/)
+          expect(roleChangeSelect).not.toHaveTextContent(/SUPER_ADMIN/)
+        })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
           const { getByRole, queryByText } = render(
             <MockedProvider mocks={[]} cache={createCache()}>
@@ -508,12 +546,86 @@ describe('<UserListModal />', () => {
           const roleChangeSelect = getByRole('combobox', {
             name: /Role:/,
           })
-          expect(roleChangeSelect.options.length).toEqual(2)
+          expect(roleChangeSelect.options.length).toEqual(3)
           expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
           expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
           // select new role and update
           userEvent.selectOptions(roleChangeSelect, 'ADMIN')
+          const confirmUserUpdateButton = getByRole('button', {
+            name: /Confirm/i,
+          })
+
+          userEvent.click(confirmUserUpdateButton)
+
+          // check for "success" toast
+          await waitFor(() => {
+            expect(getAllByText(/The user's role has been successfully updated/)[0]).toBeInTheDocument()
+          })
+        })
+        it('admin can change user role to "OWNER"', async () => {
+          const mocks = [
+            {
+              request: {
+                query: UPDATE_USER_ROLE,
+                variables: {
+                  orgId: orgId,
+                  role: 'OWNER',
+                  userName: editingUserName,
+                },
+              },
+              result: {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      status: 'User role was updated successfully',
+                      __typename: 'UpdateUserRoleResult',
+                    },
+                    __typename: 'UpdateUserRolePayload',
+                  },
+                },
+              },
+            },
+          ]
+
+          const { getAllByText, getByRole, queryByText } = render(
+            <MockedProvider mocks={mocks} cache={createCache()}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: null,
+                  tfaSendMethod: null,
+                  userName: null,
+                })}
+              >
+                <ChakraProvider theme={canada}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter initialEntries={['/']}>
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="SUPER_ADMIN" />
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ChakraProvider>
+              </UserVarProvider>
+            </MockedProvider>,
+          )
+
+          // modal closed
+          const openModalButton = getByRole('button', { name: /Open Modal/ })
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+          // modal opened
+          userEvent.click(openModalButton)
+
+          // get select element, verify options
+          const roleChangeSelect = getByRole('combobox', {
+            name: /Role:/,
+          })
+          expect(roleChangeSelect.options.length).toEqual(3)
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
+          expect(Object.values(roleChangeSelect.options)[2]).toHaveTextContent(/OWNER/)
+
+          // select new role and update
+          userEvent.selectOptions(roleChangeSelect, 'OWNER')
           const confirmUserUpdateButton = getByRole('button', {
             name: /Confirm/i,
           })
@@ -557,7 +669,7 @@ describe('<UserListModal />', () => {
           const roleChangeSelect = getByRole('combobox', {
             name: /Role:/,
           })
-          expect(roleChangeSelect.options.length).toEqual(2)
+          expect(roleChangeSelect.options.length).toEqual(3)
           expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
           expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
           expect(roleChangeSelect).not.toHaveTextContent(/SUPER_ADMIN/)

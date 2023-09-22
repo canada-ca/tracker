@@ -128,7 +128,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       orgAdminsCursor = await query`
         WITH affiliations, organizations, users
         FOR v, e IN 1..1 OUTBOUND ${org._id} affiliations
-          FILTER e.permission == "admin" || e.permission == "super_admin" || e.permission == "owner"
+          FILTER e.permission IN ["admin", "owner", "super_admin"]
           RETURN v._key
       `
     } catch (err) {
