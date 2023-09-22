@@ -1,5 +1,6 @@
-const AUTH_TOKEN = "";
-const TRACKER_GRAPHQL_URI = "";
+const AUTH_TOKEN =
+  "";
+const TRACKER_GRAPHQL_URI = "https://tracker.alpha.canada.ca/graphql";
 
 if (!AUTH_TOKEN) {
   console.error("You must enter your auth token!");
@@ -33,6 +34,7 @@ const getOrg = async (orgSlug) => {
                 id
                 name
                 slug
+                verified
             }
         }`,
     }),
@@ -90,6 +92,12 @@ const inviteList = csv2json(content, ",");
 for await (const [key, inv] of inviteList.entries()) {
   try {
     const data = await getOrg(inv.orgSlug);
+    if (!data.findOrganizationBySlug.verified) {
+      console.error(`Organization ${inv.orgSlug} is not verified: `, inv);
+      inviteList[key].success = false;
+      inviteList[key].error = `Organization ${inv.orgSlug} is not verified`;
+      continue;
+    }
     inviteList[key].orgId = data.findOrganizationBySlug.id;
     const inviteRes = await inviteUser({ email: inv.email, orgId: inv.orgId, role: inv.role });
     if (inviteRes.data.inviteUserToOrg.result["__typename"] === "AffiliationError") {
@@ -102,6 +110,7 @@ for await (const [key, inv] of inviteList.entries()) {
     console.error(`Error while inviting ${inv.email} to ${inv.orgSlug}: `, inv);
     inviteList[key].success = false;
     inviteList[key].error = e;
+    continue;
   }
   inviteList[key].success = true;
   console.log(`Successfully invited ${inv.email} to ${inv.orgSlug}: `, inv);
@@ -113,4 +122,4 @@ for (const inv of inviteList) {
   }
 }
 
-console.table(inviteList.filter((inv) => inv.success === false));
+console.table(inviteList);
