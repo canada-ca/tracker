@@ -213,7 +213,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -231,7 +232,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -252,8 +253,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -308,7 +309,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -326,7 +328,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -347,8 +349,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -403,7 +405,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -414,7 +417,7 @@ describe('invite user to org', () => {
               const sendOrgInviteCreateAccount = jest.fn()
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -435,8 +438,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -508,7 +511,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -529,8 +532,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -603,7 +606,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -624,8 +627,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -717,7 +720,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -738,8 +741,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -794,7 +797,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -812,7 +816,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -833,8 +837,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -889,7 +893,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -901,7 +906,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -922,8 +927,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -996,7 +1001,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                   mutation {
                     inviteUserToOrg(
                       input: {
@@ -1017,8 +1022,8 @@ describe('invite user to org', () => {
                     }
                   }
                 `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'en',
@@ -1158,7 +1163,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1179,8 +1184,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1236,7 +1241,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -1254,7 +1260,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1275,8 +1281,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1332,7 +1338,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -1350,7 +1357,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1371,8 +1378,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1428,7 +1435,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -1440,7 +1448,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1461,8 +1469,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1533,7 +1541,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1554,8 +1562,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1626,7 +1634,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1647,8 +1655,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1738,7 +1746,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1759,8 +1767,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1816,7 +1824,9 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -1834,7 +1844,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1855,8 +1865,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -1912,7 +1922,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
               })
             })
           })
@@ -1924,7 +1935,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -1945,8 +1956,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -2017,7 +2028,7 @@ describe('invite user to org', () => {
 
               const response = await graphql({
                 schema,
-                source:`
+                source: `
                     mutation {
                       inviteUserToOrg(
                         input: {
@@ -2038,8 +2049,8 @@ describe('invite user to org', () => {
                       }
                     }
                   `,
-                rootValue:null,
-                contextValue:{
+                rootValue: null,
+                contextValue: {
                   i18n,
                   request: {
                     language: 'fr',
@@ -2199,7 +2210,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2220,8 +2231,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2270,7 +2281,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2291,8 +2302,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2349,7 +2360,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2370,8 +2381,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2429,7 +2440,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2450,8 +2461,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2509,7 +2520,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2530,8 +2541,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2590,7 +2601,7 @@ describe('invite user to org', () => {
           it('returns an error message', async () => {
             const response = await graphql({
               schema,
-              source:`
+              source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2611,8 +2622,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              rootValue:null,
-              contextValue:{
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'fr',
@@ -2665,7 +2676,7 @@ describe('invite user to org', () => {
           it('returns an error message', async () => {
             const response = await graphql({
               schema,
-              source:`
+              source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2686,8 +2697,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              rootValue:null,
-              contextValue:{
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'fr',
@@ -2761,7 +2772,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2782,8 +2793,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2840,7 +2851,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2861,8 +2872,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2919,7 +2930,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -2940,8 +2951,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -2998,7 +3009,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3019,8 +3030,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -3077,7 +3088,7 @@ describe('invite user to org', () => {
         it('returns an error message', async () => {
           const response = await graphql({
             schema,
-            source:`
+            source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3098,8 +3109,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-            rootValue:null,
-            contextValue:{
+            rootValue: null,
+            contextValue: {
               i18n,
               request: {
                 language: 'fr',
@@ -3157,7 +3168,7 @@ describe('invite user to org', () => {
           it('returns an error message', async () => {
             const response = await graphql({
               schema,
-              source:`
+              source: `
                 mutation {
                   inviteUserToOrg(
                     input: {
@@ -3178,8 +3189,8 @@ describe('invite user to org', () => {
                   }
                 }
               `,
-              rootValue:null,
-              contextValue:{
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request: {
                   language: 'fr',
