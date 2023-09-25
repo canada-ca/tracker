@@ -69,6 +69,7 @@ def snake_to_camel(d):
 def mx_record_diff(processed_results):
     domain = process_results.get("domain")
     new_mx = processed_results.get("mx_records").get("hosts")
+    diff_reason = ""
     mx_record_diff = False
     # fetch most recent scan of domain
     last_mx = (
@@ -92,10 +93,11 @@ def mx_record_diff(processed_results):
 
     if len(new_mx) != len(last_mx):
         if len(new_mx) > len(last_mx):
-            # print("host added")
+            diff_reason = "host_added"
             mx_record_diff = True
         else:
             # print("host removed")
+            diff_reason = "host_removed"
             mx_record_diff = True
     else:
         # check hostnames
@@ -106,7 +108,7 @@ def mx_record_diff(processed_results):
             hostnames_last.append(last_mx[i]["hostname"])
 
         if set(hostnames_new) != set(hostnames_last):
-            # print("host changed")
+            diff_reason = "host_changed"
             mx_record_diff = True
         else:
             # check hostname preferences and addresses
@@ -116,18 +118,20 @@ def mx_record_diff(processed_results):
                     if new_mx[i]["hostname"] == last_mx[j]["hostname"]:
                         # check preference
                         if new_mx[i]["preference"] != last_mx[j]["preference"]:
-                            # print("preference changed")
+                            diff_reason = "preference_changed"
                             mx_record_diff = True
                             break
                         # check addresses
                         if set(new_mx[i]["addresses"]) != set(last_mx[j]["addresses"]):
-                            # print("addresses changed")
+                            diff_reason = "address_changed"
                             mx_record_diff = True
                             break
 
     # send alerts if true
     if mx_record_diff:
-        send_mx_diff_email_alerts(domain=domain, logger=logger, db=db)
+        send_mx_diff_email_alerts(
+            domain=domain, diff_reason=diff_reason, logger=logger, db=db
+        )
 
     processed_results["mx_records"].update({"diff": mx_record_diff})
     return processed_results
