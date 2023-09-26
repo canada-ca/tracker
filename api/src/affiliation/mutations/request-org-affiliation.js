@@ -157,11 +157,41 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       })
 
     if (orgAdmins.length > 0) {
+      // Get org names to use in email
+      let orgNamesCursor
+      try {
+        orgNamesCursor = await query`
+        LET org = DOCUMENT(organizations, ${org._id})
+        RETURN {
+          "orgNameEN": org.orgDetails.en.name,
+          "orgNameFR": org.orgDetails.fr.name,
+        }
+      `
+      } catch (err) {
+        console.error(
+          `Database error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while creating cursor for retrieving organization names. error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to request invite. Please try again.`))
+      }
+      let orgNames
+      try {
+        orgNames = await orgNamesCursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error occurred when user: ${userKey} attempted to request invite to org: ${org._key}. Error while retrieving organization names. error: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to request invite. Please try again.`))
+      }
       const adminLink = `https://${request.get('host')}/admin/organizations`
       // send notification to org admins
       for (const userKey of orgAdmins) {
         const adminUser = await loadUserByKey.load(userKey)
-        await sendInviteRequestEmail({ user: adminUser, orgName: org.name, adminLink })
+        await sendInviteRequestEmail({
+          user: adminUser,
+          orgNameEN: orgNames.orgNameEN,
+          orgNameFR: orgNames.orgNameFR,
+          adminLink,
+        })
       }
     }
 
