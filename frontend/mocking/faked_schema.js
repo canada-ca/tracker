@@ -3881,7 +3881,7 @@ export const getTypeNames = () => gql`
   }
 
   # This union is used with the 'signUp' mutation, allowing for the user to sign up, and support any errors that may occur.
-  union SignUpUnion = AuthResult | SignUpError
+  union SignUpUnion = TFASignInResult | SignUpError
 
   # This object is used to inform the user if any errors occurred during sign up.
   type SignUpError {
