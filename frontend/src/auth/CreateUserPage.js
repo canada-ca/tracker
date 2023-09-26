@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Box, Button, Divider, Heading, Stack, Text, useToast, Checkbox, Link } from '@chakra-ui/react'
+import React from 'react'
+import { Box, Button, Heading, Stack, Text, useToast, Checkbox, Link } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { Link as RouteLink, useParams } from 'react-router-dom'
+import { Link as RouteLink, useParams, useHistory, useLocation } from 'react-router-dom'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import { ArrowForwardIcon, CheckCircleIcon, ExternalLinkIcon } from '@chakra-ui/icons'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import { LanguageSelect } from './LanguageSelect'
 
@@ -13,15 +13,15 @@ import { DisplayNameField } from '../components/fields/DisplayNameField'
 import { PasswordConfirmation } from '../components/fields/PasswordConfirmation'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { createValidationSchema } from '../utilities/fieldRequirements'
-import { useUserVar } from '../utilities/userState'
-import { activate } from '../utilities/i18n.config'
 import { SIGN_UP } from '../graphql/mutations'
 
 export default function CreateUserPage() {
-  const { login } = useUserVar()
   const toast = useToast()
+  const history = useHistory()
+  const location = useLocation()
   const userOrgToken = useParams().userOrgToken || ''
-  const [showVerifyMessage, setShowVerifyMessage] = useState(false)
+
+  const { from } = location.state || { from: { pathname: '/' } }
 
   const [signUp, { loading }] = useMutation(SIGN_UP, {
     onError(error) {
@@ -35,22 +35,15 @@ export default function CreateUserPage() {
       })
     },
     onCompleted({ signUp }) {
-      if (signUp.result.__typename === 'AuthResult') {
-        login({
-          jwt: signUp.result.authToken,
-          tfaSendMethod: signUp.result.user.tfaSendMethod,
-          userName: signUp.result.user.userName,
-          emailValidated: signUp.result.user.emailValidated,
-          insideUser: signUp.result.user.insideUser,
-          affiliations: signUp.result.user.affiliations,
+      if (signUp.result.__typename === 'TFASignInResult') {
+        // redirect to the authenticate page
+        history.push(`/authenticate/${signUp.result.sendMethod.toLowerCase()}/${signUp.result.authenticateToken}`, {
+          from,
         })
-        if (signUp.result.user.preferredLang === 'ENGLISH') activate('en')
-        else if (signUp.result.user.preferredLang === 'FRENCH') activate('fr')
-        setShowVerifyMessage(true)
         // Display a welcome message
         toast({
           title: t`Account created.`,
-          description: t`Welcome, you are successfully signed in to your new account!`,
+          description: t`Please enter your one-time code to continue to Tracker.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -80,34 +73,6 @@ export default function CreateUserPage() {
   })
 
   if (loading) return <LoadingMessage />
-
-  if (showVerifyMessage)
-    return (
-      <Stack px="8" mx="auto" overflow="hidden" align="center">
-        <Stack isInline align="center">
-          <CheckCircleIcon color="strong" />
-          <Text fontWeight="bold" fontSize="2xl" textAlign="center">
-            <Trans>A verification link has been sent to your email account</Trans>
-          </Text>
-        </Stack>
-        <Divider />
-        <Text fontSize="lg">
-          <Trans>Please follow the link in order to verify your account and start using Tracker.</Trans>
-        </Text>
-        <Divider />
-        <Button
-          as={RouteLink}
-          to="/"
-          color="primary"
-          bg="transparent"
-          borderColor="primary"
-          borderWidth="1px"
-          rightIcon={<ArrowForwardIcon />}
-        >
-          <Trans>Continue</Trans>
-        </Button>
-      </Stack>
-    )
 
   const addUserToOrgText = userOrgToken ? (
     <Text fontSize="md">Your account will automatically be linked to the organization that invited you.</Text>
@@ -164,8 +129,9 @@ export default function CreateUserPage() {
 
             <LanguageSelect name="lang" w={{ lg: '25%', md: '50%' }} mb="6" />
 
-            <Box ml={{ lg: '12', md: '0' }} mb="4">
-              {/* <Flex align="center"> */}
+            {/* TODO disclaimer: MFA is active by deafult and used to verify account email */}
+
+            <Box mb="4">
               <Checkbox colorScheme="orange" isRequired mb="4" borderColor="black">
                 <Trans>
                   I agree to all{' '}
@@ -174,8 +140,6 @@ export default function CreateUserPage() {
                   </Link>
                 </Trans>
               </Checkbox>
-
-              {/* </Flex> */}
 
               <Box>
                 <Button

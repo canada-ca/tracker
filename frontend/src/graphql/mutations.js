@@ -21,8 +21,9 @@ export const SIGN_UP = gql`
       }
     ) {
       result {
-        ... on AuthResult {
-          ...RequiredAuthResultFields
+        ... on TFASignInResult {
+          authenticateToken
+          sendMethod
         }
         ... on SignUpError {
           code
@@ -31,17 +32,12 @@ export const SIGN_UP = gql`
       }
     }
   }
-  ${Authorization.fragments.requiredFields}
 `
 
 export const SIGN_IN = gql`
   mutation signIn($userName: EmailAddress!, $password: String!, $rememberMe: Boolean) {
     signIn(input: { userName: $userName, password: $password, rememberMe: $rememberMe }) {
       result {
-        ... on TFASignInResult {
-          authenticateToken
-          sendMethod
-        }
         ... on AuthResult {
           ...RequiredAuthResultFields
         }
