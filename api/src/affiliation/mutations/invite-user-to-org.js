@@ -86,9 +86,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // Check to see requesting users permission to the org is
     const permission = await checkPermission({ orgId: org._id })
 
+    // Only admins, owners, and super admins may invite users to an org
+    // Only super admins may create owners and other super admins
     if (
       (['user', 'admin'].includes(requestedRole) && !['admin', 'owner', 'super_admin'].includes(permission)) ||
-      (requestedRole === 'super_admin' && permission !== 'super_admin')
+      (['super_admin', 'owner'].includes(requestedRole) && permission !== 'super_admin')
     ) {
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
