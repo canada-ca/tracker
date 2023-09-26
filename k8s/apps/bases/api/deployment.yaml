@@ -259,6 +259,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_ORG_INVITE_REQUEST_FR
+            - name: NOTIFICATION_ORG_INVITE_BILINGUAL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_BILINGUAL
             - name: TRACING_ENABLED
               valueFrom:
                 secretKeyRef:
