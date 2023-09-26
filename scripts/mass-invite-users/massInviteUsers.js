@@ -55,7 +55,6 @@ const inviteUser = async ({ email, role, orgId }) => {
                 userName: "${email}",
                 requestedRole: ${role},
                 orgId: "${orgId}",
-                preferredLang: ENGLISH
             }) {
                 result {
                     ... on InviteUserToOrgResult {
