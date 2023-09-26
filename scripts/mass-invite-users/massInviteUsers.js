@@ -89,6 +89,12 @@ const content = (await file.text()).trim();
 const inviteList = csv2json(content, ",");
 
 for await (const [key, inv] of inviteList.entries()) {
+  if (!inv.email || !inv.orgSlug || !inv.role) {
+    console.error(`Invalid invite: `, inv);
+    inviteList[key].success = false;
+    inviteList[key].error = `Invalid invite`;
+    continue;
+  }
   try {
     const data = await getOrg(inv.orgSlug);
     if (
