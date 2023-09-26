@@ -1,14 +1,14 @@
 import { GraphQLUnionType } from 'graphql'
-import { authResultType, signUpError } from '../objects'
+import { signUpError, tfaSignInResult } from '../objects'
 
 export const signUpUnion = new GraphQLUnionType({
   name: 'SignUpUnion',
   description:
     'This union is used with the `signUp` mutation, allowing for the user to sign up, and support any errors that may occur.',
-  types: [authResultType, signUpError],
+  types: [tfaSignInResult, signUpError],
   resolveType({ _type }) {
-    if (_type === 'authResult') {
-      return authResultType.name
+    if (_type === 'tfaSignInResult') {
+      return tfaSignInResult.name
     } else {
       return signUpError.name
     }
