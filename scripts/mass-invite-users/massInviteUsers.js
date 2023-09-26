@@ -25,7 +25,7 @@ const csv2json = (str, delimiter = ",") => {
   });
 };
 
-const getOrg = async (orgSlug) => {
+const getOrgAffiliation = async ({ orgSlug }) => {
   const res = await fetch(TRACKER_GRAPHQL_URI, {
     body: JSON.stringify({
       query: `query {
@@ -34,6 +34,18 @@ const getOrg = async (orgSlug) => {
                 name
                 slug
                 verified
+                affiliations(first:100, includePending: true) {
+                    edges {
+                        node {
+                            id
+                            permission
+                            user {
+                                id
+                                userName
+                            }
+                        }
+                    }
+                }
             }
         }`,
     }),
@@ -82,6 +94,41 @@ const inviteUser = async ({ email, role, orgId }) => {
   return json;
 };
 
+const updateUserRole = async ({ email, role, orgId }) => {
+  const res = await fetch(TRACKER_GRAPHQL_URI, {
+    body: JSON.stringify({
+      query: `mutation {
+            updateUserRole(input: {
+                userName: "${email}",
+                role: ${role},
+                orgId: "${orgId}",
+            }) {
+                result {
+                    ... on UpdateUserRoleResult {
+                        status
+                    }
+                    ... on AffiliationError {
+                        code
+                        description
+                    }
+                    __typename
+                }
+            }
+        }`,
+    }),
+    headers: {
+      Accept: "application/json",
+      Authorization: AUTH_TOKEN,
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+
+  const json = await res.json();
+
+  return json;
+};
+
 const [fileHandle] = await window.showOpenFilePicker();
 const file = await fileHandle.getFile();
 const content = (await file.text()).trim();
@@ -95,7 +142,12 @@ for await (const [key, inv] of inviteList.entries()) {
     continue;
   }
   try {
-    const data = await getOrg(inv.orgSlug);
+    const data = await getOrgAffiliation({
+      orgSlug: inv.orgSlug,
+      email: inv.email,
+    });
+
+    // Check if org is verified (or is the unclaimed org)
     if (
       !data.findOrganizationBySlug.verified &&
       data.findOrganizationBySlug.slug !== "unclaimed"
@@ -105,6 +157,64 @@ for await (const [key, inv] of inviteList.entries()) {
       inviteList[key].error = `Organization ${inv.orgSlug} is not verified`;
       continue;
     }
+
+    // Check if user is already affiliated with org
+    if (
+      data.findOrganizationBySlug.affiliations.edges.some(
+        (edge) => edge.node.user.userName === inv.email
+      )
+    ) {
+      // Check if user is already affiliated with org with the correct role
+      if (
+        data.findOrganizationBySlug.affiliations.edges.some(
+          (edge) =>
+            edge.node.user.userName === inv.email &&
+            edge.node.permission === inv.role
+        )
+      ) {
+        console.error(
+          `User ${inv.email} is already affiliated with org ${inv.orgSlug} with the correct role: `,
+          inv
+        );
+        inviteList[key].success = false;
+        inviteList[
+          key
+        ].error = `User ${inv.email} is already affiliated with org ${inv.orgSlug} with the correct role`;
+        continue;
+      }
+
+      // Update user role
+      console.log(
+        `Updating user ${inv.email} role to ${inv.role} in org ${inv.orgSlug}: `,
+        inv
+      );
+      const updateRes = await updateUserRole({
+        email: inv.email,
+        orgId: data.findOrganizationBySlug.id,
+        role: inv.role,
+      });
+      if (
+        updateRes.data.updateUserRole.result["__typename"] ===
+        "AffiliationError"
+      ) {
+        console.error(
+          `Error while updating user ${inv.email} role to ${inv.role} in org ${inv.orgSlug}: `,
+          inv
+        );
+        inviteList[key].success = false;
+        inviteList[key].error =
+          updateRes.data.updateUserRole.result.description;
+        continue;
+      }
+      inviteList[key].success = true;
+      console.log(
+        `Successfully updated user ${inv.email} role to ${inv.role} in org ${inv.orgSlug}: `,
+        inv
+      );
+
+      continue;
+    }
+
     inviteList[key].orgId = data.findOrganizationBySlug.id;
     const inviteRes = await inviteUser({
       email: inv.email,
