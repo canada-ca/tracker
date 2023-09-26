@@ -129,8 +129,6 @@ export default function CreateUserPage() {
 
             <LanguageSelect name="lang" w={{ lg: '25%', md: '50%' }} mb="6" />
 
-            {/* TODO disclaimer: MFA is active by deafult and used to verify account email */}
-
             <Box mb="4">
               <Checkbox colorScheme="orange" isRequired mb="4" borderColor="black">
                 <Trans>
@@ -142,6 +140,11 @@ export default function CreateUserPage() {
               </Checkbox>
 
               <Box>
+                <Text fontWeight="bold" mb="2">
+                  <Trans>
+                    Disclaimer: Multifactor authentication is active by deafult and used to verify account email
+                  </Trans>
+                </Text>
                 <Button
                   variant="primary"
                   type="submit"
