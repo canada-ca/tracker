@@ -85,6 +85,30 @@ export const authenticate = new mutationWithClientMutationId({
       // Setup Transaction
       const trx = await transaction(collections)
 
+      // verify user email
+      if (!user.emailValidated) {
+        try {
+          await trx.step(
+            () => query`
+              WITH users
+              UPSERT { _key: ${user._key} }
+                INSERT {
+                  emailValidated: true,
+                }
+                UPDATE {
+                  emailValidated: true,
+                }
+                IN users
+            `,
+          )
+        } catch (err) {
+          console.error(
+            `Trx step error occurred when setting email validated to true for user: ${user._key} during authentication: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+        }
+      }
+
       // Reset tfa code attempts, and set refresh code
       try {
         await trx.step(
