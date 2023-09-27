@@ -91,8 +91,8 @@ msgid "A more detailed breakdown of each domain can be found by clicking on its 
 msgstr "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 
 #: src/auth/CreateUserPage.js:90
-msgid "A verification link has been sent to your email account"
-msgstr "A verification link has been sent to your email account"
+#~ msgid "A verification link has been sent to your email account"
+#~ msgstr "A verification link has been sent to your email account"
 
 #: src/admin/UserListModal.js:262
 msgid "ADMIN"
@@ -134,7 +134,7 @@ msgstr "Account Closed Successfully"
 msgid "Account Settings"
 msgstr "Account Settings"
 
-#: src/auth/CreateUserPage.js:52
+#: src/auth/CreateUserPage.js:45
 msgid "Account created."
 msgstr "Account created."
 
@@ -649,7 +649,6 @@ msgstr "Contact Us"
 msgid "Contact the Tracker Team"
 msgstr "Contact the Tracker Team"
 
-#: src/auth/CreateUserPage.js:107
 #: src/auth/EmailValidationPage.js:88
 msgid "Continue"
 msgstr "Continue"
@@ -686,7 +685,7 @@ msgstr "Create"
 
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:129
-#: src/auth/CreateUserPage.js:189
+#: src/auth/CreateUserPage.js:154
 msgid "Create Account"
 msgstr "Create Account"
 
@@ -1637,7 +1636,7 @@ msgstr "Hostname Matches"
 msgid "How can I edit my domain list?"
 msgstr "How can I edit my domain list?"
 
-#: src/auth/CreateUserPage.js:170
+#: src/auth/CreateUserPage.js:134
 msgid "I agree to all <0>Terms, Privacy Policy & Code of Conduct Guidelines <1/></0>"
 msgstr "I agree to all <0>Terms, Privacy Policy & Code of Conduct Guidelines <1/></0>"
 
@@ -1797,7 +1796,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/SuperAdminUserList.js:110
 #: src/admin/UserListModal.js:80
 #: src/admin/UserListModal.js:125
-#: src/auth/CreateUserPage.js:70
+#: src/auth/CreateUserPage.js:63
 #: src/auth/ResetPasswordPage.js:60
 #: src/auth/SignInPage.js:86
 #: src/auth/TwoFactorAuthenticatePage.js:76
@@ -1821,7 +1820,7 @@ msgstr "Incorrect setPhoneNumber.result typename."
 msgid "Incorrect signIn.result typename."
 msgstr "Incorrect signIn.result typename."
 
-#: src/auth/CreateUserPage.js:71
+#: src/auth/CreateUserPage.js:64
 msgid "Incorrect signUp.result typename."
 msgstr "Incorrect signUp.result typename."
 
@@ -2046,7 +2045,7 @@ msgstr "Leaf Certificate is EV"
 #~ msgid "Leave Organization"
 #~ msgstr "Leave Organization"
 
-#: src/auth/CreateUserPage.js:153
+#: src/auth/CreateUserPage.js:118
 msgid "Let's get you set up so you can verify your account information and begin using Tracker."
 msgstr "Let's get you set up so you can verify your account information and begin using Tracker."
 
@@ -2126,6 +2125,10 @@ msgstr "More details"
 #: src/app/ReadGuidancePage.js:604
 msgid "Mozilla SSL Configuration Generator"
 msgstr "Mozilla SSL Configuration Generator"
+
+#: src/auth/CreateUserPage.js:144
+msgid "Multifactor authentication (MFA) is active by deafult and used to verify account email"
+msgstr "Multifactor authentication (MFA) is active by deafult and used to verify account email"
 
 #: src/guidance/WebTLSResults.js:299
 msgid "Must Staple"
@@ -2643,13 +2646,17 @@ msgstr "Please contact <0>TBS Cyber Security</0> for help."
 msgid "Please enter your current password."
 msgstr "Please enter your current password."
 
+#: src/auth/CreateUserPage.js:46
+msgid "Please enter your one-time code to continue to Tracker."
+msgstr "Please enter your one-time code to continue to Tracker."
+
 #: src/components/fields/AuthenticateField.js:26
 msgid "Please enter your two factor code below."
 msgstr "Please enter your two factor code below."
 
 #: src/auth/CreateUserPage.js:95
-msgid "Please follow the link in order to verify your account and start using Tracker."
-msgstr "Please follow the link in order to verify your account and start using Tracker."
+#~ msgid "Please follow the link in order to verify your account and start using Tracker."
+#~ msgstr "Please follow the link in order to verify your account and start using Tracker."
 
 #: src/dmarc/DmarcReportPage.js:232
 msgid "Pointer to a DKIM public key record in DNS."
@@ -2796,7 +2803,7 @@ msgstr "Record:"
 msgid "References:"
 msgstr "References:"
 
-#: src/auth/CreateUserPage.js:145
+#: src/auth/CreateUserPage.js:110
 msgid "Register"
 msgstr "Register"
 
@@ -3831,7 +3838,7 @@ msgstr "Unable to close the account."
 msgid "Unable to close this account."
 msgstr "Unable to close this account."
 
-#: src/auth/CreateUserPage.js:61
+#: src/auth/CreateUserPage.js:54
 msgid "Unable to create account, please try again."
 msgstr "Unable to create account, please try again."
 
@@ -4209,7 +4216,7 @@ msgstr "Web-hosting"
 #~ msgid "Web-hosting domains"
 #~ msgstr "Web-hosting domains"
 
-#: src/auth/CreateUserPage.js:150
+#: src/auth/CreateUserPage.js:115
 msgid "Welcome to Tracker, please enter your details."
 msgstr "Welcome to Tracker, please enter your details."
 
@@ -4218,8 +4225,8 @@ msgid "Welcome to your personal view of Tracker. Moderate the security posture o
 msgstr "Welcome to your personal view of Tracker. Moderate the security posture of domains of interest across multiple organizations. To add domains to this view, use the star icon buttons available on domain lists."
 
 #: src/auth/CreateUserPage.js:53
-msgid "Welcome, you are successfully signed in to your new account!"
-msgstr "Welcome, you are successfully signed in to your new account!"
+#~ msgid "Welcome, you are successfully signed in to your new account!"
+#~ msgstr "Welcome, you are successfully signed in to your new account!"
 
 #: src/auth/SignInPage.js:60
 #: src/auth/TwoFactorAuthenticatePage.js:56

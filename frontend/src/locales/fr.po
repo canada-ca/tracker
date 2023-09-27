@@ -91,8 +91,8 @@ msgid "A more detailed breakdown of each domain can be found by clicking on its 
 msgstr "Une ventilation plus détaillée de chaque domaine peut être trouvée en cliquant sur son adresse dans la première colonne."
 
 #: src/auth/CreateUserPage.js:90
-msgid "A verification link has been sent to your email account"
-msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
+#~ msgid "A verification link has been sent to your email account"
+#~ msgstr "Un lien de vérification a été envoyé à votre compte de messagerie."
 
 #: src/admin/UserListModal.js:262
 msgid "ADMIN"
@@ -134,7 +134,7 @@ msgstr "Compte clôturé avec succès"
 msgid "Account Settings"
 msgstr "Paramètres du compte"
 
-#: src/auth/CreateUserPage.js:52
+#: src/auth/CreateUserPage.js:45
 msgid "Account created."
 msgstr "Compte créé"
 
@@ -649,7 +649,6 @@ msgstr "Nous contacter"
 msgid "Contact the Tracker Team"
 msgstr "Contacter l'équipe Suivi"
 
-#: src/auth/CreateUserPage.js:107
 #: src/auth/EmailValidationPage.js:88
 msgid "Continue"
 msgstr "Continuer"
@@ -686,7 +685,7 @@ msgstr "Créer"
 
 #: src/app/FloatingMenu.js:200
 #: src/app/TopBanner.js:129
-#: src/auth/CreateUserPage.js:189
+#: src/auth/CreateUserPage.js:154
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -1609,7 +1608,7 @@ msgstr "Correspondance des noms d'hôtes"
 msgid "How can I edit my domain list?"
 msgstr "Comment puis-je modifier ma liste de domaines?"
 
-#: src/auth/CreateUserPage.js:170
+#: src/auth/CreateUserPage.js:134
 msgid "I agree to all <0>Terms, Privacy Policy & Code of Conduct Guidelines <1/></0>"
 msgstr "J'accepte toutes les <0>Conditions générales, la politique de confidentialité et les directives du code de conduite<1/></0>."
 
@@ -1769,7 +1768,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/SuperAdminUserList.js:110
 #: src/admin/UserListModal.js:80
 #: src/admin/UserListModal.js:125
-#: src/auth/CreateUserPage.js:70
+#: src/auth/CreateUserPage.js:63
 #: src/auth/ResetPasswordPage.js:60
 #: src/auth/SignInPage.js:86
 #: src/auth/TwoFactorAuthenticatePage.js:76
@@ -1793,7 +1792,7 @@ msgstr "Incorrect setPhoneNumber.result typename."
 msgid "Incorrect signIn.result typename."
 msgstr "Nom d'utilisateur incorrect signIn.result."
 
-#: src/auth/CreateUserPage.js:71
+#: src/auth/CreateUserPage.js:64
 msgid "Incorrect signUp.result typename."
 msgstr "Incorrect signUp.result typename."
 
@@ -2018,7 +2017,7 @@ msgstr "Le certificat Leaf est EV"
 #~ msgid "Leave Organization"
 #~ msgstr "Organisation des congés"
 
-#: src/auth/CreateUserPage.js:153
+#: src/auth/CreateUserPage.js:118
 msgid "Let's get you set up so you can verify your account information and begin using Tracker."
 msgstr "Nous allons vous configurer pour que vous puissiez vérifier les informations de votre compte et commencer à utiliser Suivi."
 
@@ -2098,6 +2097,10 @@ msgstr "Plus de détails"
 #: src/app/ReadGuidancePage.js:604
 msgid "Mozilla SSL Configuration Generator"
 msgstr "Générateur de configuration SSL de Mozilla"
+
+#: src/auth/CreateUserPage.js:144
+msgid "Multifactor authentication (MFA) is active by deafult and used to verify account email"
+msgstr "L'authentification multifactorielle (MFA) est activée par deafult et utilisée pour vérifier l'adresse électronique du compte."
 
 #: src/guidance/WebTLSResults.js:299
 msgid "Must Staple"
@@ -2611,13 +2614,17 @@ msgstr "Veuillez communiquer avec l’<0>équipe responsable de la cybersécurit
 msgid "Please enter your current password."
 msgstr "Veuillez entrer votre mot de passe actuel."
 
+#: src/auth/CreateUserPage.js:46
+msgid "Please enter your one-time code to continue to Tracker."
+msgstr "Veuillez saisir votre code à usage unique pour continuer à Tracker."
+
 #: src/components/fields/AuthenticateField.js:26
 msgid "Please enter your two factor code below."
 msgstr "Veuillez entrer votre code à deux facteurs ci-dessous."
 
 #: src/auth/CreateUserPage.js:95
-msgid "Please follow the link in order to verify your account and start using Tracker."
-msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à utiliser Suivi."
+#~ msgid "Please follow the link in order to verify your account and start using Tracker."
+#~ msgstr "Veuillez suivre le lien afin de vérifier votre compte et commencer à utiliser Suivi."
 
 #: src/dmarc/DmarcReportPage.js:232
 msgid "Pointer to a DKIM public key record in DNS."
@@ -2760,7 +2767,7 @@ msgstr "Record :"
 msgid "References:"
 msgstr "Références :"
 
-#: src/auth/CreateUserPage.js:145
+#: src/auth/CreateUserPage.js:110
 msgid "Register"
 msgstr "Registre"
 
@@ -3785,7 +3792,7 @@ msgstr "Impossible de fermer le compte."
 msgid "Unable to close this account."
 msgstr "Impossible de fermer ce compte."
 
-#: src/auth/CreateUserPage.js:61
+#: src/auth/CreateUserPage.js:54
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
@@ -4151,7 +4158,7 @@ msgstr "Résumé du site web"
 msgid "Web-hosting"
 msgstr "d'hébergement web"
 
-#: src/auth/CreateUserPage.js:150
+#: src/auth/CreateUserPage.js:115
 msgid "Welcome to Tracker, please enter your details."
 msgstr "Bienvenue sur Suivi, veuillez entrer vos coordonnées."
 
@@ -4160,8 +4167,8 @@ msgid "Welcome to your personal view of Tracker. Moderate the security posture o
 msgstr "Bienvenue dans votre vision personnelle de Suivi. Modérez la posture de sécurité des domaines d'intérêt à travers plusieurs organisations. Pour ajouter des domaines à cette vue, utilisez les boutons de l'icône étoile disponibles sur les listes de domaines."
 
 #: src/auth/CreateUserPage.js:53
-msgid "Welcome, you are successfully signed in to your new account!"
-msgstr "Veuillez choisir votre langue préférée"
+#~ msgid "Welcome, you are successfully signed in to your new account!"
+#~ msgstr "Veuillez choisir votre langue préférée"
 
 #: src/auth/SignInPage.js:60
 #: src/auth/TwoFactorAuthenticatePage.js:56
