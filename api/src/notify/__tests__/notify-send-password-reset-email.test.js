@@ -1,13 +1,10 @@
-import {setupI18n} from '@lingui/core'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
-import {sendPasswordResetEmail} from '../index'
+import { sendPasswordResetEmail } from '../index'
 
-const {
-  NOTIFICATION_PASSWORD_RESET_EN,
-  NOTIFICATION_PASSWORD_RESET_FR,
-} = process.env
+const { NOTIFICATION_PASSWORD_RESET_BILINGUAL } = process.env
 
 describe('given the sendPasswordResetEmail function', () => {
   let i18n
@@ -19,8 +16,8 @@ describe('given the sendPasswordResetEmail function', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -39,8 +36,8 @@ describe('given the sendPasswordResetEmail function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -71,23 +68,17 @@ describe('given the sendPasswordResetEmail function', () => {
           resetUrl: 'reset.url',
         })
 
-        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-          NOTIFICATION_PASSWORD_RESET_EN,
-          user.userName,
-          {
-            personalisation: {
-              user: user.displayName,
-              password_reset_url: 'reset.url',
-            },
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(NOTIFICATION_PASSWORD_RESET_BILINGUAL, user.userName, {
+          personalisation: {
+            user: user.displayName,
+            password_reset_url: 'reset.url',
           },
-        )
+        })
       })
     })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
-        const sendEmail = jest
-          .fn()
-          .mockRejectedValue(new Error('Notification error occurred.'))
+        const sendEmail = jest.fn().mockRejectedValue(new Error('Notification error occurred.'))
         const notifyClient = {
           sendEmail,
         }
@@ -108,9 +99,7 @@ describe('given the sendPasswordResetEmail function', () => {
             resetUrl: 'reset.url',
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to send password reset email. Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to send password reset email. Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -124,8 +113,8 @@ describe('given the sendPasswordResetEmail function', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -156,23 +145,17 @@ describe('given the sendPasswordResetEmail function', () => {
           resetUrl: 'reset.url',
         })
 
-        expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-          NOTIFICATION_PASSWORD_RESET_FR,
-          user.userName,
-          {
-            personalisation: {
-              user: user.displayName,
-              password_reset_url: 'reset.url',
-            },
+        expect(notifyClient.sendEmail).toHaveBeenCalledWith(NOTIFICATION_PASSWORD_RESET_BILINGUAL, user.userName, {
+          personalisation: {
+            user: user.displayName,
+            password_reset_url: 'reset.url',
           },
-        )
+        })
       })
     })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
-        const sendEmail = jest
-          .fn()
-          .mockRejectedValue(new Error('Notification error occurred.'))
+        const sendEmail = jest.fn().mockRejectedValue(new Error('Notification error occurred.'))
         const notifyClient = {
           sendEmail,
         }
@@ -194,9 +177,7 @@ describe('given the sendPasswordResetEmail function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              "Impossible d'envoyer l'email de réinitialisation du mot de passe. Veuillez réessayer.",
-            ),
+            new Error("Impossible d'envoyer l'email de réinitialisation du mot de passe. Veuillez réessayer."),
           )
         }
 

@@ -219,6 +219,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_ORG_INVITE_FR
+            - name: NOTIFICATION_PASSWORD_RESET_BILINGUAL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_PASSWORD_RESET_BILINGUAL
             - name: NOTIFICATION_PASSWORD_RESET_EN
               valueFrom:
                 secretKeyRef:
@@ -249,6 +254,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_VERIFICATION_EMAIL_FR
+            - name: NOTIFICATION_ORG_INVITE_REQUEST_BILINGUAL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_REQUEST_BILINGUAL
             - name: NOTIFICATION_ORG_INVITE_REQUEST_EN
               valueFrom:
                 secretKeyRef:
