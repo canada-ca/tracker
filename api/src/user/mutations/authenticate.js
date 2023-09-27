@@ -2,7 +2,6 @@ import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
-import { TfaSendMethodEnum } from '../../enums'
 
 const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
 
@@ -12,7 +11,7 @@ export const authenticate = new mutationWithClientMutationId({
     'This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.',
   inputFields: () => ({
     sendMethod: {
-      type: new GraphQLNonNull(TfaSendMethodEnum),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The method that the user wants to receive their authentication code by.',
     },
     authenticationCode: {

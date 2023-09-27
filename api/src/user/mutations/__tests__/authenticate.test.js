@@ -97,7 +97,7 @@ describe('authenticate user account', () => {
             mutation {
               authenticate(
                 input: {
-                  sendMethod: EMAIL
+                  sendMethod: "email"
                   authenticationCode: 123456
                   authenticateToken: "${token}"
                 }
@@ -220,7 +220,7 @@ describe('authenticate user account', () => {
             mutation {
               authenticate(
                 input: {
-                  sendMethod: EMAIL
+                  sendMethod: "email"
                   authenticationCode: 123456
                   authenticateToken: "${token}"
                 }
@@ -335,7 +335,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -408,7 +408,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -481,7 +481,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -556,7 +556,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -628,7 +628,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -707,7 +707,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -801,7 +801,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -874,7 +874,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -947,7 +947,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -1022,7 +1022,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -1094,7 +1094,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -1173,7 +1173,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
-                    sendMethod: EMAIL
+                    sendMethod: "email"
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
