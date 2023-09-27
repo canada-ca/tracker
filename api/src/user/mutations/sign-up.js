@@ -7,7 +7,7 @@ import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 
-const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
+const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY } = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -46,7 +46,7 @@ export const signUp = new mutationWithClientMutationId({
   outputFields: () => ({
     result: {
       type: signUpUnion,
-      description: '`SignUpUnion` returning either a `AuthResult`, or `SignUpError` object.',
+      description: '`SignUpUnion` returning either a `TFASignInResult`, or `SignUpError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -57,12 +57,10 @@ export const signUp = new mutationWithClientMutationId({
       collections,
       query,
       transaction,
-      request,
-      response,
       uuidv4,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
-      notify: { sendVerificationEmail },
+      notify: { sendAuthEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -111,6 +109,7 @@ export const signUp = new mutationWithClientMutationId({
     const hashedPassword = bcrypt.hashSync(password, 10)
 
     const refreshId = uuidv4()
+    const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
     // Create User Structure for insert
     const user = {
@@ -123,7 +122,8 @@ export const signUp = new mutationWithClientMutationId({
       insideUser: false,
       receiveUpdateEmails: true,
       failedLoginAttempts: 0,
-      tfaSendMethod: 'none',
+      tfaSendMethod: 'email',
+      tfaCode: tfaCode,
       refreshInfo: {
         refreshId,
         rememberMe,
@@ -222,41 +222,14 @@ export const signUp = new mutationWithClientMutationId({
     }
 
     const returnUser = await loadUserByKey.load(insertedUser._key)
+    await sendAuthEmail({ user: returnUser })
 
-    // Generate JWTs
-    const token = tokenize({ parameters: { userKey: insertedUser._key } })
-
-    const verifyUrl = `https://${request.get('host')}/validate/${token}`
-
-    await sendVerificationEmail({ user: returnUser, verifyUrl })
-
-    const refreshToken = tokenize({
-      parameters: { userKey: user._key, uuid: refreshId },
-      expPeriod: 168,
-      secret: String(REFRESH_KEY),
+    const authenticateToken = tokenize({
+      parameters: { userKey: insertedUser._key },
+      secret: String(SIGN_IN_KEY),
     })
 
-    // if the user does not want to stay logged in, create http session cookie
-    let cookieData = {
-      httpOnly: true,
-      secure: true,
-      sameSite: true,
-      expires: 0,
-    }
-
-    // if user wants to stay logged in create normal http cookie
-    if (rememberMe) {
-      cookieData = {
-        maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-        httpOnly: true,
-        secure: true,
-        sameSite: true,
-      }
-    }
-
-    response.cookie('refresh_token', refreshToken, cookieData)
-
-    console.info(`User: ${userName} successfully created a new account.`)
+    console.info(`User: ${userName} successfully created a new account, and sent auth msg.`)
     await logActivity({
       transaction,
       collections,
@@ -272,9 +245,9 @@ export const signUp = new mutationWithClientMutationId({
     })
 
     return {
-      _type: 'authResult',
-      token,
-      user: returnUser,
+      _type: 'tfa',
+      sendMethod: 'email',
+      authenticateToken,
     }
   },
 })

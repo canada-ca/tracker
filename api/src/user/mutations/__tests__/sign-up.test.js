@@ -1,7 +1,6 @@
 import { ensure, dbNameFromFile } from 'arango-tools'
 import bcrypt from 'bcryptjs'
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
-import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -19,7 +18,7 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
 
 describe('testing user sign up', () => {
-  let query, drop, truncate, collections, transaction, schema, i18n, mockTokenize, mockNotify, request
+  let query, drop, truncate, collections, transaction, schema, i18n, mockTokenize, mockNotify
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -35,10 +34,6 @@ describe('testing user sign up', () => {
       mutation: createMutationSchema(),
     })
     mockTokenize = jest.fn().mockReturnValue('token')
-    request = {
-      protocol: 'https',
-      get: (text) => text,
-    }
   })
   beforeEach(() => {
     mockNotify = jest.fn()
@@ -86,9 +81,6 @@ describe('testing user sign up', () => {
         describe('when user is not signing up without an invite token', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -103,16 +95,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -124,11 +109,9 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
-                  response: mockedResponse,
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -142,7 +125,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -153,34 +136,22 @@ describe('testing user sign up', () => {
                       RETURN user
                 `
               const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', users[0]._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'ENGLISH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                expires: 0,
-                sameSite: true,
-                secure: true,
-              })
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('sends verification email', async () => {
@@ -198,16 +169,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -219,7 +183,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -236,7 +199,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -247,19 +210,13 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -275,16 +232,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -296,11 +246,10 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
-                  response: mockedResponse,
+
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -314,7 +263,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -325,34 +274,23 @@ describe('testing user sign up', () => {
                       RETURN user
                 `
               const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', users[0]._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'ENGLISH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                sameSite: true,
-                secure: true,
-              })
+
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('sends verification email', async () => {
@@ -370,16 +308,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -391,7 +322,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -408,7 +338,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -419,11 +349,8 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
@@ -465,9 +392,6 @@ describe('testing user sign up', () => {
           })
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -483,16 +407,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -504,11 +421,10 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
-                  response: mockedResponse,
+
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -524,7 +440,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -534,35 +450,23 @@ describe('testing user sign up', () => {
                     FILTER user.userName == "test.account@istio.actually.exists"
                     RETURN user
               `
-              const user = await cursor.next()
+              const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', user._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'ENGLISH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                expires: 0,
-                sameSite: true,
-                secure: true,
-              })
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('creates affiliation', async () => {
@@ -581,16 +485,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -602,7 +499,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -621,7 +517,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -664,16 +560,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -685,7 +574,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -704,7 +592,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -715,19 +603,13 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -744,16 +626,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -765,11 +640,10 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
-                  response: mockedResponse,
+
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -785,7 +659,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -795,35 +669,23 @@ describe('testing user sign up', () => {
                     FILTER user.userName == "test.account@istio.actually.exists"
                     RETURN user
               `
-              const user = await cursor.next()
+              const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', user._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'ENGLISH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                sameSite: true,
-                secure: true,
-              })
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('creates affiliation', async () => {
@@ -842,16 +704,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -863,7 +718,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -882,7 +736,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -925,16 +779,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -946,7 +793,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -965,7 +811,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -976,11 +822,8 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
@@ -1006,9 +849,6 @@ describe('testing user sign up', () => {
         describe('when user is not signing up without an invite token', () => {
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -1023,16 +863,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -1044,11 +877,10 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
-                  response: mockedResponse,
+
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -1062,7 +894,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1072,35 +904,22 @@ describe('testing user sign up', () => {
                                 FILTER user.userName == "test.account@istio.actually.exists"
                                 RETURN user
                         `
-              const user = await cursor.next()
+              const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', user._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'FRENCH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
-
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                expires: 0,
-                sameSite: true,
-                secure: true,
-              })
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('sends verification email', async () => {
@@ -1118,16 +937,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -1139,7 +951,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -1156,7 +967,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1167,19 +978,13 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -1195,16 +1000,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -1216,11 +1014,10 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
-                  response: mockedResponse,
+
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -1234,7 +1031,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1244,35 +1041,23 @@ describe('testing user sign up', () => {
                     FILTER user.userName == "test.account@istio.actually.exists"
                     RETURN user
               `
-              const user = await cursor.next()
+              const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', user._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'FRENCH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                sameSite: true,
-                secure: true,
-              })
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('sends verification email', async () => {
@@ -1290,16 +1075,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -1311,7 +1089,6 @@ describe('testing user sign up', () => {
                 `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -1328,7 +1105,7 @@ describe('testing user sign up', () => {
                     loadUserByKey: loadUserByKey({ query }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1339,11 +1116,8 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
@@ -1385,9 +1159,6 @@ describe('testing user sign up', () => {
           })
           describe('user has rememberMe disabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -1403,16 +1174,9 @@ describe('testing user sign up', () => {
                         }
                       ) {
                         result {
-                          ... on AuthResult {
-                            authToken
-                            user {
-                              id
-                              userName
-                              displayName
-                              preferredLang
-                              phoneValidated
-                              emailValidated
-                            }
+                          ... on TFASignInResult {
+                            authenticateToken
+                            sendMethod
                           }
                           ... on SignUpError {
                             code
@@ -1424,12 +1188,11 @@ describe('testing user sign up', () => {
                   `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
                   uuidv4,
-                  response: mockedResponse,
+
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1444,7 +1207,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1454,35 +1217,23 @@ describe('testing user sign up', () => {
                       FILTER user.userName == "test.account@istio.actually.exists"
                       RETURN user
                 `
-              const user = await cursor.next()
+              const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', user._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'FRENCH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                expires: 0,
-                sameSite: true,
-                secure: true,
-              })
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('creates affiliation', async () => {
@@ -1501,16 +1252,9 @@ describe('testing user sign up', () => {
                         }
                       ) {
                         result {
-                          ... on AuthResult {
-                            authToken
-                            user {
-                              id
-                              userName
-                              displayName
-                              preferredLang
-                              phoneValidated
-                              emailValidated
-                            }
+                          ... on TFASignInResult {
+                            authenticateToken
+                            sendMethod
                           }
                           ... on SignUpError {
                             code
@@ -1522,7 +1266,6 @@ describe('testing user sign up', () => {
                   `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -1541,7 +1284,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1584,16 +1327,9 @@ describe('testing user sign up', () => {
                         }
                       ) {
                         result {
-                          ... on AuthResult {
-                            authToken
-                            user {
-                              id
-                              userName
-                              displayName
-                              preferredLang
-                              phoneValidated
-                              emailValidated
-                            }
+                          ... on TFASignInResult {
+                            authenticateToken
+                            sendMethod
                           }
                           ... on SignUpError {
                             code
@@ -1605,7 +1341,6 @@ describe('testing user sign up', () => {
                   `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -1624,7 +1359,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1635,19 +1370,13 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
           describe('user has rememberMe enabled', () => {
             it('returns auth result with user info', async () => {
-              const mockedCookie = jest.fn()
-              const mockedResponse = { cookie: mockedCookie }
-
               const response = await graphql({
                 schema,
                 source: `
@@ -1664,16 +1393,9 @@ describe('testing user sign up', () => {
                         }
                       ) {
                         result {
-                          ... on AuthResult {
-                            authToken
-                            user {
-                              id
-                              userName
-                              displayName
-                              preferredLang
-                              phoneValidated
-                              emailValidated
-                            }
+                          ... on TFASignInResult {
+                            authenticateToken
+                            sendMethod
                           }
                           ... on SignUpError {
                             code
@@ -1685,12 +1407,11 @@ describe('testing user sign up', () => {
                   `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
                   uuidv4,
-                  response: mockedResponse,
+
                   auth: {
                     bcrypt,
                     tokenize: mockTokenize,
@@ -1705,7 +1426,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1715,35 +1436,23 @@ describe('testing user sign up', () => {
                       FILTER user.userName == "test.account@istio.actually.exists"
                       RETURN user
                 `
-              const user = await cursor.next()
+              const users = await cursor.all()
+              expect(users).toHaveLength(1)
 
               const expectedResult = {
                 data: {
                   signUp: {
                     result: {
-                      authToken: 'token',
-                      user: {
-                        id: `${toGlobalId('user', user._key)}`,
-                        userName: 'test.account@istio.actually.exists',
-                        displayName: 'Test Account',
-                        preferredLang: 'FRENCH',
-                        phoneValidated: false,
-                        emailValidated: false,
-                      },
+                      authenticateToken: 'token',
+                      sendMethod: 'email',
                     },
                   },
                 },
               }
 
               expect(response).toEqual(expectedResult)
-              expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
-                sameSite: true,
-                secure: true,
-              })
               expect(consoleOutput).toEqual([
-                'User: test.account@istio.actually.exists successfully created a new account.',
+                'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',
               ])
             })
             it('creates affiliation', async () => {
@@ -1762,16 +1471,9 @@ describe('testing user sign up', () => {
                         }
                       ) {
                         result {
-                          ... on AuthResult {
-                            authToken
-                            user {
-                              id
-                              userName
-                              displayName
-                              preferredLang
-                              phoneValidated
-                              emailValidated
-                            }
+                          ... on TFASignInResult {
+                            authenticateToken
+                            sendMethod
                           }
                           ... on SignUpError {
                             code
@@ -1783,7 +1485,6 @@ describe('testing user sign up', () => {
                   `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -1802,7 +1503,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1845,16 +1546,9 @@ describe('testing user sign up', () => {
                         }
                       ) {
                         result {
-                          ... on AuthResult {
-                            authToken
-                            user {
-                              id
-                              userName
-                              displayName
-                              preferredLang
-                              phoneValidated
-                              emailValidated
-                            }
+                          ... on TFASignInResult {
+                            authenticateToken
+                            sendMethod
                           }
                           ... on SignUpError {
                             code
@@ -1866,7 +1560,6 @@ describe('testing user sign up', () => {
                   `,
                 rootValue: null,
                 contextValue: {
-                  request,
                   query,
                   collections: collectionNames,
                   transaction,
@@ -1885,7 +1578,7 @@ describe('testing user sign up', () => {
                     loadOrgByKey: loadOrgByKey({ query, language: 'fr' }),
                   },
                   notify: {
-                    sendVerificationEmail: mockNotify,
+                    sendAuthEmail: mockNotify,
                   },
                 },
               })
@@ -1896,11 +1589,8 @@ describe('testing user sign up', () => {
                 i18n: {},
               }).load('test.account@istio.actually.exists')
 
-              const verifyUrl = `https://${request.get('host')}/validate/token`
-
               expect(mockNotify).toHaveBeenCalledWith({
                 user: user,
-                verifyUrl,
               })
             })
           })
@@ -1940,16 +1630,9 @@ describe('testing user sign up', () => {
                   }
                 ) {
                   result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
-                      }
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
                     }
                     ... on SignUpError {
                       code
@@ -1982,7 +1665,7 @@ describe('testing user sign up', () => {
                 },
               },
               notify: {
-                sendVerificationEmail: mockNotify,
+                sendAuthEmail: mockNotify,
               },
             },
           })
@@ -2020,16 +1703,9 @@ describe('testing user sign up', () => {
                   }
                 ) {
                   result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
-                      }
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
                     }
                     ... on SignUpError {
                       code
@@ -2062,7 +1738,7 @@ describe('testing user sign up', () => {
                 },
               },
               notify: {
-                sendVerificationEmail: mockNotify,
+                sendAuthEmail: mockNotify,
               },
             },
           })
@@ -2100,16 +1776,9 @@ describe('testing user sign up', () => {
                   }
                 ) {
                   result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
-                      }
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
                     }
                     ... on SignUpError {
                       code
@@ -2148,7 +1817,7 @@ describe('testing user sign up', () => {
                 },
               },
               notify: {
-                sendVerificationEmail: mockNotify,
+                sendAuthEmail: mockNotify,
               },
             },
           })
@@ -2198,16 +1867,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -2272,7 +1934,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -2321,16 +1983,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -2371,7 +2026,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -2411,16 +2066,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -2485,7 +2133,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -2517,16 +2165,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -2589,7 +2230,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -2630,16 +2271,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -2702,7 +2336,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -2732,16 +2366,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -2805,7 +2432,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -2852,16 +2479,9 @@ describe('testing user sign up', () => {
                   }
                 ) {
                   result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
-                      }
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
                     }
                     ... on SignUpError {
                       code
@@ -2894,7 +2514,7 @@ describe('testing user sign up', () => {
                 },
               },
               notify: {
-                sendVerificationEmail: mockNotify,
+                sendAuthEmail: mockNotify,
               },
             },
           })
@@ -2932,16 +2552,9 @@ describe('testing user sign up', () => {
                   }
                 ) {
                   result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
-                      }
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
                     }
                     ... on SignUpError {
                       code
@@ -2974,7 +2587,7 @@ describe('testing user sign up', () => {
                 },
               },
               notify: {
-                sendVerificationEmail: mockNotify,
+                sendAuthEmail: mockNotify,
               },
             },
           })
@@ -3012,16 +2625,9 @@ describe('testing user sign up', () => {
                   }
                 ) {
                   result {
-                    ... on AuthResult {
-                      authToken
-                      user {
-                        id
-                        userName
-                        displayName
-                        preferredLang
-                        phoneValidated
-                        emailValidated
-                      }
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
                     }
                     ... on SignUpError {
                       code
@@ -3060,7 +2666,7 @@ describe('testing user sign up', () => {
                 },
               },
               notify: {
-                sendVerificationEmail: mockNotify,
+                sendAuthEmail: mockNotify,
               },
             },
           })
@@ -3110,16 +2716,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -3184,7 +2783,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -3234,16 +2833,9 @@ describe('testing user sign up', () => {
                       }
                     ) {
                       result {
-                        ... on AuthResult {
-                          authToken
-                          user {
-                            id
-                            userName
-                            displayName
-                            preferredLang
-                            phoneValidated
-                            emailValidated
-                          }
+                        ... on TFASignInResult {
+                          authenticateToken
+                          sendMethod
                         }
                         ... on SignUpError {
                           code
@@ -3284,7 +2876,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -3325,16 +2917,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -3399,7 +2984,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -3431,16 +3016,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -3503,7 +3081,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -3544,16 +3122,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -3616,7 +3187,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })
@@ -3646,16 +3217,9 @@ describe('testing user sign up', () => {
                     }
                   ) {
                     result {
-                      ... on AuthResult {
-                        authToken
-                        user {
-                          id
-                          userName
-                          displayName
-                          preferredLang
-                          phoneValidated
-                          emailValidated
-                        }
+                      ... on TFASignInResult {
+                        authenticateToken
+                        sendMethod
                       }
                       ... on SignUpError {
                         code
@@ -3719,7 +3283,7 @@ describe('testing user sign up', () => {
                   },
                 },
                 notify: {
-                  sendVerificationEmail: mockNotify,
+                  sendAuthEmail: mockNotify,
                 },
               },
             })

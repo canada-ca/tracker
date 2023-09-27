@@ -70,10 +70,9 @@ describe('authenticate user account', () => {
               }
             ) {
               result {
-                ... on AuthResult {
-                  user {
-                    id
-                  }
+                ... on TFASignInResult {
+                  authenticateToken
+                  sendMethod
                 }
               }
             }
