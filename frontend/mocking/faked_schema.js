@@ -3643,6 +3643,9 @@ export const getTypeNames = () => gql`
   }
 
   input AuthenticateInput {
+    # The method that the user wants to receive their authentication code by.
+    sendMethod: TFASendMethodEnum!
+
     # Security code found in text msg, or email inbox.
     authenticationCode: Int!
 

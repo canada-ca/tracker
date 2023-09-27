@@ -2,6 +2,7 @@ import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
+import { TfaSendMethodEnum } from '../../enums'
 
 const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
 
@@ -10,6 +11,10 @@ export const authenticate = new mutationWithClientMutationId({
   description:
     'This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.',
   inputFields: () => ({
+    sendMethod: {
+      type: new GraphQLNonNull(TfaSendMethodEnum),
+      description: 'The method that the user wants to receive their authentication code by.',
+    },
     authenticationCode: {
       type: new GraphQLNonNull(GraphQLInt),
       description: 'Security code found in text msg, or email inbox.',
@@ -43,6 +48,7 @@ export const authenticate = new mutationWithClientMutationId({
     // Cleanse Inputs
     const authenticationCode = args.authenticationCode
     const authenticationToken = cleanseInput(args.authenticateToken)
+    const sendMethod = cleanseInput(args.sendMethod)
 
     // Gather token parameters
     const tokenParameters = verifyToken({
@@ -110,7 +116,7 @@ export const authenticate = new mutationWithClientMutationId({
       }
 
       // verify user email
-      if (!user.emailValidated) {
+      if (sendMethod === 'email' && !user.emailValidated) {
         try {
           await trx.step(
             () => query`

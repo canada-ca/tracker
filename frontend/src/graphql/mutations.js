@@ -56,8 +56,10 @@ export const SIGN_IN = gql`
 `
 
 export const AUTHENTICATE = gql`
-  mutation authenticate($authenticationCode: Int!, $authenticateToken: String!) {
-    authenticate(input: { authenticationCode: $authenticationCode, authenticateToken: $authenticateToken }) {
+  mutation authenticate($sendMethod: TFASendMethodEnum!, $authenticationCode: Int!, $authenticateToken: String!) {
+    authenticate(
+      input: { sendMethod: $sendMethod, authenticationCode: $authenticationCode, authenticateToken: $authenticateToken }
+    ) {
       result {
         ... on AuthResult {
           ...RequiredAuthResultFields

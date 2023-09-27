@@ -97,6 +97,7 @@ describe('authenticate user account', () => {
             mutation {
               authenticate(
                 input: {
+                  sendMethod: EMAIL
                   authenticationCode: 123456
                   authenticateToken: "${token}"
                 }
@@ -219,6 +220,7 @@ describe('authenticate user account', () => {
             mutation {
               authenticate(
                 input: {
+                  sendMethod: EMAIL
                   authenticationCode: 123456
                   authenticateToken: "${token}"
                 }
@@ -333,6 +335,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -405,6 +408,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -477,6 +481,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -551,6 +556,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -622,6 +628,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -700,6 +707,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -793,6 +801,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -865,6 +874,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -937,6 +947,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -1011,6 +1022,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -1082,6 +1094,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -1160,6 +1173,7 @@ describe('authenticate user account', () => {
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
