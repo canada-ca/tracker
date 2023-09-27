@@ -82,7 +82,7 @@ def check_mx_diff(processed_results):
             bind_vars={"domain": domain},
         )
         .next()
-        .get("mx_records", {})
+        .get("mxRecords", {})
         .get("hosts", [])
     )
     # compare mx_records to most recent scan
