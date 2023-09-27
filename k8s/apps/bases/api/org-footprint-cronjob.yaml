@@ -50,6 +50,11 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_ORG_FOOTPRINT_FR
+                - name: NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
                 - name: SERVICE_ACCOUNT_EMAIL
                   valueFrom:
                     secretKeyRef:
