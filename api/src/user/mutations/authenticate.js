@@ -131,6 +131,7 @@ export const authenticate = new mutationWithClientMutationId({
                 IN users
             `,
           )
+          user.emailValidated = true
         } catch (err) {
           console.error(
             `Trx step error occurred when setting email validated to true for user: ${user._key} during authentication: ${err}`,
