@@ -65,7 +65,7 @@ def snake_to_camel(d):
         }
 
 
-def mx_record_diff(processed_results):
+def check_mx_diff(processed_results):
     domain = processed_results.get("domain")
     new_mx = processed_results.get("mx_records").get("hosts")
     mx_record_diff = False
@@ -82,8 +82,8 @@ def mx_record_diff(processed_results):
             bind_vars={"domain": domain},
         )
         .next()
-        .get("mx_records")
-        .get("hosts")
+        .get("mxRecords", {})
+        .get("hosts", [])
     )
     # compare mx_records to most recent scan
     # if different, set mx_records_diff to True
@@ -124,8 +124,7 @@ def mx_record_diff(processed_results):
                             mx_record_diff = True
                             break
 
-    processed_results["mx_records"].update({"diff": mx_record_diff})
-    return processed_results
+    return mx_record_diff
 
 
 async def run(loop):
@@ -164,7 +163,8 @@ async def run(loop):
         shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
-        processed_results = mx_record_diff(processed_results)
+        mx_record_diff = check_mx_diff(processed_results)
+        processed_results["mx_records"].update({"diff": mx_record_diff})
 
         dmarc_status = processed_results.get("dmarc").get("status")
         spf_status = processed_results.get("spf").get("status")
