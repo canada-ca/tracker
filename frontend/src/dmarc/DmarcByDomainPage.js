@@ -328,19 +328,19 @@ export default function DmarcByDomainPage() {
           />
           <InfoBox
             title={t`Full Pass %`}
-            info={t`Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.`}
+            info={t`Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements.`}
           />
           <InfoBox
             title={t`Fail SPF %`}
-            info={t`Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments.`}
+            info={t`Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements.`}
           />
           <InfoBox
             title={t`Fail DKIM %`}
-            info={t`Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments.`}
+            info={t`Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements.`}
           />
           <InfoBox
             title={t`Full Fail %`}
-            info={t`Shows the percentage of emails from the domain that fail both SPF and DKIM requirments.`}
+            info={t`Shows the percentage of emails from the domain that fail both SPF and DKIM requirements.`}
           />
           <Divider borderColor="gray.500" />
           <Trans>

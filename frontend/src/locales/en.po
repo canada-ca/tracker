@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/termsConditions/TermsConditionsPage.js:170
+#: src/termsConditions/TermsConditionsPage.js:159
 msgid ", and"
 msgstr ", and"
 
-#: src/termsConditions/TermsConditionsPage.js:63
+#: src/termsConditions/TermsConditionsPage.js:58
 msgid ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 msgstr ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the"
 
@@ -86,7 +86,7 @@ msgstr "A domain may only be removed for one of the reasons below. For a domain 
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 msgstr "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 
-#: src/dmarc/DmarcByDomainPage.js:346
+#: src/dmarc/DmarcByDomainPage.js:294
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 
@@ -94,7 +94,7 @@ msgstr "A more detailed breakdown of each domain can be found by clicking on its
 msgid "A verification link has been sent to your email account"
 msgstr "A verification link has been sent to your email account"
 
-#: src/admin/UserListModal.js:262
+#: src/admin/UserListModal.js:261
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -111,25 +111,25 @@ msgstr "ARCHIVED"
 #~ msgid "Acceptable Curves:"
 #~ msgstr "Acceptable Curves:"
 
-#: src/termsConditions/TermsConditionsPage.js:86
+#: src/termsConditions/TermsConditionsPage.js:81
 msgid "Access to Information"
 msgstr "Access to Information"
 
-#: src/termsConditions/TermsConditionsPage.js:105
+#: src/termsConditions/TermsConditionsPage.js:100
 msgid "Access to Information Act."
 msgstr "Access to Information Act."
 
-#: src/termsConditions/TermsConditionsPage.js:249
+#: src/termsConditions/TermsConditionsPage.js:227
 msgid "Account"
 msgstr "Account"
 
-#: src/admin/SuperAdminUserList.js:91
+#: src/admin/SuperAdminUserList.js:85
 #: src/user/UserPage.js:88
 msgid "Account Closed Successfully"
 msgstr "Account Closed Successfully"
 
 #: src/app/App.js:154
-#: src/app/FloatingMenu.js:177
+#: src/app/FloatingMenu.js:146
 #: src/user/UserPage.js:137
 msgid "Account Settings"
 msgstr "Account Settings"
@@ -197,7 +197,7 @@ msgstr "Add User"
 msgid "Admin"
 msgstr "Admin"
 
-#: src/app/FloatingMenu.js:179
+#: src/app/FloatingMenu.js:148
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
@@ -221,7 +221,7 @@ msgstr "Admin accounts must activate a multi-factor authentication option."
 msgid "Admins of an organization can add domains to their list."
 msgstr "Admins of an organization can add domains to their list."
 
-#: src/admin/SuperAdminUserList.js:356
+#: src/admin/SuperAdminUserList.js:309
 msgid "Affiliations:"
 msgstr "Affiliations:"
 
@@ -234,17 +234,30 @@ msgid "An error has occurred."
 msgstr "An error has occurred."
 
 #: src/admin/SuperAdminUserList.js:209
-msgid "An error occured when fetching this organization's information"
-msgstr "An error occured when fetching this organization's information"
+#~ msgid "An error occured when fetching this organization's information"
+#~ msgstr "An error occured when fetching this organization's information"
 
 #: src/domains/DomainsPage.js:39
-msgid "An error occured when you attempted to download all domain statuses."
-msgstr "An error occured when you attempted to download all domain statuses."
+#~ msgid "An error occured when you attempted to download all domain statuses."
+#~ msgstr "An error occured when you attempted to download all domain statuses."
 
 #: src/app/FloatingMenu.js:38
 #: src/app/TopBanner.js:30
-msgid "An error occured when you attempted to sign out"
-msgstr "An error occured when you attempted to sign out"
+#~ msgid "An error occured when you attempted to sign out"
+#~ msgstr "An error occured when you attempted to sign out"
+
+#: src/admin/SuperAdminUserList.js:182
+msgid "An error occurred when fetching this organization's information"
+msgstr "An error occurred when fetching this organization's information"
+
+#: src/domains/DomainsPage.js:39
+msgid "An error occurred when you attempted to download all domain statuses."
+msgstr "An error occurred when you attempted to download all domain statuses."
+
+#: src/app/FloatingMenu.js:38
+#: src/app/TopBanner.js:30
+msgid "An error occurred when you attempted to sign out"
+msgstr "An error occurred when you attempted to sign out"
 
 #: src/domains/DomainCard.js:49
 msgid "An error occurred while favouriting a domain."
@@ -325,11 +338,11 @@ msgstr "An error occurred."
 msgid "Another possibility is that your domain is not internet facing."
 msgstr "Another possibility is that your domain is not internet facing."
 
-#: src/termsConditions/TermsConditionsPage.js:226
+#: src/termsConditions/TermsConditionsPage.js:207
 msgid "Any data or information disclosed to TBS will be used in a manner consistent with our"
 msgstr "Any data or information disclosed to TBS will be used in a manner consistent with our"
 
-#: src/termsConditions/TermsConditionsPage.js:137
+#: src/termsConditions/TermsConditionsPage.js:130
 msgid "Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada."
 msgstr "Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada."
 
@@ -449,7 +462,7 @@ msgstr "By default our scanners check domains ending in “.gc.ca” and “.can
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
-#: src/admin/SuperAdminUserList.js:434
+#: src/admin/SuperAdminUserList.js:373
 #: src/user/UserPage.js:260
 msgid "Cancel"
 msgstr "Cancel"
@@ -552,12 +565,12 @@ msgid "Clear"
 msgstr "Clear"
 
 #: src/admin/OrganizationInformation.js:341
-#: src/app/FloatingMenu.js:267
+#: src/app/FloatingMenu.js:206
 msgid "Close"
 msgstr "Close"
 
-#: src/admin/SuperAdminUserList.js:371
-#: src/admin/SuperAdminUserList.js:404
+#: src/admin/SuperAdminUserList.js:324
+#: src/admin/SuperAdminUserList.js:353
 #: src/user/UserPage.js:216
 #: src/user/UserPage.js:243
 msgid "Close Account"
@@ -593,8 +606,8 @@ msgstr "Configuration requirements for web sites and services completely met"
 #: src/admin/AdminDomains.js:495
 #: src/admin/OrganizationInformation.js:349
 #: src/admin/OrganizationInformation.js:440
-#: src/admin/SuperAdminUserList.js:443
-#: src/admin/UserListModal.js:278
+#: src/admin/SuperAdminUserList.js:377
+#: src/admin/UserListModal.js:277
 #: src/domains/SubdomainDiscoveryButton.js:91
 #: src/organizations/RequestOrgInviteModal.js:75
 #: src/user/EditableUserDisplayName.js:168
@@ -634,7 +647,7 @@ msgstr "Connection Results"
 msgid "Consider prioritizing websites and web services that exchange Protected data."
 msgstr "Consider prioritizing websites and web services that exchange Protected data."
 
-#: src/app/FloatingMenu.js:238
+#: src/app/FloatingMenu.js:183
 msgid "Contact"
 msgstr "Contact"
 
@@ -654,7 +667,7 @@ msgstr "Contact the Tracker Team"
 msgid "Continue"
 msgstr "Continue"
 
-#: src/termsConditions/TermsConditionsPage.js:167
+#: src/termsConditions/TermsConditionsPage.js:156
 msgid "Copyright Act"
 msgstr "Copyright Act"
 
@@ -684,7 +697,7 @@ msgstr "Country:"
 msgid "Create"
 msgstr "Create"
 
-#: src/app/FloatingMenu.js:200
+#: src/app/FloatingMenu.js:157
 #: src/app/TopBanner.js:129
 #: src/auth/CreateUserPage.js:189
 msgid "Create Account"
@@ -847,9 +860,9 @@ msgstr "DMARC Status"
 
 #: src/app/App.js:143
 #: src/app/App.js:276
-#: src/app/FloatingMenu.js:131
-#: src/dmarc/DmarcByDomainPage.js:181
-#: src/dmarc/DmarcByDomainPage.js:241
+#: src/app/FloatingMenu.js:107
+#: src/dmarc/DmarcByDomainPage.js:161
+#: src/dmarc/DmarcByDomainPage.js:213
 msgid "DMARC Summaries"
 msgstr "DMARC Summaries"
 
@@ -891,11 +904,11 @@ msgstr "DNS scan for domain \"{0}\" has completed."
 msgid "DOES NOT EQUAL"
 msgstr "DOES NOT EQUAL"
 
-#: src/termsConditions/TermsConditionsPage.js:202
+#: src/termsConditions/TermsConditionsPage.js:187
 msgid "Data Handling"
 msgstr "Data Handling"
 
-#: src/termsConditions/TermsConditionsPage.js:114
+#: src/termsConditions/TermsConditionsPage.js:109
 msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
@@ -955,7 +968,7 @@ msgstr "Develop a prioritized schedule to address any failings:"
 msgid "Discover Subdomains"
 msgstr "Discover Subdomains"
 
-#: src/admin/SuperAdminUserList.js:149
+#: src/admin/SuperAdminUserList.js:133
 #: src/components/fields/DisplayNameField.js:14
 msgid "Display Name"
 msgstr "Display Name"
@@ -978,8 +991,8 @@ msgid "Disposition"
 msgstr "Disposition"
 
 #: src/admin/AuditLogTable.js:67
-#: src/dmarc/DmarcByDomainPage.js:124
-#: src/dmarc/DmarcByDomainPage.js:324
+#: src/dmarc/DmarcByDomainPage.js:104
+#: src/dmarc/DmarcByDomainPage.js:272
 #: src/domains/DomainsPage.js:73
 #: src/domains/DomainsPage.js:177
 #: src/organizationDetails/OrganizationDomains.js:307
@@ -1037,7 +1050,7 @@ msgstr "Domain:"
 #: src/admin/AdminPanel.js:19
 #: src/app/App.js:136
 #: src/app/App.js:247
-#: src/app/FloatingMenu.js:116
+#: src/app/FloatingMenu.js:92
 #: src/domains/DomainsPage.js:87
 #: src/domains/DomainsPage.js:137
 #: src/organizationDetails/OrganizationDetails.js:130
@@ -1112,7 +1125,7 @@ msgstr "Edit Phone Number"
 msgid "Edit User"
 msgstr "Edit User"
 
-#: src/admin/SuperAdminUserList.js:148
+#: src/admin/SuperAdminUserList.js:132
 #: src/components/fields/EmailField.js:15
 #: src/domains/DomainCard.js:201
 #: src/user/EditableUserTFAMethod.js:166
@@ -1220,7 +1233,7 @@ msgid "English"
 msgstr "English"
 
 #: src/admin/OrganizationInformation.js:433
-#: src/admin/SuperAdminUserList.js:415
+#: src/admin/SuperAdminUserList.js:363
 msgid "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 msgstr "Enter \"{0}\" below to confirm removal. This field is case-sensitive."
 
@@ -1288,8 +1301,8 @@ msgstr "Fail"
 msgid "Fail DKIM"
 msgstr "Fail DKIM"
 
-#: src/dmarc/DmarcByDomainPage.js:156
-#: src/dmarc/DmarcByDomainPage.js:338
+#: src/dmarc/DmarcByDomainPage.js:136
+#: src/dmarc/DmarcByDomainPage.js:286
 msgid "Fail DKIM %"
 msgstr "Fail DKIM %"
 
@@ -1298,8 +1311,8 @@ msgstr "Fail DKIM %"
 msgid "Fail SPF"
 msgstr "Fail SPF"
 
-#: src/dmarc/DmarcByDomainPage.js:163
-#: src/dmarc/DmarcByDomainPage.js:334
+#: src/dmarc/DmarcByDomainPage.js:143
+#: src/dmarc/DmarcByDomainPage.js:282
 msgid "Fail SPF %"
 msgstr "Fail SPF %"
 
@@ -1345,7 +1358,7 @@ msgstr "Filters:"
 msgid "For any questions or concerns, please contact <0>TBS Cyber Security</0> ."
 msgstr "For any questions or concerns, please contact <0>TBS Cyber Security</0> ."
 
-#: src/termsConditions/TermsConditionsPage.js:46
+#: src/termsConditions/TermsConditionsPage.js:44
 msgid "For details related to terms pertaining to privacy, please refer to"
 msgstr "For details related to terms pertaining to privacy, please refer to"
 
@@ -1394,13 +1407,13 @@ msgstr "French"
 msgid "Frequently Asked Questions"
 msgstr "Frequently Asked Questions"
 
-#: src/dmarc/DmarcByDomainPage.js:170
-#: src/dmarc/DmarcByDomainPage.js:342
+#: src/dmarc/DmarcByDomainPage.js:150
+#: src/dmarc/DmarcByDomainPage.js:290
 msgid "Full Fail %"
 msgstr "Full Fail %"
 
-#: src/dmarc/DmarcByDomainPage.js:149
-#: src/dmarc/DmarcByDomainPage.js:330
+#: src/dmarc/DmarcByDomainPage.js:129
+#: src/dmarc/DmarcByDomainPage.js:278
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
@@ -1613,7 +1626,7 @@ msgstr "Hide domain"
 
 #: src/app/App.js:127
 #: src/app/App.js:173
-#: src/app/FloatingMenu.js:175
+#: src/app/FloatingMenu.js:144
 msgid "Home"
 msgstr "Home"
 
@@ -1688,7 +1701,7 @@ msgstr "Identify any current affiliated Tracker users within your organization a
 msgid "If a domain is no longer in use but still exists on the DNS, it is still vulnerable to email spoofing attacks, where an attacker can send an email that appears to be coming from your domain."
 msgstr "If a domain is no longer in use but still exists on the DNS, it is still vulnerable to email spoofing attacks, where an attacker can send an email that appears to be coming from your domain."
 
-#: src/termsConditions/TermsConditionsPage.js:392
+#: src/termsConditions/TermsConditionsPage.js:346
 msgid "If at any time you or your representatives wish to adjust or cancel these services, please"
 msgstr "If at any time you or your representatives wish to adjust or cancel these services, please"
 
@@ -1757,7 +1770,7 @@ msgstr "Inactive"
 msgid "Incorrect authenticate.result typename."
 msgstr "Incorrect authenticate.result typename."
 
-#: src/admin/SuperAdminUserList.js:111
+#: src/admin/SuperAdminUserList.js:105
 #: src/user/UserPage.js:109
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
@@ -1794,7 +1807,7 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/admin/AdminDomainModal.js:93
 #: src/admin/AdminDomainModal.js:141
 #: src/admin/AdminDomains.js:149
-#: src/admin/SuperAdminUserList.js:110
+#: src/admin/SuperAdminUserList.js:104
 #: src/admin/UserListModal.js:80
 #: src/admin/UserListModal.js:125
 #: src/auth/CreateUserPage.js:70
@@ -1884,11 +1897,11 @@ msgstr "Individuals from a departmental information technology group may contact
 msgid "Info"
 msgstr "Info"
 
-#: src/termsConditions/TermsConditionsPage.js:329
+#: src/termsConditions/TermsConditionsPage.js:293
 msgid "Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:"
 msgstr "Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:"
 
-#: src/termsConditions/TermsConditionsPage.js:91
+#: src/termsConditions/TermsConditionsPage.js:86
 msgid "Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the"
 msgstr "Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the"
 
@@ -1906,8 +1919,8 @@ msgstr "Informative tags highlight relevant configuration details, but are not a
 msgid "Initiated By"
 msgstr "Initiated By"
 
-#: src/admin/SuperAdminUserList.js:151
-#: src/admin/SuperAdminUserList.js:351
+#: src/admin/SuperAdminUserList.js:135
+#: src/admin/SuperAdminUserList.js:304
 msgid "Inside User"
 msgstr "Inside User"
 
@@ -1924,7 +1937,7 @@ msgstr "Inside user status changed"
 #~ msgid "Insider status changed"
 #~ msgstr "Insider status changed"
 
-#: src/termsConditions/TermsConditionsPage.js:132
+#: src/termsConditions/TermsConditionsPage.js:125
 msgid "Intellectual Property, Copyright and Trademarks"
 msgstr "Intellectual Property, Copyright and Trademarks"
 
@@ -1997,7 +2010,7 @@ msgstr "July"
 msgid "June"
 msgstr "June"
 
-#: src/termsConditions/TermsConditionsPage.js:407
+#: src/termsConditions/TermsConditionsPage.js:358
 msgid "Jurisdiction"
 msgstr "Jurisdiction"
 
@@ -2050,7 +2063,7 @@ msgstr "Leaf Certificate is EV"
 msgid "Let's get you set up so you can verify your account information and begin using Tracker."
 msgstr "Let's get you set up so you can verify your account information and begin using Tracker."
 
-#: src/termsConditions/TermsConditionsPage.js:282
+#: src/termsConditions/TermsConditionsPage.js:256
 msgid "Limitation of Liability"
 msgstr "Limitation of Liability"
 
@@ -2062,7 +2075,7 @@ msgstr "Links to Review:"
 msgid "List of guidance tags"
 msgstr "List of guidance tags"
 
-#: src/dmarc/DmarcByDomainPage.js:268
+#: src/dmarc/DmarcByDomainPage.js:230
 msgid "Loading Data..."
 msgstr "Loading Data..."
 
@@ -2100,8 +2113,8 @@ msgstr "March"
 msgid "May"
 msgstr "May"
 
-#: src/app/FloatingMenu.js:146
-#: src/app/FloatingMenu.js:169
+#: src/app/FloatingMenu.js:122
+#: src/app/FloatingMenu.js:138
 msgid "Menu"
 msgstr "Menu"
 
@@ -2338,7 +2351,7 @@ msgstr "No scan data for this organization."
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
-#: src/admin/SuperAdminUserList.js:161
+#: src/admin/SuperAdminUserList.js:145
 #: src/admin/UserList.js:69
 msgid "No users"
 msgstr "No users"
@@ -2391,7 +2404,7 @@ msgstr "Note: This will affect results for {orgCount} organizations"
 msgid "Notice of Agreement"
 msgstr "Notice of Agreement"
 
-#: src/termsConditions/TermsConditionsPage.js:362
+#: src/termsConditions/TermsConditionsPage.js:319
 msgid "Notification of Changes"
 msgstr "Notification of Changes"
 
@@ -2406,7 +2419,7 @@ msgstr "November"
 msgid "OUTSIDE"
 msgstr "OUTSIDE"
 
-#: src/admin/UserListModal.js:265
+#: src/admin/UserListModal.js:264
 msgid "OWNER"
 msgstr "OWNER"
 
@@ -2505,7 +2518,7 @@ msgstr "Organization:"
 #: src/admin/AdminPage.js:189
 #: src/app/App.js:133
 #: src/app/App.js:213
-#: src/app/FloatingMenu.js:103
+#: src/app/FloatingMenu.js:86
 #: src/organizations/Organizations.js:71
 #: src/organizations/Organizations.js:127
 msgid "Organizations"
@@ -2695,17 +2708,17 @@ msgstr "Prevent this domain from being visible, scanned, and being counted in an
 #~ msgstr "Previous"
 
 #: src/app/App.js:343
-#: src/app/FloatingMenu.js:219
+#: src/app/FloatingMenu.js:169
 #: src/app/SlideMessage.js:88
-#: src/termsConditions/TermsConditionsPage.js:41
+#: src/termsConditions/TermsConditionsPage.js:39
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/termsConditions/TermsConditionsPage.js:77
+#: src/termsConditions/TermsConditionsPage.js:72
 msgid "Privacy Act."
 msgstr "Privacy Act."
 
-#: src/termsConditions/TermsConditionsPage.js:240
+#: src/termsConditions/TermsConditionsPage.js:218
 msgid "Privacy Notice Statement"
 msgstr "Privacy Notice Statement"
 
@@ -2831,7 +2844,7 @@ msgid "Removed Organization"
 msgstr "Removed Organization"
 
 #: src/app/App.js:351
-#: src/app/FloatingMenu.js:230
+#: src/app/FloatingMenu.js:177
 #: src/app/SlideMessage.js:99
 msgid "Report an Issue"
 msgstr "Report an Issue"
@@ -2997,7 +3010,7 @@ msgstr "SPF record is deployed and valid"
 msgid "STAGING"
 msgstr "STAGING"
 
-#: src/admin/UserListModal.js:269
+#: src/admin/UserListModal.js:268
 msgid "SUPER_ADMIN"
 msgstr "SUPER_ADMIN"
 
@@ -3057,8 +3070,8 @@ msgstr "Search by Domain URL"
 msgid "Search by initiated by, resource name"
 msgstr "Search by initiated by, resource name"
 
-#: src/dmarc/DmarcByDomainPage.js:221
-#: src/dmarc/DmarcByDomainPage.js:292
+#: src/dmarc/DmarcByDomainPage.js:193
+#: src/dmarc/DmarcByDomainPage.js:245
 #: src/domains/DomainsPage.js:223
 #: src/organizationDetails/OrganizationDomains.js:363
 msgid "Search for a domain"
@@ -3068,7 +3081,7 @@ msgstr "Search for a domain"
 msgid "Search for a tagged organization"
 msgstr "Search for a tagged organization"
 
-#: src/admin/SuperAdminUserList.js:473
+#: src/admin/SuperAdminUserList.js:406
 msgid "Search for a user (email)"
 msgstr "Search for a user (email)"
 
@@ -3158,7 +3171,7 @@ msgstr "Services: {domainCount}"
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/dmarc/DmarcByDomainPage.js:252
+#: src/dmarc/DmarcByDomainPage.js:218
 #: src/dmarc/DmarcReportPage.js:645
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
@@ -3307,23 +3320,39 @@ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade 
 msgid "Shows the percentage of domains which have a valid DMARC policy configuration."
 msgstr "Shows the percentage of domains which have a valid DMARC policy configuration."
 
+#: src/dmarc/DmarcByDomainPage.js:287
+msgid "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
+msgstr "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
+
 #: src/dmarc/DmarcByDomainPage.js:339
-msgid "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
-msgstr "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
+#~ msgid "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
+#~ msgstr "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
+
+#: src/dmarc/DmarcByDomainPage.js:283
+msgid "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
+msgstr "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 
 #: src/dmarc/DmarcByDomainPage.js:335
-msgid "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
-msgstr "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
+#~ msgid "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
+#~ msgstr "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
+
+#: src/dmarc/DmarcByDomainPage.js:291
+msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
+msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 
 #: src/dmarc/DmarcByDomainPage.js:343
-msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
-msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
+#~ msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
+#~ msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
+
+#: src/dmarc/DmarcByDomainPage.js:279
+msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
+msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 
 #: src/dmarc/DmarcByDomainPage.js:331
-msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
-msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
+#~ msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
+#~ msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:327
+#: src/dmarc/DmarcByDomainPage.js:275
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
@@ -3332,7 +3361,7 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 #~ msgstr "Siganture Hash:"
 
 #: src/app/App.js:183
-#: src/app/FloatingMenu.js:197
+#: src/app/FloatingMenu.js:156
 #: src/app/TopBanner.js:120
 #: src/auth/SignInPage.js:147
 msgid "Sign In"
@@ -3343,7 +3372,7 @@ msgstr "Sign In"
 msgid "Sign In."
 msgstr "Sign In."
 
-#: src/app/FloatingMenu.js:192
+#: src/app/FloatingMenu.js:153
 #: src/app/TopBanner.js:108
 msgid "Sign Out"
 msgstr "Sign Out"
@@ -3444,15 +3473,15 @@ msgstr "Symbol of the Government of Canada"
 #~ msgid "TBS Application Portfolio Management (APM)"
 #~ msgstr "TBS Application Portfolio Management (APM)"
 
-#: src/termsConditions/TermsConditionsPage.js:207
+#: src/termsConditions/TermsConditionsPage.js:192
 msgid "TBS agrees to protect any information you disclose to us in a manner commensurate with the level of protection you use to secure such information, but in any event, with no less than a reasonable level of care."
 msgstr "TBS agrees to protect any information you disclose to us in a manner commensurate with the level of protection you use to secure such information, but in any event, with no less than a reasonable level of care."
 
-#: src/termsConditions/TermsConditionsPage.js:346
+#: src/termsConditions/TermsConditionsPage.js:304
 msgid "TBS be identified as the source; and"
 msgstr "TBS be identified as the source; and"
 
-#: src/termsConditions/TermsConditionsPage.js:271
+#: src/termsConditions/TermsConditionsPage.js:246
 msgid "TBS reserves the right to refuse service, and may reject your application for an account, or cancel an existing account, for any reason, at our sole discretion."
 msgstr "TBS reserves the right to refuse service, and may reject your application for an account, or cancel an existing account, for any reason, at our sole discretion."
 
@@ -3542,7 +3571,7 @@ msgstr "Tag used to show domains which may be from a wildcard subdomain (a wildc
 msgid "Technical implementation guidance:"
 msgstr "Technical implementation guidance:"
 
-#: src/termsConditions/TermsConditionsPage.js:381
+#: src/termsConditions/TermsConditionsPage.js:336
 msgid "Termination"
 msgstr "Termination"
 
@@ -3551,7 +3580,7 @@ msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
 #: src/app/App.js:347
-#: src/app/FloatingMenu.js:225
+#: src/app/FloatingMenu.js:173
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
@@ -3560,7 +3589,7 @@ msgstr "Terms & conditions"
 msgid "Terms and Conditions"
 msgstr "Terms and Conditions"
 
-#: src/termsConditions/TermsConditionsPage.js:303
+#: src/termsConditions/TermsConditionsPage.js:274
 msgid "Terms of Use"
 msgstr "Terms of Use"
 
@@ -3594,10 +3623,14 @@ msgid "The address/domain used in the \"From\" field."
 msgstr "The address/domain used in the \"From\" field."
 
 #: src/termsConditions/TermsConditionsPage.js:287
-msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
-msgstr "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
+#~ msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
+#~ msgstr "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
 
-#: src/dmarc/DmarcByDomainPage.js:324
+#: src/termsConditions/TermsConditionsPage.js:261
+msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warranty or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
+msgstr "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warranty or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
+
+#: src/dmarc/DmarcByDomainPage.js:272
 #: src/domains/DomainsPage.js:177
 #: src/organizationDetails/OrganizationDomains.js:307
 msgid "The domain address."
@@ -3611,11 +3644,11 @@ msgstr "The domains used for DKIM validation."
 msgid "The following ciphers are from known weak protocols and must be disabled:"
 msgstr "The following ciphers are from known weak protocols and must be disabled:"
 
-#: src/termsConditions/TermsConditionsPage.js:143
+#: src/termsConditions/TermsConditionsPage.js:136
 msgid "The graphics displayed on the Tracker website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada’s approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs."
 msgstr "The graphics displayed on the Tracker website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada’s approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs."
 
-#: src/termsConditions/TermsConditionsPage.js:154
+#: src/termsConditions/TermsConditionsPage.js:145
 msgid "The material available on this web site is subject to the"
 msgstr "The material available on this web site is subject to the"
 
@@ -3631,7 +3664,7 @@ msgstr "The percentage of internet-facing services that have a DMARC policy of a
 msgid "The percentage of web-hosting services that strongly enforce HTTPS"
 msgstr "The percentage of web-hosting services that strongly enforce HTTPS"
 
-#: src/termsConditions/TermsConditionsPage.js:349
+#: src/termsConditions/TermsConditionsPage.js:307
 msgid "The reproduction is not represented as an official version of the materials reproduced, nor as having been made, in affiliation with or under the direction of TBS."
 msgstr "The reproduction is not represented as an official version of the materials reproduced, nor as having been made, in affiliation with or under the direction of TBS."
 
@@ -3655,11 +3688,11 @@ msgstr "The user's role has been successfully updated"
 msgid "These metrics are an important first step in securing your services and should be treated as minimum requirements. Further metrics are available in your organization's domain list."
 msgstr "These metrics are an important first step in securing your services and should be treated as minimum requirements. Further metrics are available in your organization's domain list."
 
-#: src/termsConditions/TermsConditionsPage.js:412
+#: src/termsConditions/TermsConditionsPage.js:363
 msgid "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 msgstr "These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions."
 
-#: src/admin/SuperAdminUserList.js:408
+#: src/admin/SuperAdminUserList.js:357
 msgid "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 msgstr "This action CANNOT be reversed, are you sure you wish to to close the account {0}?"
 
@@ -3701,7 +3734,7 @@ msgstr "This is a new service, we are constantly improving."
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 
-#: src/admin/SuperAdminUserList.js:188
+#: src/admin/SuperAdminUserList.js:164
 msgid "This user is not affiliated with any organizations"
 msgstr "This user is not affiliated with any organizations"
 
@@ -3745,8 +3778,8 @@ msgstr "To receive DKIM scan results and guidance, you must add the DKIM selecto
 msgid "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 msgstr "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 
-#: src/dmarc/DmarcByDomainPage.js:142
-#: src/dmarc/DmarcByDomainPage.js:326
+#: src/dmarc/DmarcByDomainPage.js:122
+#: src/dmarc/DmarcByDomainPage.js:274
 #: src/dmarc/DmarcReportPage.js:177
 msgid "Total Messages"
 msgstr "Total Messages"
@@ -3768,7 +3801,7 @@ msgstr "Track Digital Security"
 msgid "Tracker HSTS and HTTPS results display incorrectly when a domain has a non-compliant WWW subdomain. Check your WWW subdomain if your results appear incorrect. For example, the results for www.canada.ca in the Tracker platform are included in the results for canada.ca. Work is in progress to separate the results."
 msgstr "Tracker HSTS and HTTPS results display incorrectly when a domain has a non-compliant WWW subdomain. Check your WWW subdomain if your results appear incorrect. For example, the results for www.canada.ca in the Tracker platform are included in the results for canada.ca. Work is in progress to separate the results."
 
-#: src/admin/SuperAdminUserList.js:92
+#: src/admin/SuperAdminUserList.js:86
 #: src/user/UserPage.js:89
 msgid "Tracker account has been successfully closed."
 msgstr "Tracker account has been successfully closed."
@@ -3797,7 +3830,7 @@ msgstr "Tracker results refresh every 24 hours."
 msgid "Tracker:"
 msgstr "Tracker:"
 
-#: src/termsConditions/TermsConditionsPage.js:181
+#: src/termsConditions/TermsConditionsPage.js:170
 msgid "Trademarks Act"
 msgstr "Trademarks Act"
 
@@ -3822,12 +3855,12 @@ msgstr "USER"
 msgid "Unable to change user role, please try again."
 msgstr "Unable to change user role, please try again."
 
-#: src/admin/SuperAdminUserList.js:101
+#: src/admin/SuperAdminUserList.js:95
 #: src/user/UserPage.js:99
 msgid "Unable to close the account."
 msgstr "Unable to close the account."
 
-#: src/admin/SuperAdminUserList.js:80
+#: src/admin/SuperAdminUserList.js:74
 msgid "Unable to close this account."
 msgstr "Unable to close this account."
 
@@ -4005,7 +4038,7 @@ msgstr "Upgrade DMARC policy to reject (gradually increment enforcement from 25%
 #~ msgid "Use Tracker to monitor the domains and sub-domains of your organization."
 #~ msgstr "Use Tracker to monitor the domains and sub-domains of your organization."
 
-#: src/termsConditions/TermsConditionsPage.js:191
+#: src/termsConditions/TermsConditionsPage.js:177
 msgid "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 msgstr "Use of intellectual property in breach of this agreement may result in the termination of access to the Tracker website, product or services."
 
@@ -4017,12 +4050,12 @@ msgstr "User"
 msgid "User Affiliations"
 msgstr "User Affiliations"
 
-#: src/admin/SuperAdminUserList.js:423
+#: src/admin/SuperAdminUserList.js:368
 #: src/user/UserPage.js:255
 msgid "User Email"
 msgstr "User Email"
 
-#: src/admin/SuperAdminUserList.js:157
+#: src/admin/SuperAdminUserList.js:141
 #: src/admin/UserList.js:65
 msgid "User List"
 msgstr "User List"
@@ -4049,7 +4082,7 @@ msgstr "User:"
 msgid "Users"
 msgstr "Users"
 
-#: src/termsConditions/TermsConditionsPage.js:340
+#: src/termsConditions/TermsConditionsPage.js:301
 msgid "Users exercise due diligence in ensuring the accuracy of the materials reproduced;"
 msgstr "Users exercise due diligence in ensuring the accuracy of the materials reproduced;"
 
@@ -4061,8 +4094,8 @@ msgstr "Value"
 msgid "Verification code must only contains numbers"
 msgstr "Verification code must only contains numbers"
 
-#: src/admin/SuperAdminUserList.js:150
-#: src/admin/SuperAdminUserList.js:341
+#: src/admin/SuperAdminUserList.js:134
+#: src/admin/SuperAdminUserList.js:294
 #: src/organizations/Organizations.js:62
 msgid "Verified"
 msgstr "Verified"
@@ -4127,11 +4160,11 @@ msgstr "WILDCARD"
 msgid "Warnings:"
 msgstr "Warnings:"
 
-#: src/termsConditions/TermsConditionsPage.js:367
+#: src/termsConditions/TermsConditionsPage.js:324
 msgid "We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change."
 msgstr "We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change."
 
-#: src/termsConditions/TermsConditionsPage.js:386
+#: src/termsConditions/TermsConditionsPage.js:341
 msgid "We reserve the right to modify or terminate our services for any reason, without notice, at any time."
 msgstr "We reserve the right to modify or terminate our services for any reason, without notice, at any time."
 
@@ -4296,19 +4329,19 @@ msgstr "Would you like to request an invite to {orgName}?"
 msgid "Yes"
 msgstr "Yes"
 
-#: src/termsConditions/TermsConditionsPage.js:265
+#: src/termsConditions/TermsConditionsPage.js:241
 msgid "You acknowledge that TBS will use the email address you provide as the primary method for communication."
 msgstr "You acknowledge that TBS will use the email address you provide as the primary method for communication."
 
-#: src/termsConditions/TermsConditionsPage.js:215
+#: src/termsConditions/TermsConditionsPage.js:199
 msgid "You acknowledge that any data or information disclosed to TBS may be used to protect the Government of Canada as well as electronic information and information infrastructures designated as being of importance to the Government of Canada in accordance with cyber security and information assurance aspect of TBS’s mandate under the Policy on Government Security and the Policy on Service and Digital."
 msgstr "You acknowledge that any data or information disclosed to TBS may be used to protect the Government of Canada as well as electronic information and information infrastructures designated as being of importance to the Government of Canada in accordance with cyber security and information assurance aspect of TBS’s mandate under the Policy on Government Security and the Policy on Service and Digital."
 
-#: src/termsConditions/TermsConditionsPage.js:119
+#: src/termsConditions/TermsConditionsPage.js:114
 msgid "You agree to protect any information disclosed to you by TBS in accordance with the data handling measures outlined in these Terms & Conditions. Similarly, TBS agrees to protect any information you disclose to us. Any such information must only be used for the purposes for which it was intended."
 msgstr "You agree to protect any information disclosed to you by TBS in accordance with the data handling measures outlined in these Terms & Conditions. Similarly, TBS agrees to protect any information you disclose to us. Any such information must only be used for the purposes for which it was intended."
 
-#: src/termsConditions/TermsConditionsPage.js:308
+#: src/termsConditions/TermsConditionsPage.js:279
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
@@ -4386,7 +4419,7 @@ msgstr "You have successfully updated {0}."
 msgid "You may now sign in with your new password"
 msgstr "You may now sign in with your new password"
 
-#: src/termsConditions/TermsConditionsPage.js:254
+#: src/termsConditions/TermsConditionsPage.js:232
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
@@ -4418,11 +4451,11 @@ msgstr "Your request has been sent to the organization administrators."
 msgid "acceptable"
 msgstr "acceptable"
 
-#: src/termsConditions/TermsConditionsPage.js:185
+#: src/termsConditions/TermsConditionsPage.js:174
 msgid "and by applicable laws, policies, regulations and international agreements."
 msgstr "and by applicable laws, policies, regulations and international agreements."
 
-#: src/termsConditions/TermsConditionsPage.js:398
+#: src/termsConditions/TermsConditionsPage.js:349
 msgid "contact us"
 msgstr "contact us"
 
@@ -4437,7 +4470,7 @@ msgstr "contact us"
 msgid "myTracker"
 msgstr "myTracker"
 
-#: src/termsConditions/TermsConditionsPage.js:60
+#: src/termsConditions/TermsConditionsPage.js:55
 msgid "our Terms and Conditions on the TBS website"
 msgstr "our Terms and Conditions on the TBS website"
 

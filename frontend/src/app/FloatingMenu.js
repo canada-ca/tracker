@@ -35,7 +35,7 @@ export const FloatingMenu = () => {
     onError(error) {
       toast({
         title: error.message,
-        description: t`An error occured when you attempted to sign out`,
+        description: t`An error occurred when you attempted to sign out`,
         status: 'error',
         duration: 9000,
         isClosable: true,
