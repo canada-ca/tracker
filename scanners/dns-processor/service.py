@@ -66,7 +66,7 @@ def snake_to_camel(d):
 
 
 def mx_record_diff(processed_results):
-    domain = process_results.get("domain")
+    domain = processed_results.get("domain")
     new_mx = processed_results.get("mx_records").get("hosts")
     mx_record_diff = False
     # fetch most recent scan of domain
