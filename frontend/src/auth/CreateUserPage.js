@@ -155,10 +155,12 @@ export default function CreateUserPage() {
                 </Button>
               </Box>
               <Text>
-                Already have an account?{' '}
-                <Link as={RouteLink} to="/sign-in">
-                  Log in
-                </Link>
+                <Trans>
+                  Already have an account?{' '}
+                  <Link as={RouteLink} to="/sign-in">
+                    Log in
+                  </Link>
+                </Trans>
               </Text>
             </Box>
           </form>

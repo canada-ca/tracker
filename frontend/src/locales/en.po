@@ -225,6 +225,10 @@ msgstr "Admins of an organization can add domains to their list."
 msgid "Affiliations:"
 msgstr "Affiliations:"
 
+#: src/auth/CreateUserPage.js:158
+msgid "Already have an account? <0>Log in</0>"
+msgstr "Already have an account? <0>Log in</0>"
+
 #: src/auth/ForgotPasswordPage.js:39
 msgid "An email was sent with a link to reset your password"
 msgstr "An email was sent with a link to reset your password"
@@ -3422,7 +3426,7 @@ msgid "Subject:"
 msgstr "Subject:"
 
 #: src/auth/ForgotPasswordPage.js:97
-#: src/auth/TwoFactorAuthenticatePage.js:120
+#: src/auth/TwoFactorAuthenticatePage.js:121
 msgid "Submit"
 msgstr "Submit"
 
@@ -3808,7 +3812,7 @@ msgstr "Tracker:"
 msgid "Trademarks Act"
 msgstr "Trademarks Act"
 
-#: src/auth/TwoFactorAuthenticatePage.js:111
+#: src/auth/TwoFactorAuthenticatePage.js:112
 msgid "Two Factor Authentication"
 msgstr "Two Factor Authentication"
 
