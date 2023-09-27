@@ -141,7 +141,7 @@ export default function CreateUserPage() {
 
               <Box>
                 <Text fontWeight="bold" mb="2">
-                  <Trans>Multifactor authentication (MFA) is active by deafult and used to verify account email</Trans>
+                  <Trans>Multifactor authentication (MFA) is active by default and used to verify account email</Trans>
                 </Text>
                 <Button
                   variant="primary"

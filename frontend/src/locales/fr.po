@@ -2103,8 +2103,8 @@ msgid "Mozilla SSL Configuration Generator"
 msgstr "Générateur de configuration SSL de Mozilla"
 
 #: src/auth/CreateUserPage.js:144
-msgid "Multifactor authentication (MFA) is active by deafult and used to verify account email"
-msgstr "L'authentification multifactorielle (MFA) est activée par deafult et utilisée pour vérifier l'adresse électronique du compte."
+msgid "Multifactor authentication (MFA) is active by default and used to verify account email"
+msgstr "L'authentification multifactorielle (MFA) est active par défaut et utilisée pour vérifier l'adresse électronique du compte."
 
 #: src/guidance/WebTLSResults.js:299
 msgid "Must Staple"

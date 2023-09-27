@@ -2131,8 +2131,12 @@ msgid "Mozilla SSL Configuration Generator"
 msgstr "Mozilla SSL Configuration Generator"
 
 #: src/auth/CreateUserPage.js:144
-msgid "Multifactor authentication (MFA) is active by deafult and used to verify account email"
-msgstr "Multifactor authentication (MFA) is active by deafult and used to verify account email"
+#~ msgid "Multifactor authentication (MFA) is active by deafult and used to verify account email"
+#~ msgstr "Multifactor authentication (MFA) is active by deafult and used to verify account email"
+
+#: src/auth/CreateUserPage.js:144
+msgid "Multifactor authentication (MFA) is active by default and used to verify account email"
+msgstr "Multifactor authentication (MFA) is active by default and used to verify account email"
 
 #: src/guidance/WebTLSResults.js:299
 msgid "Must Staple"
