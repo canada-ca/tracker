@@ -7,7 +7,7 @@ export const signUpUnion = new GraphQLUnionType({
     'This union is used with the `signUp` mutation, allowing for the user to sign up, and support any errors that may occur.',
   types: [tfaSignInResult, signUpError],
   resolveType({ _type }) {
-    if (_type === 'tfaSignInResult') {
+    if (_type === 'tfa') {
       return tfaSignInResult.name
     } else {
       return signUpError.name

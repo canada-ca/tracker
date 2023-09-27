@@ -112,7 +112,6 @@ describe('testing user sign up', () => {
                   query,
                   collections: collectionNames,
                   transaction,
-
                   uuidv4,
                   auth: {
                     bcrypt,
@@ -918,7 +917,6 @@ describe('testing user sign up', () => {
                   },
                 },
               }
-              console.log(JSON.stringify(response))
               expect(response).toEqual(expectedResult)
               expect(consoleOutput).toEqual([
                 'User: test.account@istio.actually.exists successfully created a new account, and sent auth msg.',

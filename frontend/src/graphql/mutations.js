@@ -38,6 +38,10 @@ export const SIGN_IN = gql`
   mutation signIn($userName: EmailAddress!, $password: String!, $rememberMe: Boolean) {
     signIn(input: { userName: $userName, password: $password, rememberMe: $rememberMe }) {
       result {
+        ... on TFASignInResult {
+          authenticateToken
+          sendMethod
+        }
         ... on AuthResult {
           ...RequiredAuthResultFields
         }

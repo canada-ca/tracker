@@ -18,7 +18,7 @@ describe('given the sign up union', () => {
     describe('testing the authResult type', () => {
       it('returns the correct type', () => {
         const obj = {
-          _type: 'tfaSignInResult',
+          _type: 'tfa',
           authResult: {},
         }
 
