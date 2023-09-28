@@ -65,21 +65,19 @@ def snake_to_camel(d):
         }
 
 
-def check_mx_diff(processed_results):
-    domain = processed_results.get("domain")
+def check_mx_diff(processed_results, domain_id):
     new_mx = processed_results.get("mx_records").get("hosts")
     mx_record_diff = False
     # fetch most recent scan of domain
     last_mx = (
         db.aql.execute(
             """
-            FOR scan IN dns
-                FILTER scan.domain == @domain
-                SORT scan.timestamp DESC
+            FOR v, e IN 1..1 OUTBOUND @domain_id domainsDNS
+                SORT v.timestamp DESC
                 LIMIT 1
-                RETURN scan
+                RETURN v
             """,
-            bind_vars={"domain": domain},
+            bind_vars={"domain_id": domain_id},
         )
         .next()
         .get("mxRecords", {})
@@ -163,7 +161,7 @@ async def run(loop):
         shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
-        mx_record_diff = check_mx_diff(processed_results)
+        mx_record_diff = check_mx_diff(processed_results=processed_results, domain_id=f"domains/{domain_key}")
         processed_results["mx_records"].update({"diff": mx_record_diff})
 
         dmarc_status = processed_results.get("dmarc").get("status")
