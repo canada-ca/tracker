@@ -51,7 +51,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const domainInput = cleanseInput(args.domain)
 
-    // Check to see if domain is valid for subdomain discovery
+    // Check to see if domain is valid for subdomain discovery.
     // Discovery should not be performed on a domain that is not a subdomain of canada.ca or gc.ca, or on the root domains themselves
     const regex = /^[A-Za-z0-9](?:[A-Za-z0-9\-.]+[A-Za-z0-9])?.(canada|gc).ca$/gm
     const found = domainInput.match(regex)

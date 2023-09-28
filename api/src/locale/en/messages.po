@@ -260,7 +260,7 @@ msgstr "Permission Denied: Please contact organization admin for help with updat
 #~ msgid "Permission Denied: Please contact organization admin for help with updating user roles."
 #~ msgstr "Permission Denied: Please contact organization admin for help with updating user roles."
 
-#: src/affiliation/mutations/invite-user-to-org.js:99
+#: src/affiliation/mutations/invite-user-to-org.js:101
 msgid "Permission Denied: Please contact organization admin for help with user invitations."
 msgstr "Permission Denied: Please contact organization admin for help with user invitations."
 
@@ -330,7 +330,7 @@ msgstr "Permission error, not an admin for this user."
 msgid "Permission error: Unable to close other user's account."
 msgstr "Permission error: Unable to close other user's account."
 
-#: src/auth/super-admin-required.js:15
+#: src/auth/super-admin-required.js:11
 #: src/organization/queries/get-all-organization-domain-statuses.js:33
 msgid "Permissions error. You do not have sufficient permissions to access this data."
 msgstr "Permissions error. You do not have sufficient permissions to access this data."
@@ -468,7 +468,7 @@ msgstr "Successfully dispatched subdomain discovery scan."
 msgid "Successfully email verified account, and set TFA send method to email."
 msgstr "Successfully email verified account, and set TFA send method to email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:280
+#: src/affiliation/mutations/invite-user-to-org.js:283
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "Successfully invited user to organization, and sent notification email."
 
@@ -504,7 +504,7 @@ msgstr "Successfully removed {domainCount} domain(s) from {0}."
 msgid "Successfully requested invite to organization, and sent notification email."
 msgstr "Successfully requested invite to organization, and sent notification email."
 
-#: src/affiliation/mutations/invite-user-to-org.js:172
+#: src/affiliation/mutations/invite-user-to-org.js:174
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "Successfully sent invitation to service, and organization email."
 
@@ -733,13 +733,13 @@ msgstr "Unable to find user affiliation(s). Please try again."
 msgid "Unable to find verified organization(s). Please try again."
 msgstr "Unable to find verified organization(s). Please try again."
 
-#: src/affiliation/mutations/invite-user-to-org.js:117
-#: src/affiliation/mutations/invite-user-to-org.js:127
-#: src/affiliation/mutations/invite-user-to-org.js:192
+#: src/affiliation/mutations/invite-user-to-org.js:119
+#: src/affiliation/mutations/invite-user-to-org.js:129
+#: src/affiliation/mutations/invite-user-to-org.js:194
 msgid "Unable to invite user to organization. Please try again."
 msgstr "Unable to invite user to organization. Please try again."
 
-#: src/affiliation/mutations/invite-user-to-org.js:204
+#: src/affiliation/mutations/invite-user-to-org.js:206
 msgid "Unable to invite user to organization. User is already affiliated with organization."
 msgstr "Unable to invite user to organization. User is already affiliated with organization."
 
@@ -747,8 +747,8 @@ msgstr "Unable to invite user to organization. User is already affiliated with o
 msgid "Unable to invite user to unknown organization."
 msgstr "Unable to invite user to unknown organization."
 
-#: src/affiliation/mutations/invite-user-to-org.js:233
-#: src/affiliation/mutations/invite-user-to-org.js:252
+#: src/affiliation/mutations/invite-user-to-org.js:235
+#: src/affiliation/mutations/invite-user-to-org.js:255
 msgid "Unable to invite user. Please try again."
 msgstr "Unable to invite user. Please try again."
 
@@ -1176,7 +1176,7 @@ msgid "Unable to send authentication text message. Please try again."
 msgstr "Unable to send authentication text message. Please try again."
 
 #: src/notify/notify-send-org-invite-create-account.js:19
-#: src/notify/notify-send-org-invite-email.js:26
+#: src/notify/notify-send-org-invite-email.js:18
 msgid "Unable to send org invite email. Please try again."
 msgstr "Unable to send org invite email. Please try again."
 

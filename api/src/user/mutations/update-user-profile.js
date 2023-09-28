@@ -70,7 +70,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     // Get user info from DB
     const user = await userRequired()
 
-    // Check to see if user name is already in use
+    // Check to see if username is already in use
     if (userName !== '') {
       const checkUser = await loadUserByUserName.load(userName)
       if (typeof checkUser !== 'undefined') {
