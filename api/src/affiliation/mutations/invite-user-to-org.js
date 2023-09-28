@@ -132,7 +132,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // Check to see if requested user exists
     const requestedUser = await loadUserByUserName.load(userName)
 
-    // If there is not associated account with that user name send invite to org with create account
+    // If there is not associated account with that username send invite to org with create account
     if (typeof requestedUser === 'undefined') {
       const token = tokenize({
         parameters: { userName, orgKey: org._key, requestedRole },

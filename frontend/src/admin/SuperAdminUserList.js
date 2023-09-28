@@ -161,156 +161,125 @@ export function SuperAdminUserList({ permission }) {
         <Trans>No users</Trans>
       </Text>
     ) : (
-      nodes.map(
-        ({
-          id: userId,
-          userName,
-          displayName,
-          emailValidated,
-          insideUser,
-          affiliations,
-        }) => {
-          const { totalCount, edges: orgEdges } = affiliations
-          const orgNodes = orgEdges?.map((e) => e.node)
-          let userAffiliations
-          if (totalCount === 0) {
-            userAffiliations = (
-              <Box
-                justify="space-between"
-                borderColor="black"
-                borderWidth="1px"
-                rounded="md"
-                align="center"
-                p="2"
-                w="100%"
-              >
-                <Text>
-                  <Trans>
-                    This user is not affiliated with any organizations
-                  </Trans>
-                </Text>
-              </Box>
+      nodes.map(({ id: userId, userName, displayName, emailValidated, insideUser, affiliations }) => {
+        const { totalCount, edges: orgEdges } = affiliations
+        const orgNodes = orgEdges?.map((e) => e.node)
+        let userAffiliations
+        if (totalCount === 0) {
+          userAffiliations = (
+            <Box
+              justify="space-between"
+              borderColor="black"
+              borderWidth="1px"
+              rounded="md"
+              align="center"
+              p="2"
+              w="100%"
+            >
+              <Text>
+                <Trans>This user is not affiliated with any organizations</Trans>
+              </Text>
+            </Box>
+          )
+        } else {
+          userAffiliations = orgNodes.map(({ permission: userRole, organization }) => {
+            if (!organization) {
+              return (
+                <Box
+                  justify="space-between"
+                  borderColor="black"
+                  borderWidth="1px"
+                  rounded="md"
+                  align="center"
+                  p="2"
+                  w="100%"
+                >
+                  <Text>
+                    <Trans>An error occurred when fetching this organization's information</Trans>
+                  </Text>
+                </Box>
+              )
+            }
+            const { id: orgId, name: orgName, acronym, slug, verified } = organization
+            return (
+              <Flex key={orgId} align="center" p="1" w="100%">
+                <Stack direction="row" flexGrow="0" mr="2">
+                  <IconButton
+                    aria-label={`Remove ${userName} from ${orgName}`}
+                    variant="danger"
+                    onClick={() => {
+                      setEditUserRole({
+                        mutation: 'remove',
+                        userId,
+                        userName,
+                        userRole,
+                        orgName,
+                        orgId,
+                      })
+                      onOpen()
+                    }}
+                    p="2"
+                    icon={<MinusIcon />}
+                  />
+                  <IconButton
+                    aria-label={`Edit ${userName} in ${orgName}`}
+                    variant="primary"
+                    onClick={() => {
+                      setEditUserRole({
+                        mutation: 'update',
+                        userId,
+                        userName,
+                        userRole,
+                        orgName,
+                        orgId,
+                      })
+                      onOpen()
+                    }}
+                    p="2"
+                    icon={<EditIcon />}
+                  />
+                </Stack>
+                <Flex
+                  justify="space-between"
+                  borderColor="black"
+                  borderWidth="1px"
+                  rounded="md"
+                  align="center"
+                  p="2"
+                  w="100%"
+                >
+                  <Text fontWeight="bold">
+                    {orgName} ({acronym}){' '}
+                    {verified && (
+                      <CheckCircleIcon color="blue.500" size="icons.sm" aria-label="Verified Organization" />
+                    )}
+                  </Text>
+                  <Badge
+                    variant="solid"
+                    bg={userRole === 'USER' ? 'primary' : userRole === 'ADMIN' ? 'info' : 'weak'}
+                    pt={1}
+                    mr={{ md: '1rem' }}
+                    justifySelf={{ base: 'start', md: 'end' }}
+                  >
+                    {userRole}
+                  </Badge>
+                </Flex>
+                <UserListModal
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  orgId={editUserRole.orgId}
+                  editingUserName={editUserRole.userName}
+                  editingUserRole={editUserRole.userRole}
+                  editingUserId={editUserRole.userId}
+                  orgSlug={slug}
+                  orgName={editUserRole.orgName}
+                  permission={permission}
+                  mutation={editUserRole.mutation}
+                />
+              </Flex>
             )
-          } else {
-            userAffiliations = orgNodes.map(
-              ({ permission: userRole, organization }) => {
-                if (!organization) {
-                  return (
-                    <Box
-                      justify="space-between"
-                      borderColor="black"
-                      borderWidth="1px"
-                      rounded="md"
-                      align="center"
-                      p="2"
-                      w="100%"
-                    >
-                      <Text>
-                        <Trans>
-                          An error occured when fetching this organization's
-                          information
-                        </Trans>
-                      </Text>
-                    </Box>
-                  )
-                }
-                const {
-                  id: orgId,
-                  name: orgName,
-                  acronym,
-                  slug,
-                  verified,
-                } = organization
-                return (
-                  <Flex key={orgId} align="center" p="1" w="100%">
-                    <Stack direction="row" flexGrow="0" mr="2">
-                      <IconButton
-                        aria-label={`Remove ${userName} from ${orgName}`}
-                        variant="danger"
-                        onClick={() => {
-                          setEditUserRole({
-                            mutation: 'remove',
-                            userId,
-                            userName,
-                            userRole,
-                            orgName,
-                            orgId,
-                          })
-                          onOpen()
-                        }}
-                        p="2"
-                        icon={<MinusIcon />}
-                      />
-                      <IconButton
-                        aria-label={`Edit ${userName} in ${orgName}`}
-                        variant="primary"
-                        onClick={() => {
-                          setEditUserRole({
-                            mutation: 'update',
-                            userId,
-                            userName,
-                            userRole,
-                            orgName,
-                            orgId,
-                          })
-                          onOpen()
-                        }}
-                        p="2"
-                        icon={<EditIcon />}
-                      />
-                    </Stack>
-                    <Flex
-                      justify="space-between"
-                      borderColor="black"
-                      borderWidth="1px"
-                      rounded="md"
-                      align="center"
-                      p="2"
-                      w="100%"
-                    >
-                      <Text fontWeight="bold">
-                        {orgName} ({acronym}){' '}
-                        {verified && (
-                          <CheckCircleIcon
-                            color="blue.500"
-                            size="icons.sm"
-                            aria-label="Verified Organization"
-                          />
-                        )}
-                      </Text>
-                      <Badge
-                        variant="solid"
-                        bg={
-                          userRole === 'USER'
-                            ? 'primary'
-                            : userRole === 'ADMIN'
-                            ? 'info'
-                            : 'weak'
-                        }
-                        pt={1}
-                        mr={{ md: '1rem' }}
-                        justifySelf={{ base: 'start', md: 'end' }}
-                      >
-                        {userRole}
-                      </Badge>
-                    </Flex>
-                    <UserListModal
-                      isOpen={isOpen}
-                      onClose={onClose}
-                      orgId={editUserRole.orgId}
-                      editingUserName={editUserRole.userName}
-                      editingUserRole={editUserRole.userRole}
-                      editingUserId={editUserRole.userId}
-                      orgSlug={slug}
-                      orgName={editUserRole.orgName}
-                      permission={permission}
-                      mutation={editUserRole.mutation}
-                    />
-                  </Flex>
-                )
-              },
-            )
-          }
+          })
+        }
 
           return (
             <AccordionItem key={userId}>
@@ -434,24 +403,18 @@ export function SuperAdminUserList({ permission }) {
                             <Trans>Cancel</Trans>
                           </Button>
 
-                          <Button
-                            variant="primary"
-                            mr="4"
-                            type="submit"
-                            isLoading={loadingCloseAccount}
-                          >
-                            <Trans>Confirm</Trans>
-                          </Button>
-                        </ModalFooter>
-                      </ModalContent>
-                    </form>
-                  )}
-                </Formik>
-              </Modal>
-            </AccordionItem>
-          )
-        },
-      )
+                        <Button variant="primary" mr="4" type="submit" isLoading={loadingCloseAccount}>
+                          <Trans>Confirm</Trans>
+                        </Button>
+                      </ModalFooter>
+                    </ModalContent>
+                  </form>
+                )}
+              </Formik>
+            </Modal>
+          </AccordionItem>
+        )
+      })
     )
 
   return (

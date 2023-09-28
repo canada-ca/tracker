@@ -36,7 +36,7 @@ export default function DomainsPage() {
       onError(error) {
         toast({
           title: error.message,
-          description: t`An error occured when you attempted to download all domain statuses.`,
+          description: t`An error occurred when you attempted to download all domain statuses.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
