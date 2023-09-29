@@ -31,11 +31,11 @@ class DMARCScanner:
         cache_dir = '/tmp/tldextract'
 
         try:
-            cached_tld_extract_age_minutes = (time.time() - os.path.getmtime(cache_dir)) / 60
+            cached_tld_extract_age_hours = (time.time() - os.path.getmtime(cache_dir)) / 60 / 60
 
-            # If the cached tldextract is older than 60 minutes, update it.
-            if cached_tld_extract_age_minutes > 60:
-                logger.info(f"Updating tldextract cache. (age: {cached_tld_extract_age_minutes} minutes)")
+            # If the cached tldextract is older than 60 hours, update it.
+            if cached_tld_extract_age_hours > 24:
+                logger.info(f"Updating tldextract cache. (age: {cached_tld_extract_age_hours} hours)")
                 shutil.rmtree(cache_dir)
                 extract = tldextract.TLDExtract(include_psl_private_domains=True, suffix_list_urls=['https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat'], cache_dir=cache_dir)
             else:
