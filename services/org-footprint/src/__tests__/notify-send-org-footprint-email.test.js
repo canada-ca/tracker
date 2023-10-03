@@ -74,8 +74,6 @@ describe('given the sendOrgFootprintEmail function', () => {
           update_domains_list: 'domain2',
           remove_domains_count: 1,
           remove_domains_list: 'domain1',
-          export_count: 0,
-          scan_count: 0,
         },
       })
     })

@@ -186,6 +186,18 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     })
   }
 
+  const getInitTags = () => {
+    let tags = tagInputList?.map((label) => {
+      return tagOptions.filter((option) => {
+        return option[i18n.locale] == label
+      })[0]
+    })
+    if (mutation === 'create' && tags.filter((tag) => tag.en === 'NEW').length === 0) {
+      tags.push(tagOptions[0])
+    }
+    return tags
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef} motionPreset="slideInBottom">
       <ModalOverlay />
@@ -195,11 +207,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
             domainUrl: editingDomainUrl,
             selectors: selectorInputList,
             // convert initial tags to input type
-            tags: tagInputList?.map((label) => {
-              return tagOptions.filter((option) => {
-                return option[i18n.locale] == label
-              })[0]
-            }),
+            tags: getInitTags(),
             archiveDomain: archived,
             hideDomain: hidden,
             outsideComment: null,

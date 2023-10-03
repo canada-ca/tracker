@@ -99,6 +99,7 @@ export default function TwoFactorAuthenticatePage() {
         onSubmit={async (values) => {
           authenticate({
             variables: {
+              sendMethod: sendMethod === 'email' ? 'EMAIL' : 'PHONE',
               authenticationCode: parseInt(values.twoFactorCode),
               authenticateToken: values.authenticateToken,
             },

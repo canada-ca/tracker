@@ -1,6 +1,6 @@
-import {t} from '@lingui/macro'
-import {GraphQLBoolean, GraphQLID} from 'graphql'
-import {fromGlobalId} from 'graphql-relay'
+import { t } from '@lingui/macro'
+import { GraphQLBoolean, GraphQLID } from 'graphql'
+import { fromGlobalId } from 'graphql-relay'
 
 export const isUserAdmin = {
   type: GraphQLBoolean,
@@ -8,8 +8,7 @@ export const isUserAdmin = {
   args: {
     orgId: {
       type: GraphQLID,
-      description:
-        'Optional org id to see if user is an admin for the requested org.',
+      description: 'Optional org id to see if user is an admin for the requested org.',
     },
   },
   resolve: async (
@@ -19,12 +18,12 @@ export const isUserAdmin = {
       i18n,
       query,
       userKey,
-      auth: {checkPermission, userRequired},
-      loaders: {loadOrgByKey},
-      validators: {cleanseInput},
+      auth: { checkPermission, userRequired },
+      loaders: { loadOrgByKey },
+      validators: { cleanseInput },
     },
   ) => {
-    const {id: orgKey} = fromGlobalId(cleanseInput(args.orgId))
+    const { id: orgKey } = fromGlobalId(cleanseInput(args.orgId))
 
     const user = await userRequired()
 
@@ -32,7 +31,7 @@ export const isUserAdmin = {
     if (orgKey !== '') {
       const org = await loadOrgByKey.load(orgKey)
 
-      const permission = await checkPermission({orgId: org._id})
+      const permission = await checkPermission({ orgId: org._id })
 
       if (permission === 'admin' || permission === 'super_admin') {
         return true
@@ -47,17 +46,13 @@ export const isUserAdmin = {
       userAdmin = await query`
         WITH users, affiliations
         FOR v, e IN 1..1 INBOUND ${user._id} affiliations
-        FILTER e.permission == "admin" || e.permission == "super_admin"
+        FILTER e.permission IN ["admin", "owner", "super_admin"]
         LIMIT 1
         RETURN e.permission
       `
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to verify if user is an admin, please try again.`),
-      )
+      console.error(`Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`)
+      throw new Error(i18n._(t`Unable to verify if user is an admin, please try again.`))
     }
 
     if (userAdmin.count > 0) {

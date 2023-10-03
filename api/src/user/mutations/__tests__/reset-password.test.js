@@ -69,10 +69,9 @@ describe('reset users password', () => {
               }
             ) {
               result {
-                ... on AuthResult {
-                  user {
-                    id
-                  }
+                ... on TFASignInResult {
+                  authenticateToken
+                  sendMethod
                 }
               }
             }
@@ -249,7 +248,8 @@ describe('reset users password', () => {
           data: {
             signIn: {
               result: {
-                authToken: 'token',
+                authenticateToken: 'token',
+                sendMethod: 'email',
               },
             },
           },
@@ -463,7 +463,8 @@ describe('reset users password', () => {
           data: {
             signIn: {
               result: {
-                authToken: 'token',
+                authenticateToken: 'token',
+                sendMethod: 'email',
               },
             },
           },

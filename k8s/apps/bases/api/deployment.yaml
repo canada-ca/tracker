@@ -54,7 +54,7 @@ spec:
             - name: database-config
               mountPath: /app
       containers:
-        - image: gcr.io/track-compliance/api-js:master-f0cc59b-1694710818 # {"$imagepolicy": "flux-system:api"}
+        - image: gcr.io/track-compliance/api-js:master-26207c6-1695920883 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
@@ -219,6 +219,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_ORG_INVITE_FR
+            - name: NOTIFICATION_PASSWORD_RESET_BILINGUAL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_PASSWORD_RESET_BILINGUAL
             - name: NOTIFICATION_PASSWORD_RESET_EN
               valueFrom:
                 secretKeyRef:
@@ -249,6 +254,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_VERIFICATION_EMAIL_FR
+            - name: NOTIFICATION_ORG_INVITE_REQUEST_BILINGUAL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_REQUEST_BILINGUAL
             - name: NOTIFICATION_ORG_INVITE_REQUEST_EN
               valueFrom:
                 secretKeyRef:
@@ -259,6 +269,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_ORG_INVITE_REQUEST_FR
+            - name: NOTIFICATION_ORG_INVITE_BILINGUAL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: NOTIFICATION_ORG_INVITE_BILINGUAL
             - name: TRACING_ENABLED
               valueFrom:
                 secretKeyRef:

@@ -1,24 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { array, func, string } from 'prop-types'
-import {
-  Box,
-  Text,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Flex,
-} from '@chakra-ui/react'
+import { Box, Text, Input, InputGroup, InputRightElement, Flex, InputLeftElement } from '@chakra-ui/react'
+import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@chakra-ui/icons'
 
-export function Dropdown({
-  label,
-  labelDirection,
-  options,
-  placeholder,
-  onChange,
-  searchValue,
-  onSearch,
-  ...props
-}) {
+export function Dropdown({ label, labelDirection, options, placeholder, onChange, searchValue, onSearch, ...props }) {
   const [open, setOpen] = useState(false)
   const inputRef = useRef(null)
   const optionRefs = []
@@ -110,15 +95,17 @@ export function Dropdown({
         }}
       >
         <label>
-          <Flex
-            flexDirection={{ base: 'column', md: labelDirection }}
-            align="center"
-          >
+          <Flex flexDirection={{ base: 'column', md: labelDirection }} align="center">
             <Text fontWeight="bold" fontSize="2xl" mr={{ base: '0', md: '4' }}>
               {label}
             </Text>
             <InputGroup>
+              <InputLeftElement>
+                <SearchIcon boxSize="icons.md" />
+              </InputLeftElement>
               <Input
+                borderColor="black"
+                borderWidth="1px"
                 ref={inputRef}
                 type="text"
                 placeholder={placeholder}
@@ -130,21 +117,9 @@ export function Dropdown({
                 onKeyDown={handleInputOnKeyDown}
               />
               <InputRightElement>
-                <Box
-                  // arrow icon
-                  borderColor={
-                    open
-                      ? 'transparent transparent #999'
-                      : '#999 transparent transparent'
-                  }
-                  borderWidth={open ? '0 5px 5px' : '5px 5px 0'}
-                  borderStyle="solid"
-                  display="block"
-                  marginTop="0.3rem"
-                  position="absolute"
-                  right="10px"
-                  top="14px"
-                />
+                <InputRightElement>
+                  {open ? <ChevronUpIcon boxSize="icons.md" /> : <ChevronDownIcon boxSize="icons.md" />}
+                </InputRightElement>
               </InputRightElement>
             </InputGroup>
           </Flex>
