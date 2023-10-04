@@ -38,7 +38,6 @@ const progressReportService = async ({ query, log, notifyClient }) => {
   // send notifications
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
     const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
-    console.log(orgAdmins)
     for (const user of orgAdmins) {
       await notifySendOrgProgressReport({
         notifyClient,
