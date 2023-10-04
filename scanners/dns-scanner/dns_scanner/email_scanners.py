@@ -33,7 +33,7 @@ class DMARCScanner:
         try:
             cached_tld_extract_age_hours = (time.time() - os.path.getmtime(cache_dir)) / 60 / 60
 
-            # If the cached tldextract is older than 60 hours, update it.
+            # If the cached tldextract is older than 24 hours, update it.
             if cached_tld_extract_age_hours > 24:
                 logger.info(f"Updating tldextract cache. (age: {cached_tld_extract_age_hours} hours)")
                 shutil.rmtree(cache_dir)
