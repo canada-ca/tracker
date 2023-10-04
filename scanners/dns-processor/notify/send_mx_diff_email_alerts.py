@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_stakeholders(db) -> list:
+def get_stakeholders(db):
     """
     Gets the stakeholders for a domain.
 
@@ -22,12 +22,11 @@ def get_stakeholders(db) -> list:
     return users
 
 
-def get_reason_str(reason) -> dict:
+def get_reason_str(reason):
     """
     Gets the reason for the change as a string.
 
     :param reason: The reason for the change.
-    :param language: The language to use.
     :return: A string representing the reason for the change.
     """
 
@@ -57,9 +56,7 @@ def get_reason_str(reason) -> dict:
         return {"en": "unknown", "fr": "inconnue"}
 
 
-def send_mx_diff_email_alerts(
-    domain: str, diff_reason: str, logger: object, db: object
-) -> None:
+def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
     """
     Sends an email to the user when the MX records for a domain have changed.
 

@@ -128,7 +128,10 @@ def check_mx_diff(processed_results, domain_id):
     # send alerts if true
     if mx_record_diff:
         send_mx_diff_email_alerts(
-            domain=domain, diff_reason=diff_reason, logger=logger, db=db
+            domain=processed_results.get("domain"),
+            diff_reason=diff_reason,
+            logger=logger,
+            db=db,
         )
 
     return mx_record_diff
@@ -170,7 +173,9 @@ async def run(loop):
         shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
-        mx_record_diff = check_mx_diff(processed_results=processed_results, domain_id=f"domains/{domain_key}")
+        mx_record_diff = check_mx_diff(
+            processed_results=processed_results, domain_id=f"domains/{domain_key}"
+        )
         processed_results["mx_records"].update({"diff": mx_record_diff})
 
         dmarc_status = processed_results.get("dmarc").get("status")
