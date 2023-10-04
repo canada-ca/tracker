@@ -4,7 +4,7 @@ const findVerifiedOrgs = async ({ query }) => {
     cursor = await query`
         FOR org IN organizations
           FILTER org.verified == true
-          RETURN { _key: org._key, _id: org._id, en: org.en, fr: org.fr, summaries: org.summaries }
+          RETURN { _key: org._key, _id: org._id, orgDetails: org.orgDetails, summaries: org.summaries }
     `
   } catch (err) {
     throw new Error(`Database error occurred while trying to find domain claims: ${err}`)
@@ -24,14 +24,14 @@ const findOrgSummaries = async ({ query, startDate }) => {
   const verifiedOrgs = await findVerifiedOrgs({ query })
   const orgSummaries = {}
   for (const org of verifiedOrgs) {
-    const { _key, _id, en, fr, summaries } = org
+    const { _key, _id, orgDetails, summaries } = org
     // get 30 days previous
     let cursor
     try {
       cursor = await query`
         FOR os IN organizationSummaries
           FILTER os.organization == ${org._id}
-          FILTER DATE_FORMAT(os.date, '%yyyy-%mm-%dd') == DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+          FILTER DATE_FORMAT(os.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
           LIMIT 1
           RETURN os
       `
@@ -48,8 +48,7 @@ const findOrgSummaries = async ({ query, startDate }) => {
 
     orgSummaries[_key] = {
       _id,
-      en,
-      fr,
+      orgDetails,
       endSummary: summaries,
       startSummary: orgSummary,
     }
