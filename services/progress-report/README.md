@@ -6,8 +6,8 @@ The service calculates a number of statistics, including:
 1. Change in overall HTTPS and DMARC compliance (percentage + number of domains)
 2. Change in overall domain count
 3. Average change in HTTPS and DMARC compliance across verified organizations
-4. Periodic change in HTTPS and DMARC compliance for individual verified organizations
-5. Periodic change in domain count for individual verified organizations
+4. Change in HTTPS and DMARC compliance for individual verified organizations
+5. Change in domain count for individual verified organizations
 
 ## Install dependencies
 
