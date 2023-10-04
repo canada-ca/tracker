@@ -35,11 +35,10 @@ const progressReportService = async ({ query, log, notifyClient }) => {
   }
 
   const verifiedOrgAverages = calculateOrgAverages({ stats: verifiedOrgStats })
-  console.log(verifiedOrgAverages)
   // send notifications
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
-    console.log('org', value)
     const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
+    console.log(orgAdmins)
     for (const user of orgAdmins) {
       await notifySendOrgProgressReport({
         notifyClient,
@@ -56,20 +55,20 @@ const calculateSummaryStats = ({ startSummary, endSummary }) => {
   // calculate https diff
   const startHttpsScore = startSummary.https.pass / startSummary.https.total
   const endHttpsScore = endSummary.https.pass / endSummary.https.total
-  const httpsScoreDiff = (endHttpsScore - startHttpsScore).toFixed(2) * 100
-  const webDomainCountDiff = endSummary.https.total - startSummary.https.total
+  const chartHttpsScoreDiff = (endHttpsScore - startHttpsScore).toFixed(2) * 100
+  const chartWebDomainCountDiff = endSummary.https.total - startSummary.https.total
 
   // calculate dmarc diff
   const startDmarcScore = startSummary.dmarc.pass / startSummary.dmarc.total
   const endDmarcScore = endSummary.dmarc.pass / endSummary.dmarc.total
-  const dmarcScoreDiff = (endDmarcScore - startDmarcScore).toFixed(2) * 100
-  const domainCountDiff = endSummary.dmarc.total - startSummary.dmarc.total
+  const chartDmarcScoreDiff = (endDmarcScore - startDmarcScore).toFixed(2) * 100
+  const chartDomainCountDiff = endSummary.dmarc.total - startSummary.dmarc.total
 
   return {
-    httpsScoreDiff,
-    webDomainCountDiff,
-    dmarcScoreDiff,
-    domainCountDiff,
+    chartHttpsScoreDiff,
+    chartWebDomainCountDiff,
+    chartDmarcScoreDiff,
+    chartDomainCountDiff,
   }
 }
 
@@ -80,7 +79,6 @@ const calculateOrgAverages = ({ stats }) => {
   const domainCountDiffs = []
 
   for (const [_key, value] of Object.entries(stats)) {
-    console.log(stats)
     const { httpsScoreDiff, webDomainCountDiff, dmarcScoreDiff, domainCountDiff } = value
     httpsScoreDiffs.push(httpsScoreDiff)
     webDomainCountDiffs.push(webDomainCountDiff)
@@ -89,10 +87,10 @@ const calculateOrgAverages = ({ stats }) => {
   }
 
   return {
-    httpsScoreDiff: average(httpsScoreDiffs),
-    webDomainCountDiff: average(webDomainCountDiffs),
-    dmarcScoreDiff: average(dmarcScoreDiffs),
-    domainCountDiff: average(domainCountDiffs),
+    httpsScoreDiffAvg: average(httpsScoreDiffs),
+    webDomainCountDiffAvg: average(webDomainCountDiffs),
+    dmarcScoreDiffAvg: average(dmarcScoreDiffs),
+    domainCountDiffAvg: average(domainCountDiffs),
   }
 }
 
