@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: org-progress-report
+  namespace: api
+spec:
+  schedule: "30 10 * * *"
+  concurrencyPolicy: Replace
+  startingDeadlineSeconds: 180
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: org-progress-report
+              image: gcr.io/track-compliance/services/org-progress-report:master-850d2ac-1696012535 # {"$imagepolicy": "flux-system:org-progress-report"}
+              env:
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_PASS
+                - name: DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_URL
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_NAME
+                - name: NOTIFICATION_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_API_KEY
+                - name: NOTIFICATION_API_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_API_URL
+                - name: NOTIFICATION_ORG_PROGRESS_REPORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_ORG_PROGRESS_REPORT
+          restartPolicy: OnFailure
