@@ -38,7 +38,7 @@ export const checkUserIsAdminForUser =
         WITH affiliations, organizations, users
         LET requestingUserOrgKeys = (
           FOR v, e IN 1 INBOUND ${requestingUserId} affiliations
-            FILTER e.permission == "admin"
+            FILTER e.permission IN ["admin", "owner"]
             RETURN v._key
         )
 

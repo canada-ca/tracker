@@ -85,18 +85,14 @@ export const loadWebCheckConnectionsByUserId =
         `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadWebCheckConnectionsByUserId.`,
       )
       throw new Error(
-        i18n._(
-          t`You must provide a \`first\` or \`last\` value to properly paginate the \`Organization\` connection.`,
-        ),
+        i18n._(t`You must provide a \`first\` or \`last\` value to properly paginate the \`Organization\` connection.`),
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
       console.warn(
         `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadWebCheckConnectionsByUserId.`,
       )
       throw new Error(
-        i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`Organization\` connection is not supported.`,
-        ),
+        i18n._(t`Passing both \`first\` and \`last\` to paginate the \`Organization\` connection is not supported.`),
       )
     } else if (typeof first === 'number' || typeof last === 'number') {
       /* istanbul ignore else */
@@ -105,11 +101,7 @@ export const loadWebCheckConnectionsByUserId =
         console.warn(
           `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadWebCheckConnectionsByUserId.`,
         )
-        throw new Error(
-          i18n._(
-            t`\`${argSet}\` on the \`Organization\` connection cannot be less than zero.`,
-          ),
-        )
+        throw new Error(i18n._(t`\`${argSet}\` on the \`Organization\` connection cannot be less than zero.`))
       } else if (first > 100 || last > 100) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         const amount = typeof first !== 'undefined' ? first : last
@@ -132,9 +124,7 @@ export const loadWebCheckConnectionsByUserId =
       console.warn(
         `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadWebCheckConnectionsByUserId.`,
       )
-      throw new Error(
-        i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
-      )
+      throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
     }
 
     let hasNextPageFilter = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(LAST(retrievedOrgs)._key)`
@@ -205,8 +195,7 @@ export const loadWebCheckConnectionsByUserId =
         LET orgKeys = (
           FOR org, e IN 1..1
           INBOUND ${userDBId} affiliations
-          FILTER e.permission == "admin"
-          OR e.permission == "super_admin"
+          FILTER e.permission IN ["admin", "owner", "super_admin"]
           RETURN org._key
         )
       `
@@ -327,9 +316,7 @@ export const loadWebCheckConnectionsByUserId =
       console.error(
         `Database error occurred while user: ${userKey} was trying to gather organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to load organization(s). Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to load organization(s). Please try again.`))
     }
 
     let orgsInfo
@@ -339,9 +326,7 @@ export const loadWebCheckConnectionsByUserId =
       console.error(
         `Cursor error occurred while user: ${userKey} was trying to gather organizations in loadWebCheckConnectionsByUserId, error: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to load organization(s). Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to load organization(s). Please try again.`))
     }
 
     if (orgsInfo.retrievedOrgs.length === 0) {

@@ -254,11 +254,14 @@ export function UserListModal({
                     >
                       {editingUserRole === 'PENDING' && <option value="PENDING">{t`PENDING`}</option>}
                       {(['PENDING', 'USER'].includes(editingUserRole) ||
-                        (['ADMIN', 'OWNER', 'SUPER_ADMIN'].includes(permission) && editingUserRole === 'ADMIN')) && (
-                        <option value="USER">{t`USER`}</option>
-                      )}
-                      {['PENDING', 'USER', 'ADMIN'].includes(editingUserRole) && (
+                        (['ADMIN', 'OWNER'].includes(permission) && editingUserRole === 'ADMIN') ||
+                        permission === 'SUPER_ADMIN') && <option value="USER">{t`USER`}</option>}
+                      {(['PENDING', 'USER', 'ADMIN'].includes(editingUserRole) ||
+                        (['SUPER_ADMIN'].includes(permission) && editingUserRole === 'OWNER')) && (
                         <option value="ADMIN">{t`ADMIN`}</option>
+                      )}
+                      {(editingUserRole === 'OWNER' || permission === 'SUPER_ADMIN') && (
+                        <option value="OWNER">{t`OWNER`}</option>
                       )}
                       {(editingUserRole === 'SUPER_ADMIN' ||
                         (permission === 'SUPER_ADMIN' && ['super-admin', 'sa'].includes(orgSlug))) && (

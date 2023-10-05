@@ -70,7 +70,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
     // Get user info from DB
     const user = await userRequired()
 
-    // Check to see if user name is already in use
+    // Check to see if username is already in use
     if (userName !== '') {
       const checkUser = await loadUserByUserName.load(userName)
       if (typeof checkUser !== 'undefined') {
@@ -91,7 +91,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
         userAdmin = await query`
         WITH users, affiliations
         FOR v, e IN 1..1 INBOUND ${user._id} affiliations
-        FILTER e.permission == "admin" || e.permission == "super_admin"
+        FILTER e.permission IN ["admin", "owner", "super_admin"]
         LIMIT 1
         RETURN e.permission
       `

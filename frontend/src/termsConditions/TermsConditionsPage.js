@@ -285,14 +285,11 @@ export default function TermsConditionsPage() {
         <List listStylePosition="outside" listStyleType="" ml={4}>
           <ListItem>
             <Trans>
-              The advice, guidance or services provided to you by TBS will be
-              provided on an “as-is” basis, without warrantee or representation
-              of any kind, and TBS will not be liable for any loss, liability,
-              damage or cost, including loss of data or interruptions of
-              business arising from the provision of such advice, guidance or
-              services by Tracker. Consequently, TBS recommends, that the users
-              exercise their own skill and care with respect to their use of the
-              advice, guidance and services that Tracker provides.
+              The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without
+              warranty or representation of any kind, and TBS will not be liable for any loss, liability, damage or
+              cost, including loss of data or interruptions of business arising from the provision of such advice,
+              guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and
+              care with respect to their use of the advice, guidance and services that Tracker provides.
             </Trans>
           </ListItem>
         </List>

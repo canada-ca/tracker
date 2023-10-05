@@ -23,6 +23,7 @@ export default function AdminPage({ isLoginRequired }) {
   const [orgDetails, setOrgDetails] = useState({})
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [initRender, setInitRender] = useState(true)
 
   const { activeMenu } = useParams()
   const toast = useToast()
@@ -62,7 +63,15 @@ export default function AdminPage({ isLoginRequired }) {
     if (!activeMenu) {
       history.replace(`/admin/organizations`)
     }
-  }, [activeMenu, history])
+    if (initRender && data?.findMyOrganizations?.edges.length === 1) {
+      setInitRender(false)
+      setOrgDetails({
+        slug: data?.findMyOrganizations?.edges[0]?.node?.slug,
+        id: data?.findMyOrganizations?.edges[0]?.node?.id,
+      })
+      setSelectedOrg(data?.findMyOrganizations?.edges[0]?.node?.name || 'none')
+    }
+  }, [activeMenu, history, data])
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
@@ -100,6 +109,7 @@ export default function AdminPage({ isLoginRequired }) {
           setOrgDetails(opt.value)
           setSelectedOrg(opt.label)
         }}
+        mr="auto"
       />
     )
   }
@@ -112,11 +122,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   const orgPanel = (
     <>
-      <Flex
-        direction={{ base: 'column', md: 'row' }}
-        align="center"
-        justifyContent="space-between"
-      >
+      <Flex direction={{ base: 'column', md: 'row' }} align="center" justifyContent="space-between">
         {dropdown}
         <Button
           variant="primary"
@@ -158,11 +164,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   let adminPanel
   if (activeMenu === 'users' && data?.isUserSuperAdmin) {
-    adminPanel = (
-      <SuperAdminUserList
-        permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'}
-      />
-    )
+    adminPanel = <SuperAdminUserList permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'} />
   } else if (activeMenu === 'audit-logs' && data?.isUserSuperAdmin) {
     adminPanel = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -181,11 +183,7 @@ export default function AdminPage({ isLoginRequired }) {
             <Text fontSize="lg" fontWeight="bold" mr="2">
               <Trans>Super Admin Menu:</Trans>
             </Text>
-            <Select
-              w="20%"
-              defaultValue={activeMenu}
-              onChange={(e) => changeActiveMenu(e.target.value)}
-            >
+            <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
               <option value="organizations">{t`Organizations`}</option>
               <option value="users">{t`Users`}</option>
               <option value="audit-logs">{t`Audit Logs`}</option>

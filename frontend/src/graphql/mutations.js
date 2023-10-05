@@ -21,8 +21,9 @@ export const SIGN_UP = gql`
       }
     ) {
       result {
-        ... on AuthResult {
-          ...RequiredAuthResultFields
+        ... on TFASignInResult {
+          authenticateToken
+          sendMethod
         }
         ... on SignUpError {
           code
@@ -31,7 +32,6 @@ export const SIGN_UP = gql`
       }
     }
   }
-  ${Authorization.fragments.requiredFields}
 `
 
 export const SIGN_IN = gql`
@@ -56,8 +56,10 @@ export const SIGN_IN = gql`
 `
 
 export const AUTHENTICATE = gql`
-  mutation authenticate($authenticationCode: Int!, $authenticateToken: String!) {
-    authenticate(input: { authenticationCode: $authenticationCode, authenticateToken: $authenticateToken }) {
+  mutation authenticate($sendMethod: TFASendMethodEnum!, $authenticationCode: Int!, $authenticateToken: String!) {
+    authenticate(
+      input: { sendMethod: $sendMethod, authenticationCode: $authenticationCode, authenticateToken: $authenticateToken }
+    ) {
       result {
         ... on AuthResult {
           ...RequiredAuthResultFields

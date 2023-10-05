@@ -1,10 +1,7 @@
-const { NOTIFICATION_ORG_FOOTPRINT_EN, NOTIFICATION_ORG_FOOTPRINT_FR } = process.env
+const { NOTIFICATION_ORG_FOOTPRINT_BILINGUAL } = process.env
 
 const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }) => {
-  let templateId = NOTIFICATION_ORG_FOOTPRINT_EN
-  if (user.preferredLang === 'french') {
-    templateId = NOTIFICATION_ORG_FOOTPRINT_FR
-  }
+  const templateId = NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
 
   // Get stats for user changes
   const usersAdded = auditLogs.filter((log) => log.action === 'add' && log.target.resourceType === 'user')
@@ -33,14 +30,12 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
     removeDomainsList = domainsRemoved.map((log) => log.target.resource).join(', ')
   }
 
-  const exportsToCsv = auditLogs.filter((log) => log.action === 'export')
-  const scansToCsv = auditLogs.filter((log) => log.action === 'scan')
-
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
         display_name: user.displayName,
-        organization_name: user.preferredLang === 'french' ? orgNames.fr : orgNames.en,
+        organization_name_en: orgNames.en,
+        organization_name_fr: orgNames.fr,
         add_users_count: usersAdded.length,
         update_users_count: usersUpdated.length,
         remove_users_count: usersRemoved.length,
@@ -50,8 +45,6 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
         update_domains_list: updateDomainsList,
         remove_domains_count: domainsRemoved.length,
         remove_domains_list: removeDomainsList,
-        export_count: exportsToCsv.length,
-        scan_count: scansToCsv.length,
       },
     })
   } catch (err) {

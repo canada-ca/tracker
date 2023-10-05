@@ -86,9 +86,11 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // Check to see requesting users permission to the org is
     const permission = await checkPermission({ orgId: org._id })
 
+    // Only admins, owners, and super admins may invite users to an org
+    // Only super admins may create owners and other super admins
     if (
       (['user', 'admin'].includes(requestedRole) && !['admin', 'owner', 'super_admin'].includes(permission)) ||
-      (requestedRole === 'super_admin' && permission !== 'super_admin')
+      (['super_admin', 'owner'].includes(requestedRole) && permission !== 'super_admin')
     ) {
       console.warn(
         `User: ${userKey} attempted to invite user: ${userName} to org: ${org._key} with role: ${requestedRole} but does not have permission to do so.`,
@@ -130,7 +132,7 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // Check to see if requested user exists
     const requestedUser = await loadUserByUserName.load(userName)
 
-    // If there is not associated account with that user name send invite to org with create account
+    // If there is not associated account with that username send invite to org with create account
     if (typeof requestedUser === 'undefined') {
       const token = tokenize({
         parameters: { userName, orgKey: org._key, requestedRole },
@@ -236,7 +238,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
 
     await sendOrgInviteEmail({
       user: requestedUser,
-      orgName: requestedUser.preferredLang === 'english' ? orgNames.orgNameEN : orgNames.orgNameFR,
+      orgNameEN: orgNames.orgNameEN,
+      orgNameFR: orgNames.orgNameFR,
     })
 
     // Commit affiliation

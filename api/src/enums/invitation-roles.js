@@ -12,6 +12,11 @@ export const InvitationRoleEnums = new GraphQLEnumType({
       description:
         'A user who has the same access as a user write account, but can define new user read/write accounts.',
     },
+    OWNER: {
+      value: 'owner',
+      description:
+        'A user who has the same access as an admin, but can define new admins, and delete the organization.',
+    },
     SUPER_ADMIN: {
       value: 'super_admin',
       description: 'A user who has the same access as an admin, but can define new admins.',

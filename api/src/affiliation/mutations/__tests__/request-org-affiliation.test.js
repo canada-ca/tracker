@@ -201,7 +201,8 @@ describe('invite user to org', () => {
                   userName: 'test@email.gc.ca',
                   ...secondaryUser,
                 },
-                orgName: 'Treasury Board of Canada Secretariat',
+                orgNameEN: 'Treasury Board of Canada Secretariat',
+                orgNameFR: 'Secrétariat du Conseil Trésor du Canada',
                 adminLink: 'https://host/admin/organizations',
               })
             })

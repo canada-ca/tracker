@@ -93,6 +93,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },
@@ -160,6 +161,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },
@@ -234,6 +236,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },
@@ -311,6 +314,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },

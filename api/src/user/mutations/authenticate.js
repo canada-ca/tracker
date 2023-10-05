@@ -2,6 +2,7 @@ import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
+import { TfaSendMethodEnum } from '../../enums'
 
 const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
 
@@ -10,6 +11,10 @@ export const authenticate = new mutationWithClientMutationId({
   description:
     'This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.',
   inputFields: () => ({
+    sendMethod: {
+      type: new GraphQLNonNull(TfaSendMethodEnum),
+      description: 'The method that the user wants to receive their authentication code by.',
+    },
     authenticationCode: {
       type: new GraphQLNonNull(GraphQLInt),
       description: 'Security code found in text msg, or email inbox.',
@@ -43,6 +48,7 @@ export const authenticate = new mutationWithClientMutationId({
     // Cleanse Inputs
     const authenticationCode = args.authenticationCode
     const authenticationToken = cleanseInput(args.authenticateToken)
+    const sendMethod = cleanseInput(args.sendMethod)
 
     // Gather token parameters
     const tokenParameters = verifyToken({
@@ -107,6 +113,31 @@ export const authenticate = new mutationWithClientMutationId({
           `Trx step error occurred when clearing tfa code and setting refresh id for user: ${user._key} during authentication: ${err}`,
         )
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+      }
+
+      // verify user email
+      if (sendMethod === 'email' && !user.emailValidated) {
+        try {
+          await trx.step(
+            () => query`
+              WITH users
+              UPSERT { _key: ${user._key} }
+                INSERT {
+                  emailValidated: true,
+                }
+                UPDATE {
+                  emailValidated: true,
+                }
+                IN users
+            `,
+          )
+          user.emailValidated = true
+        } catch (err) {
+          console.error(
+            `Trx step error occurred when setting email validated to true for user: ${user._key} during authentication: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+        }
       }
 
       try {
