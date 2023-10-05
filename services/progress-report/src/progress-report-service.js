@@ -21,12 +21,9 @@ const progressReportService = async ({ query, log, notifyClient }) => {
 
   // calculate individual org stats
   const verifiedOrgSummaries = await findOrgSummaries({ query, log, startDate: thirtyDaysAgo })
-
-  // calculate org averages
   const verifiedOrgStats = {}
   for (const [_key, value] of Object.entries(verifiedOrgSummaries)) {
     const { startSummary, endSummary, orgDetails, _id } = value
-    // calculate org averages
     const orgStats = calculateSummaryStats({
       startSummary,
       endSummary,
@@ -34,7 +31,9 @@ const progressReportService = async ({ query, log, notifyClient }) => {
     verifiedOrgStats[_key] = { ...orgStats, orgDetails, _id }
   }
 
+  // calculate overall org averages
   const verifiedOrgAverages = calculateOrgAverages({ stats: verifiedOrgStats })
+
   // send notifications
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
     const orgAdmins = await getOrgAdmins({ query, orgId: value._id })

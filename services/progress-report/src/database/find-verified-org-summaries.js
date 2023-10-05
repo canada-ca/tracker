@@ -31,7 +31,8 @@ const findOrgSummaries = async ({ query, startDate }) => {
       cursor = await query`
         FOR os IN organizationSummaries
           FILTER os.organization == ${org._id}
-          FILTER DATE_FORMAT(os.date, '%yyyy-%mm-%dd') <= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+          FILTER DATE_FORMAT(os.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+          SORT os.date ASC
           LIMIT 1
           RETURN os
       `
