@@ -8,14 +8,14 @@ const findChartSummaries = async ({ query, startDate, endDate }) => {
           RETURN cs
     `
   } catch (err) {
-    throw new Error(`Database error occurred while trying to find domain claims: ${err}`)
+    throw new Error(`Database error occurred while trying to find chart summaries: ${err}`)
   }
 
   let chartSummaries
   try {
     chartSummaries = await cursor.all()
   } catch (err) {
-    throw new Error(`Cursor error occurred while trying to find domain claims: ${err}`)
+    throw new Error(`Cursor error occurred while trying to find chart summaries: ${err}`)
   }
 
   return { startSummary: chartSummaries[0], endSummary: chartSummaries[chartSummaries.length - 1] }

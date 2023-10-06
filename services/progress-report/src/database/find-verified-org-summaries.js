@@ -7,14 +7,14 @@ const findVerifiedOrgs = async ({ query }) => {
           RETURN { _key: org._key, _id: org._id, orgDetails: org.orgDetails, summaries: org.summaries }
     `
   } catch (err) {
-    throw new Error(`Database error occurred while trying to find domain claims: ${err}`)
+    throw new Error(`Database error occurred while trying to find verified orgs: ${err}`)
   }
 
   let verifiedOrgs
   try {
     verifiedOrgs = await cursor.all()
   } catch (err) {
-    throw new Error(`Cursor error occurred while trying to find domain claims: ${err}`)
+    throw new Error(`Cursor error occurred while trying to find verified orgs: ${err}`)
   }
 
   return verifiedOrgs
@@ -37,14 +37,14 @@ const findOrgSummaries = async ({ query, startDate }) => {
           RETURN os
       `
     } catch (err) {
-      throw new Error(`Database error occurred while trying to find domain claims: ${err}`)
+      throw new Error(`Database error occurred while trying to find org summaries: ${err}`)
     }
 
     let orgSummary
     try {
       orgSummary = await cursor.next()
     } catch (err) {
-      throw new Error(`Cursor error occurred while trying to find domain claims: ${err}`)
+      throw new Error(`Cursor error occurred while trying to find org summaries: ${err}`)
     }
 
     orgSummaries[_key] = {
