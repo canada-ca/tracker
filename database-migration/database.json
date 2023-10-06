@@ -4,11 +4,7 @@
   "url": "{{url}}",
   "rootPassword": "{{rootPassword}}",
   "options": [
-    {
-      "type": "user",
-      "username": "{{username}}",
-      "password": "{{password}}"
-    },
+    { "type": "user", "username": "{{username}}", "password": "{{password}}" },
     {
       "type": "documentcollection",
       "name": "users",
@@ -30,6 +26,15 @@
     {
       "type": "documentcollection",
       "name": "domains",
+      "options": {
+        "replicationFactor": 3,
+        "writeConcern": 1,
+        "numberOfShards": 6
+      }
+    },
+    {
+      "type": "documentcollection",
+      "name": "selectors",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -182,6 +187,15 @@
     },
     {
       "type": "edgecollection",
+      "name": "domainsToSelectors",
+      "options": {
+        "replicationFactor": 3,
+        "writeConcern": 1,
+        "numberOfShards": 6
+      }
+    },
+    {
+      "type": "edgecollection",
       "name": "affiliations",
       "options": {
         "replicationFactor": 3,
@@ -264,9 +278,7 @@
         "links": {
           "domains": {
             "fields": {
-              "domain": {
-                "analyzers": ["space-delimiter-analyzer"]
-              }
+              "domain": { "analyzers": ["space-delimiter-analyzer"] }
             }
           }
         }
@@ -283,22 +295,14 @@
                 "fields": {
                   "en": {
                     "fields": {
-                      "acronym": {
-                        "analyzers": ["text_en"]
-                      },
-                      "name": {
-                        "analyzers": ["text_en"]
-                      }
+                      "acronym": { "analyzers": ["text_en"] },
+                      "name": { "analyzers": ["text_en"] }
                     }
                   },
                   "fr": {
                     "fields": {
-                      "acronym": {
-                        "analyzers": ["text_fr"]
-                      },
-                      "name": {
-                        "analyzers": ["text_fr"]
-                      }
+                      "acronym": { "analyzers": ["text_fr"] },
+                      "name": { "analyzers": ["text_fr"] }
                     }
                   }
                 }
@@ -315,12 +319,8 @@
         "links": {
           "users": {
             "fields": {
-              "displayName": {
-                "analyzers": ["text_en"]
-              },
-              "userName": {
-                "analyzers": ["text_en"]
-              }
+              "displayName": { "analyzers": ["text_en"] },
+              "userName": { "analyzers": ["text_en"] }
             }
           }
         }

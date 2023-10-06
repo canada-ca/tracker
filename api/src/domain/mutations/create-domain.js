@@ -149,7 +149,6 @@ export const createDomain = new mutationWithClientMutationId({
     const insertDomain = {
       domain: domain.toLowerCase(),
       lastRan: null,
-      selectors: selectors,
       hash: saltedHash(domain.toLowerCase()),
       status: {
         certificates: null,
@@ -199,48 +198,38 @@ export const createDomain = new mutationWithClientMutationId({
       }
     }
 
-    // Check to see if domain already exists in db
-    const checkDomain = await loadDomainByDomain.load(insertDomain.domain)
-
     // Setup Transaction
     const trx = await transaction(collections)
 
-    let insertedDomainCursor
-    if (typeof checkDomain === 'undefined') {
-      try {
-        insertedDomainCursor = await trx.step(
-          () =>
-            query`
-            WITH domains
-            INSERT ${insertDomain} INTO domains
-            RETURN MERGE(
-              {
-                id: NEW._key,
-                _type: "domain"
-              },
-              NEW
-            )
+    let domainCursor
+    try {
+      domainCursor = await trx.step(
+        () =>
+          query`
+            UPSERT { domain: ${insertDomain.domain} }
+              INSERT ${insertDomain}
+              UPDATE { }
+              IN domains
+              RETURN NEW
           `,
-        )
-      } catch (err) {
-        console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`)
-        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-      }
+      )
+    } catch (err) {
+      console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain: ${err}`)
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+    }
 
-      let insertedDomain
-      try {
-        insertedDomain = await insertedDomainCursor.next()
-      } catch (err) {
-        console.error(
-          `Cursor error occurred for user: ${userKey} after inserting new domain and gathering its domain info: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-      }
+    let insertedDomain
+    try {
+      insertedDomain = await domainCursor.next()
+    } catch (err) {
+      console.error(`Cursor error occurred for user: ${userKey} when inserting new domain: ${err}`)
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+    }
 
-      try {
-        await trx.step(
-          () =>
-            query`
+    try {
+      await trx.step(
+        () =>
+          query`
             WITH claims
             INSERT {
               _from: ${org._id},
@@ -250,56 +239,59 @@ export const createDomain = new mutationWithClientMutationId({
               outsideComment: ${outsideComment}
             } INTO claims
           `,
-        )
-      } catch (err) {
-        console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`)
-        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-      }
-    } else {
-      const { selectors: selectorList, status, lastRan, archived } = checkDomain
+      )
+    } catch (err) {
+      console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`)
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+    }
 
-      selectors.forEach((selector) => {
-        if (!checkDomain.selectors.includes(selector)) {
-          selectorList.push(selector)
-        }
-      })
-
-      insertDomain.selectors = selectorList
-      insertDomain.status = status
-      insertDomain.lastRan = lastRan
-      insertDomain.archived = archived
-
+    for (const selector of selectors) {
+      // Ensure selector exists in database
+      let selectorDocCursor
       try {
-        await trx.step(
+        selectorDocCursor = await trx.step(
           () =>
             query`
-              WITH claims, domains, organizations
-              UPSERT { _key: ${checkDomain._key} }
-                INSERT ${insertDomain}
-                UPDATE ${insertDomain}
-                IN domains
-            `,
-        )
-      } catch (err) {
-        console.error(`Transaction step error occurred for user: ${userKey} when inserting domain selectors: ${err}`)
-        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-      }
-
-      try {
-        await trx.step(
-          () =>
-            query`
-            WITH claims
-            INSERT {
-              _from: ${org._id},
-              _to: ${checkDomain._id},
-              tags: ${tags},
-              hidden: ${hidden},
-            } INTO claims
+            UPSERT { selector: ${selector} }
+              INSERT { selector: ${selector} }
+              UPDATE { }
+              IN selectors
+              RETURN NEW
           `,
         )
       } catch (err) {
-        console.error(`Transaction step error occurred for user: ${userKey} when inserting domain edge: ${err}`)
+        console.error(
+          `Database error occurred while user: ${userKey} was creating domain: ${insertDomain.domain} while ensuring selector exists: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+      }
+
+      let selectorDoc
+      try {
+        selectorDoc = await selectorDocCursor.next()
+      } catch (err) {
+        console.error(
+          `Cursor error occurred while user: ${userKey} was creating domain: ${insertDomain.domain} while ensuring selector exists: ${err}`,
+        )
+        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
+      }
+
+      // Add selector to domain
+      try {
+        await trx.step(
+          () =>
+            query`
+              INSERT {
+                _from: ${insertedDomain._id},
+                _to: ${selectorDoc._id},
+                status: "active"
+              } INTO domainsToSelectors
+          `,
+        )
+      } catch (err) {
+        console.error(
+          `Transaction step error occurred for user: ${userKey} when inserting new selector edge for domain: ${err}`,
+        )
         throw new Error(i18n._(t`Unable to create domain. Please try again.`))
       }
     }

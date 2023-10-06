@@ -89,10 +89,8 @@ def check_mx_diff(processed_results, domain_id):
 
     if len(new_mx) != len(last_mx):
         if len(new_mx) > len(last_mx):
-            # print("host added")
             mx_record_diff = True
         else:
-            # print("host removed")
             mx_record_diff = True
     else:
         # check hostnames
@@ -103,7 +101,6 @@ def check_mx_diff(processed_results, domain_id):
             hostnames_last.append(last_mx[i]["hostname"])
 
         if set(hostnames_new) != set(hostnames_last):
-            # print("host changed")
             mx_record_diff = True
         else:
             # check hostname preferences and addresses
@@ -113,12 +110,10 @@ def check_mx_diff(processed_results, domain_id):
                     if new_mx[i]["hostname"] == last_mx[j]["hostname"]:
                         # check preference
                         if new_mx[i]["preference"] != last_mx[j]["preference"]:
-                            # print("preference changed")
                             mx_record_diff = True
                             break
                         # check addresses
                         if set(new_mx[i]["addresses"]) != set(last_mx[j]["addresses"]):
-                            # print("addresses changed")
                             mx_record_diff = True
                             break
 
