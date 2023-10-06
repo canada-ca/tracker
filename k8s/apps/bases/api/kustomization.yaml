@@ -9,4 +9,4 @@ resources:
   - database-configmap.yaml
   - org-footprint-cronjob.yaml
   - domain-cleanup-cronjob.yaml
-  - org-progress-report.yaml
+  - progress-report-cronjob.yaml
