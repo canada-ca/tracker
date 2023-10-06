@@ -1,5 +1,5 @@
 const { findChartSummaries, findOrgSummaries, getOrgAdmins } = require('./database')
-const { notifySendOrgProgressReport } = require('./notify')
+const { sendOrgProgressReport } = require('./notify')
 
 const progressReportService = async ({ query, log, notifyClient }) => {
   // get date 30 days ago
@@ -38,7 +38,7 @@ const progressReportService = async ({ query, log, notifyClient }) => {
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
     const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
     for (const user of orgAdmins) {
-      await notifySendOrgProgressReport({
+      await sendOrgProgressReport({
         notifyClient,
         user,
         orgStats: value,

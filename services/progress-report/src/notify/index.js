@@ -1,3 +1,3 @@
-const { notifySendOrgProgressReport } = require('./notify-send-org-progress-report')
+const { sendOrgProgressReport } = require('./notify-send-org-progress-report')
 
-module.exports = { notifySendOrgProgressReport }
+module.exports = { sendOrgProgressReport }

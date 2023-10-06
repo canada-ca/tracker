@@ -1,6 +1,6 @@
 const { NOTIFICATION_ORG_PROGRESS_REPORT } = process.env
 
-const notifySendOrgProgressReport = async ({ user, orgStats, orgAverages, chartStats, notifyClient }) => {
+const sendOrgProgressReport = async ({ user, orgStats, orgAverages, chartStats, notifyClient }) => {
   const templateId = NOTIFICATION_ORG_PROGRESS_REPORT
   const { httpsScoreDiff, webDomainCountDiff, dmarcScoreDiff, domainCountDiff, orgDetails } = orgStats
 
@@ -38,5 +38,5 @@ const notifySendOrgProgressReport = async ({ user, orgStats, orgAverages, chartS
 }
 
 module.exports = {
-  notifySendOrgProgressReport,
+  sendOrgProgressReport,
 }
