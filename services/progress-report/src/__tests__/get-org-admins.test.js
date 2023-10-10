@@ -44,6 +44,7 @@ describe('given the getOrgAdmins function', () => {
       org = await collections.organizations.save({})
       user = await collections.users.save({
         userName: 'user@test.ca',
+        receiveUpdateEmails: true,
       })
       affiliation = await collections.affiliations.save({
         _from: org._id,
