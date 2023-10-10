@@ -41,7 +41,9 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
-  const [filters, setFilters] = useState([])
+  const [filters, setFilters] = useState([
+    { filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' },
+  ])
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
