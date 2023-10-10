@@ -38,7 +38,7 @@
     "graphql-depth-limit": "^1.1.0",
     "graphql-redis-subscriptions": "^2.6.0",
     "graphql-relay": "^0.10.0",
-    "graphql-scalars": "^1.22.2",
+    "graphql-scalars": "^1.22.3",
     "graphql-subscriptions": "^2.0.0",
     "graphql-validation-complexity": "^0.4.2",
     "ioredis": "^4.28.3",
