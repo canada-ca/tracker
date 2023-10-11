@@ -45,17 +45,17 @@ spec:
             - name: NOTIFICATION_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: api
+                  name: scanners
                   key: NOTIFICATION_API_KEY
             - name: NOTIFICATION_API_URL
               valueFrom:
                 secretKeyRef:
-                  name: api
+                  name: scanners
                   key: NOTIFICATION_API_URL
             - name: NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL
               valueFrom:
                 secretKeyRef:
-                  name: api
+                  name: scanners
                   key: NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL
             - name: ALERT_SUBS
               valueFrom:
