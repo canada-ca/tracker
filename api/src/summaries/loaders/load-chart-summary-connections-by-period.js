@@ -54,6 +54,46 @@ export const loadChartSummaryConnectionsByPeriod =
             "totalCount": LENGTH(retrievedSummaries),
           }
         `
+      } else if (period === 'lastYear') {
+        startDate = new Date(new Date().setDate(new Date().getDate() - 365))
+        requestedSummaryInfo = await query`
+          LET retrievedSummaries = (
+            FOR summary IN chartSummaries
+              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+              SORT summary.date ASC
+              RETURN {
+                id: summary._key,
+                date: summary.date,
+                https: summary.https,
+                dmarc: summary.dmarc,
+              }
+          )
+
+          RETURN {
+            "summaries": retrievedSummaries,
+            "totalCount": LENGTH(retrievedSummaries),
+          }
+        `
+      } else if (period === 'yearToDate') {
+        startDate = new Date(`${periodYear}-01-01`)
+        requestedSummaryInfo = await query`
+          LET retrievedSummaries = (
+            FOR summary IN chartSummaries
+              FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+              SORT summary.date ASC
+              RETURN {
+                id: summary._key,
+                date: summary.date,
+                https: summary.https,
+                dmarc: summary.dmarc,
+              }
+          )
+
+          RETURN {
+            "summaries": retrievedSummaries,
+            "totalCount": LENGTH(retrievedSummaries),
+          }
+        `
       } else {
         startDate = new Date(`${periodYear}-${periodMonth}-01`)
         requestedSummaryInfo = await query`

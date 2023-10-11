@@ -1,4 +1,4 @@
-import {GraphQLEnumType} from 'graphql'
+import { GraphQLEnumType } from 'graphql'
 
 export const PeriodEnums = new GraphQLEnumType({
   name: 'PeriodEnums',
@@ -54,6 +54,14 @@ export const PeriodEnums = new GraphQLEnumType({
     LAST30DAYS: {
       value: 'thirtyDays',
       description: 'The last 30 days.',
+    },
+    LASTYEAR: {
+      value: 'lastYear',
+      description: 'The last year.',
+    },
+    YTD: {
+      value: 'yearToDate',
+      description: 'The year to date.',
     },
   },
   description: 'An enum used to select information from the dmarc-report-api.',
