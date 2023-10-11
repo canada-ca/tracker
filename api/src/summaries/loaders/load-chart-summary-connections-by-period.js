@@ -2,32 +2,45 @@ import { toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 export const loadChartSummaryConnectionsByPeriod =
-  ({ query, userKey, cleanseInput, i18n, loadStartDateFromPeriod }) =>
+  ({ query, userKey, cleanseInput, i18n }) =>
   async ({ period, year }) => {
     if (typeof period === 'undefined') {
       console.warn(`User: ${userKey} did not have \`period\` argument set for: loadChartSummaryConnectionsByPeriod.`)
       throw new Error(i18n._(t`You must provide a \`period\` value to access the \`ChartSummaries\` connection.`))
     }
     const cleansedPeriod = cleanseInput(period)
+    const monthMap = {
+      january: '01',
+      february: '02',
+      march: '03',
+      april: '04',
+      may: '05',
+      june: '06',
+      july: '07',
+      august: '08',
+      september: '09',
+      october: '10',
+      november: '11',
+      december: '12',
+    }
+    const periodMonth = monthMap[cleansedPeriod]
 
     if (typeof year === 'undefined') {
       console.warn(`User: ${userKey} did not have \`year\` argument set for: loadChartSummaryConnectionsByPeriod.`)
       throw new Error(i18n._(t`You must provide a \`year\` value to access the \`ChartSummaries\` connection.`))
     }
-    const cleansedYear = cleanseInput(year)
+    const periodYear = cleanseInput(year)
 
-    const startDate = loadStartDateFromPeriod({
-      period: cleansedPeriod,
-      year: cleansedYear,
-    })
-
+    let startDate
     let requestedSummaryInfo
     try {
       if (period === 'thirtyDays') {
+        startDate = new Date(new Date().setDate(new Date().getDate() - 30))
         requestedSummaryInfo = await query`
           LET retrievedSummaries = (
             FOR summary IN chartSummaries
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
+              SORT summary.date ASC
               RETURN {
                 id: summary._key,
                 date: summary.date,
@@ -42,12 +55,12 @@ export const loadChartSummaryConnectionsByPeriod =
           }
         `
       } else {
-        const periodMonth = startDate.split('-')[1]
-        const periodYear = startDate.split('-')[0]
+        startDate = new Date(`${periodYear}-${periodMonth}-01`)
         requestedSummaryInfo = await query`
           LET retrievedSummaries = (
             FOR summary IN chartSummaries
-              FILTER DATE_FORMAT(summary.date, "%yyyy-%mm") == ${periodYear}-${periodMonth}
+              FILTER DATE_FORMAT(summary.date, "%yyyy-%mm") == DATE_FORMAT(${startDate}, "%yyyy-%mm")
+              SORT summary.date ASC
               RETURN {
                 id: summary._key,
                 date: summary.date,

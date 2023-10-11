@@ -20,14 +20,18 @@ export const findChartSummaries = {
   resolve: async (
     _,
     args,
-    { userKey, auth: { userRequired, loginRequiredBool, verifiedRequired }, loaders: { loadChartSummariesByPeriod } },
+    {
+      userKey,
+      auth: { userRequired, loginRequiredBool, verifiedRequired },
+      loaders: { loadChartSummaryConnectionsByPeriod },
+    },
   ) => {
     if (loginRequiredBool) {
       const user = await userRequired()
       verifiedRequired({ user })
     }
 
-    const summaryConnections = await loadChartSummariesByPeriod({
+    const summaryConnections = await loadChartSummaryConnectionsByPeriod({
       period: args.month,
       ...args,
     })
