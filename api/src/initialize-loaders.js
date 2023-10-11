@@ -59,12 +59,18 @@ import {
   loadVerifiedOrgConnectionsByDomainId,
   loadVerifiedOrgConnections,
 } from './verified-organizations/loaders'
-import { loadChartSummaryByKey } from './summaries/loaders'
+import { loadChartSummaryByKey, loadChartSummaryConnectionsByPeriod } from './summaries/loaders'
 import { loadDnsConnectionsByDomainId, loadMxRecordDiffByDomainId } from './dns-scan'
 
 export function initializeLoaders({ query, db, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
     loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
+    loadChartSummaryConnectionsByPeriod: loadChartSummaryConnectionsByPeriod({
+      query,
+      userKey,
+      cleanseInput,
+      i18n,
+    }),
     loadAggregateGuidanceTagByTagId: loadAggregateGuidanceTagByTagId({
       query,
       userKey,
