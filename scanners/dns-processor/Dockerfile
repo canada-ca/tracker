@@ -35,6 +35,7 @@ COPY --from=python-builder /working/install/lib /usr/local/lib
 
 COPY service.py dns_processor_cli.py ./
 COPY dns_processor ./dns_processor
+COPY notify ./notify
 
 RUN useradd -ms /bin/bash scanner
 USER scanner
