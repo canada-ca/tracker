@@ -153,7 +153,7 @@ async def run(loop):
         logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     nc = await nats.connect(
-        # error_cb=error_cb,
+        error_cb=error_cb,
         closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
