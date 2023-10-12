@@ -71,7 +71,7 @@ def check_mx_diff(processed_results, domain_id):
     diff_reason = ""
     mx_record_diff = False
     # fetch most recent scan of domain
-    last_mx = (
+    last_mx_cursor = (
         db.aql.execute(
             """
             FOR v, e IN 1..1 OUTBOUND @domain_id domainsDNS
@@ -81,10 +81,13 @@ def check_mx_diff(processed_results, domain_id):
             """,
             bind_vars={"domain_id": domain_id},
         )
-        .next()
-        .get("mxRecords", {})
-        .get("hosts", [])
     )
+    # if no previous scan, return False as we can't compare records
+    if last_mx_cursor.empty():
+        return False
+
+    last_mx = last_mx_cursor.next().get("mxRecords", {}).get("hosts", [])
+
     # compare mx_records to most recent scan
     # if different, set mx_records_diff to True
     # check number of hosts
@@ -150,7 +153,7 @@ async def run(loop):
         logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     nc = await nats.connect(
-        error_cb=error_cb,
+        # error_cb=error_cb,
         closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
