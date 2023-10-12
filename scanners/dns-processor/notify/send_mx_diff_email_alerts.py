@@ -1,5 +1,5 @@
 import os
-from notify_client import notify_client
+from notify.notify_client import notify_client
 from dotenv import load_dotenv
 
 load_dotenv()

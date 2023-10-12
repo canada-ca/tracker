@@ -126,7 +126,7 @@ def check_mx_diff(processed_results, domain_id):
                             break
 
     # send alerts if true
-    if mx_record_diff:
+    if mx_record_diff and os.getenv("ALERT_SUBS"):
         send_mx_diff_email_alerts(
             domain=processed_results.get("domain"),
             diff_reason=diff_reason,
