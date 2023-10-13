@@ -1058,7 +1058,7 @@ export const MY_TRACKER_SUMMARY = gql`
 export const MY_TRACKER_DOMAINS = gql`
   query FindMyTracker($first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
     findMyTracker {
-      domains(orderBy: $orderBy, search: $search, first: $first, after: $after, myTracker: true) {
+      domains(orderBy: $orderBy, search: $search, first: $first, after: $after) {
         pageInfo {
           hasNextPage
           hasPreviousPage
@@ -1075,6 +1075,7 @@ export const MY_TRACKER_DOMAINS = gql`
               ...RequiredDomainStatusFields
             }
             archived
+            rcode
             blocked
             wildcardSibling
             webScanPending
