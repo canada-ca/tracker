@@ -14,6 +14,7 @@ resources:
   - log4shell-processor-image-repo-policy.yaml
   - log4shell-scanner-image-repo-policy.yaml
   - org-footprint-image-repo-policy.yaml
+  - org-progress-report-image-repo-policy.yaml
   - spring4shell-scanner-image-repo-policy.yaml
   - summaries-image-repo-policy.yaml
   - super-admin-image-repo-policy.yaml

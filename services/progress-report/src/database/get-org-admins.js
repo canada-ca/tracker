@@ -1,6 +1,5 @@
-const getOrgAdmins = async ({ query, orgKey }) => {
+const getOrgAdmins = async ({ query, orgId }) => {
   let cursor
-  const orgId = `organizations/${orgKey}`
   try {
     cursor = await query`
         FOR v, e IN 1..1 OUTBOUND ${orgId} affiliations
