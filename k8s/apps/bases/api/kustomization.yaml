@@ -7,6 +7,4 @@ resources:
   - service.yaml
   - virtual-service.yaml
   - database-configmap.yaml
-  - org-footprint-cronjob.yaml
   - domain-cleanup-cronjob.yaml
-  - progress-report-cronjob.yaml
