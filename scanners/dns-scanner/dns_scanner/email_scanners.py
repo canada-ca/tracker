@@ -2,6 +2,8 @@ import base64
 import logging
 import os
 import json
+import time
+import shutil
 
 import dkim
 import nacl
@@ -23,6 +25,28 @@ class DMARCScanner:
 
     def __init__(self, target_domain):
         self.domain = target_domain
+
+    @staticmethod
+    def get_tld_extract():
+        cache_dir = '/tmp/tldextract'
+
+        try:
+            cached_tld_extract_age_hours = (time.time() - os.path.getmtime(cache_dir)) / 60 / 60
+
+            # If the cached tldextract is older than 24 hours, update it.
+            if cached_tld_extract_age_hours > 24:
+                logger.info(f"Updating tldextract cache. (age: {cached_tld_extract_age_hours} hours)")
+                shutil.rmtree(cache_dir)
+                extract = tldextract.TLDExtract(include_psl_private_domains=True, suffix_list_urls=['https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat'], cache_dir=cache_dir)
+            else:
+                # Otherwise, use the cached version.
+                extract = tldextract.TLDExtract(include_psl_private_domains=True, suffix_list_urls=(), cache_dir=cache_dir)
+        except FileNotFoundError:
+            # If the cached tldextract does not exist, create it.
+            logger.info("Creating tldextract cache.")
+            extract = tldextract.TLDExtract(include_psl_private_domains=True, suffix_list_urls=['https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat'], cache_dir=cache_dir)
+
+        return extract
 
     def run(self):
 
@@ -63,8 +87,7 @@ class DMARCScanner:
                 rua_domain = rua_addr.split("@", 1)[1]
 
                 # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
-                extract = tldextract.TLDExtract(include_psl_private_domains=True)
-                extract.update()
+                extract = self.get_tld_extract()
                 parsed_domain = extract(self.domain)
                 org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
 
@@ -113,8 +136,7 @@ class DMARCScanner:
                 ruf_domain = ruf_addr.split("@", 1)[1]
 
                 # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
-                extract = tldextract.TLDExtract(include_psl_private_domains=True)
-                extract.update()
+                extract = self.get_tld_extract()
                 parsed_domain = extract(self.domain)
                 org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
 

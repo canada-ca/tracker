@@ -34,7 +34,8 @@ const sendOrgFootprintEmail = async ({ notifyClient, user, auditLogs, orgNames }
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
         display_name: user.displayName,
-        organization_name: user.preferredLang === 'french' ? orgNames.fr : orgNames.en,
+        organization_name_en: orgNames.en,
+        organization_name_fr: orgNames.fr,
         add_users_count: usersAdded.length,
         update_users_count: usersUpdated.length,
         remove_users_count: usersRemoved.length,

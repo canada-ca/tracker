@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: dns-processor
-          image: gcr.io/track-compliance/dns-processor:master-da85960-1695919977 # {"$imagepolicy": "flux-system:dns-processor"}
+          image: gcr.io/track-compliance/dns-processor:master-80bf8b2-1697137039 # {"$imagepolicy": "flux-system:dns-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -42,5 +42,26 @@ spec:
               value: dns_processor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
+            - name: NOTIFICATION_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: NOTIFICATION_API_KEY
+            - name: NOTIFICATION_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: NOTIFICATION_API_URL
+            - name: NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL
+            - name: ALERT_SUBS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ALERT_SUBS
+                  optional: true
           resources: {}
 status: {}

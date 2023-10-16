@@ -13,6 +13,7 @@ from arango import ArangoClient
 from dotenv import load_dotenv
 
 from dns_processor.dns_processor import process_results
+from notify.send_mx_diff_email_alerts import send_mx_diff_email_alerts
 
 load_dotenv()
 
@@ -67,9 +68,10 @@ def snake_to_camel(d):
 
 def check_mx_diff(processed_results, domain_id):
     new_mx = processed_results.get("mx_records").get("hosts")
+    diff_reason = ""
     mx_record_diff = False
     # fetch most recent scan of domain
-    last_mx = (
+    last_mx_cursor = (
         db.aql.execute(
             """
             FOR v, e IN 1..1 OUTBOUND @domain_id domainsDNS
@@ -79,20 +81,24 @@ def check_mx_diff(processed_results, domain_id):
             """,
             bind_vars={"domain_id": domain_id},
         )
-        .next()
-        .get("mxRecords", {})
-        .get("hosts", [])
     )
+    # if no previous scan, return False as we can't compare records
+    if last_mx_cursor.empty():
+        return False
+
+    last_mx = last_mx_cursor.next().get("mxRecords", {}).get("hosts", [])
+
     # compare mx_records to most recent scan
     # if different, set mx_records_diff to True
     # check number of hosts
 
     if len(new_mx) != len(last_mx):
         if len(new_mx) > len(last_mx):
-            # print("host added")
+            diff_reason = "host_added"
             mx_record_diff = True
         else:
             # print("host removed")
+            diff_reason = "host_removed"
             mx_record_diff = True
     else:
         # check hostnames
@@ -103,7 +109,7 @@ def check_mx_diff(processed_results, domain_id):
             hostnames_last.append(last_mx[i]["hostname"])
 
         if set(hostnames_new) != set(hostnames_last):
-            # print("host changed")
+            diff_reason = "host_changed"
             mx_record_diff = True
         else:
             # check hostname preferences and addresses
@@ -113,14 +119,23 @@ def check_mx_diff(processed_results, domain_id):
                     if new_mx[i]["hostname"] == last_mx[j]["hostname"]:
                         # check preference
                         if new_mx[i]["preference"] != last_mx[j]["preference"]:
-                            # print("preference changed")
+                            diff_reason = "preference_changed"
                             mx_record_diff = True
                             break
                         # check addresses
                         if set(new_mx[i]["addresses"]) != set(last_mx[j]["addresses"]):
-                            # print("addresses changed")
+                            diff_reason = "address_changed"
                             mx_record_diff = True
                             break
+
+    # send alerts if true
+    if mx_record_diff and os.getenv("ALERT_SUBS"):
+        send_mx_diff_email_alerts(
+            domain=processed_results.get("domain"),
+            diff_reason=diff_reason,
+            logger=logger,
+            db=db,
+        )
 
     return mx_record_diff
 
@@ -161,7 +176,9 @@ async def run(loop):
         shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
-        mx_record_diff = check_mx_diff(processed_results=processed_results, domain_id=f"domains/{domain_key}")
+        mx_record_diff = check_mx_diff(
+            processed_results=processed_results, domain_id=f"domains/{domain_key}"
+        )
         processed_results["mx_records"].update({"diff": mx_record_diff})
 
         dmarc_status = processed_results.get("dmarc").get("status")

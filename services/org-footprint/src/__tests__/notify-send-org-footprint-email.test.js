@@ -64,7 +64,8 @@ describe('given the sendOrgFootprintEmail function', () => {
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(NOTIFICATION_ORG_FOOTPRINT_EN, user.userName, {
         personalisation: {
           display_name: user.displayName,
-          organization_name: 'Test Org',
+          organization_name_en: 'Test Org',
+          organization_name_fr: 'Le Test Org',
           add_users_count: 2,
           update_users_count: 0,
           remove_users_count: 0,
