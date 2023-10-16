@@ -167,7 +167,7 @@ describe('given findMyTracker query', () => {
                         }
                       }
                       domainCount
-                      domains(first: 10, myTracker: true) {
+                      domains(first: 10) {
                         pageInfo {
                           hasNextPage
                           hasPreviousPage
@@ -349,7 +349,7 @@ describe('given findMyTracker query', () => {
                     }
                   }
                   domainCount
-                  domains(first: 10, myTracker: true) {
+                  domains(first: 10) {
                     pageInfo {
                       hasNextPage
                       hasPreviousPage
