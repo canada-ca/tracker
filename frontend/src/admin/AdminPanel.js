@@ -39,7 +39,6 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
                 activeMenu={activeMenu}
                 permission={permission}
                 orgSlug={orgSlug}
-                usersPerPage={10}
                 orgId={orgId}
               />
             </ErrorBoundary>
