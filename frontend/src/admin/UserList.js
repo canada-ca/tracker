@@ -173,6 +173,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
       {userList}
 
       <RelayPaginationControls
+        displayLimitOptions={[5, 10, 20, 50, 100]}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
         next={next}

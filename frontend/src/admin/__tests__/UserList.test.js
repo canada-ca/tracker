@@ -121,7 +121,6 @@ describe('<UserList />', () => {
                 <UserList
                   includePending={true}
                   permission={'SUPER_ADMIN'}
-                  usersPerPage={10}
                   orgSlug={'test-org.slug'}
                   orgId={rawOrgUserListData.findOrganizationBySlug.id}
                 />
@@ -158,7 +157,6 @@ describe('<UserList />', () => {
                 <UserList
                   includePending={true}
                   permission={'SUPER_ADMIN'}
-                  usersPerPage={10}
                   orgSlug={'test-org.slug'}
                   orgId={rawOrgUserListData.findOrganizationBySlug.id}
                 />
@@ -258,7 +256,6 @@ describe('<UserList />', () => {
                   <UserList
                     includePending={true}
                     permission={'SUPER_ADMIN'}
-                    usersPerPage={10}
                     orgSlug={'test-org.slug'}
                     orgId={rawOrgUserListData.findOrganizationBySlug.id}
                   />
