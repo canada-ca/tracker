@@ -101,6 +101,7 @@ async def run():
                 bind_vars={"domain": domain_id},
             )
             connected_selector_docs = [sel for sel in connected_selectors_cursor]
+            connected_selector_strings = [sel["selector"] for sel in connected_selector_docs]
         except Exception as e:
             logger.error(f"Error getting selectors for domain '{domain}': {e}")
             return
@@ -130,8 +131,8 @@ async def run():
             return
 
         # Add new selectors if not already connected
-        for selector_string in summary_selector_strings:
-            if selector_string not in connected_selector_docs and selector_string != "":
+        for selector_string in list(set(summary_selector_strings + ["*"])):
+            if selector_string not in connected_selector_strings and selector_string != "":
                 if not check_if_domain_exists(f"{selector_string}._domainkey.{domain}"):
                     continue
 
@@ -175,8 +176,7 @@ async def run():
 
                 logger.info(f"Inserted new domain/selector connection for domain '{domain}' and selector '{selector_string}'")
                 connected_selector_docs.append(selector_doc)
-
-        connected_selector_strings = [sel["selector"] for sel in connected_selector_docs]
+                connected_selector_strings.append(selector_string)
 
         try:
             logger.info(f"Scanning {domain} with DKIM selectors '{str(connected_selector_strings)}'")
