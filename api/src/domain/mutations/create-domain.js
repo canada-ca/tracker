@@ -284,7 +284,6 @@ export const createDomain = new mutationWithClientMutationId({
               INSERT {
                 _from: ${insertedDomain._id},
                 _to: ${selectorDoc._id},
-                status: "active"
               } INTO domainsToSelectors
           `,
         )
