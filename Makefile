@@ -20,8 +20,12 @@ cluster:
 
 .PHONY: secrets
 secrets:
-		kustomize build platform/creds/${mode} | kubectl apply -f -
-		kustomize build app/creds/${mode} | kubectl apply -f -
+		kustomize build k8s/apps/bases/api/creds | kubectl apply -f -
+		kustomize build k8s/apps/bases/scanners/dmarc-report-cronjob/creds | kubectl apply -f -
+		kustomize build k8s/apps/bases/scanners/scanner-platform/creds | kubectl apply -f -
+		kustomize build k8s/apps/bases/super-admin/creds | kubectl apply -f -
+		kustomize build k8s/apps/bases/arangodb/creds | kubectl apply -f -
+		kustomize build k8s/clusters/auto-image-update/bases/creds | kubectl apply -f -
 
 .PHONY: dbdump
 dbdump:
@@ -38,7 +42,7 @@ install-arango-operator:
 
 .PHONY: update-flux
 update-flux:
-		flux install --components=source-controller,kustomize-controller,notification-controller,image-reflector-controller,image-automation-controller --export > deploy/bases/flux.yaml
+		flux install --components=source-controller,kustomize-controller,notification-controller,image-reflector-controller,image-automation-controller --export > k8s/clusters/platform/crds.yaml
 
 .PHONY: update-istio
 update-istio:
@@ -47,23 +51,25 @@ update-istio:
 
 .PHONY: print-arango-deployment
 print-arango-deployment:
-		kustomize build app/$(env) | yq -y '. | select(.kind == "ArangoDeployment" and .metadata.name == "arangodb")'
+		kustomize build k8s/infrastructure/bases/arangodb | yq -y '. | select(.kind == "ArangoDeployment" and .metadata.name == "arangodb")'
 
 .PHONY: print-istio-operator
 print-istio-operator:
-		kustomize build platform/$(env) | yq -y '. | select(.kind == "IstioOperator" and .metadata.name == "istio-operator")'
+		kustomize build k8s/infrastructure/overlays/$(env) | yq -y '. | select(.kind == "IstioOperator" and .metadata.name == "istio-operator")'
 
 .PHONY: platform
 platform:
-		kustomize build platform/$(env) | kubectl apply -f -
+		kustomize build k8s/infrastructure/overlays/$(env) | kubectl apply -f -
 
 .PHONY: deploy
 deploy:
 ifeq ("$(env)", "gke")
-		kustomize build deploy/creds/readwrite | kubectl apply -f -
-		kustomize build deploy/$(env) | kubectl apply -f -
+		kustomize build k8s/clusters/auto-image-update/bases/creds | kubectl apply -f -
+		kustomize build k8s/infrastructure/overlays/$(env) | kubectl apply -f -
+		kustomize build k8s/apps/overlays/$(env) | kubectl apply -f -
 else
-		kustomize build deploy/$(env) | kubectl apply -f -
+		kustomize build k8s/infrastructure/overlays/$(env) | kubectl apply -f -
+		kustomize build k8s/apps/overlays/$(env) | kubectl apply -f -
 endif
 
 .PHONY: app
