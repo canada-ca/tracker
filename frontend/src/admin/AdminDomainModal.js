@@ -224,7 +224,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 variables: {
                   domainId: editingDomainId,
                   orgId: orgId,
-                  domain: values.domainUrl,
+                  domain: values.domainUrl.trim(),
                   selectors: values.selectors,
                   tags: values.tags,
                   archived: values.archiveDomain,
@@ -236,7 +236,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
               await createDomain({
                 variables: {
                   orgId: orgId,
-                  domain: values.domainUrl,
+                  domain: values.domainUrl.trim(),
                   selectors: values.selectors,
                   tags: values.tags,
                   archived: values.archiveDomain,

@@ -1,4 +1,4 @@
-FROM node:18.16.1-alpine3.18
+FROM node:18.18.0-alpine3.18
 
 ENV NODE_ENV production
 

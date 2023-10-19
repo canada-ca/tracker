@@ -47,6 +47,11 @@ export function createCache() {
           domains: relayStylePagination(),
         },
       },
+      MyTrackerResult: {
+        fields: {
+          domains: relayStylePagination(),
+        },
+      },
       Period: {
         keyFields: ['month', 'year', 'domain'],
         fields: {

@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon, EmailIcon, MinusIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
-import { number, string } from 'prop-types'
+import { string } from 'prop-types'
 
 import { UserListModal } from './UserListModal'
 
@@ -27,14 +27,14 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { bool } from 'prop-types'
 
-export function UserList({ includePending, permission, orgSlug, usersPerPage, orgId }) {
+export function UserList({ includePending, permission, orgSlug, orgId }) {
   const [mutation, setMutation] = useState()
   const [addedUserName, setAddedUserName] = useState('')
   const [selectedRemoveUser, setSelectedRemoveUser] = useState({
     id: null,
     userName: null,
   })
-
+  const [usersPerPage, setUsersPerPage] = useState(20)
   const [editingUserRole, setEditingUserRole] = useState()
   const [editingUserName, setEditingUserName] = useState()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -47,16 +47,15 @@ export function UserList({ includePending, permission, orgSlug, usersPerPage, or
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage } = usePaginatedCollection(
-    {
+  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage, resetToFirstPage } =
+    usePaginatedCollection({
       fetchForward: FORWARD,
       recordsPerPage: usersPerPage,
       variables: { orgSlug, search: debouncedSearchUser, includePending },
       relayRoot: 'findOrganizationBySlug.affiliations',
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
-    },
-  )
+    })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -117,42 +116,68 @@ export function UserList({ includePending, permission, orgSlug, usersPerPage, or
 
   return (
     <Flex mb="6" w="100%" flexDirection="column">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault() // prevents page from refreshing
-          setMutation('create')
-          setEditingUserRole('USER')
-          setEditingUserName(addedUserName)
-          onOpen()
-        }}
-      >
-        <Flex align="center" flexDirection={{ base: 'column', md: 'row' }} mb="2">
-          <Text as="label" htmlFor="Search-for-user-field" fontSize="md" fontWeight="bold" textAlign="center" mr={2}>
-            <Trans>Search: </Trans>
-          </Text>
-          <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
-            <InputLeftElement aria-hidden="true">
-              <EmailIcon color="gray.300" />
-            </InputLeftElement>
-            <Input
-              id="Search-for-user-field"
-              aria-label="new-user-input"
-              placeholder={t`user email`}
-              onChange={(e) => setAddedUserName(e.target.value)}
-            />
-          </InputGroup>
-
-          <Button w={{ base: '100%', md: '25%' }} variant="primary" type="submit">
-            <AddIcon mr={2} aria-hidden="true" />
-            <Trans>Invite User</Trans>
-          </Button>
-        </Flex>
-      </form>
+      <Box bg="gray.100" p="2" mb="2" borderColor="gray.300" borderWidth="1px">
+        <form
+          id="form"
+          onSubmit={(e) => {
+            e.preventDefault() // prevents page from refreshing
+            setMutation('create')
+            setEditingUserRole('USER')
+            setEditingUserName(addedUserName)
+            onOpen()
+          }}
+        >
+          <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
+            <Text
+              as="label"
+              htmlFor="Search-for-domain-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mr={2}
+            >
+              <Trans>Search: </Trans>
+            </Text>
+            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
+              <InputLeftElement aria-hidden="true">
+                <EmailIcon color="gray.300" />
+              </InputLeftElement>
+              <Input
+                id="Search-for-user-field"
+                aria-label="new-user-input"
+                placeholder={t`User email`}
+                onChange={(e) => setAddedUserName(e.target.value)}
+              />
+            </InputGroup>
+            <Button w={{ base: '100%', md: '25%' }} variant="primary" type="submit">
+              <AddIcon mr={2} aria-hidden="true" />
+              <Trans>Invite User</Trans>
+            </Button>
+          </Flex>
+        </form>
+        <Divider borderBottomWidth="1px" borderBottomColor="black" />
+        <RelayPaginationControls
+          onlyPagination={false}
+          selectedDisplayLimit={usersPerPage}
+          setSelectedDisplayLimit={setUsersPerPage}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
+      </Box>
 
       {userList}
 
       <RelayPaginationControls
-        onlyPagination={true}
+        onlyPagination={false}
+        selectedDisplayLimit={usersPerPage}
+        setSelectedDisplayLimit={setUsersPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
         next={next}
@@ -178,7 +203,6 @@ export function UserList({ includePending, permission, orgSlug, usersPerPage, or
 UserList.propTypes = {
   orgSlug: string,
   permission: string,
-  usersPerPage: number,
   orgId: string.isRequired,
   includePending: bool,
 }
