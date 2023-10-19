@@ -313,7 +313,7 @@ export const createDomain = new mutationWithClientMutationId({
       updatedProperties.push({
         name: 'selectors',
         oldValue: [],
-        newValue: insertDomain.selectors,
+        newValue: selectors,
       })
     }
 
@@ -360,7 +360,6 @@ export const createDomain = new mutationWithClientMutationId({
       msg: {
         domain: returnDomain.domain,
         domain_key: returnDomain._key,
-        selectors: returnDomain.selectors ? returnDomain.selectors : [],
         hash: returnDomain.hash,
         user_key: null, // only used for One Time Scans
         shared_id: null, // only used for One Time Scans
