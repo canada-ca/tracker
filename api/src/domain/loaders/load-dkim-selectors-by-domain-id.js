@@ -8,6 +8,7 @@ export const loadDkimSelectorsByDomainId =
       domainSelectorsCursor = await query`
       WITH domains, domainsToSelectors
       FOR selector, selectorEdge IN 1..1 OUTBOUND ${domainId} domainsToSelectors
+        SORT selector.selector ASC
         RETURN selector
     `
     } catch (err) {
