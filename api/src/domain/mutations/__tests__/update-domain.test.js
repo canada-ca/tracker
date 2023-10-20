@@ -9,7 +9,7 @@ import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired, tfaRequired, checkDomainPermission } from '../../../auth'
-import { loadDomainByKey } from '../../loaders'
+import { loadDkimSelectorsByDomainId, loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
@@ -99,7 +99,16 @@ describe('updating a domain', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
+      })
+      const selector1 = await collections.selectors.save({ selector: 'selector1' })
+      const selector2 = await collections.selectors.save({ selector: 'selector2' })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector2._id,
       })
       await collections.claims.save({
         _to: domain._id,
@@ -170,6 +179,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -246,6 +262,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -323,6 +346,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -405,6 +435,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -481,6 +518,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -558,6 +602,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -640,6 +691,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -716,6 +774,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -793,6 +858,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
@@ -886,6 +958,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn(),
                 },
@@ -964,6 +1043,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1042,6 +1128,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1121,6 +1214,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1200,6 +1300,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1273,6 +1380,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1328,7 +1442,12 @@ describe('updating a domain', () => {
             rootValue: null,
             contextValue: {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest
+                .fn()
+                .mockReturnValueOnce({ count: 1 })
+                .mockReturnValueOnce({ count: 1 })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) }),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
@@ -1346,6 +1465,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: 123,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1428,6 +1554,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn(),
                 },
@@ -1506,6 +1639,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1584,6 +1724,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1663,6 +1810,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1742,6 +1896,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1815,6 +1976,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: 123,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1870,7 +2038,12 @@ describe('updating a domain', () => {
             rootValue: null,
             contextValue: {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest
+                .fn()
+                .mockReturnValue({ count: 1 })
+                .mockReturnValueOnce({ count: 1 })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) }),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
@@ -1888,6 +2061,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },

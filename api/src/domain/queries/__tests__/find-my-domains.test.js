@@ -9,7 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkDomainPermission, checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
-import { loadDomainConnectionsByUserId } from '../../loaders'
+import { loadDkimSelectorsByDomainId, loadDomainConnectionsByUserId } from '../../loaders'
 import { loadUserByKey } from '../../../user'
 import dbschema from '../../../../database.json'
 
@@ -91,7 +91,6 @@ describe('given findMyDomainsQuery', () => {
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -103,7 +102,6 @@ describe('given findMyDomainsQuery', () => {
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -111,6 +109,24 @@ describe('given findMyDomainsQuery', () => {
           spf: 'fail',
           ssl: 'fail',
         },
+      })
+      const selector1 = await collections.selectors.save({ selector: 'selector1' })
+      const selector2 = await collections.selectors.save({ selector: 'selector2' })
+      await collections.domainsToSelectors.save({
+        _from: domainOne._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domainTwo._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domainOne._id,
+        _to: selector2._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domainTwo._id,
+        _to: selector2._id,
       })
       await collections.claims.save({
         _to: domainOne._id,
@@ -185,6 +201,13 @@ describe('given findMyDomainsQuery', () => {
                 userKey: user._key,
                 cleanseInput,
                 auth: { loginRequired: true },
+              }),
+              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                auth: { loginRequiredBool: true },
               }),
             },
           },
