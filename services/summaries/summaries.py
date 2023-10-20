@@ -319,13 +319,14 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         }
 
         current_summary = org.get("summaries")
-        if current_summary.get("date") is None:
-            current_summary.update(
-                {"date": (date.today() - timedelta(days=1)).isoformat()}
+        if current_summary is not None:
+            if current_summary.get("date") is None:
+                current_summary.update(
+                    {"date": (date.today() - timedelta(days=1)).isoformat()}
+                )
+            db.collection("organizationSummaries").insert(
+                {"organization": org.get("_id"), **current_summary}
             )
-        db.collection("organizationSummaries").insert(
-            {"organization": org.get("_id"), **current_summary}
-        )
         org.update({"summaries": summary_data})
         db.collection("organizations").update(org)
 
