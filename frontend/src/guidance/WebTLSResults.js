@@ -384,7 +384,10 @@ export function WebTLSResults({ tlsResult }) {
                               my="2"
                               borderWidth="1px"
                               bg={
-                                expiredCert || certRevoked || (selfSignedCert && !passedValidation)
+                                expiredCert ||
+                                certRevoked ||
+                                (selfSignedCert && !passedValidation) ||
+                                (badHostname && idx === 0)
                                   ? 'weakMuted'
                                   : 'gray.100'
                               }
@@ -457,6 +460,9 @@ export function WebTLSResults({ tlsResult }) {
                                     )
                                   })}
                                 </Flex>
+                                <Text fontWeight={badHostname ? 'bold' : ''} color={badHostname ? 'weak' : 'black'}>
+                                  <Trans>Hostname Matches: {badHostname ? t`No` : t`Yes`}</Trans>
+                                </Text>
                               </AccordionPanel>
                             </Box>
                           </AccordionItem>
