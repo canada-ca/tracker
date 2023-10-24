@@ -11,6 +11,7 @@ import { cleanseInput } from '../../../validators'
 import { checkPermission, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadOrgByKey } from '../../loaders'
+import { loadDomainByKey } from '../../../domain/loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
@@ -39,7 +40,7 @@ describe('removing an organization', () => {
   })
 
   describe('given a successful org verification', () => {
-    let org
+    let org, domain
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
@@ -88,6 +89,14 @@ describe('removing an organization', () => {
         _from: org._id,
         _to: user._id,
         permission: 'super_admin',
+      })
+      domain = await collections.domains.save({
+        domain: 'test.gc.ca',
+        archived: true,
+      })
+      await collections.claims.save({
+        _from: org._id,
+        _to: domain._id,
       })
     })
     afterEach(async () => {
@@ -202,6 +211,11 @@ describe('removing an organization', () => {
           })
           const verifiedOrg = await orgLoader.load(org._key)
           expect(verifiedOrg.verified).toEqual(true)
+
+          const domainLoader = loadDomainByKey({ query, userKey: user._key, i18n })
+
+          const unarchivedDomain = await domainLoader.load(domain._key)
+          expect(unarchivedDomain.archived).toEqual(false)
         })
       })
     })

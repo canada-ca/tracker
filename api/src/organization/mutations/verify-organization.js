@@ -105,6 +105,22 @@ export const verifyOrganization = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
     }
 
+    // unarchive all archived affiliated domains
+    try {
+      await trx.step(
+        () =>
+          query`
+            WITH domains, claims
+            FOR v, e IN 1..1 OUTBOUND ${currentOrg._id} claims
+              FILTER v.archived == true
+              UPDATE v WITH { archived: false } IN domains
+          `,
+      )
+    } catch (err) {
+      console.error(`Transaction error occurred while unarchiving affiliated domains for org: ${orgKey}, err: ${err}`)
+      throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
+    }
+
     try {
       await trx.commit()
     } catch (err) {
