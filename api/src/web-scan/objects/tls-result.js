@@ -243,6 +243,10 @@ export const certificateChainInfoType = new GraphQLObjectType({
       type: new GraphQLList(certificateType),
       description: `The certificate chain which was used to create the TLS connection.`,
     },
+    passedValidation: {
+      type: GraphQLBoolean,
+      description: `Whether or not the certificate chain passed validation.`,
+    },
   }),
 })
 

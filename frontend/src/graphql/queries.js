@@ -404,6 +404,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     receivedChainHasValidOrder
                     verifiedChainHasSha1Signature
                     verifiedChainHasLegacySymantecAnchor
+                    passedValidation
                     certificateChain {
                       notValidBefore
                       notValidAfter
