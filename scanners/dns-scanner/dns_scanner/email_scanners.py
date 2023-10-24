@@ -218,7 +218,7 @@ class DKIMScanner:
 
         pk = None
         keysize = None
-        ktag = pub.get(b"k", None)
+        ktag = pub.get(b"k", b"rsa")
 
         if ktag == b"ed25519":
             pk = nacl.signing.VerifyKey(pub[b"p"], encoder=nacl.encoding.Base64Encoder)
