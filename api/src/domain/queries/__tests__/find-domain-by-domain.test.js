@@ -9,7 +9,7 @@ import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
 import { checkDomainPermission, userRequired, verifiedRequired } from '../../../auth'
-import { loadDomainByDomain } from '../../loaders'
+import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
@@ -82,7 +82,6 @@ describe('given findDomainByDomain query', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -90,6 +89,16 @@ describe('given findDomainByDomain query', () => {
           spf: 'fail',
           ssl: 'fail',
         },
+      })
+      const selector1 = await collections.selectors.save({ selector: 'selector1' })
+      const selector2 = await collections.selectors.save({ selector: 'selector2' })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector2._id,
       })
       await collections.claims.save({
         _to: domain._id,
@@ -151,6 +160,13 @@ describe('given findDomainByDomain query', () => {
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
               loadUserByKey: loadUserByKey({ query }),
+              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                auth: { loginRequiredBool: true },
+              }),
             },
           },
         })

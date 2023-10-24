@@ -4051,6 +4051,7 @@ describe('removing a domain', () => {
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
+                  .mockReturnValueOnce()
                   .mockRejectedValue(new Error('Step error')),
               })
 
@@ -5194,6 +5195,7 @@ describe('removing a domain', () => {
               const mockedTransaction = jest.fn().mockReturnValue({
                 step: jest
                   .fn()
+                  .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()
                   .mockReturnValueOnce()

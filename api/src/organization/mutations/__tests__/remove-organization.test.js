@@ -3285,7 +3285,13 @@ describe('removing an organization', () => {
             const mockedQuery = jest.fn().mockReturnValue(mockedCursor)
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest.fn().mockReturnValueOnce({}).mockReturnValueOnce({}).mockRejectedValue(new Error('Trx Step')),
+              step: jest
+                .fn()
+                .mockReturnValueOnce({})
+                .mockReturnValueOnce({})
+                .mockReturnValueOnce({})
+                .mockReturnValueOnce({})
+                .mockRejectedValue(new Error('Trx Step')),
             })
 
             const response = await graphql({
@@ -3380,6 +3386,8 @@ describe('removing an organization', () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest
                 .fn()
+                .mockReturnValueOnce({})
+                .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockReturnValueOnce({})
                 .mockReturnValueOnce({})

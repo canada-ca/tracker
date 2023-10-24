@@ -19,6 +19,20 @@ spec:
         - name: dns-scanner
           image: gcr.io/track-compliance/dns-scanner:master-24d12a2-1697630339 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              value: http://arangodb.db:8529
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
             - name: PYTHONWARNINGS
               value: ignore
             - name: PUBLISH_TO

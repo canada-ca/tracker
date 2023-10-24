@@ -20,6 +20,7 @@ import {
   loadDomainByDomain,
   loadDomainConnectionsByOrgId,
   loadDomainConnectionsByUserId,
+  loadDkimSelectorsByDomainId,
   loadDomainTagsByOrgId,
 } from './domain/loaders'
 import {
@@ -149,6 +150,13 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       auth: { loginRequiredBool },
     }),
     loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+      query,
+      userKey,
+      cleanseInput,
+      i18n,
+      auth: { loginRequiredBool },
+    }),
+    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
       query,
       userKey,
       cleanseInput,

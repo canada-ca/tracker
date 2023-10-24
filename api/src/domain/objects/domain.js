@@ -51,7 +51,11 @@ export const domainType = new GraphQLObjectType({
     selectors: {
       type: new GraphQLList(Selectors),
       description: 'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async ({ _id, selectors }, _, { userKey, auth: { checkDomainPermission, userRequired } }) => {
+      resolve: async (
+        { _id },
+        _,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDkimSelectorsByDomainId } },
+      ) => {
         await userRequired()
         const permitted = await checkDomainPermission({ domainId: _id })
         if (!permitted) {
@@ -59,7 +63,9 @@ export const domainType = new GraphQLObjectType({
           throw new Error(t`Cannot query domain selectors without permission.`)
         }
 
-        return selectors
+        return await loadDkimSelectorsByDomainId({
+          domainId: _id,
+        })
       },
     },
     status: {

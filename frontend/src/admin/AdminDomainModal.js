@@ -38,6 +38,7 @@ import { useMutation } from '@apollo/client'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
   const {
@@ -256,63 +257,67 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 <Stack spacing={4} p={25}>
                   <DomainField name="domainUrl" label={t`New Domain URL:`} placeholder={t`New Domain URL`} />
 
-                  <FieldArray
-                    name="selectors"
-                    render={(arrayHelpers) => (
-                      <Box>
-                        <Text fontWeight="bold">
-                          <Trans>DKIM Selectors:</Trans>
-                        </Text>
-                        {values.selectors.map((_selector, index) => (
-                          <FormControl
-                            key={index}
-                            isInvalid={
-                              errors.selectors &&
-                              errors.selectors[index] &&
-                              touched.selectors &&
-                              touched.selectors[index]
-                            }
-                          >
-                            <Grid gridTemplateColumns="auto 1fr" gap="0.5em" alignItems="center" mb="0.5em">
-                              <IconButton
-                                variant="danger"
-                                icon={<MinusIcon size="icons.xs" />}
-                                data-testid="remove-dkim-selector"
-                                type="button"
-                                p="3"
-                                onClick={() => arrayHelpers.remove(index)}
-                                aria-label="remove-dkim-selector"
-                              />
-                              <Field id={`selectors.${index}`} name={`selectors.${index}`} h="1.5rem">
-                                {({ field }) => (
-                                  <Input
-                                    {...field}
-                                    id={`selectors.${index}`}
-                                    name={`selectors.${index}`}
-                                    placeholder={i18n._(t`DKIM Selector`)}
-                                    ref={initialFocusRef}
+                  <ABTestWrapper insiderVariantName="B">
+                    <ABTestVariant name="A">
+                      <FieldArray
+                        name="selectors"
+                        render={(arrayHelpers) => (
+                          <Box>
+                            <Text fontWeight="bold">
+                              <Trans>DKIM Selectors:</Trans>
+                            </Text>
+                            {values.selectors.map((_selector, index) => (
+                              <FormControl
+                                key={index}
+                                isInvalid={
+                                  errors.selectors &&
+                                  errors.selectors[index] &&
+                                  touched.selectors &&
+                                  touched.selectors[index]
+                                }
+                              >
+                                <Grid gridTemplateColumns="auto 1fr" gap="0.5em" alignItems="center" mb="0.5em">
+                                  <IconButton
+                                    variant="danger"
+                                    icon={<MinusIcon size="icons.xs" />}
+                                    data-testid="remove-dkim-selector"
+                                    type="button"
+                                    p="3"
+                                    onClick={() => arrayHelpers.remove(index)}
+                                    aria-label="remove-dkim-selector"
                                   />
-                                )}
-                              </Field>
+                                  <Field id={`selectors.${index}`} name={`selectors.${index}`} h="1.5rem">
+                                    {({ field }) => (
+                                      <Input
+                                        {...field}
+                                        id={`selectors.${index}`}
+                                        name={`selectors.${index}`}
+                                        placeholder={i18n._(t`DKIM Selector`)}
+                                        ref={initialFocusRef}
+                                      />
+                                    )}
+                                  </Field>
 
-                              <FormErrorMessage gridColumn="2 / 3" mt={0}>
-                                {errors && errors.selectors && errors.selectors[index]}
-                              </FormErrorMessage>
-                            </Grid>
-                          </FormControl>
-                        ))}
-                        <IconButton
-                          variant="primary"
-                          icon={<SmallAddIcon size="icons.md" />}
-                          data-testid="add-dkim-selector"
-                          type="button"
-                          px="2"
-                          onClick={() => arrayHelpers.push('')}
-                          aria-label="add-dkim-selector"
-                        />
-                      </Box>
-                    )}
-                  />
+                                  <FormErrorMessage gridColumn="2 / 3" mt={0}>
+                                    {errors && errors.selectors && errors.selectors[index]}
+                                  </FormErrorMessage>
+                                </Grid>
+                              </FormControl>
+                            ))}
+                            <IconButton
+                              variant="primary"
+                              icon={<SmallAddIcon size="icons.md" />}
+                              data-testid="add-dkim-selector"
+                              type="button"
+                              px="2"
+                              onClick={() => arrayHelpers.push('')}
+                              aria-label="add-dkim-selector"
+                            />
+                          </Box>
+                        )}
+                      />
+                    </ABTestVariant>
+                  </ABTestWrapper>
                   <FieldArray
                     name="tags"
                     render={(arrayHelpers) => (

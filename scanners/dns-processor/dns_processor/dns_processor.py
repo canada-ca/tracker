@@ -60,7 +60,7 @@ def process_dkim(dkim_results):
     if dkim_err:
         return get_dkim_tag_status(dkim_tags)
 
-    for selector in dkim_results.keys():
+    for selector in dkim_results:
         dkim_tags[selector] = []
 
         if dkim_results[selector].get("record", None) is None:

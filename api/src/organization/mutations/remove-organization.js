@@ -173,10 +173,10 @@ export const removeOrganization = new mutationWithClientMutationId({
               RETURN 1
           )
           RETURN {
-            _id: domain._id,
-            _key: domain._key,
-            domain: domain.domain,
-            count
+            "_id": domain._id,
+            "_key": domain._key,
+            "domain": domain.domain,
+            "count": count
           }
       `
     } catch (err) {
@@ -234,6 +234,39 @@ export const removeOrganization = new mutationWithClientMutationId({
         } catch (err) {
           console.error(
             `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
+        }
+
+        // remove favourites
+        try {
+          await trx.step(async () => {
+            await query`
+            WITH favourites, domains
+            FOR fav IN favourites
+              FILTER fav._to == ${domain._id}
+              REMOVE fav IN favourites
+          `
+          })
+        } catch (err) {
+          console.error(
+            `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
+        }
+
+        // remove DKIM selectors
+        try {
+          await trx.step(async () => {
+            await query`
+            FOR e IN domainsToSelectors
+              FILTER e._from == ${domain._id}
+              REMOVE e IN domainsToSelectors
+          `
+          })
+        } catch (err) {
+          console.error(
+            `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
           throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }

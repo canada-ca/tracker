@@ -17,7 +17,7 @@ import {
   tfaRequired,
   checkDomainPermission,
 } from '../../../auth'
-import { loadDomainByDomain } from '../../loaders'
+import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadOrgByKey, loadOrgConnectionsByDomainId } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
@@ -186,6 +186,13 @@ describe('create a domain', () => {
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -345,6 +352,13 @@ describe('create a domain', () => {
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -481,6 +495,13 @@ describe('create a domain', () => {
               tfaRequired: tfaRequired({}),
             },
             loaders: {
+              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                auth: { loginRequiredBool: true },
+              }),
               loadDomainByDomain: loadDomainByDomain({ query }),
               loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
               loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -576,7 +597,6 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            selectors: ['selector1', 'selector2'],
             lastRan: null,
             status: {
               dkim: null,
@@ -585,6 +605,16 @@ describe('create a domain', () => {
               spf: null,
               ssl: null,
             },
+          })
+          const selector1 = await collections.selectors.save({ selector: 'selector1' })
+          const selector2 = await collections.selectors.save({ selector: 'selector2' })
+          await collections.domainsToSelectors.save({
+            _from: domain._id,
+            _to: selector1._id,
+          })
+          await collections.domainsToSelectors.save({
+            _from: domain._id,
+            _to: selector2._id,
           })
           await collections.claims.save({
             _from: org._id,
@@ -659,6 +689,13 @@ describe('create a domain', () => {
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -811,6 +848,13 @@ describe('create a domain', () => {
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -889,6 +933,16 @@ describe('create a domain', () => {
               ssl: null,
             },
           })
+          const selector1 = await collections.selectors.save({ selector: 'selector1' })
+          const selector2 = await collections.selectors.save({ selector: 'selector2' })
+          await collections.domainsToSelectors.save({
+            _from: domain._id,
+            _to: selector1._id,
+          })
+          await collections.domainsToSelectors.save({
+            _from: domain._id,
+            _to: selector2._id,
+          })
           await collections.claims.save({
             _from: org._id,
             _to: domain._id,
@@ -963,6 +1017,13 @@ describe('create a domain', () => {
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -1115,6 +1176,13 @@ describe('create a domain', () => {
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -1267,6 +1335,13 @@ describe('create a domain', () => {
                 tfaRequired: tfaRequired({}),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: loadDomainByDomain({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
@@ -1413,6 +1488,13 @@ describe('create a domain', () => {
                 tfaRequired: jest.fn(),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: {
                   load: jest.fn(),
                 },
@@ -1512,6 +1594,13 @@ describe('create a domain', () => {
                 tfaRequired: jest.fn(),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: {
                   load: jest.fn(),
                 },
@@ -1615,6 +1704,13 @@ describe('create a domain', () => {
                 tfaRequired: jest.fn(),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: {
                   load: jest.fn(),
                 },
@@ -1717,6 +1813,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn(),
                   },
@@ -1813,6 +1916,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn(),
                   },
@@ -1911,6 +2021,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn(),
                   },
@@ -1932,7 +2049,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Cursor error occurred for user: 123 after inserting new domain and gathering its domain info: Error: cursor error`,
+              `Cursor error occurred for user: 123 when inserting new domain: Error: cursor error`,
             ])
           })
         })
@@ -2010,6 +2127,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn(),
                     },
@@ -2111,6 +2235,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn(),
                     },
@@ -2209,6 +2340,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn().mockReturnValue({
                         domain: 'domain.ca',
@@ -2235,7 +2373,7 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: 123 when inserting domain selectors: Error: trx step error`,
+                `Transaction step error occurred for user: 123 when inserting new domain: Error: trx step error`,
               ])
             })
           })
@@ -2293,14 +2431,17 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce({ next: jest.fn().mockReturnValue() })
+                      .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
                     checkDomainPermission: checkDomainPermission({
                       i18n,
-                      userKey: user._key,
+                      userKey: 123,
                       query,
                     }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
@@ -2310,6 +2451,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: 123,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn().mockReturnValue({
                         domain: 'domain.ca',
@@ -2336,7 +2484,7 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: 123 when inserting domain edge: Error: trx step error`,
+                `Transaction step error occurred for user: 123 when inserting new domain edge: Error: trx step error`,
               ])
             })
           })
@@ -2393,11 +2541,11 @@ describe('create a domain', () => {
                   language: 'en',
                 },
                 query: jest.fn().mockReturnValue({
-                  next: jest.fn().mockReturnValueOnce(undefined),
+                  next: jest.fn().mockReturnValue(undefined),
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue(),
+                  step: jest.fn().mockReturnValue({ next: jest.fn().mockReturnValue() }),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
@@ -2405,7 +2553,7 @@ describe('create a domain', () => {
                 auth: {
                   checkDomainPermission: checkDomainPermission({
                     i18n,
-                    userKey: user._key,
+                    userKey: 123,
                     query,
                   }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
@@ -2415,6 +2563,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: 123,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn().mockReturnValue({
                       domain: 'domain.ca',
@@ -2525,6 +2680,13 @@ describe('create a domain', () => {
                 tfaRequired: jest.fn(),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: {
                   load: jest.fn(),
                 },
@@ -2624,6 +2786,13 @@ describe('create a domain', () => {
                 tfaRequired: jest.fn(),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: {
                   load: jest.fn(),
                 },
@@ -2728,6 +2897,13 @@ describe('create a domain', () => {
                 tfaRequired: jest.fn(),
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByDomain: {
                   load: jest.fn(),
                 },
@@ -2830,6 +3006,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn(),
                   },
@@ -2926,6 +3109,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn(),
                   },
@@ -3014,7 +3204,7 @@ describe('create a domain', () => {
                 auth: {
                   checkDomainPermission: checkDomainPermission({
                     i18n,
-                    userKey: user._key,
+                    userKey: 123,
                     query,
                   }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
@@ -3024,6 +3214,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: 123,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn(),
                   },
@@ -3045,7 +3242,7 @@ describe('create a domain', () => {
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
-              `Cursor error occurred for user: 123 after inserting new domain and gathering its domain info: Error: cursor error`,
+              `Cursor error occurred for user: 123 when inserting new domain: Error: cursor error`,
             ])
           })
         })
@@ -3123,6 +3320,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn(),
                     },
@@ -3224,6 +3428,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn(),
                     },
@@ -3322,6 +3533,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn().mockReturnValue({
                         domain: 'domain.ca',
@@ -3348,7 +3566,7 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: 123 when inserting domain selectors: Error: trx step error`,
+                `Transaction step error occurred for user: 123 when inserting new domain: Error: trx step error`,
               ])
             })
           })
@@ -3406,14 +3624,17 @@ describe('create a domain', () => {
                   }),
                   collections: collectionNames,
                   transaction: jest.fn().mockReturnValue({
-                    step: jest.fn().mockReturnValueOnce().mockRejectedValue(new Error('trx step error')),
+                    step: jest
+                      .fn()
+                      .mockReturnValueOnce({ next: jest.fn().mockReturnValueOnce(undefined) })
+                      .mockRejectedValue(new Error('trx step error')),
                   }),
                   userKey: 123,
                   publish: jest.fn(),
                   auth: {
                     checkDomainPermission: checkDomainPermission({
                       i18n,
-                      userKey: user._key,
+                      userKey: 123,
                       query,
                     }),
                     checkPermission: jest.fn().mockReturnValue('admin'),
@@ -3423,6 +3644,13 @@ describe('create a domain', () => {
                     tfaRequired: jest.fn(),
                   },
                   loaders: {
+                    loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                      query,
+                      userKey: 123,
+                      cleanseInput,
+                      i18n,
+                      auth: { loginRequiredBool: true },
+                    }),
                     loadDomainByDomain: {
                       load: jest.fn().mockReturnValue({
                         domain: 'domain.ca',
@@ -3449,7 +3677,7 @@ describe('create a domain', () => {
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
-                `Transaction step error occurred for user: 123 when inserting domain edge: Error: trx step error`,
+                `Transaction step error occurred for user: 123 when inserting new domain edge: Error: trx step error`,
               ])
             })
           })
@@ -3510,7 +3738,7 @@ describe('create a domain', () => {
                 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest.fn().mockReturnValue(),
+                  step: jest.fn().mockReturnValue({ next: jest.fn().mockReturnValueOnce(undefined) }),
                   commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
                 }),
                 userKey: 123,
@@ -3518,7 +3746,7 @@ describe('create a domain', () => {
                 auth: {
                   checkDomainPermission: checkDomainPermission({
                     i18n,
-                    userKey: user._key,
+                    userKey: 123,
                     query,
                   }),
                   checkPermission: jest.fn().mockReturnValue('admin'),
@@ -3528,6 +3756,13 @@ describe('create a domain', () => {
                   tfaRequired: jest.fn(),
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: 123,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByDomain: {
                     load: jest.fn().mockReturnValue({
                       domain: 'domain.ca',

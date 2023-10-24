@@ -6,6 +6,7 @@ import time
 import shutil
 
 import dkim
+import dns
 import nacl
 import tldextract
 from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
@@ -13,11 +14,20 @@ from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
 from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 from dns import resolver
-from dns.resolver import NoAnswer
+from dns.resolver import NoAnswer, NXDOMAIN
 
 logger = logging.getLogger(__name__)
 
 TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
+
+
+def check_if_domain_exists(domain):
+    # Check if domain exists, only return True if DNS returns NOERROR
+    try:
+        exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
+        return exist_response.response.rcode() == dns.rcode.NOERROR
+    except NXDOMAIN:
+        return False
 
 
 class DMARCScanner:
@@ -176,9 +186,9 @@ class DKIMScanner:
     domain = None
     selectors = None
 
-    def __init__(self, target_domain, target_selectors):
+    def __init__(self, target_domain, selectors):
         self.domain = target_domain
-        self.selectors = target_selectors
+        self.selectors = selectors
 
     @staticmethod
     def bitsize(x):

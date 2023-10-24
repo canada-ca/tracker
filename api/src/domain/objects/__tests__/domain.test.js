@@ -186,6 +186,9 @@ describe('given the domain object', () => {
                 userRequired: jest.fn().mockReturnValue(true),
                 checkDomainPermission: jest.fn().mockReturnValue(true),
               },
+              loaders: {
+                loadDkimSelectorsByDomainId: jest.fn().mockReturnValue(selectors),
+              },
             },
           ),
         ).resolves.toEqual(['selector1', 'selector2'])
