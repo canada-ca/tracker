@@ -47,7 +47,6 @@ update-flux:
 .PHONY: update-istio
 update-istio:
 		istioctl manifest generate --dry-run > k8s/infrastructure/bases/istio/platform/crds.yaml
-		istioctl operator dump --dry-run > k8s/infrastructure/bases/istio/istio-operator-deployment.yaml
 
 .PHONY: print-arango-deployment
 print-arango-deployment:
