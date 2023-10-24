@@ -1,19 +1,18 @@
 import jwt from 'jsonwebtoken'
 
-const {AUTHENTICATED_KEY} = process.env
+const { AUTHENTICATED_KEY } = process.env
 
 const now = () => Math.floor(new Date().getTime() / 1000)
 
-const future = (expPeriod) =>
-  Math.floor(new Date((now() + expPeriod * 3600) * 1000) / 1000)
+const future = (expPeriod) => Math.floor(new Date((now() + expPeriod * 900) * 1000) / 1000)
 
 export const tokenize = ({
-                           parameters = {},
-                           expPeriod = 1,
-                           iat = now(),
-                           exp = future(expPeriod),
-                           secret = String(AUTHENTICATED_KEY),
-                         }) =>
+  parameters = {},
+  expPeriod = 1,
+  iat = now(),
+  exp = future(expPeriod),
+  secret = String(AUTHENTICATED_KEY),
+}) =>
   jwt.sign(
     {
       exp,
@@ -21,5 +20,5 @@ export const tokenize = ({
       parameters,
     },
     secret,
-    {algorithm: 'HS256'},
+    { algorithm: 'HS256' },
   )
