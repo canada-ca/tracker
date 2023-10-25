@@ -148,8 +148,9 @@ export const refreshTokens = new mutationWithClientMutationId({
 
     // if user wants to stay logged in create normal http cookie
     if (user.refreshInfo.rememberMe) {
+      const tokenMaxAgeSeconds = jwt.decode(newRefreshToken).exp - jwt.decode(newRefreshToken).iat
       cookieData = {
-        maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+        maxAge: tokenMaxAgeSeconds,
         httpOnly: true,
         secure: true,
         sameSite: true,

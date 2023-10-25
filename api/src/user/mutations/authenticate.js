@@ -40,6 +40,7 @@ export const authenticate = new mutationWithClientMutationId({
       collections,
       transaction,
       uuidv4,
+      jwt,
       auth: { tokenize, verifyToken },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -148,6 +149,7 @@ export const authenticate = new mutationWithClientMutationId({
       }
 
       const token = tokenize({ expiresIn: '15m', parameters: { userKey: user._key } })
+
       const refreshToken = tokenize({
         expiresIn: '7d',
         parameters: { userKey: user._key, uuid: refreshId },
@@ -164,8 +166,9 @@ export const authenticate = new mutationWithClientMutationId({
 
       // if user wants to stay logged in create normal http cookie
       if (user.refreshInfo.rememberMe) {
+        const tokenMaxAgeSeconds = jwt.decode(token).exp - jwt.decode(token).iat
         cookieData = {
-          maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+          maxAge: tokenMaxAgeSeconds,
           httpOnly: true,
           secure: true,
           sameSite: true,

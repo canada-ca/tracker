@@ -43,6 +43,7 @@ export const signIn = new mutationWithClientMutationId({
       transaction,
       uuidv4,
       response,
+      jwt,
       auth: { tokenize, bcrypt },
       loaders: { loadUserByUserName },
       validators: { cleanseInput },
@@ -208,8 +209,9 @@ export const signIn = new mutationWithClientMutationId({
 
           // if user wants to stay logged in create normal http cookie
           if (rememberMe) {
+            const tokenMaxAgeSeconds = jwt.decode(refreshToken).exp - jwt.decode(refreshToken).iat
             cookieData = {
-              maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+              maxAge: tokenMaxAgeSeconds,
               httpOnly: true,
               secure: true,
               sameSite: true,
