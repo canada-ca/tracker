@@ -40,6 +40,7 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
 
     if (typeof user !== 'undefined') {
       const token = tokenize({
+        expiresIn: '1h',
         parameters: { userKey: user._key, currentPassword: user.password },
       })
       const resetUrl = `https://${request.get('host')}/reset-password/${token}`

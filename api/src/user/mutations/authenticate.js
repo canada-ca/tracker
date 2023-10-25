@@ -147,10 +147,10 @@ export const authenticate = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
-      const token = tokenize({ parameters: { userKey: user._key } })
+      const token = tokenize({ expiresIn: '15m', parameters: { userKey: user._key } })
       const refreshToken = tokenize({
+        expiresIn: '7d',
         parameters: { userKey: user._key, uuid: refreshId },
-        expPeriod: 168,
         secret: String(REFRESH_KEY),
       })
 

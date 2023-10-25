@@ -135,8 +135,8 @@ able to sign-up and be assigned to that organization in one mutation.`,
     // If there is not associated account with that username send invite to org with create account
     if (typeof requestedUser === 'undefined') {
       const token = tokenize({
+        expiresIn: '3d',
         parameters: { userName, orgKey: org._key, requestedRole },
-        expPeriod: 24,
       })
       const createAccountLink = `https://${request.get('host')}/create-user/${token}`
 

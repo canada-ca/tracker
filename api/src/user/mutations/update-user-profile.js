@@ -171,7 +171,10 @@ export const updateUserProfile = new mutationWithClientMutationId({
     const returnUser = await loadUserByKey.load(userKey)
 
     if (changedUserName) {
-      const token = tokenize({ parameters: { userKey: returnUser._key } })
+      const token = tokenize({
+        expiresIn: '15m',
+        parameters: { userKey: returnUser._key },
+      })
 
       const verifyUrl = `https://${request.get('host')}/validate/${token}`
 

@@ -152,6 +152,7 @@ export const signIn = new mutationWithClientMutationId({
           console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
 
           const authenticateToken = tokenize({
+            expiresIn: '15m',
             parameters: { userKey: user._key },
             secret: String(SIGN_IN_KEY),
           })
@@ -187,12 +188,13 @@ export const signIn = new mutationWithClientMutationId({
           }
 
           const token = tokenize({
+            expiresIn: '15m',
             parameters: { userKey: user._key },
           })
 
           const refreshToken = tokenize({
+            expiresIn: '7d',
             parameters: { userKey: user._key, uuid: refreshId },
-            expPeriod: 168,
             secret: String(REFRESH_KEY),
           })
 

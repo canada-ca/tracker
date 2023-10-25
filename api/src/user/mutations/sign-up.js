@@ -225,6 +225,7 @@ export const signUp = new mutationWithClientMutationId({
     await sendAuthEmail({ user: returnUser })
 
     const authenticateToken = tokenize({
+      expiresIn: '15m',
       parameters: { userKey: insertedUser._key },
       secret: String(SIGN_IN_KEY),
     })

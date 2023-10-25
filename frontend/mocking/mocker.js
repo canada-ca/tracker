@@ -27,23 +27,13 @@ const parseCookies = (str) => {
   }, {})
 }
 
-const now = () => Math.floor(new Date().getTime() / 1000)
-
-const future = (expPeriod) => Math.floor(new Date((now() + expPeriod) * 1000) / 1000)
-
-const tokenize = ({
-  parameters = {},
-  expPeriod = JWT_TOKEN_EXPIRY_SECONDS, // seconds until expiry
-  iat = now(),
-  exp = future(expPeriod),
-}) =>
+const tokenize = ({ expiresIn = '15m', parameters = {} }) =>
   jwt.sign(
     {
-      exp,
-      iat,
       parameters,
     },
     'secret',
+    { expiresIn: expiresIn },
   )
 
 const pubsub = new PubSub()
@@ -716,7 +706,7 @@ const schemaWithMocks = addMocksToSchema({
           parameters: {
             userKey: jwt.decode(context.cookies.refresh_token, 'secret').parameters.userKey,
           },
-          expPeriod: REFRESH_TOKEN_EXPIRY_SECONDS,
+          expiresIn: '15m',
         })
 
         context.res.cookie('refresh_token', refreshToken, cookieData)
@@ -829,7 +819,6 @@ const schemaWithMocks = addMocksToSchema({
         const refreshToken = tokenize({
           parameters: {
             userKey: userId,
-            expPeriod: REFRESH_TOKEN_EXPIRY_SECONDS,
           },
         })
 
