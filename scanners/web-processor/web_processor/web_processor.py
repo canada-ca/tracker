@@ -116,8 +116,7 @@ def process_tls_results(tls_results):
         pass
 
     try:
-        if len(
-            [res for res in tls_results["certificate_chain_info"]["path_validation_results"] if res is False]) > 0:
+        if not tls_results["certificate_chain_info"]["passed_validation"]:
             negative_tags.append("ssl16")
     except TypeError:
         pass

@@ -183,6 +183,7 @@ export function WebTLSResults({ tlsResult }) {
     verifiedChainHasLegacySymantecAnchor,
     certificateChain,
     pathValidationResults,
+    passedValidation,
   } = tlsResult?.certificateChainInfo || {}
 
   const { robotVulnerable, heartbleedVulnerable } = tlsResult
@@ -382,8 +383,19 @@ export function WebTLSResults({ tlsResult }) {
                               px="2"
                               my="2"
                               borderWidth="1px"
-                              bg={expiredCert || certRevoked || selfSignedCert ? 'weakMuted' : 'gray.100'}
-                              borderColor={expiredCert || certRevoked || selfSignedCert ? 'weak' : 'gray.300'}
+                              bg={
+                                expiredCert ||
+                                certRevoked ||
+                                (selfSignedCert && !passedValidation) ||
+                                (badHostname && idx === 0)
+                                  ? 'weakMuted'
+                                  : 'gray.100'
+                              }
+                              borderColor={
+                                expiredCert || certRevoked || (selfSignedCert && !passedValidation)
+                                  ? 'weak'
+                                  : 'gray.300'
+                              }
                             >
                               <Text fontWeight="bold">
                                 {idx + 1}. {commonNames[0]}
@@ -424,8 +436,8 @@ export function WebTLSResults({ tlsResult }) {
                                   <Trans>Issuer:</Trans> {issuer}
                                 </Text>
                                 <Text
-                                  fontWeight={selfSignedCert ? 'bold' : ''}
-                                  color={selfSignedCert ? 'weak' : 'black'}
+                                  fontWeight={selfSignedCert && !passedValidation ? 'bold' : ''}
+                                  color={selfSignedCert && !passedValidation ? 'weak' : 'black'}
                                 >
                                   <Trans>Self-signed:</Trans> {selfSignedCert ? t`Yes` : t`No`}
                                 </Text>
@@ -448,6 +460,9 @@ export function WebTLSResults({ tlsResult }) {
                                     )
                                   })}
                                 </Flex>
+                                <Text fontWeight={badHostname ? 'bold' : ''} color={badHostname ? 'weak' : 'black'}>
+                                  <Trans>Hostname Matches: {badHostname ? t`No` : t`Yes`}</Trans>
+                                </Text>
                               </AccordionPanel>
                             </Box>
                           </AccordionItem>

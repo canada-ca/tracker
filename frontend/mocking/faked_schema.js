@@ -1775,6 +1775,9 @@ export const getTypeNames = () => gql`
 
     # The certificate chain which was used to create the TLS connection.
     certificateChain: [Certificate]
+
+    # Whether or not the certificate chain passed validation.
+    passedValidation: Boolean
   }
 
   # Validation results from each trust store.
