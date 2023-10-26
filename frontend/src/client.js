@@ -1,10 +1,13 @@
 import 'isomorphic-unfetch'
-import { ApolloClient, createHttpLink, InMemoryCache, makeVar, split } from '@apollo/client'
+import { ApolloClient, createHttpLink, InMemoryCache, makeVar, ApolloLink } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
 import { getMainDefinition, relayStylePagination } from '@apollo/client/utilities'
 import { setContext } from '@apollo/client/link/context'
 import { i18n } from '@lingui/core'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { REFRESH_TOKENS } from './graphql/mutations'
+import { RetryLink } from '@apollo/client/link/retry'
 
 export function createCache() {
   return new InMemoryCache({
@@ -82,20 +85,62 @@ export const currentUserVar = makeVar({
   userName: null,
 })
 
+const refreshTokens = async () => {
+  let currentToken = currentUserVar().jwt
+  if (currentToken === null) {
+    return
+  }
+  currentUserVar({
+    jwt: null,
+  })
+
+  const { data } = await client.mutate({ mutation: REFRESH_TOKENS })
+  if (data.refreshTokens.result.__typename === 'AuthResult') {
+    currentUserVar({
+      jwt: data.refreshTokens.result.authToken,
+      ...currentUserVar(),
+    })
+
+    return data.refreshTokens.result.authToken
+  }
+}
+
 const httpLink = createHttpLink({
   uri: process.env.NODE_ENV === 'production' ? `https://${window.location.host}/graphql` : '/graphql',
 })
 
-const headersLink = setContext((_, { headers }) => {
+const headersLink = setContext(({ operationName }, { headers }) => {
   const language = i18n.locale
+
+  const authorization = currentUserVar().jwt && operationName !== 'RefreshTokens' ? currentUserVar().jwt : ''
 
   return {
     headers: {
       ...headers,
-      ...(currentUserVar().jwt && { authorization: currentUserVar().jwt }),
+      authorization,
       'Accept-Language': language,
     },
   }
+})
+
+const errorLink = onError(({ graphQLErrors, operation, forward }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(async ({ extensions }) => {
+      if (extensions.code === 'UNAUTHENTICATED') {
+        // Modify the operation context with a new token
+        const oldHeaders = operation.getContext().headers
+        const newToken = await refreshTokens()
+
+        operation.setContext({
+          headers: {
+            ...oldHeaders,
+            authorization: newToken,
+          },
+        })
+        // Retry the request, returning the new observable
+        return forward(operation)
+      }
+    })
 })
 
 const httpLinkWithHeaders = headersLink.concat(httpLink)
@@ -114,9 +159,10 @@ export const wsClient = new SubscriptionClient(
   },
 )
 
+const retryLink = new RetryLink()
 const wsLink = new WebSocketLink(wsClient)
 
-const splitLink = split(
+const splitLink = ApolloLink.from([retryLink, errorLink]).split(
   ({ query }) => {
     const definition = getMainDefinition(query)
     return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
