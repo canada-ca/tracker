@@ -231,7 +231,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       dmarcPhase
       hasDMARCReport
       userHasPermission
-      mxRecordDiff(limit: 10, orderBy: { field: TIMESTAMP, direction: ASC }) {
+      mxRecordDiff(limit: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
         totalCount
         edges {
           node {

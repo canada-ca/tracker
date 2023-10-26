@@ -365,10 +365,10 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                     return (
                       <ReactDiffViewer
                         key={idx}
-                        oldValue={node.mxRecords.hosts}
-                        newValue={nextNode.mxRecords.hosts}
-                        leftTitle={node.timestamp}
-                        rightTitle={nextNode.timestamp}
+                        newValue={node.mxRecords.hosts}
+                        oldValue={nextNode.mxRecords.hosts}
+                        rightTitle={node.timestamp}
+                        leftTitle={nextNode.timestamp}
                         splitView={true}
                         compareMethod={DiffMethod.JSON}
                         hideLineNumbers={true}
