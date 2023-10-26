@@ -3,6 +3,8 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
+const { AUTHENTICATED_KEY } = process.env
+
 export const sendPasswordResetLink = new mutationWithClientMutationId({
   name: 'SendPasswordResetLink',
   description:
@@ -42,6 +44,7 @@ export const sendPasswordResetLink = new mutationWithClientMutationId({
       const token = tokenize({
         expiresIn: '1h',
         parameters: { userKey: user._key, currentPassword: user.password },
+        secret: String(AUTHENTICATED_KEY),
       })
       const resetUrl = `https://${request.get('host')}/reset-password/${token}`
 

@@ -6,6 +6,8 @@ import { t } from '@lingui/macro'
 import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
 import { updateUserProfileUnion } from '../unions'
 
+const { AUTHENTICATED_KEY } = process.env
+
 export const updateUserProfile = new mutationWithClientMutationId({
   name: 'UpdateUserProfile',
   description:
@@ -174,6 +176,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
       const token = tokenize({
         expiresIn: '15m',
         parameters: { userKey: returnUser._key },
+        secret: String(AUTHENTICATED_KEY),
       })
 
       const verifyUrl = `https://${request.get('host')}/validate/${token}`

@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
 import { TfaSendMethodEnum } from '../../enums'
 
-const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
+const { REFRESH_KEY, REFRESH_TOKEN_EXPIRY, AUTHENTICATED_KEY, SIGN_IN_KEY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -148,7 +148,11 @@ export const authenticate = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
-      const token = tokenize({ expiresIn: '15m', parameters: { userKey: user._key } })
+      const token = tokenize({
+        expiresIn: '15m',
+        parameters: { userKey: user._key },
+        secret: String(AUTHENTICATED_KEY),
+      })
 
       const refreshToken = tokenize({
         expiresIn: '7d',

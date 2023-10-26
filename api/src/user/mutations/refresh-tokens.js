@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 
 import { refreshTokensUnion } from '../unions'
 
-const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
+const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY, AUTHENTICATED_KEY } = process.env
 
 export const refreshTokens = new mutationWithClientMutationId({
   name: 'RefreshTokens',
@@ -128,7 +128,7 @@ export const refreshTokens = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
     }
 
-    const newAuthToken = tokenize({ expiresIn: '15m', parameters: { userKey } })
+    const newAuthToken = tokenize({ expiresIn: '15m', parameters: { userKey }, secret: String(AUTHENTICATED_KEY) })
 
     console.info(`User: ${userKey} successfully refreshed their tokens.`)
 

@@ -163,6 +163,7 @@ export default function UserPage() {
           <Trans>Admin accounts must activate a multi-factor authentication option.</Trans>
         </NotificationBanner>
       )}
+      {/*<Text>{client.cache.}</Text>*/}
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} width="100%">
         <Box mt={25} px="4">
           <EditableUserDisplayName detailValue={displayName} mb="8" />

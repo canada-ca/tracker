@@ -5,7 +5,7 @@ import { t } from '@lingui/macro'
 
 import { signInUnion } from '../../user'
 
-const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY, AUTHENTICATED_KEY } = process.env
 
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
@@ -155,7 +155,7 @@ export const signIn = new mutationWithClientMutationId({
           const authenticateToken = tokenize({
             expiresIn: '15m',
             parameters: { userKey: user._key },
-            secret: String(SIGN_IN_KEY),
+            secret: String(SIGN_IN_KEY), // SIGN_IN_KEY is reserved for signing TFA tokens
           })
 
           return {
@@ -191,6 +191,7 @@ export const signIn = new mutationWithClientMutationId({
           const token = tokenize({
             expiresIn: '15m',
             parameters: { userKey: user._key },
+            secret: String(AUTHENTICATED_KEY),
           })
 
           const refreshToken = tokenize({

@@ -14,7 +14,7 @@ import { loadUserByUserName } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
 
-const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
+const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY } = process.env
 
 const mockNotify = jest.fn()
 
@@ -340,6 +340,7 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                jwt,
                 auth: {
                   bcrypt,
                   tokenize,
@@ -400,6 +401,14 @@ describe('authenticate user account', () => {
             const mockedCookie = jest.fn()
             const mockedResponse = { cookie: mockedCookie }
 
+            const mockedTokenize = jest.fn().mockReturnValue(
+              tokenize({
+                expiresIn: '15m',
+                parameters: { userKey: user._key },
+                secret: String(SIGN_IN_KEY),
+              }),
+            )
+
             const response = await graphql({
               schema,
               source: `
@@ -431,6 +440,7 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                jwt,
                 auth: {
                   bcrypt,
                   tokenize,
