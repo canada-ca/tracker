@@ -150,7 +150,7 @@ export const refreshTokens = new mutationWithClientMutationId({
     if (user.refreshInfo.rememberMe) {
       const tokenMaxAgeSeconds = jwt.decode(newRefreshToken).exp - jwt.decode(newRefreshToken).iat
       cookieData = {
-        maxAge: tokenMaxAgeSeconds,
+        maxAge: tokenMaxAgeSeconds * 1000,
         httpOnly: true,
         secure: true,
         sameSite: true,

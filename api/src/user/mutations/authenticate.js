@@ -170,9 +170,9 @@ export const authenticate = new mutationWithClientMutationId({
 
       // if user wants to stay logged in create normal http cookie
       if (user.refreshInfo.rememberMe) {
-        const tokenMaxAgeSeconds = jwt.decode(token).exp - jwt.decode(token).iat
+        const tokenMaxAgeSeconds = jwt.decode(refreshToken).exp - jwt.decode(refreshToken).iat
         cookieData = {
-          maxAge: tokenMaxAgeSeconds,
+          maxAge: tokenMaxAgeSeconds * 1000,
           httpOnly: true,
           secure: true,
           sameSite: true,
