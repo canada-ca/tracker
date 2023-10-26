@@ -22,7 +22,7 @@ def get_stakeholders(db: StandardDatabase):
         users_cursor = db.aql.execute(
             """
             FOR user IN users
-                FILTER user.userName IN @user_emails
+                FILTER @user_emails[? ANY FILTER LOWER(CURRENT) == LOWER(user.userName)]
                 RETURN user
             """,
             bind_vars={"user_emails": user_emails},
