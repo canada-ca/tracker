@@ -19,7 +19,14 @@ def get_stakeholders(db: StandardDatabase):
     user_emails = os.getenv("ALERT_SUBS").split(",")
 
     try:
-        users_cursor = db.collection("users").find({"username": {"$in": user_emails}})
+        users_cursor = db.aql.execute(
+            """
+            FOR user IN users
+                FILTER @user_emails[? ANY FILTER LOWER(CURRENT) == LOWER(user.userName)]
+                RETURN user
+            """,
+            bind_vars={"user_emails": user_emails},
+        )
         users = [user for user in users_cursor]
     except Exception as e:
         raise Exception(f"Failed to get users from database with error: {e}")
