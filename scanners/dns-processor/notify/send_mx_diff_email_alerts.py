@@ -1,11 +1,14 @@
 import os
+
+from arango.database import StandardDatabase
+
 from notify.notify_client import notify_client
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-def get_stakeholders(db):
+def get_stakeholders(db: StandardDatabase):
     """
     Gets the stakeholders for a domain.
 
@@ -14,11 +17,13 @@ def get_stakeholders(db):
     """
 
     user_emails = os.getenv("ALERT_SUBS").split(",")
-    users = []
+
     try:
-        users = db.users.find({"username": {"$in": user_emails}}).all()
+        users_cursor = db.collection("users").find({"username": {"$in": user_emails}})
+        users = [user for user in users_cursor]
     except Exception as e:
         raise Exception(f"Failed to get users from database with error: {e}")
+
     return users
 
 
@@ -68,7 +73,7 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
 
     stakeholders = get_stakeholders(db)
     for user in stakeholders:
-        email = user.get("username")
+        email = user.get("userName")
         reason = get_reason_str(reason=diff_reason)
         try:
             response = notify_client.send_email_notification(
