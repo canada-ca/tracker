@@ -78,7 +78,7 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
     :param db: The database object.
     """
 
-    stakeholders = get_stakeholders(db)
+    stakeholders = os.getenv("ALERT_SUBS").split(",")
     for user in stakeholders:
         email = user.get("userName")
         reason = get_reason_str(reason=diff_reason)
