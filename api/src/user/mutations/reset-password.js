@@ -75,18 +75,6 @@ export const resetPassword = new mutationWithClientMutationId({
       }
     }
 
-    // Check if password in token matches token in db
-    if (tokenParameters.currentPassword !== user.password) {
-      console.warn(
-        `User: ${user._key} attempted to reset password, however the current password does not match the current hashed password in the db.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to reset password. Please request a new email.`),
-      }
-    }
-
     // Check to see if newly submitted passwords match
     if (password !== confirmPassword) {
       console.warn(
