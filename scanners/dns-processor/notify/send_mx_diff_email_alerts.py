@@ -44,7 +44,7 @@ def get_reason_str(reason):
 
     if reason == "host_added":
         return {
-            "en": "a new hostname was addeden",
+            "en": "a new hostname was added",
             "fr": "un nouveau nom d'hôte a été ajouté",
         }
     elif reason == "host_removed":
