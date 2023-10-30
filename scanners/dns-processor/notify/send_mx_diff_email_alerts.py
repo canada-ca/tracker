@@ -88,7 +88,7 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
                 template_id=os.getenv("NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL"),
                 personalisation={
                     "domain": domain,
-                    "display_name": user.get("displayName"),
+                    "link": "https://tracker.canada.ca/domains/" + domain,
                     "reasonEN": reason.get("en"),
                     "reasonFR": reason.get("fr"),
                 },
