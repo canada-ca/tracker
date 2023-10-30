@@ -65,4 +65,9 @@ spec:
                     secretKeyRef:
                       name: api
                       key: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
+                - name: NOTIFICATION_PENDING_USERS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_PENDING_USERS
           restartPolicy: OnFailure
