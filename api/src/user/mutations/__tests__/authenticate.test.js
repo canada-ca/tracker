@@ -14,8 +14,17 @@ import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
+import jwt from 'jsonwebtoken'
+import ms from 'ms'
 
-const { DB_PASS: rootPass, DB_URL: url, SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY } = process.env
+const {
+  DB_PASS: rootPass,
+  DB_URL: url,
+  SIGN_IN_KEY,
+  REFRESH_TOKEN_EXPIRY,
+  AUTH_TOKEN_EXPIRY,
+  REFRESH_KEY,
+} = process.env
 
 describe('authenticate user account', () => {
   let query, drop, truncate, schema, collections, transaction, mockTokenize
@@ -214,6 +223,19 @@ describe('authenticate user account', () => {
         const mockedCookie = jest.fn()
         const mockedResponse = { cookie: mockedCookie }
 
+        const authToken = tokenize({
+          expiresIn: AUTH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key },
+          secret: String(SIGN_IN_KEY),
+        })
+        const refreshToken = tokenize({
+          expiresIn: REFRESH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key, uuid: '456' },
+          secret: String(REFRESH_KEY),
+        })
+
+        const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
+
         const response = await graphql({
           schema,
           source: `
@@ -252,9 +274,10 @@ describe('authenticate user account', () => {
             transaction,
             uuidv4,
             response: mockedResponse,
+            jwt,
             auth: {
               bcrypt,
-              tokenize: mockTokenize,
+              tokenize: mockedTokenize,
               verifyToken: verifyToken({}),
             },
             validators: {
@@ -270,7 +293,7 @@ describe('authenticate user account', () => {
           data: {
             authenticate: {
               result: {
-                authToken: 'token',
+                authToken: authToken,
                 user: {
                   id: `${toGlobalId('user', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
@@ -295,9 +318,9 @@ describe('authenticate user account', () => {
 
         expect(user.tfaCode).toEqual(null)
 
-        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+          maxAge: ms(REFRESH_TOKEN_EXPIRY),
           sameSite: true,
           secure: true,
         })
