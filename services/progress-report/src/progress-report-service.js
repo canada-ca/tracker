@@ -1,6 +1,8 @@
 const { findChartSummaries, findOrgSummaries, getOrgAdmins } = require('./database')
 const { sendOrgProgressReport } = require('./notify')
 
+const { REDIRECT_TO_SERVICE_ACCOUNT_EMAIL, SERVICE_ACCOUNT_EMAIL } = process.env
+
 const progressReportService = async ({ query, log, notifyClient }) => {
   // get date 30 days ago
   const today = new Date()
@@ -36,8 +38,12 @@ const progressReportService = async ({ query, log, notifyClient }) => {
 
   // send notifications
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
-    const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
-    for (const user of orgAdmins) {
+    if (REDIRECT_TO_SERVICE_ACCOUNT_EMAIL) {
+      const user = {
+        userName: SERVICE_ACCOUNT_EMAIL,
+        displayName: 'Service Account',
+        _key: 'service-account',
+      }
       await sendOrgProgressReport({
         notifyClient,
         user,
@@ -45,6 +51,17 @@ const progressReportService = async ({ query, log, notifyClient }) => {
         orgAverages: verifiedOrgAverages,
         chartStats,
       })
+    } else {
+      const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
+      for (const user of orgAdmins) {
+        await sendOrgProgressReport({
+          notifyClient,
+          user,
+          orgStats: value,
+          orgAverages: verifiedOrgAverages,
+          chartStats,
+        })
+      }
     }
   }
 }
