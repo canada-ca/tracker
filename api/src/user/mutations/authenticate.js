@@ -3,8 +3,9 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
 import { TfaSendMethodEnum } from '../../enums'
+import ms from 'ms'
 
-const { REFRESH_KEY, REFRESH_TOKEN_EXPIRY, AUTHENTICATED_KEY, SIGN_IN_KEY } = process.env
+const { REFRESH_KEY, REFRESH_TOKEN_EXPIRY, AUTHENTICATED_KEY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -86,7 +87,7 @@ export const authenticate = new mutationWithClientMutationId({
       const refreshInfo = {
         refreshId,
         rememberMe: user.refreshInfo.rememberMe,
-        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
+        expiresAt: new Date(new Date().getTime() + ms(REFRESH_TOKEN_EXPIRY)),
       }
 
       // Setup Transaction
@@ -149,13 +150,13 @@ export const authenticate = new mutationWithClientMutationId({
       }
 
       const token = tokenize({
-        expiresIn: '15m',
+        expiresIn: AUTH_TOKEN_EXPIRY,
         parameters: { userKey: user._key },
         secret: String(AUTHENTICATED_KEY),
       })
 
       const refreshToken = tokenize({
-        expiresIn: '7d',
+        expiresIn: REFRESH_TOKEN_EXPIRY,
         parameters: { userKey: user._key, uuid: refreshId },
         secret: String(REFRESH_KEY),
       })

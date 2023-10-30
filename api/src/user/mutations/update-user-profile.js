@@ -6,7 +6,7 @@ import { t } from '@lingui/macro'
 import { LanguageEnums, TfaSendMethodEnum } from '../../enums'
 import { updateUserProfileUnion } from '../unions'
 
-const { AUTHENTICATED_KEY } = process.env
+const { AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const updateUserProfile = new mutationWithClientMutationId({
   name: 'UpdateUserProfile',
@@ -174,7 +174,7 @@ export const updateUserProfile = new mutationWithClientMutationId({
 
     if (changedUserName) {
       const token = tokenize({
-        expiresIn: '15m',
+        expiresIn: AUTH_TOKEN_EXPIRY,
         parameters: { userKey: returnUser._key },
         secret: String(AUTHENTICATED_KEY),
       })

@@ -4,8 +4,9 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { signInUnion } from '../../user'
+import ms from 'ms'
 
-const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY, AUTHENTICATED_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY, AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
@@ -99,7 +100,7 @@ export const signIn = new mutationWithClientMutationId({
         const refreshId = uuidv4()
         const refreshInfo = {
           refreshId,
-          expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
+          expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
           rememberMe,
         }
 
@@ -153,7 +154,7 @@ export const signIn = new mutationWithClientMutationId({
           console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
 
           const authenticateToken = tokenize({
-            expiresIn: '15m',
+            expiresIn: AUTH_TOKEN_EXPIRY,
             parameters: { userKey: user._key },
             secret: String(SIGN_IN_KEY), // SIGN_IN_KEY is reserved for signing TFA tokens
           })
@@ -189,13 +190,13 @@ export const signIn = new mutationWithClientMutationId({
           }
 
           const token = tokenize({
-            expiresIn: '15m',
+            expiresIn: AUTH_TOKEN_EXPIRY,
             parameters: { userKey: user._key },
             secret: String(AUTHENTICATED_KEY),
           })
 
           const refreshToken = tokenize({
-            expiresIn: '7d',
+            expiresIn: REFRESH_TOKEN_EXPIRY,
             parameters: { userKey: user._key, uuid: refreshId },
             secret: String(REFRESH_KEY),
           })

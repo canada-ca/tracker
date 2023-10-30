@@ -2,8 +2,9 @@ import { t } from '@lingui/macro'
 import { mutationWithClientMutationId } from 'graphql-relay'
 
 import { refreshTokensUnion } from '../unions'
+import ms from 'ms'
 
-const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY, AUTHENTICATED_KEY } = process.env
+const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY, AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const refreshTokens = new mutationWithClientMutationId({
   name: 'RefreshTokens',
@@ -100,7 +101,7 @@ export const refreshTokens = new mutationWithClientMutationId({
     const refreshInfo = {
       refreshId: newRefreshId,
       rememberMe: user.refreshInfo.rememberMe,
-      expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
+      expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
     }
 
     // Setup Transaction
@@ -128,12 +129,16 @@ export const refreshTokens = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to refresh tokens, please sign in.`))
     }
 
-    const newAuthToken = tokenize({ expiresIn: '15m', parameters: { userKey }, secret: String(AUTHENTICATED_KEY) })
+    const newAuthToken = tokenize({
+      expiresIn: AUTH_TOKEN_EXPIRY,
+      parameters: { userKey },
+      secret: String(AUTHENTICATED_KEY),
+    })
 
     console.info(`User: ${userKey} successfully refreshed their tokens.`)
 
     const newRefreshToken = tokenize({
-      expiresIn: '7d',
+      expiresIn: REFRESH_TOKEN_EXPIRY,
       parameters: { userKey: user._key, uuid: newRefreshId },
       secret: String(REFRESH_KEY),
     })
