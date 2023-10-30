@@ -1,15 +1,17 @@
 import { t } from '@lingui/macro'
-import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
-import { Acronym, Slug } from '../../scalars'
+import { Acronym, Slug, Year } from '../../scalars'
 import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
+import { PeriodEnums } from '../../enums'
+import { orgSummaryConnection } from './organization-summary-connection'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -64,6 +66,44 @@ export const organizationType = new GraphQLObjectType({
       type: organizationSummaryType,
       description: 'Summaries based on scan types that are preformed on the given organizations domains.',
       resolve: ({ summaries }) => summaries,
+    },
+    historicalSummaries: {
+      type: orgSummaryConnection.connectionType,
+      description: 'Historical summaries based on scan types that are preformed on the given organizations domains.',
+      args: {
+        month: {
+          type: new GraphQLNonNull(PeriodEnums),
+          description: 'The month in which the returned data is relevant to.',
+        },
+        year: {
+          type: new GraphQLNonNull(Year),
+          description: 'The year in which the returned data is relevant to.',
+        },
+      },
+      resolve: async (
+        { _id },
+        args,
+        {
+          userKey,
+          auth: { userRequired, loginRequiredBool, verifiedRequired },
+          loaders: { loadOrganizationSummariesByPeriod },
+        },
+      ) => {
+        if (loginRequiredBool) {
+          const user = await userRequired()
+          verifiedRequired({ user })
+        }
+
+        const historicalSummaries = await loadOrganizationSummariesByPeriod({
+          orgId: _id,
+          period: args.month,
+          ...args,
+        })
+
+        console.info(`User: ${userKey} successfully retrieved their chart summaries.`)
+
+        return historicalSummaries
+      },
     },
     domainCount: {
       type: GraphQLInt,

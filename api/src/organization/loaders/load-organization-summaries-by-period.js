@@ -1,12 +1,14 @@
 import { toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
-export const loadChartSummaryConnectionsByPeriod =
+export const loadOrganizationSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ period, year }) => {
+  async ({ orgId, period, year }) => {
     if (typeof period === 'undefined') {
-      console.warn(`User: ${userKey} did not have \`period\` argument set for: loadChartSummaryConnectionsByPeriod.`)
-      throw new Error(i18n._(t`You must provide a \`period\` value to access the \`ChartSummaries\` connection.`))
+      console.warn(`User: ${userKey} did not have \`period\` argument set for: loadOrganizationSummariesByPeriod.`)
+      throw new Error(
+        i18n._(t`You must provide a \`period\` value to access the \`OrganizationSummaries\` connection.`),
+      )
     }
     const cleansedPeriod = cleanseInput(period)
     const monthMap = {
@@ -26,8 +28,8 @@ export const loadChartSummaryConnectionsByPeriod =
     const periodMonth = monthMap[cleansedPeriod]
 
     if (typeof year === 'undefined') {
-      console.warn(`User: ${userKey} did not have \`year\` argument set for: loadChartSummaryConnectionsByPeriod.`)
-      throw new Error(i18n._(t`You must provide a \`year\` value to access the \`ChartSummaries\` connection.`))
+      console.warn(`User: ${userKey} did not have \`year\` argument set for: loadOrganizationSummariesByPeriod.`)
+      throw new Error(i18n._(t`You must provide a \`year\` value to access the \`OrganizationSummaries\` connection.`))
     }
     const periodYear = cleanseInput(year)
 
@@ -38,15 +40,11 @@ export const loadChartSummaryConnectionsByPeriod =
         startDate = new Date(new Date().setDate(new Date().getDate() - 30))
         requestedSummaryInfo = await query`
           LET retrievedSummaries = (
-            FOR summary IN chartSummaries
+            FOR summary IN organizationSummaries
+              FILTER summary.organization == ${orgId}
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN summary
           )
 
           RETURN {
@@ -58,15 +56,11 @@ export const loadChartSummaryConnectionsByPeriod =
         startDate = new Date(new Date().setDate(new Date().getDate() - 365))
         requestedSummaryInfo = await query`
           LET retrievedSummaries = (
-            FOR summary IN chartSummaries
+            FOR summary IN organizationSummaries
+              FILTER summary.organization == ${orgId}
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN summary
           )
 
           RETURN {
@@ -78,15 +72,11 @@ export const loadChartSummaryConnectionsByPeriod =
         startDate = new Date(`${periodYear}-01-01`)
         requestedSummaryInfo = await query`
           LET retrievedSummaries = (
-            FOR summary IN chartSummaries
-              FILTER DATE_FORMAT(summary.date, '%yyyy') == DATE_FORMAT(${startDate}, '%yyyy')
+            FOR summary IN organizationSummaries
+              FILTER summary.organization == ${orgId}
+              FILTER DATE_FORMAT(summary.date, '%yyyy') >= DATE_FORMAT(${startDate}, '%yyyy')
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN summary
           )
 
           RETURN {
@@ -98,15 +88,11 @@ export const loadChartSummaryConnectionsByPeriod =
         startDate = new Date(`${periodYear}-${periodMonth}-01`)
         requestedSummaryInfo = await query`
           LET retrievedSummaries = (
-            FOR summary IN chartSummaries
+            FOR summary IN organizationSummaries
+              FILTER summary.organization == ${orgId}
               FILTER DATE_FORMAT(summary.date, "%yyyy-%mm") == DATE_FORMAT(${startDate}, "%yyyy-%mm")
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN summary
           )
 
           RETURN {
@@ -117,9 +103,9 @@ export const loadChartSummaryConnectionsByPeriod =
       }
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userKey} was trying to gather chart summaries in loadChartSummaryConnectionsByPeriod, error: ${err}`,
+        `Database error occurred while user: ${userKey} was trying to gather organization summaries in loadOrganizationSummariesByPeriod, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to load chart summary data. Please try again.`))
+      throw new Error(i18n._(t`Unable to load organization summary data. Please try again.`))
     }
 
     let summariesInfo
@@ -127,9 +113,9 @@ export const loadChartSummaryConnectionsByPeriod =
       summariesInfo = await requestedSummaryInfo.next()
     } catch (err) {
       console.error(
-        `Cursor error occurred while user: ${userKey} was trying to gather chart summaries in loadChartSummaryConnectionsByPeriod, error: ${err}`,
+        `Cursor error occurred while user: ${userKey} was trying to gather organization summaries in loadOrganizationSummariesByPeriod, error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to load chart summary data. Please try again.`))
+      throw new Error(i18n._(t`Unable to load organization summary data. Please try again.`))
     }
 
     if (summariesInfo.summaries.length === 0) {
@@ -148,7 +134,7 @@ export const loadChartSummaryConnectionsByPeriod =
     const edges = summariesInfo.summaries.map((summary) => {
       summary.startDate = startDate
       return {
-        cursor: toGlobalId('chartSummary', summary.id),
+        cursor: toGlobalId('organizationSummary', summary._key),
         node: summary,
       }
     })
