@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: org-progress-report
+  name: progress-report
   namespace: api
 spec:
   schedule: "30 10 1 * *"
@@ -12,8 +12,8 @@ spec:
       template:
         spec:
           containers:
-            - name: org-progress-report
-              image: gcr.io/track-compliance/services/org-progress-report:master-850d2ac-1696012535 # {"$imagepolicy": "flux-system:org-progress-report"}
+            - name: progress-report
+              image: gcr.io/track-compliance/services/progress-report:master-850d2ac-1696012535 # {"$imagepolicy": "flux-system:progress-report"}
               env:
                 - name: DB_PASS
                   valueFrom:

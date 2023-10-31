@@ -14,19 +14,19 @@ steps:
 
   - name: node:alpine
     id: install-dependencies
-    dir: services/org-progress-report
+    dir: services/progress-report
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - name: node:alpine
     id: run-eslint
-    dir: services/org-progress-report
+    dir: services/progress-report
     entrypoint: npm
     args: ['run', lint]
 
   - name: node:alpine
     id: test
-    dir: services/org-progress-report
+    dir: services/progress-report
     entrypoint: npm
     args: ['test']
     env:
@@ -37,16 +37,16 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: services/org-progress-report
+    dir: services/progress-report
     args:
       - '-c'
       - |
-        echo "gcr.io/$PROJECT_ID/services/org-progress-report:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/services/progress-report:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-if-master
     entrypoint: 'bash'
-    dir: services/org-progress-report
+    dir: services/progress-report
     args:
       - '-c'
       - |
@@ -61,7 +61,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: push-if-master
     entrypoint: 'bash'
-    dir: services/org-progress-report
+    dir: services/progress-report
     args:
       - '-c'
       - |
