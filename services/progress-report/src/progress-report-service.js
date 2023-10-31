@@ -21,8 +21,6 @@ const progressReportService = async ({ query, log, notifyClient }) => {
     endSummary: chartSummaries.endSummary,
   })
 
-  // test
-
   // calculate individual org stats
   const verifiedOrgSummaries = await findOrgSummaries({ query, log, startDate: thirtyDaysAgo })
   const verifiedOrgStats = {}
