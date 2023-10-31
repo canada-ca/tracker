@@ -8,17 +8,17 @@ const getPendingOrgUserCount = async ({ query, orgKey }) => {
             RETURN v
     `
   } catch (err) {
-    throw new Error(`Database error occurred while trying to find org admins: ${err}`)
+    throw new Error(`Database error occurred while trying to find pending users: ${err}`)
   }
 
   let pendingUserCount
   try {
-    pendingUserCount = await cursor.count()
+    pendingUserCount = await cursor.all()
   } catch (err) {
-    throw new Error(`Cursor error occurred while trying to find org admins: ${err}`)
+    throw new Error(`Cursor error occurred while trying to find pending users: ${err}`)
   }
 
-  return pendingUserCount
+  return pendingUserCount.length
 }
 
 module.exports = {
