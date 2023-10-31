@@ -6,8 +6,9 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ms from 'ms'
 
-const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY } = process.env
+const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
@@ -127,7 +128,7 @@ export const signUp = new mutationWithClientMutationId({
       refreshInfo: {
         refreshId,
         rememberMe,
-        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
+        expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
       },
     }
 
@@ -225,6 +226,7 @@ export const signUp = new mutationWithClientMutationId({
     await sendAuthEmail({ user: returnUser })
 
     const authenticateToken = tokenize({
+      expiresIn: AUTH_TOKEN_EXPIRY,
       parameters: { userKey: insertedUser._key },
       secret: String(SIGN_IN_KEY),
     })

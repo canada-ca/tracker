@@ -4,6 +4,8 @@ import { t } from '@lingui/macro'
 
 import { resetPasswordUnion } from '../unions'
 
+const { AUTHENTICATED_KEY } = process.env
+
 export const resetPassword = new mutationWithClientMutationId({
   name: 'ResetPassword',
   description: 'This mutation allows the user to take the token they received in their email to reset their password.',
@@ -46,7 +48,7 @@ export const resetPassword = new mutationWithClientMutationId({
     const resetToken = cleanseInput(args.resetToken)
 
     // Check if reset token is valid
-    const tokenParameters = verifyToken({ token: resetToken })
+    const tokenParameters = verifyToken({ token: resetToken, secret: String(AUTHENTICATED_KEY) })
 
     // Check to see if user id exists in token params !!!
     if (tokenParameters.userKey === 'undefined' || typeof tokenParameters.userKey === 'undefined') {

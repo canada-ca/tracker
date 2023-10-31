@@ -13,8 +13,16 @@ import { loadUserByKey } from '../../loaders'
 import { tokenize } from '../../../auth'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
+import ms from 'ms'
 
-const { DB_PASS: rootPass, DB_URL: url, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
+const {
+  DB_PASS: rootPass,
+  DB_URL: url,
+  REFRESH_KEY,
+  REFRESH_TOKEN_EXPIRY,
+  AUTH_TOKEN_EXPIRY,
+  SIGN_IN_KEY,
+} = process.env
 
 describe('refresh users tokens', () => {
   let query, drop, truncate, schema, collections, transaction, user
@@ -175,13 +183,6 @@ describe('refresh users tokens', () => {
         })
       })
       it('returns a new auth, and refresh token', async () => {
-        const refreshToken = tokenize({
-          parameters: { userKey: user._key, uuid: '1234' },
-          expPeriod: 168,
-          secret: String(REFRESH_KEY),
-        })
-        const mockedRequest = { cookies: { refresh_token: refreshToken } }
-
         const mockedFormat = jest
           .fn()
           .mockReturnValueOnce('2021-06-30T12:00:00')
@@ -193,6 +194,21 @@ describe('refresh users tokens', () => {
 
         const mockedCookie = jest.fn()
         const mockedResponse = { cookie: mockedCookie }
+
+        const authToken = tokenize({
+          expiresIn: AUTH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key },
+          secret: String(SIGN_IN_KEY),
+        })
+        const refreshToken = tokenize({
+          expiresIn: REFRESH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key, uuid: '1234' },
+          secret: String(REFRESH_KEY),
+        })
+
+        const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
+
+        const mockedRequest = { cookies: { refresh_token: refreshToken } }
 
         const response = await graphql({
           schema,
@@ -225,7 +241,7 @@ describe('refresh users tokens', () => {
             request: mockedRequest,
             response: mockedResponse,
             auth: {
-              tokenize: jest.fn().mockReturnValue('token'),
+              tokenize: mockedTokenize,
             },
             validators: {
               cleanseInput,
@@ -240,7 +256,7 @@ describe('refresh users tokens', () => {
           data: {
             refreshTokens: {
               result: {
-                authToken: 'token',
+                authToken: authToken,
                 user: {
                   displayName: 'Test Account',
                 },
@@ -250,9 +266,9 @@ describe('refresh users tokens', () => {
         }
 
         expect(response).toEqual(expectedResult)
-        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+          maxAge: ms(REFRESH_TOKEN_EXPIRY),
           sameSite: true,
           secure: true,
         })

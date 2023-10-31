@@ -40,6 +40,7 @@ export const sendEmailVerification = new mutationWithClientMutationId({
 
     if (typeof user !== 'undefined') {
       const token = tokenize({
+        expiresIn: '1h',
         parameters: { userKey: user._key },
       })
 

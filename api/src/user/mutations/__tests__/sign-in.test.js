@@ -13,13 +13,22 @@ import { cleanseInput } from '../../../validators'
 import { loadUserByUserName } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
+import { tokenize } from '../../../auth'
+import ms from 'ms'
 
-const { DB_PASS: rootPass, DB_URL: url, REFRESH_TOKEN_EXPIRY } = process.env
+const {
+  DB_PASS: rootPass,
+  DB_URL: url,
+  REFRESH_TOKEN_EXPIRY,
+  SIGN_IN_KEY,
+  AUTH_TOKEN_EXPIRY,
+  REFRESH_KEY,
+} = process.env
 
 const mockNotify = jest.fn()
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, schema, i18n, tokenize, transaction
+  let query, drop, truncate, schema, i18n, transaction
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
@@ -34,7 +43,6 @@ describe('authenticate user account', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    tokenize = jest.fn().mockReturnValue('token')
   })
   afterEach(() => {
     consoleOutput.length = 0
@@ -53,7 +61,6 @@ describe('authenticate user account', () => {
 
         schema: dbschema,
       }))
-      tokenize = jest.fn().mockReturnValue('token')
     })
     beforeEach(async () => {
       await graphql({
@@ -140,6 +147,14 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'phone' } IN users
           `
 
+          const authToken = tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
+            parameters: { userKey: user._key },
+            secret: String(SIGN_IN_KEY),
+          })
+
+          const mockedTokenize = jest.fn().mockReturnValueOnce(authToken)
+
           const response = await graphql({
             schema,
             source: `
@@ -171,7 +186,7 @@ describe('authenticate user account', () => {
               uuidv4,
               auth: {
                 bcrypt,
-                tokenize,
+                tokenize: mockedTokenize,
               },
               validators: {
                 cleanseInput,
@@ -190,7 +205,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   sendMethod: 'text',
-                  authenticateToken: 'token',
+                  authenticateToken: authToken,
                 },
               },
             },
@@ -224,6 +239,14 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
+          const authToken = tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
+            parameters: { userKey: user._key },
+            secret: String(SIGN_IN_KEY),
+          })
+
+          const mockedTokenize = jest.fn().mockReturnValueOnce(authToken)
+
           const response = await graphql({
             schema,
             source: `
@@ -255,7 +278,7 @@ describe('authenticate user account', () => {
               uuidv4,
               auth: {
                 bcrypt,
-                tokenize,
+                tokenize: mockedTokenize,
               },
               validators: {
                 cleanseInput,
@@ -274,7 +297,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   sendMethod: 'email',
-                  authenticateToken: 'token',
+                  authenticateToken: authToken,
                 },
               },
             },
@@ -310,6 +333,19 @@ describe('authenticate user account', () => {
             const mockedCookie = jest.fn()
             const mockedResponse = { cookie: mockedCookie }
 
+            const authToken = tokenize({
+              expiresIn: AUTH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key },
+              secret: String(SIGN_IN_KEY),
+            })
+            const refreshToken = tokenize({
+              expiresIn: REFRESH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key, uuid: '456' },
+              secret: String(REFRESH_KEY),
+            })
+
+            const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
+
             const response = await graphql({
               schema,
               source: `
@@ -340,9 +376,10 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                jwt,
                 auth: {
                   bcrypt,
-                  tokenize,
+                  tokenize: mockedTokenize,
                 },
                 validators: {
                   cleanseInput,
@@ -360,7 +397,7 @@ describe('authenticate user account', () => {
               data: {
                 signIn: {
                   result: {
-                    authToken: 'token',
+                    authToken: authToken,
                   },
                 },
               },
@@ -374,7 +411,7 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', refreshToken, {
               httpOnly: true,
               expires: 0,
               sameSite: true,
@@ -399,6 +436,19 @@ describe('authenticate user account', () => {
 
             const mockedCookie = jest.fn()
             const mockedResponse = { cookie: mockedCookie }
+
+            const authToken = tokenize({
+              expiresIn: AUTH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key },
+              secret: String(SIGN_IN_KEY),
+            })
+            const refreshToken = tokenize({
+              expiresIn: REFRESH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key, uuid: '456' },
+              secret: String(REFRESH_KEY),
+            })
+
+            const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
 
             const response = await graphql({
               schema,
@@ -431,9 +481,10 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                jwt,
                 auth: {
                   bcrypt,
-                  tokenize,
+                  tokenize: mockedTokenize,
                 },
                 validators: {
                   cleanseInput,
@@ -451,7 +502,7 @@ describe('authenticate user account', () => {
               data: {
                 signIn: {
                   result: {
-                    authToken: 'token',
+                    authToken: authToken,
                   },
                 },
               },
@@ -465,9 +516,9 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', refreshToken, {
               httpOnly: true,
-              maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+              maxAge: ms(REFRESH_TOKEN_EXPIRY),
               sameSite: true,
               secure: true,
             })
@@ -574,6 +625,14 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'phone' } IN users
           `
 
+          const authToken = tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
+            parameters: { userKey: user._key },
+            secret: String(SIGN_IN_KEY),
+          })
+
+          const mockedTokenize = jest.fn().mockReturnValueOnce(authToken)
+
           const response = await graphql({
             schema,
             source: `
@@ -609,7 +668,7 @@ describe('authenticate user account', () => {
               uuidv4,
               auth: {
                 bcrypt,
-                tokenize,
+                tokenize: mockedTokenize,
               },
               validators: {
                 cleanseInput,
@@ -628,7 +687,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   sendMethod: 'text',
-                  authenticateToken: 'token',
+                  authenticateToken: authToken,
                 },
               },
             },
@@ -660,6 +719,14 @@ describe('authenticate user account', () => {
               UPDATE ${user._key} WITH { tfaSendMethod: 'email' } IN users
           `
 
+          const authToken = tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
+            parameters: { userKey: user._key },
+            secret: String(SIGN_IN_KEY),
+          })
+
+          const mockedTokenize = jest.fn().mockReturnValueOnce(authToken)
+
           const response = await graphql({
             schema,
             source: `
@@ -695,7 +762,7 @@ describe('authenticate user account', () => {
               uuidv4,
               auth: {
                 bcrypt,
-                tokenize,
+                tokenize: mockedTokenize,
               },
               validators: {
                 cleanseInput,
@@ -714,7 +781,7 @@ describe('authenticate user account', () => {
               signIn: {
                 result: {
                   sendMethod: 'email',
-                  authenticateToken: 'token',
+                  authenticateToken: authToken,
                 },
               },
             },
@@ -750,6 +817,19 @@ describe('authenticate user account', () => {
             const mockedCookie = jest.fn()
             const mockedResponse = { cookie: mockedCookie }
 
+            const authToken = tokenize({
+              expiresIn: AUTH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key },
+              secret: String(SIGN_IN_KEY),
+            })
+            const refreshToken = tokenize({
+              expiresIn: REFRESH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key, uuid: '456' },
+              secret: String(REFRESH_KEY),
+            })
+
+            const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
+
             const response = await graphql({
               schema,
               source: `
@@ -782,7 +862,7 @@ describe('authenticate user account', () => {
                 uuidv4,
                 auth: {
                   bcrypt,
-                  tokenize,
+                  tokenize: mockedTokenize,
                 },
                 validators: {
                   cleanseInput,
@@ -800,7 +880,7 @@ describe('authenticate user account', () => {
               data: {
                 signIn: {
                   result: {
-                    authToken: 'token',
+                    authToken: authToken,
                   },
                 },
               },
@@ -814,7 +894,7 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', refreshToken, {
               httpOnly: true,
               expires: 0,
               sameSite: true,
@@ -839,6 +919,19 @@ describe('authenticate user account', () => {
 
             const mockedCookie = jest.fn()
             const mockedResponse = { cookie: mockedCookie }
+
+            const authToken = tokenize({
+              expiresIn: AUTH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key },
+              secret: String(SIGN_IN_KEY),
+            })
+            const refreshToken = tokenize({
+              expiresIn: REFRESH_TOKEN_EXPIRY,
+              parameters: { userKey: user._key, uuid: '456' },
+              secret: String(REFRESH_KEY),
+            })
+
+            const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
 
             const response = await graphql({
               schema,
@@ -871,9 +964,10 @@ describe('authenticate user account', () => {
                 transaction,
                 response: mockedResponse,
                 uuidv4,
+                jwt,
                 auth: {
                   bcrypt,
-                  tokenize,
+                  tokenize: mockedTokenize,
                 },
                 validators: {
                   cleanseInput,
@@ -891,7 +985,7 @@ describe('authenticate user account', () => {
               data: {
                 signIn: {
                   result: {
-                    authToken: 'token',
+                    authToken: authToken,
                   },
                 },
               },
@@ -905,9 +999,9 @@ describe('authenticate user account', () => {
             user = await cursor.next()
 
             expect(response).toEqual(expectedResponse)
-            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+            expect(mockedCookie).toHaveBeenCalledWith('refresh_token', refreshToken, {
               httpOnly: true,
-              maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+              maxAge: ms(REFRESH_TOKEN_EXPIRY),
               sameSite: true,
               secure: true,
             })

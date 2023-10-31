@@ -3,8 +3,9 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
 import { TfaSendMethodEnum } from '../../enums'
+import ms from 'ms'
 
-const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
+const { REFRESH_KEY, REFRESH_TOKEN_EXPIRY, AUTHENTICATED_KEY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
@@ -40,6 +41,7 @@ export const authenticate = new mutationWithClientMutationId({
       collections,
       transaction,
       uuidv4,
+      jwt,
       auth: { tokenize, verifyToken },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -85,7 +87,7 @@ export const authenticate = new mutationWithClientMutationId({
       const refreshInfo = {
         refreshId,
         rememberMe: user.refreshInfo.rememberMe,
-        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
+        expiresAt: new Date(new Date().getTime() + ms(REFRESH_TOKEN_EXPIRY)),
       }
 
       // Setup Transaction
@@ -147,10 +149,15 @@ export const authenticate = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
-      const token = tokenize({ parameters: { userKey: user._key } })
+      const token = tokenize({
+        expiresIn: AUTH_TOKEN_EXPIRY,
+        parameters: { userKey: user._key },
+        secret: String(AUTHENTICATED_KEY),
+      })
+
       const refreshToken = tokenize({
+        expiresIn: REFRESH_TOKEN_EXPIRY,
         parameters: { userKey: user._key, uuid: refreshId },
-        expPeriod: 168,
         secret: String(REFRESH_KEY),
       })
 
@@ -164,8 +171,9 @@ export const authenticate = new mutationWithClientMutationId({
 
       // if user wants to stay logged in create normal http cookie
       if (user.refreshInfo.rememberMe) {
+        const tokenMaxAgeSeconds = jwt.decode(refreshToken).exp - jwt.decode(refreshToken).iat
         cookieData = {
-          maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+          maxAge: tokenMaxAgeSeconds * 1000,
           httpOnly: true,
           secure: true,
           sameSite: true,

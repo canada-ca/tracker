@@ -4,8 +4,9 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { t } from '@lingui/macro'
 
 import { signInUnion } from '../../user'
+import ms from 'ms'
 
-const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
+const { SIGN_IN_KEY, REFRESH_TOKEN_EXPIRY, REFRESH_KEY, AUTHENTICATED_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const signIn = new mutationWithClientMutationId({
   name: 'SignIn',
@@ -43,6 +44,7 @@ export const signIn = new mutationWithClientMutationId({
       transaction,
       uuidv4,
       response,
+      jwt,
       auth: { tokenize, bcrypt },
       loaders: { loadUserByUserName },
       validators: { cleanseInput },
@@ -98,7 +100,7 @@ export const signIn = new mutationWithClientMutationId({
         const refreshId = uuidv4()
         const refreshInfo = {
           refreshId,
-          expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY),
+          expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
           rememberMe,
         }
 
@@ -152,8 +154,9 @@ export const signIn = new mutationWithClientMutationId({
           console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
 
           const authenticateToken = tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
             parameters: { userKey: user._key },
-            secret: String(SIGN_IN_KEY),
+            secret: String(SIGN_IN_KEY), // SIGN_IN_KEY is reserved for signing TFA tokens
           })
 
           return {
@@ -187,12 +190,14 @@ export const signIn = new mutationWithClientMutationId({
           }
 
           const token = tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
             parameters: { userKey: user._key },
+            secret: String(AUTHENTICATED_KEY),
           })
 
           const refreshToken = tokenize({
+            expiresIn: REFRESH_TOKEN_EXPIRY,
             parameters: { userKey: user._key, uuid: refreshId },
-            expPeriod: 168,
             secret: String(REFRESH_KEY),
           })
 
@@ -206,8 +211,9 @@ export const signIn = new mutationWithClientMutationId({
 
           // if user wants to stay logged in create normal http cookie
           if (rememberMe) {
+            const tokenMaxAgeSeconds = jwt.decode(refreshToken).exp - jwt.decode(refreshToken).iat
             cookieData = {
-              maxAge: 1000 * 60 * 60 * 24 * REFRESH_TOKEN_EXPIRY,
+              maxAge: tokenMaxAgeSeconds * 1000,
               httpOnly: true,
               secure: true,
               sameSite: true,
