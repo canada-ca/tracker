@@ -53,9 +53,9 @@ describe('given the getOrgAdmins function', () => {
       })
     })
     it('returns the org admins', async () => {
-      const orgAdmins = await getOrgAdmins({ query, orgKey: org._key })
+      const orgAdmins = await getOrgAdmins({ query, orgId: org._id })
 
-      const expectedOrgAdmins = [{ ...user, userName: 'user@test.ca' }]
+      const expectedOrgAdmins = [{ ...user, userName: 'user@test.ca', receiveUpdateEmails: true }]
 
       expect(orgAdmins).toEqual(expectedOrgAdmins)
     })
