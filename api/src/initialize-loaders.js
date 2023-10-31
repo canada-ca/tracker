@@ -45,6 +45,7 @@ import {
   loadWebCheckConnectionsByUserId,
   loadAllOrganizationDomainStatuses,
   loadOrganizationDomainStatuses,
+  loadOrganizationSummariesByPeriod,
 } from './organization/loaders'
 import { loadMyTrackerByUserId, loadUserByUserName, loadUserByKey, loadUserConnectionsByUserId } from './user/loaders'
 import { loadWebConnectionsByDomainId, loadWebScansByWebId } from './web-scan/loaders'
@@ -278,6 +279,14 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       auth: { loginRequiredBool },
     }),
     loadOrgConnectionsByUserId: loadOrgConnectionsByUserId({
+      query,
+      userKey,
+      cleanseInput,
+      language,
+      i18n,
+      auth: { loginRequiredBool },
+    }),
+    loadOrganizationSummariesByPeriod: loadOrganizationSummariesByPeriod({
       query,
       userKey,
       cleanseInput,

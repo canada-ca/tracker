@@ -1,11 +1,17 @@
 import { GraphQLObjectType } from 'graphql'
 
 import { categorizedSummaryType } from '../../summaries'
+import { GraphQLDate } from 'graphql-scalars'
 
 export const organizationSummaryType = new GraphQLObjectType({
   name: 'OrganizationSummary',
   description: 'Summaries based on domains that the organization has claimed.',
   fields: () => ({
+    date: {
+      type: GraphQLDate,
+      description: 'Date that the summary was computed.',
+      resolve: ({ date }) => date,
+    },
     dmarc: {
       type: categorizedSummaryType,
       description: 'Summary based on DMARC scan results for a given organization.',

@@ -1,11 +1,14 @@
 import os
+
+from arango.database import StandardDatabase
+
 from notify.notify_client import notify_client
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-def get_stakeholders(db):
+def get_stakeholders(db: StandardDatabase):
     """
     Gets the stakeholders for a domain.
 
@@ -14,11 +17,20 @@ def get_stakeholders(db):
     """
 
     user_emails = os.getenv("ALERT_SUBS").split(",")
-    users = []
+
     try:
-        users = db.users.find({"username": {"$in": user_emails}}).all()
+        users_cursor = db.aql.execute(
+            """
+            FOR user IN users
+                FILTER @user_emails[? ANY FILTER LOWER(CURRENT) == LOWER(user.userName)]
+                RETURN user
+            """,
+            bind_vars={"user_emails": user_emails},
+        )
+        users = [user for user in users_cursor]
     except Exception as e:
         raise Exception(f"Failed to get users from database with error: {e}")
+
     return users
 
 
@@ -32,7 +44,7 @@ def get_reason_str(reason):
 
     if reason == "host_added":
         return {
-            "en": "a new hostname was addeden",
+            "en": "a new hostname was added",
             "fr": "un nouveau nom d'hôte a été ajouté",
         }
     elif reason == "host_removed":
@@ -66,9 +78,9 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
     :param db: The database object.
     """
 
-    stakeholders = get_stakeholders(db)
+    stakeholders = os.getenv("ALERT_SUBS").split(",")
     for user in stakeholders:
-        email = user.get("username")
+        email = user.get("userName")
         reason = get_reason_str(reason=diff_reason)
         try:
             response = notify_client.send_email_notification(
@@ -76,7 +88,7 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
                 template_id=os.getenv("NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL"),
                 personalisation={
                     "domain": domain,
-                    "display_name": user.get("displayName"),
+                    "link": "https://tracker.canada.ca/domains/" + domain,
                     "reasonEN": reason.get("en"),
                     "reasonFR": reason.get("fr"),
                 },
