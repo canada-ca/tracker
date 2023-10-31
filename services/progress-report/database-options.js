@@ -7,6 +7,11 @@ const databaseOptions = ({ rootPass }) => [
   },
   {
     type: 'documentcollection',
+    name: 'users',
+    options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
+  },
+  {
+    type: 'documentcollection',
     name: 'organizations',
     options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
   },
