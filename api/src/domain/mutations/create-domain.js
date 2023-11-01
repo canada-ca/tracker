@@ -236,7 +236,8 @@ export const createDomain = new mutationWithClientMutationId({
               _to: ${insertedDomain._id},
               tags: ${tags},
               hidden: ${hidden},
-              outsideComment: ${outsideComment}
+              outsideComment: ${outsideComment},
+              firstSeen: ${new Date().toISOString()},
             } INTO claims
           `,
       )
