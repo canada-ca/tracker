@@ -1,2 +1,3 @@
 const { sendOrgFootprintEmail } = require('./notify-send-org-footprint-email')
-module.exports = { sendOrgFootprintEmail }
+const { sendPendingOrgUsersEmail } = require('./notify-send-pending-org-users-email')
+module.exports = { sendOrgFootprintEmail, sendPendingOrgUsersEmail }
