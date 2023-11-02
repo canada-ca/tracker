@@ -2639,7 +2639,7 @@
       "dkim16": {
         "en": {
           "tagName": "Selectors Not Given",
-          "guidance": "Tracker is unaware of the selectors used by the domain, please have the selectors for this domain added to Tracker.",
+          "guidance": "Tracker is unaware of the selectors used by the domain, please implement selectors for this domain and Tracker should detect them. If you have implemented selectors and Tracker is still not detecting them, please contact us at zzTBSCybers@tbs-sct.gc.ca.",
           "refLinksGuide": [
             {
               "description": "B.2.1 DKIM Records",
@@ -2650,7 +2650,7 @@
         },
         "fr": {
           "tagName": "Sélecteurs non indiqués",
-          "guidance": "Tracker n'est pas au courant des sélecteurs utilisés par le domaine, veuillez ajouter les sélecteurs à Tracker pour ce domaine.",
+          "guidance": "Tracker ne connaît pas les sélecteurs utilisés par le domaine, veuillez implémenter des sélecteurs pour ce domaine et Tracker devrait les détecter. Si vous avez implémenté des sélecteurs et que Tracker ne les détecte toujours pas, veuillez nous contacter à l'adresse zzTBSCybers@tbs-sct.gc.ca.",
           "refLinksGuide": [
             {
               "description": "B.2.1 Enregistrements DKIM",
