@@ -240,6 +240,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const claimToInsert = {
       tags: tags || claim?.tags,
       hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
+      firstSeen: typeof claim?.firstSeen === 'undefined' ? new Date().toISOString() : claim?.firstSeen,
     }
 
     try {
