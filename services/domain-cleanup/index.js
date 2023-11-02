@@ -20,7 +20,21 @@ const { removeNXDomainService, unclaimedCleanupService, untagNewDomainsService }
     options: databaseOptions({ rootPass }),
   })
 
-  await removeNXDomainService({ query, log: console.log })
-  await unclaimedCleanupService({ query, log: console.log })
-  await untagNewDomainsService({ query, log: console.log })
+  try {
+    await removeNXDomainService({ query, log: console.log })
+  } catch (err) {
+    console.log(err)
+  }
+
+  try {
+    await unclaimedCleanupService({ query, log: console.log })
+  } catch (err) {
+    console.log(err)
+  }
+
+  try {
+    await untagNewDomainsService({ query, log: console.log })
+  } catch (err) {
+    console.log(err)
+  }
 })()
