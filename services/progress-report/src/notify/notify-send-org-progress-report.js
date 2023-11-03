@@ -6,7 +6,12 @@ const sendOrgProgressReport = async ({ user, orgStats, orgAverages, chartStats, 
 
   const { httpsScoreDiffAvg, webDomainCountDiffAvg, dmarcScoreDiffAvg, domainCountDiffAvg } = orgAverages
 
-  const { chartHttpsScoreDiff, chartWebDomainCountDiff, chartDmarcScoreDiff, chartDomainCountDiff } = chartStats
+  const {
+    httpsScoreDiff: chartHttpsScoreDiff,
+    webDomainCountDiff: chartWebDomainCountDiff,
+    dmarcScoreDiff: chartDmarcScoreDiff,
+    domainCountDiff: chartDomainCountDiff,
+  } = chartStats
 
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
