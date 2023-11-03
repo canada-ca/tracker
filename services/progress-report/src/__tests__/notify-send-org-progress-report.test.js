@@ -42,10 +42,10 @@ describe('given the sendOrgProgressReport function', () => {
         domainCountDiffAvg: 0,
       }
       const chartStats = {
-        chartHttpsScoreDiff: 4,
-        chartWebDomainCountDiff: 4,
-        chartDmarcScoreDiff: 4,
-        chartDomainCountDiff: 4,
+        httpsScoreDiff: 4,
+        webDomainCountDiff: 4,
+        dmarcScoreDiff: 4,
+        domainCountDiff: 4,
       }
 
       await sendOrgProgressReport({
