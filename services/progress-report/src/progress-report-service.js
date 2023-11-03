@@ -96,6 +96,9 @@ const calculateOrgAverages = ({ stats }) => {
   for (const [_key, value] of Object.entries(stats)) {
     const { httpsScoreDiff, webDomainCountDiff, dmarcScoreDiff, domainCountDiff } = value
 
+    if (httpsScoreDiff === null || webDomainCountDiff === null || dmarcScoreDiff === null || domainCountDiff === null)
+      continue
+
     httpsScoreDiffs.push(httpsScoreDiff)
     webDomainCountDiffs.push(webDomainCountDiff)
     dmarcScoreDiffs.push(dmarcScoreDiff)
