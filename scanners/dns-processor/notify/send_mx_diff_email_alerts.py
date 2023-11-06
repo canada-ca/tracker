@@ -80,11 +80,10 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
 
     stakeholders = os.getenv("ALERT_SUBS").split(",")
     for user in stakeholders:
-        email = user.get("userName")
         reason = get_reason_str(reason=diff_reason)
         try:
             response = notify_client.send_email_notification(
-                email_address=email,
+                email_address=user,
                 template_id=os.getenv("NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL"),
                 personalisation={
                     "domain": domain,
@@ -93,6 +92,6 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
                     "reasonFR": reason.get("fr"),
                 },
             )
-            logger.info(f"Email sent to {email} with response: {response}")
+            logger.info(f"Email sent to {user} with response: {response}")
         except Exception as e:
-            logger.error(f"Failed to send email to {email} with error: {e}")
+            logger.error(f"Failed to send email to {user} with error: {e}")
