@@ -211,14 +211,14 @@ export const authenticate = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred when clearing tfa code on attempt timeout for user: ${user._key} during authentication: ${err}`,
         )
-        throw new Error(`Incorrect MFA code. Please sign in again.`)
+        throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
       }
 
       try {
         await trx.commit()
       } catch (err) {
         console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
-        throw new Error(`Incorrect MFA code. Please sign in again.`)
+        throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
       }
       throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
     }
