@@ -138,7 +138,6 @@ msgstr "Paramètres du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/admin/WebCheckPage.js:61
 #: src/createOrganization/CreateOrganizationPage.js:184
 #: src/createOrganization/CreateOrganizationPage.js:189
 #: src/organizations/Organizations.js:60
@@ -1044,7 +1043,6 @@ msgstr "Domaine mis à jour"
 msgid "Domain url field must not be empty"
 msgstr "Le champ de l'url du domaine ne doit pas être vide"
 
-#: src/admin/WebCheckPage.js:129
 #: src/domains/DomainCard.js:129
 #: src/domains/ScanDomain.js:211
 msgid "Domain:"
@@ -2019,10 +2017,6 @@ msgstr "Les 30 derniers jours"
 #~ msgid "Last Scanned"
 #~ msgstr "Dernière numérisation"
 
-#: src/admin/WebCheckPage.js:136
-msgid "Last Scanned:"
-msgstr "Dernier balayage :"
-
 #: src/guidance/EmailGuidance.js:317
 msgid "Latest Scan:"
 msgstr "Dernière analyse :"
@@ -2137,7 +2131,6 @@ msgstr "NOUVEAU"
 msgid "NXDOMAIN"
 msgstr "NXDOMAIN"
 
-#: src/admin/WebCheckPage.js:60
 #: src/createOrganization/CreateOrganizationPage.js:173
 #: src/createOrganization/CreateOrganizationPage.js:178
 #: src/organizations/Organizations.js:59
@@ -2261,7 +2254,6 @@ msgstr "Aucun domaine"
 #~ msgid "No HTTPS configuration information available for this organization."
 #~ msgstr "Aucune information de configuration HTTPS disponible pour cette organisation."
 
-#: src/admin/WebCheckPage.js:94
 #: src/organizations/Organizations.js:80
 msgid "No Organizations"
 msgstr "Aucune organisation"
@@ -3056,10 +3048,6 @@ msgstr "Recherche par initié par, nom de la ressource"
 #: src/organizationDetails/OrganizationDomains.js:365
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
-
-#: src/admin/WebCheckPage.js:174
-msgid "Search for a tagged organization"
-msgstr "Recherche d'une organisation étiquetée"
 
 #: src/admin/SuperAdminUserList.js:436
 msgid "Search for a user (email)"
@@ -4110,10 +4098,6 @@ msgstr "Volume de messages usurpant domaine (rejet + quarantaine + aucun) :"
 #~ msgid "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 #~ msgstr "Volume de messages usurpant {domainSlug} (rejet + quarantaine + aucun) :"
 
-#: src/admin/WebCheckPage.js:158
-msgid "Vulnerability Scan Dashboard"
-msgstr "Tableau de bord de l'analyse des vulnérabilités"
-
 #: src/admin/AdminDomains.js:168
 #: src/organizationDetails/OrganizationDomains.js:111
 #: src/organizationDetails/OrganizationDomains.js:335
@@ -4170,10 +4154,6 @@ msgstr "Web"
 #: src/domains/DomainCard.js:188
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
-
-#: src/admin/WebCheckPage.js:155
-msgid "Web Check"
-msgstr "Vérification du Web"
 
 #: src/summaries/TierTwoSummaries.js:39
 msgid "Web Connections Summary"

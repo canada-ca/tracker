@@ -138,7 +138,6 @@ msgstr "Account Settings"
 msgid "Account created."
 msgstr "Account created."
 
-#: src/admin/WebCheckPage.js:61
 #: src/createOrganization/CreateOrganizationPage.js:184
 #: src/createOrganization/CreateOrganizationPage.js:189
 #: src/organizations/Organizations.js:60
@@ -1044,7 +1043,6 @@ msgstr "Domain updated"
 msgid "Domain url field must not be empty"
 msgstr "Domain url field must not be empty"
 
-#: src/admin/WebCheckPage.js:129
 #: src/domains/DomainCard.js:129
 #: src/domains/ScanDomain.js:211
 msgid "Domain:"
@@ -2047,10 +2045,6 @@ msgstr "Last 30 Days"
 #~ msgid "Last Scanned"
 #~ msgstr "Last Scanned"
 
-#: src/admin/WebCheckPage.js:136
-msgid "Last Scanned:"
-msgstr "Last Scanned:"
-
 #: src/guidance/EmailGuidance.js:317
 msgid "Latest Scan:"
 msgstr "Latest Scan:"
@@ -2173,7 +2167,6 @@ msgstr "NEW"
 msgid "NXDOMAIN"
 msgstr "NXDOMAIN"
 
-#: src/admin/WebCheckPage.js:60
 #: src/createOrganization/CreateOrganizationPage.js:173
 #: src/createOrganization/CreateOrganizationPage.js:178
 #: src/organizations/Organizations.js:59
@@ -2297,7 +2290,6 @@ msgstr "No Domains"
 #~ msgid "No HTTPS configuration information available for this organization."
 #~ msgstr "No HTTPS configuration information available for this organization."
 
-#: src/admin/WebCheckPage.js:94
 #: src/organizations/Organizations.js:80
 msgid "No Organizations"
 msgstr "No Organizations"
@@ -3096,10 +3088,6 @@ msgstr "Search by initiated by, resource name"
 #: src/organizationDetails/OrganizationDomains.js:365
 msgid "Search for a domain"
 msgstr "Search for a domain"
-
-#: src/admin/WebCheckPage.js:174
-msgid "Search for a tagged organization"
-msgstr "Search for a tagged organization"
 
 #: src/admin/SuperAdminUserList.js:436
 msgid "Search for a user (email)"
@@ -4160,10 +4148,6 @@ msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 #~ msgid "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 #~ msgstr "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 
-#: src/admin/WebCheckPage.js:158
-msgid "Vulnerability Scan Dashboard"
-msgstr "Vulnerability Scan Dashboard"
-
 #: src/admin/AdminDomains.js:168
 #: src/organizationDetails/OrganizationDomains.js:111
 #: src/organizationDetails/OrganizationDomains.js:335
@@ -4224,10 +4208,6 @@ msgstr "Web"
 #: src/domains/DomainCard.js:188
 msgid "Web (HTTPS/TLS)"
 msgstr "Web (HTTPS/TLS)"
-
-#: src/admin/WebCheckPage.js:155
-msgid "Web Check"
-msgstr "Web Check"
 
 #: src/summaries/TierTwoSummaries.js:39
 msgid "Web Connections Summary"
