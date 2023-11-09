@@ -49,7 +49,7 @@ export const TopBanner = (props) => {
 
   return (
     <Layout>
-      <Flex align="center" fontFamily="body" {...props}>
+      <Flex align="center" fontFamily="body" flexWrap="wrap" {...props}>
         <Link href="https://www.canada.ca/" isExternal>
           <Flex>
             <Box ml="8" mr="4" width={{ base: 272, md: 360 }} display={{ base: 'none', md: 'initial' }}>
@@ -86,50 +86,53 @@ export const TopBanner = (props) => {
               </ABTestVariant>
             </ABTestWrapper>
           }
-          ml={{ base: '0', md: 'auto' }}
+          ml="8"
           mr="2"
+          flexShrink="0"
         >
           <Trans>This is a new service, we are constantly improving.</Trans>
         </PhaseBanner>
 
-        <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
-          <LocaleSwitcher />
-        </Box>
+        <Flex align="center" ml="auto">
+          <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
+            <LocaleSwitcher />
+          </Box>
 
-        {isLoggedIn() ? (
-          <Button
-            variant="primaryWhite"
-            as={RouteLink}
-            to="/"
-            px="3"
-            display={{ base: 'none', md: 'inline' }}
-            onClick={signOut}
-          >
-            <Trans>Sign Out</Trans>
-          </Button>
-        ) : (
-          <>
+          {isLoggedIn() ? (
             <Button
               variant="primaryWhite"
               as={RouteLink}
-              to="/sign-in"
-              px="3"
-              mr="2"
-              display={{ base: 'none', md: 'inline' }}
-            >
-              <Trans>Sign In</Trans>
-            </Button>
-            <Button
-              variant="primaryWhite"
-              as={RouteLink}
-              to="/create-user"
+              to="/"
               px="3"
               display={{ base: 'none', md: 'inline' }}
+              onClick={signOut}
             >
-              <Trans>Create Account</Trans>
+              <Trans>Sign Out</Trans>
             </Button>
-          </>
-        )}
+          ) : (
+            <>
+              <Button
+                variant="primaryWhite"
+                as={RouteLink}
+                to="/sign-in"
+                px="3"
+                mr="2"
+                display={{ base: 'none', md: 'inline' }}
+              >
+                <Trans>Sign In</Trans>
+              </Button>
+              <Button
+                variant="primaryWhite"
+                as={RouteLink}
+                to="/create-user"
+                px="3"
+                display={{ base: 'none', md: 'inline' }}
+              >
+                <Trans>Create Account</Trans>
+              </Button>
+            </>
+          )}
+        </Flex>
       </Flex>
     </Layout>
   )
