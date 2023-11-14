@@ -8,7 +8,7 @@ nassl==5.1.0
 nats-py==2.2.0
 psutil==5.9.5
 pycparser==2.21
-pydantic==2.3.0
+pydantic==2.5.0
 pydantic_core==2.6.3
 pyOpenSSL==23.2.0
 python-dotenv==0.21.0
