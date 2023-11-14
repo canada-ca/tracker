@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: progress-report
-              image: gcr.io/track-compliance/services/progress-report:master-310b6a3-1699551985 # {"$imagepolicy": "flux-system:progress-report"}
+              image: gcr.io/track-compliance/services/progress-report:master-75da851-1699967239 # {"$imagepolicy": "flux-system:progress-report"}
               env:
                 - name: DB_PASS
                   valueFrom:
