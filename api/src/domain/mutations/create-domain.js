@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { createDomainUnion } from '../unions'
-import { Domain, Selectors } from '../../scalars'
+import { Domain, SelectorsInput } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { OutsideDomainCommentEnum } from '../../enums'
@@ -21,7 +21,7 @@ export const createDomain = new mutationWithClientMutationId({
       description: 'Url that you would like to be added to the database.',
     },
     selectors: {
-      type: new GraphQLList(Selectors),
+      type: new GraphQLList(SelectorsInput),
       description: 'DKIM selector strings corresponding to this domain.',
     },
     tags: {
