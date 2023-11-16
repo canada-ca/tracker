@@ -35,6 +35,9 @@ spec:
                   name: dump
               image: rclone/rclone
               name: upload
+              resources:
+                requests:
+                  cpu: 100m
           initContainers:
             - args:
                 - arangodump
@@ -59,6 +62,9 @@ spec:
               volumeMounts:
                 - mountPath: /tmp/dump
                   name: dump
+              resources:
+                requests:
+                  cpu: 1000m
           restartPolicy: Never
           volumes:
             - emptyDir: {}
