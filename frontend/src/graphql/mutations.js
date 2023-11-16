@@ -181,7 +181,7 @@ export const CREATE_DOMAIN = gql`
   mutation CreateDomain(
     $orgId: ID!
     $domain: DomainScalar!
-    $selectors: [Selector]
+    $selectors: [SelectorInput]
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
@@ -277,7 +277,7 @@ export const UPDATE_DOMAIN = gql`
     $domainId: ID!
     $orgId: ID!
     $domain: DomainScalar
-    $selectors: [Selector]
+    $selectors: [SelectorInput]
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
