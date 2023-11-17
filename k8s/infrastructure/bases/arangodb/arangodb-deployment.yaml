@@ -46,7 +46,7 @@ spec:
     resources:
       requests:
         cpu: 1000m
-        memory: 4Gi
+        memory: 1Gi
     volumeClaimTemplate:
       spec:
         storageClassName: fast-delete
