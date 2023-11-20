@@ -1,4 +1,4 @@
-FROM python:3.11.4-slim-bookworm AS python-builder
+FROM python:3.11.6-slim-bookworm AS python-builder
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -22,15 +22,15 @@ COPY requirements.txt /requirements.txt
 RUN pip3 install --prefix=/working/install -r /requirements.txt
 
 # Install findomain
-RUN curl -LO https://github.com/findomain/findomain/releases/latest/download/findomain-linux.zip && \ 
-    unzip findomain-linux.zip && \ 
-    chmod +x findomain && \ 
+RUN curl -LO https://github.com/findomain/findomain/releases/latest/download/findomain-linux.zip && \
+    unzip findomain-linux.zip && \
+    chmod +x findomain && \
     mv findomain /usr/bin/findomain
 
 #===============================================================================================
 #===============================================================================================
 
-FROM python:3.11.4-slim-bookworm
+FROM python:3.11.6-slim-bookworm
 
 # Copy local code to the container image.
 ENV PYTHONUNBUFFERED 1
@@ -39,7 +39,7 @@ ENV PYTHONWARNINGS ignore
 WORKDIR /domain-discovery
 
 # Copy installed python modules
-COPY --from=python-builder /working/install/lib /usr/local/lib 
+COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy findomain binary
 COPY --from=python-builder /usr/bin/findomain /usr/bin/findomain
 
