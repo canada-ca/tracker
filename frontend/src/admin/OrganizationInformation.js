@@ -32,7 +32,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 
-export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelectedOrg, ...props }) {
+export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelectedOrg, isUserSuperAdmin, ...props }) {
   const toast = useToast()
   const { isOpen: isRemovalOpen, onOpen: onRemovalOpen, onClose: onRemovalClose } = useDisclosure()
   const removeOrgBtnRef = useRef()
@@ -292,12 +292,16 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
                   <Text fontWeight="bold" textAlign="center" mb="0.5em" gridColumn="span 4">
                     <Trans>Blank fields will not be included when updating the organization.</Trans>
                   </Text>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="acronymEN" label={t`Acronym (EN)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="acronymFR" label={t`Acronym (FR)`} />
-                  </Box>
+                  {isUserSuperAdmin && (
+                    <>
+                      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                        <FormField name="acronymEN" label={t`Acronym (EN)`} />
+                      </Box>
+                      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+                        <FormField name="acronymFR" label={t`Acronym (FR)`} />
+                      </Box>
+                    </>
+                  )}
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
                     <FormField name="nameEN" label={t`Name (EN)`} />
                   </Box>
@@ -453,4 +457,5 @@ OrganizationInformation.propTypes = {
   orgSlug: string.isRequired,
   removeOrgCallback: func.isRequired,
   isLoginRequired: bool,
+  isUserSuperAdmin: bool,
 }
