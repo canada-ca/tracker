@@ -56,7 +56,7 @@ spec:
               name: dump
               resources:
                   requests:
-                    cpu: 1000m
+                    cpu: 500m
               volumeMounts:
                 - mountPath: /tmp/dump
                   name: dump

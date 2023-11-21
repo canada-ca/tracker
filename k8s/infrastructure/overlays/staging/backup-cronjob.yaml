@@ -64,7 +64,7 @@ spec:
                   name: dump
               resources:
                 requests:
-                  cpu: 1000m
+                  cpu: 500m
           restartPolicy: Never
           volumes:
             - emptyDir: {}
