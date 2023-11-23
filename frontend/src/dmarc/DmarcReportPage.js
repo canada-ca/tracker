@@ -599,7 +599,7 @@ export default function DmarcReportPage() {
 
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-      <NotificationBanner bg="yellow-200">
+      <NotificationBanner bg="yellow.200" my="4">
         <Text fontWeight="medium">
           <Trans>
             <b>The following data may have recently changed.</b> We've made enhancements to our DMARC data tables to
