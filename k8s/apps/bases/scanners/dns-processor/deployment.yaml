@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: dns-processor
-          image: gcr.io/track-compliance/dns-processor:master-03b6af9-1700508482 # {"$imagepolicy": "flux-system:dns-processor"}
+          image: gcr.io/track-compliance/dns-processor:master-5ea01a4-1701110313 # {"$imagepolicy": "flux-system:dns-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
