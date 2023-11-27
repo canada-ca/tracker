@@ -71,16 +71,14 @@ def check_mx_diff(processed_results, domain_id):
     diff_reason = ""
     mx_record_diff = False
     # fetch most recent scan of domain
-    last_mx_cursor = (
-        db.aql.execute(
-            """
+    last_mx_cursor = db.aql.execute(
+        """
             FOR v, e IN 1..1 OUTBOUND @domain_id domainsDNS
                 SORT v.timestamp DESC
                 LIMIT 1
                 RETURN v
             """,
-            bind_vars={"domain_id": domain_id},
-        )
+        bind_vars={"domain_id": domain_id},
     )
     # if no previous scan, return False as we can't compare records
     if last_mx_cursor.empty():
@@ -176,10 +174,11 @@ async def run(loop):
         shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
-        mx_record_diff = check_mx_diff(
-            processed_results=processed_results, domain_id=f"domains/{domain_key}"
-        )
-        processed_results["mx_records"].update({"diff": mx_record_diff})
+        if processed_results.get("mx_records") is not None:
+            mx_record_diff = check_mx_diff(
+                processed_results=processed_results, domain_id=f"domains/{domain_key}"
+            )
+            processed_results["mx_records"].update({"diff": mx_record_diff})
 
         dmarc_status = processed_results.get("dmarc").get("status")
         spf_status = processed_results.get("spf").get("status")
