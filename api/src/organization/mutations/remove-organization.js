@@ -204,10 +204,12 @@ export const removeOrganization = new mutationWithClientMutationId({
             await query`
               WITH web, webScan
               FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
-                FOR webScanV, webToWebScansV In 1..1 ANY webV._id webToWebScans
-                  REMOVE webScanV IN webScan
-                  REMOVE webToWebScansV IN webToWebScans
-                  OPTIONS { waitForSync: true }
+                LET removeWebScansQuery = (
+                  FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
+                    REMOVE webScanV IN webScan
+                    REMOVE webToWebScansV IN webToWebScans
+                    OPTIONS { waitForSync: true }
+                )
                 REMOVE webV IN web
                 REMOVE domainsWebEdge IN domainsWeb
                 OPTIONS { waitForSync: true }
