@@ -1,4 +1,5 @@
 from easm_client import client
+from discover_assets import list_disco_group_runs
 
 
 def get_login_pages():
@@ -78,3 +79,24 @@ def find_gc_hosts():
             print(asset["name"])
             assets.append(asset)
     return assets
+
+
+def find_disco_group_assets(group_name):
+    group_runs = list_disco_group_runs(group_name)
+
+    # sort by most recent run
+    group_runs = sorted(group_runs, key=lambda k: k["submittedDate"], reverse=True)
+    latest_run = group_runs[0]
+    print(f"Latest run: {latest_run}")
+
+    assets = []
+    for asset in client.assets.list(
+        filter=f"kind = host AND state = confirmed AND wildcard = false and discoverRun = ???",
+    ):
+        print(asset["name"])
+        assets.append(asset)
+    return assets
+
+
+if __name__ == "__main__":
+    find_disco_group_assets("Elections")
