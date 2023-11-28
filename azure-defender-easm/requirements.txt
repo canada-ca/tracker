@@ -1,0 +1,3 @@
+azure-identity==1.15.0
+azure-defender-easm==1.0.0b1
+python-dotenv==1.0.0
