@@ -1,4 +1,4 @@
-import { aql } from 'arangojs'
+const { aql } = require('arangojs')
 const { UNCLAIMED_ORG_ID } = process.env
 
 const findVerifiedOrgs = async ({ query }) => {
