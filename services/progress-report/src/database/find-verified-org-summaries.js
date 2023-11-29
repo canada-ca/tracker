@@ -1,9 +1,12 @@
+const { UNCLAIMED_ORG_ID } = process.env
+
 const findVerifiedOrgs = async ({ query }) => {
   let cursor
   try {
     cursor = await query`
         FOR org IN organizations
           FILTER org.verified == true
+          FILTER org._id != ${UNCLAIMED_ORG_ID}
           RETURN { _key: org._key, _id: org._id, orgDetails: org.orgDetails, summaries: org.summaries }
     `
   } catch (err) {

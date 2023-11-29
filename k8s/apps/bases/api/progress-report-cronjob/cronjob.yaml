@@ -55,4 +55,9 @@ spec:
                     secretKeyRef:
                       name: api
                       key: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
+                - name: UNCLAIMED_ORG_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: UNCLAIMED_ORG_ID
           restartPolicy: OnFailure
