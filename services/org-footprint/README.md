@@ -24,8 +24,6 @@ DB_URL=http://localhost:8529
 DB_NAME=track_dmarc
 NOTIFICATION_API_KEY=asdf1234
 NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca
-NOTIFICATION_ORG_FOOTPRINT_EN=test_id
-NOTIFICATION_ORG_FOOTPRINT_FR=test_id
 NOTIFICATION_ORG_FOOTPRINT_BILINGUAL=test_id
 SERVICE_ACCOUNT_EMAIL=test@email.ca
 REDIRECT_TO_SERVICE_ACCOUNT_EMAIL=false
@@ -56,8 +54,6 @@ DB_URL=http://localhost:8529
 DB_NAME=track_dmarc
 NOTIFICATION_API_KEY=asdf1234
 NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca
-NOTIFICATION_ORG_FOOTPRINT_EN=test_id
-NOTIFICATION_ORG_FOOTPRINT_FR=test_id
 SERVICE_ACCOUNT_EMAIL=test@email.ca
 REDIRECT_TO_SERVICE_ACCOUNT_EMAIL=false
 ```
@@ -67,7 +63,7 @@ REDIRECT_TO_SERVICE_ACCOUNT_EMAIL=false
 Cloudbuild is used for CI, and one of the reasons for that is that it has great tooling for running jobs locally which is very helpful for debugging. To see how this will behave in CI you can run something like the following to run the tests with cloud-build-local.
 
 ```bash
-cloud-build-local --config cloudbuild.yaml --substitutions=BRANCH_NAME=foo,SHORT_SHA=asdf1234,_DB_PASS=test,_DB_URL=http://arangodb:8529,_DB_NAME=track_dmarc,NOTIFICATION_API_KEY=asdf1234, NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca, NOTIFICATION_ORG_FOOTPRINT_EN=test_id, NOTIFICATION_ORG_FOOTPRINT_FR=test_id, SERVICE_ACCOUNT_EMAIL=test@email.ca, REDIRECT_TO_SERVICE_ACCOUNT_EMAIL=false --dryrun=false .
+cloud-build-local --config cloudbuild.yaml --substitutions=BRANCH_NAME=foo,SHORT_SHA=asdf1234,_DB_PASS=test,_DB_URL=http://arangodb:8529,_DB_NAME=track_dmarc,NOTIFICATION_API_KEY=asdf1234, NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca, SERVICE_ACCOUNT_EMAIL=test@email.ca, REDIRECT_TO_SERVICE_ACCOUNT_EMAIL=false --dryrun=false .
 ```
 
 Because of the way the cloudbuild config spins up and detaches a copy of ArangoDB, you will need to run the following commands to clean up after.

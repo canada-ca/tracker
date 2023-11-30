@@ -40,16 +40,6 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_API_URL
-                - name: NOTIFICATION_ORG_FOOTPRINT_EN
-                  valueFrom:
-                    secretKeyRef:
-                      name: api
-                      key: NOTIFICATION_ORG_FOOTPRINT_EN
-                - name: NOTIFICATION_ORG_FOOTPRINT_FR
-                  valueFrom:
-                    secretKeyRef:
-                      name: api
-                      key: NOTIFICATION_ORG_FOOTPRINT_FR
                 - name: NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
                   valueFrom:
                     secretKeyRef:
