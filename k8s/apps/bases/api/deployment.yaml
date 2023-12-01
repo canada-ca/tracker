@@ -209,6 +209,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: HASHING_SALT
+            - name: SERVICE_ACCOUNT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SERVICE_ACCOUNT_EMAIL
           resources:
             limits:
               cpu: 300m
