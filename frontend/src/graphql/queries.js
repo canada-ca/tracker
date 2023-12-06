@@ -851,6 +851,7 @@ export const ORGANIZATION_INFORMATION = gql`
       province
       city
       verified
+      externallyManaged
     }
   }
 `
