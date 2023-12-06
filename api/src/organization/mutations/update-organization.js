@@ -225,7 +225,10 @@ export const updateOrganization = new mutationWithClientMutationId({
           city: cityFR || compareOrg.orgDetails.fr.city,
         },
       },
-      externallyManaged: args.externallyManaged || compareOrg?.externallyManaged,
+    }
+
+    if (permission === 'super_admin' && typeof args.externallyManaged !== 'undefined') {
+      updatedOrgDetails.externallyManaged = args.externallyManaged
     }
 
     // Setup Trans action
