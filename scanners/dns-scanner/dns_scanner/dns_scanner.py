@@ -10,7 +10,7 @@ from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
+TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "10"))
 
 
 @dataclass
@@ -46,13 +46,28 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     try:
-        exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
-        scan_result.rcode = dns.rcode.to_text(exist_response.response.rcode())
-    except NXDOMAIN as nxdomain_error:
-        logger.info(f"No domain records found for {domain}.")
-        scan_result.rcode = dns.rcode.to_text(nxdomain_error.kwargs["responses"][nxdomain_error.kwargs["qnames"][0]].rcode())
+        default_resolver = dns.resolver.get_default_resolver()
+        resolver_ip = default_resolver.nameservers[0]
+        resolver_port = default_resolver.port
+        query = dns.message.make_query(domain, dns.rdatatype.SOA)
+        exist_response = dns.query.udp_with_fallback(q=query, timeout=TIMEOUT, where=resolver_ip, port=resolver_port)[0]
+        scan_result.rcode = dns.rcode.to_text(exist_response.rcode())
+    except BaseException as e:
+        logger.error(f"Error while checking if domain '{domain}' exists: {e}")
         scan_result.record_exists = False
         return scan_result.__dict__
+
+    if scan_result.rcode == "NXDOMAIN":
+        raise NXDOMAIN(f"NXDOMAIN for {domain}.")
+        logger.info(f"NXDOMAIN for {domain}.")
+        scan_result.record_exists = False
+        return scan_result.__dict__
+
+    if scan_result.rcode == "SERVFAIL":
+        logger.info(f"SERVFAIL for {domain}.")
+        scan_result.record_exists = False
+        return scan_result.__dict__
+
 
     scan_result.record_exists = True
 

@@ -14,7 +14,7 @@ from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
 from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 from dns import resolver
-from dns.resolver import NoAnswer, NXDOMAIN
+from dns.resolver import NoAnswer, NXDOMAIN, NoNameservers
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,15 @@ def check_if_domain_exists(domain):
         exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
         return exist_response.response.rcode() == dns.rcode.NOERROR
     except NXDOMAIN:
+        return False
+    except DNSException as e:
+        logging.error(f"DNSException occurred while checking if domain exists: {e}")
+        return False
+    except NoNameservers as e:
+        logging.error(f"NoNameservers occurred while checking if domain exists: {e}")
+        return False
+    except BaseException as e:
+        logging.error(f"Unknown error occurred while checking if domain exists: {e}")
         return False
 
 
