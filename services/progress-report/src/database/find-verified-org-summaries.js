@@ -26,7 +26,7 @@ const findVerifiedOrgs = async ({ query }) => {
   return verifiedOrgs
 }
 
-const findOrgSummaries = async ({ query, startDate }) => {
+const findOrgSummaries = async ({ log, query, startDate }) => {
   const verifiedOrgs = await findVerifiedOrgs({ query })
   const orgSummaries = {}
   for (const org of verifiedOrgs) {
@@ -61,6 +61,7 @@ const findOrgSummaries = async ({ query, startDate }) => {
     }
   }
 
+  log(`Successfully found ${Object.keys(orgSummaries).length} verified org summaries`)
   return orgSummaries
 }
 

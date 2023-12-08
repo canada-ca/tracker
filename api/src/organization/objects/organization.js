@@ -62,6 +62,11 @@ export const organizationType = new GraphQLObjectType({
       description: 'Whether the organization is a verified organization.',
       resolve: ({ verified }) => verified,
     },
+    externallyManaged: {
+      type: GraphQLBoolean,
+      description: 'Whether the organization is externally managed.',
+      resolve: ({ externallyManaged }) => externallyManaged,
+    },
     summaries: {
       type: organizationSummaryType,
       description: 'Summaries based on scan types that are preformed on the given organizations domains.',

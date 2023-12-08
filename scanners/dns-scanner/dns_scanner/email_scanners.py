@@ -14,6 +14,7 @@ from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
 from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 from dns import resolver
+from dns.exception import Timeout
 from dns.resolver import NoAnswer, NXDOMAIN, NoNameservers
 
 logger = logging.getLogger(__name__)
@@ -24,9 +25,12 @@ TIMEOUT = int(os.getenv("SCAN_TIMEOUT", "80"))
 def check_if_domain_exists(domain):
     # Check if domain exists, only return True if DNS returns NOERROR
     try:
-        exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
+        exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False)
         return exist_response.response.rcode() == dns.rcode.NOERROR
-    except NXDOMAIN:
+    except (NXDOMAIN, NoAnswer, NoNameservers, Timeout):
+        return False
+    except Exception as e:
+        logger.error(f"Unknown error getting A record for {domain}: {e}")
         return False
     except DNSException as e:
         logging.error(f"DNSException occurred while checking if domain exists: {e}")

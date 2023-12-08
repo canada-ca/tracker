@@ -1,4 +1,4 @@
-const findChartSummaries = async ({ query, startDate, endDate }) => {
+const findChartSummaries = async ({ log, query, startDate, endDate }) => {
   let cursor
   try {
     cursor = await query`
@@ -18,6 +18,7 @@ const findChartSummaries = async ({ query, startDate, endDate }) => {
     throw new Error(`Cursor error occurred while trying to find chart summaries: ${err}`)
   }
 
+  log('Successfully found chart summaries')
   return { startSummary: chartSummaries[0], endSummary: chartSummaries[chartSummaries.length - 1] }
 }
 

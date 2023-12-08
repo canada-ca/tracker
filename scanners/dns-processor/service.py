@@ -68,7 +68,6 @@ def snake_to_camel(d):
 
 def check_mx_diff(processed_results, domain_id):
     new_mx = processed_results.get("mx_records").get("hosts")
-    diff_reason = ""
     mx_record_diff = False
     # fetch most recent scan of domain
     last_mx_cursor = db.aql.execute(
@@ -89,50 +88,54 @@ def check_mx_diff(processed_results, domain_id):
     # compare mx_records to most recent scan
     # if different, set mx_records_diff to True
     # check number of hosts
-
     if len(new_mx) != len(last_mx):
-        if len(new_mx) > len(last_mx):
-            diff_reason = "host_added"
-            mx_record_diff = True
-        else:
-            # print("host removed")
-            diff_reason = "host_removed"
-            mx_record_diff = True
+        mx_record_diff = True
     else:
         # check hostnames
         hostnames_new = []
         hostnames_last = []
-        for i in range(len(new_mx)):
-            hostnames_new.append(new_mx[i]["hostname"])
-            hostnames_last.append(last_mx[i]["hostname"])
+        for host in new_mx:
+            hostnames_new.append(host["hostname"])
+            hostnames_last.append(host["hostname"])
 
         if set(hostnames_new) != set(hostnames_last):
-            diff_reason = "host_changed"
             mx_record_diff = True
-        else:
-            # check hostname preferences and addresses
-            for i in range(len(new_mx)):
-                # find hostname in last_mx
-                for j in range(len(last_mx)):
-                    if new_mx[i]["hostname"] == last_mx[j]["hostname"]:
-                        # check preference
-                        if new_mx[i]["preference"] != last_mx[j]["preference"]:
-                            diff_reason = "preference_changed"
-                            mx_record_diff = True
-                            break
-                        # check addresses
-                        if set(new_mx[i]["addresses"]) != set(last_mx[j]["addresses"]):
-                            diff_reason = "address_changed"
-                            mx_record_diff = True
-                            break
+
+    # fetch domain org, filter by verified and externally managed
+    domain_org_cursor = db.aql.execute(
+        """
+            FOR v, e IN 1..1 OUTBOUND @domain_id claims
+                FILTER v.verified == true
+                LIMIT 1
+                RETURN v
+            """,
+        bind_vars={"domain_id": domain_id},
+    )
+    # if no org, return early
+    if domain_org_cursor.empty():
+        return mx_record_diff
+
+    domain_org = domain_org_cursor.next()
 
     # send alerts if true
     if mx_record_diff and os.getenv("ALERT_SUBS"):
+        current_val = []
+        for host in new_mx:
+            current_val.append(f"{host['hostname']} {host['preference']}")
+        current_val = ";".join(current_val)
+
+        prev_val = []
+        for host in last_mx:
+            prev_val.append(f"{host['hostname']} {host['preference']}")
+        prev_val = ";".join(prev_val)
+
         send_mx_diff_email_alerts(
             domain=processed_results.get("domain"),
-            diff_reason=diff_reason,
+            record_type="MX",
+            org=domain_org,
+            prev_val=prev_val,
+            current_val=current_val,
             logger=logger,
-            db=db,
         )
 
     return mx_record_diff

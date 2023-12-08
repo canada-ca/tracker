@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql'
+import { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLBoolean } from 'graphql'
 import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
@@ -69,6 +69,10 @@ export const updateOrganization = new mutationWithClientMutationId({
     cityFR: {
       type: GraphQLString,
       description: 'The French translation of the city the organization resides in.',
+    },
+    externallyManaged: {
+      type: GraphQLBoolean,
+      description: 'If the organization has domains that are managed externally.',
     },
   }),
   outputFields: () => ({
@@ -221,6 +225,10 @@ export const updateOrganization = new mutationWithClientMutationId({
           city: cityFR || compareOrg.orgDetails.fr.city,
         },
       },
+    }
+
+    if (permission === 'super_admin' && typeof args.externallyManaged !== 'undefined') {
+      updatedOrgDetails.externallyManaged = args.externallyManaged
     }
 
     // Setup Trans action

@@ -7,68 +7,27 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Show old and new values, see below for example
 
-def get_stakeholders(db: StandardDatabase):
-    """
-    Gets the stakeholders for a domain.
+# Domain: subdomain-example.canada.ca
+# Record type: MX
+# Org: Org
+# Previous value: good-value 0
+# Current value: malicious-domain-here 0
 
-    :param db: The database object.
-    :return: A list of user objects.
-    """
-
-    user_emails = os.getenv("ALERT_SUBS").split(",")
-
-    try:
-        users_cursor = db.aql.execute(
-            """
-            FOR user IN users
-                FILTER @user_emails[? ANY FILTER LOWER(CURRENT) == LOWER(user.userName)]
-                RETURN user
-            """,
-            bind_vars={"user_emails": user_emails},
-        )
-        users = [user for user in users_cursor]
-    except Exception as e:
-        raise Exception(f"Failed to get users from database with error: {e}")
-
-    return users
+# SSC receives only alerts from clients and its partners. This requires new tombstone data that only super admins should be allowed to edit
+# Add org acronym in title.
+# Add org inside body of email
 
 
-def get_reason_str(reason):
-    """
-    Gets the reason for the change as a string.
-
-    :param reason: The reason for the change.
-    :return: A string representing the reason for the change.
-    """
-
-    if reason == "host_added":
-        return {
-            "en": "a new hostname was added",
-            "fr": "un nouveau nom d'hôte a été ajouté",
-        }
-    elif reason == "host_removed":
-        return {
-            "en": "a hostname was removed",
-            "fr": "un nom d'hôte a été supprimé",
-        }
-    elif reason == "host_changed":
-        return {"en": "a hostname was changed", "fr": "un nom d'hôte a été modifié"}
-    elif reason == "preference_changed":
-        return {
-            "en": "a host's preference was changed",
-            "fr": "la préférence d'un hôte a été modifiée",
-        }
-    elif reason == "address_changed":
-        return {
-            "en": "a host's address was changed",
-            "fr": "l'adresse d'un hôte a été modifiée",
-        }
-    else:
-        return {"en": "unknown", "fr": "inconnue"}
-
-
-def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
+def send_mx_diff_email_alerts(
+    domain,
+    record_type,
+    org,
+    prev_val,
+    current_val,
+    logger,
+):
     """
     Sends an email to the user when the MX records for a domain have changed.
 
@@ -78,18 +37,26 @@ def send_mx_diff_email_alerts(domain, diff_reason, logger, db):
     :param db: The database object.
     """
 
+    org_name_en = org["orgDetails"]["en"]["name"]
+    org_name_fr = org["orgDetails"]["fr"]["name"]
+    org_acronym_en = org["orgDetails"]["en"]["acronym"]
+    org_acronym_fr = org["orgDetails"]["fr"]["acronym"]
+
     stakeholders = os.getenv("ALERT_SUBS").split(",")
     for user in stakeholders:
-        reason = get_reason_str(reason=diff_reason)
         try:
             response = notify_client.send_email_notification(
                 email_address=user,
                 template_id=os.getenv("NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL"),
                 personalisation={
                     "domain": domain,
-                    "link": "https://tracker.canada.ca/domains/" + domain,
-                    "reasonEN": reason.get("en"),
-                    "reasonFR": reason.get("fr"),
+                    "record_type": record_type,
+                    "org_name_en": org_name_en,
+                    "org_name_fr": org_name_fr,
+                    "org_acronym_en": org_acronym_en,
+                    "org_acronym_fr": org_acronym_fr,
+                    "prev_val": prev_val,
+                    "current_val": current_val,
                 },
             )
             logger.info(f"Email sent to {user} with response: {response}")
