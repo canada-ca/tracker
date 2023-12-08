@@ -94,9 +94,9 @@ def check_mx_diff(processed_results, domain_id):
         # check hostnames
         hostnames_new = []
         hostnames_last = []
-        for host in new_mx:
-            hostnames_new.append(host["hostname"])
-            hostnames_last.append(host["hostname"])
+        for i in range(len(new_mx)):
+            hostnames_new.append(new_mx[i]["hostname"])
+            hostnames_last.append(last_mx[i]["hostname"])
 
         if set(hostnames_new) != set(hostnames_last):
             mx_record_diff = True
@@ -104,7 +104,7 @@ def check_mx_diff(processed_results, domain_id):
     # fetch domain org, filter by verified and externally managed
     domain_org_cursor = db.aql.execute(
         """
-            FOR v, e IN 1..1 OUTBOUND @domain_id claims
+            FOR v, e IN 1..1 INBOUND @domain_id claims
                 FILTER v.verified == true
                 LIMIT 1
                 RETURN v

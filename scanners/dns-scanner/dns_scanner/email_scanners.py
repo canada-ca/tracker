@@ -29,8 +29,8 @@ def check_if_domain_exists(domain):
         return exist_response.response.rcode() == dns.rcode.NOERROR
     except (NXDOMAIN, NoAnswer, NoNameservers, Timeout):
         return False
-    except BaseException as e:
-        logging.error(f"Unknown error occurred while checking if domain exists: {e}")
+    except Exception as e:
+        logger.error(f"Unknown error getting A record for {domain}: {e}")
         return False
 
 
