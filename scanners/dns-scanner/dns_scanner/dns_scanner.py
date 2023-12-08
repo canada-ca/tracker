@@ -53,13 +53,15 @@ def scan_domain(domain, dkim_selectors=None):
         query = dns.message.make_query(domain, dns.rdatatype.SOA)
         exist_response = dns.query.udp_with_fallback(q=query, timeout=TIMEOUT, where=resolver_ip, port=resolver_port)[0]
         scan_result.rcode = dns.rcode.to_text(exist_response.rcode())
-    except BaseException as e:
+    except Timeout:
+        scan_result.record_exists = False
+        return scan_result.__dict__
+    except Exception as e:
         logger.error(f"Error while checking if domain '{domain}' exists: {e}")
         scan_result.record_exists = False
         return scan_result.__dict__
 
     if scan_result.rcode == "NXDOMAIN":
-        raise NXDOMAIN(f"NXDOMAIN for {domain}.")
         logger.info(f"NXDOMAIN for {domain}.")
         scan_result.record_exists = False
         return scan_result.__dict__
