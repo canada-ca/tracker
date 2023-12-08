@@ -4,7 +4,8 @@ import re
 
 import dns.resolver
 from checkdmarc import *
-from dns.resolver import NXDOMAIN, NoAnswer
+from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
+from dns.exception import Timeout
 
 from dns_scanner.email_scanners import DKIMScanner, DMARCScanner
 
@@ -46,11 +47,20 @@ def scan_domain(domain, dkim_selectors=None):
 
     # Check if domain exists
     try:
-        exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
+        exist_response = dns.resolver.resolve(domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False)
         scan_result.rcode = dns.rcode.to_text(exist_response.response.rcode())
     except NXDOMAIN as nxdomain_error:
         logger.info(f"No domain records found for {domain}.")
         scan_result.rcode = dns.rcode.to_text(nxdomain_error.kwargs["responses"][nxdomain_error.kwargs["qnames"][0]].rcode())
+        scan_result.record_exists = False
+        return scan_result.__dict__
+    except (NoAnswer, NoNameservers, Timeout) as e:
+        logger.error(f"Error getting A record for {domain}: {e}")
+        scan_result.rcode = dns.rcode.to_text(e.kwargs["responses"][e.kwargs["qnames"][0]].rcode())
+        scan_result.record_exists = False
+        return scan_result.__dict__
+    except Exception as e:
+        logger.error(f"Unknown error getting A record for {domain}: {e}")
         scan_result.record_exists = False
         return scan_result.__dict__
 
@@ -59,7 +69,10 @@ def scan_domain(domain, dkim_selectors=None):
     # Get chaining results (A and CNAME records)
     try:
         a_records = dns.resolver.resolve(qname=domain, rdtype=dns.rdatatype.A)
-    except NoAnswer:
+    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+        a_records = None
+    except Exception as e:
+        logger.error(f"Unknown error getting A records for {domain}: {e}")
         a_records = None
 
     if a_records:
@@ -74,13 +87,20 @@ def scan_domain(domain, dkim_selectors=None):
         wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
         dns.resolver.resolve(wildcard_sibling_domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False)
         scan_result.wildcard_sibling = True
-    except NXDOMAIN:
+    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+        scan_result.wildcard_sibling = False
+    except Exception as e:
+        logger.error(f"Unknown error checking for wildcard sibling domain for {domain}: {e}")
         scan_result.wildcard_sibling = False
 
     # Get first CNAME record (in case there is no A record in chain). Checking if chain is valid.
     try:
         cname_record = dns.resolver.resolve(qname=domain, rdtype=dns.rdatatype.CNAME)
-    except NoAnswer:
+    except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
+        cname_record = None
+        pass
+    except Exception as e:
+        logger.error(f"Unknown error getting CNAME record for {domain}: {e}")
         cname_record = None
         pass
 
