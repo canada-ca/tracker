@@ -69,7 +69,12 @@ describe('given the findChartSummaries function', () => {
       })
     })
     it('returns the recent chart summaries', async () => {
-      const chartSummaries = await findChartSummaries({ query, startDate: '2021-01-01', endDate: '2021-01-31' })
+      const chartSummaries = await findChartSummaries({
+        log: console.log,
+        query,
+        startDate: '2021-01-01',
+        endDate: '2021-01-31',
+      })
 
       const expectedChartSummaries = {
         startSummary: {
