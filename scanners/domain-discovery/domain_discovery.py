@@ -115,7 +115,7 @@ def get_claimed_domains(orgId):
 
 def check_live(domain):
     try:
-        dns.resolver.resolve(domain, rdtype=dns.rdatatype.SOA, raise_on_no_answer=False)
+        dns.resolver.resolve(domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False)
         return True
     except (
         dns.resolver.NoAnswer,
