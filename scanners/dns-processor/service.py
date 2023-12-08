@@ -94,9 +94,9 @@ def check_mx_diff(processed_results, domain_id):
         # check hostnames
         hostnames_new = []
         hostnames_last = []
-        for host in new_mx:
-            hostnames_new.append(host["hostname"])
-            hostnames_last.append(host["hostname"])
+        for i in range(len(new_mx)):
+            hostnames_new.append(new_mx[i]["hostname"])
+            hostnames_last.append(last_mx[i]["hostname"])
 
         if set(hostnames_new) != set(hostnames_last):
             mx_record_diff = True
