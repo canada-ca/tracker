@@ -105,7 +105,7 @@ def check_mx_diff(processed_results, domain_id):
     domain_org_cursor = db.aql.execute(
         """
             FOR v, e IN 1..1 OUTBOUND @domain_id claims
-                FILTER v.verified == true AND v.externallyManaged == true
+                FILTER v.verified == true
                 LIMIT 1
                 RETURN v
             """,
