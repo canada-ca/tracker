@@ -108,10 +108,10 @@ const calculateOrgAverages = ({ stats, log }) => {
 
   log('Successfully calculated org averages')
   return {
-    httpsScoreDiffAvg: average(httpsScoreDiffs),
-    webDomainCountDiffAvg: average(webDomainCountDiffs),
-    dmarcScoreDiffAvg: average(dmarcScoreDiffs),
-    domainCountDiffAvg: average(domainCountDiffs),
+    httpsScoreDiffAvg: average(httpsScoreDiffs).toFixed(2),
+    webDomainCountDiffAvg: average(webDomainCountDiffs).toFixed(0),
+    dmarcScoreDiffAvg: average(dmarcScoreDiffs).toFixed(2),
+    domainCountDiffAvg: average(domainCountDiffs).toFixed(0),
   }
 }
 
