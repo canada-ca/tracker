@@ -57,18 +57,18 @@ const saltedHash = (data, salt) => {
 
   const domainList = await domainListCursor.all()
 
-  for (const domain of domainList) {
+  await Promise.all(domainList.map((domain) => {
     const hash = saltedHash(domain.domain, HASHING_SALT)
     domain['hash'] = hash
 
-    await query`
+    return query`
       WITH domains
         UPSERT { _key: ${domain._key} }
           INSERT ${domain}
           UPDATE { hash: ${hash} }
           IN domains
     `
-  }
+  }))
 
   console.log('Completed hashing domains.')
 })()

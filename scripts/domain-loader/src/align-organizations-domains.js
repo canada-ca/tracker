@@ -107,7 +107,7 @@ const alignOrganizationsDomains = async ({ db, query, data }) => {
     {},
   )
 
-  for (const domain of domainsInDb) {
+  await Promise.all(domainsInDb.map(async (domain) => {
     // remove domain claims which don't exist in JSON data
     const claimRemovalParams = {
       domainId: domain._id,
@@ -219,8 +219,8 @@ const alignOrganizationsDomains = async ({ db, query, data }) => {
       removeVertices: true,
     })
 
-    await (await query`REMOVE ${domain._key} IN domains`).all()
-  }
+    return (await query`REMOVE ${domain._key} IN domains`).all()
+  }))
 
   // <------------------------------ done removing domains ------------------------------------>
 
