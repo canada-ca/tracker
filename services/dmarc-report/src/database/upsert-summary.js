@@ -18,26 +18,52 @@ const upsertSummary =
     let spfFailureTable
 
     if (date === 'thirtyDays') {
-      categoryTotals = await loadCategoryTotals({ domain, date: 'thirty_days' })
-      dkimFailureTable = await loadDkimFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
-      dmarcFailureTable = await loadDmarcFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
-      fullPassTable = await loadFullPassTable({ domain, date: 'thirty_days' })
-      spfFailureTable = await loadSpfFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
+      const [
+        _categoryTotals,
+        _dkimFailureTable,
+        _dmarcFailureTable,
+        _fullPassTable,
+        _spfFailureTable,
+      ] = await Promise.all([
+        loadCategoryTotals({ domain, date: 'thirty_days' }),
+        loadDkimFailureTable({
+          domain,
+          date: 'thirty_days',
+        }),
+        loadDmarcFailureTable({
+          domain,
+          date: 'thirty_days',
+        }),
+        loadFullPassTable({ domain, date: 'thirty_days' }),
+        loadSpfFailureTable({
+          domain,
+          date: 'thirty_days',
+        }),
+      ])
+      categoryTotals = _categoryTotals
+      dkimFailureTable = _dkimFailureTable
+      dmarcFailureTable = _dmarcFailureTable
+      fullPassTable = _fullPassTable
+      spfFailureTable = _spfFailureTable
     } else {
-      categoryTotals = await loadCategoryTotals({ domain, date })
-      dkimFailureTable = await loadDkimFailureTable({ domain, date })
-      dmarcFailureTable = await loadDmarcFailureTable({ domain, date })
-      fullPassTable = await loadFullPassTable({ domain, date })
-      spfFailureTable = await loadSpfFailureTable({ domain, date })
+      const [
+        _categoryTotals,
+        _dkimFailureTable,
+        _dmarcFailureTable,
+        _fullPassTable,
+        _spfFailureTable,
+      ]  = await Promise.all([
+        loadCategoryTotals({ domain, date }),
+        loadDkimFailureTable({ domain, date }),
+        loadDmarcFailureTable({ domain, date }),
+        loadFullPassTable({ domain, date }),
+        loadSpfFailureTable({ domain, date })
+      ])
+      categoryTotals = _categoryTotals
+      dkimFailureTable = _dkimFailureTable
+      dmarcFailureTable = _dmarcFailureTable
+      fullPassTable = _fullPassTable
+      spfFailureTable = _spfFailureTable
     }
 
     const categoryPercentages = calculatePercentages({ ...categoryTotals })
