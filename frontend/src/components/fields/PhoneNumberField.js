@@ -16,7 +16,7 @@ export function PhoneNumberField({ name, label }) {
       <FormLabel htmlFor="phoneNumber" fontWeight="bold">
         {labelText}
       </FormLabel>
-      <Box display="inline-block" border="2px" borderColor="gray.200" w="100%">
+      <Box display="inline-block" border="2px" borderColor="black" w="100%">
         <PhoneInput
           inputProps={{
             id: name,
