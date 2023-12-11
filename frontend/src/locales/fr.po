@@ -57,6 +57,10 @@ msgstr "404 - Page non trouvée"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 Tous les sites web et services web restants doivent être accessibles par une connexion sécurisée, comme indiqué à la section 6.1, d'ici le 31 décembre 2019."
 
+#: src/user/EditableUserPhoneNumber.js:156
+msgid "<0>Current Phone Number:</0> {detailValue}"
+msgstr "<0>Numéro de téléphone actuel:</0> {detailValue}"
+
 #: src/guidance/EmailGuidance.js:323
 #: src/guidance/EmailGuidance.js:397
 msgid "<0>Hostname:</0> {hostname}"
@@ -322,11 +326,11 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre langue."
 msgid "An error occurred while updating your password."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre mot de passe."
 
-#: src/user/EditableUserPhoneNumber.js:45
+#: src/user/EditableUserPhoneNumber.js:43
 msgid "An error occurred while updating your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
-#: src/user/EditableUserPhoneNumber.js:85
+#: src/user/EditableUserPhoneNumber.js:80
 msgid "An error occurred while verifying your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
@@ -518,7 +522,7 @@ msgstr "Changement de la langue de l'utilisateur"
 msgid "Changed User Password"
 msgstr "Modification du mot de passe de l'utilisateur"
 
-#: src/user/EditableUserPhoneNumber.js:96
+#: src/user/EditableUserPhoneNumber.js:91
 msgid "Changed User Phone Number"
 msgstr "Changement du numéro de téléphone de l'utilisateur"
 
@@ -620,8 +624,8 @@ msgstr "Les exigences de configuration des sites et services web sont entièreme
 #: src/user/EditableUserDisplayName.js:168
 #: src/user/EditableUserEmail.js:168
 #: src/user/EditableUserPassword.js:182
-#: src/user/EditableUserPhoneNumber.js:188
-#: src/user/EditableUserPhoneNumber.js:246
+#: src/user/EditableUserPhoneNumber.js:168
+#: src/user/EditableUserPhoneNumber.js:212
 #: src/user/UserPage.js:264
 msgid "Confirm"
 msgstr "Confirmer"
@@ -740,8 +744,8 @@ msgid "Current Password:"
 msgstr "Mot de passe actuel:"
 
 #: src/user/EditableUserPhoneNumber.js:167
-msgid "Current Phone Number:"
-msgstr "Numéro de téléphone actuel:"
+#~ msgid "Current Phone Number:"
+#~ msgstr "Numéro de téléphone actuel:"
 
 #: src/domains/DomainCard.js:196
 #: src/domains/DomainsPage.js:187
@@ -1094,7 +1098,7 @@ msgstr "La liste des domaines de chaque organisation doit inclure tous les servi
 #: src/user/EditableUserDisplayName.js:109
 #: src/user/EditableUserEmail.js:109
 #: src/user/EditableUserPassword.js:112
-#: src/user/EditableUserPhoneNumber.js:286
+#: src/user/EditableUserPhoneNumber.js:235
 msgid "Edit"
 msgstr "Edit"
 
@@ -1114,7 +1118,7 @@ msgstr "Modifier l'e-mail"
 msgid "Edit Organization"
 msgstr "Organisation d'édition"
 
-#: src/user/EditableUserPhoneNumber.js:159
+#: src/user/EditableUserPhoneNumber.js:146
 msgid "Edit Phone Number"
 msgstr "Modifier le numéro de téléphone"
 
@@ -1690,6 +1694,10 @@ msgstr "Si, à tout moment, vous ou vos représentants souhaitez ajuster ou annu
 #~ msgid "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
 #~ msgstr "Si, à tout moment, vous ou vos représentants souhaitez adapter ou annuler ces services, veuillez nous contacter à l'adresse suivante"
 
+#: src/user/EditableUserPhoneNumber.js:152
+msgid "If available, please use a managed device provided by your organization."
+msgstr "Si disponible, veuillez utiliser un dispositif géré fourni par votre organisation."
+
 #: src/guidance/GuidancePage.js:91
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "Si vous pensez que cela peut être le résultat d'un problème avec l'analyse, réanalysez le service en utilisant le bouton d'actualisation. Si vous pensez que c'est parce que le service n'existe plus (NXDOMAIN), ce domaine doit être supprimé de toutes les organisations affiliées."
@@ -1800,14 +1808,14 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserEmail.js:72
 #: src/user/EditableUserLanguage.js:51
 #: src/user/EditableUserPassword.js:75
-#: src/user/EditableUserPhoneNumber.js:67
-#: src/user/EditableUserPhoneNumber.js:118
+#: src/user/EditableUserPhoneNumber.js:65
+#: src/user/EditableUserPhoneNumber.js:111
 #: src/user/EditableUserTFAMethod.js:76
 #: src/user/UserPage.js:108
 msgid "Incorrect send method received."
 msgstr "Méthode d'envoi incorrecte reçue."
 
-#: src/user/EditableUserPhoneNumber.js:68
+#: src/user/EditableUserPhoneNumber.js:66
 msgid "Incorrect setPhoneNumber.result typename."
 msgstr "Incorrect setPhoneNumber.result typename."
 
@@ -1854,7 +1862,7 @@ msgstr "Incorrect updateUserProfile.result typename."
 msgid "Incorrect updateUserRole.result typename."
 msgstr "Incorrect updateUserRole.result typename."
 
-#: src/user/EditableUserPhoneNumber.js:119
+#: src/user/EditableUserPhoneNumber.js:112
 msgid "Incorrect verifyPhoneNumber.result typename."
 msgstr "Une erreur s'est produite lors de la vérification de votre numéro de téléphone."
 
@@ -2208,7 +2216,7 @@ msgstr "Nouvelle adresse électronique:"
 msgid "New Password:"
 msgstr "Nouveau mot de passe:"
 
-#: src/user/EditableUserPhoneNumber.js:176
+#: src/user/EditableUserPhoneNumber.js:162
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
@@ -2270,7 +2278,7 @@ msgstr "Pas d'utilisateurs"
 msgid "No activity logs"
 msgstr "Aucun journal d'activité"
 
-#: src/user/EditableUserPhoneNumber.js:275
+#: src/user/EditableUserPhoneNumber.js:232
 msgid "No current phone number"
 msgstr "Pas de numéro de téléphone actuel"
 
@@ -2596,7 +2604,7 @@ msgid "Phone"
 msgstr "Téléphone"
 
 #: src/components/fields/PhoneNumberField.js:12
-#: src/user/EditableUserPhoneNumber.js:261
+#: src/user/EditableUserPhoneNumber.js:227
 msgid "Phone Number:"
 msgstr "Numéro de téléphone:"
 
@@ -3939,11 +3947,11 @@ msgstr "Impossible de mettre à jour le rôle de l'utilisateur."
 msgid "Unable to update your password, please try again."
 msgstr "Impossible de mettre à jour votre mot de passe, veuillez réessayer."
 
-#: src/user/EditableUserPhoneNumber.js:58
+#: src/user/EditableUserPhoneNumber.js:56
 msgid "Unable to update your phone number, please try again."
 msgstr "Impossible de mettre à jour votre numéro de téléphone, veuillez réessayer."
 
-#: src/user/EditableUserPhoneNumber.js:109
+#: src/user/EditableUserPhoneNumber.js:102
 msgid "Unable to verify your phone number, please try again."
 msgstr "Impossible de vérifier votre numéro de téléphone, veuillez réessayer."
 
@@ -4074,7 +4082,7 @@ msgstr "Chaîne vérifiée exempte d'ancre Symantec ancienne"
 msgid "Verified Chain Free of SHA1 Signature"
 msgstr "Chaîne vérifiée sans signature SHA1"
 
-#: src/user/EditableUserPhoneNumber.js:226
+#: src/user/EditableUserPhoneNumber.js:201
 msgid "Verify"
 msgstr "Vérifier"
 
@@ -4346,7 +4354,7 @@ msgstr "Vous avez réussi à mettre à jour vos préférences d'utilisateur inte
 msgid "You have successfully updated your password."
 msgstr "Vous avez mis à jour votre mot de passe avec succès."
 
-#: src/user/EditableUserPhoneNumber.js:97
+#: src/user/EditableUserPhoneNumber.js:92
 msgid "You have successfully updated your phone number."
 msgstr "Vous avez réussi à mettre à jour votre numéro de téléphone."
 

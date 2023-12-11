@@ -57,6 +57,10 @@ msgstr "404 - Page Not Found"
 #~ msgid "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 #~ msgstr "6.2.3 All remaining websites and web services must be accessible through a secure connection, as outlined in Section 6.1, by December 31, 2019."
 
+#: src/user/EditableUserPhoneNumber.js:156
+msgid "<0>Current Phone Number:</0> {detailValue}"
+msgstr "<0>Current Phone Number:</0> {detailValue}"
+
 #: src/guidance/EmailGuidance.js:323
 #: src/guidance/EmailGuidance.js:397
 msgid "<0>Hostname:</0> {hostname}"
@@ -322,11 +326,11 @@ msgstr "An error occurred while updating your language."
 msgid "An error occurred while updating your password."
 msgstr "An error occurred while updating your password."
 
-#: src/user/EditableUserPhoneNumber.js:45
+#: src/user/EditableUserPhoneNumber.js:43
 msgid "An error occurred while updating your phone number."
 msgstr "An error occurred while updating your phone number."
 
-#: src/user/EditableUserPhoneNumber.js:85
+#: src/user/EditableUserPhoneNumber.js:80
 msgid "An error occurred while verifying your phone number."
 msgstr "An error occurred while verifying your phone number."
 
@@ -518,7 +522,7 @@ msgstr "Changed User Language"
 msgid "Changed User Password"
 msgstr "Changed User Password"
 
-#: src/user/EditableUserPhoneNumber.js:96
+#: src/user/EditableUserPhoneNumber.js:91
 msgid "Changed User Phone Number"
 msgstr "Changed User Phone Number"
 
@@ -620,8 +624,8 @@ msgstr "Configuration requirements for web sites and services completely met"
 #: src/user/EditableUserDisplayName.js:168
 #: src/user/EditableUserEmail.js:168
 #: src/user/EditableUserPassword.js:182
-#: src/user/EditableUserPhoneNumber.js:188
-#: src/user/EditableUserPhoneNumber.js:246
+#: src/user/EditableUserPhoneNumber.js:168
+#: src/user/EditableUserPhoneNumber.js:212
 #: src/user/UserPage.js:264
 msgid "Confirm"
 msgstr "Confirm"
@@ -740,8 +744,8 @@ msgid "Current Password:"
 msgstr "Current Password:"
 
 #: src/user/EditableUserPhoneNumber.js:167
-msgid "Current Phone Number:"
-msgstr "Current Phone Number:"
+#~ msgid "Current Phone Number:"
+#~ msgstr "Current Phone Number:"
 
 #: src/domains/DomainCard.js:196
 #: src/domains/DomainsPage.js:187
@@ -1102,7 +1106,7 @@ msgstr "Each organization’s domain list should include every internet-facing s
 #: src/user/EditableUserDisplayName.js:109
 #: src/user/EditableUserEmail.js:109
 #: src/user/EditableUserPassword.js:112
-#: src/user/EditableUserPhoneNumber.js:286
+#: src/user/EditableUserPhoneNumber.js:235
 msgid "Edit"
 msgstr "Edit"
 
@@ -1122,7 +1126,7 @@ msgstr "Edit Email"
 msgid "Edit Organization"
 msgstr "Edit Organization"
 
-#: src/user/EditableUserPhoneNumber.js:159
+#: src/user/EditableUserPhoneNumber.js:146
 msgid "Edit Phone Number"
 msgstr "Edit Phone Number"
 
@@ -1718,6 +1722,10 @@ msgstr "If at any time you or your representatives wish to adjust or cancel thes
 #~ msgid "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
 #~ msgstr "If at any time you or your representatives wish to adjust or cancel these services, please contact us at"
 
+#: src/user/EditableUserPhoneNumber.js:152
+msgid "If available, please use a managed device provided by your organization."
+msgstr "If available, please use a managed device provided by your organization."
+
 #: src/guidance/GuidancePage.js:91
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
@@ -1828,14 +1836,14 @@ msgstr "Incorrect resetPassword.result typename."
 #: src/user/EditableUserEmail.js:72
 #: src/user/EditableUserLanguage.js:51
 #: src/user/EditableUserPassword.js:75
-#: src/user/EditableUserPhoneNumber.js:67
-#: src/user/EditableUserPhoneNumber.js:118
+#: src/user/EditableUserPhoneNumber.js:65
+#: src/user/EditableUserPhoneNumber.js:111
 #: src/user/EditableUserTFAMethod.js:76
 #: src/user/UserPage.js:108
 msgid "Incorrect send method received."
 msgstr "Incorrect send method received."
 
-#: src/user/EditableUserPhoneNumber.js:68
+#: src/user/EditableUserPhoneNumber.js:66
 msgid "Incorrect setPhoneNumber.result typename."
 msgstr "Incorrect setPhoneNumber.result typename."
 
@@ -1882,7 +1890,7 @@ msgstr "Incorrect updateUserProfile.result typename."
 msgid "Incorrect updateUserRole.result typename."
 msgstr "Incorrect updateUserRole.result typename."
 
-#: src/user/EditableUserPhoneNumber.js:119
+#: src/user/EditableUserPhoneNumber.js:112
 msgid "Incorrect verifyPhoneNumber.result typename."
 msgstr "Incorrect verifyPhoneNumber.result typename."
 
@@ -2244,7 +2252,7 @@ msgstr "New Email Address:"
 msgid "New Password:"
 msgstr "New Password:"
 
-#: src/user/EditableUserPhoneNumber.js:176
+#: src/user/EditableUserPhoneNumber.js:162
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
 
@@ -2306,7 +2314,7 @@ msgstr "No Users"
 msgid "No activity logs"
 msgstr "No activity logs"
 
-#: src/user/EditableUserPhoneNumber.js:275
+#: src/user/EditableUserPhoneNumber.js:232
 msgid "No current phone number"
 msgstr "No current phone number"
 
@@ -2632,7 +2640,7 @@ msgid "Phone"
 msgstr "Phone"
 
 #: src/components/fields/PhoneNumberField.js:12
-#: src/user/EditableUserPhoneNumber.js:261
+#: src/user/EditableUserPhoneNumber.js:227
 msgid "Phone Number:"
 msgstr "Phone Number:"
 
@@ -3989,11 +3997,11 @@ msgstr "Unable to update user role."
 msgid "Unable to update your password, please try again."
 msgstr "Unable to update your password, please try again."
 
-#: src/user/EditableUserPhoneNumber.js:58
+#: src/user/EditableUserPhoneNumber.js:56
 msgid "Unable to update your phone number, please try again."
 msgstr "Unable to update your phone number, please try again."
 
-#: src/user/EditableUserPhoneNumber.js:109
+#: src/user/EditableUserPhoneNumber.js:102
 msgid "Unable to verify your phone number, please try again."
 msgstr "Unable to verify your phone number, please try again."
 
@@ -4124,7 +4132,7 @@ msgstr "Verified Chain Free of Legacy Symantec Anchor"
 msgid "Verified Chain Free of SHA1 Signature"
 msgstr "Verified Chain Free of SHA1 Signature"
 
-#: src/user/EditableUserPhoneNumber.js:226
+#: src/user/EditableUserPhoneNumber.js:201
 msgid "Verify"
 msgstr "Verify"
 
@@ -4412,7 +4420,7 @@ msgstr "You have successfully updated your inside user preference."
 msgid "You have successfully updated your password."
 msgstr "You have successfully updated your password."
 
-#: src/user/EditableUserPhoneNumber.js:97
+#: src/user/EditableUserPhoneNumber.js:92
 msgid "You have successfully updated your phone number."
 msgstr "You have successfully updated your phone number."
 
