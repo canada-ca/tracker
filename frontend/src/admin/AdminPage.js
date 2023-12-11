@@ -145,6 +145,7 @@ export default function AdminPage({ isLoginRequired }) {
             // set key, this resets state when switching orgs (closes editing box)
             key={orgDetails.slug}
             isLoginRequired={isLoginRequired}
+            isUserSuperAdmin={data?.isUserSuperAdmin}
           />
           <AdminPanel
             activeMenu={activeMenu}

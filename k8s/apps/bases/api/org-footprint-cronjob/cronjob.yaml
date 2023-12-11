@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: org-footprint
-              image: gcr.io/track-compliance/services/org-footprint:master-04ea43c-1698944452 # {"$imagepolicy": "flux-system:org-footprint"}
+              image: gcr.io/track-compliance/services/org-footprint:master-4e53a04-1701449611 # {"$imagepolicy": "flux-system:org-footprint"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -40,16 +40,6 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_API_URL
-                - name: NOTIFICATION_ORG_FOOTPRINT_EN
-                  valueFrom:
-                    secretKeyRef:
-                      name: api
-                      key: NOTIFICATION_ORG_FOOTPRINT_EN
-                - name: NOTIFICATION_ORG_FOOTPRINT_FR
-                  valueFrom:
-                    secretKeyRef:
-                      name: api
-                      key: NOTIFICATION_ORG_FOOTPRINT_FR
                 - name: NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
                   valueFrom:
                     secretKeyRef:

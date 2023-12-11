@@ -54,7 +54,7 @@ spec:
             - name: database-config
               mountPath: /app
       containers:
-        - image: gcr.io/track-compliance/api-js:master-12ca453-1699553575 # {"$imagepolicy": "flux-system:api"}
+        - image: gcr.io/track-compliance/api-js:master-98f5e72-1701894068 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
@@ -124,26 +124,6 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_API_URL
-            - name: DMARC_REPORT_API_URL
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: DMARC_REPORT_API_URL
-            - name: DMARC_REPORT_API_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: DMARC_REPORT_API_SECRET
-            - name: DMARC_REPORT_API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: DMARC_REPORT_API_TOKEN
-            - name: TOKEN_HASH
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: TOKEN_HASH
             - name: DEPTH_LIMIT
               valueFrom:
                 secretKeyRef:
@@ -169,21 +149,6 @@ spec:
                 secretKeyRef:
                   name: api
                   key: OBJECT_COST
-            - name: DNS_SCANNER_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: DNS_SCANNER_ENDPOINT
-            - name: HTTPS_SCANNER_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: HTTPS_SCANNER_ENDPOINT
-            - name: SSL_SCANNER_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: SSL_SCANNER_ENDPOINT
             - name: NOTIFICATION_AUTHENTICATE_EMAIL_ID
               valueFrom:
                 secretKeyRef:
@@ -199,41 +164,11 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL
-            - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN
-            - name: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR
-            - name: NOTIFICATION_ORG_INVITE_EN
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_ORG_INVITE_EN
-            - name: NOTIFICATION_ORG_INVITE_FR
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_ORG_INVITE_FR
             - name: NOTIFICATION_PASSWORD_RESET_BILINGUAL
               valueFrom:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_PASSWORD_RESET_BILINGUAL
-            - name: NOTIFICATION_PASSWORD_RESET_EN
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_PASSWORD_RESET_EN
-            - name: NOTIFICATION_PASSWORD_RESET_FR
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_PASSWORD_RESET_FR
             - name: NOTIFICATION_TWO_FACTOR_CODE_EN
               valueFrom:
                 secretKeyRef:
@@ -259,16 +194,6 @@ spec:
                 secretKeyRef:
                   name: api
                   key: NOTIFICATION_ORG_INVITE_REQUEST_BILINGUAL
-            - name: NOTIFICATION_ORG_INVITE_REQUEST_EN
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_ORG_INVITE_REQUEST_EN
-            - name: NOTIFICATION_ORG_INVITE_REQUEST_FR
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: NOTIFICATION_ORG_INVITE_REQUEST_FR
             - name: NOTIFICATION_ORG_INVITE_BILINGUAL
               valueFrom:
                 secretKeyRef:
@@ -279,46 +204,16 @@ spec:
                 secretKeyRef:
                   name: api
                   key: TRACING_ENABLED
-            - name: REDIS_PORT_NUMBER
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: REDIS_PORT_NUMBER
-            - name: REDIS_DOMAIN_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: REDIS_DOMAIN_NAME
-            - name: DKIM_SCAN_CHANNEL
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: DKIM_SCAN_CHANNEL
-            - name: DMARC_SCAN_CHANNEL
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: DMARC_SCAN_CHANNEL
-            - name: SPF_SCAN_CHANNEL
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: SPF_SCAN_CHANNEL
-            - name: SSL_SCAN_CHANNEL
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: SSL_SCAN_CHANNEL
-            - name: HTTPS_SCAN_CHANNEL
-              valueFrom:
-                secretKeyRef:
-                  name: api
-                  key: HTTPS_SCAN_CHANNEL
             - name: HASHING_SALT
               valueFrom:
                 secretKeyRef:
                   name: api
                   key: HASHING_SALT
+            - name: SERVICE_ACCOUNT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SERVICE_ACCOUNT_EMAIL
           resources:
             limits:
               cpu: 300m

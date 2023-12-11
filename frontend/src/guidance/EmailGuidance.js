@@ -150,7 +150,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
     </AccordionItem>
   )
   return (
-    <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4]} w="100%">
+    <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
       <Text fontsize="lg">
         <b>Last Scanned:</b> {formatTimestamp(timestamp)}
       </Text>

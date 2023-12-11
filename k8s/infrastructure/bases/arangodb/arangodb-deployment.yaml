@@ -43,6 +43,10 @@ spec:
   coordinators:
     count: 3
   single:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
     volumeClaimTemplate:
       spec:
         storageClassName: fast-delete
