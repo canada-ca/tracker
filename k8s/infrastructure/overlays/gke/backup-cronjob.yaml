@@ -27,6 +27,9 @@ spec:
                   value: 'true'
               image: rclone/rclone
               name: upload
+              resources:
+                requests:
+                  cpu: 100m
               volumeMounts:
                 - mountPath: /tmp/dump
                   name: dump
@@ -51,6 +54,9 @@ spec:
                       name: arangodb
               image: arangodb:3.9.9
               name: dump
+              resources:
+                  requests:
+                    cpu: 500m
               volumeMounts:
                 - mountPath: /tmp/dump
                   name: dump

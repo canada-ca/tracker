@@ -1,5 +1,5 @@
 const { sendOrgFootprintEmail } = require('../notify')
-const { NOTIFICATION_ORG_FOOTPRINT_EN, NOTIFICATION_ORG_FOOTPRINT_FR } = process.env
+const { NOTIFICATION_ORG_FOOTPRINT_BILINGUAL } = process.env
 
 describe('given the sendOrgFootprintEmail function', () => {
   let consoleOutput = []
@@ -61,7 +61,7 @@ describe('given the sendOrgFootprintEmail function', () => {
         },
       })
 
-      expect(notifyClient.sendEmail).toHaveBeenCalledWith(NOTIFICATION_ORG_FOOTPRINT_EN, user.userName, {
+      expect(notifyClient.sendEmail).toHaveBeenCalledWith(NOTIFICATION_ORG_FOOTPRINT_BILINGUAL, user.userName, {
         personalisation: {
           display_name: user.displayName,
           organization_name_en: 'Test Org',

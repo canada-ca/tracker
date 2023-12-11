@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
-import { Domain, Selectors } from '../../scalars'
+import { Domain, SelectorsInput } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { OutsideDomainCommentEnum } from '../../enums'
@@ -25,7 +25,7 @@ export const updateDomain = new mutationWithClientMutationId({
       description: 'The new url of the of the old domain.',
     },
     selectors: {
-      type: new GraphQLList(Selectors),
+      type: new GraphQLList(SelectorsInput),
       description: 'The updated DKIM selector strings corresponding to this domain.',
     },
     tags: {
@@ -240,6 +240,7 @@ export const updateDomain = new mutationWithClientMutationId({
     const claimToInsert = {
       tags: tags || claim?.tags,
       hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
+      firstSeen: typeof claim?.firstSeen === 'undefined' ? new Date().toISOString() : claim?.firstSeen,
     }
 
     try {

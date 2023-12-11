@@ -568,6 +568,26 @@ describe('authenticate user account', () => {
         })
       })
       describe('when tfa codes do not match', () => {
+        beforeAll(async () => {
+          // Generate DB Items
+          ;({ query, drop, truncate, collections, transaction } = await ensure({
+            variables: {
+              dbname: dbNameFromFile(__filename),
+              username: 'root',
+              rootPassword: rootPass,
+              password: rootPass,
+              url,
+            },
+
+            schema: dbschema,
+          }))
+        })
+        afterEach(async () => {
+          await truncate()
+        })
+        afterAll(async () => {
+          await drop()
+        })
         it('returns an error message', async () => {
           const token = tokenize({
             parameters: { userKey: 123 },
@@ -1034,6 +1054,26 @@ describe('authenticate user account', () => {
         })
       })
       describe('when tfa codes do not match', () => {
+        beforeAll(async () => {
+          // Generate DB Items
+          ;({ query, drop, truncate, collections, transaction } = await ensure({
+            variables: {
+              dbname: dbNameFromFile(__filename),
+              username: 'root',
+              rootPassword: rootPass,
+              password: rootPass,
+              url,
+            },
+
+            schema: dbschema,
+          }))
+        })
+        afterEach(async () => {
+          await truncate()
+        })
+        afterAll(async () => {
+          await drop()
+        })
         it('returns an error message', async () => {
           const token = tokenize({
             parameters: { userKey: 123 },

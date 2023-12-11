@@ -128,6 +128,7 @@ export const createOrganization = new mutationWithClientMutationId({
     // Create new organization
     const organizationDetails = {
       verified: false,
+      externallyManaged: false,
       orgDetails: {
         en: {
           slug: slugEN,

@@ -42,7 +42,6 @@ import {
   loadOrgBySlug,
   loadOrgConnectionsByDomainId,
   loadOrgConnectionsByUserId,
-  loadWebCheckConnectionsByUserId,
   loadAllOrganizationDomainStatuses,
   loadOrganizationDomainStatuses,
   loadOrganizationSummariesByPeriod,
@@ -293,13 +292,6 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       language,
       i18n,
       auth: { loginRequiredBool },
-    }),
-    loadWebCheckConnectionsByUserId: loadWebCheckConnectionsByUserId({
-      query,
-      userKey,
-      cleanseInput,
-      language,
-      i18n,
     }),
     loadAllOrganizationDomainStatuses: loadAllOrganizationDomainStatuses({
       query,

@@ -18,6 +18,7 @@ import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAcco
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { MonthSelect } from '../components/MonthSelect'
+import { NotificationBanner } from '../app/NotificationBanner'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
@@ -598,6 +599,14 @@ export default function DmarcReportPage() {
 
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+      <NotificationBanner bg="yellow.200" my="4">
+        <Text fontWeight="medium">
+          <Trans>
+            <b>The following data may have recently changed.</b> We've made enhancements to our DMARC data tables to
+            provide a more accurate view of the information.
+          </Trans>
+        </Text>
+      </NotificationBanner>
       <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
         <AccordionItem buttonLabel={t`Fully Aligned by IP Address`}>{fullPassTable}</AccordionItem>
         <AccordionItem buttonLabel={t`DKIM Failures by IP Address`}>{dkimFailureTable}</AccordionItem>
