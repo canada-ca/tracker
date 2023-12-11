@@ -11,5 +11,8 @@ module.exports = {
     'index.js',
     'env.js',
   ],
+  moduleNameMapper: {
+    '^axios$': require.resolve('axios'),
+  },
   testTimeout: 120000,
 }
