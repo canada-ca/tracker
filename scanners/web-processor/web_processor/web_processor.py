@@ -149,12 +149,6 @@ def process_tls_results(tls_results):
         "tls_1_1_cipher_suites"
     ]
 
-    # ssl status
-    if len(negative_tags) > 0 or "ssl5" not in positive_tags:
-        ssl_status = "fail"
-    else:
-        ssl_status = "pass"
-
     # certificate status
     if any(tag in negative_tags for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16"]):
         certificate_status = "fail"
@@ -184,6 +178,11 @@ def process_tls_results(tls_results):
     else:
         curve_status = "pass"
         positive_tags.append("ssl20")
+
+    if protocol_status == cipher_status == curve_status == certificate_status == "pass":
+        ssl_status = "pass"
+    else:
+        ssl_status = "fail"
 
     processed_tags = {
         "neutral_tags": neutral_tags,
