@@ -179,12 +179,7 @@ def process_tls_results(tls_results):
         curve_status = "pass"
         positive_tags.append("ssl20")
 
-    if (
-        protocol_status == "pass"
-        and cipher_status == "pass"
-        and curve_status == "pass"
-        and certificate_status == "pass"
-    ):
+    if protocol_status == cipher_status == curve_status == certificate_status == "pass":
         ssl_status = "pass"
     else:
         ssl_status = "fail"
