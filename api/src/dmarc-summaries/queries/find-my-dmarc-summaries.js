@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { dmarcSummaryOrder } from '../inputs'
@@ -25,6 +25,10 @@ export const findMyDmarcSummaries = {
     search: {
       type: GraphQLString,
       description: 'An optional string used to filter the results based on domains.',
+    },
+    isAffiliated: {
+      type: GraphQLBoolean,
+      description: 'Filter the results based on the users affiliation.',
     },
     ...connectionArgs,
   },
