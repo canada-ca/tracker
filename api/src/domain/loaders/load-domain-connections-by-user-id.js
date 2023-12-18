@@ -329,7 +329,23 @@ export const loadDomainConnectionsByUserId =
             RETURN v
       )
     `
-    } else if (!loginRequiredBool || isAffiliated) {
+    } else if (isAffiliated) {
+      domainKeysQuery = aql`
+      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
+      LET collectedDomains = UNIQUE(
+        LET userAffiliations = (
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key
+          ${ownershipOrgsOnly}
+          FILTER v.archived != true
+          RETURN v
+      )
+    `
+    } else if (!loginRequiredBool) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET collectedDomains = UNIQUE(
