@@ -1414,6 +1414,54 @@ describe('given the load domain connections by user id function', () => {
           expect(domains).toEqual(expectedStructure)
         })
       })
+      describe('isAffiliated is set to true', () => {
+        it('returns a domain', async () => {
+          const connectionLoader = loadDomainConnectionsByUserId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            auth: { loginRequired: true },
+          })
+
+          const connectionArgs = {
+            first: 10,
+            isAffiliated: true,
+          }
+          const domains = await connectionLoader({ ...connectionArgs })
+
+          const domainLoader = loadDomainByKey({ query })
+          const expectedDomains = await domainLoader.loadMany([domainOne._key, domainTwo._key])
+
+          expectedDomains[0].id = expectedDomains[0]._key
+          expectedDomains[1].id = expectedDomains[1]._key
+
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('domain', expectedDomains[0]._key),
+                node: {
+                  ...expectedDomains[0],
+                },
+              },
+              {
+                cursor: toGlobalId('domain', expectedDomains[1]._key),
+                node: {
+                  ...expectedDomains[1],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('domain', expectedDomains[0]._key),
+              endCursor: toGlobalId('domain', expectedDomains[1]._key),
+            },
+          }
+
+          expect(domains).toEqual(expectedStructure)
+        })
+      })
     })
     describe('given there are no domain connections to be returned', () => {
       it('returns no domain connections', async () => {

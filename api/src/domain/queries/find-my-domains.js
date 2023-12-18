@@ -1,8 +1,8 @@
-import {GraphQLBoolean, GraphQLString} from 'graphql'
-import {connectionArgs} from 'graphql-relay'
+import { GraphQLBoolean, GraphQLString } from 'graphql'
+import { connectionArgs } from 'graphql-relay'
 
-import {domainOrder} from '../inputs'
-import {domainConnection} from '../objects'
+import { domainOrder } from '../inputs'
+import { domainConnection } from '../objects'
 
 export const findMyDomains = {
   type: domainConnection.connectionType,
@@ -14,12 +14,15 @@ export const findMyDomains = {
     },
     ownership: {
       type: GraphQLBoolean,
-      description:
-        'Limit domains to those that belong to an organization that has ownership.',
+      description: 'Limit domains to those that belong to an organization that has ownership.',
     },
     search: {
       type: GraphQLString,
       description: 'String used to search for domains.',
+    },
+    isAffiliated: {
+      type: GraphQLBoolean,
+      description: 'Filter the results based on the users affiliation.',
     },
     ...connectionArgs,
   },
@@ -28,18 +31,13 @@ export const findMyDomains = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        loginRequiredBool,
-        verifiedRequired,
-      },
-      loaders: {loadDomainConnectionsByUserId},
+      auth: { checkSuperAdmin, userRequired, loginRequiredBool, verifiedRequired },
+      loaders: { loadDomainConnectionsByUserId },
     },
   ) => {
     if (loginRequiredBool) {
       const user = await userRequired()
-      verifiedRequired({user})
+      verifiedRequired({ user })
     }
 
     const isSuperAdmin = await checkSuperAdmin()

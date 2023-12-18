@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByUserId =
   ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
-  async ({ after, before, first, last, ownership, orderBy, isSuperAdmin, myTracker, search }) => {
+  async ({ after, before, first, last, ownership, orderBy, isSuperAdmin, myTracker, search, isAffiliated }) => {
     const userDBId = `users/${userKey}`
 
     let ownershipOrgsOnly = aql`
@@ -329,7 +329,7 @@ export const loadDomainConnectionsByUserId =
             RETURN v
       )
     `
-    } else if (!loginRequiredBool) {
+    } else if (!loginRequiredBool || isAffiliated) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
       LET collectedDomains = UNIQUE(

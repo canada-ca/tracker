@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 
 export const loadDmarcSummaryConnectionsByUserId =
   ({ query, userKey, cleanseInput, i18n, loadStartDateFromPeriod }) =>
-  async ({ after, before, first, last, period, year, orderBy, isSuperAdmin, search }) => {
+  async ({ after, before, first, last, period, year, orderBy, isSuperAdmin, search, isAffiliated }) => {
     const userDBId = `users/${userKey}`
 
     if (typeof period === 'undefined') {
@@ -343,6 +343,21 @@ export const loadDmarcSummaryConnectionsByUserId =
           LET claimDomainIds = (FOR v, e IN 1..1 OUTBOUND orgId ownership RETURN v._id)
           RETURN APPEND(ids, claimDomainIds)
       ))
+    `
+    } else if (isAffiliated) {
+      domainIdQueries = aql`
+      WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
+      LET userAffiliations = (
+        FOR v, e IN 1..1 ANY ${userDBId} affiliations
+          FILTER e.permission != "pending"
+          RETURN v
+      )
+      LET domainIds = UNIQUE(
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key
+          FOR v, e IN 1..1 OUTBOUND org._id ownership
+            RETURN v._id
+      )
     `
     } else {
       domainIdQueries = aql`

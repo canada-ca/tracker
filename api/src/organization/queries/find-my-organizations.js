@@ -28,6 +28,10 @@ export const findMyOrganizations = {
       type: GraphQLBoolean,
       description: 'Filter org list to include only verified organizations.',
     },
+    isAffiliated: {
+      type: GraphQLBoolean,
+      description: 'Filter the results based on the users affiliation.',
+    },
     ...connectionArgs,
   },
   resolve: async (

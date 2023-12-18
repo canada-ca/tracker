@@ -4,7 +4,19 @@ import { t } from '@lingui/macro'
 
 export const loadOrgConnectionsByUserId =
   ({ query, userKey, cleanseInput, language, i18n, auth: { loginRequiredBool } }) =>
-  async ({ after, before, first, last, orderBy, isSuperAdmin, search, isAdmin, includeSuperAdminOrg, isVerified }) => {
+  async ({
+    after,
+    before,
+    first,
+    last,
+    orderBy,
+    isSuperAdmin,
+    search,
+    isAdmin,
+    includeSuperAdminOrg,
+    isVerified,
+    isAffiliated,
+  }) => {
     const userDBId = `users/${userKey}`
 
     let afterTemplate = aql``
@@ -364,7 +376,7 @@ export const loadOrgConnectionsByUserId =
           RETURN org._key
         )
       `
-    } else if (!loginRequiredBool) {
+    } else if (!loginRequiredBool || isAffiliated) {
       orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET userAffiliations = (

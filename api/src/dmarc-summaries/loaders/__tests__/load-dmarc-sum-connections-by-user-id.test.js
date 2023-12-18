@@ -2930,6 +2930,57 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           expect(summaries).toEqual(expectedStructure)
         })
       })
+      describe('isAffiliated is set to true', () => {
+        it('returns dmarc summaries', async () => {
+          const expectedSummaries = await loadDmarcSummaryByKey({
+            query,
+          }).loadMany([dmarcSummary1._key, dmarcSummary2._key])
+
+          const connectionLoader = loadDmarcSummaryConnectionsByUserId({
+            query,
+            userKey: user._key,
+            cleanseInput,
+            auth: { loginRequired: true },
+            i18n: {},
+            loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
+          })
+
+          const connectionArgs = {
+            first: 10,
+            period: 'thirtyDays',
+            year: '2021',
+            isAffiliated: true,
+          }
+
+          const summaries = await connectionLoader({ ...connectionArgs })
+
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                node: {
+                  ...expectedSummaries[0],
+                },
+              },
+              {
+                cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                node: {
+                  ...expectedSummaries[1],
+                },
+              },
+            ],
+            totalCount: 2,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+              endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+            },
+          }
+
+          expect(summaries).toEqual(expectedStructure)
+        })
+      })
     })
     describe('given there are no dmarc summaries to be returned', () => {
       it('returns no dmarc summary connections', async () => {
