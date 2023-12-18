@@ -2,26 +2,25 @@ import React from 'react'
 import { Flex, Switch, Tooltip } from '@chakra-ui/react'
 import { bool, func } from 'prop-types'
 import { UserIcon } from '../theme/Icons'
-import { useUserVar } from '../utilities/userState'
 import { t } from '@lingui/macro'
+import { useUserVar } from '../utilities/userState'
 
 export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated }) {
   const { isLoggedIn } = useUserVar()
+  if (!isLoggedIn()) return null
   return (
-    isLoggedIn() && (
+    <Tooltip label={t`Filter list to affiliated resources only.`}>
       <Flex align="center" my="2">
-        <Tooltip label={t`Filter list to affiliated resources only.`}>
-          <Switch
-            isFocusable={true}
-            aria-label="Filter list to affiliated resources only."
-            mx="2"
-            defaultChecked={isAffiliated}
-            onChange={(e) => setIsAffiliated(e.target.checked)}
-          />
-          <UserIcon color="gray.900" size="lg" />
-        </Tooltip>
+        <Switch
+          isFocusable={true}
+          aria-label="Filter list to affiliated resources only."
+          mx="2"
+          defaultChecked={isAffiliated}
+          onChange={(e) => setIsAffiliated(e.target.checked)}
+        />
+        <UserIcon color="gray.900" size="lg" />
       </Flex>
-    )
+    </Tooltip>
   )
 }
 

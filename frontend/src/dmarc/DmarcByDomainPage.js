@@ -47,7 +47,6 @@ export default function DmarcByDomainPage() {
     field: 'TOTAL_MESSAGES',
     direction: 'DESC',
   })
-
   const { isOpen, onToggle } = useDisclosure()
 
   const { loading, error, nodes, resetToFirstPage, hasNextPage, hasPreviousPage, next, previous, isLoadingMore } =

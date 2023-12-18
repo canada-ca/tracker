@@ -57,7 +57,6 @@ export default function Organizations() {
     })
 
   if (error) return <ErrorFallbackMessage error={error} />
-  console.log(isAffiliated)
   const orderByOptions = [
     { value: 'NAME', text: t`Name` },
     { value: 'ACRONYM', text: t`Acronym` },

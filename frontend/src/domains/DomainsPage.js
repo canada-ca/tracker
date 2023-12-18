@@ -227,6 +227,7 @@ export default function DomainsPage() {
           onToggle={onToggle}
         />
         <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+
         {domainList}
 
         <RelayPaginationControls
