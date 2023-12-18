@@ -94,7 +94,7 @@ msgstr "A domain may only be removed for one of the reasons below. For a domain 
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 msgstr "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 
-#: src/dmarc/DmarcByDomainPage.js:295
+#: src/dmarc/DmarcByDomainPage.js:294
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 
@@ -148,7 +148,7 @@ msgstr "Account created."
 
 #: src/createOrganization/CreateOrganizationPage.js:184
 #: src/createOrganization/CreateOrganizationPage.js:189
-#: src/organizations/Organizations.js:63
+#: src/organizations/Organizations.js:62
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -821,7 +821,7 @@ msgstr "DKIM record and keys are deployed and valid"
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/organizations/Organizations.js:144
+#: src/organizations/Organizations.js:143
 msgid "DMARC Configuration"
 msgstr "DMARC Configuration"
 
@@ -871,8 +871,8 @@ msgstr "DMARC Status"
 #: src/app/App.js:143
 #: src/app/App.js:276
 #: src/app/FloatingMenu.js:131
-#: src/dmarc/DmarcByDomainPage.js:164
-#: src/dmarc/DmarcByDomainPage.js:216
+#: src/dmarc/DmarcByDomainPage.js:163
+#: src/dmarc/DmarcByDomainPage.js:215
 msgid "DMARC Summaries"
 msgstr "DMARC Summaries"
 
@@ -923,8 +923,8 @@ msgid "Data Security and Use"
 msgstr "Data Security and Use"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:114
-msgid "Data:"
-msgstr "Data:"
+#~ msgid "Data:"
+#~ msgstr "Data:"
 
 #: src/components/MonthSelect.js:55
 #: src/utilities/months.js:15
@@ -992,7 +992,7 @@ msgstr "Display Name:"
 msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
-#: src/organizations/Organizations.js:136
+#: src/organizations/Organizations.js:135
 msgid "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 msgstr "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 
@@ -1001,8 +1001,8 @@ msgid "Disposition"
 msgstr "Disposition"
 
 #: src/admin/AuditLogTable.js:67
-#: src/dmarc/DmarcByDomainPage.js:107
-#: src/dmarc/DmarcByDomainPage.js:273
+#: src/dmarc/DmarcByDomainPage.js:106
+#: src/dmarc/DmarcByDomainPage.js:272
 #: src/domains/DomainsPage.js:76
 #: src/domains/DomainsPage.js:180
 #: src/organizationDetails/OrganizationDomains.js:309
@@ -1301,33 +1301,27 @@ msgstr "Export to CSV"
 
 #: src/dmarc/DmarcReportPage.js:129
 #: src/dmarc/DmarcReportPage.js:130
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 #: src/organizationDetails/OrganizationDomains.js:226
 msgid "Fail"
 msgstr "Fail"
 
 #: src/dmarc/DmarcReportPage.js:123
 #: src/dmarc/DmarcReportPage.js:124
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail DKIM"
 msgstr "Fail DKIM"
 
-#: src/dmarc/DmarcByDomainPage.js:139
-#: src/dmarc/DmarcByDomainPage.js:287
+#: src/dmarc/DmarcByDomainPage.js:138
+#: src/dmarc/DmarcByDomainPage.js:286
 msgid "Fail DKIM %"
 msgstr "Fail DKIM %"
 
 #: src/dmarc/DmarcReportPage.js:126
 #: src/dmarc/DmarcReportPage.js:127
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 msgid "Fail SPF"
 msgstr "Fail SPF"
 
-#: src/dmarc/DmarcByDomainPage.js:146
-#: src/dmarc/DmarcByDomainPage.js:283
+#: src/dmarc/DmarcByDomainPage.js:145
+#: src/dmarc/DmarcByDomainPage.js:282
 msgid "Fail SPF %"
 msgstr "Fail SPF %"
 
@@ -1352,9 +1346,13 @@ msgstr "February"
 #~ msgid "Filter Tags"
 #~ msgstr "Filter Tags"
 
-#: src/components/AffiliationFilterSwitch.js:13
+#: src/components/AffiliationFilterSwitch.js:12
 msgid "Filter list to affiliated resources only."
 msgstr "Filter list to affiliated resources only."
+
+#: src/organizations/Organizations.js:169
+msgid "Filter list to verified organizations only."
+msgstr "Filter list to verified organizations only."
 
 #: src/admin/AuditLogTable.js:221
 #~ msgid "Filters"
@@ -1426,13 +1424,13 @@ msgstr "French"
 msgid "Frequently Asked Questions"
 msgstr "Frequently Asked Questions"
 
-#: src/dmarc/DmarcByDomainPage.js:153
-#: src/dmarc/DmarcByDomainPage.js:291
+#: src/dmarc/DmarcByDomainPage.js:152
+#: src/dmarc/DmarcByDomainPage.js:290
 msgid "Full Fail %"
 msgstr "Full Fail %"
 
-#: src/dmarc/DmarcByDomainPage.js:132
-#: src/dmarc/DmarcByDomainPage.js:279
+#: src/dmarc/DmarcByDomainPage.js:131
+#: src/dmarc/DmarcByDomainPage.js:278
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
@@ -1446,7 +1444,7 @@ msgstr "Fully Aligned Table"
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/organizations/Organizations.js:148
+#: src/organizations/Organizations.js:147
 msgid "Further details for each organization can be found by clicking on its row."
 msgstr "Further details for each organization can be found by clicking on its row."
 
@@ -1487,8 +1485,8 @@ msgid "Government of Canada Employees"
 msgstr "Government of Canada Employees"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:101
-msgid "Graph direction:"
-msgstr "Graph direction:"
+#~ msgid "Graph direction:"
+#~ msgstr "Graph direction:"
 
 #: src/app/App.js:359
 #: src/dmarc/DmarcReportPage.js:194
@@ -1577,7 +1575,7 @@ msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
 #: src/organizations/OrganizationCard.js:82
-#: src/organizations/Organizations.js:140
+#: src/organizations/Organizations.js:139
 msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
 
@@ -1650,8 +1648,8 @@ msgid "Home"
 msgstr "Home"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:109
-msgid "Horizontal View"
-msgstr "Horizontal View"
+#~ msgid "Horizontal View"
+#~ msgstr "Horizontal View"
 
 #: src/dmarc/DmarcReportPage.js:241
 msgid "Host from reverse DNS of source IP address."
@@ -2050,8 +2048,8 @@ msgid "Key type:"
 msgstr "Key type:"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:68
-msgid "L-30-D"
-msgstr "L-30-D"
+#~ msgid "L-30-D"
+#~ msgstr "L-30-D"
 
 #: src/auth/LanguageSelect.js:18
 #: src/user/EditableUserLanguage.js:67
@@ -2098,7 +2096,7 @@ msgstr "Links to Review:"
 msgid "List of guidance tags"
 msgstr "List of guidance tags"
 
-#: src/dmarc/DmarcByDomainPage.js:232
+#: src/dmarc/DmarcByDomainPage.js:231
 msgid "Loading Data..."
 msgstr "Loading Data..."
 
@@ -2191,7 +2189,7 @@ msgstr "NXDOMAIN"
 
 #: src/createOrganization/CreateOrganizationPage.js:173
 #: src/createOrganization/CreateOrganizationPage.js:178
-#: src/organizations/Organizations.js:62
+#: src/organizations/Organizations.js:61
 msgid "Name"
 msgstr "Name"
 
@@ -2312,7 +2310,7 @@ msgstr "No Domains"
 #~ msgid "No HTTPS configuration information available for this organization."
 #~ msgstr "No HTTPS configuration information available for this organization."
 
-#: src/organizations/Organizations.js:83
+#: src/organizations/Organizations.js:82
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -2504,7 +2502,7 @@ msgid "Organization Information"
 msgstr "Organization Information"
 
 #: src/admin/OrganizationInformation.js:440
-#: src/organizations/Organizations.js:135
+#: src/organizations/Organizations.js:134
 msgid "Organization Name"
 msgstr "Organization Name"
 
@@ -2549,8 +2547,8 @@ msgstr "Organization:"
 #: src/app/App.js:133
 #: src/app/App.js:213
 #: src/app/FloatingMenu.js:103
-#: src/organizations/Organizations.js:74
-#: src/organizations/Organizations.js:130
+#: src/organizations/Organizations.js:73
+#: src/organizations/Organizations.js:129
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -2584,8 +2582,6 @@ msgstr "Page {0} of {1}"
 
 #: src/dmarc/DmarcReportPage.js:120
 #: src/dmarc/DmarcReportPage.js:121
-#: src/dmarc/DmarcReportSummaryGraph.js:185
-#: src/dmarc/DmarcReportSummaryGraph.js:383
 #: src/organizationDetails/OrganizationDomains.js:220
 msgid "Pass"
 msgstr "Pass"
@@ -2628,8 +2624,8 @@ msgid "Passwords must match"
 msgstr "Passwords must match"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:121
-msgid "Percentages"
-msgstr "Percentages"
+#~ msgid "Percentages"
+#~ msgstr "Percentages"
 
 #: src/app/ReadGuidancePage.js:78
 #~ msgid "Perform an assessment of the domains and sub-domains to determine the status of the configuration. Tools available to support this activity includes the <0>Tracker Dashboard</0>, <1>SSL Labs</1>, <2>Hardenize</2>, <3>SSLShopper</3>, etc."
@@ -3106,8 +3102,8 @@ msgstr "Search by Domain URL"
 msgid "Search by initiated by, resource name"
 msgstr "Search by initiated by, resource name"
 
-#: src/dmarc/DmarcByDomainPage.js:196
-#: src/dmarc/DmarcByDomainPage.js:246
+#: src/dmarc/DmarcByDomainPage.js:195
+#: src/dmarc/DmarcByDomainPage.js:245
 #: src/domains/DomainsPage.js:226
 #: src/organizationDetails/OrganizationDomains.js:365
 msgid "Search for a domain"
@@ -3121,7 +3117,7 @@ msgstr "Search for a user (email)"
 #~ msgid "Search for an activity"
 #~ msgstr "Search for an activity"
 
-#: src/organizations/Organizations.js:166
+#: src/organizations/Organizations.js:165
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -3190,8 +3186,8 @@ msgstr "September"
 msgid "Serial:"
 msgstr "Serial:"
 
-#: src/organizations/Organizations.js:64
-#: src/organizations/Organizations.js:138
+#: src/organizations/Organizations.js:63
+#: src/organizations/Organizations.js:137
 msgid "Services"
 msgstr "Services"
 
@@ -3203,7 +3199,7 @@ msgstr "Services: {domainCount}"
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/dmarc/DmarcByDomainPage.js:220
+#: src/dmarc/DmarcByDomainPage.js:219
 #: src/dmarc/DmarcReportPage.js:654
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
@@ -3336,11 +3332,11 @@ msgstr "Shows if the server was found to be vulnerable to the ROBOT vulnerabilit
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Shows the duration of time, in seconds, that the HSTS header is valid."
 
-#: src/organizations/Organizations.js:138
+#: src/organizations/Organizations.js:137
 msgid "Shows the number of domains that the organization is in control of."
 msgstr "Shows the number of domains that the organization is in control of."
 
-#: src/organizations/Organizations.js:141
+#: src/organizations/Organizations.js:140
 msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 
@@ -3348,11 +3344,11 @@ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade 
 #~ msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 #~ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 
-#: src/organizations/Organizations.js:145
+#: src/organizations/Organizations.js:144
 msgid "Shows the percentage of domains which have a valid DMARC policy configuration."
 msgstr "Shows the percentage of domains which have a valid DMARC policy configuration."
 
-#: src/dmarc/DmarcByDomainPage.js:288
+#: src/dmarc/DmarcByDomainPage.js:287
 msgid "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
 msgstr "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
 
@@ -3360,7 +3356,7 @@ msgstr "Shows the percentage of emails from the domain that fail DKIM requiremen
 #~ msgid "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:284
+#: src/dmarc/DmarcByDomainPage.js:283
 msgid "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 
@@ -3368,7 +3364,7 @@ msgstr "Shows the percentage of emails from the domain that fail SPF requirement
 #~ msgid "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:292
+#: src/dmarc/DmarcByDomainPage.js:291
 msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 
@@ -3376,7 +3372,7 @@ msgstr "Shows the percentage of emails from the domain that fail both SPF and DK
 #~ msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:280
+#: src/dmarc/DmarcByDomainPage.js:279
 msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 
@@ -3384,7 +3380,7 @@ msgstr "Shows the percentage of emails from the domain that have passed both SPF
 #~ msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:276
+#: src/dmarc/DmarcByDomainPage.js:275
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
@@ -3662,7 +3658,7 @@ msgstr "The address/domain used in the \"From\" field."
 msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warranty or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
 msgstr "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warranty or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
 
-#: src/dmarc/DmarcByDomainPage.js:273
+#: src/dmarc/DmarcByDomainPage.js:272
 #: src/domains/DomainsPage.js:180
 #: src/organizationDetails/OrganizationDomains.js:309
 msgid "The domain address."
@@ -3810,10 +3806,9 @@ msgstr "To receive DKIM scan results and guidance, you must add the DKIM selecto
 msgid "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 msgstr "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 
-#: src/dmarc/DmarcByDomainPage.js:125
-#: src/dmarc/DmarcByDomainPage.js:275
+#: src/dmarc/DmarcByDomainPage.js:124
+#: src/dmarc/DmarcByDomainPage.js:274
 #: src/dmarc/DmarcReportPage.js:178
-#: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
 msgstr "Total Messages"
 
@@ -4133,7 +4128,7 @@ msgstr "Verification code must only contains numbers"
 
 #: src/admin/SuperAdminUserList.js:150
 #: src/admin/SuperAdminUserList.js:310
-#: src/organizations/Organizations.js:65
+#: src/organizations/Organizations.js:64
 msgid "Verified"
 msgstr "Verified"
 
@@ -4154,8 +4149,8 @@ msgid "Verify Account"
 msgstr "Verify Account"
 
 #: src/dmarc/DmarcReportSummaryGraph.js:108
-msgid "Vertical View"
-msgstr "Vertical View"
+#~ msgid "Vertical View"
+#~ msgstr "Vertical View"
 
 #: src/organizations/OrganizationCard.js:101
 #~ msgid "View Details"

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Flex, Heading, IconButton, Switch, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, IconButton, Switch, Text, Tooltip, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -166,17 +166,20 @@ export default function Organizations() {
           onToggle={onToggle}
         />
         <Flex align="center" mb="2">
-          <Switch
-            isFocusable={true}
-            aria-label="Show only verified organizations"
-            mx="2"
-            defaultChecked={isVerified}
-            onChange={(e) => setIsVerified(e.target.checked)}
-          />
-          <CheckCircleIcon color="blue.500" boxSize="icons.md" />
+          <Tooltip label={t`Filter list to verified organizations only.`}>
+            <Flex align="center">
+              <Switch
+                isFocusable={true}
+                aria-label="Show only verified organizations"
+                mx="2"
+                defaultChecked={isVerified}
+                onChange={(e) => setIsVerified(e.target.checked)}
+              />
+              <CheckCircleIcon color="blue.500" boxSize="icons.md" />
+            </Flex>
+          </Tooltip>
           <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
         </Flex>
-
         {orgList}
         <RelayPaginationControls
           onlyPagination={false}
