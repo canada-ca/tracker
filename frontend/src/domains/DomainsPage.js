@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Flex, Heading, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Flex, Heading, Switch, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -29,6 +29,7 @@ export default function DomainsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [isAffiliated, setIsAffiliated] = useState(false)
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -60,6 +61,7 @@ export default function DomainsPage() {
       variables: {
         orderBy: { field: orderField, direction: orderDirection },
         search: debouncedSearchTerm,
+        isAffiliated,
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
@@ -223,7 +225,13 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
         />
-
+        <Switch
+          isFocusable={true}
+          aria-label="Show only affiliated organizations"
+          mx="2"
+          defaultChecked={isAffiliated}
+          onChange={(e) => setIsAffiliated(e.target.checked)}
+        />
         {domainList}
 
         <RelayPaginationControls

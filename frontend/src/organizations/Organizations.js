@@ -28,6 +28,7 @@ export default function Organizations() {
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
   const [orgInfo, setOrgInfo] = useState({})
   const [isVerified, setIsVerified] = useState(true)
+  const [isAffiliated, setIsAffiliated] = useState(false)
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -46,6 +47,7 @@ export default function Organizations() {
         search: debouncedSearchTerm,
         includeSuperAdminOrg: false,
         isVerified,
+        isAffiliated,
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
@@ -54,7 +56,7 @@ export default function Organizations() {
     })
 
   if (error) return <ErrorFallbackMessage error={error} />
-
+  console.log(isAffiliated)
   const orderByOptions = [
     { value: 'NAME', text: t`Name` },
     { value: 'ACRONYM', text: t`Acronym` },
@@ -173,6 +175,15 @@ export default function Organizations() {
           />
           <CheckCircleIcon color="blue.500" boxSize="icons.md" />
         </Flex>
+        {isLoggedIn() && (
+          <Switch
+            isFocusable={true}
+            aria-label="Show only affiliated organizations"
+            mx="2"
+            defaultChecked={isAffiliated}
+            onChange={(e) => setIsAffiliated(e.target.checked)}
+          />
+        )}
         {orgList}
         <RelayPaginationControls
           onlyPagination={false}
