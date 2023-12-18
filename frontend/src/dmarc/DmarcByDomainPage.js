@@ -11,7 +11,6 @@ import {
   Link,
   Spinner,
   Stack,
-  Switch,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -29,6 +28,7 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { toConstantCase } from '../helpers/toConstantCase'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { MonthSelect } from '../components/MonthSelect'
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -215,7 +215,6 @@ export default function DmarcByDomainPage() {
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>DMARC Summaries</Trans>
       </Heading>
-
       <Flex align="center" mb={2}>
         <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>
           <Trans>Showing data for period: </Trans>
@@ -236,7 +235,6 @@ export default function DmarcByDomainPage() {
           </Stack>
         )}
       </Flex>
-
       <Flex>
         <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
           <InputLeftElement>
@@ -255,14 +253,7 @@ export default function DmarcByDomainPage() {
 
         <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" />
       </Flex>
-      <Switch
-        isFocusable={true}
-        aria-label="Show only affiliated organizations"
-        mx="2"
-        defaultChecked={isAffiliated}
-        onChange={(e) => setIsAffiliated(e.target.checked)}
-      />
-
+      <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls

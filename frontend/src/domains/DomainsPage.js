@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Flex, Heading, Switch, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -20,6 +20,7 @@ import {
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function DomainsPage() {
   const { data } = useQuery(IS_USER_SUPER_ADMIN)
@@ -225,13 +226,7 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
         />
-        <Switch
-          isFocusable={true}
-          aria-label="Show only affiliated organizations"
-          mx="2"
-          defaultChecked={isAffiliated}
-          onChange={(e) => setIsAffiliated(e.target.checked)}
-        />
+        <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
         {domainList}
 
         <RelayPaginationControls

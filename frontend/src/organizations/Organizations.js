@@ -17,6 +17,7 @@ import { SearchBox } from '../components/SearchBox'
 import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function Organizations() {
   const { isLoggedIn } = useUserVar()
@@ -174,16 +175,9 @@ export default function Organizations() {
             onChange={(e) => setIsVerified(e.target.checked)}
           />
           <CheckCircleIcon color="blue.500" boxSize="icons.md" />
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
         </Flex>
-        {isLoggedIn() && (
-          <Switch
-            isFocusable={true}
-            aria-label="Show only affiliated organizations"
-            mx="2"
-            defaultChecked={isAffiliated}
-            onChange={(e) => setIsAffiliated(e.target.checked)}
-          />
-        )}
+
         {orgList}
         <RelayPaginationControls
           onlyPagination={false}
