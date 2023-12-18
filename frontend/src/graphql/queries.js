@@ -10,6 +10,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $search: String
     $includeSuperAdminOrg: Boolean
     $isVerified: Boolean
+    $isAffiliated: Boolean
   ) {
     findMyOrganizations(
       after: $after
@@ -18,6 +19,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
       search: $search
       includeSuperAdminOrg: $includeSuperAdminOrg
       isVerified: $isVerified
+      isAffiliated: $isAffiliated
     ) {
       edges {
         cursor
@@ -606,8 +608,8 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
 `
 
 export const PAGINATED_DOMAINS = gql`
-  query Domains($first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
-    findMyDomains(first: $first, after: $after, orderBy: $orderBy, search: $search) {
+  query Domains($first: Int, $after: String, $orderBy: DomainOrder, $search: String, $isAffiliated: Boolean) {
+    findMyDomains(first: $first, after: $after, orderBy: $orderBy, search: $search, isAffiliated: $isAffiliated) {
       edges {
         cursor
         node {
@@ -809,8 +811,17 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
     $after: String
     $orderBy: DmarcSummaryOrder
     $search: String
+    $isAffiliated: Boolean
   ) {
-    findMyDmarcSummaries(month: $month, year: $year, first: $first, after: $after, orderBy: $orderBy, search: $search) {
+    findMyDmarcSummaries(
+      month: $month
+      year: $year
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+      isAffiliated: $isAffiliated
+    ) {
       pageInfo {
         hasNextPage
         hasPreviousPage
