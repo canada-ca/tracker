@@ -12,8 +12,8 @@ export function AffiliationFilterSwitch({ isAffiliated, setIsAffiliated }) {
   return (
     <ABTestWrapper insiderVariantName="B">
       <ABTestVariant name="B">
-        <Tooltip label={t`Filter list to affiliated resources only.`}>
-          <Flex align="center" my="2">
+        <Tooltip label={t`Filter list to affiliated resources only.`} hasArrow>
+          <Flex align="center" my="2" maxW="5rem">
             <Switch
               isFocusable={true}
               aria-label="Filter list to affiliated resources only."
