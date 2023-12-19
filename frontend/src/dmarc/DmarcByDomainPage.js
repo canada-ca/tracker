@@ -28,6 +28,7 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { toConstantCase } from '../helpers/toConstantCase'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { MonthSelect } from '../components/MonthSelect'
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
@@ -37,44 +38,32 @@ export default function DmarcByDomainPage() {
   const displayLimitOptions = [5, 10, 20, 50, 100]
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [isAffiliated, setIsAffiliated] = useState(false)
 
   const [selectedPeriod, setSelectedPeriod] = useState('LAST30DAYS')
-  const [selectedYear, setSelectedYear] = useState(
-    currentDate.getFullYear().toString(),
-  )
-  const [selectedDate, setSelectedDate] = useState(
-    `LAST30DAYS, ${currentDate.getFullYear()}`,
-  )
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString())
+  const [selectedDate, setSelectedDate] = useState(`LAST30DAYS, ${currentDate.getFullYear()}`)
   const [orderBy, setOrderBy] = useState({
     field: 'TOTAL_MESSAGES',
     direction: 'DESC',
   })
-
   const { isOpen, onToggle } = useDisclosure()
 
-  const {
-    loading,
-    error,
-    nodes,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-    next,
-    previous,
-    isLoadingMore,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: selectedTableDisplayLimit,
-    variables: {
-      month: selectedPeriod,
-      year: selectedYear,
-      search: debouncedSearchTerm,
-      orderBy: orderBy,
-    },
-    relayRoot: 'findMyDmarcSummaries',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, error, nodes, resetToFirstPage, hasNextPage, hasPreviousPage, next, previous, isLoadingMore } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      recordsPerPage: selectedTableDisplayLimit,
+      variables: {
+        month: selectedPeriod,
+        year: selectedYear,
+        search: debouncedSearchTerm,
+        orderBy: orderBy,
+        isAffiliated,
+      },
+      relayRoot: 'findMyDmarcSummaries',
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -112,14 +101,7 @@ export default function DmarcByDomainPage() {
     return curData
   }, [nodes])
 
-  const [
-    domain,
-    totalMessages,
-    fullPassPercentage,
-    passSpfOnlyPercentage,
-    passDkimOnlyPercentage,
-    failPercentage,
-  ] = [
+  const [domain, totalMessages, fullPassPercentage, passSpfOnlyPercentage, passDkimOnlyPercentage, failPercentage] = [
     {
       Header: i18n._(t`Domain`),
       accessor: 'domain',
@@ -190,15 +172,7 @@ export default function DmarcByDomainPage() {
         ],
       },
     ],
-    [
-      domain,
-      totalMessages,
-      fullPassPercentage,
-      passSpfOnlyPercentage,
-      passDkimOnlyPercentage,
-      failPercentage,
-      i18n,
-    ],
+    [domain, totalMessages, fullPassPercentage, passSpfOnlyPercentage, passDkimOnlyPercentage, failPercentage, i18n],
   )
 
   // DMARC Summary Table setup
@@ -240,15 +214,8 @@ export default function DmarcByDomainPage() {
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>DMARC Summaries</Trans>
       </Heading>
-
       <Flex align="center" mb={2}>
-        <Text
-          as="label"
-          htmlFor="data-date-range"
-          fontWeight="bold"
-          textAlign="center"
-          mr={1}
-        >
+        <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>
           <Trans>Showing data for period: </Trans>
         </Text>
         <MonthSelect
@@ -259,30 +226,16 @@ export default function DmarcByDomainPage() {
         />
 
         {loading && (
-          <Stack
-            isInline
-            justifyContent="center"
-            w={{ base: '100%', md: '50%' }}
-          >
+          <Stack isInline justifyContent="center" w={{ base: '100%', md: '50%' }}>
             <Text fontWeight="bold" ml={{ md: 'auto' }} mr="1.5em">
               <Trans>Loading Data...</Trans>
             </Text>
-            <Spinner
-              size="md"
-              speed="0.6s"
-              color="primary"
-              emptyColor="accent"
-              thickness="0.175em"
-            />
+            <Spinner size="md" speed="0.6s" color="primary" emptyColor="accent" thickness="0.175em" />
           </Stack>
         )}
       </Flex>
-
       <Flex>
-        <InputGroup
-          w={{ base: '100%', md: '50%' }}
-          mb={{ base: '8px', md: '0' }}
-        >
+        <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
           <InputLeftElement>
             <SearchIcon />
           </InputLeftElement>
@@ -297,14 +250,9 @@ export default function DmarcByDomainPage() {
           />
         </InputGroup>
 
-        <InfoButton
-          onToggle={onToggle}
-          ml="100%"
-          borderColor="black"
-          borderWidth="1px"
-        />
+        <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" />
       </Flex>
-
+      <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls
@@ -344,8 +292,7 @@ export default function DmarcByDomainPage() {
           />
           <Divider borderColor="gray.500" />
           <Trans>
-            A more detailed breakdown of each domain can be found by clicking on
-            its address in the first column.
+            A more detailed breakdown of each domain can be found by clicking on its address in the first column.
           </Trans>
         </InfoPanel>
       </ErrorBoundary>

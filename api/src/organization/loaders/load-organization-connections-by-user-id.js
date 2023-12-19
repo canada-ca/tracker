@@ -376,7 +376,23 @@ export const loadOrgConnectionsByUserId =
           RETURN org._key
         )
       `
-    } else if (!loginRequiredBool || isAffiliated) {
+    } else if (isAffiliated) {
+      orgKeysQuery = aql`
+        WITH affiliations, claims, domains, organizations, organizationSearch, users
+        LET userAffiliations = (
+          FOR v, e IN 1..1 ANY ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        LET orgKeys = (
+          FOR org IN organizations
+            ${isVerifiedQuery}
+            ${includeSuperAdminOrgQuery}
+            FILTER org._key IN userAffiliations[*]._key
+            RETURN org._key
+        )
+      `
+    } else if (!loginRequiredBool) {
       orgKeysQuery = aql`
         WITH affiliations, claims, domains, organizations, organizationSearch, users
         LET userAffiliations = (

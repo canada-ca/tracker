@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { ListOf } from '../components/ListOf'
-import { Box, Divider, Flex, Heading, IconButton, Switch, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, IconButton, Switch, Text, Tooltip, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationCard } from './OrganizationCard'
@@ -17,6 +17,7 @@ import { SearchBox } from '../components/SearchBox'
 import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function Organizations() {
   const { isLoggedIn } = useUserVar()
@@ -28,6 +29,7 @@ export default function Organizations() {
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
   const [orgInfo, setOrgInfo] = useState({})
   const [isVerified, setIsVerified] = useState(true)
+  const [isAffiliated, setIsAffiliated] = useState(false)
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -46,6 +48,7 @@ export default function Organizations() {
         search: debouncedSearchTerm,
         includeSuperAdminOrg: false,
         isVerified,
+        isAffiliated,
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
@@ -54,7 +57,6 @@ export default function Organizations() {
     })
 
   if (error) return <ErrorFallbackMessage error={error} />
-
   const orderByOptions = [
     { value: 'NAME', text: t`Name` },
     { value: 'ACRONYM', text: t`Acronym` },
@@ -164,14 +166,19 @@ export default function Organizations() {
           onToggle={onToggle}
         />
         <Flex align="center" mb="2">
-          <Switch
-            isFocusable={true}
-            aria-label="Show only verified organizations"
-            mx="2"
-            defaultChecked={isVerified}
-            onChange={(e) => setIsVerified(e.target.checked)}
-          />
-          <CheckCircleIcon color="blue.500" boxSize="icons.md" />
+          <Tooltip label={t`Filter list to verified organizations only.`}>
+            <Flex align="center">
+              <Switch
+                isFocusable={true}
+                aria-label="Show only verified organizations"
+                mx="2"
+                defaultChecked={isVerified}
+                onChange={(e) => setIsVerified(e.target.checked)}
+              />
+              <CheckCircleIcon color="blue.500" boxSize="icons.md" />
+            </Flex>
+          </Tooltip>
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
         </Flex>
         {orgList}
         <RelayPaginationControls
