@@ -34,9 +34,9 @@ const orgFootprintService = async ({ query, log, notifyClient }) => {
         const orgNames = await getBilingualOrgNames({ query, orgKey })
 
         // send email to org admins
-        for (const user of orgAdmins) {
-          await sendOrgFootprintEmail({ notifyClient, user, auditLogs, orgNames })
-        }
+        await Promise.all(orgAdmins.map((user) => {
+          return sendOrgFootprintEmail({ notifyClient, user, auditLogs, orgNames })
+        }))
       }
     }
     // if org has pending users
@@ -48,9 +48,9 @@ const orgFootprintService = async ({ query, log, notifyClient }) => {
         log(`Sending pending users email to admins of org: ${orgKey}`)
         const orgNames = await getBilingualOrgNames({ query, orgKey })
         // send email to org admins
-        for (const user of orgAdmins) {
-          await sendPendingOrgUsersEmail({ notifyClient, user, orgNames })
-        }
+        await Promise.all(orgAdmins.map((user) => {
+          return sendPendingOrgUsersEmail({ notifyClient, user, orgNames })
+        }))
       }
     }
   }

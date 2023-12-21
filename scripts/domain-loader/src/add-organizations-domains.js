@@ -21,7 +21,7 @@ const addOrganizationsDomains = async ({ db, query, data }) => {
     return collection.name
   })
 
-  for (const key of Object.keys(requiredCollectionTypes)) {
+  await Promise.all(Object.keys(requiredCollectionTypes).map((key) => {
     console.log(`Checking if collection "${key}" exists`)
     if (!existingCollections.includes(key)) {
       // collection does not exist, create collection
@@ -30,16 +30,16 @@ const addOrganizationsDomains = async ({ db, query, data }) => {
       )
       if (requiredCollectionTypes[key] === 'document') {
         // create document collection
-        await db.createCollection(key)
+        return db.createCollection(key)
       } else {
         // create edge collection
-        await db.createEdgeCollection(key)
+        return db.createEdgeCollection(key)
       }
     } else {
       // collections exists
       console.log(`Collection "${key}" exists`)
     }
-  }
+  }))
 
   for (const key in data) {
     const trx = await db.beginTransaction(Object.keys(requiredCollectionTypes))

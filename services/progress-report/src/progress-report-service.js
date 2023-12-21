@@ -39,14 +39,14 @@ const progressReportService = async ({ query, log, notifyClient }) => {
   const verifiedOrgAverages = calculateOrgAverages({ log, stats: verifiedOrgStats })
 
   // send notifications
-  for (const [_key, value] of Object.entries(verifiedOrgStats)) {
+  await Promise.all(Object.entries(verifiedOrgStats).map(async ([_key, val]) => {
     if (REDIRECT_TO_SERVICE_ACCOUNT_EMAIL) {
       const user = {
         userName: SERVICE_ACCOUNT_EMAIL,
         displayName: 'Service Account',
         _key: 'service-account',
       }
-      await sendOrgProgressReport({
+      return sendOrgProgressReport({
         log,
         notifyClient,
         user,
@@ -56,8 +56,8 @@ const progressReportService = async ({ query, log, notifyClient }) => {
       })
     } else {
       const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
-      for (const user of orgAdmins) {
-        await sendOrgProgressReport({
+      return Promise.all(orgAdmins.map((user) => {
+        return sendOrgProgressReport({
           log,
           notifyClient,
           user,
@@ -65,9 +65,9 @@ const progressReportService = async ({ query, log, notifyClient }) => {
           orgAverages: verifiedOrgAverages,
           chartStats,
         })
-      }
+      }))
     }
-  }
+  }))
 }
 
 const calculateSummaryStats = ({ startSummary, endSummary }) => {
