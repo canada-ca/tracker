@@ -222,17 +222,16 @@ async def run(loop):
                     domain.update(
                         {
                             "status": {
-                                "https": "unknown",
-                                "ssl": "unknown",
-                                "dmarc": "unknown",
-                                "dkim": "unknown",
-                                "spf": "unknown",
-                                "certificates": "fail",
-                                "ciphers": "fail",
-                                "curves": "fail",
-                                "hsts": "fail",
-                                "policy": "fail",
-                                "protocols": "fail",
+                                "certificates": "info",
+                                "ciphers": "info",
+                                "curves": "info",
+                                "dkim": "info",
+                                "dmarc": "info",
+                                "hsts": "info",
+                                "https": "info",
+                                "protocols": "info",
+                                "spf": "info",
+                                "ssl": "info",
                             }
                         }
                     )

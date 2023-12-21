@@ -222,11 +222,11 @@ describe('create a domain', () => {
                   lastRan: null,
                   selectors: ['selector1', 'selector2'],
                   status: {
-                    dkim: null,
-                    dmarc: null,
-                    https: null,
-                    spf: null,
-                    ssl: null,
+                    dkim: 'INFO',
+                    dmarc: 'INFO',
+                    https: 'INFO',
+                    spf: 'INFO',
+                    ssl: 'INFO',
                   },
                   organizations: {
                     edges: [
@@ -389,11 +389,11 @@ describe('create a domain', () => {
                   lastRan: null,
                   selectors: ['selector1', 'selector2'],
                   status: {
-                    dkim: null,
-                    dmarc: null,
-                    https: null,
-                    spf: null,
-                    ssl: null,
+                    dkim: 'INFO',
+                    dmarc: 'INFO',
+                    https: 'INFO',
+                    spf: 'INFO',
+                    ssl: 'INFO',
                   },
                   organizations: {
                     edges: [
@@ -532,11 +532,11 @@ describe('create a domain', () => {
                 lastRan: null,
                 selectors: ['selector1', 'selector2'],
                 status: {
-                  dkim: null,
-                  dmarc: null,
-                  https: null,
-                  spf: null,
-                  ssl: null,
+                  dkim: 'INFO',
+                  dmarc: 'INFO',
+                  https: 'INFO',
+                  spf: 'INFO',
+                  ssl: 'INFO',
                 },
                 organizations: {
                   edges: [
