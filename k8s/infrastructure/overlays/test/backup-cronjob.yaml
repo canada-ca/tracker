@@ -59,7 +59,7 @@ spec:
           volumes:
             - emptyDir: {}
               name: dump
-  schedule: 59 3 * * *
+  schedule: 0 0 * * *
   startingDeadlineSeconds: 180
 
 
