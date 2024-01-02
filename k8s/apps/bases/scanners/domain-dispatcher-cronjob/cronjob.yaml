@@ -4,7 +4,7 @@ metadata:
   name: domain-dispatcher
   namespace: scanners
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 2 * * *"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
