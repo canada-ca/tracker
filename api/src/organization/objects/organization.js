@@ -84,6 +84,10 @@ export const organizationType = new GraphQLObjectType({
           type: new GraphQLNonNull(Year),
           description: 'The year in which the returned data is relevant to.',
         },
+        sortDirection: {
+          type: GraphQLString,
+          description: 'The direction in which to sort the data.',
+        },
       },
       resolve: async (
         { _id },
