@@ -31,6 +31,7 @@ import { ORG_DETAILS_PAGE } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
+import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 
 export default function OrganizationDetails() {
   const { isLoggedIn } = useUserVar()
@@ -43,7 +44,7 @@ export default function OrganizationDetails() {
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug },
+    variables: { slug: orgSlug, month: 'LAST30DAYS', year: '2023' },
     // errorPolicy: 'ignore', // allow partial success
   })
 
@@ -121,7 +122,7 @@ export default function OrganizationDetails() {
       >
         <TabList mb="4">
           <Tab borderTopWidth="4px">
-            <Trans>Summary</Trans>
+            <Trans>Summaries</Trans>
           </Tab>
           <Tab borderTopWidth="4px">
             <Trans>DMARC Phases</Trans>
@@ -139,7 +140,10 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <TieredSummaries summaries={data?.organization?.summaries} />
+              <>
+                {/* <TieredSummaries summaries={data?.organization?.summaries} /> */}
+                <HistoricalSummariesGraph data={data?.organization?.historicalSummaries} width={1200} height={500} />
+              </>
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
@@ -159,7 +163,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          {!isNaN(data?.organization?.affiliations?.totalCount) && (
+          {data?.organization?.userHasPermission && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} />
