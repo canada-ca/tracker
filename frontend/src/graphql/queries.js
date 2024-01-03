@@ -542,44 +542,28 @@ export const ORG_DETAILS_PAGE = gql`
             dmarc {
               ...RequiredSummaryFields
             }
-          }
-        }
-      }
-    }
-  }
-  ${Summary.fragments.requiredFields}
-`
-
-export const HISTORICAL_ORG_SUMMARIES = gql`
-  query HistoricalOrgSummaries($slug: Slug!, $month: PeriodEnums, $year: Year) {
-    findOrganizationBySlug(orgSlug: $slug) {
-      id
-      summaries {
-        https {
-          ...RequiredSummaryFields
-        }
-        dmarc {
-          ...RequiredSummaryFields
-        }
-      }
-      historicalSummaries(month: $month, year: $year) {
-        totalCount
-        edges {
-          node {
-            date
-            https {
+            dkim {
               ...RequiredSummaryFields
             }
-            dmarc {
+            spf {
+              ...RequiredSummaryFields
+            }
+            ssl {
+              ...RequiredSummaryFields
+            }
+            webConnections {
+              ...RequiredSummaryFields
+            }
+            dmarcPhase {
+              ...RequiredSummaryFields
+            }
+            web {
+              ...RequiredSummaryFields
+            }
+            mail {
               ...RequiredSummaryFields
             }
           }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
-          hasPreviousPage
-          startCursor
         }
       }
     }

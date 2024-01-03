@@ -140,10 +140,8 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <>
-                {/* <TieredSummaries summaries={data?.organization?.summaries} /> */}
-                <HistoricalSummariesGraph data={data?.organization?.historicalSummaries} width={1200} height={500} />
-              </>
+              <TieredSummaries summaries={data?.organization?.summaries} />
+              <HistoricalSummariesGraph data={data?.organization?.historicalSummaries} width={1200} height={500} />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>

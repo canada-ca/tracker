@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react'
-import { Box, Text } from '@chakra-ui/react'
-import { number, object } from 'prop-types'
+import React, { useCallback, useState } from 'react'
+import { Box, Flex, Select, Text } from '@chakra-ui/react'
+import { number, object, string } from 'prop-types'
 import { extent, bisector } from 'd3-array'
 
 import { AxisLeft, AxisBottom } from '@visx/axis'
@@ -12,19 +12,44 @@ import { scaleLinear } from '@visx/scale'
 import { Line, LinePath } from '@visx/shape'
 import { useTooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip'
 import { timeFormat } from '@visx/vendor/d3-time-format'
+import { GlyphCircle } from '@visx/glyph'
+import { Trans } from '@lingui/macro'
 
 const getDate = ({ date }) => new Date(date)
 
-export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
+const getSummaries = (data, scanTypes, scoreType) => {
   let summaries = []
-  data?.edges?.forEach(({ node }) => {
-    const { date, https, dmarc } = node
-    const httpsNode = { date, type: 'HTTPS', score: https.categories[0].percentage.toFixed(1) }
-    const dmarcNode = { date, type: 'DMARC', score: dmarc.categories[0].percentage.toFixed(1) }
-
-    summaries.push(httpsNode)
-    summaries.push(dmarcNode)
+  data.forEach(({ node }) => {
+    for (const scanType of scanTypes) {
+      const { date, [scanType]: scanTypeData } = node
+      const scanTypeNode = { date, type: scanType, score: scanTypeData.categories[0][scoreType].toFixed(0) }
+      summaries.push(scanTypeNode)
+    }
   })
+  return summaries
+}
+
+const getSeries = (summaries, scanTypes) => {
+  let series = []
+  for (const scanType of scanTypes) {
+    const scanTypeSeries = summaries.filter(({ type }) => {
+      return type === scanType
+    })
+    series.push(scanTypeSeries)
+  }
+  return series
+}
+
+const tieredSummaries = {
+  one: ['https', 'dmarc'],
+  two: ['webConnections', 'ssl', 'spf', 'dkim', 'dmarcPhases'],
+  three: ['web', 'mail'],
+}
+
+export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
+  const [scoreType, setScoreType] = useState('percentage')
+  const [summaryTier, setSummaryTier] = useState('one')
+  const summaries = getSummaries(data.edges, tieredSummaries[summaryTier], scoreType)
   summaries.sort((a, b) => getDate(a) - getDate(b))
 
   // tooltip parameters
@@ -37,17 +62,10 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
-  // data for lines
-  const httpsData = summaries.filter(({ type }) => {
-    return type === 'HTTPS'
-  })
-  const dmarcData = summaries.filter(({ type }) => {
-    return type === 'DMARC'
-  })
-  const series = [dmarcData, httpsData]
+  const series = getSeries(summaries, tieredSummaries.one)
 
-  //colors for lines
-  const colors = ['#43b284', '#fab255']
+  // colors for lines
+  const colors = ['#fab255', '#43b284', '#f56565', '#ed64a6', '#9f7aea']
 
   // Defining selector functions
   const getRD = ({ score }) => score
@@ -55,8 +73,8 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
 
   // get data from a date
   const getD = (date) => {
-    const output = summaries.filter((el) => {
-      return el.date === date
+    const output = summaries.filter((sum) => {
+      return sum.date === date
     })
     return output
   }
@@ -74,7 +92,8 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
   // vertical, y scale
   const rdScale = scaleLinear({
     range: [innerHeight, 0],
-    domain: [0, 101],
+    domain:
+      scoreType === 'percentage' ? [0, 100] : [Math.min(...summaries.map(getRD)), Math.max(...summaries.map(getRD))],
     nice: true,
   })
 
@@ -107,6 +126,28 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
 
   return (
     <Box position="relative">
+      <Flex align="center">
+        <Select onChange={(e) => setScoreType(e.target.value)}>
+          <option value="percentage">
+            <Trans>Percentage</Trans>
+          </option>
+          <option value="count">
+            <Trans>Domain count</Trans>
+          </option>
+        </Select>
+
+        <Select onChange={(e) => setSummaryTier(e.target.value)}>
+          <option value="one">
+            <Trans>Tier 1</Trans>
+          </option>
+          <option value="two">
+            <Trans>Tier 2</Trans>
+          </option>
+          <option value="three">
+            <Trans>Tier 3</Trans>
+          </option>
+        </Select>
+      </Flex>
       <svg width={width} height={height}>
         <rect x={0} y={0} width={width} height={height} fill={'#24242c'} rx={14} />
         <Group left={margin.left} top={margin.top}>
@@ -153,6 +194,19 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
               y={(d) => rdScale(getRD(d)) ?? 0}
             />
           ))}
+          {tooltipData &&
+            tooltipData.map((d, i) => (
+              <g key={i}>
+                <GlyphCircle
+                  left={tooltipLeft - margin.left}
+                  top={rdScale(d.score) + 2}
+                  size={110}
+                  fill={colors[i]}
+                  stroke={'white'}
+                  strokeWidth={2}
+                />
+              </g>
+            ))}
           {tooltipData && (
             <g>
               <Line
@@ -180,8 +234,11 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
       </svg>
       {tooltipData && (
         <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
-          <Text color="#fab255">{`HTTPS: ${getRD(tooltipData[0])}%`}</Text>
-          <Text color="#43b284">{`DMARC: ${getRD(tooltipData[1])}%`}</Text>
+          {tooltipData.map((d, i) => (
+            <Text key={i} color={colors[i]}>{`${d.type.toUpperCase()}: ${getRD(tooltipData[i])}${
+              scoreType === 'percentage' && '%'
+            }`}</Text>
+          ))}
           <Text color="white">{`Date: ${formatDate(getDate(tooltipData[0]))}`}</Text>
         </TooltipWithBounds>
       )}
@@ -191,6 +248,7 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
 
 HistoricalSummariesGraph.propTypes = {
   data: object.isRequired,
+  summaryTier: string,
   width: number.isRequired,
   height: number.isRequired,
 }
