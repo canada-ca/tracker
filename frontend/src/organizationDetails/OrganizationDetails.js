@@ -99,7 +99,7 @@ export default function OrganizationDetails() {
             {data?.organization?.verified && <CheckCircleIcon ml="1" color="blue.500" boxSize="icons.lg" />}
           </Flex>
         </Heading>
-        {isLoggedIn() && (
+        {isLoggedIn() && !data?.organization?.userHasPermission && (
           <>
             <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
               <Trans>Request Invite</Trans>
@@ -130,7 +130,7 @@ export default function OrganizationDetails() {
           <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
-          {!isNaN(data?.organization?.affiliations?.totalCount) && (
+          {data?.organization?.userHasPermission && (
             <Tab>
               <Trans>Users</Trans>
             </Tab>
@@ -161,7 +161,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          {!isNaN(data?.organization?.affiliations?.totalCount) && (
+          {data?.organization?.userHasPermission && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} />

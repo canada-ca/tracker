@@ -479,6 +479,13 @@ const mocks = {
       totalCount: numberOfEdges,
     }
   },
+  OrganizationSummaryConnection: () => {
+    const numberOfEdges = faker.datatype.number({ min: 30, max: 365 })
+    return {
+      edges: [...new Array(numberOfEdges)],
+      totalCount: numberOfEdges,
+    }
+  },
   PersonalUser: () => {
     const affiliationCount = faker.datatype.number({ min: 0, max: 200 })
 

@@ -30,6 +30,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
           slug
           domainCount
           verified
+          userHasPermission
           summaries {
             dmarc {
               total
