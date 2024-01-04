@@ -95,7 +95,7 @@ export default function Organizations() {
                 verified={verified}
                 summaries={summaries}
                 mb="3"
-                mr="2"
+                mr={userHasPermission ? '3rem' : '2'}
                 w="100%"
               />
               {isLoggedIn() && !userHasPermission && (
