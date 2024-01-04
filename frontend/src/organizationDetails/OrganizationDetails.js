@@ -161,7 +161,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          {data?.organization?.userHasPermission && (
+          {!isNaN(data?.organization?.affiliations?.totalCount) && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} />
