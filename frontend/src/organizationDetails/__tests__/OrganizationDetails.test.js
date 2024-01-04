@@ -157,7 +157,7 @@ describe('<OrganizationDetails />', () => {
         expect(getByText('Summary')).toBeInTheDocument()
       })
     })
-    it('displays the request invite buton for unaffiliated users', async () => {
+    it('displays the request invite button for unaffiliated users', async () => {
       window.resizeTo(1024, 768)
       const { queryByRole, getByText } = render(
         <ChakraProvider theme={theme}>
@@ -189,6 +189,33 @@ describe('<OrganizationDetails />', () => {
       const requestInviteButton = queryByRole('button', { name: /Request Invite/ })
       expect(requestInviteButton).toBeInTheDocument()
     })
+    it('does not display the users tab for unaffiliated users', async () => {
+      const { queryByRole } = render(
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: 'asdf1234',
+                  tlfaSendMethod: null,
+                  userName: 'justauser',
+                })}
+              >
+                <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
+                  <Route path="/organizations/:orgSlug">
+                    <OrganizationDetails />
+                  </Route>
+                </MemoryRouter>
+              </UserVarProvider>
+            </MockedProvider>
+          </I18nProvider>
+        </ChakraProvider>,
+      )
+
+      await waitFor(() => {
+        expect(queryByRole('tab', { name: 'Users' })).not.toBeInTheDocument()
+      })
+    })
   })
   describe('for a non-admin user', () => {
     const mocks = [
@@ -198,14 +225,6 @@ describe('<OrganizationDetails />', () => {
           variables: { slug: 'treasury-board-of-canada-secretariat' },
         },
         result: {
-          errors: [
-            {
-              message: 'cannot query affiliations on organization without admin permission or higher.',
-              locations: [{ line: 33, column: 5 }],
-              path: ['organization', 'affiliations'],
-              extensions: { code: 'INTERNAL_SERVER_ERROR' },
-            },
-          ],
           data: {
             organization: {
               id: 'b3JnYW5pemF0aW9uczoyMTY2MDUy',
@@ -310,7 +329,7 @@ describe('<OrganizationDetails />', () => {
         expect(queryByText(/Ottawa/)).not.toBeInTheDocument()
       })
     })
-    it('does not display the request invite buton for affiliated users', async () => {
+    it('does not display the request invite button for affiliated users', async () => {
       const { queryByText } = render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
@@ -335,6 +354,33 @@ describe('<OrganizationDetails />', () => {
 
       await waitFor(() => {
         expect(queryByText(/Request Invite/)).not.toBeInTheDocument()
+      })
+    })
+    it('displays the users tab for affiliated users', async () => {
+      const { queryByRole } = render(
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: 'asdf1234',
+                  tlfaSendMethod: null,
+                  userName: 'justauser',
+                })}
+              >
+                <MemoryRouter initialEntries={['/organizations/treasury-board-of-canada-secretariat']} initialIndex={0}>
+                  <Route path="/organizations/:orgSlug">
+                    <OrganizationDetails />
+                  </Route>
+                </MemoryRouter>
+              </UserVarProvider>
+            </MockedProvider>
+          </I18nProvider>
+        </ChakraProvider>,
+      )
+
+      await waitFor(() => {
+        expect(queryByRole('tab', { name: 'Users' })).toBeInTheDocument()
       })
     })
   })
