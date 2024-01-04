@@ -332,6 +332,80 @@ describe('<Organisations />', () => {
 
       await waitFor(() => expect(history.location.pathname).toEqual('/organizations/organization-one'))
     })
+
+    describe('when logged in', () => {
+      it('displays a button to request an invite', async () => {
+        const mocks = [
+          {
+            request: {
+              query: PAGINATED_ORGANIZATIONS,
+              variables: {
+                first: 10,
+                field: 'NAME',
+                direction: 'ASC',
+                search: '',
+                includeSuperAdminOrg: false,
+                isVerified: true,
+                isAffiliated: false,
+              },
+            },
+            result: {
+              data: {
+                findMyOrganizations: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoyCg==',
+                        acronym: 'ORG1',
+                        name: 'organization one',
+                        slug: 'organization-one',
+                        domainCount: 5,
+                        verified: true,
+                        userHasPermission: false,
+                        summaries,
+                        __typename: 'Organizations',
+                      },
+                      __typename: 'OrganizationsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: true,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'OrganizationsConnection',
+                },
+              },
+            },
+          },
+        ]
+
+        const { findByRole } = render(
+          <MockedProvider mocks={mocks} cache={createCache()}>
+            <UserVarProvider
+              userVar={makeVar({
+                jwt: 'somejwt',
+                tfaSendMethod: null,
+                userName: null,
+              })}
+            >
+              <ChakraProvider theme={theme}>
+                <I18nProvider i18n={i18n}>
+                  <MemoryRouter initialEntries={['/organizations']} initialIndex={0}>
+                    <Organizations />
+                  </MemoryRouter>
+                </I18nProvider>
+              </ChakraProvider>
+            </UserVarProvider>
+          </MockedProvider>,
+        )
+
+        await findByRole('button', { name: /Request Invite/i })
+      })
+    })
   })
 
   describe('pagination', () => {
@@ -364,6 +438,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: true,
+                        userHasPermission: true,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -409,6 +484,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: true,
+                        userHasPermission: true,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -500,6 +576,7 @@ describe('<Organisations />', () => {
                     slug: 'organization-one',
                     domainCount: 5,
                     verified: true,
+                    userHasPermission: false,
                     summaries,
                     __typename: 'Organizations',
                   },
@@ -545,6 +622,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-one',
                         domainCount: 5,
                         verified: true,
+                        userHasPermission: false,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -590,6 +668,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: true,
+                        userHasPermission: false,
                         summaries,
                         __typename: 'Organizations',
                       },
@@ -635,6 +714,7 @@ describe('<Organisations />', () => {
                         slug: 'organization-two',
                         domainCount: 5,
                         verified: true,
+                        userHasPermission: false,
                         summaries,
                         __typename: 'Organizations',
                       },
