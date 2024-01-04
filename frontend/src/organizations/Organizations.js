@@ -84,7 +84,7 @@ export default function Organizations() {
         )}
         mb="4"
       >
-        {({ id, name, slug, acronym, domainCount, verified, summaries }, index) => (
+        {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
           <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
               <OrganizationCard
@@ -95,12 +95,13 @@ export default function Organizations() {
                 verified={verified}
                 summaries={summaries}
                 mb="3"
-                mr="2"
+                mr={userHasPermission ? '3rem' : '2'}
                 w="100%"
               />
-              {isLoggedIn() && (
+              {isLoggedIn() && !userHasPermission && (
                 <>
                   <IconButton
+                    aria-label={t`Request Invite`}
                     variant="primary"
                     icon={<UserIcon color="white" boxSize="icons.md" />}
                     onClick={() => {
