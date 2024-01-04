@@ -129,7 +129,7 @@ export default function OrganizationDetails() {
           <Tab borderTopWidth="4px">
             <Trans>Domains</Trans>
           </Tab>
-          {!isNaN(data?.organization?.affiliations?.totalCount) && (
+          {data?.organization?.userHasPermission && (
             <Tab>
               <Trans>Users</Trans>
             </Tab>
@@ -159,7 +159,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          {!isNaN(data?.organization?.affiliations?.totalCount) && (
+          {data?.organization?.userHasPermission && (
             <TabPanel>
               <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <OrganizationAffiliations orgSlug={orgSlug} />
