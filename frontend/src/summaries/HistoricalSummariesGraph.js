@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Flex, Select, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Select, Text } from '@chakra-ui/react'
 import { number, object, string } from 'prop-types'
 import { extent, bisector } from 'd3-array'
+import theme from '../theme/canada'
 
 import { AxisLeft, AxisBottom } from '@visx/axis'
 import { LinearGradient } from '@visx/gradient'
@@ -42,11 +43,12 @@ const getSeries = (summaries, scanTypes) => {
 
 const tieredSummaries = {
   one: ['https', 'dmarc'],
-  two: ['webConnections', 'ssl', 'spf', 'dkim', 'dmarcPhases'],
+  two: ['webConnections', 'ssl', 'spf', 'dkim', 'dmarcPhase'],
   three: ['web', 'mail'],
 }
 
 export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
+  const { colors } = theme
   const [scoreType, setScoreType] = useState('percentage')
   const [summaryTier, setSummaryTier] = useState('one')
   const summaries = getSummaries(data.edges, tieredSummaries[summaryTier], scoreType)
@@ -62,10 +64,16 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
-  const series = getSeries(summaries, tieredSummaries.one)
+  const series = getSeries(summaries, tieredSummaries[summaryTier])
 
   // colors for lines
-  const colors = ['#fab255', '#43b284', '#f56565', '#ed64a6', '#9f7aea']
+  const graphColours = [
+    colors.tracker.warm.medium,
+    colors.tracker.cool.medium,
+    colors.tracker.warm.dark,
+    colors.tracker.cool.light,
+    colors.tracker.logo.red,
+  ]
 
   // Defining selector functions
   const getRD = ({ score }) => score
@@ -80,7 +88,7 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
   }
 
   // to remove comma from date
-  const formatDate = timeFormat("%b %d, '%y")
+  const formatDate = timeFormat('%y-%m-%d')
 
   // horizontal, x scale
   const timeScale = scaleLinear({
@@ -125,9 +133,12 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
   })
 
   return (
-    <Box position="relative">
-      <Flex align="center">
-        <Select onChange={(e) => setScoreType(e.target.value)}>
+    <>
+      <Flex align="center" my="2">
+        <Text fontSize="lg" fontWeight="bold" textAlign="center">
+          <Trans>Data:</Trans>
+        </Text>
+        <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setScoreType(e.target.value)}>
           <option value="percentage">
             <Trans>Percentage</Trans>
           </option>
@@ -136,7 +147,10 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
           </option>
         </Select>
 
-        <Select onChange={(e) => setSummaryTier(e.target.value)}>
+        <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
+          <Trans>Summary Tier:</Trans>
+        </Text>
+        <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setSummaryTier(e.target.value)}>
           <option value="one">
             <Trans>Tier 1</Trans>
           </option>
@@ -148,101 +162,112 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
           </option>
         </Select>
       </Flex>
-      <svg width={width} height={height}>
-        <rect x={0} y={0} width={width} height={height} fill={'#24242c'} rx={14} />
-        <Group left={margin.left} top={margin.top}>
-          <GridRows
-            scale={rdScale}
-            width={innerWidth}
-            height={innerHeight - margin.top}
-            stroke="#EDF2F7"
-            strokeOpacity={0.2}
-          />
-          <GridColumns scale={timeScale} width={innerWidth} height={innerHeight} stroke="#EDF2F7" strokeOpacity={0.2} />
-          <LinearGradient id="area-gradient" from={'#43b284'} to={'#43b284'} toOpacity={0.1} />
-          <AxisLeft
-            tickTextFill={'#EDF2F7'}
-            stroke={'#EDF2F7'}
-            tickStroke={'#EDF2F7'}
-            scale={rdScale}
-            tickLabelProps={() => ({
-              fill: '#EDF2F7',
-              fontSize: 11,
-              textAnchor: 'end',
-            })}
-          />
-          <AxisBottom
-            scale={timeScale}
-            stroke={'#EDF2F7'}
-            tickFormat={formatDate}
-            tickStroke={'#EDF2F7'}
-            tickTextFill={'#EDF2F7'}
-            top={innerHeight}
-            tickLabelProps={() => ({
-              fill: '#EDF2F7',
-              fontSize: 11,
-              textAnchor: 'middle',
-            })}
-          />
-          {series.map((sData, i) => (
-            <LinePath
-              key={i}
-              stroke={colors[i]}
-              strokeWidth={3}
-              data={sData}
-              x={(d) => timeScale(getDate(d)) ?? 0}
-              y={(d) => rdScale(getRD(d)) ?? 0}
+      <Heading as="h2" size="lg" mb="2">
+        <Trans>Last 30 Days</Trans>
+      </Heading>
+      <Box position="relative">
+        <svg width={width} height={height}>
+          <rect x={0} y={0} width={width} height={height} fill={'#24242c'} rx={14} />
+          <Group left={margin.left} top={margin.top}>
+            <GridRows
+              scale={rdScale}
+              width={innerWidth}
+              height={innerHeight - margin.top}
+              stroke="#EDF2F7"
+              strokeOpacity={0.2}
             />
-          ))}
-          {tooltipData &&
-            tooltipData.map((d, i) => (
-              <g key={i}>
-                <GlyphCircle
-                  left={tooltipLeft - margin.left}
-                  top={rdScale(d.score) + 2}
-                  size={110}
-                  fill={colors[i]}
-                  stroke={'white'}
+            <GridColumns
+              scale={timeScale}
+              width={innerWidth}
+              height={innerHeight}
+              stroke="#EDF2F7"
+              strokeOpacity={0.2}
+            />
+            <LinearGradient id="area-gradient" from={'#43b284'} to={'#43b284'} toOpacity={0.1} />
+            <AxisLeft
+              tickTextFill={'#EDF2F7'}
+              stroke={'#EDF2F7'}
+              tickStroke={'#EDF2F7'}
+              scale={rdScale}
+              tickLabelProps={() => ({
+                fill: '#EDF2F7',
+                fontSize: 11,
+                textAnchor: 'end',
+              })}
+            />
+            <AxisBottom
+              scale={timeScale}
+              stroke={'#EDF2F7'}
+              tickFormat={formatDate}
+              tickStroke={'#EDF2F7'}
+              tickTextFill={'#EDF2F7'}
+              top={innerHeight}
+              tickLabelProps={() => ({
+                fill: '#EDF2F7',
+                fontSize: 11,
+                textAnchor: 'middle',
+              })}
+            />
+            {series.map((sData, i) => (
+              <LinePath
+                key={i}
+                stroke={graphColours[i]}
+                strokeWidth={3}
+                data={sData}
+                x={(d) => timeScale(getDate(d)) ?? 0}
+                y={(d) => rdScale(getRD(d)) ?? 0}
+              />
+            ))}
+            {tooltipData &&
+              tooltipData.map((d, i) => (
+                <g key={i}>
+                  <GlyphCircle
+                    left={tooltipLeft - margin.left}
+                    top={rdScale(d.score) + 2}
+                    size={110}
+                    fill={graphColours[i]}
+                    stroke={'white'}
+                    strokeWidth={2}
+                  />
+                </g>
+              ))}
+            {tooltipData && (
+              <g>
+                <Line
+                  from={{ x: tooltipLeft - margin.left, y: 0 }}
+                  to={{ x: tooltipLeft - margin.left, y: innerHeight }}
+                  stroke={'#EDF2F7'}
                   strokeWidth={2}
+                  pointerEvents="none"
+                  strokeDasharray="4,2"
                 />
               </g>
+            )}
+            <rect
+              x={0}
+              y={0}
+              width={innerWidth}
+              height={innerHeight}
+              onTouchStart={handleTooltip}
+              fill={'transparent'}
+              onTouchMove={handleTooltip}
+              onMouseMove={handleTooltip}
+              onMouseLeave={() => hideTooltip()}
+            />
+          </Group>
+        </svg>
+        {tooltipData && (
+          <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
+            <Text fontWeight="bold" color="white">{`${formatDate(getDate(tooltipData[0]))}`}</Text>
+            {tooltipData.map((d, i) => (
+              <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${d.type.toUpperCase()}: ${getRD(
+                tooltipData[i],
+              )}${scoreType === 'percentage' ? '%' : ''}`}</Text>
             ))}
-          {tooltipData && (
-            <g>
-              <Line
-                from={{ x: tooltipLeft - margin.left, y: 0 }}
-                to={{ x: tooltipLeft - margin.left, y: innerHeight }}
-                stroke={'#EDF2F7'}
-                strokeWidth={2}
-                pointerEvents="none"
-                strokeDasharray="4,2"
-              />
-            </g>
-          )}
-          <rect
-            x={0}
-            y={0}
-            width={innerWidth}
-            height={innerHeight}
-            onTouchStart={handleTooltip}
-            fill={'transparent'}
-            onTouchMove={handleTooltip}
-            onMouseMove={handleTooltip}
-            onMouseLeave={() => hideTooltip()}
-          />
-        </Group>
-      </svg>
-      {tooltipData && (
-        <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
-          {tooltipData.map((d, i) => (
-            <Text key={i} color={colors[i]}>{`${d.type.toUpperCase()}: ${getRD(tooltipData[i])}${
-              scoreType === 'percentage' && '%'
-            }`}</Text>
-          ))}
-          <Text color="white">{`Date: ${formatDate(getDate(tooltipData[0]))}`}</Text>
-        </TooltipWithBounds>
-      )}
-    </Box>
+          </TooltipWithBounds>
+        )}
+      </Box>
+    </>
   )
 }
 

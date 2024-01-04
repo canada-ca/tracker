@@ -44,7 +44,7 @@ export default function OrganizationDetails() {
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug, month: 'LAST30DAYS', year: '2023' },
+    variables: { slug: orgSlug, month: 'LAST30DAYS', year: new Date().getFullYear().toString() },
     // errorPolicy: 'ignore', // allow partial success
   })
 
