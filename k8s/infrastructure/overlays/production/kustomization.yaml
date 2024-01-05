@@ -8,6 +8,7 @@ resources:
 - storage-classes.yaml
 patchesStrategicMerge:
   - arangodb-retain-storage-patch.yaml
+  - arangodb-tolerance.yaml
   - ingress-gateway-tls-patch.yaml
 patchesJSON6902:
 - target:
