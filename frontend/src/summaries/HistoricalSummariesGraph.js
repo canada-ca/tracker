@@ -70,9 +70,9 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
   const graphColours = [
     colors.tracker.warm.medium,
     colors.tracker.cool.medium,
-    colors.tracker.warm.dark,
+    colors.tracker.warm.light,
     colors.tracker.cool.light,
-    colors.tracker.logo.red,
+    colors.tracker.logo.orange,
   ]
 
   // Defining selector functions
