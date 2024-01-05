@@ -30,7 +30,7 @@ export default function DomainsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
-  const [isAffiliated, setIsAffiliated] = useState(false)
+  const [isAffiliated, setIsAffiliated] = useState(true)
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,

@@ -38,7 +38,7 @@ export default function DmarcByDomainPage() {
   const displayLimitOptions = [5, 10, 20, 50, 100]
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [isAffiliated, setIsAffiliated] = useState(false)
+  const [isAffiliated, setIsAffiliated] = useState(true)
 
   const [selectedPeriod, setSelectedPeriod] = useState('LAST30DAYS')
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString())

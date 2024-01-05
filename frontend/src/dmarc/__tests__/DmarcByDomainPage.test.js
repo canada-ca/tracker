@@ -52,7 +52,7 @@ describe('<DmarcByDomainPage />', () => {
             direction: 'DESC',
           },
           search: '',
-          isAffiliated: false,
+          isAffiliated: true,
         },
       },
       result: { data: rawDmarcReportSummaryTableData },
@@ -69,7 +69,7 @@ describe('<DmarcByDomainPage />', () => {
             direction: 'DESC',
           },
           search: '',
-          isAffiliated: false,
+          isAffiliated: true,
         },
       },
       result: {

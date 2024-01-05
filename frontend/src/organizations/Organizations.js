@@ -29,7 +29,7 @@ export default function Organizations() {
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
   const [orgInfo, setOrgInfo] = useState({})
   const [isVerified, setIsVerified] = useState(true)
-  const [isAffiliated, setIsAffiliated] = useState(false)
+  const [isAffiliated, setIsAffiliated] = useState(true)
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
