@@ -1,9 +1,10 @@
 import { toGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
+import { aql } from 'arangojs'
 
 export const loadOrganizationSummariesByPeriod =
   ({ query, userKey, cleanseInput, i18n }) =>
-  async ({ orgId, period, year }) => {
+  async ({ orgId, period, year, sortDirection }) => {
     if (typeof period === 'undefined') {
       console.warn(`User: ${userKey} did not have \`period\` argument set for: loadOrganizationSummariesByPeriod.`)
       throw new Error(
@@ -33,6 +34,13 @@ export const loadOrganizationSummariesByPeriod =
     }
     const periodYear = cleanseInput(year)
 
+    let sortString
+    if (typeof last !== 'undefined') {
+      sortString = aql`DESC`
+    } else {
+      sortString = aql`${sortDirection}`
+    }
+
     let startDate
     let requestedSummaryInfo
     try {
@@ -43,7 +51,7 @@ export const loadOrganizationSummariesByPeriod =
             FOR summary IN organizationSummaries
               FILTER summary.organization == ${orgId}
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
-              SORT summary.date ASC
+              SORT summary.date ${sortString}
               RETURN summary
           )
 
@@ -59,7 +67,7 @@ export const loadOrganizationSummariesByPeriod =
             FOR summary IN organizationSummaries
               FILTER summary.organization == ${orgId}
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
-              SORT summary.date ASC
+              SORT summary.date ${sortString}
               RETURN summary
           )
 
@@ -75,7 +83,7 @@ export const loadOrganizationSummariesByPeriod =
             FOR summary IN organizationSummaries
               FILTER summary.organization == ${orgId}
               FILTER DATE_FORMAT(summary.date, '%yyyy') >= DATE_FORMAT(${startDate}, '%yyyy')
-              SORT summary.date ASC
+              SORT summary.date ${sortString}
               RETURN summary
           )
 
@@ -91,7 +99,7 @@ export const loadOrganizationSummariesByPeriod =
             FOR summary IN organizationSummaries
               FILTER summary.organization == ${orgId}
               FILTER DATE_FORMAT(summary.date, "%yyyy-%mm") == DATE_FORMAT(${startDate}, "%yyyy-%mm")
-              SORT summary.date ASC
+              SORT summary.date ${sortString}
               RETURN summary
           )
 

@@ -51,7 +51,7 @@ describe('<OrganizationDetails />', () => {
       {
         request: {
           query: ORG_DETAILS_PAGE,
-          variables: { slug: 'tbs-sct-gc-ca' },
+          variables: { slug: 'tbs-sct-gc-ca', month: 'LAST30DAYS', year: new Date().getFullYear().toString() },
         },
         result: {
           data: {
@@ -154,7 +154,7 @@ describe('<OrganizationDetails />', () => {
 
       await waitFor(() => {
         expect(getByText(name)).toBeInTheDocument()
-        expect(getByText('Summary')).toBeInTheDocument()
+        expect(getByText('Summaries')).toBeInTheDocument()
       })
     })
     it('displays the request invite button for unaffiliated users', async () => {
@@ -183,7 +183,7 @@ describe('<OrganizationDetails />', () => {
 
       await waitFor(() => {
         expect(getByText(name)).toBeInTheDocument()
-        expect(getByText('Summary')).toBeInTheDocument()
+        expect(getByText('Summaries')).toBeInTheDocument()
       })
 
       const requestInviteButton = queryByRole('button', { name: /Request Invite/ })
@@ -222,7 +222,11 @@ describe('<OrganizationDetails />', () => {
       {
         request: {
           query: ORG_DETAILS_PAGE,
-          variables: { slug: 'treasury-board-of-canada-secretariat' },
+          variables: {
+            slug: 'treasury-board-of-canada-secretariat',
+            month: 'LAST30DAYS',
+            year: new Date().getFullYear().toString(),
+          },
         },
         result: {
           data: {

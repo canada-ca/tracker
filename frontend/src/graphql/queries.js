@@ -496,7 +496,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
 `
 
 export const ORG_DETAILS_PAGE = gql`
-  query OrgDetails($slug: Slug!) {
+  query OrgDetails($slug: Slug!, $month: PeriodEnums!, $year: Year!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {
       id
       name
@@ -530,6 +530,41 @@ export const ORG_DETAILS_PAGE = gql`
         }
         mail {
           ...RequiredSummaryFields
+        }
+      }
+      historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
+        totalCount
+        edges {
+          node {
+            date
+            https {
+              ...RequiredSummaryFields
+            }
+            dmarc {
+              ...RequiredSummaryFields
+            }
+            dkim {
+              ...RequiredSummaryFields
+            }
+            spf {
+              ...RequiredSummaryFields
+            }
+            ssl {
+              ...RequiredSummaryFields
+            }
+            webConnections {
+              ...RequiredSummaryFields
+            }
+            dmarcPhase {
+              ...RequiredSummaryFields
+            }
+            web {
+              ...RequiredSummaryFields
+            }
+            mail {
+              ...RequiredSummaryFields
+            }
+          }
         }
       }
     }
