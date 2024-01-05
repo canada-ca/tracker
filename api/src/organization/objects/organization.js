@@ -10,7 +10,7 @@ import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
-import { PeriodEnums } from '../../enums'
+import { OrderDirection, PeriodEnums } from '../../enums'
 import { orgSummaryConnection } from './organization-summary-connection'
 
 export const organizationType = new GraphQLObjectType({
@@ -85,7 +85,7 @@ export const organizationType = new GraphQLObjectType({
           description: 'The year in which the returned data is relevant to.',
         },
         sortDirection: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(OrderDirection),
           description: 'The direction in which to sort the data.',
         },
       },
