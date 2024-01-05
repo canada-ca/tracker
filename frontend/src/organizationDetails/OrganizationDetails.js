@@ -131,7 +131,7 @@ export default function OrganizationDetails() {
             <Trans>Domains</Trans>
           </Tab>
           {data?.organization?.userHasPermission && (
-            <Tab>
+            <Tab borderTopWidth="4px">
               <Trans>Users</Trans>
             </Tab>
           )}
