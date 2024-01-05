@@ -34,7 +34,7 @@ describe('<DomainsPage />', () => {
           first: 10,
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
-          isAffiliated: false,
+          isAffiliated: true,
         },
       },
       result: {
@@ -202,7 +202,7 @@ describe('<DomainsPage />', () => {
           first: 10,
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
-          isAffiliated: false,
+          isAffiliated: true,
         },
       },
       result: {
