@@ -47,24 +47,24 @@ const tieredSummaries = {
   three: ['web', 'mail'],
 }
 
-const summaryNames = {
-  https: `HTTPS`,
-  dmarc: `DMARC`,
-  webConnections: t`Web Connections`,
-  ssl: `SSL`,
-  spf: `SPF`,
-  dkim: `DKIM`,
-  dmarcPhase: `DMARC`,
-  web: t`Web`,
-  mail: t`Mail`,
-}
-
 export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
   const { colors } = theme
   const [scoreType, setScoreType] = useState('percentage')
   const [summaryTier, setSummaryTier] = useState('one')
   const summaries = getSummaries(data.edges, tieredSummaries[summaryTier], scoreType)
   summaries.sort((a, b) => getDate(a) - getDate(b))
+
+  const summaryNames = {
+    https: `HTTPS`,
+    dmarc: `DMARC`,
+    webConnections: t`Web Connections`,
+    ssl: `SSL`,
+    spf: `SPF`,
+    dkim: `DKIM`,
+    dmarcPhase: `DMARC`,
+    web: t`Web`,
+    mail: t`Mail`,
+  }
 
   // tooltip parameters
   const { tooltipData, tooltipLeft = 0, tooltipTop = 0, showTooltip, hideTooltip } = useTooltip()
@@ -164,13 +164,13 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
         </Text>
         <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setSummaryTier(e.target.value)}>
           <option value="one">
-            <Trans>Tier 1</Trans>
+            <Trans>Tier 1: Minimum Requirements</Trans>
           </option>
           <option value="two">
-            <Trans>Tier 2</Trans>
+            <Trans>Tier 2: Improved Posture</Trans>
           </option>
           <option value="three">
-            <Trans>Tier 3</Trans>
+            <Trans>Tier 3: Compliance</Trans>
           </option>
         </Select>
       </Flex>
