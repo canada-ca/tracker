@@ -14,7 +14,7 @@ import { Line, LinePath } from '@visx/shape'
 import { useTooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip'
 import { timeFormat } from '@visx/vendor/d3-time-format'
 import { GlyphCircle } from '@visx/glyph'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 
 const getDate = ({ date }) => new Date(date)
 
@@ -45,6 +45,18 @@ const tieredSummaries = {
   one: ['https', 'dmarc'],
   two: ['webConnections', 'ssl', 'spf', 'dkim', 'dmarcPhase'],
   three: ['web', 'mail'],
+}
+
+const summaryNames = {
+  https: `HTTPS`,
+  dmarc: `DMARC`,
+  webConnections: t`Web Connections`,
+  ssl: `SSL`,
+  spf: `SPF`,
+  dkim: `DKIM`,
+  dmarcPhase: `DMARC`,
+  web: t`Web`,
+  mail: t`Mail`,
 }
 
 export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
@@ -260,7 +272,7 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
           <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
             <Text fontWeight="bold" color="white">{`${formatDate(getDate(tooltipData[0]))}`}</Text>
             {tooltipData.map((d, i) => (
-              <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${d.type.toUpperCase()}: ${getRD(
+              <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${summaryNames[d.type]}: ${getRD(
                 tooltipData[i],
               )}${scoreType === 'percentage' ? '%' : ''}`}</Text>
             ))}
