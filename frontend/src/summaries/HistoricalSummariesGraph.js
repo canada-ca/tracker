@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Box, Flex, Heading, Select, Text } from '@chakra-ui/react'
-import { number, object, string } from 'prop-types'
+import { number, object } from 'prop-types'
 import { extent, bisector } from 'd3-array'
 import theme from '../theme/canada'
 
@@ -273,7 +273,6 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
 
 HistoricalSummariesGraph.propTypes = {
   data: object.isRequired,
-  summaryTier: string,
-  width: number.isRequired,
-  height: number.isRequired,
+  width: number,
+  height: number,
 }
