@@ -1,0 +1,20 @@
+kind: ArangoDeployment
+apiVersion: database.arangodb.com/v1alpha
+metadata:
+  name: arangodb
+  namespace: db
+spec:
+  single:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: task
+            operator: In
+            values:
+            - db
+    tolerations:
+      - key: "task"
+        operator: "Equal"
+        value: "db"
+        effect: "NoSchedule"
