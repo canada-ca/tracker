@@ -32,6 +32,7 @@ import { RadialBarChart } from '../summaries/RadialBarChart'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
+import { ABTestWrapper } from '../app/ABTestWrapper'
 
 export default function OrganizationDetails() {
   const { isLoggedIn } = useUserVar()
@@ -141,8 +142,14 @@ export default function OrganizationDetails() {
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <TieredSummaries summaries={data?.organization?.summaries} />
-              <HistoricalSummariesGraph data={data?.organization?.historicalSummaries} width={1200} height={500} />
             </ErrorBoundary>
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestWrapper name="B">
+                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                  <HistoricalSummariesGraph data={data?.organization?.historicalSummaries} width={1200} height={500} />
+                </ErrorBoundary>
+              </ABTestWrapper>
+            </ABTestWrapper>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
