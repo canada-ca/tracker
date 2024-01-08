@@ -74,20 +74,20 @@ const calculateSummaryStats = ({ startSummary, endSummary }) => {
   // calculate https diff
   const startHttpsScore = startSummary.https.pass / startSummary.https.total
   const endHttpsScore = endSummary.https.pass / endSummary.https.total
-  const httpsScoreDiff = (endHttpsScore - startHttpsScore).toFixed(2) * 100
+  const httpsScoreDiff = (endHttpsScore - startHttpsScore) * 100
   const webDomainCountDiff = endSummary.https.total - startSummary.https.total
 
   // calculate dmarc diff
   const startDmarcScore = startSummary.dmarc.pass / startSummary.dmarc.total
   const endDmarcScore = endSummary.dmarc.pass / endSummary.dmarc.total
-  const dmarcScoreDiff = (endDmarcScore - startDmarcScore).toFixed(2) * 100
+  const dmarcScoreDiff = (endDmarcScore - startDmarcScore) * 100
   const domainCountDiff = endSummary.dmarc.total - startSummary.dmarc.total
 
   return {
-    httpsScoreDiff,
-    webDomainCountDiff,
-    dmarcScoreDiff,
-    domainCountDiff,
+    httpsScoreDiff: httpsScoreDiff.toFixed(2),
+    webDomainCountDiff: webDomainCountDiff.toFixed(0),
+    dmarcScoreDiff: dmarcScoreDiff.toFixed(2),
+    domainCountDiff: domainCountDiff.toFixed(0),
   }
 }
 
