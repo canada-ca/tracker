@@ -1,7 +1,4 @@
 import os
-
-from arango.database import StandardDatabase
-
 from notify.notify_client import notify_client
 from dotenv import load_dotenv
 
@@ -14,10 +11,6 @@ load_dotenv()
 # Org: Org
 # Previous value: good-value 0
 # Current value: malicious-domain-here 0
-
-# SSC receives only alerts from clients and its partners. This requires new tombstone data that only super admins should be allowed to edit
-# Add org acronym in title.
-# Add org inside body of email
 
 
 def send_mx_diff_email_alerts(
