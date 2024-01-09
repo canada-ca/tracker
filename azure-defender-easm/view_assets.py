@@ -91,7 +91,7 @@ def find_disco_group_assets(group_name):
 
     assets = []
     for asset in client.assets.list(
-        filter=f"kind = host AND state = confirmed AND wildcard = false and discoverRun = ???",
+        filter=f"kind = host AND state = confirmed AND wildcard = false",
     ):
         print(asset["name"])
         assets.append(asset)

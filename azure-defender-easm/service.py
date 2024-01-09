@@ -9,7 +9,7 @@ import json
 import signal
 import traceback
 
-from scripts.discover_assets import (
+from discover_assets import (
     run_disco_group,
     create_disco_group,
     delete_disco_group,
