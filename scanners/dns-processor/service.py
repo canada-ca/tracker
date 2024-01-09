@@ -127,7 +127,11 @@ def check_mx_diff(processed_results, domain_id):
         prev_val = []
         for host in last_mx:
             prev_val.append(f"{host['hostname']} {host['preference']}")
-        prev_val = ";".join(prev_val)
+
+        if len(prev_val) == 0:
+            prev_val = "null"
+        else:
+            prev_val = ";".join(prev_val)
 
         send_mx_diff_email_alerts(
             domain=processed_results.get("domain"),
