@@ -37,6 +37,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { ExportButton } from './ExportButton'
 import { InfoButton } from './InfoPanel'
+import 'regenerator-runtime'
 
 import { ReactTableGlobalFilter } from './ReactTableGlobalFilter'
 
