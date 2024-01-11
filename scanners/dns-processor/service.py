@@ -122,7 +122,10 @@ def check_mx_diff(processed_results, domain_id):
         current_val = []
         for host in new_mx:
             current_val.append(f"{host['hostname']} {host['preference']}")
-        current_val = ";".join(current_val)
+        if len(current_val) == 0:
+            current_val = "null"
+        else:
+            current_val = ";".join(current_val)
 
         prev_val = []
         for host in last_mx:
