@@ -13,6 +13,7 @@ resources:
 #- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/prometheus.yaml
 patchesStrategicMerge:
   - arangodb-retain-storage-patch.yaml
+  - arangodb-memory-limit-patch.yaml
   - certificate-issuer-patch.yaml
   - cert-manager-service-account-patch.yaml
 patchesJSON6902:

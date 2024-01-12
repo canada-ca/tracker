@@ -10,6 +10,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $search: String
     $includeSuperAdminOrg: Boolean
     $isVerified: Boolean
+    $isAffiliated: Boolean
   ) {
     findMyOrganizations(
       after: $after
@@ -18,6 +19,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
       search: $search
       includeSuperAdminOrg: $includeSuperAdminOrg
       isVerified: $isVerified
+      isAffiliated: $isAffiliated
     ) {
       edges {
         cursor
@@ -28,6 +30,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
           slug
           domainCount
           verified
+          userHasPermission
           summaries {
             dmarc {
               total
@@ -493,7 +496,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
 `
 
 export const ORG_DETAILS_PAGE = gql`
-  query OrgDetails($slug: Slug!) {
+  query OrgDetails($slug: Slug!, $month: PeriodEnums!, $year: Year!) {
     organization: findOrganizationBySlug(orgSlug: $slug) {
       id
       name
@@ -527,6 +530,41 @@ export const ORG_DETAILS_PAGE = gql`
         }
         mail {
           ...RequiredSummaryFields
+        }
+      }
+      historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
+        totalCount
+        edges {
+          node {
+            date
+            https {
+              ...RequiredSummaryFields
+            }
+            dmarc {
+              ...RequiredSummaryFields
+            }
+            dkim {
+              ...RequiredSummaryFields
+            }
+            spf {
+              ...RequiredSummaryFields
+            }
+            ssl {
+              ...RequiredSummaryFields
+            }
+            webConnections {
+              ...RequiredSummaryFields
+            }
+            dmarcPhase {
+              ...RequiredSummaryFields
+            }
+            web {
+              ...RequiredSummaryFields
+            }
+            mail {
+              ...RequiredSummaryFields
+            }
+          }
         }
       }
     }
@@ -606,8 +644,8 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
 `
 
 export const PAGINATED_DOMAINS = gql`
-  query Domains($first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
-    findMyDomains(first: $first, after: $after, orderBy: $orderBy, search: $search) {
+  query Domains($first: Int, $after: String, $orderBy: DomainOrder, $search: String, $isAffiliated: Boolean) {
+    findMyDomains(first: $first, after: $after, orderBy: $orderBy, search: $search, isAffiliated: $isAffiliated) {
       edges {
         cursor
         node {
@@ -809,8 +847,17 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
     $after: String
     $orderBy: DmarcSummaryOrder
     $search: String
+    $isAffiliated: Boolean
   ) {
-    findMyDmarcSummaries(month: $month, year: $year, first: $first, after: $after, orderBy: $orderBy, search: $search) {
+    findMyDmarcSummaries(
+      month: $month
+      year: $year
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+      isAffiliated: $isAffiliated
+    ) {
       pageInfo {
         hasNextPage
         hasPreviousPage

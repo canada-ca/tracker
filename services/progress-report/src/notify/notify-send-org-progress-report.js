@@ -1,6 +1,6 @@
 const { NOTIFICATION_ORG_PROGRESS_REPORT } = process.env
 
-const sendOrgProgressReport = async ({ user, orgStats, orgAverages, chartStats, notifyClient }) => {
+const sendOrgProgressReport = async ({ log, user, orgStats, orgAverages, chartStats, notifyClient }) => {
   const templateId = NOTIFICATION_ORG_PROGRESS_REPORT
   const { httpsScoreDiff, webDomainCountDiff, dmarcScoreDiff, domainCountDiff, orgDetails } = orgStats
 
@@ -37,6 +37,7 @@ const sendOrgProgressReport = async ({ user, orgStats, orgAverages, chartStats, 
         chart_domain_count_diff: chartDomainCountDiff > 0 ? `+${chartDomainCountDiff}` : chartDomainCountDiff,
       },
     })
+    log(`Successfully sent ${orgDetails.en.name} progress report via email to user:, ${user._key}`)
   } catch (err) {
     console.error(`Error occurred when sending org progress report via email for ${user._key}: ${err}`)
   }

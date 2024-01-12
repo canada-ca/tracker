@@ -20,6 +20,7 @@ import {
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function DomainsPage() {
   const { data } = useQuery(IS_USER_SUPER_ADMIN)
@@ -29,6 +30,7 @@ export default function DomainsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [isAffiliated, setIsAffiliated] = useState(true)
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -60,6 +62,7 @@ export default function DomainsPage() {
       variables: {
         orderBy: { field: orderField, direction: orderDirection },
         search: debouncedSearchTerm,
+        isAffiliated,
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
@@ -223,6 +226,7 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
         />
+        <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
 
         {domainList}
 

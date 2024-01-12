@@ -47,6 +47,8 @@ spec:
       requests:
         cpu: 500m
         memory: 1Gi
+      limits:
+        memory: 4.5Gi
     volumeClaimTemplate:
       spec:
         storageClassName: fast-delete

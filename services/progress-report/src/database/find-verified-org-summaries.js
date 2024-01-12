@@ -1,9 +1,15 @@
+const { aql } = require('arangojs')
+const { UNCLAIMED_ORG_ID } = process.env
+
 const findVerifiedOrgs = async ({ query }) => {
+  let unclaimedFilter = aql``
+  if (typeof UNCLAIMED_ORG_ID !== 'undefined') unclaimedFilter = aql`FILTER org._id != ${UNCLAIMED_ORG_ID}`
   let cursor
   try {
     cursor = await query`
         FOR org IN organizations
           FILTER org.verified == true
+          ${unclaimedFilter}
           RETURN { _key: org._key, _id: org._id, orgDetails: org.orgDetails, summaries: org.summaries }
     `
   } catch (err) {
@@ -20,7 +26,7 @@ const findVerifiedOrgs = async ({ query }) => {
   return verifiedOrgs
 }
 
-const findOrgSummaries = async ({ query, startDate }) => {
+const findOrgSummaries = async ({ log, query, startDate }) => {
   const verifiedOrgs = await findVerifiedOrgs({ query })
   const orgSummaries = {}
   for (const org of verifiedOrgs) {
@@ -55,6 +61,7 @@ const findOrgSummaries = async ({ query, startDate }) => {
     }
   }
 
+  log(`Successfully found ${Object.keys(orgSummaries).length} verified org summaries`)
   return orgSummaries
 }
 

@@ -73,7 +73,7 @@ describe('given the findChartSummaries function', () => {
       })
     })
     it('returns the recent chart summaries', async () => {
-      const orgSummaries = await findOrgSummaries({ query, startDate: '2021-01-01' })
+      const orgSummaries = await findOrgSummaries({ log: console.log, query, startDate: '2021-01-01' })
 
       const expectedOrgSummaries = {
         _id: org._id,

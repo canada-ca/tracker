@@ -10,7 +10,7 @@ import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
 import { logActivity } from '../../audit-logs'
-import { PeriodEnums } from '../../enums'
+import { OrderDirection, PeriodEnums } from '../../enums'
 import { orgSummaryConnection } from './organization-summary-connection'
 
 export const organizationType = new GraphQLObjectType({
@@ -62,6 +62,11 @@ export const organizationType = new GraphQLObjectType({
       description: 'Whether the organization is a verified organization.',
       resolve: ({ verified }) => verified,
     },
+    externallyManaged: {
+      type: GraphQLBoolean,
+      description: 'Whether the organization is externally managed.',
+      resolve: ({ externallyManaged }) => externallyManaged,
+    },
     summaries: {
       type: organizationSummaryType,
       description: 'Summaries based on scan types that are preformed on the given organizations domains.',
@@ -78,6 +83,10 @@ export const organizationType = new GraphQLObjectType({
         year: {
           type: new GraphQLNonNull(Year),
           description: 'The year in which the returned data is relevant to.',
+        },
+        sortDirection: {
+          type: new GraphQLNonNull(OrderDirection),
+          description: 'The direction in which to sort the data.',
         },
       },
       resolve: async (
@@ -292,7 +301,7 @@ export const organizationType = new GraphQLObjectType({
         { i18n, auth: { checkPermission }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
         const permission = await checkPermission({ orgId: _id })
-        if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+        if (['user', 'admin', 'owner', 'super_admin'].includes(permission) === false) {
           throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
 

@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: progress-report
-              image: gcr.io/track-compliance/services/progress-report:master-75da851-1699967239 # {"$imagepolicy": "flux-system:progress-report"}
+              image: gcr.io/track-compliance/services/progress-report:master-b30504a-1704892971 # {"$imagepolicy": "flux-system:progress-report"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -55,4 +55,9 @@ spec:
                     secretKeyRef:
                       name: api
                       key: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
+                - name: UNCLAIMED_ORG_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: UNCLAIMED_ORG_ID
           restartPolicy: OnFailure

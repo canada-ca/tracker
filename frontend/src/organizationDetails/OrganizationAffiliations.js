@@ -13,23 +13,16 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORG_AFFILIATIONS as FORWARD } from '../graphql/queries'
 
 export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    variables: { slug: orgSlug },
-    recordsPerPage: usersPerPage,
-    relayRoot: 'findOrganizationBySlug.affiliations',
-    fetchPolicy: 'network-only',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage } = usePaginatedCollection(
+    {
+      fetchForward: FORWARD,
+      variables: { slug: orgSlug },
+      recordsPerPage: usersPerPage,
+      relayRoot: 'findOrganizationBySlug.affiliations',
+      fetchPolicy: 'network-only',
+      nextFetchPolicy: 'cache-first',
+    },
+  )
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -53,16 +46,8 @@ export function OrganizationAffiliations({ usersPerPage = 10, orgSlug }) {
           mb="4"
         >
           {({ permission, user }, index) => (
-            <ErrorBoundary
-              FallbackComponent={ErrorFallbackMessage}
-              key={`${user.id}:${index}`}
-            >
-              <UserCard
-                userName={user.userName}
-                displayName={user.displayName}
-                role={permission}
-                tfa={user.tfaValidated}
-              />
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage} key={`${user.id}:${index}`}>
+              <UserCard userName={user.userName} displayName={user.displayName} role={permission} />
               <Divider borderColor="gray.900" />
             </ErrorBoundary>
           )}
