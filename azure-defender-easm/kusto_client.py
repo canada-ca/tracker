@@ -1,9 +1,9 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.exceptions import KustoServiceError
 from azure.kusto.data.helpers import dataframe_from_result_table
-import pandas as pd
-from dotenv import load_dotenv
+
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -17,9 +17,21 @@ KCSB_DATA = KustoConnectionStringBuilder.with_aad_application_key_authentication
     KUSTO_CLUSTER, CLIENT_ID, CLIENT_SECRET, AUTHORITY_ID
 )
 KUSTO_CLIENT = KustoClient(KCSB_DATA)
-KUSTO_QUERY = "EasmAsset | where AssetType == 'Host' | project AssetName | take 5"
 
-RESPONSE = KUSTO_CLIENT.execute(KUSTO_DATABASE, KUSTO_QUERY)
 
-df = dataframe_from_result_table(RESPONSE.primary_results[0])
-df
+def get_host_asset(host_name):
+    query = f"EasmHostAsset | where Host == '{host_name}' | take 1"
+    response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
+    data = dataframe_from_result_table(response.primary_results[0]).to_dict(
+        orient="records"
+    )
+    return data
+
+
+def get_page_asset(page_name):
+    query = f"EasmPageAsset | where Host == '{page_name}' | take 1"
+    response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
+    data = dataframe_from_result_table(response.primary_results[0]).to_dict(
+        orient="records"
+    )
+    return data
