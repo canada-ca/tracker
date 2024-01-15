@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
 from dns_scanner.dns_scanner import scan_domain
 import nats
+from azure.cosmos import CosmosClient
 
 from dns_scanner.email_scanners import check_if_domain_exists
 
@@ -35,6 +36,22 @@ DB_URL = os.getenv("DB_URL")
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
+# Establish CosmosDB connection
+endpoint = os.getenv("AZURE_CONN_STRING")
+database = os.getenv("DATABASE")
+selector_container = os.getenv("SELECTOR_CONTAINER")
+
+# Set CosmosDB http_logging_policy logging level to warning to avoid excessive logging
+logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
+
+# Initialize the Cosmos client using connection string
+cosmos_client = CosmosClient.from_connection_string(endpoint)
+
+# Get DB
+cosmos_db = cosmos_client.get_database_client(database)
+
+# Get container
+container = cosmos_db.get_container_client(selector_container)
 
 def to_json(msg):
     print(json.dumps(msg, indent=2))
@@ -108,24 +125,13 @@ async def run():
 
         # Get DKIM selectors from DMARC summaries in DB
         try:
-            summary_selectors_cursor = db.aql.execute(
-                """
-                LET selsSplit = (
-                    FOR dmarcSumm, e IN 1 ANY @domain domainsToDmarcSummaries
-                        LIMIT 1
-                        LET sels = (
-                            FOR s in dmarcSumm.detailTables.fullPass[*].dkimSelectors
-                                RETURN SPLIT(s, ",")
-                        )
-                        RETURN sels
-                )[***]
-
-                FOR sel IN selsSplit
-                    RETURN DISTINCT sel
-                """,
-                bind_vars={"domain": domain_id},
-            )
-            summary_selector_strings = [sel for sel in summary_selectors_cursor]
+            summary_selector_strings = []
+            selectors = list(container.query_items(
+                query="SELECT c.id, c.data FROM c WHERE c.id = @domain OFFSET 0 LIMIT 1",
+                parameters=[{"name": "@domain", "value": domain}],
+            ))
+            if len(selectors) > 0:
+                summary_selector_strings = [sel["selector"] for sel in selectors[0]["data"]]
         except Exception as e:
             logger.error(f"Error getting selectors from DMARC summaries for domain '{domain}': {e}")
             return
