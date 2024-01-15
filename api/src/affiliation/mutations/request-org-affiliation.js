@@ -148,13 +148,7 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to request invite. Please try again.`))
     }
 
-    if (typeof SERVICE_ACCOUNT_EMAIL !== 'undefined')
-      orgAdmins.push({
-        userName: SERVICE_ACCOUNT_EMAIL,
-        displayName: 'Service Account',
-        preferredLang: 'en',
-        _key: 'service-account',
-      })
+    if (typeof SERVICE_ACCOUNT_EMAIL !== 'undefined') orgAdmins.push('service-account')
 
     if (orgAdmins.length > 0) {
       // Get org names to use in email
@@ -185,7 +179,16 @@ export const requestOrgAffiliation = new mutationWithClientMutationId({
       const adminLink = `https://${request.get('host')}/admin/organizations`
       // send notification to org admins
       for (const userKey of orgAdmins) {
-        const adminUser = await loadUserByKey.load(userKey)
+        let adminUser
+        if (userKey === 'service-account') {
+          adminUser = {
+            userName: SERVICE_ACCOUNT_EMAIL,
+            displayName: 'Service Account',
+            preferredLang: 'en',
+            _key: 'service-account',
+          }
+        } else adminUser = await loadUserByKey.load(userKey)
+
         await sendInviteRequestEmail({
           user: adminUser,
           orgNameEN: orgNames.orgNameEN,
