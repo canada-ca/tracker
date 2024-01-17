@@ -37,21 +37,21 @@ arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 # Establish CosmosDB connection
-endpoint = os.getenv("AZURE_CONN_STRING")
-database = os.getenv("DATABASE")
-selector_container = os.getenv("SELECTOR_CONTAINER")
+summaries_endpoint = os.getenv("AZURE_CONN_STRING")
+summaries_database = os.getenv("DATABASE")
+summaries_container = os.getenv("SUMMARIES_CONTAINER")
 
 # Set CosmosDB http_logging_policy logging level to warning to avoid excessive logging
 logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
 
 # Initialize the Cosmos client using connection string
-cosmos_client = CosmosClient.from_connection_string(endpoint)
+cosmos_client = CosmosClient.from_connection_string(summaries_endpoint)
 
 # Get DB
-cosmos_db = cosmos_client.get_database_client(database)
+cosmos_db = cosmos_client.get_database_client(summaries_database)
 
 # Get container
-container = cosmos_db.get_container_client(selector_container)
+container = cosmos_db.get_container_client(summaries_container)
 
 def to_json(msg):
     print(json.dumps(msg, indent=2))
