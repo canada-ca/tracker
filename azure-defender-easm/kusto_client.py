@@ -35,3 +35,28 @@ def get_page_asset(page_name):
         orient="records"
     )
     return data
+
+
+def get_hosts_with_ddos_protection():
+    query = "EasmHostAsset | where AssetName endswith '.gc.ca' or AssetName endswith '.canada.ca' | where WebComponents has 'DDOS Protection' | order by TimeGenerated desc | project TimeGenerated, AssetName, WebComponents"
+    response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
+    data = dataframe_from_result_table(response.primary_results[0]).to_dict(
+        orient="records"
+    )
+    return data
+
+
+def get_org_assets_from_roots(roots):
+    query = f"""
+    let org_roots = dynamic({roots});
+    EasmAsset
+    | where AssetType == 'HOST' 
+    | where AssetName has_any (org_roots) 
+    | summarize by AssetName, AssetId, AssetUuid, Labels
+    | order by AssetName asc
+    """
+    response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
+    data = dataframe_from_result_table(response.primary_results[0]).to_dict(
+        orient="records"
+    )
+    return data
