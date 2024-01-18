@@ -129,6 +129,7 @@ async def run():
             selectors = list(container.query_items(
                 query="SELECT c.id, c.data FROM c WHERE c.id = @domain OFFSET 0 LIMIT 1",
                 parameters=[{"name": "@domain", "value": domain}],
+                enable_cross_partition_query=True,
             ))
             if len(selectors) > 0:
                 summary_selector_strings = [sel["selector"] for sel in selectors[0]["data"]]
