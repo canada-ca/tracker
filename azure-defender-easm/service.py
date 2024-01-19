@@ -12,7 +12,6 @@ import traceback
 from discover_assets import (
     run_disco_group,
     create_disco_group,
-    delete_disco_group,
 )
 
 load_dotenv()
@@ -61,11 +60,16 @@ async def run(loop):
 
         domain = payload.get("domain")
 
+        if not domain.endswith(".gc.ca") or not domain.endswith(".canada.ca"):
+            logger.info(f"Skipping '{domain}' as it is not a GC domain.")
+            return
         try:
             logger.info(f"Adding '{domain}' to EASM tooling...")
-            await create_disco_group(domain, [domain])
+            await create_disco_group(
+                name=domain, assets=[{"kind": "host", "name": domain}]
+            )
             await run_disco_group(domain)
-            await delete_disco_group(domain)
+            # TODO delete disco group after run
             logger.info(f"Successfully added '{domain}' to EASM tooling.")
 
         except Exception as e:

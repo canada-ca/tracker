@@ -18,11 +18,11 @@ def get_disco_group(group_name):
     return disco_group
 
 
-def create_disco_group(name, assets):
+def create_disco_group(name, assets, frequency=0):
     request = {
         "description": "Discovery group made for discovering assets for " + name,
         "seeds": assets,
-        "frequencyMilliseconds": 604800000,  # weekly
+        "frequencyMilliseconds": frequency,
     }
     response = client.discovery_groups.put(name, request)
     return response
