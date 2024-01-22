@@ -19,7 +19,7 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 
 
 def get_host_asset(host_name):
-    query = f"EasmHostAsset | where Host == '{host_name}' | take 1"
+    query = f"EasmHostAsset | where Host == '{host_name}' | limit 1"
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"
@@ -49,7 +49,7 @@ def get_unlabelled_org_assets_from_roots(roots):
     query = f"""
     let org_roots = dynamic({roots});
     EasmAsset
-    | where AssetType == 'HOST' 
+    | where AssetType == 'HOST'
     | where AssetName has_any (org_roots)
     | where Labels == '[]'
     | summarize by AssetName, AssetId, AssetUuid, Labels

@@ -13,6 +13,7 @@ from discover_assets import (
     run_disco_group,
     create_disco_group,
 )
+from kusto_client import get_host_asset
 
 load_dotenv()
 
@@ -63,6 +64,18 @@ async def run(loop):
         if not domain.endswith(".gc.ca") or not domain.endswith(".canada.ca"):
             logger.info(f"Skipping '{domain}' as it is not a GC domain.")
             return
+
+        try:
+            easm_asset = get_host_asset(domain)
+            if len(easm_asset) > 0:
+                logger.info(f"Skipping '{domain}' as it already exists in EASM.")
+                return
+        except Exception as e:
+            logging.error(
+                f"Checking if asset exists in EASM: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+            )
+            return
+
         try:
             logger.info(f"Adding '{domain}' to EASM tooling...")
             await create_disco_group(
@@ -71,7 +84,6 @@ async def run(loop):
             await run_disco_group(domain)
             # TODO delete disco group after run
             logger.info(f"Successfully added '{domain}' to EASM tooling.")
-
         except Exception as e:
             logging.error(
                 f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
