@@ -37,7 +37,13 @@ def get_page_asset(page_name):
 
 
 def get_hosts_with_ddos_protection():
-    query = "EasmHostAsset | where AssetName endswith '.gc.ca' or AssetName endswith '.canada.ca' | where WebComponents has 'DDOS Protection' | order by TimeGenerated desc | project TimeGenerated, AssetName, WebComponents"
+    query = """
+    EasmHostAsset
+    | where AssetName endswith '.gc.ca' or AssetName endswith '.canada.ca'
+    | where WebComponents has 'DDOS Protection'
+    | order by TimeGenerated desc
+    | project TimeGenerated, AssetName, WebComponents
+    """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"
