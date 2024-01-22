@@ -18,4 +18,4 @@ credential = ClientSecretCredential(
     client_id=client_id, client_secret=client_secret, tenant_id=tenant_id
 )
 
-client = EasmClient(endpoint, resource_group, sub_id, workspace_name, credential)
+easm_client = EasmClient(endpoint, resource_group, sub_id, workspace_name, credential)

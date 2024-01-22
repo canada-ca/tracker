@@ -1,10 +1,10 @@
-from easm_client import client
+from easm_client import easm_client
 from discover_assets import list_disco_group_runs
 
 
 def get_login_pages():
     login_pages = []
-    for asset in client.assets.list(
+    for asset in easm_client.assets.list(
         filter="kind = page AND (url ~ /login OR url ~ /log-in OR url ~ /signin OR url ~ /sign-in) AND url !~ api.canada.ca",
     ):
         # print asset if it has a login page
@@ -17,7 +17,7 @@ def get_login_pages():
 
 def get_register_pages():
     register_pages = []
-    for asset in client.assets.list(
+    for asset in easm_client.assets.list(
         filter="kind = page AND (url ~/register OR url ~/signup OR url ~/sign-up) AND url !~ api.canada.ca",
     ):
         # print asset if it has a login page
@@ -38,7 +38,7 @@ def get_cookies(asset):
 
 def enumerate_attributes_types():
     type_enums = set()
-    for asset in client.assets.list(filter="kind = page AND state = confirmed"):
+    for asset in easm_client.assets.list(filter="kind = page AND state = confirmed"):
         length = len(type_enums)
         try:
             attributes = asset["asset"]["attributes"]
@@ -55,7 +55,7 @@ def enumerate_attributes_types():
 
 def enumerate_wc_types():
     type_enums = set()
-    for asset in client.assets.list(filter="kind = host AND state = confirmed"):
+    for asset in easm_client.assets.list(filter="kind = host AND state = confirmed"):
         length = len(type_enums)
         try:
             web_components = asset["asset"]["webComponents"]
@@ -72,7 +72,7 @@ def enumerate_wc_types():
 
 def find_gc_hosts():
     assets = []
-    for asset in client.assets.list(
+    for asset in easm_client.assets.list(
         filter="kind = host AND state = confirmed AND wildcard = false",
     ):
         if ".gc.ca" in asset["name"] or ".canada.ca" in asset["name"]:
@@ -90,7 +90,7 @@ def find_disco_group_assets(group_name):
     print(f"Latest run: {latest_run}")
 
     assets = []
-    for asset in client.assets.list(
+    for asset in easm_client.assets.list(
         filter=f"kind = host AND state = confirmed AND wildcard = false",
     ):
         print(asset["name"])

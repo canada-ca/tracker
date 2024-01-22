@@ -1,4 +1,4 @@
-from easm_client import client
+from easm_client import easm_client
 
 
 UNNECESSARY_OPEN_PORTS = {
@@ -54,7 +54,7 @@ def get_cookies(asset):
 
 
 def get_asset(asset_id):
-    return client.assets.get(asset_id=asset_id)
+    return easm_client.assets.get(asset_id=asset_id)
 
 
 def get_vulnerable_web_components(asset):
