@@ -1,5 +1,4 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
-from azure.kusto.data.exceptions import KustoServiceError
 from azure.kusto.data.helpers import dataframe_from_result_table
 
 import os
@@ -46,12 +45,13 @@ def get_hosts_with_ddos_protection():
     return data
 
 
-def get_org_assets_from_roots(roots):
+def get_unlabelled_org_assets_from_roots(roots):
     query = f"""
     let org_roots = dynamic({roots});
     EasmAsset
     | where AssetType == 'HOST' 
-    | where AssetName has_any (org_roots) 
+    | where AssetName has_any (org_roots)
+    | where Labels == '[]'
     | summarize by AssetName, AssetId, AssetUuid, Labels
     | order by AssetName asc
     """
