@@ -27,7 +27,7 @@ def ddos_protection_detection_service():
             }
         )
 
-    current_time = time.strftime("%Y%m%d-%H%M%S")
+    current_time = time.strftime("%Y-%m-%d")
     export_to_csv(export_arr, f"ddos_protection_{current_time}.csv")
 
 

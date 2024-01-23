@@ -54,7 +54,7 @@ def get_hosts_with_ddos_protection():
     EasmHostAsset
     | where AssetName endswith '.gc.ca' or AssetName endswith '.canada.ca'
     | where WebComponents has 'DDOS Protection'
-    | summarize AssetName
+    | summarize by AssetName
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
@@ -68,7 +68,7 @@ def get_hosts_without_ddos_protection():
     EasmHostAsset
     | where AssetName endswith '.gc.ca' or AssetName endswith '.canada.ca'
     | where WebComponents !has 'DDOS Protection'
-    | summarize AssetName
+    | summarize by AssetName
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
