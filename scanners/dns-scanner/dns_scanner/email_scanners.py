@@ -220,6 +220,9 @@ class DKIMScanner:
         except InvalidTagValueList as e:
             raise KeyFormatError(e)
 
+        if pub.get(b"p") == b"":
+            return None, None, None
+
         pk = None
         keysize = None
         ktag = pub.get(b"k", b"rsa")
