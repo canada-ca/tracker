@@ -18,11 +18,11 @@ arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
-def get_verified_org_ids():
+def get_verified_orgs():
     query = """
     FOR org IN organizations
         FILTER org.verified == true
-        RETURN org._id
+        RETURN { "id": org._id, "labelName": org.easmLabelName }
     """
     cursor = db.aql.execute(query)
     return cursor.all()
@@ -45,7 +45,7 @@ def extract_root_domains(subdomains):
             root_domain = ".".join(parts[-3:])
             match = re.match(r"^([^.]+)\.(gc|canada)\.ca$", root_domain)
             if match:
-                full_root_domain = match.group(2)
+                full_root_domain = match.group(0)
                 root_domains_set.add(full_root_domain)
 
     unique_root_domains = list(root_domains_set)
@@ -54,18 +54,18 @@ def extract_root_domains(subdomains):
 
 def update_asset_labels():
     # Get verified org ids
-    verified_org_ids = get_verified_org_ids()
-
-    for org_id in verified_org_ids:
+    verified_orgs = get_verified_orgs()
+    for org in verified_orgs:
         # Get org domains
-        org_domains = get_org_domains(org_id)
-
+        org_domains = get_org_domains(org["id"])
         # Extract root domains
         unique_roots = extract_root_domains(org_domains)
-
-        # get unlabelled assets from roots
-        unlabelled_org_assets = get_unlabelled_org_assets_from_roots(unique_roots)
-        label_assets(assets=unlabelled_org_assets, label="test")
+        for root in unique_roots:
+            logging.info(f"Root domain: {root}")
+            # get unlabelled assets from roots
+            unlabelled_org_assets = get_unlabelled_org_assets_from_roots([root])
+            logging.info("Found " + str(len(unlabelled_org_assets)) + " assets")
+            label_assets(assets=unlabelled_org_assets, label=org["labelName"])
 
 
 if __name__ == "__main__":
