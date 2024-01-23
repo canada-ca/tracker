@@ -58,6 +58,9 @@ def process_tls_results(tls_results):
                 + guidance["ciphers"]["1.3"]["sufficient"]
             ):
                 strength = "acceptable"
+            elif cipher_suite in guidance["ciphers"]["1.2"]["phase_out"]:
+                strength = "phase_out"
+                neutral_tags.append("ssl23")
             else:
                 strength = "weak"
                 negative_tags.append("ssl6")
@@ -70,6 +73,9 @@ def process_tls_results(tls_results):
             strength = "strong"
         elif curve.lower() in guidance["curves"]["sufficient"]:
             strength = "acceptable"
+        elif curve.lower() in guidance["curves"]["phase_out"]:
+            strength = "phase_out"
+            neutral_tags.append("ssl22")
         else:
             strength = "weak"
             weak_curve = True

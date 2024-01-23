@@ -26,6 +26,7 @@ export function WebTLSResults({ tlsResult }) {
 
   const cipherStrengths = {
     weak: t`weak`,
+    phase_out: t`phase out`,
     acceptable: t`acceptable`,
     strong: t`strong`,
   }
@@ -93,6 +94,10 @@ export function WebTLSResults({ tlsResult }) {
     return true
   }
 
+  const cipherCurveTextColor = (strength) => {
+    return strength === 'weak' ? 'weak' : 'black'
+  }
+
   const tlsCiphers = (
     <Box>
       <Flex as={AccordionButton}>
@@ -113,11 +118,9 @@ export function WebTLSResults({ tlsResult }) {
                 return (
                   <Flex key={idx} {...cipherStyleProps}>
                     <Flex align="center" minW="50%">
-                      <Text color={strength === 'weak' ? 'weak' : 'black'}>{name}</Text>
+                      <Text color={cipherCurveTextColor(strength)}>{name}</Text>
                     </Flex>
-                    <Text color={strength === 'weak' ? 'weak' : 'black'}>
-                      {cipherStrengths[strength].toUpperCase()}
-                    </Text>
+                    <Text color={cipherCurveTextColor(strength)}>{cipherStrengths[strength].toUpperCase()}</Text>
                   </Flex>
                 )
               })}
@@ -132,11 +135,9 @@ export function WebTLSResults({ tlsResult }) {
                 return (
                   <Flex key={idx} {...cipherStyleProps}>
                     <Flex align="center" minW="50%">
-                      <Text color={strength === 'weak' ? 'weak' : 'black'}>{name}</Text>
+                      <Text color={cipherCurveTextColor(strength)}>{name}</Text>
                     </Flex>
-                    <Text color={strength === 'weak' ? 'weak' : 'black'}>
-                      {cipherStrengths[strength].toUpperCase()}
-                    </Text>
+                    <Text color={cipherCurveTextColor(strength)}>{cipherStrengths[strength].toUpperCase()}</Text>
                   </Flex>
                 )
               })}
@@ -162,9 +163,9 @@ export function WebTLSResults({ tlsResult }) {
             return (
               <Flex key={idx} {...cipherStyleProps}>
                 <Flex align="center" minW="50%">
-                  <Text color={strength === 'weak' ? 'weak' : 'black'}>{name}</Text>
+                  <Text color={cipherCurveTextColor(strength)}>{name}</Text>
                 </Flex>
-                <Text color={strength === 'weak' ? 'weak' : 'black'}>{cipherStrengths[strength].toUpperCase()}</Text>
+                <Text color={cipherCurveTextColor(strength)}>{cipherStrengths[strength].toUpperCase()}</Text>
               </Flex>
             )
           })}

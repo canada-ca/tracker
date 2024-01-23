@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: dns-scanner
-          image: gcr.io/track-compliance/dns-scanner:master-ef5143f-1702065578 # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: gcr.io/track-compliance/dns-scanner:master-cf3d6e4-1705590518 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -49,5 +49,20 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: AZURE_CONN_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: dmarc
+                  key: AZURE_CONN_STRING
+            - name: DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: dmarc
+                  key: DATABASE
+            - name: SUMMARIES_CONTAINER
+              valueFrom:
+                secretKeyRef:
+                  name: dmarc
+                  key: SUMMARIES_CONTAINER
           resources: {}
 status: {}
