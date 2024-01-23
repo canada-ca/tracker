@@ -1,6 +1,6 @@
 import csv
 import time
-from kusto_client import get_host_assets, host_has_ddos_protection
+from kusto_queries import get_hosts_with_ddos_protection, host_has_ddos_protection
 
 
 def export_to_csv(data, filename):
@@ -14,11 +14,11 @@ def export_to_csv(data, filename):
 
 
 def ddos_protection_detection_service():
-    host_assets = get_host_assets()
-    print(f"Found {len(host_assets)} host assets")
+    protected_assets = get_hosts_with_ddos_protection()
+    print(f"Found {len(protected_assets)} host assets")
 
     export_arr = []
-    for host in host_assets:
+    for host in protected_assets:
         ddos_protection = host_has_ddos_protection(host["AssetName"])
         export_arr.append(
             {
