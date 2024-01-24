@@ -70,16 +70,17 @@ def process_dkim(dkim_results):
         key_size = dkim_results[selector].get("key_size", None)
         key_type = dkim_results[selector].get("key_type", None)
 
-        if key_size >= 4096 and key_type == "rsa":
-            dkim_tags[selector].append("dkim8")
-        elif key_size >= 2048 and key_type == "rsa":
-            dkim_tags[selector].append("dkim7")
-        elif key_size == 1024 and key_type == "rsa":
-            dkim_tags[selector].append("dkim6")
-        elif key_size < 1024 and key_type == "rsa":
-            dkim_tags[selector].append("dkim5")
-        else:
-            dkim_tags[selector].append("dkim9")
+        if key_size is not None and key_type is not None:
+            if key_size >= 4096 and key_type == "rsa":
+                dkim_tags[selector].append("dkim8")
+            elif key_size >= 2048 and key_type == "rsa":
+                dkim_tags[selector].append("dkim7")
+            elif key_size == 1024 and key_type == "rsa":
+                dkim_tags[selector].append("dkim6")
+            elif key_size < 1024 and key_type == "rsa":
+                dkim_tags[selector].append("dkim5")
+            else:
+                dkim_tags[selector].append("dkim9")
 
         if key_type is not None and key_type != "rsa":
             dkim_tags[selector].append("dkim11")
