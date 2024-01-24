@@ -2,8 +2,8 @@ import logging
 import re
 from arango import ArangoClient
 import os
-from kusto_queries import get_unlabelled_org_assets_from_roots
-from easm_update_asset import label_assets
+from clients.kusto_client import get_unlabelled_org_assets_from_roots
+from clients.easm_client import label_assets
 from dotenv import load_dotenv
 
 load_dotenv()

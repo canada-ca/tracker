@@ -9,8 +9,8 @@ import json
 import signal
 import traceback
 
-from easm_discover_assets import run_disco_group, create_disco_group
-from kusto_queries import get_host_asset
+from clients.easm_client import run_disco_group, create_disco_group
+from clients.kusto_client import get_host_asset
 
 load_dotenv()
 

@@ -1,6 +1,9 @@
 import csv
 import time
-from kusto_queries import get_hosts_with_ddos_protection, host_has_ddos_protection
+from clients.kusto_client import (
+    get_hosts_with_ddos_protection,
+    host_has_ddos_protection,
+)
 
 
 def export_to_csv(data, filename):
