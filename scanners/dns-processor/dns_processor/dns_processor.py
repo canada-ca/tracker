@@ -86,7 +86,7 @@ def process_dkim(dkim_results):
             else:
                 dkim_tags[selector].append("dkim9")
 
-        if key_type != "rsa":
+        if key_type is not None and key_type != "rsa":
             dkim_tags[selector].append("dkim11")
 
         # Dkim value invalid
@@ -94,7 +94,7 @@ def process_dkim(dkim_results):
         v_tag = dkim_results[selector].get("parsed", {}).get("v", None)
         p_tag = dkim_results[selector].get("parsed", {}).get("p", None)
 
-        if p_tag is None:
+        if p_tag is None or p_tag == "":
             dkim_tags[selector].append("dkim15")
 
         # Testing Enabled
