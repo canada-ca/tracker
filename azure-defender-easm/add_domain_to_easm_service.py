@@ -9,7 +9,7 @@ import json
 import signal
 import traceback
 
-from discover_assets import run_disco_group, create_disco_group
+from easm_discover_assets import run_disco_group, create_disco_group
 from kusto_queries import get_host_asset
 
 load_dotenv()

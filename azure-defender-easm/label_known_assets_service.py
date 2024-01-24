@@ -3,7 +3,7 @@ import re
 from arango import ArangoClient
 import os
 from kusto_queries import get_unlabelled_org_assets_from_roots
-from update_asset import label_assets
+from easm_update_asset import label_assets
 from dotenv import load_dotenv
 
 load_dotenv()
