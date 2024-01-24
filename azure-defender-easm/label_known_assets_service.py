@@ -22,7 +22,7 @@ def get_verified_orgs():
     query = """
     FOR org IN organizations
         FILTER org.verified == true
-        RETURN { "id": org._id, "labelName": org.easmLabelName }
+        RETURN { "key": org._key, "id": org._id, "labelName": org.easmLabelName }
     """
     cursor = db.aql.execute(query)
     return cursor.all()
@@ -65,7 +65,7 @@ def update_asset_labels():
             # get unlabelled assets from roots
             unlabelled_org_assets = get_unlabelled_org_assets_from_roots([root])
             logging.info("Found " + str(len(unlabelled_org_assets)) + " assets")
-            label_assets(assets=unlabelled_org_assets, label=org["labelName"])
+            label_assets(assets=unlabelled_org_assets, label=org["key"])
 
 
 if __name__ == "__main__":
