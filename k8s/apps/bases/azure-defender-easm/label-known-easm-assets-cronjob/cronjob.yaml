@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: label-known-easm-assets
+  namespace: azure-defender-easm
+spec:
+  schedule: "0 2 * * *"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 21600
+      template:
+        metadata:
+          labels:
+            app: label-known-easm-assets
+        spec:
+          containers:
+            - name: label-known-easm-assets
+              image: gcr.io/track-compliance/label-known-easm-assets:master-17ff220-1697550117 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+              env:
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: DB_PASS
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: DB_USER
+                - name: DB_HOST
+                  value: arangodb.db
+                - name: DB_PORT
+                  value: "8529"
+                - name: DB_NAME
+                  value: track_dmarc
+                - name: DB_COLLECTION
+                  value: domains
+                - name: PUBLISH_TO
+                  value: domains
+                - name: NATS_URL
+                  value: nats://nats.pubsub:4222
+          restartPolicy: Never
+      backoffLimit: 4

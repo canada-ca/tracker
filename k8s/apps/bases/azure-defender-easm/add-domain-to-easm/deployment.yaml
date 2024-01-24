@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: add-domain-to-easm
+  labels:
+    app: add-domain-to-easm
+  namespace: azure-defender-easm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: add-domain-to-easm
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: add-domain-to-easm
+    spec:
+      containers:
+        - name: add-domain-to-easm
+          image: gcr.io/track-compliance/add-domain-to-easm:master-4b3c965-1702065336 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
+          env:
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              value: http://arangodb.db:8529
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: PUBLISH_TO
+              value: domains
+            - name: SUBSCRIBE_TO
+              value: domains.*.discovery
+            - name: QUEUE_GROUP
+              value: domain_discovery
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+          resources: {}
+status: {}
