@@ -96,7 +96,3 @@ def find_disco_group_assets(group_name):
         print(asset["name"])
         assets.append(asset)
     return assets
-
-
-if __name__ == "__main__":
-    find_disco_group_assets("Elections")
