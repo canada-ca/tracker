@@ -2,7 +2,7 @@
   "dkim": {
     "pass": [],
     "fail": ["dkim2", "dkim11", "dkim12", "dkim13", "dkim16"],
-    "info": ["dkim1", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim14"]
+    "info": ["dkim1", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim14", "dkim15"]
   },
   "spf": {
     "pass": ["spf12"],
