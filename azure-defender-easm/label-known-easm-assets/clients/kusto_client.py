@@ -28,7 +28,7 @@ def get_unlabelled_org_assets_from_root(root):
     EasmAsset
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
-    | where AssetName endswith '{root}'
+    | where AssetName == '{root}' or AssetName endswith '.{root}' 
     | where Labels == '[]'
     | project AssetName, AssetUuid, Labels
     """
