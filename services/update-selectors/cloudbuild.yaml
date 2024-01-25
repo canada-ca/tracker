@@ -15,7 +15,7 @@ steps:
 
   - name: mikewilliamson/wait-for
     id: wait_test_cosmosdb
-    args: ['test_cosmosdb:8081']
+    args: ['cosmosdb:8081']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-results
