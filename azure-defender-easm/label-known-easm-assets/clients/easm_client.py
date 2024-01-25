@@ -1,36 +1,32 @@
 import os
+import logging
 from azure.identity import ClientSecretCredential
 from azure.defender.easm import EasmClient
 from dotenv import load_dotenv
 
 load_dotenv()
 
-sub_id = os.getenv("SUBSCRIPTION_ID")
-workspace_name = os.getenv("WORKSPACE_NAME")
-resource_group = os.getenv("RESOURCE_GROUP")
-region = os.getenv("REGION")
-endpoint = f"{region}.easm.defender.microsoft.com"
+SUB_ID = os.getenv("SUBSCRIPTION_ID")
+WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
+RESOURCE_GROUP = os.getenv("RESOURCE_GROUP")
+REGION = os.getenv("REGION")
+ENDPOINT = f"{REGION}.easm.defender.microsoft.com"
 
-client_id = os.getenv("CLIENT_ID")
-client_secret = os.getenv("CLIENT_SECRET")
-tenant_id = os.getenv("TENANT_ID")
-credential = ClientSecretCredential(
-    client_id=client_id, client_secret=client_secret, tenant_id=tenant_id
-)
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+TENANT_ID = os.getenv("TENANT_ID")
+CREDENTIAL = ClientSecretCredential(TENANT_ID, CLIENT_ID, CLIENT_SECRET)
 
-EASM_CLIENT = EasmClient(endpoint, resource_group, sub_id, workspace_name, credential)
+EASM_CLIENT = EasmClient(ENDPOINT, RESOURCE_GROUP, SUB_ID, WORKSPACE_NAME, CREDENTIAL)
 
 
 def label_assets(assets, label):
-    update_ids = []
     for asset in assets:
         update_request = {"labels": {f"{label}": True}}
         asset_filter = f"uuid = {asset['AssetUuid']}"
-        update = EASM_CLIENT.assets.update(body=update_request, filter=asset_filter)
-        update_ids.append(update["id"])
-        print(f"{asset['AssetName']} labeled with {label}")
-
-    # Using the `tasks` EASM_CLIENT, we can view the progress of each update using the `get` method
-    for update_id in update_ids:
-        update = EASM_CLIENT.tasks.get(update_id)
-        print(f'{update["id"]}: {update["state"]}')
+        try:
+            EASM_CLIENT.assets.update(body=update_request, filter=asset_filter)
+            logging.info(f"{asset['AssetName']} labeled with {label}")
+        except Exception as e:
+            logging.error(f"Failed to label {asset['AssetName']}: {e}")
+            continue

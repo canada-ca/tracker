@@ -2,7 +2,7 @@ import logging
 import re
 from arango import ArangoClient
 import os
-from clients.kusto_client import get_unlabelled_org_assets_from_roots
+from clients.kusto_client import get_unlabelled_org_assets_from_root
 from clients.easm_client import label_assets
 from dotenv import load_dotenv
 
@@ -22,19 +22,22 @@ def get_verified_orgs():
     query = """
     FOR org IN organizations
         FILTER org.verified == true
-        RETURN { "key": org._key, "id": org._id, "labelName": org.easmLabelName }
+        RETURN { "key": org._key, "id": org._id }
     """
     cursor = db.aql.execute(query)
-    return cursor.all()
+    return cursor.batch()
 
 
 def get_org_domains(org_id):
     query = f"""
     FOR v, e IN 1..1 OUTBOUND @org_id claims
+        FILTER e.hidden != true
+        FILTER v.archived != true
+        FILTER v.rcode != "NXDOMAIN"
         RETURN v.domain
     """
     cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
-    return cursor.all()
+    return cursor.batch()
 
 
 def extract_root_domains(subdomains):
@@ -54,18 +57,38 @@ def extract_root_domains(subdomains):
 
 def update_asset_labels():
     # Get verified org ids
-    verified_orgs = get_verified_orgs()
+    try:
+        logging.info("Getting verified orgs")
+        verified_orgs = get_verified_orgs()
+        logging.info(f"Found {len(verified_orgs)} verified orgs")
+    except Exception as e:
+        logging.error(e)
+        return
     for org in verified_orgs:
         # Get org domains
-        org_domains = get_org_domains(org["id"])
+        try:
+            logging.info(f"Getting domains for org {org['key']}")
+            org_domains = get_org_domains(org["id"])
+            logging.info(f"Found {len(org_domains)} domains")
+        except Exception as e:
+            logging.error(e)
+            continue
         # Extract root domains
-        unique_roots = extract_root_domains(org_domains)
+        try:
+            unique_roots = extract_root_domains(org_domains)
+        except Exception as e:
+            logging.error(e)
+
         for root in unique_roots:
-            logging.info(f"Root domain: {root}")
-            # get unlabelled assets from roots
-            unlabelled_org_assets = get_unlabelled_org_assets_from_roots([root])
-            logging.info("Found " + str(len(unlabelled_org_assets)) + " assets")
-            label_assets(assets=unlabelled_org_assets, label=org["key"])
+            try:
+                logging.info(f"Root domain: {root}")
+                # get unlabelled assets from roots
+                unlabelled_org_assets = get_unlabelled_org_assets_from_root(root)
+                logging.info("Found " + str(len(unlabelled_org_assets)) + " assets")
+                label_assets(assets=unlabelled_org_assets, label=org["key"])
+            except Exception as e:
+                logging.error(e)
+                continue
 
 
 if __name__ == "__main__":
