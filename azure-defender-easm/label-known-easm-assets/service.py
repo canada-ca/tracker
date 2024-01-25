@@ -84,7 +84,9 @@ def update_asset_labels():
                 logging.info(f"Root domain: {root}")
                 # get unlabelled assets from roots
                 unlabelled_org_assets = get_unlabelled_org_assets_from_root(root)
-                logging.info("Found " + str(len(unlabelled_org_assets)) + " assets")
+                logging.info(
+                    "Found " + str(len(unlabelled_org_assets)) + " unlabelled assets"
+                )
                 label_assets(assets=unlabelled_org_assets, label=org["key"])
             except Exception as e:
                 logging.error(e)

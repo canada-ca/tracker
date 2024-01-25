@@ -26,11 +26,11 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 def get_unlabelled_org_assets_from_root(root):
     query = f"""
     EasmAsset
+    | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
-    | where AssetName endswith '.{root}'
+    | where AssetName endswith '{root}'
     | where Labels == '[]'
-    | summarize by AssetName, AssetId, AssetUuid, Labels
-    | order by AssetName asc
+    | project AssetName, AssetUuid, Labels
     """
     try:
         response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
