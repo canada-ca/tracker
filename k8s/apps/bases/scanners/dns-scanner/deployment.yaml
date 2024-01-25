@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: dns-scanner
-          image: gcr.io/track-compliance/dns-scanner:master-cf3d6e4-1705590518 # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: gcr.io/track-compliance/dns-scanner:master-25143c7-1706105437 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
             - name: DB_NAME
               value: track_dmarc

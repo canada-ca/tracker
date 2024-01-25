@@ -9,12 +9,12 @@ spec:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
-          - key: task
+          - key: workload
             operator: In
             values:
-            - db
+            - database
     tolerations:
-      - key: "task"
+      - key: "workload"
         operator: "Equal"
-        value: "db"
+        value: "database"
         effect: "NoSchedule"

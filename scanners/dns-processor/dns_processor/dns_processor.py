@@ -70,11 +70,7 @@ def process_dkim(dkim_results):
         key_size = dkim_results[selector].get("key_size", None)
         key_type = dkim_results[selector].get("key_type", None)
 
-        if key_size is None:
-            dkim_tags[selector].append("dkim9")
-        elif key_type is None:
-            dkim_tags[selector].append("dkim9")
-        else:
+        if key_size is not None and key_type is not None:
             if key_size >= 4096 and key_type == "rsa":
                 dkim_tags[selector].append("dkim8")
             elif key_size >= 2048 and key_type == "rsa":
@@ -86,7 +82,7 @@ def process_dkim(dkim_results):
             else:
                 dkim_tags[selector].append("dkim9")
 
-        if key_type != "rsa":
+        if key_type is not None and key_type != "rsa":
             dkim_tags[selector].append("dkim11")
 
         # Dkim value invalid
@@ -94,7 +90,7 @@ def process_dkim(dkim_results):
         v_tag = dkim_results[selector].get("parsed", {}).get("v", None)
         p_tag = dkim_results[selector].get("parsed", {}).get("p", None)
 
-        if p_tag is None:
+        if p_tag is None or p_tag == "":
             dkim_tags[selector].append("dkim15")
 
         # Testing Enabled

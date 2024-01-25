@@ -41,12 +41,7 @@ export const loadChartSummaryConnectionsByPeriod =
             FOR summary IN chartSummaries
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
           )
 
           RETURN {
@@ -61,12 +56,7 @@ export const loadChartSummaryConnectionsByPeriod =
             FOR summary IN chartSummaries
               FILTER DATE_FORMAT(summary.date, '%yyyy-%mm-%dd') >= DATE_FORMAT(${startDate}, '%yyyy-%mm-%dd')
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
           )
 
           RETURN {
@@ -81,12 +71,7 @@ export const loadChartSummaryConnectionsByPeriod =
             FOR summary IN chartSummaries
               FILTER DATE_FORMAT(summary.date, '%yyyy') == DATE_FORMAT(${startDate}, '%yyyy')
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
           )
 
           RETURN {
@@ -101,12 +86,7 @@ export const loadChartSummaryConnectionsByPeriod =
             FOR summary IN chartSummaries
               FILTER DATE_FORMAT(summary.date, "%yyyy-%mm") == DATE_FORMAT(${startDate}, "%yyyy-%mm")
               SORT summary.date ASC
-              RETURN {
-                id: summary._key,
-                date: summary.date,
-                https: summary.https,
-                dmarc: summary.dmarc,
-              }
+              RETURN MERGE({ id: summary._key }, DOCUMENT(summary._id))
           )
 
           RETURN {

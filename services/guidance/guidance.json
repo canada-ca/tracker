@@ -685,7 +685,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -701,7 +701,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -719,7 +719,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -735,7 +735,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -753,7 +753,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.7 Default Results",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
             }
           ]
         },
@@ -769,7 +769,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.7 Default Results (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
             }
           ]
         }
@@ -787,7 +787,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -803,7 +803,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -821,7 +821,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -837,7 +837,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -855,7 +855,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -871,7 +871,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -889,7 +889,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -905,7 +905,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -923,7 +923,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
             }
           ]
         },
@@ -939,7 +939,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
             }
           ]
         }
@@ -957,7 +957,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 5.3 a",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
             }
           ]
         },
@@ -973,7 +973,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 5.3 a (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
             }
           ]
         }
@@ -991,7 +991,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
             }
           ]
         },
@@ -1007,7 +1007,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
             }
           ]
         }
@@ -1025,7 +1025,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -1041,7 +1041,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -1059,7 +1059,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -1075,7 +1075,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -1486,7 +1486,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6 Policy",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6"
             }
           ]
         },
@@ -1502,7 +1502,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6 Policy (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6"
             }
           ]
         }
@@ -1520,7 +1520,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1536,7 +1536,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6 Policy (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6"
             }
           ]
         }
@@ -1554,7 +1554,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1570,7 +1570,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1588,7 +1588,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1604,7 +1604,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1622,7 +1622,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1638,7 +1638,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1656,7 +1656,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1672,7 +1672,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1690,7 +1690,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1706,7 +1706,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1724,7 +1724,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1740,7 +1740,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1758,7 +1758,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1774,7 +1774,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1792,7 +1792,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1808,7 +1808,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1826,7 +1826,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1842,7 +1842,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1860,7 +1860,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1876,7 +1876,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1894,7 +1894,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         },
@@ -1910,7 +1910,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         }
@@ -1928,7 +1928,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         },
@@ -1944,7 +1944,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         }
@@ -1962,7 +1962,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1978,7 +1978,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1996,7 +1996,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -2012,7 +2012,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -2030,7 +2030,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -2046,7 +2046,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -2064,7 +2064,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -2080,7 +2080,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -2098,7 +2098,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -2114,7 +2114,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -2132,7 +2132,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -2148,7 +2148,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -2166,7 +2166,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         },
@@ -2182,7 +2182,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         }
@@ -2200,7 +2200,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -2216,7 +2216,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -2261,7 +2261,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         },
@@ -2277,7 +2277,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM) (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         }
@@ -2295,7 +2295,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         },
@@ -2311,7 +2311,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance (EN)",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         }
@@ -2329,7 +2329,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         },
@@ -2345,7 +2345,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance (EN)",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         }
@@ -2363,7 +2363,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2379,7 +2379,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2397,7 +2397,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2413,7 +2413,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2431,7 +2431,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2447,7 +2447,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2465,7 +2465,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2481,7 +2481,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2499,7 +2499,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2515,7 +2515,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2557,7 +2557,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2573,7 +2573,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2591,7 +2591,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         },
@@ -2607,7 +2607,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         }
@@ -2625,7 +2625,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         },
@@ -2641,7 +2641,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         }
@@ -2683,7 +2683,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2699,7 +2699,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2815,7 +2815,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -2831,7 +2831,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -2849,7 +2849,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -2865,7 +2865,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -2883,7 +2883,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 2.6 Reults of Evaluation",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
             }
           ]
         },
@@ -2899,7 +2899,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 2.6 Reults of Evaluation (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
             }
           ]
         }
@@ -2917,7 +2917,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -2933,7 +2933,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }
@@ -2951,7 +2951,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -2967,7 +2967,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }
@@ -2985,7 +2985,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         },
@@ -3001,7 +3001,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM) (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         }
@@ -3019,7 +3019,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 7.5 _domainkey DNS TXT Resource Record Tag Specifications",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
             }
           ]
         },
@@ -3035,7 +3035,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 7.5 _domainkey DNS TXT Resource Record Tag Specifications (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
             }
           ]
         }
@@ -3053,7 +3053,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 6 Verifier Actions",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-6"
             }
           ]
         },
@@ -3069,7 +3069,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 6 Verifier Actions (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-6"
             }
           ]
         }
@@ -3087,7 +3087,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -3103,7 +3103,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }
@@ -3121,7 +3121,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -3137,7 +3137,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }
