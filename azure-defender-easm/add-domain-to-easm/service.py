@@ -19,9 +19,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-NAME = os.getenv("NAME", "azure-defender-easm")
+NAME = os.getenv("NAME", "add-domain-to-easm")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP", "azure-defender-easm")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP", "add-domain-to-easm")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
@@ -57,7 +57,6 @@ async def run(loop):
         payload = json.loads(msg.data)
 
         domain = payload.get("domain")
-
         if not domain.endswith(".gc.ca") or not domain.endswith(".canada.ca"):
             logger.info(f"Skipping '{domain}' as it is not a GC domain.")
             return
