@@ -28,16 +28,15 @@ FROM python:3.11.6-slim-bookworm
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
 
-WORKDIR /dns-processor
+WORKDIR /add-domain-to-easm
 
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
 
-COPY service.py dns_processor_cli.py ./
-COPY dns_processor ./dns_processor
-COPY notify ./notify
+COPY service.py ./
+COPY client ./client
 
-RUN useradd -ms /bin/bash scanner
-USER scanner
+RUN useradd -ms /bin/bash defender
+USER defender
 
 CMD ["python3", "service.py"]
