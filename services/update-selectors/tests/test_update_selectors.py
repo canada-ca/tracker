@@ -14,8 +14,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 load_dotenv(os.path.join(os.path.dirname(__file__), "test.env"))
 
 ARANGO_DB_URL = os.getenv("ARANGO_DB_URL", "http://localhost:8530")
-ARANGO_DB_USER = os.getenv("ARANGO_DB_USER")
-ARANGO_DB_PASS = os.getenv("ARANGO_DB_PASS")
+ARANGO_DB_USER = os.getenv("ARANGO_DB_USER", "root")
+ARANGO_DB_PASS = os.getenv("ARANGO_DB_PASS", "test")
 
 COSMOS_DB_HOST = os.getenv("COSMOS_DB_HOST", "localhost")
 
@@ -33,13 +33,14 @@ class TestUpdateSelectors:
     @pytest.fixture
     def selector_container(self):
         cosmos_client = CosmosClient.from_connection_string(
-            azure_cosmos_db_conn_string, connection_verify=False
+            azure_cosmos_db_conn_string, connection_verify=False, connection_timeout=15
         )
-        cosmos_db = cosmos_client.create_database_if_not_exists(
-            id="testdb", offer_throughput=400
-        )
-        selector_container = cosmos_db.create_container_if_not_exists(
-            id="selectors", partition_key=PartitionKey(path="/id")
+        if "testdb" in cosmos_client.list_databases():
+            cosmos_client.delete_database("testdb")
+        cosmos_db = cosmos_client.create_database(id="testdb")
+        selector_container = cosmos_db.create_container(
+            id="selectors",
+            partition_key=PartitionKey(path="/id"),
         )
 
         selectors_to_insert = [
@@ -74,6 +75,7 @@ class TestUpdateSelectors:
         for sel in selectors_to_insert:
             selector_container.upsert_item(sel)
         yield selector_container
+        cosmos_db.delete_container("selectors")
         cosmos_client.delete_database("testdb")
 
     @pytest.fixture
