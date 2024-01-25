@@ -12,4 +12,4 @@ resources:
   - scanners/summaries-cronjob
   - scanners/domain-discovery
   - azure-defender-easm/add-domain-to-easm
-  - azure-defender-easm/label-known-easm-assets
+  - azure-defender-easm/label-known-easm-assets-cronjob
