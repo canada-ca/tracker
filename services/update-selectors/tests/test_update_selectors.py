@@ -17,8 +17,10 @@ ARANGO_DB_URL = os.getenv("ARANGO_DB_URL", "http://localhost:8530")
 ARANGO_DB_USER = os.getenv("ARANGO_DB_USER")
 ARANGO_DB_PASS = os.getenv("ARANGO_DB_PASS")
 
+COSMOS_DB_HOST = os.getenv("COSMOS_DB_HOST", "localhost")
+
 # Well known connection string for emulator
-azure_cosmos_db_conn_string = "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;"
+azure_cosmos_db_conn_string = f"AccountEndpoint=https://{COSMOS_DB_HOST}:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;"
 
 
 def get_date_ago_formatted(days):
