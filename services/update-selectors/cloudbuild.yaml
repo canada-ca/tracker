@@ -12,7 +12,7 @@ steps:
     id: test-results
     dir: services/update-selectors
     entrypoint: /bin/sh
-    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest -v"]
     env:
       - ARANGO_DB_URL=http://testdb:8529
       - ARANGO_DB_USER=root
