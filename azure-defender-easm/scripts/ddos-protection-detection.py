@@ -1,6 +1,6 @@
 import csv
 import time
-from clients.kusto_client import (
+from kusto_queries import (
     get_hosts_with_ddos_protection,
     host_has_ddos_protection,
 )
