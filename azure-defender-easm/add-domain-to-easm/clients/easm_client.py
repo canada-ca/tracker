@@ -19,9 +19,10 @@ CREDENTIAL = ClientSecretCredential(TENANT_ID, CLIENT_ID, CLIENT_SECRET)
 EASM_CLIENT = EasmClient(ENDPOINT, RESOURCE_GROUP, SUB_ID, WORKSPACE_NAME, CREDENTIAL)
 
 
-def run_disco_group(group_name):
+def run_disco_group(group_name, logger):
     org_disco_group = get_disco_group(group_name)
     if org_disco_group:
+        logger.info(f"Running discovery group {group_name}")
         EASM_CLIENT.discovery_groups.run(group_name)
 
 

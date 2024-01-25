@@ -57,7 +57,7 @@ async def run(loop):
         payload = json.loads(msg.data)
 
         domain = payload.get("domain")
-        if not domain.endswith(".gc.ca") or not domain.endswith(".canada.ca"):
+        if not domain.endswith(".gc.ca") and not domain.endswith(".canada.ca"):
             logger.info(f"Skipping '{domain}' as it is not a GC domain.")
             return
 
@@ -67,21 +67,19 @@ async def run(loop):
                 logger.info(f"Skipping '{domain}' as it already exists in EASM.")
                 return
         except Exception as e:
-            logging.error(
+            logger.error(
                 f"Checking if asset exists in EASM: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
             )
             return
 
         try:
             logger.info(f"Adding '{domain}' to EASM tooling...")
-            await create_disco_group(
-                name=domain, assets=[{"kind": "host", "name": domain}]
-            )
-            await run_disco_group(domain)
+            create_disco_group(name=domain, assets=[{"kind": "host", "name": domain}])
+            run_disco_group(domain)
             # TODO delete disco group after run
             logger.info(f"Successfully added '{domain}' to EASM tooling.")
         except Exception as e:
-            logging.error(
+            logger.error(
                 f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
             )
             return
