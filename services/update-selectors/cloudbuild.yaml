@@ -8,6 +8,15 @@ steps:
     id: wait_testdb
     args: ['testdb:8529']
 
+  - name: 'gcr.io/cloud-builders/docker'
+    id: start_test_cosmosdb
+    entrypoint: /bin/sh
+    args: ["-c", "docker run --net cloudbuild --name test_cosmosdb -d -p 8081:8081 -p 10250-10255:10250-10255 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest"]
+
+  - name: mikewilliamson/wait-for
+    id: wait_test_cosmosdb
+    args: ['test_cosmosdb:8081']
+
   - name: 'gcr.io/track-compliance/ci'
     id: test-results
     dir: services/update-selectors

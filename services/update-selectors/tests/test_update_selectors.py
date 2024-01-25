@@ -1,18 +1,24 @@
 import datetime
-
-import pytest
 import os
 
-from arango import ArangoClient
-from dotenv import load_dotenv
-
 import update_selectors
+import pytest
+from arango import ArangoClient
+from azure.cosmos import CosmosClient, PartitionKey
+from dotenv import load_dotenv
+import urllib3
+
+# Disable insecure request warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 load_dotenv(os.path.join(os.path.dirname(__file__), "test.env"))
 
 ARANGO_DB_URL = os.getenv("ARANGO_DB_URL", "http://localhost:8530")
 ARANGO_DB_USER = os.getenv("ARANGO_DB_USER")
 ARANGO_DB_PASS = os.getenv("ARANGO_DB_PASS")
+
+# Well known connection string for emulator
+azure_cosmos_db_conn_string = "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;"
 
 
 def get_date_ago_formatted(days):
@@ -21,9 +27,20 @@ def get_date_ago_formatted(days):
     )
 
 
-class SelectorContainerMock:
-    def __init__(self):
-        self.selectors = [
+class TestUpdateSelectors:
+    @pytest.fixture
+    def selector_container(self):
+        cosmos_client = CosmosClient.from_connection_string(
+            azure_cosmos_db_conn_string, connection_verify=False
+        )
+        cosmos_db = cosmos_client.create_database_if_not_exists(
+            id="testdb", offer_throughput=400
+        )
+        selector_container = cosmos_db.create_container_if_not_exists(
+            id="selectors", partition_key=PartitionKey(path="/id")
+        )
+
+        selectors_to_insert = [
             {
                 "id": "domain2",
                 "data": [
@@ -52,12 +69,11 @@ class SelectorContainerMock:
                 ],
             },
         ]
+        for sel in selectors_to_insert:
+            selector_container.upsert_item(sel)
+        yield selector_container
+        cosmos_client.delete_database("testdb")
 
-    def query_items(self, query, enable_cross_partition_query):
-        return self.selectors
-
-
-class TestUpdateSelectors:
     @pytest.fixture
     def arango_db(self):
         arango_client = ArangoClient(hosts=os.getenv("ARANGO_DB_URL"))
@@ -154,10 +170,10 @@ class TestUpdateSelectors:
             == 0
         )
 
-    def test_update_selectors_with_removal(self, arango_db):
+    def test_update_selectors_with_removal(self, arango_db, selector_container):
         update_selectors.update_selectors(
             arango_db,
-            SelectorContainerMock(),
+            selector_container,
             remove_selectors=True,
         )
 
@@ -201,10 +217,10 @@ class TestUpdateSelectors:
             == 1
         )
 
-    def test_update_selectors_without_removal(self, arango_db):
+    def test_update_selectors_without_removal(self, arango_db, selector_container):
         update_selectors.update_selectors(
             arango_db,
-            SelectorContainerMock(),
+            selector_container,
             remove_selectors=False,
         )
 
