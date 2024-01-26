@@ -6,7 +6,7 @@ steps:
     args:
       - "-c"
       - |
-        echo "gcr.io/$PROJECT_ID/add-domain-to-easm:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/azure-defender-easm/add-domain-to-easm:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: "gcr.io/cloud-builders/docker"
     id: build-https-if-master

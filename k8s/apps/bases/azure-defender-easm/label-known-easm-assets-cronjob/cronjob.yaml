@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: label-known-easm-assets
-              image: gcr.io/track-compliance/label-known-easm-assets:master-17ff220-1697550117 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+              image: gcr.io/track-compliance/azure-defender-easm/label-known-easm-assets:master-17ff220-1697550117 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
               env:
                 - name: DB_PASS
                   valueFrom:
