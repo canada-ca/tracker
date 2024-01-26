@@ -7,9 +7,8 @@ from arango import ArangoClient
 from azure.cosmos import CosmosClient, PartitionKey
 from dotenv import load_dotenv
 import urllib3
+from urllib3.exceptions import InsecureRequestWarning
 
-# Disable insecure request warnings
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 load_dotenv(os.path.join(os.path.dirname(__file__), "test.env"))
 
@@ -32,6 +31,8 @@ def get_date_ago_formatted(days):
 class TestUpdateSelectors:
     @pytest.fixture
     def selector_container(self):
+        # Disable insecure request warnings
+        urllib3.disable_warnings(InsecureRequestWarning)
         cosmos_client = CosmosClient.from_connection_string(
             azure_cosmos_db_conn_string, connection_verify=False, connection_timeout=15
         )
