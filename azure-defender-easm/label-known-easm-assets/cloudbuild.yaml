@@ -2,16 +2,16 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
     entrypoint: "bash"
-    dir: azure-defender-easm/label_known_easm_assets
+    dir: azure-defender-easm/label-known-easm-assets
     args:
       - "-c"
       - |
-        echo "gcr.io/$PROJECT_ID/label_known_easm_assets:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/label-known-easm-assets:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: "gcr.io/cloud-builders/docker"
     id: build-https-if-master
     entrypoint: "bash"
-    dir: azure-defender-easm/label_known_easm_assets
+    dir: azure-defender-easm/label-known-easm-assets
     args:
       - "-c"
       - |
@@ -26,7 +26,7 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     id: push-https-if-master
     entrypoint: "bash"
-    dir: azure-defender-easm/label_known_easm_assets
+    dir: azure-defender-easm/label-known-easm-assets
     args:
       - "-c"
       - |

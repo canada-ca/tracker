@@ -2,16 +2,16 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
     entrypoint: "bash"
-    dir: azure-defender-easm/add_domain_to_easm
+    dir: azure-defender-easm/add-domain-to-easm
     args:
       - "-c"
       - |
-        echo "gcr.io/$PROJECT_ID/add_domain_to_easm:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "gcr.io/$PROJECT_ID/add-domain-to-easm:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: "gcr.io/cloud-builders/docker"
     id: build-https-if-master
     entrypoint: "bash"
-    dir: azure-defender-easm/add_domain_to_easm
+    dir: azure-defender-easm/add-domain-to-easm
     args:
       - "-c"
       - |
@@ -26,7 +26,7 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     id: push-https-if-master
     entrypoint: "bash"
-    dir: azure-defender-easm/add_domain_to_easm
+    dir: azure-defender-easm/add-domain-to-easm
     args:
       - "-c"
       - |
