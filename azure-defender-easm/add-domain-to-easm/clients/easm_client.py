@@ -1,4 +1,5 @@
 import os
+import logging
 from azure.identity import ClientSecretCredential
 from azure.defender.easm import EasmClient
 from dotenv import load_dotenv
@@ -18,8 +19,10 @@ CREDENTIAL = ClientSecretCredential(TENANT_ID, CLIENT_ID, CLIENT_SECRET)
 
 EASM_CLIENT = EasmClient(ENDPOINT, RESOURCE_GROUP, SUB_ID, WORKSPACE_NAME, CREDENTIAL)
 
+logger = logging.getLogger()
 
-def run_disco_group(group_name, logger):
+
+def run_disco_group(group_name):
     org_disco_group = get_disco_group(group_name)
     if org_disco_group:
         logger.info(f"Running discovery group {group_name}")
