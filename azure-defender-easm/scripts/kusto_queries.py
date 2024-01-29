@@ -103,15 +103,15 @@ def host_has_ddos_protection(domain):
     return len(data) > 0
 
 
-def get_unlabelled_org_assets_from_roots(roots):
+def get_unlabelled_org_assets_from_root(root):
     query = f"""
-    let org_roots = dynamic({roots});
+    declare query_parameters(domainRoot:string = '{root}');
     EasmAsset
+    | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
-    | where AssetName has_any (org_roots)
+    | where AssetName == domainRoot or AssetName endswith '.' + domainRoot
     | where Labels == '[]'
-    | summarize by AssetName, AssetId, AssetUuid, Labels
-    | order by AssetName asc
+    | project AssetName, AssetUuid, Labels
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
