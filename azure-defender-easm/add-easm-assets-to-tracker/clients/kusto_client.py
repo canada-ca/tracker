@@ -1,7 +1,6 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.helpers import dataframe_from_result_table
 
-
 import os
 from dotenv import load_dotenv
 
@@ -39,4 +38,23 @@ def get_labelled_org_assets_from_org_key(org_key):
         return data
     except Exception as e:
         print(f"Failed to get labelled assets from org key: {e}")
+        return []
+
+
+def get_unlabelled_assets():
+    query = f"""
+    EasmAsset
+    | where TimeGeneratedValue > ago(24h)
+    | where AssetType == 'HOST'
+    | where Labels == '[]'
+    | project AssetName, AssetUuid, Labels
+    """
+    try:
+        response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
+        data = dataframe_from_result_table(response.primary_results[0]).to_dict(
+            orient="records"
+        )
+        return data
+    except Exception as e:
+        print(f"Failed to get unlabelled assets: {e}")
         return []

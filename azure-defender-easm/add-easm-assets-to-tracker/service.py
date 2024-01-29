@@ -14,6 +14,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
+
 NATS_URL = os.getenv("NATS_URL")
 PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
 
@@ -57,22 +58,7 @@ async def main():
         """
         bind_vars = {"insert_domain": insert_domain}
         cursor = db.aql.execute(query, bind_vars=bind_vars)
-        return_domain = cursor.batch()[0]
-
-        try:
-            await publish(
-                f"{PUBLISH_TO}.{return_domain['_key']}",
-                json.dumps(
-                    {
-                        "domain": return_domain["domain"],
-                        "domain_key": return_domain["_key"],
-                    }
-                ).encode(),
-            )
-        except Exception as e:
-            logging.error(e)
-
-        return return_domain
+        return cursor.batch()[0]
 
     def get_verified_orgs():
         query = """
@@ -91,7 +77,7 @@ async def main():
         cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
         return cursor.batch()
 
-    def create_claim(org_id, domain_id):
+    def create_claim(org_id, domain_id, domain_name):
         insert_claim = {
             "_from": org_id,
             "_to": domain_id,
@@ -105,6 +91,39 @@ async def main():
         INSERT @insert_claim INTO claims
         """
         bind_vars = {"insert_claim": insert_claim}
+        db.aql.execute(query, bind_vars=bind_vars)
+
+        # add activity logging
+        log_activity(domain_name, org)
+
+    def log_activity(domain, org_id):
+        insert_activity = {
+            "timestamp": date.today().isoformat(),
+            "initiatedBy": {
+                "id": "easm-service",
+                "userName": "easm-service",
+                "role": "easm-service",
+            },
+            "target": {
+                "resource": domain,
+                "updatedProperties": {
+                    "name": "tags",
+                    "oldValue": [],
+                    "newValue": [{"en": "NEW", "fr": "NOUVEAU"}],
+                },
+                "organization": {
+                    "id": org_id,
+                },
+                "resourceType": "domain",
+            },
+            "action": "add",
+            "reason": "",
+        }
+
+        query = """
+        INSERT @insert_activity INTO activity
+        """
+        bind_vars = {"insert_activity": insert_activity}
         db.aql.execute(query, bind_vars=bind_vars)
 
     async def add_labelled_domains_to_org(org_id, domains):
@@ -121,12 +140,27 @@ async def main():
 
             if domain_exists:
                 # add domain to org
-                create_claim(org_id, domain_exists["_id"])
+                create_claim(org_id, domain_exists["_id"], domain)
             else:
                 # create domain
                 created_domain = await create_domain(domain)
+
                 # add domain to org
-                create_claim(org_id, created_domain["_id"])
+                create_claim(org_id, created_domain["_id"], domain)
+
+                # publish domain to NATS
+                try:
+                    await publish(
+                        f"{PUBLISH_TO}.{created_domain['_key']}",
+                        json.dumps(
+                            {
+                                "domain": created_domain["domain"],
+                                "domain_key": created_domain["_key"],
+                            }
+                        ).encode(),
+                    )
+                except Exception as e:
+                    logging.error(e)
 
     try:
         verified_orgs = get_verified_orgs()
