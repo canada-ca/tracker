@@ -20,3 +20,5 @@ resources:
   - super-admin-image-repo-policy.yaml
   - web-processor-image-repo-policy.yaml
   - web-scanner-image-repo-policy.yaml
+  - label-known-easm-assets-image-repo-policy.yaml
+  - add-domain-to-easm-image-repo-policy.yaml
