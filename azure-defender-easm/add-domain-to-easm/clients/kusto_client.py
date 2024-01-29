@@ -24,7 +24,12 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 
 
 def get_host_asset(host_name):
-    query = f"EasmHostAsset | where Host == '{host_name}' | limit 1"
+    query = f"""
+    declare query_parameters(hostName:string = '{host_name}');
+    EasmHostAsset
+    | where Host == hostName
+    | limit 1
+    """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"

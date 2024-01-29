@@ -3,7 +3,12 @@ from azure.kusto.data.helpers import dataframe_from_result_table
 
 
 def get_host_asset(host_name):
-    query = f"EasmHostAsset | where Host == '{host_name}' | limit 1"
+    query = f"""
+    declare query_parameters(hostName:string = '{host_name}');
+    EasmHostAsset
+    | where Host == hostName
+    | limit 1
+    """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"
@@ -12,7 +17,12 @@ def get_host_asset(host_name):
 
 
 def get_page_asset(page_name):
-    query = f"EasmPageAsset | where Host == '{page_name}' | take 1"
+    query = f"""
+    declare query_parameters(pageName:string = '{page_name}');
+    EasmPageAsset
+    | where Host == pageName
+    | take 1
+    """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"
@@ -36,10 +46,11 @@ def get_host_assets():
 
 def get_host_assets_by_labels(label):
     query = f"""
+    declare query_parameters(label:string = '{label}');
     EasmAsset
     | where AssetName endswith '.gc.ca' or AssetName endswith '.canada.ca'
     | where AssetType == 'HOST'
-    | where Labels has '{label}'
+    | where Labels has label
     | summarize by AssetName, AssetUuid, Labels
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
@@ -79,8 +90,9 @@ def get_hosts_without_ddos_protection():
 
 def host_has_ddos_protection(domain):
     query = f"""
+    declare query_parameters(domain:string = '{domain}');
     EasmHostAsset
-    | where AssetName == '{domain}'
+    | where AssetName == domain
     | where WebComponents has 'DDOS Protection'
     | project AssetName
     """

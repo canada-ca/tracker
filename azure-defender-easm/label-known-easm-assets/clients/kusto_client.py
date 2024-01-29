@@ -25,10 +25,11 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 
 def get_unlabelled_org_assets_from_root(root):
     query = f"""
+    declare query_parameters(domainRoot:string = '{root}');
     EasmAsset
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
-    | where AssetName == '{root}' or AssetName endswith '.{root}' 
+    | where AssetName == domainRoot or AssetName endswith '.' + domainRoot
     | where Labels == '[]'
     | project AssetName, AssetUuid, Labels
     """
