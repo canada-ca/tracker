@@ -77,25 +77,6 @@ async def main():
         cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
         return cursor.batch()
 
-    def create_claim(org_id, domain_id, domain_name):
-        insert_claim = {
-            "_from": org_id,
-            "_to": domain_id,
-            "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-            "hidden": False,
-            "outsideComment": "",
-            "firstSeen": date.today().isoformat(),
-        }
-
-        query = """
-        INSERT @insert_claim INTO claims
-        """
-        bind_vars = {"insert_claim": insert_claim}
-        db.aql.execute(query, bind_vars=bind_vars)
-
-        # add activity logging
-        log_activity(domain_name, org)
-
     def log_activity(domain, org_id):
         insert_activity = {
             "timestamp": date.today().isoformat(),
@@ -125,6 +106,25 @@ async def main():
         """
         bind_vars = {"insert_activity": insert_activity}
         db.aql.execute(query, bind_vars=bind_vars)
+
+    def create_claim(org_id, domain_id, domain_name):
+        insert_claim = {
+            "_from": org_id,
+            "_to": domain_id,
+            "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
+            "hidden": False,
+            "outsideComment": "",
+            "firstSeen": date.today().isoformat(),
+        }
+
+        query = """
+        INSERT @insert_claim INTO claims
+        """
+        bind_vars = {"insert_claim": insert_claim}
+        db.aql.execute(query, bind_vars=bind_vars)
+
+        # add activity logging
+        log_activity(domain_name, org)
 
     async def add_labelled_domains_to_org(org_id, domains):
         for domain in domains:
