@@ -78,15 +78,15 @@ def update_selectors(
                 arango_db.aql.execute(
                     """
                     UPSERT { _from: @domain, _to: @selector }
-                        INSERT { _from: @domain, _to: @selector, first_seen: @first_seen, last_seen: @last_seen }
-                        UPDATE { first_seen: @first_seen, last_seen: @last_seen }
+                        INSERT { _from: @domain, _to: @selector, firstSeen: @firstSeen, lastSeen: @lastSeen }
+                        UPDATE { firstSeen: @firstSeen, lastSeen: @lastSeen }
                         IN domainsToSelectors
                     """,
                     bind_vars={
                         "domain": domain["_id"],
                         "selector": arango_selector_doc["_id"],
-                        "first_seen": selector["first_seen"],
-                        "last_seen": selector["last_seen"],
+                        "firstSeen": selector["first_seen"],
+                        "lastSeen": selector["last_seen"],
                     },
                 )
             except Exception as e:
@@ -101,8 +101,8 @@ def update_selectors(
         removed_edges_cursor = arango_db.aql.execute(
             """
             FOR edge IN domainsToSelectors
-                LET date_diff_in_days = DATE_DIFF(edge.last_seen, DATE_NOW(), "d")
-                FILTER !!edge.last_seen && date_diff_in_days > 365
+                LET date_diff_in_days = DATE_DIFF(edge.lastSeen, DATE_NOW(), "d")
+                FILTER !!edge.lastSeen && date_diff_in_days > 365
                 LET from_domain = DOCUMENT(edge._from).domain
                 LET to_selector = DOCUMENT(edge._to).selector
                 REMOVE edge IN domainsToSelectors
@@ -124,8 +124,8 @@ def update_selectors(
         old_edges_cursor = arango_db.aql.execute(
             """
             FOR edge IN domainsToSelectors
-                LET date_diff_in_days = DATE_DIFF(edge.last_seen, DATE_NOW(), "d")
-                FILTER !!edge.last_seen && date_diff_in_days > 365
+                LET date_diff_in_days = DATE_DIFF(edge.lastSeen, DATE_NOW(), "d")
+                FILTER !!edge.lastSeen && date_diff_in_days > 365
                 RETURN {
                     _id: edge._id,
                     from_domain: DOCUMENT(edge._from).domain,
