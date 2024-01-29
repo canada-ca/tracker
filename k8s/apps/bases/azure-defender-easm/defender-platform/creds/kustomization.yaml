@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+secretGenerator:
+  - envs:
+      - azure-defender-easm.env
+    name: azure-defender-easm
+    namespace: azure-defender-easm
+generatorOptions:
+  disableNameSuffixHash: true
