@@ -38,9 +38,12 @@ def process_dkim(dkim_results):
             if len(selector_tags[dkim_selector]["negative_tags"]) > 0:
                 dkim_statuses.append("fail")
                 selector_tags[dkim_selector]["status"] = "fail"
-            else:
+            elif len(selector_tags[dkim_selector]["positive_tags"]) > 0:
                 dkim_statuses.append("pass")
                 selector_tags[dkim_selector]["status"] = "pass"
+            else:
+                dkim_statuses.append("info")
+                selector_tags[dkim_selector]["status"] = "info"
 
         dkim_status = (
             "pass"
