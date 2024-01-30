@@ -18,5 +18,6 @@ resources:
   - spring4shell-scanner-image-repo-policy.yaml
   - summaries-image-repo-policy.yaml
   - super-admin-image-repo-policy.yaml
+  - update-selectors-image-repo-policy.yaml
   - web-processor-image-repo-policy.yaml
   - web-scanner-image-repo-policy.yaml
