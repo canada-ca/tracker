@@ -31,7 +31,7 @@ WORKDIR /selectors
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
 # Copy local source code
-COPY update-selectors.py ./
+COPY update_selectors.py main.py ./
 
 RUN useradd -ms /bin/bash selectors
 USER selectors
