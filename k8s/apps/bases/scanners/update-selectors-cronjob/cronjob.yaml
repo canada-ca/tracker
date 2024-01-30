@@ -52,7 +52,7 @@ spec:
                   valueFrom:
                     secretKeyRef:
                       name: dmarc
-                      key: DKIM-SELECTORS-CONTAINER
+                      key: DKIM_SELECTORS_CONTAINER
                 - name: REMOVE_SELECTORS
                   value: "false"
           restartPolicy: Never
