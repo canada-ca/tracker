@@ -3,7 +3,10 @@ import os
 import json
 from datetime import date
 from arango import ArangoClient
-from clients.kusto_client import get_labelled_org_assets_from_org_key
+from clients.kusto_client import (
+    get_labelled_org_assets_from_org_key,
+    get_unlabelled_assets,
+)
 from dotenv import load_dotenv
 import asyncio
 import nats
@@ -17,6 +20,7 @@ DB_URL = os.getenv("DB_URL")
 
 NATS_URL = os.getenv("NATS_URL")
 PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
+UNCLAIMED_ID = os.getenv("UNCLAIMED_ID")
 
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
@@ -162,6 +166,45 @@ async def main():
                 except Exception as e:
                     logging.error(e)
 
+    async def add_unlabelled_assets_to_unclaimed():
+        unlabelled_assets = get_unlabelled_assets()
+        for asset in unlabelled_assets:
+            domain = asset["AssetName"]
+
+            # check if domain exists in system
+            query = """
+            FOR domain IN domains
+                FILTER domain.domain == @domain
+                RETURN domain
+            """
+            bind_vars = {"domain": domain}
+            cursor = db.aql.execute(query, bind_vars=bind_vars)
+            domain_exists = cursor.batch()
+
+            if domain_exists:
+                # add domain to org
+                create_claim(UNCLAIMED_ID, domain_exists["_id"], domain)
+            else:
+                # create domain
+                created_domain = await create_domain(domain)
+
+                # add domain to org
+                create_claim(UNCLAIMED_ID, created_domain["_id"], domain)
+
+                # publish domain to NATS
+                try:
+                    await publish(
+                        f"{PUBLISH_TO}.{created_domain['_key']}",
+                        json.dumps(
+                            {
+                                "domain": created_domain["domain"],
+                                "domain_key": created_domain["_key"],
+                            }
+                        ).encode(),
+                    )
+                except Exception as e:
+                    logging.error(e)
+
     try:
         verified_orgs = get_verified_orgs()
     except Exception as e:
@@ -193,6 +236,11 @@ async def main():
             continue
 
         logging.info(f"Added {len(new_domains)} new domains to org {org_key}")
+
+    try:
+        await add_unlabelled_assets_to_unclaimed()
+    except Exception as e:
+        logging.error(e)
 
     await nc.close()
 
