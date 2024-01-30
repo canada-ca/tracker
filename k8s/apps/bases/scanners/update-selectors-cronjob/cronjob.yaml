@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: update-selectors
+  namespace: scanners
+spec:
+  schedule: "30 1 * * *"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 21600
+      template:
+        metadata:
+          labels:
+            app: update-selectors
+        spec:
+          containers:
+            - name: update-selectors
+              image: gcr.io/track-compliance/services/update-selectors:master-6602636-1706634805 # {"$imagepolicy": "flux-system:update-selectors"}
+              env:
+                - name: ARANGO_DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_USER
+                - name: ARANGO_DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_PASS
+                - name: ARANGO_DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_NAME
+                - name: ARANGO_DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: DB_URL
+                - name: COSMOS_DB_CONN_STRING
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: AZURE_CONN_STRING
+                - name: COSMOS_DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: DATABASE
+                - name: COSMOS_DB_SELECTORS_CONTAINER
+                  valueFrom:
+                    secretKeyRef:
+                      name: dmarc
+                      key: dkim-selectors
+                - name: REMOVE_SELECTORS
+                  value: "false"
+          restartPolicy: Never
+      backoffLimit: 4
