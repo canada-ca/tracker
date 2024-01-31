@@ -22,6 +22,7 @@ def get_verified_orgs():
     query = """
     FOR org IN organizations
         FILTER org.verified == true
+        SORT org.en.name ASC
         RETURN { "key": org._key, "id": org._id }
     """
     cursor = db.aql.execute(query)
