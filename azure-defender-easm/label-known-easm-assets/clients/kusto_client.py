@@ -42,3 +42,25 @@ def get_unlabelled_org_assets_from_root(root):
     except Exception as e:
         print(f"Failed to get unlabelled assets from roots: {e}")
         return []
+
+
+def get_unlabelled_org_assets_from_domains(domains):
+    query = f"""
+    let names = dynamic([{domains}]);
+    EasmAsset
+    | where TimeGeneratedValue > ago(24h)
+    | where AssetType == 'HOST'
+    | where AssetName in (names)
+    | where Labels == '[]'
+    | project AssetName, AssetUuid, Labels
+    | order by AssetName asc
+    """
+    try:
+        response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
+        data = dataframe_from_result_table(response.primary_results[0]).to_dict(
+            orient="records"
+        )
+        return data
+    except Exception as e:
+        print(f"Failed to get unlabelled assets: {e}")
+        return []

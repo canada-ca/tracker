@@ -2,7 +2,10 @@ import logging
 import re
 from arango import ArangoClient
 import os
-from clients.kusto_client import get_unlabelled_org_assets_from_root
+from clients.kusto_client import (
+    get_unlabelled_org_assets_from_root,
+    get_unlabelled_org_assets_from_domains,
+)
 from clients.easm_client import label_assets
 from dotenv import load_dotenv
 
@@ -74,6 +77,29 @@ def update_asset_labels():
         except Exception as e:
             logging.error(e)
             continue
+
+        # label known assets first
+        try:
+            logging.info(f"Labeling known assets for org {org['key']}")
+            known_org_assets = get_unlabelled_org_assets_from_domains(org_domains)
+            logging.info(
+                "Found " + str(len(known_org_assets)) + " known unlabelled assets"
+            )
+            label_assets(assets=known_org_assets, label=org["key"])
+        except Exception as e:
+            logging.error(e)
+            continue
+
+    for org in verified_orgs:
+        # Get org domains
+        try:
+            logging.info(f"Getting domains for org {org['key']}")
+            org_domains = get_org_domains(org["id"])
+            logging.info(f"Found {len(org_domains)} domains")
+        except Exception as e:
+            logging.error(e)
+            continue
+
         # Extract root domains
         try:
             unique_roots = extract_root_domains(org_domains)
