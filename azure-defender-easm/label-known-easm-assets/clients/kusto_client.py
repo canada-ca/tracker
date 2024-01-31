@@ -46,11 +46,11 @@ def get_unlabelled_org_assets_from_root(root):
 
 def get_unlabelled_org_assets_from_domains(domains):
     query = f"""
-    let names = dynamic([{domains}]);
+    declare query_parameters(domains:dynamic = dynamic({domains}));
     EasmAsset
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
-    | where AssetName in (names)
+    | where AssetName in (domains)
     | where Labels == '[]'
     | project AssetName, AssetUuid, Labels
     | order by AssetName asc
