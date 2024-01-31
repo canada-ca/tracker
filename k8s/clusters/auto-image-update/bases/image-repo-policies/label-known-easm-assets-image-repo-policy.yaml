@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageRepository
+metadata:
+  name: label-known-easm-assets
+  namespace: flux-system
+spec:
+  image: gcr.io/track-compliance/label-known-easm-assets
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: label-known-easm-assets
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: label-known-easm-assets
+  policy:
+    numerical:
+      order: asc
