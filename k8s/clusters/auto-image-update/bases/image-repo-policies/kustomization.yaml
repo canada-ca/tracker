@@ -23,3 +23,4 @@ resources:
   - web-scanner-image-repo-policy.yaml
   - label-known-easm-assets-image-repo-policy.yaml
   - add-domain-to-easm-image-repo-policy.yaml
+  - add-easm-assets-to-tracker-image-repo-policy.yaml
