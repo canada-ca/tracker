@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: label-known-easm-assets
+  namespace: azure-defender-easm
+spec:
+  schedule: "30 10 * * 0"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 21600
+      template:
+        metadata:
+          labels:
+            app: label-known-easm-assets
+        spec:
+          containers:
+            - name: label-known-easm-assets
+              image: gcr.io/track-compliance/azure-defender-easm/label-known-easm-assets:master-17ff220-1697550117 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+              env:
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: DB_PASS
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: DB_USER
+                - name: DB_URL
+                  value: http://arangodb.db:8529
+                - name: DB_NAME
+                  value: track_dmarc
+                - name: SUBSCRIPTION_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: SUBSCRIPTION_ID
+                - name: WORKSPACE_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: WORKSPACE_NAME
+                - name: REGION
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: REGION
+                - name: CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: CLIENT_ID
+                - name: CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: CLIENT_SECRET
+                - name: TENANT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: TENANT_ID
+                - name: KUSTO_CLUSTER
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: KUSTO_CLUSTER
+                - name: KUSTO_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: KUSTO_DATABASE
+          restartPolicy: Never
+      backoffLimit: 4

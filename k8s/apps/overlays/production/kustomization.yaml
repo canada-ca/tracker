@@ -12,8 +12,12 @@ resources:
   - ../../bases/scanners/web-scanner
   - ../../bases/scanners/dmarc-report-cronjob
   - ../../bases/scanners/domain-dispatcher-cronjob
+  - ../../bases/scanners/update-selectors-cronjob
   - ../../bases/scanners/summaries-cronjob
   - ../../bases/scanners/domain-discovery
+  - ../../bases/azure-defender-easm/defender-platform
+  - ../../bases/azure-defender-easm/add-domain-to-easm
+  - ../../bases/azure-defender-easm/label-known-easm-assets
 replicas:
   - name: tracker-api
     count: 2

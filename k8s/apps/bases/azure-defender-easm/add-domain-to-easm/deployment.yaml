@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: add-domain-to-easm
+  labels:
+    app: add-domain-to-easm
+  namespace: azure-defender-easm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: add-domain-to-easm
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: add-domain-to-easm
+    spec:
+      containers:
+        - name: add-domain-to-easm
+          image: gcr.io/track-compliance/azure-defender-easm/add-domain-to-easm:master-4b3c965-1702065336 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
+          env:
+            - name: SUBSCRIBE_TO
+              value: domains.*
+            - name: QUEUE_GROUP
+              value: add_domain_to_easm
+            - name: NATS_SERVERS
+              value: nats://nats.pubsub:4222
+            - name: SUBSCRIPTION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: SUBSCRIPTION_ID
+            - name: WORKSPACE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: WORKSPACE_NAME
+            - name: REGION
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: REGION
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: CLIENT_ID
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: CLIENT_SECRET
+            - name: TENANT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: TENANT_ID
+            - name: KUSTO_CLUSTER
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: KUSTO_CLUSTER
+            - name: KUSTO_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: KUSTO_DATABASE
+          resources: {}
+status: {}
