@@ -34,7 +34,7 @@ WORKDIR /add-domain-to-easm
 COPY --from=python-builder /working/install/lib /usr/local/lib
 
 COPY service.py ./
-COPY client ./client
+COPY clients ./clients
 
 RUN useradd -ms /bin/bash defender
 USER defender
