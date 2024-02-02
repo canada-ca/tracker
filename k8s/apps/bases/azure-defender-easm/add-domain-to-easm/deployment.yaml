@@ -36,6 +36,11 @@ spec:
                 secretKeyRef:
                   name: azure-defender-easm
                   key: WORKSPACE_NAME
+            - name: RESOURCE_GROUP
+              valueFrom:
+                secretKeyRef:
+                  name: azure-defender-easm
+                  key: RESOURCE_GROUP
             - name: REGION
               valueFrom:
                 secretKeyRef:
