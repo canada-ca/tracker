@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: add-domain-to-easm
-          image: gcr.io/track-compliance/azure-defender-easm/add-domain-to-easm:master-4b3c965-1702065336 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
+          image: gcr.io/track-compliance/azure-defender-easm/add-domain-to-easm:master-5104232-1706728878 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
           env:
             - name: SUBSCRIBE_TO
               value: domains.*
