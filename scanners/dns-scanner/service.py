@@ -11,9 +11,7 @@ from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
 from dns_scanner.dns_scanner import scan_domain
 import nats
-from azure.cosmos import CosmosClient
 
-from dns_scanner.email_scanners import check_if_domain_exists
 
 load_dotenv()
 
@@ -35,23 +33,6 @@ DB_URL = os.getenv("DB_URL")
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
-
-# Establish CosmosDB connection
-summaries_endpoint = os.getenv("AZURE_CONN_STRING")
-summaries_database = os.getenv("DATABASE")
-summaries_container = os.getenv("SUMMARIES_CONTAINER")
-
-# Set CosmosDB http_logging_policy logging level to warning to avoid excessive logging
-logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
-
-# Initialize the Cosmos client using connection string
-cosmos_client = CosmosClient.from_connection_string(summaries_endpoint)
-
-# Get DB
-cosmos_db = cosmos_client.get_database_client(summaries_database)
-
-# Get container
-container = cosmos_db.get_container_client(summaries_container)
 
 def to_json(msg):
     print(json.dumps(msg, indent=2))
@@ -122,68 +103,6 @@ async def run():
         except Exception as e:
             logger.error(f"Error getting selectors for domain '{domain}': {e}")
             return
-
-        # Get DKIM selectors from DMARC summaries in DB
-        try:
-            summary_selector_strings = []
-            selectors = list(container.query_items(
-                query="SELECT c.id, c.data FROM c WHERE c.id = @domain OFFSET 0 LIMIT 1",
-                parameters=[{"name": "@domain", "value": domain}],
-                enable_cross_partition_query=True,
-            ))
-            if len(selectors) > 0:
-                summary_selector_strings = [sel["selector"] for sel in selectors[0]["data"]]
-        except Exception as e:
-            logger.error(f"Error getting selectors from DMARC summaries for domain '{domain}': {e}")
-            return
-
-        # Add new selectors if not already connected
-        for selector_string in list(set(summary_selector_strings + ["*"])):
-            if selector_string not in connected_selector_strings and selector_string != "":
-                if not check_if_domain_exists(f"{selector_string}._domainkey.{domain}"):
-                    continue
-
-                # Ensure selector exists in DB
-                try:
-                    selector_doc_cursor = db.aql.execute(
-                        """
-                        UPSERT { selector: @selector }
-                            INSERT { selector: @selector }
-                            UPDATE { }
-                            IN selectors
-                        RETURN NEW
-                        """,
-                        bind_vars={"selector": selector_string}
-                    )
-                except Exception as e:
-                    logger.error(f"Error while ensuring selector '{selector_string}' exists in DB: {e}")
-                    return
-
-                # Get selector doc
-                try:
-                    selector_doc = selector_doc_cursor.next()
-                except IndexError:
-                    logger.error(f"Selector '{selector_string}' not found in DB")
-                    return
-
-                # Insert new domain/selector connection into DB
-                try:
-                    db.aql.execute(
-                        """
-                        UPSERT { _from: @domain, _to: @selector_id }
-                            INSERT { _from: @domain, _to: @selector_id }
-                            UPDATE { }
-                            IN domainsToSelectors
-                        """,
-                        bind_vars={"domain": domain_id, "selector_id": selector_doc["_id"]},
-                    )
-                except Exception as e:
-                    logger.error(f"Error inserting new domain/selector connection for domain '{domain}' and selector '{selector_string}': {e}")
-                    return
-
-                logger.info(f"Inserted new domain/selector connection for domain '{domain}' and selector '{selector_string}'")
-                connected_selector_docs.append(selector_doc)
-                connected_selector_strings.append(selector_string)
 
         try:
             logger.info(f"Scanning {domain} with DKIM selectors '{str(connected_selector_strings)}'")

@@ -1,0 +1,13 @@
+version: '3'
+services:
+  arangodb:
+    image: arangodb:3.10.5
+    ports:
+      - "8530:8529"
+    environment:
+      - ARANGO_ROOT_PASSWORD=test
+  cosmosdb:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    ports:
+      - '8081:8081'
+      - '10250-10255:10250-10255'
