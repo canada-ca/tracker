@@ -109,16 +109,6 @@ export default function ReadGuidancePage() {
               <ListItem>
                 <Text>
                   <Trans>
-                    To receive DKIM scan results and guidance, you must add the DKIM selectors used for each domain.
-                    Organization administrators can add selectors in the “Admin Profile” by clicking the edit button of
-                    the domain for which they wish to add the selector. Common selectors to keep an for are “selector1”,
-                    and “selector2”.
-                  </Trans>
-                </Text>
-              </ListItem>
-              <ListItem>
-                <Text>
-                  <Trans>
                     Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted
                     from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have
                     identified that they do not belong to your organization.
