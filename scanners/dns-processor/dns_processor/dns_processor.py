@@ -291,6 +291,10 @@ def process_dmarc(dmarc_results):
                 if "dmarc15" not in dmarc_tags:
                     dmarc_tags.append("dmarc15")
 
+    # If rua tag exists and doesn't include dmarc@cyber.gc.ca, add dmarc24
+    if "dmarc12" not in dmarc_tags and "dmarc10" not in dmarc_tags:
+        dmarc_tags.append("dmarc24")
+
     # Check RUF _tags
     # "ruf": {
     #   "value": [

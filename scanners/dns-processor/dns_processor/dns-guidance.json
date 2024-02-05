@@ -11,7 +11,7 @@
   },
   "dmarc": {
     "pass": ["dmarc10", "dmarc23"],
-    "fail": ["dmarc2", "dmarc3", "dmarc9", "dmarc12"],
+    "fail": ["dmarc2", "dmarc3", "dmarc9", "dmarc12", "dmarc24"],
     "info": [
       "dmarc1",
       "dmarc4",
