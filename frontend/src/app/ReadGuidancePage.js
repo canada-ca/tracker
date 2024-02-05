@@ -1,15 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import {
-  Box,
-  Heading,
-  Text,
-  Link,
-  ListItem,
-  OrderedList,
-  UnorderedList,
-  Divider,
-} from '@chakra-ui/react'
+import { Box, Heading, Text, Link, ListItem, OrderedList, UnorderedList, Divider } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 
 export default function ReadGuidancePage() {
@@ -35,9 +26,8 @@ export default function ReadGuidancePage() {
             >
               Directive on Service and Digital
             </Link>{' '}
-            provides expectations on how GC organizations are to manage their
-            Information Technology (IT) services. The focus of the Tracker tool
-            is to help organizations stay in compliance with the directives{' '}
+            provides expectations on how GC organizations are to manage their Information Technology (IT) services. The
+            focus of the Tracker tool is to help organizations stay in compliance with the directives{' '}
             <Link
               color="blue.500"
               href={
@@ -63,10 +53,7 @@ export default function ReadGuidancePage() {
           </Trans>
         </Text>
         <Text mt="4">
-          <Trans>
-            Below are steps on how government organizations can leverage the
-            Tracker platform:
-          </Trans>
+          <Trans>Below are steps on how government organizations can leverage the Tracker platform:</Trans>
         </Text>
         <OrderedList spacing="4" px="4">
           {/* 1 */}
@@ -78,20 +65,15 @@ export default function ReadGuidancePage() {
               <ListItem>
                 <Text>
                   <Trans>
-                    Identify any current affiliated Tracker users within your
-                    organization and develop a plan with them.
+                    Identify any current affiliated Tracker users within your organization and develop a plan with them.
                   </Trans>
                 </Text>
               </ListItem>
               <ListItem>
                 <Text>
                   <Trans>
-                    If your organization has no affiliated users within Tracker,
-                    contact the{' '}
-                    <Link
-                      href="mailto:zzTBSCybers@tbs-sct.gc.ca"
-                      color="blue.500"
-                    >
+                    If your organization has no affiliated users within Tracker, contact the{' '}
+                    <Link href="mailto:zzTBSCybers@tbs-sct.gc.ca" color="blue.500">
                       TBS Cyber Security
                     </Link>{' '}
                     to assist in onboarding.
@@ -101,9 +83,8 @@ export default function ReadGuidancePage() {
                   <ListItem>
                     <Text>
                       <Trans>
-                        Once access is given to your department by the TBS Cyber
-                        team, they will be able to invite and manage other users
-                        within the organization and manage the domain list.
+                        Once access is given to your department by the TBS Cyber team, they will be able to invite and
+                        manage other users within the organization and manage the domain list.
                       </Trans>
                     </Text>
                   </ListItem>
@@ -120,43 +101,36 @@ export default function ReadGuidancePage() {
               <ListItem>
                 <Text>
                   <Trans>
-                    Each organization’s domain list should include every
-                    internet-facing service. It is the responsibility of
-                    organization admins to manage the current list and identify
-                    new domains to add.
+                    Each organization’s domain list should include every internet-facing service. It is the
+                    responsibility of organization admins to manage the current list and identify new domains to add.
                   </Trans>
                 </Text>
               </ListItem>
               <ListItem>
                 <Text>
                   <Trans>
-                    To receive DKIM scan results and guidance, you must add the
-                    DKIM selectors used for each domain. Organization
-                    administrators can add selectors in the “Admin Profile” by
-                    clicking the edit button of the domain for which they wish
-                    to add the selector. Common selectors to keep an for are
-                    “selector1”, and “selector2”.
+                    To receive DKIM scan results and guidance, you must add the DKIM selectors used for each domain.
+                    Organization administrators can add selectors in the “Admin Profile” by clicking the edit button of
+                    the domain for which they wish to add the selector. Common selectors to keep an for are “selector1”,
+                    and “selector2”.
                   </Trans>
                 </Text>
               </ListItem>
               <ListItem>
                 <Text>
                   <Trans>
-                    Domains are only to be removed from your list when 1) they
-                    no longer exist, meaning they are deleted from the DNS
-                    returning an error code of NX DOMAIN (domain name does not
-                    exist); or 2) if you have identified that they do not belong
-                    to your organization.
+                    Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted
+                    from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have
+                    identified that they do not belong to your organization.
                   </Trans>
                 </Text>
                 <UnorderedList>
                   <ListItem>
                     <Text>
                       <Trans>
-                        If a domain is no longer in use but still exists on the
-                        DNS, it is still vulnerable to email spoofing attacks,
-                        where an attacker can send an email that appears to be
-                        coming from your domain.
+                        If a domain is no longer in use but still exists on the DNS, it is still vulnerable to email
+                        spoofing attacks, where an attacker can send an email that appears to be coming from your
+                        domain.
                       </Trans>
                     </Text>
                   </ListItem>
@@ -172,21 +146,15 @@ export default function ReadGuidancePage() {
             <UnorderedList mb="2" px="2">
               <ListItem>
                 <Text>
-                  <Trans>
-                    The summary cards show two metrics that Tracker scans:
-                  </Trans>
+                  <Trans>The summary cards show two metrics that Tracker scans:</Trans>
                 </Text>
                 <OrderedList>
                   <ListItem>
-                    <Trans>
-                      The percentage of web-hosting services that strongly
-                      enforce HTTPS
-                    </Trans>
+                    <Trans>The percentage of web-hosting services that strongly enforce HTTPS</Trans>
                   </ListItem>
                   <ListItem>
                     <Trans>
-                      The percentage of internet-facing services that have a
-                      DMARC policy of at least p=”none”
+                      The percentage of internet-facing services that have a DMARC policy of at least p=”none”
                     </Trans>
                   </ListItem>
                 </OrderedList>
@@ -194,10 +162,8 @@ export default function ReadGuidancePage() {
               <ListItem>
                 <Text>
                   <Trans>
-                    These metrics are an important first step in securing your
-                    services and should be treated as minimum requirements.
-                    Further metrics are available in your organization's domain
-                    list.
+                    These metrics are an important first step in securing your services and should be treated as minimum
+                    requirements. Further metrics are available in your organization's domain list.
                   </Trans>
                 </Text>
               </ListItem>
@@ -208,41 +174,30 @@ export default function ReadGuidancePage() {
           </ListItem>
           {/* 4 */}
           <ListItem>
-            <Trans>
-              Develop a prioritized schedule to address any failings:
-            </Trans>
+            <Trans>Develop a prioritized schedule to address any failings:</Trans>
             <UnorderedList>
               <ListItem>
+                <Trans>Consider prioritizing websites and web services that exchange Protected data.</Trans>
+              </ListItem>
+              <ListItem>
+                <Trans>Where necessary adjust IT Plans and budget estimates where work is expected.</Trans>
+              </ListItem>
+              <ListItem>
                 <Trans>
-                  Consider prioritizing websites and web services that exchange
-                  Protected data.
+                  It is recommended that Shared Service Canada (SSC) partners contact their SSC Service Delivery Manager
+                  to discuss action plans and required steps to submit a request for change.
                 </Trans>
               </ListItem>
               <ListItem>
                 <Trans>
-                  Where necessary adjust IT Plans and budget estimates where
-                  work is expected.
+                  Obtain certificates from a GC-approved certificate source as outlined in the Recommendations for TLS
+                  Server Certificates for GC public facing web services
                 </Trans>
               </ListItem>
               <ListItem>
                 <Trans>
-                  It is recommended that Shared Service Canada (SSC) partners
-                  contact their SSC Service Delivery Manager to discuss action
-                  plans and required steps to submit a request for change.
-                </Trans>
-              </ListItem>
-              <ListItem>
-                <Trans>
-                  Obtain certificates from a GC-approved certificate source as
-                  outlined in the Recommendations for TLS Server Certificates
-                  for GC public facing web services
-                </Trans>
-              </ListItem>
-              <ListItem>
-                <Trans>
-                  Obtain the configuration guidance for the appropriate
-                  endpoints (e.g., web server, network/security appliances,
-                  etc.) and implement recommended configurations.
+                  Obtain the configuration guidance for the appropriate endpoints (e.g., web server, network/security
+                  appliances, etc.) and implement recommended configurations.
                 </Trans>
               </ListItem>
             </UnorderedList>
@@ -256,18 +211,12 @@ export default function ReadGuidancePage() {
                 <Trans>Tracker:</Trans>
                 <UnorderedList>
                   <ListItem>
-                    <Link
-                      href="https://github.com/canada-ca/tracker/wiki"
-                      color="blue.500"
-                    >
+                    <Link href="https://github.com/canada-ca/tracker/wiki" color="blue.500">
                       <Trans>Wiki</Trans>
                     </Link>
                   </ListItem>
                   <ListItem>
-                    <Link
-                      href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
-                      color="blue.500"
-                    >
+                    <Link href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags" color="blue.500">
                       <Trans>List of guidance tags</Trans>
                     </Link>
                   </ListItem>
@@ -291,8 +240,7 @@ export default function ReadGuidancePage() {
                           color="blue.500"
                           isExternal
                         >
-                          Web Sites and Services Management Configuration
-                          Requirements
+                          Web Sites and Services Management Configuration Requirements
                         </Link>
                       </Trans>
                     </Text>
@@ -310,8 +258,7 @@ export default function ReadGuidancePage() {
                           color="blue.500"
                           isExternal
                         >
-                          Guidance on securely configuring network protocols
-                          (ITSP.40.062)
+                          Guidance on securely configuring network protocols (ITSP.40.062)
                         </Link>
                       </Trans>
                     </Text>
@@ -354,8 +301,7 @@ export default function ReadGuidancePage() {
                           color="blue.500"
                           isExternal
                         >
-                          Implementation guidance: email domain protection
-                          (ITSP.40.065 v1.1)
+                          Implementation guidance: email domain protection (ITSP.40.065 v1.1)
                         </Link>
                       </Trans>
                     </Text>
@@ -380,10 +326,7 @@ export default function ReadGuidancePage() {
               <ListItem>
                 <Trans>
                   Please contact{' '}
-                  <Link
-                    href="mailto:zzTBSCybers@tbs-sct.gc.ca"
-                    color="blue.500"
-                  >
+                  <Link href="mailto:zzTBSCybers@tbs-sct.gc.ca" color="blue.500">
                     TBS Cyber Security
                   </Link>{' '}
                   for help.
@@ -396,52 +339,29 @@ export default function ReadGuidancePage() {
             <Trans>How can I edit my domain list?</Trans>
             <UnorderedList>
               <ListItem>
-                <Trans>
-                  Admins of an organization can add domains to their list.
-                </Trans>
-              </ListItem>
-              <ListItem>
-                <Trans>
-                  Requests for updates can be sent directly to{' '}
-                  <Link
-                    href="mailto:zzTBSCybers@tbs-sct.gc.ca"
-                    color="blue.500"
-                  >
-                    TBS Cyber Security
-                  </Link>
-                  .
-                </Trans>
+                <Trans>Admins of an organization can add domains to their list.</Trans>
               </ListItem>
               <ListItem>
                 <Trans>
                   Only{' '}
-                  <Link
-                    href="mailto:zzTBSCybers@tbs-sct.gc.ca"
-                    color="blue.500"
-                  >
+                  <Link href="mailto:zzTBSCybers@tbs-sct.gc.ca" color="blue.500">
                     TBS Cyber Security
                   </Link>{' '}
-                  can remove domains from your organization. Domains are only to
-                  be removed from your list when 1) they no longer exist,
-                  meaning they are deleted from the DNS returning an error code
-                  of NX DOMAIN (domain name does not exist); or 2) if you have
-                  identified that they do not belong to your organization.
+                  can remove domains from your organization. Domains are only to be removed from your list when 1) they
+                  no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain
+                  name does not exist); or 2) if you have identified that they do not belong to your organization.
                 </Trans>
               </ListItem>
             </UnorderedList>
           </ListItem>
           {/* 3 */}
           <ListItem>
-            <Trans>
-              Why do other tools show positive results for a domain while
-              Tracker shows negative results?
-            </Trans>
+            <Trans>Why do other tools show positive results for a domain while Tracker shows negative results?</Trans>
             <UnorderedList>
               <ListItem>
                 <Trans>
-                  While other tools are useful to work alongside Tracker, they
-                  do not specifically adhere to the configuration requirements
-                  specified in the{' '}
+                  While other tools are useful to work alongside Tracker, they do not specifically adhere to the
+                  configuration requirements specified in the{' '}
                   <Link
                     color="blue.500"
                     href={
@@ -463,8 +383,7 @@ export default function ReadGuidancePage() {
                   >
                     Web Site and Service Management Configuration Requirements
                   </Link>
-                  . For a list of allowed protocols, ciphers, and curves review
-                  the{' '}
+                  . For a list of allowed protocols, ciphers, and curves review the{' '}
                   <Link
                     href={
                       i18n.locale === 'en'
@@ -489,23 +408,16 @@ export default function ReadGuidancePage() {
             <UnorderedList>
               <ListItem>
                 <Trans>
-                  By default our scanners check domains ending in “.gc.ca” and
-                  “.canada.ca”. If your domain is outside that set, you need to
-                  contact us to let us know. Send an email to{' '}
-                  <Link
-                    href="mailto:zzTBSCybers@tbs-sct.gc.ca"
-                    color="blue.500"
-                  >
+                  By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside
+                  that set, you need to contact us to let us know. Send an email to{' '}
+                  <Link href="mailto:zzTBSCybers@tbs-sct.gc.ca" color="blue.500">
                     TBS Cyber Security
                   </Link>{' '}
                   to confirm your ownership of that domain.
                 </Trans>
               </ListItem>
               <ListItem>
-                <Trans>
-                  Another possibility is that your domain is not internet
-                  facing.
-                </Trans>
+                <Trans>Another possibility is that your domain is not internet facing.</Trans>
               </ListItem>
             </UnorderedList>
           </ListItem>
@@ -536,16 +448,19 @@ export default function ReadGuidancePage() {
             </UnorderedList>
           </ListItem>
           <ListItem>
-            <Trans>
-              Why does the guidance page not show the domain’s DKIM selectors
-              even though they exist?
-            </Trans>
+            <Trans>Why does the guidance page not show the domain’s DKIM selectors even though they exist?</Trans>
             <UnorderedList>
               <ListItem>
                 <Trans>
-                  Tracker does not automatically add selectors, so it is likely
-                  that they are not in the system yet. More information can be
-                  found above in Getting Started.
+                  Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when
+                  1) the domain has a DMARC RUA record which includes "mailto:dmarc@cyber.gc.ca"; and 2) the selector
+                  has been used to sign an email and passed DKIM validation.
+                </Trans>
+              </ListItem>
+              <ListItem>
+                <Trans>
+                  The process of detecting DKIM selectors is not immediate. It may take more than 24 hours for the
+                  selectors to appear in Tracker after the conditions are met.
                 </Trans>
               </ListItem>
             </UnorderedList>
@@ -563,10 +478,7 @@ export default function ReadGuidancePage() {
                   }
                   color="blue.500"
                 >
-                  <Trans>
-                    Domain Name System (DNS) Services Management Configuration
-                    Requirements - Canada.ca
-                  </Trans>
+                  <Trans>Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca</Trans>
                 </Link>
               </ListItem>
               <ListItem>
@@ -578,10 +490,7 @@ export default function ReadGuidancePage() {
                   }
                   color="blue.500"
                 >
-                  <Trans>
-                    Email Management Services Configuration Requirements -
-                    Canada.ca
-                  </Trans>
+                  <Trans>Email Management Services Configuration Requirements - Canada.ca</Trans>
                 </Link>
               </ListItem>
               <ListItem>
@@ -594,8 +503,8 @@ export default function ReadGuidancePage() {
                   color="blue.500"
                 >
                   <Trans>
-                    Implementation guidance: email domain protection
-                    (ITSP.40.065 v1.1) - Canadian Centre for Cyber Security
+                    Implementation guidance: email domain protection (ITSP.40.065 v1.1) - Canadian Centre for Cyber
+                    Security
                   </Trans>
                 </Link>
               </ListItem>
@@ -605,13 +514,8 @@ export default function ReadGuidancePage() {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link
-                  color="blue.500"
-                  href="https://www.gov.uk/guidance/protect-domains-that-dont-send-email"
-                >
-                  <Trans>
-                    Protect domains that do not send email - GOV.UK (www.gov.uk)
-                  </Trans>
+                <Link color="blue.500" href="https://www.gov.uk/guidance/protect-domains-that-dont-send-email">
+                  <Trans>Protect domains that do not send email - GOV.UK (www.gov.uk)</Trans>
                 </Link>
               </ListItem>
             </UnorderedList>
