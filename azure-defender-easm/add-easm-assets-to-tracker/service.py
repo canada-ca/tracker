@@ -28,7 +28,10 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
 async def main():
+    # Connect to NATS
+    logging.info("Connecting to NATS")
     nc = await nats.connect(NATS_URL)
+    logging.info("Successfully connected to NATS")
     # Create JetStream context.
     js = nc.jetstream()
 
@@ -62,6 +65,8 @@ async def main():
         """
         bind_vars = {"insert_domain": insert_domain}
         cursor = db.aql.execute(query, bind_vars=bind_vars)
+
+        logging.info(f"Successfully created domain: {domain}")
         return cursor.batch()[0]
 
     def get_verified_orgs():
@@ -72,6 +77,7 @@ async def main():
             RETURN { "key": org._key, "id": org._id }
         """
         cursor = db.aql.execute(query)
+        logging.info(f"Successfully fetched verified orgs")
         return cursor.batch()
 
     def get_org_domains(org_id):
@@ -80,6 +86,7 @@ async def main():
             RETURN v.domain
         """
         cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
+        logging.info(f"Successfully fetched domains for org: {org_id}")
         return cursor.batch()
 
     def log_activity(domain, org_id):
@@ -111,6 +118,7 @@ async def main():
         """
         bind_vars = {"insert_activity": insert_activity}
         db.aql.execute(query, bind_vars=bind_vars)
+        logging.info(f"Successfully logged activity for domain: {domain}")
 
     def create_claim(org_id, domain_id, domain_name):
         insert_claim = {
@@ -127,7 +135,9 @@ async def main():
         """
         bind_vars = {"insert_claim": insert_claim}
         db.aql.execute(query, bind_vars=bind_vars)
-
+        logging.info(
+            f"Successfully created claim for domain: {domain_name} in org {org_id}"
+        )
         # add activity logging
         log_activity(domain_name, org)
 
@@ -164,6 +174,7 @@ async def main():
                             }
                         ).encode(),
                     )
+                    logging.info(f"Published domain: {domain} to NATS")
                 except Exception as e:
                     logging.error(e)
 
@@ -203,6 +214,7 @@ async def main():
                             }
                         ).encode(),
                     )
+                    logging.info(f"Published domain: {domain} to NATS")
                 except Exception as e:
                     logging.error(e)
 
@@ -236,14 +248,14 @@ async def main():
             logging.error(e)
             continue
 
-        logging.info(f"Added {len(new_domains)} new domains to org {org_key}")
-
     try:
         await add_unlabelled_assets_to_unclaimed()
     except Exception as e:
         logging.error(e)
 
+    logging.info("Closing NATS connection")
     await nc.close()
+    logging.info("Successfully closed connection")
 
 
 if __name__ == "__main__":
