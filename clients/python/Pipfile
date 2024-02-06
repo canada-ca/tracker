@@ -8,7 +8,7 @@ gql = ">=3.0.0a5"
 aiohttp = "*"
 websockets = "*"
 python-slugify = "*"
-cryptography = "~=42.0.0"
+cryptography = "~=42.0.2"
 
 [dev-packages]
 black = "*"
