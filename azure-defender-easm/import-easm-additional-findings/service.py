@@ -53,7 +53,6 @@ def main():
 
     for domain in domains:
         try:
-            domain = domain["domain"]
             web_components = get_web_components_by_asset(domain)
             additional_findings = get_additional_findings_by_asset(domain)
 
@@ -67,10 +66,10 @@ def main():
             }
 
             # insert the findings into the DB
-            logging.info(f"Upserting additional findings for domain {domain}")
+            logging.info(f"Upserting additional findings for domain {domain['domain']}")
             upsert_finding(insert_obj)
             logging.info(
-                f"Successfully upserted additional findings for domain {domain}"
+                f"Successfully upserted additional findings for domain {domain['domain']}"
             )
         except Exception as e:
             logging.error(f"Failed to process domain {domain}: {e}")
