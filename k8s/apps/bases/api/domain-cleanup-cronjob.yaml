@@ -4,7 +4,7 @@ metadata:
   name: domain-cleanup
   namespace: api
 spec:
-  schedule: "30 10 * * 0"
+  schedule: "00 5 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
