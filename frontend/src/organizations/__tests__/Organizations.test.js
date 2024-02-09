@@ -76,7 +76,7 @@ describe('<Organisations />', () => {
               search: '',
               includeSuperAdminOrg: false,
               isVerified: true,
-              isAffiliated: true,
+              isAffiliated: false,
             },
           },
           result: {
@@ -162,7 +162,7 @@ describe('<Organisations />', () => {
               search: '',
               includeSuperAdminOrg: false,
               isVerified: true,
-              isAffiliated: true,
+              isAffiliated: false,
             },
           },
           result: {
@@ -422,7 +422,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -468,7 +468,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -562,7 +562,7 @@ describe('<Organisations />', () => {
             search: '',
             includeSuperAdminOrg: false,
             isVerified: true,
-            isAffiliated: true,
+            isAffiliated: false,
           },
           data: {
             findMyOrganizations: {
@@ -606,7 +606,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -652,7 +652,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -698,7 +698,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
