@@ -41,7 +41,7 @@ export function UserVarProvider({
   }
 
   const hasAffiliation = () => {
-    return currentUser?.affiliations.totalCount > 0
+    return currentUser?.affiliations?.totalCount > 0
   }
 
   const login = (newUserState) => {
