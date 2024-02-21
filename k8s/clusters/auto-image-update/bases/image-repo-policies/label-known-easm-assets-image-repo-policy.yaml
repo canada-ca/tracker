@@ -4,7 +4,7 @@ metadata:
   name: label-known-easm-assets
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/label-known-easm-assets
+  image: gcr.io/track-compliance/label-known-easm-assets
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1

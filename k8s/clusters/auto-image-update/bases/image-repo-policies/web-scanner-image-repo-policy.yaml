@@ -4,7 +4,7 @@ metadata:
   name: web-scanner
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner
+  image: gcr.io/track-compliance/web-scanner
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1

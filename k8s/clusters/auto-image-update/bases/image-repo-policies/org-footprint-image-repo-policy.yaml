@@ -4,7 +4,7 @@ metadata:
   name: org-footprint
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint
+  image: gcr.io/track-compliance/services/org-footprint
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
