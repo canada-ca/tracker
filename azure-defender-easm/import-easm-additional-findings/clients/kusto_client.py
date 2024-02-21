@@ -24,17 +24,24 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 
 
 def get_web_components_by_asset(asset):
+    print(f"Getting web components for {asset}")
     query = f"""
     declare query_parameters(asset_name:string = '{asset}');
     EasmAssetWebComponent
     | where AssetName == asset_name
     | where TimeGeneratedValue > ago(24h)
-    | WebComponentName, WebComponentCategory, WebComponentVersion, WebComponentCves, WebComponentPorts, WebComponentFirstSeen, WebComponentLastSeen
+    | summarize arg_max(TimeGeneratedValue, WebComponentCves, WebComponentPorts) by WebComponentName, WebComponentCategory, WebComponentVersion, WebComponentFirstSeen, WebComponentLastSeen
+    | project WebComponentName, WebComponentCategory, WebComponentVersion, WebComponentFirstSeen, WebComponentLastSeen, WebComponentCves, WebComponentPorts
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"
     )
+
+    for wc in data:
+        wc["WebComponentFirstSeen"] = wc["WebComponentFirstSeen"].isoformat()
+        wc["WebComponentLastSeen"] = wc["WebComponentLastSeen"].isoformat()
+
     return data
 
 
@@ -44,10 +51,12 @@ def get_additional_findings_by_asset(asset):
     EasmHostAsset
     | where AssetName == asset_name
     | where TimeGeneratedValue > ago(24h)
-    | project AssetName, Locations, Ports, Headers
+    | order by TimeGeneratedValue desc
+    | limit 1
+    | project Locations, Ports, Headers
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
         orient="records"
-    )
+    )[0]
     return data
