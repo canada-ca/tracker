@@ -4,7 +4,7 @@ metadata:
   name: spring4shell-scanner
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/spring4shell-scanner
+  image: gcr.io/track-compliance/spring4shell-scanner
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1

@@ -6,58 +6,58 @@ requires:
   - configs: ["infrastructure"]
 build:
   artifacts:
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js
+  - image: gcr.io/track-compliance/api-js
     context: api
     docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/counter
+#  - image: gcr.io/track-compliance/counter
 #    context: scanners/counter
 #    docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration
+  - image: gcr.io/track-compliance/database-migration
     context: database-migration
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report
+  - image: gcr.io/track-compliance/dmarc-report
     context: services/dmarc-report
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor
+  - image: gcr.io/track-compliance/dns-processor
     context: scanners/dns-processor
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner
+  - image: gcr.io/track-compliance/dns-scanner
     context: scanners/dns-scanner
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-dispatcher
+  - image: gcr.io/track-compliance/domain-dispatcher
     context: scanners/domain-dispatcher
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend
+  - image: gcr.io/track-compliance/frontend
     context: frontend
     docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/https-processor
+#  - image: gcr.io/track-compliance/https-processor
 #    context: scanners/https-processor
 #    docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/https-scanner
+#  - image: gcr.io/track-compliance/https-scanner
 #    context: scanners/https-scanner
 #    docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-processor
+#  - image: gcr.io/track-compliance/log4shell-processor
 #    context: scanners/log4shell-processor
 #    docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-scanner
+#  - image: gcr.io/track-compliance/log4shell-scanner
 #    context: scanners/log4shell-scanner
 #    docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/guidance
+  - image: gcr.io/track-compliance/services/guidance
     context: services/guidance
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries
+  - image: gcr.io/track-compliance/services/summaries
     context: services/summaries
     docker: {}
-#  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/spring4shell-scanner
+#  - image: gcr.io/track-compliance/spring4shell-scanner
 #    context: scanners/spring4shell
 #    docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin
+  - image: gcr.io/track-compliance/super-admin
     context: services/super-admin
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor
+  - image: gcr.io/track-compliance/web-processor
     context: scanners/web-processor
     docker: {}
-  - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner
+  - image: gcr.io/track-compliance/web-scanner
     context: scanners/web-scanner
     docker: {}
 #deploy:

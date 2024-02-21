@@ -4,7 +4,7 @@ metadata:
   name: domain-discovery
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery
+  image: gcr.io/track-compliance/domain-discovery
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1

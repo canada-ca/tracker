@@ -4,7 +4,7 @@ metadata:
   name: frontend
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend
+  image: gcr.io/track-compliance/frontend
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1

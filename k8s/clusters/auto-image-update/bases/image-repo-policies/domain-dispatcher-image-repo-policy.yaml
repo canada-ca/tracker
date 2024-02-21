@@ -4,7 +4,7 @@ metadata:
   name: domain-dispatcher
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-dispatcher
+  image: gcr.io/track-compliance/domain-dispatcher
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
