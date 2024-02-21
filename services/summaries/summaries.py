@@ -158,14 +158,13 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
-        dmarc_pass = 0
-        dmarc_fail = 0
+        # tier 1
         https_fail = 0
         https_pass = 0
-        web_fail = 0
-        web_pass = 0
-        mail_fail = 0
-        mail_pass = 0
+        dmarc_pass = 0
+        dmarc_fail = 0
+
+        # tier 2
         web_connections_fail = 0
         web_connections_pass = 0
         ssl_fail = 0
@@ -174,64 +173,38 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         spf_pass = 0
         dkim_fail = 0
         dkim_pass = 0
+
+        # tier 3
+        web_fail = 0
+        web_pass = 0
+        mail_fail = 0
+        mail_pass = 0
+
+        # dmarc phase
         dmarc_phase_not_implemented = 0
         dmarc_phase_assess = 0
         dmarc_phase_deploy = 0
         dmarc_phase_enforce = 0
         dmarc_phase_maintain = 0
 
-        domain_total = 0
-
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
             if ignore_domain(domain) is False:
-                domain_total = domain_total + 1
-                if domain.get("status", {}).get("dmarc") == "pass":
-                    dmarc_pass = dmarc_pass + 1
-                else:
-                    dmarc_fail = dmarc_fail + 1
-
-                if (
-                    domain.get("status", {}).get("ssl") == "pass"
-                    and domain.get("status", {}).get("https") == "pass"
-                ):
-                    web_pass = web_pass + 1
-                elif (
-                    domain.get("status", {}).get("ssl") == "fail"
-                    or domain.get("status", {}).get("https") == "fail"
-                ):
-                    web_fail = web_fail + 1
-
+                # tier 1
+                # https
                 if domain.get("status", {}).get("https") == "pass":
                     https_pass = https_pass + 1
-                if domain.get("status", {}).get("https") == "fail":
+                elif domain.get("status", {}).get("https") == "fail":
                     https_fail = https_fail + 1
+                # dmarc
+                if domain.get("status", {}).get("dmarc") == "pass":
+                    dmarc_pass = dmarc_pass + 1
+                elif domain.get("status", {}).get("dmarc") == "fail":
+                    dmarc_fail = dmarc_fail + 1
 
-                if (
-                    domain.get("status", {}).get("dmarc") == "pass"
-                    and domain.get("status", {}).get("spf") == "pass"
-                    and domain.get("status", {}).get("dkim") == "pass"
-                ):
-                    mail_pass = mail_pass + 1
-                else:
-                    mail_fail = mail_fail + 1
-
-                if domain.get("status", {}).get("spf") == "pass":
-                    spf_pass = spf_pass + 1
-                else:
-                    spf_fail = spf_fail + 1
-
-                if domain.get("status", {}).get("dkim") == "pass":
-                    dkim_pass = dkim_pass + 1
-                else:
-                    dkim_fail = dkim_fail + 1
-
-                if domain.get("status", {}).get("ssl") == "pass":
-                    ssl_pass = ssl_pass + 1
-                elif domain.get("status", {}).get("ssl") == "fail":
-                    ssl_fail = ssl_fail + 1
-
+                # tier 2
+                # web connections
                 if (
                     domain.get("status", {}).get("https") == "pass"
                     and domain.get("status", {}).get("hsts") == "pass"
@@ -242,9 +215,50 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                     or domain.get("status", {}).get("hsts") == "fail"
                 ):
                     web_connections_fail = web_connections_fail + 1
+                # ssl/tls
+                if domain.get("status", {}).get("ssl") == "pass":
+                    ssl_pass = ssl_pass + 1
+                elif domain.get("status", {}).get("ssl") == "fail":
+                    ssl_fail = ssl_fail + 1
+                # spf
+                if domain.get("status", {}).get("spf") == "pass":
+                    spf_pass = spf_pass + 1
+                elif domain.get("status", {}).get("spf") == "fail":
+                    spf_fail = spf_fail + 1
+                # dkim
+                if domain.get("status", {}).get("dkim") == "pass":
+                    dkim_pass = dkim_pass + 1
+                elif domain.get("status", {}).get("dkim") == "fail":
+                    dkim_fail = dkim_fail + 1
 
+                # tier 3
+                # web
+                if (
+                    domain.get("status", {}).get("ssl") == "pass"
+                    and domain.get("status", {}).get("https") == "pass"
+                ):
+                    web_pass = web_pass + 1
+                elif (
+                    domain.get("status", {}).get("ssl") == "fail"
+                    or domain.get("status", {}).get("https") == "fail"
+                ):
+                    web_fail = web_fail + 1
+                # mail
+                if (
+                    domain.get("status", {}).get("dmarc") == "pass"
+                    and domain.get("status", {}).get("spf") == "pass"
+                    and domain.get("status", {}).get("dkim") == "pass"
+                ):
+                    mail_pass = mail_pass + 1
+                elif (
+                    domain.get("status", {}).get("dmarc") == "fail"
+                    or domain.get("status", {}).get("spf") == "fail"
+                    or domain.get("status", {}).get("dkim") == "fail"
+                ):
+                    mail_fail = mail_fail + 1
+
+                # dmarc phase
                 phase = domain.get("phase")
-
                 if phase is None:
                     logging.info(
                         f"Property \"phase\" does not exist for domain \"${domain['domain']}\"."
@@ -262,6 +276,14 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 elif phase == "maintain":
                     dmarc_phase_maintain = dmarc_phase_maintain + 1
 
+        dmarc_phase_total = (
+            dmarc_phase_not_implemented
+            + dmarc_phase_assess
+            + dmarc_phase_deploy
+            + dmarc_phase_enforce
+            + dmarc_phase_maintain
+        )
+
         summary_data = {
             "date": date.today().isoformat(),
             "dmarc": {
@@ -278,7 +300,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             "mail": {
                 "pass": mail_pass,
                 "fail": mail_fail,
-                "total": domain_total,
+                "total": mail_pass + mail_fail,
             },
             "dmarc_phase": {
                 "not_implemented": dmarc_phase_not_implemented,
@@ -286,18 +308,18 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                 "deploy": dmarc_phase_deploy,
                 "enforce": dmarc_phase_enforce,
                 "maintain": dmarc_phase_maintain,
-                "total": domain_total,
+                "total": dmarc_phase_total,
             },
             "https": {
                 "pass": https_pass,
                 "fail": https_fail,
-                "total": https_pass + https_fail
+                "total": https_pass + https_fail,
                 # Don't count non web-hosting domains
             },
             "ssl": {
                 "pass": ssl_pass,
                 "fail": ssl_fail,
-                "total": ssl_pass + ssl_fail
+                "total": ssl_pass + ssl_fail,
                 # Don't count non web-hosting domains
             },
             "spf": {
@@ -313,7 +335,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             "web_connections": {
                 "pass": web_connections_pass,
                 "fail": web_connections_fail,
-                "total": web_connections_pass + web_connections_fail
+                "total": web_connections_pass + web_connections_fail,
                 # Don't count non web-hosting domains
             },
         }
