@@ -27,6 +27,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { AdditionalFindings } from './AdditionalFindings'
 
 function GuidancePage() {
   const { domainSlug: domain } = useParams()
@@ -61,21 +62,22 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
-    userHasPermission,
+    _userHasPermission,
+    additionalFindings,
   } = data.findDomainByDomain
 
-  if (!userHasPermission) {
-    return (
-      <Box align="center" w="100%" px={4}>
-        <Text textAlign="center" fontSize="2xl" fontWeight="bold">
-          <Trans>
-            Error while retrieving scan data for {domainName}. <br />
-            This could be due to insufficient user privileges or the domain does not exist in the system.
-          </Trans>
-        </Text>
-      </Box>
-    )
-  }
+  // if (!userHasPermission) {
+  //   return (
+  //     <Box align="center" w="100%" px={4}>
+  //       <Text textAlign="center" fontSize="2xl" fontWeight="bold">
+  //         <Trans>
+  //           Error while retrieving scan data for {domainName}. <br />
+  //           This could be due to insufficient user privileges or the domain does not exist in the system.
+  //         </Trans>
+  //       </Text>
+  //     </Box>
+  //   )
+  // }
 
   let guidanceResults
   if (rcode !== 'NOERROR') {
@@ -120,6 +122,9 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
+          <Tab borderTopWidth="0.25">
+            <Trans>Additonal Findings</Trans>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -140,6 +145,9 @@ function GuidancePage() {
                 mxRecordDiff={mxRecordDiff}
               />
             )}
+          </TabPanel>
+          <TabPanel>
+            <AdditionalFindings data={additionalFindings} />
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -219,7 +219,7 @@ export function DomainCard({
             variant="primary"
             as={RouteLink}
             to={{
-              pathname: isLoggedIn() ? `/domains/${url}` : '/sign-in',
+              pathname: `/domains/${url}`,
               state: { from: location.pathname },
             }}
             px="10"
