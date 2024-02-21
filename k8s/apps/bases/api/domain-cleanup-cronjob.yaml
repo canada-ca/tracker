@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: domain-cleanup
-              image: gcr.io/track-compliance/services/domain-cleanup:master-a528fe0-1701118115 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              image: gcr.io/track-compliance/services/domain-cleanup:master-7e4ea0e-1708552832 # {"$imagepolicy": "flux-system:domain-cleanup"}
               env:
                 - name: DB_PASS
                   valueFrom:

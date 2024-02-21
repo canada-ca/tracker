@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: org-footprint
-              image: gcr.io/track-compliance/services/org-footprint:master-8900ba0-1704892977 # {"$imagepolicy": "flux-system:org-footprint"}
+              image: gcr.io/track-compliance/services/org-footprint:master-7e4ea0e-1708552830 # {"$imagepolicy": "flux-system:org-footprint"}
               env:
                 - name: DB_PASS
                   valueFrom:
