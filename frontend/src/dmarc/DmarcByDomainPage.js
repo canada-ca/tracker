@@ -29,16 +29,17 @@ import { toConstantCase } from '../helpers/toConstantCase'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { MonthSelect } from '../components/MonthSelect'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
-
+import { useUserVar } from '../utilities/userState'
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
+  const { hasAffiliation } = useUserVar()
 
   const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
   const displayLimitOptions = [5, 10, 20, 50, 100]
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [isAffiliated, setIsAffiliated] = useState(true)
+  const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
 
   const [selectedPeriod, setSelectedPeriod] = useState('LAST30DAYS')
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString())
