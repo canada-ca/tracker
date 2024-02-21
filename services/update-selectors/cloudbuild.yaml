@@ -17,7 +17,7 @@ steps:
     id: wait_test_cosmosdb
     args: ['cosmosdb:8081', '--timeout=180']
 
-  - name: 'gcr.io/track-compliance/ci'
+  - name: 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci'
     id: test-results
     dir: services/update-selectors
     entrypoint: /bin/sh
@@ -35,7 +35,7 @@ steps:
     args:
       - '-c'
       - |
-        echo "gcr.io/$PROJECT_ID/services/update-selectors:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/tracker/services/update-selectors:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-results-if-master

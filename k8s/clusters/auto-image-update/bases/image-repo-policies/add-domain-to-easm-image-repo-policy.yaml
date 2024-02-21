@@ -4,7 +4,7 @@ metadata:
   name: add-domain-to-easm
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/add-domain-to-easm
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/add-domain-to-easm
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1

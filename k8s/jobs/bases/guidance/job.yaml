@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: guidance
-          image: gcr.io/track-compliance/services/guidance:master-1a6ce4f-1708011630 # {"$imagepolicy": "flux-system:guidance"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/guidance:master-1a6ce4f-1708011630 # {"$imagepolicy": "flux-system:guidance"}
           env:
             - name: DB_USER
               valueFrom:
