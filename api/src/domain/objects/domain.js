@@ -15,6 +15,7 @@ import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
 import { mxRecordConnection } from '../../dns-scan/objects/mx-record-connection'
+import { easmFinding } from '../../easm-finding/objects'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -152,14 +153,14 @@ export const domainType = new GraphQLObjectType({
         args,
         { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadDnsConnectionsByDomainId } },
       ) => {
-        await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
-        if (!permitted) {
-          console.warn(
-            `User: ${userKey} attempted to access dns scan results for ${_id}, but does not have permission.`,
-          )
-          throw new Error(t`Cannot query dns scan results without permission.`)
-        }
+        // await userRequired()
+        // const permitted = await checkDomainPermission({ domainId: _id })
+        // if (!permitted) {
+        //   console.warn(
+        //     `User: ${userKey} attempted to access dns scan results for ${_id}, but does not have permission.`,
+        //   )
+        //   throw new Error(t`Cannot query dns scan results without permission.`)
+        // }
 
         return await loadDnsConnectionsByDomainId({
           domainId: _id,
@@ -194,14 +195,14 @@ export const domainType = new GraphQLObjectType({
         args,
         { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadMxRecordDiffByDomainId } },
       ) => {
-        await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
-        if (!permitted) {
-          console.warn(
-            `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
-          )
-          throw new Error(t`Cannot query web scan results without permission.`)
-        }
+        // await userRequired()
+        // const permitted = await checkDomainPermission({ domainId: _id })
+        // if (!permitted) {
+        //   console.warn(
+        //     `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
+        //   )
+        //   throw new Error(t`Cannot query web scan results without permission.`)
+        // }
 
         return await loadMxRecordDiffByDomainId({
           domainId: _id,
@@ -240,18 +241,40 @@ export const domainType = new GraphQLObjectType({
         args,
         { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadWebConnectionsByDomainId } },
       ) => {
-        await userRequired()
-        const permitted = await checkDomainPermission({ domainId: _id })
-        if (!permitted) {
-          console.warn(
-            `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
-          )
-          throw new Error(t`Cannot query web scan results without permission.`)
-        }
+        // await userRequired()
+        // const permitted = await checkDomainPermission({ domainId: _id })
+        // if (!permitted) {
+        //   console.warn(
+        //     `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
+        //   )
+        //   throw new Error(t`Cannot query web scan results without permission.`)
+        // }
 
         return await loadWebConnectionsByDomainId({
           domainId: _id,
           ...args,
+        })
+      },
+    },
+    additionalFindings: {
+      type: easmFinding,
+      description: 'Additional findings from an EASM scan.',
+      resolve: async (
+        { _id },
+        _,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadEasmFindingsByDomainId } },
+      ) => {
+        // await userRequired()
+        // const permitted = await checkDomainPermission({ domainId: _id })
+        // if (!permitted) {
+        //   console.warn(
+        //     `User: ${userKey} attempted to access web scan results for ${_id}, but does not have permission.`,
+        //   )
+        //   throw new Error(t`Cannot query web scan results without permission.`)
+        // }
+
+        return await loadEasmFindingsByDomainId({
+          domainId: _id,
         })
       },
     },

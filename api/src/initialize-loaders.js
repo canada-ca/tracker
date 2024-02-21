@@ -62,6 +62,7 @@ import {
 } from './verified-organizations/loaders'
 import { loadChartSummaryByKey, loadChartSummaryConnectionsByPeriod } from './summaries/loaders'
 import { loadDnsConnectionsByDomainId, loadMxRecordDiffByDomainId } from './dns-scan'
+import { loadEasmFindingsByDomainId } from './easm-finding/loaders/load-easm-findings-by-domain-id'
 
 export function initializeLoaders({ query, db, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
@@ -365,6 +366,12 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       i18n,
     }),
     loadVerifiedOrgConnections: loadVerifiedOrgConnections({
+      query,
+      language,
+      cleanseInput,
+      i18n,
+    }),
+    loadEasmFindingsByDomainId: loadEasmFindingsByDomainId({
       query,
       language,
       cleanseInput,

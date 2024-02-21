@@ -1,0 +1,163 @@
+import { GraphQLObjectType, GraphQLList, GraphQLString } from 'graphql'
+import { GraphQLDateTime } from 'graphql-scalars'
+
+export const easmFinding = new GraphQLObjectType({
+  name: 'EASMFinding',
+  fields: () => ({
+    timestamp: {
+      type: GraphQLDateTime,
+      description: `The date the finding was discovered.`,
+      resolve: ({ timestamp }) => new Date(timestamp),
+    },
+    locations: {
+      type: new GraphQLList(easmLocationType),
+      description: `The locations the finding was discovered.`,
+      resolve: ({ locations }) => locations,
+    },
+    ports: {
+      type: new GraphQLList(easmPortType),
+      description: `The ports the finding was discovered.`,
+      resolve: ({ ports }) => ports,
+    },
+    headers: {
+      type: new GraphQLList(GraphQLString),
+      description: `The headers the finding was discovered.`,
+      resolve: ({ headers }) => headers,
+    },
+    webComponents: {
+      type: new GraphQLList(easmWebConnectionType),
+      description: `The web components the finding was discovered.`,
+      resolve: ({ webomponents }) => webComponents,
+    },
+  }),
+  description: `A finding from an EASM scan.`,
+})
+
+export const easmWebConnectionType = new GraphQLObjectType({
+  name: 'EASMWebConnection',
+  fields: () => ({
+    webComponentName: {
+      type: GraphQLString,
+      description: `The URL of the web component.`,
+      resolve: ({ WebComponentName }) => WebComponentName,
+    },
+    webComponentCategory: {
+      type: GraphQLString,
+      description: `The type of web component.`,
+      resolve: ({ WebComponentCategory }) => WebComponentCategory,
+    },
+    webComponentVersion: {
+      type: GraphQLString,
+      description: `The status of the web component.`,
+      resolve: ({ WebComponentVersion }) => WebComponentVersion,
+    },
+    webComponentCves: {
+      type: new GraphQLList(webComponentCveType),
+      description: '',
+      resolve: ({ WebComponentCves }) => WebComponentCves,
+    },
+    webComponentPorts: {
+      type: new GraphQLList(easmPortType),
+      description: '',
+      resolve: ({ WebComponentPorts }) => WebComponentPorts,
+    },
+    webComponentFirstSeen: {
+      type: GraphQLDateTime,
+      description: '',
+      resolve: ({ WebComponentFirstSeen }) => WebComponentFirstSeen,
+    },
+    webComponentLastSeen: {
+      type: GraphQLDateTime,
+      description: '',
+      resolve: ({ WebComponentLastSeen }) => WebComponentLastSeen,
+    },
+  }),
+})
+
+export const easmLocationType = new GraphQLObjectType({
+  name: 'EASMLocation',
+  fields: () => ({
+    region: {
+      type: GraphQLString,
+      description: `The location of the finding.`,
+      resolve: ({ Region }) => Region,
+    },
+    city: {
+      type: GraphQLString,
+      description: `The location of the finding.`,
+      resolve: ({ City }) => City,
+    },
+    latitude: {
+      type: GraphQLString,
+      description: `The location of the finding.`,
+      resolve: ({ Latitude }) => Latitude,
+    },
+    longitude: {
+      type: GraphQLString,
+      description: `The location of the finding.`,
+      resolve: ({ Longitude }) => Longitude,
+    },
+    firstSeen: {
+      type: GraphQLString,
+      description: `The location of the finding.`,
+      resolve: ({ FirstSeen }) => FirstSeen,
+    },
+    lastSeen: {
+      type: GraphQLString,
+      description: `The location of the finding.`,
+      resolve: ({ LastSeen }) => LastSeen,
+    },
+  }),
+})
+
+export const easmPortType = new GraphQLObjectType({
+  name: 'EASMPort',
+  fields: () => ({
+    port: {
+      type: GraphQLString,
+      description: `The port the finding was discovered.`,
+      resolve: ({ Port }) => Port,
+    },
+    lastPortState: {
+      type: GraphQLString,
+      description: `The protocol the finding was discovered.`,
+      resolve: ({ LastPortState }) => LastPortState,
+    },
+    portStateFirstSeen: {
+      type: GraphQLDateTime,
+      description: `The date the finding was discovered.`,
+      resolve: ({ PortStateFirstSeen }) => PortStateFirstSeen,
+    },
+    portStateLastSeen: {
+      type: GraphQLDateTime,
+      description: `The date the finding was discovered.`,
+      resolve: ({ PortStateLastSeen }) => PortStateLastSeen,
+    },
+  }),
+})
+
+export const webComponentCveType = new GraphQLObjectType({
+  name: 'WebComponentCVE',
+  fields: () => ({
+    cve: {
+      type: GraphQLString,
+      description: `The CVE of the finding.`,
+      resolve: ({ Cve }) => Cve,
+    },
+    cwe: {
+      type: GraphQLString,
+      description: `The description of the CVE.`,
+      resolve: ({ Cwe }) => Cwe,
+    },
+    cvssScore: {
+      type: GraphQLString,
+      description: `The severity of the CVE.`,
+      resolve: ({ CvssScore }) => CvssScore,
+    },
+    cvss3Score: {
+      type: GraphQLString,
+      description: `The severity of the CVE.`,
+      resolve: ({ Cvss3Score }) => Cvss3Score,
+    },
+  }),
+})
