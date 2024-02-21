@@ -24,7 +24,7 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useUserVar } from '../utilities/userState'
 
 export default function DomainsPage() {
-  const { isLoggedIn } = useUserVar()
+  const { hasAffiliation } = useUserVar()
   const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -32,7 +32,7 @@ export default function DomainsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
-  const [isAffiliated, setIsAffiliated] = useState(isLoggedIn())
+  const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,

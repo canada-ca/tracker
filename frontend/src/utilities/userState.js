@@ -40,8 +40,8 @@ export function UserVarProvider({
     return currentUser?.tfaSendMethod
   }
 
-  const isAffiliated = () => {
-    return currentUser?.affiliations.totalCount > 0
+  const hasAffiliation = () => {
+    return currentUser?.affiliations?.totalCount > 0
   }
 
   const login = (newUserState) => {
@@ -65,7 +65,7 @@ export function UserVarProvider({
     isLoggedIn,
     isEmailValidated,
     currentTFAMethod,
-    isAffiliated,
+    hasAffiliation,
     login,
     logout,
   }

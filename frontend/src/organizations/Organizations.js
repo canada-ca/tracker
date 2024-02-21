@@ -20,7 +20,7 @@ import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function Organizations() {
-  const { isLoggedIn } = useUserVar()
+  const { isLoggedIn, hasAffiliation } = useUserVar()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
@@ -29,7 +29,7 @@ export default function Organizations() {
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
   const [orgInfo, setOrgInfo] = useState({})
   const [isVerified, setIsVerified] = useState(true)
-  const [isAffiliated, setIsAffiliated] = useState(isLoggedIn())
+  const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
