@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: web-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-b71916e-1708543158 # {"$imagepolicy": "flux-system:web-processor"}
+          image: gcr.io/track-compliance/web-processor:master-9522869-1705942059 # {"$imagepolicy": "flux-system:web-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
