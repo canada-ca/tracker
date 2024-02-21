@@ -23,7 +23,7 @@ spec:
         app: tracker-api
     spec:
       initContainers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:test-0000003
+        - image: gcr.io/track-compliance/database-migration:test-0000003
           name: database-migration
           env:
             - name: DB_USER
