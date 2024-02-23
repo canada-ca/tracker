@@ -4,7 +4,7 @@ metadata:
   name: dmarc-report
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/dmarc-report
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
