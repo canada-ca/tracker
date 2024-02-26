@@ -7,7 +7,7 @@ steps:
     args:
     - '-c'
     - |
-      docker build -t gcr.io/track-compliance/ci .
+      docker build -t northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci .
 
   - name: 'gcr.io/cloud-builders/docker'
     id: push-if-master
@@ -18,7 +18,7 @@ steps:
     - |
       if [[ "$BRANCH_NAME" == "master" ]]
       then
-        docker push gcr.io/track-compliance/ci
+        docker push northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci
       else
         exit 0
       fi

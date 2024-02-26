@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: web-scanner
-          image: gcr.io/track-compliance/web-scanner:master-7e4ea0e-1708552786 # {"$imagepolicy": "flux-system:web-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner:master-4c25564-1708965099 # {"$imagepolicy": "flux-system:web-scanner"}
           env:
             - name: PYTHONWARNINGS
               value: ignore
