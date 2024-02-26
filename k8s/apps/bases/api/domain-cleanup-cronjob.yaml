@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: domain-cleanup
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-4c25564-1708965119 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-0854839-1708977207 # {"$imagepolicy": "flux-system:domain-cleanup"}
               env:
                 - name: DB_PASS
                   valueFrom:
