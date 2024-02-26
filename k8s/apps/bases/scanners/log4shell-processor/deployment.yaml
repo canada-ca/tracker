@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: log4shell-processor
-          image: gcr.io/track-compliance/log4shell-processor:master-7e4ea0e-1708552787 # {"$imagepolicy": "flux-system:log4shell-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-processor:master-b71916e-1708543158 # {"$imagepolicy": "flux-system:log4shell-processor"}
           resources: {}
 status: {}
