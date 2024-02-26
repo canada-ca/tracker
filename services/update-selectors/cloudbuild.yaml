@@ -17,7 +17,7 @@ steps:
     id: wait_test_cosmosdb
     args: ['cosmosdb:8081', '--timeout=180']
 
-  - name: 'gcr.io/track-compliance/ci'
+  - name: 'northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/ci'
     id: test-results
     dir: services/update-selectors
     entrypoint: /bin/sh
