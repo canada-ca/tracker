@@ -45,6 +45,21 @@ def is_domain_hidden(domain, db):
     return False
 
 
+def domain_has_verified_claim(domain, db):
+    """Check if a domain has a verified claim
+
+    :param domain: domain to check
+    :param db: active arangodb connection
+    :return: True if domain has a verified claim, False otherwise
+    """
+
+    claims = db.collection("claims").find({"_to": domain["_id"]})
+    for claim in claims:
+        if claim.get("verified") == True:
+            return True
+    return False
+
+
 def ignore_domain(domain):
     """Check if a domain should be ignored
 
@@ -92,7 +107,10 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     maintain_count = 0
 
     for domain in db.collection("domains"):
-        if ignore_domain(domain) is False:
+        if (
+            ignore_domain(domain) is False
+            and domain_has_verified_claim(domain, db) is True
+        ):
             # Update chart summaries
             for chart_type in chartSummaries:
                 chart = chartSummaries[chart_type]
@@ -291,13 +309,13 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             "https": {
                 "pass": https_pass,
                 "fail": https_fail,
-                "total": https_pass + https_fail
+                "total": https_pass + https_fail,
                 # Don't count non web-hosting domains
             },
             "ssl": {
                 "pass": ssl_pass,
                 "fail": ssl_fail,
-                "total": ssl_pass + ssl_fail
+                "total": ssl_pass + ssl_fail,
                 # Don't count non web-hosting domains
             },
             "spf": {
@@ -313,7 +331,7 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
             "web_connections": {
                 "pass": web_connections_pass,
                 "fail": web_connections_fail,
-                "total": web_connections_pass + web_connections_fail
+                "total": web_connections_pass + web_connections_fail,
                 # Don't count non web-hosting domains
             },
         }
