@@ -126,9 +126,9 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
 
             # Update DMARC phase summaries
             phase = domain.get("phase")
-            if phase is None:
+            if phase is None or domain.get("status", {}).get("dmarc") == "info":
                 logging.info(
-                    f"Property \"phase\" does not exist for domain \"{domain['domain']}\"."
+                    f"No DMARC scan data available for domain \"{domain['domain']}\"."
                 )
                 continue
 
@@ -262,10 +262,9 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
                     web_connections_fail = web_connections_fail + 1
 
                 phase = domain.get("phase")
-
-                if phase is None:
+                if phase is None or domain.get("status", {}).get("dmarc") == "info":
                     logging.info(
-                        f"Property \"phase\" does not exist for domain \"${domain['domain']}\"."
+                        f"No DMARC scan data available for domain \"{domain['domain']}\"."
                     )
                     continue
 
