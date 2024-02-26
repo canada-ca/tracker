@@ -36,7 +36,7 @@ def get_dns_return_type(domain, query_type):
         default_resolver = dns.resolver.get_default_resolver()
         resolver_ip = default_resolver.nameservers[0]
         resolver_port = default_resolver.port
-        query = dns.message.make_query(domain, dns.rdatatype.SOA)
+        query = dns.message.make_query(domain, query_type)
         exist_response = dns.query.udp_with_fallback(
             q=query, timeout=TIMEOUT, where=resolver_ip, port=resolver_port
         )[0]
