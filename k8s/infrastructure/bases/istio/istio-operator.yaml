@@ -32,11 +32,6 @@ spec:
         hpaSpec:
           maxReplicas: 6
           minReplicas: 2
-          metrics:
-            - type: Resource
-              resource:
-                name: cpu
-                targetAverageUtilization: 80
           scaleTargetRef:
             apiVersion: apps/v1
             kind: Deployment
@@ -75,11 +70,6 @@ spec:
         hpaSpec:
           maxReplicas: 6
           minReplicas: 2
-          metrics:
-            - type: Resource
-              resource:
-                name: cpu
-                targetAverageUtilization: 80
           scaleTargetRef:
             apiVersion: apps/v1
             kind: Deployment
