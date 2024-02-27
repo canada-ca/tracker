@@ -24,7 +24,7 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useUserVar } from '../utilities/userState'
 
 export default function DomainsPage() {
-  const { hasAffiliation } = useUserVar()
+  const { isLoggedIn, hasAffiliation } = useUserVar()
   const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -228,8 +228,14 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
         />
-        <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-
+        {isLoggedIn() && (
+          <Flex align="center" mb="2">
+            <Text mr="2" fontWeight="bold">
+              <Trans>Filters:</Trans>
+            </Text>
+            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+          </Flex>
+        )}
         {domainList}
 
         <RelayPaginationControls

@@ -167,6 +167,9 @@ export default function Organizations() {
           onToggle={onToggle}
         />
         <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold">
+            <Trans>Filters:</Trans>
+          </Text>
           <Tooltip label={t`Filter list to verified organizations only.`}>
             <Flex align="center">
               <Switch
