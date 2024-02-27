@@ -46,18 +46,17 @@ def is_domain_hidden(domain, db):
 
 
 def domain_has_verified_claim(domain, db):
-    """Check if a domain has a verified claim
-
-    :param domain: domain to check
-    :param db: active arangodb connection
-    :return: True if domain has a verified claim, False otherwise
-    """
-
-    claims = db.collection("claims").find({"_to": domain["_id"]})
-    for claim in claims:
-        if claim.get("verified") == True:
-            return True
-    return False
+    cursor = db.aql.execute(
+        """
+            FOR v, e IN 1..1 INBOUND @domain_id claims
+                FILTER v.verified == true
+                RETURN v
+            """,
+        bind_vars={"domain_id": domain["_id"]},
+    )
+    if cursor.empty():
+        return False
+    return True
 
 
 def ignore_domain(domain):
