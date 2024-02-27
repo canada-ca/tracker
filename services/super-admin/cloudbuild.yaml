@@ -61,7 +61,7 @@ steps:
   args:
     - '-c'
     - |
-      echo "gcr.io/$PROJECT_ID/super-admin:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+      echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
 - name: 'gcr.io/cloud-builders/docker'
   id: build-if-master
@@ -70,13 +70,8 @@ steps:
   args:
   - '-c'
   - |
-    if [[ "$BRANCH_NAME" == "master" ]]
-    then
-      image=$(cat /workspace/imagename)
-      docker build -t $image .
-    else
-      exit 0
-    fi
+    image=$(cat /workspace/imagename)
+    docker build -t $image .
 
 - name: 'gcr.io/cloud-builders/docker'
   id: push-if-master

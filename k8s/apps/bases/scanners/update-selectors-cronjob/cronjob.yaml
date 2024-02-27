@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: update-selectors
-              image: gcr.io/track-compliance/services/update-selectors:master-90cb9ef-1708446048 # {"$imagepolicy": "flux-system:update-selectors"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/update-selectors:master-0854839-1708977578 # {"$imagepolicy": "flux-system:update-selectors"}
               env:
                 - name: ARANGO_DB_USER
                   valueFrom:
