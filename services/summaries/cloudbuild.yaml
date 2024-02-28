@@ -21,10 +21,10 @@ steps:
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/summaries:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: build-results-if-master
+    id: build-results
     entrypoint: 'bash'
     dir: services/summaries
     args:
