@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: progress-report
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/progress-report:master-0854839-1708977211 # {"$imagepolicy": "flux-system:progress-report"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/progress-report:master-4b24ebf-1709148346 # {"$imagepolicy": "flux-system:progress-report"}
               env:
                 - name: DB_PASS
                   valueFrom:
