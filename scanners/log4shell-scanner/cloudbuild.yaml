@@ -9,7 +9,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-scanner:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: "gcr.io/cloud-builders/docker"
-    id: build-if-master
+    id: build
     entrypoint: "bash"
     dir: scanners/log4shell-scanner
     args:
