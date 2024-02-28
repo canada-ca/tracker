@@ -32,7 +32,7 @@ steps:
     - |
       image=$(cat /workspace/imagename)
       docker build -t $image .
-
+ 
   - name: 'gcr.io/cloud-builders/docker'
     id: push-results-if-master
     entrypoint: 'bash'
