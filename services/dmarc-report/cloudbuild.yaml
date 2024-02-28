@@ -50,10 +50,10 @@ steps:
   args:
     - '-c'
     - |
-      echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+      echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
 - name: 'gcr.io/cloud-builders/docker'
-  id: build-if-master
+  id: build
   entrypoint: 'bash'
   dir: services/dmarc-report
   args:
