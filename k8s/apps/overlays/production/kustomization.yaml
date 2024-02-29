@@ -28,4 +28,4 @@ replicas:
   - name: web-scanner
     count: 13
 components:
-#  - ../../bases/frontend/maintenance-override-component
+  - ../../bases/frontend/maintenance-override-component
