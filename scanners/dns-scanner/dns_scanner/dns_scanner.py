@@ -40,7 +40,7 @@ def get_dns_return_type(domain, query_type):
         exist_response = dns.query.udp_with_fallback(
             q=query, timeout=TIMEOUT, where=resolver_ip, port=resolver_port
         )[0]
-        return exist_response.rcode()
+        return dns.rcode.to_text(exist_response.rcode())
     except Timeout:
         logger.error(
             f"Timeout while checking if domain '{domain}' exists with query type '{query_type}'"
