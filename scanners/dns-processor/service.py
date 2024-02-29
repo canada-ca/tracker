@@ -25,10 +25,10 @@ logging.basicConfig(
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "dns-processor")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.dns")
-PUBLISH_TO = os.getenv("PUBLISH_TO", "")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP", "dns_processor")
-SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
+PUBLISH_TO = os.getenv("PUBLISH_TO")
+QUEUE_GROUP = os.getenv("QUEUE_GROUP")
+SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
 DB_USER = os.getenv("DB_USER")
