@@ -268,10 +268,12 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                 addresses
               }
               warnings
+              error
             }
             nsRecords {
               hostnames
               warnings
+              error
             }
             dkim {
               positiveTags {
