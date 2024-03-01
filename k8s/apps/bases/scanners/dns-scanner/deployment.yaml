@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: dns-scanner
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-5934515-1709298563 # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-edf403f-1709300478 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
             - name: DB_NAME
               value: track_dmarc
