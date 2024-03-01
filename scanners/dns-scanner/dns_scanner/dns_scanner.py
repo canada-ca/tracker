@@ -41,14 +41,14 @@ def get_dns_return_type(domain, query_type):
             q=query, timeout=TIMEOUT, where=resolver_ip, port=resolver_port
         )[0]
         return dns.rcode.to_text(exist_response.rcode())
-    except Timeout:
+    except Timeout as e:
         logger.error(
-            f"Timeout while checking if domain '{domain}' exists with query type '{query_type}'"
+            f"Timeout while checking if domain '{domain}' exists with query type '{dns.rdatatype.to_text(query_type)}': {e}"
         )
         return None
     except Exception as e:
         logger.error(
-            f"Error while checking if domain '{domain}' exists with query type '${query_type}': {e}"
+            f"Error while checking if domain '{domain}' exists with query type '${dns.rdatatype.to_text(query_type)}': {e}"
         )
         return None
 
