@@ -31,6 +31,28 @@ class DNSScanResult:
     wildcard_sibling: bool = None
 
 
+def get_dns_return_type(domain, query_type):
+    try:
+        default_resolver = dns.resolver.get_default_resolver()
+        resolver_ip = default_resolver.nameservers[0]
+        resolver_port = default_resolver.port
+        query = dns.message.make_query(domain, query_type)
+        exist_response = dns.query.udp_with_fallback(
+            q=query, timeout=TIMEOUT, where=resolver_ip, port=resolver_port
+        )[0]
+        return dns.rcode.to_text(exist_response.rcode())
+    except Timeout:
+        logger.error(
+            f"Timeout while checking if domain '{domain}' exists with query type '{query_type}'"
+        )
+        return None
+    except Exception as e:
+        logger.error(
+            f"Error while checking if domain '{domain}' exists with query type '${query_type}': {e}"
+        )
+        return None
+
+
 def scan_domain(domain, dkim_selectors=None):
     """
     Scan a domain for DNS records
@@ -46,31 +68,40 @@ def scan_domain(domain, dkim_selectors=None):
     scan_result = DNSScanResult(domain)
 
     # Check if domain exists
-    try:
-        default_resolver = dns.resolver.get_default_resolver()
-        resolver_ip = default_resolver.nameservers[0]
-        resolver_port = default_resolver.port
-        query = dns.message.make_query(domain, dns.rdatatype.SOA)
-        exist_response = dns.query.udp_with_fallback(q=query, timeout=TIMEOUT, where=resolver_ip, port=resolver_port)[0]
-        scan_result.rcode = dns.rcode.to_text(exist_response.rcode())
-    except Timeout:
-        scan_result.record_exists = False
-        return scan_result.__dict__
-    except Exception as e:
-        logger.error(f"Error while checking if domain '{domain}' exists: {e}")
+    dns_answer_return_types = []
+    for query_type in [dns.rdatatype.SOA, dns.rdatatype.NS]:
+        rtype = get_dns_return_type(domain, query_type)
+        if rtype == "NOERROR":
+            dns_answer_return_types.append(rtype)
+            break
+        elif rtype is None:
+            dns_answer_return_types.append(None)
+            continue
+        elif rtype == "NXDOMAIN":
+            scan_result.rcode = rtype
+            scan_result.record_exists = False
+            return scan_result.__dict__
+        elif rtype == "SERVFAIL":
+            dns_answer_return_types.append(rtype)
+        else:
+            logging.error(
+                f"Unknown return type '{rtype}' when checking if domain '{domain}' exists"
+            )
+            dns_answer_return_types.append(rtype)
+
+    if "NOERROR" not in dns_answer_return_types:
+        if "SERVFAIL" in dns_answer_return_types:
+            scan_result.rcode = "SERVFAIL"
+        elif [rtype for rtype in dns_answer_return_types if rtype is not None]:
+            scan_result.rcode = [
+                rtype for rtype in dns_answer_return_types if rtype is not None
+            ][0]
+        else:
+            scan_result.rcode = None
         scan_result.record_exists = False
         return scan_result.__dict__
 
-    if scan_result.rcode == "NXDOMAIN":
-        logger.info(f"NXDOMAIN for {domain}.")
-        scan_result.record_exists = False
-        return scan_result.__dict__
-
-    if scan_result.rcode == "SERVFAIL":
-        logger.info(f"SERVFAIL for {domain}.")
-        scan_result.record_exists = False
-        return scan_result.__dict__
-
+    scan_result.rcode = "NOERROR"
     scan_result.record_exists = True
 
     # Get chaining results (A and CNAME records)
@@ -84,7 +115,9 @@ def scan_domain(domain, dkim_selectors=None):
 
     if a_records:
         scan_result.resolve_ips = [a_record.to_text() for a_record in a_records]
-        scan_result.resolve_chain = [str(answer).splitlines() for answer in a_records.response.answer]
+        scan_result.resolve_chain = [
+            str(answer).splitlines() for answer in a_records.response.answer
+        ]
     else:
         scan_result.resolve_ips = None
         scan_result.resolve_chain = None
@@ -92,12 +125,16 @@ def scan_domain(domain, dkim_selectors=None):
     # Check for wildcard sibling domains
     try:
         wildcard_sibling_domain = re.sub(r"^[^.]+", "*", domain)
-        dns.resolver.resolve(wildcard_sibling_domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False)
+        dns.resolver.resolve(
+            wildcard_sibling_domain, rdtype=dns.rdatatype.A, raise_on_no_answer=False
+        )
         scan_result.wildcard_sibling = True
     except (NoAnswer, NXDOMAIN, NoNameservers, Timeout):
         scan_result.wildcard_sibling = False
     except Exception as e:
-        logger.error(f"Unknown error checking for wildcard sibling domain for {domain}: {e}")
+        logger.error(
+            f"Unknown error checking for wildcard sibling domain for {domain}: {e}"
+        )
         scan_result.wildcard_sibling = False
 
     # Get first CNAME record (in case there is no A record in chain). Checking if chain is valid.
