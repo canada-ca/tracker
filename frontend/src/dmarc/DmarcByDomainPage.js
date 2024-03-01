@@ -255,7 +255,7 @@ export default function DmarcByDomainPage() {
       </Flex>
       {isLoggedIn() && (
         <Flex align="center" mb="2">
-          <Text mr="2" fontWeight="bold">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
             <Trans>Filters:</Trans>
           </Text>
           <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
