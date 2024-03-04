@@ -32,6 +32,10 @@ export const mxRecordType = new GraphQLObjectType({
       type: new GraphQLList(GraphQLString),
       description: `Additional warning info about the MX record.`,
     },
+    error: {
+      type: GraphQLString,
+      description: `Error message if the MX record could not be retrieved.`,
+    },
   }),
 })
 
