@@ -105,8 +105,7 @@ const refreshTokens = async () => {
 }
 
 const httpLink = createHttpLink({
-  uri:
-    process.env.NODE_ENV === 'production' ? `https://${window.location.host}/graphql` : 'http://localhost:4000/graphql',
+  uri: process.env.NODE_ENV === 'production' ? `https://${window.location.host}/graphql` : '/graphql',
 })
 
 const headersLink = setContext(({ operationName }, { headers }) => {
