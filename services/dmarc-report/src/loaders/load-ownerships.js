@@ -2,6 +2,12 @@ const { Octokit } = require('octokit')
 
 const { GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_FILE, GITHUB_OWNER, GITHUB_REPO } = process.env
 
+function getDecodedData(resp) {
+  const data = resp.data
+  const decodedContent = Buffer.from(data.content, 'base64').toString('utf-8')
+  return JSON.parse(decodedContent)
+}
+
 async function loadDomainOwnership() {
   try {
     const octokit = new Octokit({
@@ -14,10 +20,7 @@ async function loadDomainOwnership() {
       path: GITHUB_FILE,
       ref: GITHUB_BRANCH,
     })
-
-    const data = resp.data
-    const decodedContent = Buffer.from(data.content, 'base64').toString('utf-8')
-    return JSON.parse(decodedContent)
+    return getDecodedData(resp)
   } catch (err) {
     console.error(`Error loading domain ownership: ${err}`)
     throw err
@@ -26,4 +29,5 @@ async function loadDomainOwnership() {
 
 module.exports = {
   loadDomainOwnership,
+  getDecodedData,
 }
