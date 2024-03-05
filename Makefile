@@ -16,7 +16,16 @@ endef
 
 .PHONY: cluster
 cluster:
-		gcloud beta container --project "$(project)" clusters create "$(name)" --region "$(region)" --no-enable-basic-auth --release-channel "rapid" --cluster-version "1.24.8-gke.2000" --machine-type "n2d-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-standard" --disk-size "50" --metadata disable-legacy-endpoints=true --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com" --num-nodes "2" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/track-compliance/global/networks/default" --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --workload-pool "track-compliance.svc.id.goog" --enable-shielded-nodes --enable-dataplane-v2 --shielded-secure-boot --shielded-integrity-monitoring
+		gcloud container --project "$(project)" clusters create "$(name)" --region "$(region)" --no-enable-basic-auth --release-channel "stable" --cluster-version "1.24.11-gke.1000" --machine-type "n2d-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-standard" --disk-size "50" --metadata disable-legacy-endpoints=true --service-account "gke-least-priviledge-account@$(project).iam.gserviceaccount.com" --num-nodes "2" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/$(project)/global/networks/default" --subnetwork "projects/$(project)/regions/northamerica-northeast1/subnetworks/default" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --workload-pool "$(project).svc.id.goog" --enable-shielded-nodes --enable-dataplane-v2 --shielded-secure-boot --shielded-integrity-monitoring
+
+.PHONY: gke-service-account
+gke-service-account:
+		gcloud iam service-accounts create gke-least-priviledge-account --display-name="gke least priviledge account"
+		gcloud projects add-iam-policy-binding php-observatory --member "serviceAccount:gke-least-priviledge-account@php-observatory.iam.gserviceaccount.com" --role roles/logging.logWriter
+		gcloud projects add-iam-policy-binding php-observatory --member "serviceAccount:gke-least-priviledge-account@php-observatory.iam.gserviceaccount.com" --role roles/monitoring.metricWriter
+		gcloud projects add-iam-policy-binding php-observatory --member "serviceAccount:gke-least-priviledge-account@php-observatory.iam.gserviceaccount.com" --role roles/monitoring.viewer
+		gcloud projects add-iam-policy-binding php-observatory --member "serviceAccount:gke-least-priviledge-account@php-observatory.iam.gserviceaccount.com" --role roles/stackdriver.resourceMetadata.writer
+
 
 .PHONY: secrets
 secrets:
