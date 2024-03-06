@@ -70,10 +70,7 @@ const upsertSummary =
     }
 
     // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
+    const collectionStrings = collections.map((collection) => collection._name)
     // setup Transaction
     const trx = await transaction(collectionStrings)
 
@@ -84,7 +81,7 @@ const upsertSummary =
         FOR summary IN dmarcSummaries
           FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
           UPSERT { _key: summary._key }
-            INSERT ${summary} 
+            INSERT ${summary}
             UPDATE {
               categoryPercentages: ${summary.categoryPercentages},
               categoryTotals: ${summary.categoryTotals},

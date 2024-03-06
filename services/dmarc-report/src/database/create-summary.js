@@ -54,10 +54,7 @@ const createSummary =
     }
 
     // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
+    const collectionStrings = collections.map((collection) => collection._name)
     // setup Transaction
     const trx = await transaction(collectionStrings)
 
