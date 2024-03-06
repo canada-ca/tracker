@@ -2,7 +2,7 @@ const removeSummary =
   ({ transaction, collections, query }) =>
   async ({ domain, date }) => {
     // Generate list of collections names
-    const collectionStrings = collections.map((collection) => collection._name)
+    const collectionStrings = Object.keys(collections)
 
     // setup Transaction
     const trx = await transaction(collectionStrings)

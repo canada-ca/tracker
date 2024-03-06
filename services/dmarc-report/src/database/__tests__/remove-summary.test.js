@@ -2,19 +2,19 @@ const { ensure, dbNameFromFile } = require('arango-tools')
 
 const { removeSummary } = require('../remove-summary')
 const { databaseOptions } = require('../../../database-options')
+const { arangoConnection } = require('../index')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the removeSummary function', () => {
-  let query, drop, truncate, collections, transaction, domain, org, summary
+  let query, truncate, collections, transaction, dbName, arangoDB, domain, org, summary
 
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
+    dbName = dbNameFromFile(__filename)
+    ;({ collections, query, transaction, arangoDB, truncate } = await arangoConnection({
       url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      databaseName: dbName,
+      rootPass,
     }))
   })
 
@@ -66,7 +66,8 @@ describe('given the removeSummary function', () => {
   })
 
   afterAll(async () => {
-    await drop()
+    const systemDb = arangoDB.database('_system')
+    await systemDb.dropDatabase(dbName)
   })
 
   it('removes the summary', async () => {
@@ -75,8 +76,7 @@ describe('given the removeSummary function', () => {
       date: 'thirtyDays',
     })
 
-    const dmarcSummariesCursor =
-      await query`FOR item IN dmarcSummaries RETURN item`
+    const dmarcSummariesCursor = await query`FOR item IN dmarcSummaries RETURN item`
 
     const dmarcSummaries = await dmarcSummariesCursor.next()
 
@@ -88,8 +88,7 @@ describe('given the removeSummary function', () => {
       date: 'thirtyDays',
     })
 
-    const domainsToDmarcSummariesCursor =
-      await query`FOR item IN domainsToDmarcSummaries RETURN item`
+    const domainsToDmarcSummariesCursor = await query`FOR item IN domainsToDmarcSummaries RETURN item`
 
     const domainsToDmarcSummaries = await domainsToDmarcSummariesCursor.next()
 

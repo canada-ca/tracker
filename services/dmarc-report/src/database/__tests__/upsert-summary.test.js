@@ -1,18 +1,18 @@
-const { ensure, dbNameFromFile } = require('arango-tools')
-
-const { databaseOptions } = require('../../../database-options')
 const { calculatePercentages } = require('../../utils')
 
 const { upsertSummary } = require('../upsert-summary')
+const { arangoConnection } = require('../index')
+const { dbNameFromFile } = require('arango-tools')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the upsertSummary function', () => {
   let query,
-    drop,
     truncate,
     collections,
     transaction,
+    dbName,
+    arangoDB,
     domain,
     org,
     summary,
@@ -23,12 +23,11 @@ describe('given the upsertSummary function', () => {
     loadSpfFailureTable
 
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
+    dbName = dbNameFromFile(__filename)
+    ;({ collections, query, transaction, arangoDB, truncate } = await arangoConnection({
       url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      databaseName: dbName,
+      rootPass,
     }))
   })
 
@@ -78,9 +77,7 @@ describe('given the upsertSummary function', () => {
       _to: summary._id,
       startDate: '2021-01-01',
     })
-    loadCategoryTotals = jest
-      .fn()
-      .mockReturnValue({ pass: 1, fail: 1, passDkimOnly: 1, passSpfOnly: 1 })
+    loadCategoryTotals = jest.fn().mockReturnValue({ pass: 1, fail: 1, passDkimOnly: 1, passSpfOnly: 1 })
     loadDkimFailureTable = jest.fn().mockReturnValue([{ key: 'value' }])
     loadDmarcFailureTable = jest.fn().mockReturnValue([{ key: 'value' }])
     loadFullPassTable = jest.fn().mockReturnValue([{ key: 'value' }])
@@ -92,7 +89,8 @@ describe('given the upsertSummary function', () => {
   })
 
   afterAll(async () => {
-    await drop()
+    const systemDb = arangoDB.database('_system')
+    await systemDb.dropDatabase(dbName)
   })
 
   describe('date is thirtyDays', () => {
@@ -108,10 +106,10 @@ describe('given the upsertSummary function', () => {
         loadSpfFailureTable,
         calculatePercentages,
       })({ date: 'thirtyDays', domain: 'domain.ca' })
-  
+
       const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
       const checkSummary = await summaryCursor.next()
-  
+
       const expectedResult = {
         _id: checkSummary._id,
         _key: checkSummary._key,
@@ -136,7 +134,7 @@ describe('given the upsertSummary function', () => {
         },
         totalMessages: 4,
       }
-  
+
       expect(checkSummary).toEqual(expectedResult)
     })
   })
@@ -153,10 +151,10 @@ describe('given the upsertSummary function', () => {
         loadSpfFailureTable,
         calculatePercentages,
       })({ date: '2021-01-01', domain: 'domain.ca' })
-  
+
       const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
       const checkSummary = await summaryCursor.next()
-  
+
       const expectedResult = {
         _id: checkSummary._id,
         _key: checkSummary._key,
@@ -181,7 +179,7 @@ describe('given the upsertSummary function', () => {
         },
         totalMessages: 4,
       }
-  
+
       expect(checkSummary).toEqual(expectedResult)
     })
   })
