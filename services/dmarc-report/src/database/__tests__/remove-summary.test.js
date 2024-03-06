@@ -1,7 +1,6 @@
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
 
 const { removeSummary } = require('../remove-summary')
-const { databaseOptions } = require('../../../database-options')
 const { arangoConnection } = require('../index')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
