@@ -6,9 +6,14 @@ require('dotenv-safe').config({
 const { CosmosClient } = require('@azure/cosmos')
 const moment = require('moment')
 
-const { Database: ArangoDatabase, aql } = require('arangojs')
-
-const { createOwnership, createSummary, removeOwnership, removeSummary, upsertSummary } = require('./src/database')
+const {
+  createOwnership,
+  createSummary,
+  removeOwnership,
+  removeSummary,
+  upsertSummary,
+  arangoConnection,
+} = require('./src/database')
 const {
   loadArangoDates,
   loadArangoThirtyDaysCount,
@@ -36,23 +41,11 @@ const {
 } = process.env
 
 ;(async () => {
-  const arangoDB = new ArangoDatabase({
+  const { collections, query, transaction } = await arangoConnection({
     url,
     databaseName,
-    auth: {
-      username: 'root',
-      password: rootPass,
-    },
+    rootPass,
   })
-  const collections = await arangoDB.collections()
-  const query = async (strings, ...vars) => {
-    return arangoDB.query(aql(strings, ...vars), {
-      count: true,
-    })
-  }
-  const transaction = async (collectionStrings) => {
-    return arangoDB.beginTransaction(collectionStrings)
-  }
 
   const client = new CosmosClient(AZURE_CONN_STRING)
   const { database } = await client.databases.createIfNotExists({
