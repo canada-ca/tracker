@@ -1,21 +1,14 @@
-const { ensure, dbNameFromFile } = require('arango-tools')
-
-const { databaseOptions } = require('../../database-options')
-const {
-  createOwnership,
-  createSummary,
-  removeSummary,
-  upsertSummary,
-} = require('../database')
+const { createOwnership, createSummary, removeSummary, upsertSummary, arangoConnection } = require('../database')
 const { loadArangoDates } = require('../loaders')
 const { calculatePercentages } = require('../utils')
 
 const { dmarcReport } = require('../dmarc-report')
+const { dbNameFromFile } = require('arango-tools')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the dmarcReport function', () => {
-  let query, drop, truncate, collections, transaction, domain, org
+  let query, truncate, collections, transaction, dbName, arangoDB, domain, org
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -24,12 +17,11 @@ describe('given the dmarcReport function', () => {
   beforeAll(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
+    dbName = dbNameFromFile(__filename)
+    ;({ collections, query, transaction, arangoDB, truncate } = await arangoConnection({
       url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      databaseName: dbName,
+      rootPass,
     }))
   })
 
@@ -52,7 +44,8 @@ describe('given the dmarcReport function', () => {
   })
 
   afterAll(async () => {
-    await drop()
+    const systemDb = arangoDB.database('_system')
+    await systemDb.dropDatabase(dbName)
   })
 
   describe('org is not found in arango', () => {
@@ -94,9 +87,7 @@ describe('given the dmarcReport function', () => {
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
       })
 
-      expect(consoleOutput[1]).toEqual(
-        '\tdomain.ca cannot be found in the datastore',
-      )
+      expect(consoleOutput[1]).toEqual('\tdomain.ca cannot be found in the datastore')
     })
   })
   describe('no org owns the domain', () => {
@@ -129,9 +120,7 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkOwner).toEqual(expectedResult)
-      expect(consoleOutput[2]).toEqual(
-        '\t\tAssigning domain.ca ownership to: ACR',
-      )
+      expect(consoleOutput[2]).toEqual('\t\tAssigning domain.ca ownership to: ACR')
     })
   })
   describe('another org owns the domain', () => {
@@ -162,14 +151,11 @@ describe('given the dmarcReport function', () => {
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
       })
 
-      const checkCursor =
-        await query`FOR item IN ownership FILTER item._from == ${org2._id} RETURN item`
+      const checkCursor = await query`FOR item IN ownership FILTER item._from == ${org2._id} RETURN item`
       const checkOwner = await checkCursor.next()
 
       expect(checkOwner).toBeUndefined()
-      expect(consoleOutput[2]).toEqual(
-        '\t\tRemoving domain.ca ownership to: domain.ca',
-      )
+      expect(consoleOutput[2]).toEqual('\t\tRemoving domain.ca ownership to: domain.ca')
     })
     it('creates new ownership', async () => {
       await dmarcReport({
@@ -200,9 +186,7 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkOwner).toEqual(expectedResult)
-      expect(consoleOutput[3]).toEqual(
-        '\t\tAssigning domain.ca ownership to: ACR',
-      )
+      expect(consoleOutput[3]).toEqual('\t\tAssigning domain.ca ownership to: ACR')
     })
   })
   describe('org already owns the domain', () => {
@@ -229,9 +213,7 @@ describe('given the dmarcReport function', () => {
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
       })
 
-      expect(consoleOutput[2]).toEqual(
-        '\t\tOwnership of domain.ca is already assigned to ACR',
-      )
+      expect(consoleOutput[2]).toEqual('\t\tOwnership of domain.ca is already assigned to ACR')
     })
   })
   describe('old date is found in arango', () => {
@@ -267,8 +249,7 @@ describe('given the dmarcReport function', () => {
         currentDate: '2021-01-01',
       })
 
-      const checkCursor =
-        await query`FOR item IN domainsToDmarcSummaries FILTER item._to == ${summary._id} RETURN item`
+      const checkCursor = await query`FOR item IN domainsToDmarcSummaries FILTER item._to == ${summary._id} RETURN item`
       const checkEdge = await checkCursor.next()
 
       expect(checkEdge).toBeUndefined()
@@ -334,8 +315,7 @@ describe('given the dmarcReport function', () => {
         currentDate: '2021-01-01',
       })
 
-      const checkCursor =
-        await query`FOR item IN domainsToDmarcSummaries RETURN item`
+      const checkCursor = await query`FOR item IN domainsToDmarcSummaries RETURN item`
       const checkEdge = await checkCursor.next()
 
       const expectedResult = {
@@ -348,9 +328,7 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkEdge).toEqual(expectedResult)
-      expect(consoleOutput[3]).toEqual(
-        '\t\tInitializing 2021-01-01 for domain.ca',
-      )
+      expect(consoleOutput[3]).toEqual('\t\tInitializing 2021-01-01 for domain.ca')
     })
     it('creates the summary', async () => {
       await dmarcReport({
@@ -413,9 +391,7 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkSummary).toEqual(expectedResult)
-      expect(consoleOutput[3]).toEqual(
-        '\t\tInitializing 2021-01-01 for domain.ca',
-      )
+      expect(consoleOutput[3]).toEqual('\t\tInitializing 2021-01-01 for domain.ca')
     })
   })
   describe('date is found in arango dates', () => {
@@ -611,9 +587,7 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkSummary).toEqual(expectedResult)
-      expect(consoleOutput[4]).toEqual(
-        '\t\tInitializing Thirty Days for domain.ca',
-      )
+      expect(consoleOutput[4]).toEqual('\t\tInitializing Thirty Days for domain.ca')
     })
     it('creates the summary', async () => {
       await dmarcReport({
@@ -665,8 +639,7 @@ describe('given the dmarcReport function', () => {
       const sumIdCursor =
         await query`FOR item IN domainsToDmarcSummaries FILTER item.startDate == "thirtyDays" RETURN item`
       const sumId = await sumIdCursor.next()
-      const checkCursor =
-        await query`FOR item IN dmarcSummaries FILTER item._id == ${sumId._to} RETURN item`
+      const checkCursor = await query`FOR item IN dmarcSummaries FILTER item._id == ${sumId._to} RETURN item`
       const checkSummary = await checkCursor.next()
 
       const expectedResult = {
@@ -695,9 +668,7 @@ describe('given the dmarcReport function', () => {
       }
 
       expect(checkSummary).toEqual(expectedResult)
-      expect(consoleOutput[4]).toEqual(
-        '\t\tInitializing Thirty Days for domain.ca',
-      )
+      expect(consoleOutput[4]).toEqual('\t\tInitializing Thirty Days for domain.ca')
     })
   })
   describe('thirty days is found in arango', () => {
