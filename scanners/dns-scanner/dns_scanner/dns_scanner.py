@@ -163,6 +163,22 @@ def scan_domain(domain, dkim_selectors=None):
     scan_result.dmarc = dmarc_scan_result.get("dmarc", {})
     logger.info(f"DMARC scan elapsed time: {time.monotonic() - dmarc_start_time}")
 
+    # If no MX records are found (with warnings), but there are CNAME records, check the CNAME target for MX records
+    if (
+        len(scan_result.mx_records.get("hosts", [])) == 0
+        and len(scan_result.mx_records.get("warnings", [])) > 0
+        and scan_result.cname_record is not None
+    ):
+        cname_target_domain = scan_result.cname_record.split()[-1].strip(".")
+        cname_scan_results = DMARCScanner(cname_target_domain).run()
+        cname_mx_records = cname_scan_results.get("mx", {})
+
+        if (
+            len(cname_mx_records.get("hosts", [])) > 0
+            and len(cname_mx_records.get("warnings", [])) == 0
+        ):
+            scan_result.mx_records = cname_mx_records
+
     try:
         # Run DKIM scan
         dkim_start_time = time.time()
