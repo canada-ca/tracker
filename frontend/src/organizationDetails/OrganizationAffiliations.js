@@ -45,12 +45,26 @@ export function OrganizationAffiliations({ orgSlug }) {
 
   if (error) return <ErrorFallbackMessage error={error} />
 
-  if (loading)
-    return (
-      <LoadingMessage>
-        <Trans>User Affiliations</Trans>
-      </LoadingMessage>
-    )
+  let userlist = loading ? (
+    <LoadingMessage />
+  ) : (
+    <ListOf
+      elements={nodes}
+      ifEmpty={() => (
+        <Text layerStyle="loadingMessage">
+          <Trans>No Users</Trans>
+        </Text>
+      )}
+      mb="4"
+    >
+      {({ permission, user }, index) => (
+        <ErrorBoundary FallbackComponent={ErrorFallbackMessage} key={`${user.id}:${index}`}>
+          <UserCard userName={user.userName} displayName={user.displayName} role={permission} />
+          <Divider borderColor="gray.900" />
+        </ErrorBoundary>
+      )}
+    </ListOf>
+  )
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -69,24 +83,9 @@ export function OrganizationAffiliations({ orgSlug }) {
           setOrderDirection={setOrderDirection}
           resetToFirstPage={resetToFirstPage}
           orderByOptions={orderByOptions}
-          placeholder={t`Search for an organization`}
+          placeholder={t`Search for a user by email`}
         />
-        <ListOf
-          elements={nodes}
-          ifEmpty={() => (
-            <Text layerStyle="loadingMessage">
-              <Trans>No Users</Trans>
-            </Text>
-          )}
-          mb="4"
-        >
-          {({ permission, user }, index) => (
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage} key={`${user.id}:${index}`}>
-              <UserCard userName={user.userName} displayName={user.displayName} role={permission} />
-              <Divider borderColor="gray.900" />
-            </ErrorBoundary>
-          )}
-        </ListOf>
+        {userlist}
         <RelayPaginationControls
           onlyPagination={false}
           selectedDisplayLimit={usersPerPage}
