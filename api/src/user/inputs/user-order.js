@@ -1,13 +1,13 @@
 import { GraphQLInputObjectType, GraphQLNonNull } from 'graphql'
 
-import { OrderDirection, AffiliationUserOrderField } from '../../enums'
+import { OrderDirection, UserOrderField } from '../../enums'
 
-export const affiliationUserOrder = new GraphQLInputObjectType({
-  name: 'AffiliationUserOrder',
+export const userOrder = new GraphQLInputObjectType({
+  name: 'UserOrder',
   description: 'Ordering options for affiliation connections.',
   fields: () => ({
     field: {
-      type: new GraphQLNonNull(AffiliationUserOrderField),
+      type: new GraphQLNonNull(UserOrderField),
       description: 'The field to order affiliations by.',
     },
     direction: {

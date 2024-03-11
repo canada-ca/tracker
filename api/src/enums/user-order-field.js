@@ -1,7 +1,7 @@
-import {GraphQLEnumType} from 'graphql'
+import { GraphQLEnumType } from 'graphql'
 
-export const AffiliationUserOrderField = new GraphQLEnumType({
-  name: 'AffiliationUserOrderField',
+export const UserOrderField = new GraphQLEnumType({
+  name: 'UserOrderField',
   description: 'Properties by which affiliation connections can be ordered.',
   values: {
     USER_USERNAME: {
