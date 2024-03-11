@@ -318,7 +318,7 @@ export const loadDmarcSummaryConnectionsByUserId =
 
     let domainQuery = aql``
     let searchDomainFilter = aql``
-    if (typeof search !== 'undefined') {
+    if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
       LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
