@@ -5,7 +5,7 @@ import { connectionArgs, globalIdField } from 'graphql-relay'
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
 import { Acronym, Slug, Year } from '../../scalars'
-import { userOrder } from '../../user/inputs'
+import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
 import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
@@ -282,7 +282,7 @@ export const organizationType = new GraphQLObjectType({
       description: 'Organization affiliations to various users.',
       args: {
         orderBy: {
-          type: userOrder,
+          type: affiliationUserOrder,
           description: 'Ordering options for affiliation connections.',
         },
         search: {

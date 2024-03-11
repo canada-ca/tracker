@@ -20,9 +20,15 @@ export const loadAffiliationConnectionsByOrgId =
 
         let affiliationField, documentField
         /* istanbul ignore else */
-        if (orderBy.field === 'user-username') {
+        if (orderBy.field === 'username') {
           affiliationField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).userName`
           documentField = aql`DOCUMENT(users, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._to).key).userName`
+        } else if (orderBy.field === 'display_name') {
+          affiliationField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).displayName`
+          documentField = aql`DOCUMENT(users, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._to).key).displayName`
+        } else if (orderBy.field === 'permission') {
+          affiliationField = aql`affiliation.permission`
+          documentField = aql`DOCUMENT(affiliations, ${afterId}).permission`
         }
 
         afterTemplate = aql`
@@ -48,9 +54,15 @@ export const loadAffiliationConnectionsByOrgId =
 
         let affiliationField, documentField
         /* istanbul ignore else */
-        if (orderBy.field === 'user-username') {
+        if (orderBy.field === 'username') {
           affiliationField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).userName`
           documentField = aql`DOCUMENT(users, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._to).key).userName`
+        } else if (orderBy.field === 'display_name') {
+          affiliationField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).displayName`
+          documentField = aql`DOCUMENT(users, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._to).key).displayName`
+        } else if (orderBy.field === 'permission') {
+          affiliationField = aql`affiliation.permission`
+          documentField = aql`DOCUMENT(affiliations, ${beforeId}).permission`
         }
 
         beforeTemplate = aql`
@@ -124,10 +136,18 @@ export const loadAffiliationConnectionsByOrgId =
 
       let affField, hasNextPageDocument, hasPreviousPageDocument
       /* istanbul ignore else */
-      if (orderBy.field === 'user-username') {
+      if (orderBy.field === 'username') {
         affField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).userName`
         hasNextPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._to).key).userName`
         hasPreviousPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._to).key).userName`
+      } else if (orderBy.field === 'display_name') {
+        affField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).displayName`
+        hasNextPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._to).key).displayName`
+        hasPreviousPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._to).key).displayName`
+      } else if (orderBy.field === 'permission') {
+        affField = aql`affiliation.permission`
+        hasNextPageDocument = aql`LAST(retrievedAffiliations).permission`
+        hasPreviousPageDocument = aql`FIRST(retrievedAffiliations).permission`
       }
 
       hasNextPageFilter = aql`
@@ -146,8 +166,12 @@ export const loadAffiliationConnectionsByOrgId =
     let sortByField = aql``
     if (typeof orderBy !== 'undefined') {
       /* istanbul ignore else */
-      if (orderBy.field === 'user-username') {
+      if (orderBy.field === 'username') {
         sortByField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).userName ${orderBy.direction},`
+      } else if (orderBy.field === 'display_name') {
+        sortByField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).displayName ${orderBy.direction},`
+      } else if (orderBy.field === 'permission') {
+        sortByField = aql`affiliation.permission ${orderBy.direction},`
       }
     }
 

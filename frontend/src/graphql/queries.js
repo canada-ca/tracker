@@ -955,7 +955,7 @@ export const IS_LOGIN_REQUIRED = gql`
 `
 
 export const FIND_MY_USERS = gql`
-  query FindMyUsers($first: Int, $after: String, $orderBy: AffiliationUserOrder, $search: String) {
+  query FindMyUsers($first: Int, $after: String, $orderBy: UserOrder, $search: String) {
     findMyUsers(orderBy: $orderBy, first: $first, after: $after, search: $search) {
       edges {
         cursor

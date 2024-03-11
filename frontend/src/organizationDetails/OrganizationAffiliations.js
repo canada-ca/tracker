@@ -17,7 +17,7 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 export function OrganizationAffiliations({ orgSlug }) {
   const [usersPerPage, setUsersPerPage] = useState(10)
   const [orderDirection, setOrderDirection] = useState('ASC')
-  const [orderField, setOrderField] = useState('NAME')
+  const [orderField, setOrderField] = useState('USERNAME')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
@@ -30,7 +30,11 @@ export function OrganizationAffiliations({ orgSlug }) {
   const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage, resetToFirstPage } =
     usePaginatedCollection({
       fetchForward: FORWARD,
-      variables: { slug: orgSlug, direction: orderDirection, field: orderField, search: debouncedSearchTerm },
+      variables: {
+        slug: orgSlug,
+        orderBy: { direction: orderDirection, field: orderField },
+        search: debouncedSearchTerm,
+      },
       recordsPerPage: usersPerPage,
       relayRoot: 'findOrganizationBySlug.affiliations',
       fetchPolicy: 'network-only',
