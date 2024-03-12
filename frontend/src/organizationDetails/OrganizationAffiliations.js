@@ -42,9 +42,9 @@ export function OrganizationAffiliations({ orgSlug }) {
     })
 
   const orderByOptions = [
+    { value: 'PERMISSION', text: t`Role` },
     { value: 'USERNAME', text: t`Email` },
     { value: 'DISPLAY_NAME', text: t`Name` },
-    { value: 'PERMISSION', text: t`Role` },
   ]
 
   if (error) return <ErrorFallbackMessage error={error} />
