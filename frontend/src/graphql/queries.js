@@ -149,11 +149,12 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
     $first: Int
     $after: String
     $search: String
+    $orderBy: AffiliationUserOrder
     $includePending: Boolean
   ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after, search: $search, includePending: $includePending) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy, includePending: $includePending) {
         edges {
           node {
             id
