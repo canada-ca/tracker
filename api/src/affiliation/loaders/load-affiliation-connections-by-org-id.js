@@ -27,8 +27,8 @@ export const loadAffiliationConnectionsByOrgId =
           affiliationField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).displayName`
           documentField = aql`DOCUMENT(users, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${afterId})._to).key).displayName`
         } else if (orderBy.field === 'permission') {
-          affiliationField = aql`affiliation.permission`
-          documentField = aql`DOCUMENT(affiliations, ${afterId}).permission`
+          affiliationField = aql`rolePriority[affiliation.permission]`
+          documentField = aql`rolePriority[DOCUMENT(affiliations, ${afterId}).permission]`
         }
 
         afterTemplate = aql`
@@ -61,8 +61,8 @@ export const loadAffiliationConnectionsByOrgId =
           affiliationField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).displayName`
           documentField = aql`DOCUMENT(users, PARSE_IDENTIFIER(DOCUMENT(affiliations, ${beforeId})._to).key).displayName`
         } else if (orderBy.field === 'permission') {
-          affiliationField = aql`affiliation.permission`
-          documentField = aql`DOCUMENT(affiliations, ${beforeId}).permission`
+          affiliationField = aql`rolePriority[affiliation.permission]`
+          documentField = aql`rolePriority[DOCUMENT(affiliations, ${beforeId}).permission]`
         }
 
         beforeTemplate = aql`
@@ -145,8 +145,8 @@ export const loadAffiliationConnectionsByOrgId =
         hasNextPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(LAST(retrievedAffiliations)._to).key).displayName`
         hasPreviousPageDocument = aql`DOCUMENT(users, PARSE_IDENTIFIER(FIRST(retrievedAffiliations)._to).key).displayName`
       } else if (orderBy.field === 'permission') {
-        affField = aql`affiliation.permission`
-        hasNextPageDocument = aql`LAST(retrievedAffiliations).permission`
+        affField = aql`rolePriority[affiliation.permission]`
+        hasNextPageDocument = aql`rolePriority[LAST(retrievedAffiliations).permission]`
         hasPreviousPageDocument = aql`FIRST(retrievedAffiliations).permission`
       }
 
@@ -171,7 +171,7 @@ export const loadAffiliationConnectionsByOrgId =
       } else if (orderBy.field === 'display_name') {
         sortByField = aql`DOCUMENT(users, PARSE_IDENTIFIER(affiliation._to).key).displayName ${orderBy.direction},`
       } else if (orderBy.field === 'permission') {
-        sortByField = aql`affiliation.permission ${orderBy.direction},`
+        sortByField = aql`rolePriority[affiliation.permission] ${orderBy.direction},`
       }
     }
 
@@ -219,6 +219,14 @@ export const loadAffiliationConnectionsByOrgId =
           ${pendingFilter}
           RETURN e._key
       )
+
+      LET rolePriority = {
+          "pending": 0,
+          "owner": 1,
+          "super_admin": 2,
+          "admin": 3,
+          "user": 4
+      }
 
       LET retrievedAffiliations = (
         FOR affiliation IN affiliations
