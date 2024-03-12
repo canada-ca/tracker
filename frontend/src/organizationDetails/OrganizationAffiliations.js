@@ -17,7 +17,7 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 export function OrganizationAffiliations({ orgSlug }) {
   const [usersPerPage, setUsersPerPage] = useState(10)
   const [orderDirection, setOrderDirection] = useState('ASC')
-  const [orderField, setOrderField] = useState('USERNAME')
+  const [orderField, setOrderField] = useState('PERMISSION')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 

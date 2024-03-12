@@ -56,7 +56,7 @@ describe('<OrganizationAffiliations />', () => {
             variables: {
               first: 10,
               slug: orgSlug,
-              orderBy: { direction: 'ASC', field: 'USERNAME' },
+              orderBy: { direction: 'ASC', field: 'PERMISSION' },
               search: '',
             },
           },
