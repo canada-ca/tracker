@@ -30,14 +30,26 @@ const successMocks = [
   {
     request: {
       query: FORWARD,
-      variables: { first: 20, orgSlug: 'test-org.slug', search: '', includePending: true },
+      variables: {
+        first: 20,
+        orgSlug: 'test-org.slug',
+        search: '',
+        includePending: true,
+        orderBy: { direction: 'ASC', field: 'PERMISSION' },
+      },
     },
     result: { data: rawOrgUserListData },
   },
   {
     request: {
       query: FORWARD,
-      variables: { first: 20, orgSlug: 'test-org.slug', search: '', includePending: true },
+      variables: {
+        first: 20,
+        orgSlug: 'test-org.slug',
+        search: '',
+        includePending: true,
+        orderBy: { direction: 'ASC', field: 'PERMISSION' },
+      },
     },
     result: { data: rawOrgUserListData },
   },

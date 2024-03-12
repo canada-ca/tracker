@@ -618,10 +618,10 @@ export const PAGINATED_ORG_DOMAINS = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS = gql`
-  query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
+  query OrgUsersNext($slug: Slug!, $first: Int, $after: String, $search: String, $orderBy: AffiliationUserOrder) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
-      affiliations(first: $first, after: $after) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy) {
         pageInfo {
           hasNextPage
           endCursor
@@ -957,7 +957,7 @@ export const IS_LOGIN_REQUIRED = gql`
 `
 
 export const FIND_MY_USERS = gql`
-  query FindMyUsers($first: Int, $after: String, $orderBy: AffiliationUserOrder, $search: String) {
+  query FindMyUsers($first: Int, $after: String, $orderBy: UserOrder, $search: String) {
     findMyUsers(orderBy: $orderBy, first: $first, after: $after, search: $search) {
       edges {
         cursor

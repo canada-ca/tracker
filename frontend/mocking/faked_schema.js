@@ -324,7 +324,7 @@ export const getTypeNames = () => gql`
       """
       Ordering options for user affiliation
       """
-      orderBy: AffiliationUserOrder
+      orderBy: UserOrder
 
       """
       String used to search for users.
@@ -2232,29 +2232,19 @@ export const getTypeNames = () => gql`
   """
   enum AffiliationUserOrderField {
     """
-    Order affiliation edges by username.
+    Order affiliations by username.
     """
-    USER_USERNAME
+    USERNAME
 
     """
-    Order affiliation edges by displayName.
+    Order affiliations by display name.
     """
-    USER_DISPLAYNAME
+    DISPLAY_NAME
 
     """
-    Order affiliation edges by user verification status.
+    Order affiliations by permission.
     """
-    USER_EMAIL_VALIDATED
-
-    """
-    Order affiliation edges by user insider status.
-    """
-    USER_INSIDER
-
-    """
-    Order affiliation edges by amount of total affiliations.
-    """
-    USER_AFFILIATIONS_COUNT
+    PERMISSION
   }
 
   """
@@ -4386,6 +4376,51 @@ export const getTypeNames = () => gql`
     A cursor for use in pagination
     """
     cursor: String!
+  }
+
+  """
+  Ordering options for affiliation connections.
+  """
+  input UserOrder {
+    """
+    The field to order affiliations by.
+    """
+    field: UserOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which affiliation connections can be ordered.
+  """
+  enum UserOrderField {
+    """
+    Order affiliation edges by username.
+    """
+    USER_USERNAME
+
+    """
+    Order affiliation edges by displayName.
+    """
+    USER_DISPLAYNAME
+
+    """
+    Order affiliation edges by user verification status.
+    """
+    USER_EMAIL_VALIDATED
+
+    """
+    Order affiliation edges by user insider status.
+    """
+    USER_INSIDER
+
+    """
+    Order affiliation edges by amount of total affiliations.
+    """
+    USER_AFFILIATIONS_COUNT
   }
 
   """
