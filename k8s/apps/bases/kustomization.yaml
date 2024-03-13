@@ -13,3 +13,4 @@ resources:
   - scanners/domain-discovery
   - azure-defender-easm/add-domain-to-easm
   - azure-defender-easm/label-known-easm-assets-cronjob
+  - azure-defender-easm/add-easm-assets-to-tracker-cronjob
