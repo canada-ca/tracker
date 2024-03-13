@@ -148,6 +148,19 @@ def check_mx_diff(processed_results, domain_id):
     return mx_record_diff
 
 
+def domain_sends_mail(domain_id):
+    check_mail_cursor = db.aql.execute(
+        """
+        FOR v, e IN 1..1 OUTBOUND @domain_id domainsToDmarcSummaries
+            FILTER e.startDate == "thirtyDays"
+            LIMIT 1
+            RETURN [ v.categoryTotals.pass, v.categoryTotals.passDkimOnly, v.categoryTotals.passSpfOnly ] ANY > 0
+    """,
+        bind_vars={"domain_id": domain_id},
+    )
+    return check_mail_cursor.next()
+
+
 async def run(loop):
     async def error_cb(error):
         logger.error(error)
@@ -182,6 +195,11 @@ async def run(loop):
         domain_key = payload.get("domain_key")
         user_key = payload.get("user_key")
         shared_id = payload.get("shared_id")
+
+        try:
+            results["domain_sends_mail"] = domain_sends_mail(f"domains/{domain_key}")
+        except Exception as e:
+            logger.error(f"Error while checking if domain sends mail: {str(e)}")
 
         processed_results = process_results(results)
         try:
