@@ -1,15 +1,15 @@
-import {GraphQLString} from 'graphql'
-import {connectionArgs} from 'graphql-relay'
+import { GraphQLString } from 'graphql'
+import { connectionArgs } from 'graphql-relay'
 
-import {affiliationUserOrder} from '../../affiliation/inputs'
-import {userConnection} from '../objects/user-connection'
+import { userOrder } from '../../user/inputs'
+import { userConnection } from '../objects/user-connection'
 
 export const findMyUsers = {
   type: userConnection.connectionType,
   description: 'Select users an admin has access to.',
   args: {
     orderBy: {
-      type: affiliationUserOrder,
+      type: userOrder,
       description: 'Ordering options for user affiliation',
     },
     search: {
@@ -23,20 +23,15 @@ export const findMyUsers = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        superAdminRequired,
-      },
-      loaders: {loadUserConnectionsByUserId},
+      auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
+      loaders: { loadUserConnectionsByUserId },
     },
   ) => {
     const user = await userRequired()
-    verifiedRequired({user})
+    verifiedRequired({ user })
 
     const isSuperAdmin = await checkSuperAdmin()
-    superAdminRequired({user, isSuperAdmin})
+    superAdminRequired({ user, isSuperAdmin })
 
     const userConnections = await loadUserConnectionsByUserId({
       isSuperAdmin,

@@ -1,13 +1,13 @@
-apiVersion: image.toolkit.fluxcd.io/v1alpha2
+apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
   name: domain-discovery
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/domain-discovery
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery
   interval: 5m0s
 ---
-apiVersion: image.toolkit.fluxcd.io/v1alpha1
+apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
   name: domain-discovery

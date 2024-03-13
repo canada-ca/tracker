@@ -6,25 +6,20 @@ steps:
     args:
       - "-c"
       - |
-        echo "gcr.io/$PROJECT_ID/azure-defender-easm/add-domain-to-easm:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-domain-to-easm:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: "gcr.io/cloud-builders/docker"
-    id: build-https-if-master
+    id: build
     entrypoint: "bash"
     dir: azure-defender-easm/add-domain-to-easm
     args:
       - "-c"
       - |
-        if [[ "$BRANCH_NAME" == "master" ]]
-        then
-            image=$(cat /workspace/imagename)
-            docker build -t $image .
-        else
-          exit 0
-        fi
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
 
   - name: "gcr.io/cloud-builders/docker"
-    id: push-https-if-master
+    id: push-if-master
     entrypoint: "bash"
     dir: azure-defender-easm/add-domain-to-easm
     args:

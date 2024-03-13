@@ -149,11 +149,12 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
     $first: Int
     $after: String
     $search: String
+    $orderBy: AffiliationUserOrder
     $includePending: Boolean
   ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after, search: $search, includePending: $includePending) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy, includePending: $includePending) {
         edges {
           node {
             id
@@ -268,10 +269,12 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                 addresses
               }
               warnings
+              error
             }
             nsRecords {
               hostnames
               warnings
+              error
             }
             dkim {
               positiveTags {
@@ -616,10 +619,10 @@ export const PAGINATED_ORG_DOMAINS = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS = gql`
-  query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
+  query OrgUsersNext($slug: Slug!, $first: Int, $after: String, $search: String, $orderBy: AffiliationUserOrder) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
-      affiliations(first: $first, after: $after) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy) {
         pageInfo {
           hasNextPage
           endCursor
@@ -955,7 +958,7 @@ export const IS_LOGIN_REQUIRED = gql`
 `
 
 export const FIND_MY_USERS = gql`
-  query FindMyUsers($first: Int, $after: String, $orderBy: AffiliationUserOrder, $search: String) {
+  query FindMyUsers($first: Int, $after: String, $orderBy: UserOrder, $search: String) {
     findMyUsers(orderBy: $orderBy, first: $first, after: $after, search: $search) {
       edges {
         cursor

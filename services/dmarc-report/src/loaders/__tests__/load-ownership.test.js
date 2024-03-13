@@ -1,5 +1,5 @@
 require('jest-fetch-mock').enableFetchMocks()
-const { loadDomainOwnership } = require('..')
+const { getDecodedData } = require('..')
 
 describe('given the loadDomainOwnership function', () => {
   const fetch = fetchMock
@@ -14,37 +14,18 @@ describe('given the loadDomainOwnership function', () => {
 
   describe('given a successful load', () => {
     it("returns an object with the keys as org acronyms and fields as array's of domains", async () => {
-      const gqlReturnObj = {
-        data: {
-          repository: {
-            id: 'dGVzdAo=',
-            object: {
-              text:
-                '{\n\t"TEST1": [\n\t\t"test.gc.ca",\n\t\t"test-domain.gc.ca"\n\t],\n\t"TEST2": [\n\t\t"test.canada.ca",\n\t\t"test-domain.canada.ca"\n\t]\n}\n',
-            },
-          },
-        },
-      }
-      fetch.mockResponseOnce(JSON.stringify(gqlReturnObj))
-
-      const data = await loadDomainOwnership({ fetch })()
-
-      expect(data).toEqual({
+      const unencodedContent = JSON.stringify({
         TEST1: ['test.gc.ca', 'test-domain.gc.ca'],
         TEST2: ['test.canada.ca', 'test-domain.canada.ca'],
       })
-    })
-  })
-  describe('given an unsuccessful load', () => {
-    describe('if error occurs', () => {
-      it('throws error', async () => {
-        fetch.mockReject(Error('Fetch Error occurred.'))
+      const resp = {
+        data: {
+          content: Buffer.from(unencodedContent).toString('base64'),
+        },
+      }
+      const data = await getDecodedData(resp)
 
-        await loadDomainOwnership({ fetch })()
-        expect(consoleOutput[0]).toEqual(
-          'Error occurred while fetching domain ownership information: Error: Fetch Error occurred.',
-        )
-      })
+      expect(JSON.stringify(data)).toEqual(unencodedContent)
     })
   })
 })
