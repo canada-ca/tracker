@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
+import { Link as RouteLink } from 'react-router-dom'
 
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
@@ -25,7 +26,7 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
           <Trans>Track Digital Security</Trans>
         </Heading>
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
-        <Text fontSize="xl">
+        <Text fontSize="xl" mb="4">
           <Trans>
             Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
             Digital guides government online services to adopt good security practices for practices outlined in the{' '}
@@ -48,6 +49,13 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
             </Link>{' '}
             services. Track how government sites are becoming more secure.
           </Trans>
+        </Text>
+
+        <Text fontSize="xl" mr="2">
+          First time using Tracker?{' '}
+          <Link as={RouteLink} to="/guidance">
+            Get Started <LinkIcon />
+          </Link>
         </Text>
       </Box>
       {(!loginRequired || isLoggedIn) && <LandingPageSummaries />}
