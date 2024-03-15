@@ -152,7 +152,9 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
       <Text fontsize="lg">
-        <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+        <Trans>
+          <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+        </Trans>
       </Text>
       {emailSummary}
       <Box mb={4} ml="4">
