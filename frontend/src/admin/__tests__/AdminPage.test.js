@@ -290,7 +290,13 @@ function mocks() {
     {
       request: {
         query: PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
-        variables: { orgSlug: 'Wolf-Group', first: 20, search: '', includePending: true },
+        variables: {
+          orgSlug: 'Wolf-Group',
+          first: 20,
+          search: '',
+          includePending: true,
+          orderBy: { field: 'PERMISSION', direction: 'ASC' },
+        },
       },
       result: {
         data: {

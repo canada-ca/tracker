@@ -1,20 +1,18 @@
-const { ensure, dbNameFromFile } = require('arango-tools')
-
 const { removeOwnership } = require('../remove-ownership')
-const { databaseOptions } = require('../../../database-options')
+const { arangoConnection } = require('../arango-connection')
+const { dbNameFromFile } = require('arango-tools')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the removeOwnership function', () => {
-  let query, drop, truncate, collections, transaction, domain, org, summary
+  let query, truncate, collections, transaction, dbName, arangoDB, domain, org, summary
 
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
+    dbName = dbNameFromFile(__filename)
+    ;({ collections, query, transaction, arangoDB, truncate } = await arangoConnection({
       url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      databaseName: dbName,
+      rootPass,
     }))
   })
 
@@ -66,7 +64,8 @@ describe('given the removeOwnership function', () => {
   })
 
   afterAll(async () => {
-    await drop()
+    const systemDb = arangoDB.database('_system')
+    await systemDb.dropDatabase(dbName)
   })
 
   it('removes the ownership', async () => {
@@ -87,8 +86,7 @@ describe('given the removeOwnership function', () => {
       orgAcronymEn: 'ACR',
     })
 
-    const domainsToDmarcSummariesCursor =
-      await query`FOR item IN domainsToDmarcSummaries RETURN item`
+    const domainsToDmarcSummariesCursor = await query`FOR item IN domainsToDmarcSummaries RETURN item`
 
     const domainsToDmarcSummaries = await domainsToDmarcSummariesCursor.next()
 
@@ -100,8 +98,7 @@ describe('given the removeOwnership function', () => {
       orgAcronymEn: 'ACR',
     })
 
-    const dmarcSummariesCursor =
-      await query`FOR item IN dmarcSummaries RETURN item`
+    const dmarcSummariesCursor = await query`FOR item IN dmarcSummaries RETURN item`
 
     const dmarcSummaries = await dmarcSummariesCursor.next()
 

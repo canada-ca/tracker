@@ -28,7 +28,7 @@ module.exports = (env) => {
       }),
     ],
     devServer: {
-      port: 3000,
+      port: 3300,
       host: '0.0.0.0',
       devMiddleware: { publicPath: '/' },
       hot: true,

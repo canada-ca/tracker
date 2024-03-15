@@ -22,9 +22,9 @@ static_resources:
               domains: ["*"]
               routes:
               - match: { prefix: "/graphql" }
-                route: { cluster: mocked_api }
+                route: { cluster: api }
               - match: { prefix: "/editor" }
-                route: { cluster: mocked_api }
+                route: { cluster: api }
               - match: { prefix: "/" }
                 route: { cluster: frontend }
   clusters:
@@ -39,20 +39,20 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: frontend
-                port_value: 3000
-  - name: mocked_api
+                address: 127.0.0.1
+                port_value: 3300
+  - name: api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: round_robin
     load_assignment:
-      cluster_name: mocked_api
+      cluster_name: api
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: mocked_api
+                address: 127.0.0.1
                 port_value: 4000
 admin:
   access_log_path: "/dev/null"

@@ -49,12 +49,16 @@ describe('<OrganizationAffiliations />', () => {
       window.resizeTo(1024, 768)
 
       const orgSlug = 'tbs-sct-gc-ca'
-
       const mocks = [
         {
           request: {
             query: PAGINATED_ORG_AFFILIATIONS,
-            variables: { slug: 'tbs-sct-gc-ca', first: 10 },
+            variables: {
+              first: 10,
+              slug: orgSlug,
+              orderBy: { direction: 'ASC', field: 'PERMISSION' },
+              search: '',
+            },
           },
           result: {
             data: {
@@ -132,10 +136,7 @@ describe('<OrganizationAffiliations />', () => {
                   userName: null,
                 })}
               >
-                <MemoryRouter
-                  initialEntries={['/organization/tbs-sct-gc-ca']}
-                  initialIndex={0}
-                >
+                <MemoryRouter initialEntries={['/organization/tbs-sct-gc-ca']} initialIndex={0}>
                   <Route path="/organization/:orgSlug">
                     <OrganizationAffiliations orgSlug={orgSlug} />
                   </Route>

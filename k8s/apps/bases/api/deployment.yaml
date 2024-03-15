@@ -23,7 +23,7 @@ spec:
         app: tracker-api
     spec:
       initContainers:
-        - image: gcr.io/track-compliance/database-migration:test-0000003
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:test-0000003
           name: database-migration
           env:
             - name: DB_USER
@@ -54,7 +54,7 @@ spec:
             - name: database-config
               mountPath: /app
       containers:
-        - image: gcr.io/track-compliance/api-js:master-168ac58-1706037325 # {"$imagepolicy": "flux-system:api"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-3ef26ec-1710261510 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000

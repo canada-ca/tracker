@@ -27,7 +27,7 @@ claims = graph.create_edge_definition(
 org = orgs.insert(
     {
         "_key": "testorg",
-        "verified": "true",
+        "verified": True,
         "summaries": {
             "dmarc": {"pass": 0, "fail": 0, "total": 0},
             "web": {"pass": 0, "fail": 0, "total": 0},

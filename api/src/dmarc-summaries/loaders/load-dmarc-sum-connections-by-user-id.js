@@ -316,51 +316,41 @@ export const loadDmarcSummaryConnectionsByUserId =
       sortString = aql`ASC`
     }
 
-    let domainQuery = aql``
     let searchDomainFilter = aql``
-    if (typeof search !== 'undefined') {
+    if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
-      domainQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
-      LET searchedDomains = (
-        FOR token IN tokenArr
-          FOR domain IN domainSearch
-            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
-            RETURN domain._id
-      )
-    `
-      searchDomainFilter = aql`FILTER domainId IN searchedDomains`
+      searchDomainFilter = aql`FILTER userDomain.domain LIKE CONCAT("%", ${search}, "%")`
     }
 
-    let domainIdQueries
+    let domainQueries
     if (isSuperAdmin) {
-      domainIdQueries = aql`
+      domainQueries = aql`
       WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
-      LET domainIds = UNIQUE(FLATTEN(
+      LET userDomains = UNIQUE(FLATTEN(
         LET ids = []
         LET orgIds = (FOR org IN organizations RETURN org._id)
         FOR orgId IN orgIds
-          LET claimDomainIds = (FOR v, e IN 1..1 OUTBOUND orgId ownership RETURN v._id)
-          RETURN APPEND(ids, claimDomainIds)
+          LET claimUserDomains = (FOR v, e IN 1..1 OUTBOUND orgId ownership RETURN v)
+          RETURN APPEND(ids, claimUserDomains)
       ))
     `
     } else if (isAffiliated) {
-      domainIdQueries = aql`
+      domainQueries = aql`
       WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
       LET userAffiliations = (
         FOR v, e IN 1..1 ANY ${userDBId} affiliations
           FILTER e.permission != "pending"
           RETURN v
       )
-      LET domainIds = UNIQUE(
+      LET userDomains = UNIQUE(
         FOR org IN organizations
           FILTER org._key IN userAffiliations[*]._key
           FOR v, e IN 1..1 OUTBOUND org._id ownership
-            RETURN v._id
+            RETURN v
       )
     `
     } else {
-      domainIdQueries = aql`
+      domainQueries = aql`
       WITH affiliations, dmarcSummaries, domains, domainsToDmarcSummaries, organizations, ownership, users, domainSearch
       LET userAffiliations = (
         FOR v, e IN 1..1 ANY ${userDBId} affiliations
@@ -368,11 +358,11 @@ export const loadDmarcSummaryConnectionsByUserId =
           RETURN v
       )
       LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
-      LET domainIds = UNIQUE(
+      LET userDomains = UNIQUE(
         FOR org IN organizations
           FILTER org._key IN userAffiliations[*]._key || (hasVerifiedOrgAffiliation == true && org.verified == true)
           FOR v, e IN 1..1 OUTBOUND org._id ownership
-            RETURN v._id
+            RETURN v
       )
     `
     }
@@ -380,17 +370,15 @@ export const loadDmarcSummaryConnectionsByUserId =
     let requestedSummaryInfo
     try {
       requestedSummaryInfo = await query`
-    ${domainIdQueries}
-
-    ${domainQuery}
+    ${domainQueries}
 
     ${afterVar}
     ${beforeVar}
 
     LET summaryIds = (
-      FOR domainId IN domainIds
+      FOR userDomain IN userDomains
         ${searchDomainFilter}
-        FOR v, e IN 1..1 ANY domainId domainsToDmarcSummaries
+        FOR v, e IN 1..1 ANY userDomain._id domainsToDmarcSummaries
           FILTER e.startDate == ${startDate}
           RETURN e._to
     )

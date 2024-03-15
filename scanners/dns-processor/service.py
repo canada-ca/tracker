@@ -184,11 +184,15 @@ async def run(loop):
         shared_id = payload.get("shared_id")
 
         processed_results = process_results(results)
-        if processed_results.get("mx_records") is not None:
-            mx_record_diff = check_mx_diff(
-                processed_results=processed_results, domain_id=f"domains/{domain_key}"
-            )
-            processed_results["mx_records"].update({"diff": mx_record_diff})
+        try:
+            if processed_results.get("mx_records") is not None:
+                mx_record_diff = check_mx_diff(
+                    processed_results=processed_results,
+                    domain_id=f"domains/{domain_key}",
+                )
+                processed_results["mx_records"].update({"diff": mx_record_diff})
+        except Exception as e:
+            logger.error(f"Checking MX diff: {str(e)}")
 
         dmarc_status = processed_results.get("dmarc").get("status")
         spf_status = processed_results.get("spf").get("status")

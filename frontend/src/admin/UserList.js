@@ -51,7 +51,12 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
     usePaginatedCollection({
       fetchForward: FORWARD,
       recordsPerPage: usersPerPage,
-      variables: { orgSlug, search: debouncedSearchUser, includePending },
+      variables: {
+        orgSlug,
+        search: debouncedSearchUser,
+        includePending,
+        orderBy: { field: 'PERMISSION', direction: 'ASC' },
+      },
       relayRoot: 'findOrganizationBySlug.affiliations',
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',

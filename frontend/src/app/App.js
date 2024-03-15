@@ -48,7 +48,7 @@ const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, isAffiliated } = useUserVar()
+  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, hasAffiliation } = useUserVar()
   const { i18n } = useLingui()
   const { data } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
@@ -80,7 +80,7 @@ export function App() {
             </NotificationBanner>
           )
         }
-        if (!isAffiliated()) {
+        if (!hasAffiliation()) {
           return (
             <NotificationBanner bg="yellow.250">
               <Text fontWeight="medium">

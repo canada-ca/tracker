@@ -1,5 +1,6 @@
 import React from 'react'
 import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
 
 import { LandingPageSummaries } from './LandingPageSummaries'
@@ -31,17 +32,19 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
             <Link
               href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
               isExternal
-              style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+              style={{ fontWeight: 'bold', textAlign: 'center' }}
             >
               email
+              <ExternalLinkIcon />
             </Link>{' '}
             and{' '}
             <Link
               href={i18n.locale === 'en' ? itpinUrlEn : itpinUrlFr}
               isExternal
-              style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+              style={{ fontWeight: 'bold', textAlign: 'center' }}
             >
               web
+              <ExternalLinkIcon />
             </Link>{' '}
             services. Track how government sites are becoming more secure.
           </Trans>

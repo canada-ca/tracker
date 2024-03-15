@@ -2220,6 +2220,40 @@
             }
           ]
         }
+      },
+      "dmarc24": {
+        "en": {
+          "tagName": "RUA-NOT-CCCS",
+          "guidance": "RUA must include CCCS (\"mailto:dmarc@cyber.gc.ca\")",
+          "refLinksGuide": [
+            {
+              "description": "B.3.1 DMARC Records",
+              "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "RUA-NOT-CCCS",
+          "guidance": "EVU muss CCCS enthalten (\"mailto:dmarc@cyber.gc.ca\")",
+          "refLinksGuide": [
+            {
+              "description": "B.3.1 Enregistrements DMARC",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+            }
+          ]
+        }
       }
     }
   },

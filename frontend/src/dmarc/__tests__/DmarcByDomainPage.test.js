@@ -115,7 +115,9 @@ describe('<DmarcByDomainPage />', () => {
   it('renders page header', async () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
+        >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -132,7 +134,9 @@ describe('<DmarcByDomainPage />', () => {
   it('renders date selector', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
+        >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -148,7 +152,9 @@ describe('<DmarcByDomainPage />', () => {
   it('renders table with data', async () => {
     const { findByRole, findByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
+        >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -165,7 +171,9 @@ describe('<DmarcByDomainPage />', () => {
   it('can change period', async () => {
     const { findByRole, findByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+        <UserVarProvider
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
+        >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
