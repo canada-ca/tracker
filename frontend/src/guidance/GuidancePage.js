@@ -62,22 +62,22 @@ function GuidancePage() {
     dmarcPhase,
     rcode,
     status,
-    _userHasPermission,
+    userHasPermission,
     additionalFindings,
   } = data.findDomainByDomain
 
-  // if (!userHasPermission) {
-  //   return (
-  //     <Box align="center" w="100%" px={4}>
-  //       <Text textAlign="center" fontSize="2xl" fontWeight="bold">
-  //         <Trans>
-  //           Error while retrieving scan data for {domainName}. <br />
-  //           This could be due to insufficient user privileges or the domain does not exist in the system.
-  //         </Trans>
-  //       </Text>
-  //     </Box>
-  //   )
-  // }
+  if (!userHasPermission) {
+    return (
+      <Box align="center" w="100%" px={4}>
+        <Text textAlign="center" fontSize="2xl" fontWeight="bold">
+          <Trans>
+            Error while retrieving scan data for {domainName}. <br />
+            This could be due to insufficient user privileges or the domain does not exist in the system.
+          </Trans>
+        </Text>
+      </Box>
+    )
+  }
 
   let guidanceResults
   if (rcode !== 'NOERROR') {
@@ -114,7 +114,7 @@ function GuidancePage() {
     )
 
     guidanceResults = (
-      <Tabs isFitted variant="enclosed-colored">
+      <Tabs isFitted variant="enclosed-colored" defaultIndex={2}>
         <TabList mb="4">
           <Tab borderTopWidth="0.25">
             <Trans>Web Guidance</Trans>
@@ -122,9 +122,13 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
-          <Tab borderTopWidth="0.25">
-            <Trans>Additonal Findings</Trans>
-          </Tab>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <Tab borderTopWidth="0.25">
+                <Trans>Additonal Findings</Trans>
+              </Tab>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -146,9 +150,13 @@ function GuidancePage() {
               />
             )}
           </TabPanel>
-          <TabPanel>
-            <AdditionalFindings data={additionalFindings} />
-          </TabPanel>
+          <ABTestWrapper>
+            <ABTestVariant name="B">
+              <TabPanel>
+                <AdditionalFindings data={additionalFindings} />
+              </TabPanel>
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabPanels>
       </Tabs>
     )
@@ -202,12 +210,12 @@ function GuidancePage() {
         </Text>
         {organizations.edges.map(({ node }, idx) => {
           return (
-            <>
+            <Box key={`${node.acronym}`}>
               <Link as={RouteLink} to={`/organizations/${node.slug}`} key={idx}>
                 {node.name} ({node.acronym})
               </Link>
               {idx !== organizations.edges.length - 1 && <Text mr="1">,</Text>}
-            </>
+            </Box>
           )
         })}
       </Flex>
