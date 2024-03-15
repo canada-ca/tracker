@@ -510,11 +510,23 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
           webComponentVersion
           webComponentFirstSeen
           webComponentLastSeen
-          webComponentCves {
+        }
+        vulnerabilities {
+          critical {
             cve
-            cvssScore
             cvss3Score
-            cwe
+          }
+          high {
+            cve
+            cvss3Score
+          }
+          medium {
+            cve
+            cvss3Score
+          }
+          low {
+            cve
+            cvss3Score
           }
         }
       }
