@@ -22,26 +22,22 @@ import {
   Link,
   SimpleGrid,
 } from '@chakra-ui/react'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro'
-import { object } from 'prop-types'
+import { any, object } from 'prop-types'
 
 export function AdditionalFindings({ data }) {
-  const { timestamp, headers, webComponents, vulnerabilities, ports } = data
+  const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
-  const sortedPorts = ports.slice().sort((a, b) => Number(a.port) - Number(b.port))
-
+  const { timestamp, headers, webComponents, vulnerabilities, ports } = data
+  const frameworkComponents = webComponents.filter(({ webComponentCategory }) => webComponentCategory === 'Framework')
   const ddosProtectionComponent = webComponents.find(
     ({ webComponentCategory }) => webComponentCategory === 'DDOS Protection',
   )
-
   const cdnComponent = webComponents.find(({ webComponentCategory }) => webComponentCategory === 'CDN')
-
-  const frameworkComponents = webComponents.filter(({ webComponentCategory }) => webComponentCategory === 'Framework')
-
-  const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
-
-  const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
+  const sortedPorts = ports.slice().sort((a, b) => Number(a.port) - Number(b.port))
 
   return (
     <>
@@ -52,25 +48,23 @@ export function AdditionalFindings({ data }) {
           </Trans>
         </Text>
 
-        <Button variant="link" my="4" onClick={onOpen}>
+        <Button variant="link" my="4" onClick={onOpen} fontSize="lg">
           <Trans>What are these additional findings?</Trans>
         </Button>
         <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
           <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  <Trans>Frameworks</Trans>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
+                <Trans>Frameworks</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
             <AccordionPanel pb={4}>
-              <Text>
+              <WebRequirementsLink>
                 <Trans>
                   2.1 Robust web application frameworks are used to aid in developing secure web applications.
                 </Trans>
-              </Text>
+              </WebRequirementsLink>
               <Divider borderBottomColor="gray.900" />
               {frameworkComponents ? (
                 frameworkComponents.map(
@@ -106,20 +100,18 @@ export function AdditionalFindings({ data }) {
           </AccordionItem>
 
           <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  <Trans>Response Headers</Trans>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
+                <Trans>Response Headers</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
             <AccordionPanel pb={4}>
-              <Text>
+              <WebRequirementsLink>
                 <Trans>
                   2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers.
                 </Trans>
-              </Text>
+              </WebRequirementsLink>
               <Divider borderBottomColor="gray.900" />
               {headers?.length > 0 ? (
                 <Flex justify="space-around" px="2">
@@ -136,18 +128,16 @@ export function AdditionalFindings({ data }) {
           </AccordionItem>
 
           <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  <Trans>DDOS Protection</Trans>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <Text>
-                <Trans>3.1.2 Use a denial-of-service mitigation service</Trans>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
+                <Trans>DDOS Protection</Trans>
               </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
+            <AccordionPanel pb={4}>
+              <WebRequirementsLink>
+                <Trans>3.1.2 Use a denial-of-service mitigation service</Trans>
+              </WebRequirementsLink>
               <Divider borderBottomColor="gray.900" />
               {ddosProtectionComponent ? (
                 <Flex justify="space-around" px="2">
@@ -169,21 +159,17 @@ export function AdditionalFindings({ data }) {
           </AccordionItem>
 
           <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  <Trans>Content Delivery Network</Trans>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <Text>
-                <Trans>
-                  3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the
-                  origin server.
-                </Trans>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
+                <Trans>Content Delivery Network</Trans>
               </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
+            <AccordionPanel pb={4}>
+              <WebRequirementsLink>
+                3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the
+                origin server.
+              </WebRequirementsLink>
               <Divider borderBottomColor="gray.900" />
               {cdnComponent ? (
                 <Flex px="2">
@@ -204,14 +190,12 @@ export function AdditionalFindings({ data }) {
           </AccordionItem>
 
           <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  <Trans>Ports</Trans>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
+                <Trans>Ports</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
             <AccordionPanel pb={4}>
               {sortedPorts.map(({ port, lastPortState, portStateFirstSeen, portStateLastSeen }) => {
                 return (
@@ -236,14 +220,12 @@ export function AdditionalFindings({ data }) {
           </AccordionItem>
 
           <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  <Trans>Vulnerabilities</Trans>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
+                <Trans>Vulnerabilities</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
             <AccordionPanel pb={4}>
               {Object.keys(vulnerabilitySeverities).map((severity) => {
                 return (
@@ -255,7 +237,7 @@ export function AdditionalFindings({ data }) {
                       {vulnerabilities[severity].map(({ cve }) => {
                         return (
                           <Tag key={cve} bg={severity} borderColor="black" borderWidth="1px" m="1">
-                            <Link href={`https://nvd.nist.gov/vuln/detail/${cve}`} isExternal>
+                            <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal>
                               <Text>{cve}</Text>
                             </Link>
                           </Tag>
@@ -277,10 +259,17 @@ export function AdditionalFindings({ data }) {
             <Trans>Additional Findings</Trans>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody fontSize="lg">
             <Trans>
-              These findings are imported from Microsoft's External Attack Surface Management tool. Updates to these
-              findings occur weekly.
+              These findings are imported from Microsoft's{' '}
+              <Link
+                color="blue.500"
+                isExternal
+                href="https://learn.microsoft.com/en-us/azure/external-attack-surface-management/"
+              >
+                External Attack Surface Management
+              </Link>{' '}
+              tool. Updates to these findings occur weekly.
             </Trans>
           </ModalBody>
           <ModalFooter />
@@ -290,6 +279,21 @@ export function AdditionalFindings({ data }) {
   )
 }
 
+function WebRequirementsLink({ children }) {
+  return (
+    <Link
+      isExternal
+      href="https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html"
+    >
+      {children} <ExternalLinkIcon />
+    </Link>
+  )
+}
+
 AdditionalFindings.propTypes = {
   data: object.isRequired,
+}
+
+WebRequirementsLink.propTypes = {
+  children: any.isRequired,
 }

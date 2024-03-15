@@ -35,9 +35,7 @@ export const easmFinding = new GraphQLObjectType({
       resolve: ({ webComponents }) => {
         const cves = []
         for (const webComponent of webComponents) {
-          for (const cve of webComponent.WebComponentCves) {
-            cves.push(cve)
-          }
+          cves.push(...webComponent.WebComponentCves)
         }
         const jsonObject = cves.map(JSON.stringify)
         const uniqueSet = new Set(jsonObject)
