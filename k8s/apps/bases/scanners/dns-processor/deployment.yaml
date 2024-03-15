@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: dns-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:master-e28c460-1709214812 # {"$imagepolicy": "flux-system:dns-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:master-9a4e3e2-1710515081 # {"$imagepolicy": "flux-system:dns-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
