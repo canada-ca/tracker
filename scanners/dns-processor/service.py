@@ -247,7 +247,10 @@ async def run(loop):
                             }
                         }
                     )
-                if domain.get("dmarcLocation", None) != dmarc_location:
+
+                if "dmarcLocation" not in domain.keys():
+                    domain.update({"dmarcLocation": dmarc_location})
+                elif domain.get("dmarcLocation", None) != dmarc_location:
                     domain.update({"dmarcLocation": dmarc_location})
 
                 for key, val in {
