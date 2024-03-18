@@ -1,8 +1,8 @@
 {
   "dkim": {
     "pass": [],
-    "fail": ["dkim11", "dkim12", "dkim13"],
-    "info": ["dkim1", "dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim14", "dkim15", "dkim16"]
+    "fail": ["dkim11", "dkim12", "dkim13", "dkim16"],
+    "info": ["dkim1", "dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim7", "dkim8", "dkim9", "dkim10", "dkim14", "dkim15", "dkim17"]
   },
   "spf": {
     "pass": ["spf12"],
