@@ -1,17 +1,8 @@
 const { NOTIFICATION_ORG_PROGRESS_REPORT } = process.env
 
-const sendOrgProgressReport = async ({ log, user, orgStats, orgAverages, chartStats, notifyClient }) => {
+const sendOrgProgressReport = async ({ log, user, orgStats, notifyClient }) => {
   const templateId = NOTIFICATION_ORG_PROGRESS_REPORT
-  const { httpsScoreDiff, webDomainCountDiff, dmarcScoreDiff, domainCountDiff, orgDetails } = orgStats
-
-  const { httpsScoreDiffAvg, webDomainCountDiffAvg, dmarcScoreDiffAvg, domainCountDiffAvg } = orgAverages
-
-  const {
-    httpsScoreDiff: chartHttpsScoreDiff,
-    webDomainCountDiff: chartWebDomainCountDiff,
-    dmarcScoreDiff: chartDmarcScoreDiff,
-    domainCountDiff: chartDomainCountDiff,
-  } = chartStats
+  const { httpsScore, dmarcScore, domainCount, httpsScoreDiff, dmarcScoreDiff, domainCountDiff, orgDetails } = orgStats
 
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
@@ -19,22 +10,12 @@ const sendOrgProgressReport = async ({ log, user, orgStats, orgAverages, chartSt
         display_name: user.displayName,
         org_name_en: orgDetails.en.name,
         org_name_fr: orgDetails.fr.name,
-
+        https_score: `${httpsScore.toFixed(1)}%`,
         https_score_diff: httpsScoreDiff > 0 ? `+${httpsScoreDiff}` : httpsScoreDiff,
-        web_domain_count_diff: webDomainCountDiff > 0 ? `+${webDomainCountDiff}` : webDomainCountDiff,
+        dmarc_score: `${dmarcScore.toFixed(1)}%`,
         dmarc_score_diff: dmarcScoreDiff > 0 ? `+${dmarcScoreDiff}` : dmarcScoreDiff,
+        domain_count: domainCount,
         domain_count_diff: domainCountDiff > 0 ? `+${domainCountDiff}` : domainCountDiff,
-
-        https_score_diff_avg: httpsScoreDiffAvg > 0 ? `+${httpsScoreDiffAvg}` : httpsScoreDiffAvg,
-        web_domain_count_diff_avg: webDomainCountDiffAvg > 0 ? `+${webDomainCountDiffAvg}` : webDomainCountDiffAvg,
-        dmarc_score_diff_avg: dmarcScoreDiffAvg > 0 ? `+${dmarcScoreDiffAvg}` : dmarcScoreDiffAvg,
-        domain_count_diff_avg: domainCountDiffAvg > 0 ? `+${domainCountDiffAvg}` : domainCountDiffAvg,
-
-        chart_https_score_diff: chartHttpsScoreDiff > 0 ? `+${chartHttpsScoreDiff}` : chartHttpsScoreDiff,
-        chart_web_domain_count_diff:
-          chartWebDomainCountDiff > 0 ? `+${chartWebDomainCountDiff}` : chartWebDomainCountDiff,
-        chart_dmarc_score_diff: chartDmarcScoreDiff > 0 ? `+${chartDmarcScoreDiff}` : chartDmarcScoreDiff,
-        chart_domain_count_diff: chartDomainCountDiff > 0 ? `+${chartDomainCountDiff}` : chartDomainCountDiff,
       },
     })
     log(`Successfully sent ${orgDetails.en.name} progress report via email to user:, ${user._key}`)
