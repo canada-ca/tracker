@@ -212,6 +212,7 @@ async def run(loop):
         except Exception as e:
             logger.error(f"Checking MX diff: {str(e)}")
 
+        dmarc_location = processed_results.get("dmarc").get("location")
         dmarc_status = processed_results.get("dmarc").get("status")
         spf_status = processed_results.get("spf").get("status")
         dkim_status = processed_results.get("dkim").get("status")
@@ -264,6 +265,11 @@ async def run(loop):
                             }
                         }
                     )
+
+                if "dmarcLocation" not in domain.keys():
+                    domain.update({"dmarcLocation": dmarc_location})
+                elif domain.get("dmarcLocation", None) != dmarc_location:
+                    domain.update({"dmarcLocation": dmarc_location})
 
                 for key, val in {
                     "dmarc": dmarc_status,

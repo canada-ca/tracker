@@ -411,6 +411,7 @@ def process_results(results):
 
     dmarc_results = {
         "status": dmarc_status,
+        "location": dmarc.get("location", None),
         "record": dmarc.get("record", None),
         "p_policy": dmarc.get("tags", {}).get("p", {}).get("value", None),
         "sp_policy": dmarc.get("tags", {}).get("sp", {}).get("value", None),
