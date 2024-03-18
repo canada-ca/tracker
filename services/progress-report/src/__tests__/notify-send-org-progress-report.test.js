@@ -22,9 +22,11 @@ describe('given the sendOrgProgressReport function', () => {
       }
 
       const orgStats = {
-        httpsScoreDiff: 5,
-        webDomainCountDiff: -7,
-        dmarcScoreDiff: -8,
+        httpsScore: 90.0,
+        dmarcScore: 80.0,
+        domainCount: 100,
+        httpsScoreDiff: 5.0,
+        dmarcScoreDiff: -8.0,
         domainCountDiff: 2,
         orgDetails: {
           en: {
@@ -35,44 +37,24 @@ describe('given the sendOrgProgressReport function', () => {
           },
         },
       }
-      const orgAverages = {
-        httpsScoreDiffAvg: 4,
-        webDomainCountDiffAvg: 7,
-        dmarcScoreDiffAvg: 3,
-        domainCountDiffAvg: 0,
-      }
-      const chartStats = {
-        httpsScoreDiff: 4,
-        webDomainCountDiff: 4,
-        dmarcScoreDiff: 4,
-        domainCountDiff: 4,
-      }
 
       await sendOrgProgressReport({
         notifyClient,
         user,
         orgStats,
-        orgAverages,
-        chartStats,
       })
 
       expect(notifyClient.sendEmail).toHaveBeenCalledWith(NOTIFICATION_ORG_PROGRESS_REPORT, user.userName, {
         personalisation: {
           display_name: user.displayName,
-          org_name_en: 'Org Name',
-          org_name_fr: 'Nom de Org',
-          https_score_diff: '+5',
-          web_domain_count_diff: -7,
-          dmarc_score_diff: -8,
+          org_name_en: orgStats.orgDetails.en.name,
+          org_name_fr: orgStats.orgDetails.fr.name,
+          https_score: '90%',
+          https_score_diff: '+5%',
+          dmarc_score: '80%',
+          dmarc_score_diff: '-8%',
+          domain_count: 100,
           domain_count_diff: '+2',
-          https_score_diff_avg: '+4',
-          web_domain_count_diff_avg: '+7',
-          dmarc_score_diff_avg: '+3',
-          domain_count_diff_avg: 0,
-          chart_https_score_diff: '+4',
-          chart_web_domain_count_diff: '+4',
-          chart_dmarc_score_diff: '+4',
-          chart_domain_count_diff: '+4',
         },
       })
     })
@@ -89,9 +71,11 @@ describe('given the sendOrgProgressReport function', () => {
         displayName: 'Test Account',
       }
       const orgStats = {
-        httpsScoreDiff: 5,
-        webDomainCountDiff: -7,
-        dmarcScoreDiff: -8,
+        httpsScore: 90.0,
+        dmarcScore: 80.0,
+        domainCount: 100,
+        httpsScoreDiff: 5.0,
+        dmarcScoreDiff: -8.0,
         domainCountDiff: 2,
         orgDetails: {
           en: {
@@ -102,25 +86,11 @@ describe('given the sendOrgProgressReport function', () => {
           },
         },
       }
-      const orgAverages = {
-        httpsScoreDiffAvg: 4,
-        webDomainCountDiffAvg: 7,
-        dmarcScoreDiffAvg: 3,
-        domainCountDiffAvg: 0,
-      }
-      const chartStats = {
-        chartHttpsScoreDiff: 4,
-        chartWebDomainCountDiff: 4,
-        chartDmarcScoreDiff: 4,
-        chartDomainCountDiff: 4,
-      }
 
       await sendOrgProgressReport({
         notifyClient,
         user,
         orgStats,
-        orgAverages,
-        chartStats,
       })
 
       expect(consoleOutput).toEqual([

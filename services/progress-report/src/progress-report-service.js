@@ -69,7 +69,7 @@ const calculateSummaryStats = ({ startSummary, endSummary }) => {
     domainCount: endSummary.dmarc.total,
     httpsScoreDiff: httpsScoreDiff.toFixed(1),
     dmarcScoreDiff: dmarcScoreDiff.toFixed(1),
-    domainCountDiff: domainCountDiff.toFixed(0),
+    domainCountDiff,
   }
 }
 
