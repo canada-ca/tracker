@@ -54,7 +54,7 @@ spec:
             - name: database-config
               mountPath: /app
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-9912bb6-1710782155 # {"$imagepolicy": "flux-system:api"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-56d2d7e-1710853575 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
