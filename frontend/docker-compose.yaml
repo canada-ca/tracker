@@ -5,6 +5,7 @@ services:
     network_mode: "host"
     entrypoint: envoy
     command: ["-c", "/etc/envoy-dev.yaml", "--service-cluster", "envoy"]
+    restart: always
     volumes:
       - ./envoy-dev.yaml:/etc/envoy-dev.yaml # Envoy configuration
     expose:
