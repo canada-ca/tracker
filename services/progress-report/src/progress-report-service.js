@@ -1,4 +1,4 @@
-const { findChartSummaries, findOrgSummaries, getOrgAdmins } = require('./database')
+const { findOrgSummaries, getOrgAdmins } = require('./database')
 const { sendOrgProgressReport } = require('./notify')
 
 const { REDIRECT_TO_SERVICE_ACCOUNT_EMAIL, SERVICE_ACCOUNT_EMAIL } = process.env
@@ -6,21 +6,7 @@ const { REDIRECT_TO_SERVICE_ACCOUNT_EMAIL, SERVICE_ACCOUNT_EMAIL } = process.env
 const progressReportService = async ({ query, log, notifyClient }) => {
   // get date 30 days ago
   const today = new Date()
-  const thirtyDaysAgo = new Date(today.setDate(today.getDate() - 365)).toISOString().split('T')[0]
-
-  // calculate overall stats
-  const chartSummaries = await findChartSummaries({
-    query,
-    log,
-    startDate: thirtyDaysAgo,
-    endDate: new Date().toISOString().split('T')[0],
-  })
-
-  const chartStats = calculateSummaryStats({
-    startSummary: chartSummaries.startSummary,
-    endSummary: chartSummaries.endSummary,
-  })
-  log('Successfully calculated chart stats')
+  const thirtyDaysAgo = new Date(today.setDate(today.getDate() - 30)).toISOString().split('T')[0]
 
   // calculate individual org stats
   const verifiedOrgSummaries = await findOrgSummaries({ query, log, startDate: thirtyDaysAgo })
@@ -35,9 +21,6 @@ const progressReportService = async ({ query, log, notifyClient }) => {
     verifiedOrgStats[_key] = { ...orgStats, orgDetails, _id }
   }
 
-  // calculate overall org averages
-  const verifiedOrgAverages = calculateOrgAverages({ log, stats: verifiedOrgStats })
-
   // send notifications
   for (const [_key, value] of Object.entries(verifiedOrgStats)) {
     if (REDIRECT_TO_SERVICE_ACCOUNT_EMAIL) {
@@ -51,8 +34,6 @@ const progressReportService = async ({ query, log, notifyClient }) => {
         notifyClient,
         user,
         orgStats: value,
-        orgAverages: verifiedOrgAverages,
-        chartStats,
       })
     } else {
       const orgAdmins = await getOrgAdmins({ query, orgId: value._id })
@@ -62,8 +43,6 @@ const progressReportService = async ({ query, log, notifyClient }) => {
           notifyClient,
           user,
           orgStats: value,
-          orgAverages: verifiedOrgAverages,
-          chartStats,
         })
       }
     }
@@ -75,48 +54,23 @@ const calculateSummaryStats = ({ startSummary, endSummary }) => {
   const startHttpsScore = startSummary.https.pass / startSummary.https.total
   const endHttpsScore = endSummary.https.pass / endSummary.https.total
   const httpsScoreDiff = (endHttpsScore - startHttpsScore) * 100
-  const webDomainCountDiff = endSummary.https.total - startSummary.https.total
 
   // calculate dmarc diff
   const startDmarcScore = startSummary.dmarc.pass / startSummary.dmarc.total
   const endDmarcScore = endSummary.dmarc.pass / endSummary.dmarc.total
   const dmarcScoreDiff = (endDmarcScore - startDmarcScore) * 100
+
+  // calculate domain count diff
   const domainCountDiff = endSummary.dmarc.total - startSummary.dmarc.total
 
   return {
-    httpsScoreDiff: httpsScoreDiff.toFixed(2),
-    webDomainCountDiff: webDomainCountDiff.toFixed(0),
-    dmarcScoreDiff: dmarcScoreDiff.toFixed(2),
-    domainCountDiff: domainCountDiff.toFixed(0),
+    httpsScore: endHttpsScore.toFixed(1) * 100,
+    dmarcScore: endDmarcScore.toFixed(1) * 100,
+    domainCount: endSummary.dmarc.total,
+    httpsScoreDiff: httpsScoreDiff.toFixed(1),
+    dmarcScoreDiff: dmarcScoreDiff.toFixed(1),
+    domainCountDiff,
   }
-}
-
-const calculateOrgAverages = ({ stats, log }) => {
-  const httpsScoreDiffs = []
-  const webDomainCountDiffs = []
-  const dmarcScoreDiffs = []
-  const domainCountDiffs = []
-
-  for (const [_key, value] of Object.entries(stats)) {
-    const { httpsScoreDiff, webDomainCountDiff, dmarcScoreDiff, domainCountDiff } = value
-
-    httpsScoreDiffs.push(httpsScoreDiff)
-    webDomainCountDiffs.push(webDomainCountDiff)
-    dmarcScoreDiffs.push(dmarcScoreDiff)
-    domainCountDiffs.push(domainCountDiff)
-  }
-
-  log('Successfully calculated org averages')
-  return {
-    httpsScoreDiffAvg: average(httpsScoreDiffs).toFixed(2),
-    webDomainCountDiffAvg: average(webDomainCountDiffs).toFixed(0),
-    dmarcScoreDiffAvg: average(dmarcScoreDiffs).toFixed(2),
-    domainCountDiffAvg: average(domainCountDiffs).toFixed(0),
-  }
-}
-
-const average = (array) => {
-  return array.reduce((a, b) => a + b) / array.length
 }
 
 module.exports = {
