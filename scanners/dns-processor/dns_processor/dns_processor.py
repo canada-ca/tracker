@@ -443,6 +443,8 @@ def process_results(results):
 
     if not dkim.get("error", None):
         for selector in dkim.keys():
+            if dkim_results["selectors"].get(selector, None) is None:
+                continue
             dkim_results["selectors"][selector] = {
                 "status": dkim_selector_tags[selector].get("status", None),
                 "record": results["dkim"][selector].get("record", None),
