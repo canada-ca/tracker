@@ -32,25 +32,13 @@ QUEUE_GROUP = os.getenv("QUEUE_GROUP", "domain-discovery")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
-DOMAIN_TXT_PATH = os.getenv("DOMAIN_TXT_PATH", "/tmp")
-
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
-def process_subdomains(base_domain, orgId):
-    try:
-        f = open(
-            "{path}/{domain}.txt".format(domain=base_domain, path=DOMAIN_TXT_PATH), "r"
-        )
-    except FileNotFoundError as e:
-        logging.error(
-            f"Opening {base_domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-        )
-        return []
-    subdomains = f.readlines()
-    subdomains = [domain.strip() for domain in subdomains]
+def process_subdomains(results, orgId):
+    subdomains = [domain.strip() for domain in results]
     claimed_domains = get_claimed_domains(orgId)
     domains_to_scan = []
     for subdomain in subdomains:
@@ -71,46 +59,65 @@ def process_subdomains(base_domain, orgId):
             except StopIteration:
                 checkDomain = None
             if not checkDomain:
-                domainInsert = db.collection("domains").insert(
-                    {
-                        "domain": subdomain,
-                        "lastRan": None,
-                        "selectors": [],
-                        "hash": None,
-                        "status": {
-                            "certificates": None,
-                            "dkim": None,
-                            "dmarc": None,
-                            "https": None,
-                            "spf": None,
-                            "ssl": None,
-                        },
-                        "archived": False,
-                    }
-                )
-                domainInsert["domain"] = subdomain
-                domains_to_scan.append(domainInsert)
+                try:
+                    domainInsert = db.collection("domains").insert(
+                        {
+                            "domain": subdomain,
+                            "lastRan": None,
+                            "selectors": [],
+                            "hash": None,
+                            "status": {
+                                "certificates": None,
+                                "dkim": None,
+                                "dmarc": None,
+                                "https": None,
+                                "spf": None,
+                                "ssl": None,
+                            },
+                            "archived": False,
+                        }
+                    )
+                    domainInsert["domain"] = subdomain
+                    domains_to_scan.append(domainInsert)
+                except Exception as e:
+                    logging.error(
+                        f"Inserting new domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                    )
+                    continue
             else:
                 domainInsert = checkDomain
-            db.collection("claims").insert(
-                {
-                    "_from": orgId,
-                    "_to": domainInsert["_id"],
-                    "hidden": False,
-                    "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-                }
-            )
+
+            try:
+                db.collection("claims").insert(
+                    {
+                        "_from": orgId,
+                        "_to": domainInsert["_id"],
+                        "hidden": False,
+                        "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
+                    }
+                )
+            except Exception as e:
+                logging.error(
+                    f"Claiming domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                )
+                continue
     return domains_to_scan
 
 
 def get_claimed_domains(orgId):
     # Get existing domains in org
-    cursor = db.aql.execute(
-        "FOR v, e IN 1..1 OUTBOUND @val claims RETURN v.domain",
-        bind_vars={"val": orgId},
-        count=True,
-    )
-    return [document for document in cursor]
+    try:
+        cursor = db.aql.execute(
+            "FOR v, e IN 1..1 OUTBOUND @val claims RETURN v.domain",
+            bind_vars={"val": orgId},
+            count=True,
+        )
+        return [document for document in cursor]
+    except Exception as e:
+        logging.error(
+            f"Getting claimed domains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+        )
+        return []
 
 
 def check_live(domain):
@@ -132,29 +139,24 @@ def check_live(domain):
 
 def domain_discovery(domain, orgId):
     try:
-        subprocess.run(
+        findomain_output = subprocess.run(
             [
                 "findomain",
                 "-t",
                 domain,
-                "-u",
-                "{path}/{domain}.txt".format(domain=domain, path=DOMAIN_TXT_PATH),
                 "-q",
-            ]
+            ],
+            capture_output=True,
+            text=True,
         )
+        subdomain_list = findomain_output.stdout.split("\n")
     except Exception as e:
         logging.error(
             f"Running findomain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
         return []
-    results = process_subdomains(domain, orgId)
-    try:
-        os.remove("{path}/{domain}.txt".format(domain=domain, path=DOMAIN_TXT_PATH))
-    except FileNotFoundError as e:
-        logging.error(
-            f"Removing {domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-        )
-        pass
+
+    results = process_subdomains(subdomain_list, orgId)
     return results
 
 
@@ -191,45 +193,29 @@ async def run(loop):
         domain = payload.get("domain")
         orgId = payload.get("orgId")
 
-        try:
-            logger.info(f"Starting subdomain scan on '{domain}'")
-            results = domain_discovery(domain, orgId)
+        logger.info(f"Starting subdomain scan on '{domain}'")
+        results = domain_discovery(domain, orgId)
+        logging.info(f"{len(results)} new subdomains found for {domain}")
 
-            logging.info(f"{len(results)} new subdomains found for {domain}")
-
-            for newDomain in results:
-                domain_key = newDomain["_key"]
-                try:
-                    await nc.publish(
-                        f"{PUBLISH_TO}.{domain_key}",
-                        json.dumps(
-                            {
-                                "domain": newDomain["domain"],
-                                "selectors": [],
-                                "domain_key": domain_key,
-                            }
-                        ).encode(),
-                    )
-
-                except Exception as e:
-                    logging.error(
-                        f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-                    )
-                    return
-        except Exception as e:
-            logging.error(
-                f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-            )
+        for newDomain in results:
+            domain_key = newDomain["_key"]
             try:
-                os.remove(
-                    "{path}/{domain}.txt".format(domain=domain, path=DOMAIN_TXT_PATH)
+                await nc.publish(
+                    f"{PUBLISH_TO}.{domain_key}",
+                    json.dumps(
+                        {
+                            "domain": newDomain["domain"],
+                            "selectors": [],
+                            "domain_key": domain_key,
+                        }
+                    ).encode(),
                 )
-            except FileNotFoundError as e:
+
+            except Exception as e:
                 logging.error(
-                    f"Removing {domain}.txt: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                    f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
-                pass
-            return
+                return
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
