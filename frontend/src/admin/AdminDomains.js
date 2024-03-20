@@ -306,7 +306,9 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
               />
               <ABTestWrapper>
                 <ABTestVariant name="B">
-                  <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
+                  {permission === 'SUPER_ADMIN' && (
+                    <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
+                  )}
                 </ABTestVariant>
               </ABTestWrapper>
             </Flex>
