@@ -48,8 +48,6 @@ spec:
                 secretKeyRef:
                   name: api
                   key: DB_URL
-            - name: DB_DESCRIPTION
-              value: /app/database.json
           volumeMounts:
             - name: database-config
               mountPath: /app
