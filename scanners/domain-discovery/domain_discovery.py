@@ -59,46 +59,65 @@ def process_subdomains(results, orgId):
             except StopIteration:
                 checkDomain = None
             if not checkDomain:
-                domainInsert = db.collection("domains").insert(
-                    {
-                        "domain": subdomain,
-                        "lastRan": None,
-                        "selectors": [],
-                        "hash": None,
-                        "status": {
-                            "certificates": None,
-                            "dkim": None,
-                            "dmarc": None,
-                            "https": None,
-                            "spf": None,
-                            "ssl": None,
-                        },
-                        "archived": False,
-                    }
-                )
-                domainInsert["domain"] = subdomain
-                domains_to_scan.append(domainInsert)
+                try:
+                    domainInsert = db.collection("domains").insert(
+                        {
+                            "domain": subdomain,
+                            "lastRan": None,
+                            "selectors": [],
+                            "hash": None,
+                            "status": {
+                                "certificates": None,
+                                "dkim": None,
+                                "dmarc": None,
+                                "https": None,
+                                "spf": None,
+                                "ssl": None,
+                            },
+                            "archived": False,
+                        }
+                    )
+                    domainInsert["domain"] = subdomain
+                    domains_to_scan.append(domainInsert)
+                except Exception as e:
+                    logging.error(
+                        f"Inserting new domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                    )
+                    continue
             else:
                 domainInsert = checkDomain
-            db.collection("claims").insert(
-                {
-                    "_from": orgId,
-                    "_to": domainInsert["_id"],
-                    "hidden": False,
-                    "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-                }
-            )
+
+            try:
+                db.collection("claims").insert(
+                    {
+                        "_from": orgId,
+                        "_to": domainInsert["_id"],
+                        "hidden": False,
+                        "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
+                    }
+                )
+            except Exception as e:
+                logging.error(
+                    f"Claiming domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                )
+                continue
     return domains_to_scan
 
 
 def get_claimed_domains(orgId):
     # Get existing domains in org
-    cursor = db.aql.execute(
-        "FOR v, e IN 1..1 OUTBOUND @val claims RETURN v.domain",
-        bind_vars={"val": orgId},
-        count=True,
-    )
-    return [document for document in cursor]
+    try:
+        cursor = db.aql.execute(
+            "FOR v, e IN 1..1 OUTBOUND @val claims RETURN v.domain",
+            bind_vars={"val": orgId},
+            count=True,
+        )
+        return [document for document in cursor]
+    except Exception as e:
+        logging.error(
+            f"Getting claimed domains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+        )
+        return []
 
 
 def check_live(domain):
