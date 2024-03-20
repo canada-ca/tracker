@@ -340,7 +340,6 @@ async def run(loop):
             logging.info(
                 f"DNS Scans inserted into database: {json.dumps(processed_results)}"
             )
-            logging.info(f"{results['domain_sends_mail']}")
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
 
