@@ -158,6 +158,8 @@ def domain_sends_mail(domain_id):
     """,
         bind_vars={"domain_id": domain_id},
     )
+    if check_mail_cursor.empty():
+        return None
     return check_mail_cursor.next()
 
 
