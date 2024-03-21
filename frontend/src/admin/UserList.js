@@ -73,17 +73,16 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
       <Trans>No users</Trans>
     </Text>
   ) : (
-    nodes.map((node) => {
-      const userRole = node.permission
+    nodes.map(({ id, permission: userRole, user }) => {
       return (
-        <Box key={`${node.user.userName}:${node.id}`}>
+        <Box key={`${user.userName}:${id}`}>
           <Flex align="center" w="100%">
             <Stack direction="row" flexGrow="0">
               <IconButton
                 aria-label="Remove User"
                 variant="danger"
                 onClick={() => {
-                  setSelectedRemoveUser(node.user)
+                  setSelectedRemoveUser(user)
                   setMutation('remove')
                   onOpen()
                 }}
@@ -96,7 +95,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
                 variant="primary"
                 onClick={() => {
                   setEditingUserRole(userRole)
-                  setEditingUserName(node.user.userName)
+                  setEditingUserName(user.userName)
                   setMutation('update')
                   onOpen()
                 }}
@@ -107,8 +106,8 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
             </Stack>
             <UserCard
               flexGrow="1"
-              userName={node.user.userName}
-              displayName={node.user.displayName}
+              userName={user.userName}
+              displayName={user.displayName}
               role={userRole}
               ml={{ base: 4, md: 0 }}
             />
