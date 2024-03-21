@@ -45,10 +45,10 @@ import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORG_DOMAINS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
-import { SubdomainDiscoveryButton } from '../domains/SubdomainDiscoveryButton'
+import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 
-export function AdminDomains({ orgSlug, orgId, permission }) {
+export function AdminDomains({ orgSlug, orgId }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
@@ -306,9 +306,7 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
               />
               <ABTestWrapper>
                 <ABTestVariant name="B">
-                  {permission === 'SUPER_ADMIN' && (
-                    <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
-                  )}
+                  <SubdomainDiscoveryButton domainUrl={domain} orgId={orgId} orgSlug={orgSlug} ml="2" />
                 </ABTestVariant>
               </ABTestWrapper>
             </Flex>
@@ -422,7 +420,6 @@ export function AdminDomains({ orgSlug, orgId, permission }) {
         validationSchema={createValidationSchema(['domainUrl', 'selectors'])}
         orgId={orgId}
         orgSlug={orgSlug}
-        permission={permission}
         {...modalProps}
       />
       <Modal isOpen={removeIsOpen} onClose={removeOnClose} motionPreset="slideInBottom">
