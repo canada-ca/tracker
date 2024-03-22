@@ -1,20 +1,20 @@
 steps:
   - name: node:alpine
     id: install
-    dir: api
+    dir: database-migration
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - name: node:alpine
     id: lint
-    dir: api
+    dir: database-migration
     entrypoint: npm
     args: ['run', lint]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: api
+    dir: database-migration
     args:
       - '-c'
       - |
@@ -23,7 +23,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build
     entrypoint: 'bash'
-    dir: api
+    dir: database-migration
     args:
       - '-c'
       - |
