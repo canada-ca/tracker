@@ -48,9 +48,6 @@ spec:
                 secretKeyRef:
                   name: api
                   key: DB_URL
-          volumeMounts:
-            - name: database-config
-              mountPath: /app
       containers:
         - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-3faeb6f-1710965361 # {"$imagepolicy": "flux-system:api"}
           name: api
@@ -219,8 +216,4 @@ spec:
             requests:
               cpu: 300m
               memory: 70Mi
-      volumes:
-        - name: database-config
-          configMap:
-            name: database-config
 status: {}
