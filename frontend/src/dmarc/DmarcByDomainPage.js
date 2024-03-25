@@ -33,7 +33,7 @@ import { useUserVar } from '../utilities/userState'
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
-  const { hasAffiliation } = useUserVar()
+  const { isLoggedIn, hasAffiliation } = useUserVar()
 
   const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
   const displayLimitOptions = [5, 10, 20, 50, 100]
@@ -253,7 +253,15 @@ export default function DmarcByDomainPage() {
 
         <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" />
       </Flex>
-      <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+      {isLoggedIn() && (
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+        </Flex>
+      )}
+
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls
