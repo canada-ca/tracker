@@ -39,6 +39,7 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import withSuperAdmin from '../app/withSuperAdmin'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
   const {
@@ -49,7 +50,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     orgSlug,
     archived,
     hidden,
-    permission,
     mutation,
     orgCount,
   } = props
@@ -387,38 +387,11 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                       <Trans>Hide domain</Trans>
                     </Badge>
                   </Flex>
-                  {permission === 'SUPER_ADMIN' && (
-                    <Box>
-                      <Flex align="center">
-                        <Tooltip
-                          label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}
-                        >
-                          <QuestionOutlineIcon tabIndex={0} />
-                        </Tooltip>
-                        <label>
-                          <Switch
-                            colorScheme="red"
-                            isFocusable={true}
-                            name="archiveDomain"
-                            mx="2"
-                            defaultChecked={values.archiveDomain}
-                            onChange={handleChange}
-                          />
-                        </label>
-                        <Badge variant="outline" color="gray.900" p="1.5">
-                          <Trans>Archive domain</Trans>
-                        </Badge>
-                      </Flex>
-
-                      <Text fontSize="sm">
-                        {orgCount > 0 ? (
-                          <Trans>Note: This will affect results for {orgCount} organizations</Trans>
-                        ) : (
-                          <Trans>Note: This could affect results for multiple organizations</Trans>
-                        )}
-                      </Text>
-                    </Box>
-                  )}
+                  <ArchiveDomainSwitch
+                    defaultChecked={values.archiveDomain}
+                    handleChange={handleChange}
+                    orgCount={orgCount}
+                  />
                   <Text>
                     <Trans>Please allow up to 24 hours for summaries to reflect any changes.</Trans>
                   </Text>
@@ -438,6 +411,39 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
   )
 }
 
+const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgCount }) => {
+  return (
+    <Box>
+      <Flex align="center">
+        <Tooltip label={t`Prevent this domain from being visible, scanned, and being counted in any summaries.`}>
+          <QuestionOutlineIcon tabIndex={0} />
+        </Tooltip>
+        <label>
+          <Switch
+            colorScheme="red"
+            isFocusable={true}
+            name="archiveDomain"
+            mx="2"
+            defaultChecked={defaultChecked}
+            onChange={handleChange}
+          />
+        </label>
+        <Badge variant="outline" color="gray.900" p="1.5">
+          <Trans>Archive domain</Trans>
+        </Badge>
+      </Flex>
+
+      <Text fontSize="sm">
+        {orgCount > 0 ? (
+          <Trans>Note: This will affect results for {orgCount} organizations</Trans>
+        ) : (
+          <Trans>Note: This could affect results for multiple organizations</Trans>
+        )}
+      </Text>
+    </Box>
+  )
+})
+
 AdminDomainModal.propTypes = {
   isOpen: bool,
   onClose: func,
@@ -449,7 +455,6 @@ AdminDomainModal.propTypes = {
   tagInputList: array,
   archived: bool,
   hidden: bool,
-  permission: string,
   orgSlug: string,
   mutation: string,
   orgCount: number,
