@@ -171,7 +171,7 @@ export default function Organizations() {
             <Trans>Filters:</Trans>
           </Text>
           <Tooltip label={t`Filter list to verified organizations only.`}>
-            <Flex align="center">
+            <Flex align="center" mr="2">
               <Switch
                 isFocusable={true}
                 aria-label="Show only verified organizations"
@@ -182,6 +182,7 @@ export default function Organizations() {
               <CheckCircleIcon color="blue.500" boxSize="icons.md" />
             </Flex>
           </Tooltip>
+          <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />
           <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
         </Flex>
         {orgList}
