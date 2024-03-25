@@ -182,7 +182,7 @@ export default function Organizations() {
               <CheckCircleIcon color="blue.500" boxSize="icons.md" />
             </Flex>
           </Tooltip>
-          <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />
+          {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />}
           <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
         </Flex>
         {orgList}
