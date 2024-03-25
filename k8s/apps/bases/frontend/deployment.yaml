@@ -20,7 +20,7 @@ spec:
         app: tracker-frontend
     spec:
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:master-40d6425-1711373530 # {"$imagepolicy": "flux-system:frontend"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:master-c435956-1711377050 # {"$imagepolicy": "flux-system:frontend"}
           name: frontend
           resources:
             limits:
