@@ -1,28 +1,28 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
-    entrypoint: 'bash'
+    entrypoint: "bash"
     dir: frontend-maintenance
     args:
-      - '-c'
+      - "-c"
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend-maintenance:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend-maintenance:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker'
-    id: build-if-master
-    entrypoint: 'bash'
+  - name: "gcr.io/cloud-builders/docker"
+    id: build
+    entrypoint: "bash"
     dir: frontend-maintenance
     args:
-      - '-c'
+      - "-c"
       - |
         image=$(cat /workspace/imagename)
         docker build -t $image .
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: "gcr.io/cloud-builders/docker"
     id: push-if-master
-    entrypoint: 'bash'
+    entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       - |
         if [[ "$BRANCH_NAME" == "master" ]]
         then
@@ -34,4 +34,4 @@ steps:
 
 timeout: 1200s
 options:
-  machineType: 'E2_HIGHCPU_8'
+  machineType: "E2_HIGHCPU_8"

@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  nats:
+    image: nats:2.9.11-scratch
+    container_name: nats
+    network_mode: "host"
+    command: -js
+    restart: always
+
+  arangodb:
+    image: arangodb:3.10.5
+    container_name: arangodb
+    environment:
+      - ARANGO_ROOT_PASSWORD=test
+    network_mode: "host"
+    restart: unless-stopped
+    volumes:
+      - ${TRACKER_BACKUP_DIR}:/var/lib/arangodb3

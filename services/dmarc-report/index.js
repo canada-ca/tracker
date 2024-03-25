@@ -4,17 +4,15 @@ require('dotenv-safe').config({
 })
 
 const { CosmosClient } = require('@azure/cosmos')
-const { ensure } = require('arango-tools')
-const fetch = require('isomorphic-fetch')
 const moment = require('moment')
 
-const { databaseOptions } = require('./database-options')
 const {
   createOwnership,
   createSummary,
   removeOwnership,
   removeSummary,
   upsertSummary,
+  arangoConnection,
 } = require('./src/database')
 const {
   loadArangoDates,
@@ -43,13 +41,10 @@ const {
 } = process.env
 
 ;(async () => {
-  // Generate Database information
-  const { query, collections, transaction } = await ensure({
-    type: 'database',
-    name: databaseName,
+  const { collections, query, transaction } = await arangoConnection({
     url,
-    rootPassword: rootPass,
-    options: databaseOptions({ rootPass }),
+    databaseName,
+    rootPass,
   })
 
   const client = new CosmosClient(AZURE_CONN_STRING)
@@ -57,10 +52,9 @@ const {
     id: DATABASE,
   })
 
-  const { container: summariesContainer } =
-    await database.containers.createIfNotExists({
-      id: SUMMARIES_CONTAINER,
-    })
+  const { container: summariesContainer } = await database.containers.createIfNotExists({
+    id: SUMMARIES_CONTAINER,
+  })
 
   const currentDate = moment().startOf('month').format('YYYY-MM-DD')
   const cosmosDates = await loadCosmosDates({
@@ -128,7 +122,7 @@ const {
 
   const setupRemoveSummary = removeSummary({ transaction, collections, query })
 
-  const ownerships = await loadDomainOwnership({ fetch })()
+  const ownerships = await loadDomainOwnership()
 
   await dmarcReport({
     ownerships,
@@ -145,5 +139,4 @@ const {
     cosmosDates,
     currentDate,
   })
-  
 })()

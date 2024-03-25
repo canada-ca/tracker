@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: domain-discovery
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery:master-0854839-1708977161 # {"$imagepolicy": "flux-system:domain-discovery"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery:master-e9f0802-1710962673 # {"$imagepolicy": "flux-system:domain-discovery"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -34,8 +34,6 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
-            - name: DOMAINS_TXT_PATH
-              value: /tmp
             - name: PUBLISH_TO
               value: domains
             - name: SUBSCRIBE_TO

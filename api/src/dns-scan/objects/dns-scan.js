@@ -74,5 +74,9 @@ export const nsRecordType = new GraphQLObjectType({
       type: new GraphQLList(GraphQLString),
       description: `Additional warning info about the NS record.`,
     },
+    error: {
+      type: GraphQLString,
+      description: `Error message if the NS record could not be retrieved.`,
+    },
   }),
 })

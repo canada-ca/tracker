@@ -4,7 +4,7 @@
   "description": "creates the database according to a setup file",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint",
     "start": "node --dns-result-order=ipv4first --experimental-json-modules --experimental-vm-modules index.js"
   },
   "keywords": [],

@@ -13,10 +13,11 @@ import { ADMIN_PAGE } from '../graphql/queries'
 import { Dropdown } from '../components/Dropdown'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
-import { bool } from 'prop-types'
+import { bool, func, string } from 'prop-types'
 import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
+import withSuperAdmin from '../app/withSuperAdmin'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -142,10 +143,8 @@ export default function AdminPage({ isLoginRequired }) {
             orgSlug={orgDetails.slug}
             mb="1rem"
             removeOrgCallback={setSelectedOrg}
-            // set key, this resets state when switching orgs (closes editing box)
-            key={orgDetails.slug}
+            key={orgDetails.slug} // set key, this resets state when switching orgs (closes editing box)
             isLoginRequired={isLoginRequired}
-            isUserSuperAdmin={data?.isUserSuperAdmin}
           />
           <AdminPanel
             activeMenu={activeMenu}
@@ -165,7 +164,7 @@ export default function AdminPage({ isLoginRequired }) {
 
   let adminPanel
   if (activeMenu === 'users' && data?.isUserSuperAdmin) {
-    adminPanel = <SuperAdminUserList permission={data?.isUserSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN'} />
+    adminPanel = <SuperAdminUserList />
   } else if (activeMenu === 'audit-logs' && data?.isUserSuperAdmin) {
     adminPanel = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -178,25 +177,33 @@ export default function AdminPage({ isLoginRequired }) {
 
   return (
     <Stack spacing={10} w="100%" px={4}>
-      {data?.isUserSuperAdmin && (
-        <label>
-          <Flex align="center">
-            <Text fontSize="lg" fontWeight="bold" mr="2">
-              <Trans>Super Admin Menu:</Trans>
-            </Text>
-            <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
-              <option value="organizations">{t`Organizations`}</option>
-              <option value="users">{t`Users`}</option>
-              <option value="audit-logs">{t`Audit Logs`}</option>
-            </Select>
-          </Flex>
-        </label>
-      )}
+      <SuperAdminMenu activeMenu={activeMenu} changeActiveMenu={changeActiveMenu} />
       {adminPanel}
     </Stack>
   )
 }
 
+const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
+  return (
+    <label>
+      <Flex align="center">
+        <Text fontSize="lg" fontWeight="bold" mr="2">
+          <Trans>Super Admin Menu:</Trans>
+        </Text>
+        <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
+          <option value="organizations">{t`Organizations`}</option>
+          <option value="users">{t`Users`}</option>
+          <option value="audit-logs">{t`Audit Logs`}</option>
+        </Select>
+      </Flex>
+    </label>
+  )
+})
+
+SuperAdminMenu.propTypes = {
+  activeMenu: string,
+  changeActiveMenu: func,
+}
 AdminPage.propTypes = {
   isLoginRequired: bool,
 }

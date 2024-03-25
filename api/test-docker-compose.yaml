@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  nats-test:
+    image: nats:2.9.11-scratch
+    container_name: nats-test
+    command: -js
+    restart: always
+    ports:
+      - "14222:4222"
+
+  arangodb-test:
+    image: arangodb:3.10.5
+    container_name: arangodb-test
+    environment:
+      - ARANGO_ROOT_PASSWORD=test
+    restart: unless-stopped
+    ports:
+      - "18529:8529"

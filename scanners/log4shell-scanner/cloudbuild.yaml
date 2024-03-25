@@ -1,29 +1,29 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: "gcr.io/cloud-builders/docker"
     id: generate-image-name
-    entrypoint: 'bash'
+    entrypoint: "bash"
     dir: scanners/log4shell-scanner
     args:
-      - '-c'
+      - "-c"
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-scanner:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/log4shell-scanner:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker'
-    id: build-if-master
-    entrypoint: 'bash'
+  - name: "gcr.io/cloud-builders/docker"
+    id: build
+    entrypoint: "bash"
     dir: scanners/log4shell-scanner
     args:
-      -  '-c'
+      - "-c"
       - |
         image=$(cat /workspace/imagename)
         docker build -t $image .
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: "gcr.io/cloud-builders/docker"
     id: push-if-master
-    entrypoint: 'bash'
+    entrypoint: "bash"
     dir: scanners/log4shell-scanner
     args:
-      - '-c'
+      - "-c"
       - |
         if [[ "$BRANCH_NAME" == "master" ]]
         then

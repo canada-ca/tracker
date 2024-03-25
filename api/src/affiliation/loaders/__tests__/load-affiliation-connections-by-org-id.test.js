@@ -530,7 +530,7 @@ describe('given the load affiliations by org id function', () => {
             permission: 'user',
           })
         })
-        describe('ordering by USER_USERNAME', () => {
+        describe('ordering by USERNAME', () => {
           describe('direction is set to ASC', () => {
             it('returns affiliation', async () => {
               const expectedAffiliation = await loadAffiliationByKey({
@@ -552,7 +552,7 @@ describe('given the load affiliations by org id function', () => {
                 after: toGlobalId('affiliation', affOne._key),
                 before: toGlobalId('affiliation', affThree._key),
                 orderBy: {
-                  field: 'user-username',
+                  field: 'username',
                   direction: 'ASC',
                 },
               }
@@ -601,7 +601,7 @@ describe('given the load affiliations by org id function', () => {
                 after: toGlobalId('affiliation', affThree._key),
                 before: toGlobalId('affiliation', affOne._key),
                 orderBy: {
-                  field: 'user-username',
+                  field: 'username',
                   direction: 'DESC',
                 },
               }

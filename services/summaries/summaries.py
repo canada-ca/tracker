@@ -45,6 +45,20 @@ def is_domain_hidden(domain, db):
     return False
 
 
+def domain_has_verified_claim(domain, db):
+    cursor = db.aql.execute(
+        """
+            FOR v, e IN 1..1 INBOUND @domain_id claims
+                FILTER v.verified == true
+                RETURN v
+            """,
+        bind_vars={"domain_id": domain["_id"]},
+    )
+    if cursor.empty():
+        return False
+    return True
+
+
 def ignore_domain(domain):
     """Check if a domain should be ignored
 
@@ -92,7 +106,10 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
     maintain_count = 0
 
     for domain in db.collection("domains"):
-        if ignore_domain(domain) is False:
+        if (
+            ignore_domain(domain) is False
+            and domain_has_verified_claim(domain, db) is True
+        ):
             # Update chart summaries
             for chart_type in chartSummaries:
                 chart = chartSummaries[chart_type]
@@ -108,9 +125,9 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
 
             # Update DMARC phase summaries
             phase = domain.get("phase")
-            if phase is None:
+            if phase is None or domain.get("status", {}).get("dmarc") == "info":
                 logging.info(
-                    f"Property \"phase\" does not exist for domain \"{domain['domain']}\"."
+                    f"No DMARC scan data available for domain \"{domain['domain']}\"."
                 )
                 continue
 
@@ -259,9 +276,9 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
 
                 # dmarc phase
                 phase = domain.get("phase")
-                if phase is None:
+                if phase is None or domain.get("status", {}).get("dmarc") == "info":
                     logging.info(
-                        f"Property \"phase\" does not exist for domain \"${domain['domain']}\"."
+                        f"No DMARC scan data available for domain \"{domain['domain']}\"."
                     )
                     continue
 

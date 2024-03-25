@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: guidance
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/guidance:master-0854839-1708977161 # {"$imagepolicy": "flux-system:guidance"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/guidance:master-2613178-1710864681 # {"$imagepolicy": "flux-system:guidance"}
           env:
             - name: DB_USER
               valueFrom:

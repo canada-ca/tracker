@@ -337,7 +337,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
               </Flex>
             )
           })}
-          {mxRecords.warnings.length > 0 && (
+          {mxRecords.warnings?.length > 0 && (
             <Box px="2" py="2" rounded="md" mb="4">
               <Text fontWeight="bold" fontSize="lg">
                 <Trans>Warnings:</Trans>
@@ -351,6 +351,15 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                   </Box>
                 )
               })}
+            </Box>
+          )}
+          {mxRecords.error && (
+            <Box px="2" py="2" rounded="md" mb="4">
+              <Text fontSize="lg">
+                <Trans>
+                  <b>Error:</b> {mxRecords.error}
+                </Trans>
+              </Text>
             </Box>
           )}
           {mxRecordDiff.edges.length > 1 && (
@@ -401,7 +410,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
               </Flex>
             )
           })}
-          {nsRecords.warnings.length > 0 && (
+          {nsRecords.warnings?.length > 0 && (
             <Box px="2" py="2" rounded="md" mb="1">
               <Text fontWeight="bold" fontSize="lg">
                 <Trans>Warnings:</Trans>
@@ -415,6 +424,15 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                   </Box>
                 )
               })}
+            </Box>
+          )}
+          {nsRecords.error && (
+            <Box px="2" py="2" rounded="md" mb="4">
+              <Text fontSize="lg">
+                <Trans>
+                  <b>Error:</b> {nsRecords.error}
+                </Trans>
+              </Text>
             </Box>
           )}
         </AccordionPanel>
