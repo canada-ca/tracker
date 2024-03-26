@@ -3,7 +3,7 @@ cffi==1.15.1
 charset-normalizer==2.1.1
 checkdmarc==4.4.4
 dkimpy==1.0.5
-dnspython==2.2.1
+dnspython==2.6.1
 expiringdict==1.2.2
 filelock==3.8.0
 idna==3.4
