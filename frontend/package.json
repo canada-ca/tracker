@@ -40,7 +40,7 @@
     "body-parser": "^1.19.1",
     "d3": "^7.8.0",
     "dotenv": "^16.0.1",
-    "express": "^4.17.2",
+    "express": "^4.19.2",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "isomorphic-unfetch": "^3.1.0",
