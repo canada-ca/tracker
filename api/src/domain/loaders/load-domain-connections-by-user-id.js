@@ -4,7 +4,19 @@ import { t } from '@lingui/macro'
 
 export const loadDomainConnectionsByUserId =
   ({ query, userKey, cleanseInput, i18n, auth: { loginRequiredBool } }) =>
-  async ({ after, before, first, last, ownership, orderBy, isSuperAdmin, myTracker, search, isAffiliated }) => {
+  async ({
+    after,
+    before,
+    first,
+    last,
+    ownership,
+    orderBy,
+    isSuperAdmin,
+    myTracker,
+    search,
+    isAffiliated,
+    filters = [],
+  }) => {
     const userDBId = `users/${userKey}`
 
     let ownershipOrgsOnly = aql`
@@ -310,6 +322,95 @@ export const loadDomainConnectionsByUserId =
       sortString = aql`ASC`
     }
 
+    let domainFilters = aql``
+    if (typeof filters !== 'undefined') {
+      filters.forEach(({ filterCategory, comparison, filterValue }) => {
+        if (comparison === '==') {
+          comparison = aql`==`
+        } else {
+          comparison = aql`!=`
+        }
+        if (filterCategory === 'dmarc-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dmarc ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'dkim-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dkim ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'https-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.https ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'spf-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.spf ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'ciphers-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.ciphers ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'curves-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.curves ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'hsts-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.hsts ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'policy-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.policy ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'protocols-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.protocols ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'certificates-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.certificates ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'tags') {
+          if (filterValue === 'archived') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.archived ${comparison} true
+          `
+          } else if (filterValue === 'nxdomain') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.rcode ${comparison} "NXDOMAIN"
+          `
+          } else if (filterValue === 'blocked') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.blocked ${comparison} true
+          `
+          } else if (filterValue === 'wildcard-sibling') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.wildcardSibling ${comparison} true
+          `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.webScanPending ${comparison} true
+          `
+          }
+        }
+      })
+    }
+
     let domainKeysQuery
     if (myTracker) {
       domainKeysQuery = aql`
@@ -418,6 +519,7 @@ export const loadDomainConnectionsByUserId =
       LET retrievedDomains = (
         ${loopString}
           ${showArchivedDomains}
+          ${domainFilters}
           ${afterTemplate}
           ${beforeTemplate}
           SORT
@@ -429,6 +531,7 @@ export const loadDomainConnectionsByUserId =
       LET hasNextPage = (LENGTH(
         ${loopString}
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -437,6 +540,7 @@ export const loadDomainConnectionsByUserId =
       LET hasPreviousPage = (LENGTH(
         ${loopString}
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
