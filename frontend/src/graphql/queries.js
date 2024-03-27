@@ -106,8 +106,8 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
 `
 
 export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetAllOrganizationDomainStatuses {
-    getAllOrganizationDomainStatuses
+  query GetAllOrganizationDomainStatuses($filters: [DomainFilter]) {
+    getAllOrganizationDomainStatuses(filters: $filters)
   }
 `
 
@@ -647,8 +647,22 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
 `
 
 export const PAGINATED_DOMAINS = gql`
-  query Domains($first: Int, $after: String, $orderBy: DomainOrder, $search: String, $isAffiliated: Boolean) {
-    findMyDomains(first: $first, after: $after, orderBy: $orderBy, search: $search, isAffiliated: $isAffiliated) {
+  query Domains(
+    $first: Int
+    $after: String
+    $orderBy: DomainOrder
+    $search: String
+    $isAffiliated: Boolean
+    $filters: [DomainFilter]
+  ) {
+    findMyDomains(
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+      isAffiliated: $isAffiliated
+      filters: $filters
+    ) {
       edges {
         cursor
         node {
