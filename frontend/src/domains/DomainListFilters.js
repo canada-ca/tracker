@@ -39,6 +39,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
               <Flex align="center">
                 <Box maxW="25%" mr="1">
                   <Select
+                    aria-label="filterCategory"
                     name="filterCategory"
                     borderColor="black"
                     onChange={(e) => {
@@ -70,7 +71,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                   </Text>
                 </Box>
                 <Box maxW="25%" mx="1">
-                  <Select name="comparison" borderColor="black" onChange={handleChange}>
+                  <Select aria-label="comparison" name="comparison" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
                       <Trans>Comparison</Trans>
                     </option>
@@ -86,7 +87,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                   </Text>
                 </Box>
                 <Box maxW="25%" mx="1">
-                  <Select name="filterValue" borderColor="black" onChange={handleChange}>
+                  <Select aria-label="filterValue" name="filterValue" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
                       <Trans>Status or tag</Trans>
                     </option>
