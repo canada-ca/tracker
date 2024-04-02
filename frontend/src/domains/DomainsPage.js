@@ -42,6 +42,9 @@ export default function DomainsPage() {
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
+      variables: {
+        filters,
+      },
       onError(error) {
         toast({
           title: error.message,
@@ -96,6 +99,7 @@ export default function DomainsPage() {
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `SCAN_PENDING`, text: t`Scan Pending` },
   ]
 
   const domainList = loading ? (
