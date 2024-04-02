@@ -6,7 +6,7 @@
     "dev": "webpack serve --hot --env development",
     "webpack": "webpack",
     "start": "NODE_OPTIONS=--openssl-legacy-provider node index.js",
-    "test": "jest",
+    "test": "jest --silent",
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
