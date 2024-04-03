@@ -24,6 +24,7 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useUserVar } from '../utilities/userState'
 import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export default function DomainsPage() {
   const { hasAffiliation } = useUserVar()
@@ -35,9 +36,7 @@ export default function DomainsPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
-  const [filters, setFilters] = useState([
-    { filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' },
-  ])
+  const [filters, setFilters] = useState([])
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -105,12 +104,16 @@ export default function DomainsPage() {
     </LoadingMessage>
   ) : (
     <Box>
-      <DomainListFilters
-        filters={filters}
-        setFilters={setFilters}
-        statusOptions={orderByOptions}
-        filterTagOptions={filterTagOptions}
-      />
+      <ABTestWrapper insiderVariantName="B">
+        <ABTestVariant name="B">
+          <DomainListFilters
+            filters={filters}
+            setFilters={setFilters}
+            statusOptions={orderByOptions}
+            filterTagOptions={filterTagOptions}
+          />
+        </ABTestVariant>
+      </ABTestWrapper>
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -254,7 +257,11 @@ export default function DomainsPage() {
           </Text>
           <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
           <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
-          <FilterList filters={filters} setFilters={setFilters} />
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <FilterList filters={filters} setFilters={setFilters} />
+            </ABTestVariant>
+          </ABTestWrapper>
         </Flex>
 
         {domainList}

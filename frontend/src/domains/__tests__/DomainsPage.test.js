@@ -35,7 +35,7 @@ describe('<DomainsPage />', () => {
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: true,
-          filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
+          filters: [],
         },
       },
       result: {
@@ -121,7 +121,7 @@ describe('<DomainsPage />', () => {
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: false,
-          filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
+          filters: [],
         },
       },
       result: {
@@ -210,7 +210,7 @@ describe('<DomainsPage />', () => {
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: false,
-          filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
+          filters: [],
         },
       },
       result: {
