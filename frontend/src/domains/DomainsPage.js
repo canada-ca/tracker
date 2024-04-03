@@ -42,6 +42,7 @@ export default function DomainsPage() {
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
+      variables: { filters },
       onError(error) {
         toast({
           title: error.message,

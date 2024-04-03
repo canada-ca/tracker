@@ -106,8 +106,8 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
 `
 
 export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetAllOrganizationDomainStatuses {
-    getAllOrganizationDomainStatuses
+  query GetAllOrganizationDomainStatuses($filters: [DomainFilter]) {
+    getAllOrganizationDomainStatuses(filters: $filters)
   }
 `
 
