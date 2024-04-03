@@ -1,13 +1,14 @@
-import { GraphQLString, GraphQLList } from 'graphql'
-import { domainFilter } from '../../domain/inputs'
+import { GraphQLBoolean, GraphQLString } from 'graphql'
+
+import { t } from '@lingui/macro'
 
 export const getAllOrganizationDomainStatuses = {
   type: GraphQLString,
   description: 'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
   args: {
-    filters: {
-      type: new GraphQLList(domainFilter),
-      description: 'Filters used to limit domains returned.',
+    blocked: {
+      type: GraphQLBoolean,
+      description: 'Whether to include blocked domains in the output.',
     },
   },
   resolve: async (
@@ -15,7 +16,8 @@ export const getAllOrganizationDomainStatuses = {
     args,
     {
       userKey,
-      auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
+      i18n,
+      auth: { checkSuperAdmin, userRequired, verifiedRequired },
       loaders: { loadAllOrganizationDomainStatuses },
     },
   ) => {
@@ -23,7 +25,13 @@ export const getAllOrganizationDomainStatuses = {
     verifiedRequired({ user })
 
     const isSuperAdmin = await checkSuperAdmin()
-    superAdminRequired({ user, isSuperAdmin })
+
+    if (!isSuperAdmin) {
+      console.warn(
+        `User: ${userKey} attempted to load all organization statuses but login is required and they are not a super admin.`,
+      )
+      throw new Error(i18n._(t`Permissions error. You do not have sufficient permissions to access this data.`))
+    }
 
     const domainStatuses = await loadAllOrganizationDomainStatuses({ ...args })
 
@@ -32,19 +40,17 @@ export const getAllOrganizationDomainStatuses = {
     if (domainStatuses === undefined) return domainStatuses
 
     const headers = [
-      'domain',
-      'https',
-      'hsts',
-      'certificates',
-      'protocols',
-      'ciphers',
-      'curves',
-      'spf',
-      'dkim',
-      'dmarc',
-      'rcode',
-      'blocked',
-      'wildcardSibling',
+      'Organization name (English)',
+      "Nom de l'organisation (Français)",
+      'Domain',
+      'HTTPS',
+      'HSTS',
+      'Ciphers',
+      'Curves',
+      'Protocols',
+      'SPF',
+      'DKIM',
+      'DMARC',
     ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
