@@ -1,3 +1,4 @@
+const { loadTables } = require('../loaders')
 const createSummary =
   ({
     transaction,
@@ -8,39 +9,18 @@ const createSummary =
     loadDmarcFailureTable,
     loadFullPassTable,
     loadSpfFailureTable,
-    calculatePercentages,
   }) =>
   async ({ date, domain }) => {
-    let categoryTotals
-    let dkimFailureTable
-    let dmarcFailureTable
-    let fullPassTable
-    let spfFailureTable
-
-    if (date === 'thirtyDays') {
-      categoryTotals = await loadCategoryTotals({ domain, date: 'thirty_days' })
-      dkimFailureTable = await loadDkimFailureTable({
+    const { categoryTotals, dkimFailureTable, dmarcFailureTable, fullPassTable, spfFailureTable, categoryPercentages } =
+      await loadTables({
+        loadCategoryTotals,
+        loadDkimFailureTable,
+        loadDmarcFailureTable,
+        loadFullPassTable,
+        loadSpfFailureTable,
         domain,
-        date: 'thirty_days',
+        date,
       })
-      dmarcFailureTable = await loadDmarcFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
-      fullPassTable = await loadFullPassTable({ domain, date: 'thirty_days' })
-      spfFailureTable = await loadSpfFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
-    } else {
-      categoryTotals = await loadCategoryTotals({ domain, date })
-      dkimFailureTable = await loadDkimFailureTable({ domain, date })
-      dmarcFailureTable = await loadDmarcFailureTable({ domain, date })
-      fullPassTable = await loadFullPassTable({ domain, date })
-      spfFailureTable = await loadSpfFailureTable({ domain, date })
-    }
-
-    const categoryPercentages = calculatePercentages({ ...categoryTotals })
 
     const summary = {
       ...categoryPercentages,

@@ -28,7 +28,6 @@ const {
   loadDomainOwnership,
   loadSpfFailureTable,
 } = require('./src/loaders')
-const { calculatePercentages, mapGuidance } = require('./src/utils')
 const { dmarcReport } = require('./src/dmarc-report')
 
 const {
@@ -71,7 +70,6 @@ const {
     }),
     loadDkimFailureTable: loadDkimFailureTable({
       container: summariesContainer,
-      mapGuidance,
     }),
     loadDmarcFailureTable: loadDmarcFailureTable({
       container: summariesContainer,
@@ -82,7 +80,6 @@ const {
     loadSpfFailureTable: loadSpfFailureTable({
       container: summariesContainer,
     }),
-    calculatePercentages,
   })
 
   const setupUpsertSummary = upsertSummary({
@@ -94,7 +91,6 @@ const {
     }),
     loadDkimFailureTable: loadDkimFailureTable({
       container: summariesContainer,
-      mapGuidance,
     }),
     loadDmarcFailureTable: loadDmarcFailureTable({
       container: summariesContainer,
@@ -105,7 +101,6 @@ const {
     loadSpfFailureTable: loadSpfFailureTable({
       container: summariesContainer,
     }),
-    calculatePercentages,
   })
 
   const setupCreateOwnership = createOwnership({

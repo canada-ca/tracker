@@ -2,7 +2,7 @@ const loadFullPassTable =
   ({ container }) =>
   async ({ domain, date }) => {
     // Get full pass
-    const { resources } = await container.items
+    return container.items
       .query({
         query: `
           SELECT * FROM (
@@ -27,8 +27,6 @@ const loadFullPassTable =
         ],
       })
       .fetchAll()
-
-    return resources
   }
 
 module.exports = {
