@@ -152,6 +152,11 @@ export const getTypeNames = () => gql`
       isAffiliated: Boolean
 
       """
+      Filters used to limit domains returned.
+      """
+      filters: [DomainFilter]
+
+      """
       Returns the items in the list that come after the specified cursor.
       """
       after: String
@@ -242,9 +247,9 @@ export const getTypeNames = () => gql`
     """
     getAllOrganizationDomainStatuses(
       """
-      Whether to include blocked domains in the output.
+      Filters used to limit domains returned.
       """
-      blocked: Boolean
+      filters: [DomainFilter]
     ): String
 
     """
@@ -569,7 +574,7 @@ export const getTypeNames = () => gql`
   }
 
   """
-  A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the \`date-time\` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+  A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the 'date-time' format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
   """
   scalar DateTime
 
@@ -804,16 +809,16 @@ export const getTypeNames = () => gql`
   }
 
   """
-  Possible directions in which to order a list of items when provided an \`orderBy\` argument.
+  Possible directions in which to order a list of items when provided an 'orderBy' argument.
   """
   enum OrderDirection {
     """
-    Specifies an ascending order for a given \`orderBy\` argument.
+    Specifies an ascending order for a given 'orderBy' argument.
     """
     ASC
 
     """
-    Specifies a descending order for a given \`orderBy\` argument.
+    Specifies a descending order for a given 'orderBy' argument.
     """
     DESC
   }
@@ -1574,14 +1579,14 @@ export const getTypeNames = () => gql`
   }
 
   """
-  A date string, such as 2007-12-03, compliant with the \`full-date\` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+  A date string, such as 2007-12-03, compliant with the 'full-date' format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
   """
   scalar Date
 
   """
   This object contains the list of different categories for pre-computed
-  summary data with the computed total for how many domains in total are
-  being compared.
+      summary data with the computed total for how many domains in total are
+      being compared.
   """
   type CategorizedSummary {
     """
@@ -3430,7 +3435,7 @@ export const getTypeNames = () => gql`
   }
 
   """
-  The \`JSONObject\` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+  The 'JSONObject' scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
   """
   scalar JSONObject
 
@@ -3698,7 +3703,7 @@ export const getTypeNames = () => gql`
     """
     guidance: String
       @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+        reason: "This has been turned into the 'guidanceTag' field providing detailed information to act upon if a given tag is present."
       )
 
     """
@@ -3956,7 +3961,7 @@ export const getTypeNames = () => gql`
     """
     guidance: String
       @deprecated(
-        reason: "This has been turned into the \`guidanceTag\` field providing detailed information to act upon if a given tag is present."
+        reason: "This has been turned into the 'guidanceTag' field providing detailed information to act upon if a given tag is present."
       )
 
     """
@@ -4966,14 +4971,14 @@ export const getTypeNames = () => gql`
 
   type InviteUserToOrgPayload {
     """
-    \`InviteUserToOrgUnion\` returning either a \`InviteUserToOrgResult\`, or \`InviteUserToOrgError\` object.
+    'InviteUserToOrgUnion' returning either a 'InviteUserToOrgResult', or 'InviteUserToOrgError' object.
     """
     result: InviteUserToOrgUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`InviteUserToOrg\` mutation, allowing for users to invite user to their org, and support any errors that may occur
+  This union is used with the 'InviteUserToOrg' mutation, allowing for users to invite user to their org, and support any errors that may occur
   """
   union InviteUserToOrgUnion = AffiliationError | InviteUserToOrgResult
 
@@ -5047,14 +5052,14 @@ export const getTypeNames = () => gql`
 
   type LeaveOrganizationPayload {
     """
-    \`LeaveOrganizationUnion\` resolving to either a \`LeaveOrganizationResult\` or \`AffiliationError\`.
+    'LeaveOrganizationUnion' resolving to either a 'LeaveOrganizationResult' or 'AffiliationError'.
     """
     result: LeaveOrganizationUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`leaveOrganization\` mutation, allowing for users to leave a given organization, and support any errors that may occur.
+  This union is used with the 'leaveOrganization' mutation, allowing for users to leave a given organization, and support any errors that may occur.
   """
   union LeaveOrganizationUnion = AffiliationError | LeaveOrganizationResult
 
@@ -5078,14 +5083,14 @@ export const getTypeNames = () => gql`
 
   type RemoveUserFromOrgPayload {
     """
-    \`RemoveUserFromOrgUnion\` returning either a \`RemoveUserFromOrgResult\`, or \`RemoveUserFromOrgError\` object.
+    'RemoveUserFromOrgUnion' returning either a 'RemoveUserFromOrgResult', or 'RemoveUserFromOrgError' object.
     """
     result: RemoveUserFromOrgUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`RemoveUserFromOrg\` mutation, allowing for users to remove a user from their org, and support any errors that may occur
+  This union is used with the 'RemoveUserFromOrg' mutation, allowing for users to remove a user from their org, and support any errors that may occur
   """
   union RemoveUserFromOrgUnion = AffiliationError | RemoveUserFromOrgResult
 
@@ -5119,7 +5124,7 @@ export const getTypeNames = () => gql`
 
   type RequestOrgAffiliationPayload {
     """
-    \`InviteUserToOrgUnion\` returning either a \`InviteUserToOrgResult\`, or \`InviteUserToOrgError\` object.
+    'InviteUserToOrgUnion' returning either a 'InviteUserToOrgResult', or 'InviteUserToOrgError' object.
     """
     result: InviteUserToOrgUnion
     clientMutationId: String
@@ -5135,14 +5140,14 @@ export const getTypeNames = () => gql`
 
   type TransferOrgOwnershipPayload {
     """
-    \`TransferOrgOwnershipUnion\` resolving to either a \`TransferOrgOwnershipResult\` or \`AffiliationError\`.
+    'TransferOrgOwnershipUnion' resolving to either a 'TransferOrgOwnershipResult' or 'AffiliationError'.
     """
     result: TransferOrgOwnershipUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`transferOrgOwnership\` mutation, allowing for
+  This union is used with the 'transferOrgOwnership' mutation, allowing for
   users to transfer ownership of a given organization, and support any errors that may occur.
   """
   union TransferOrgOwnershipUnion = AffiliationError | TransferOrgOwnershipResult
@@ -5172,14 +5177,14 @@ export const getTypeNames = () => gql`
 
   type UpdateUserRolePayload {
     """
-    \`UpdateUserRoleUnion\` returning either a \`UpdateUserRoleResult\`, or \`UpdateUserRoleError\` object.
+    'UpdateUserRoleUnion' returning either a 'UpdateUserRoleResult', or 'UpdateUserRoleError' object.
     """
     result: UpdateUserRoleUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`UpdateUserRole\` mutation, allowing for users to update a users role in an org, and support any errors that may occur
+  This union is used with the 'UpdateUserRole' mutation, allowing for users to update a users role in an org, and support any errors that may occur
   """
   union UpdateUserRoleUnion = AffiliationError | UpdateUserRoleResult
 
@@ -5218,16 +5223,16 @@ export const getTypeNames = () => gql`
 
   type AddOrganizationsDomainsPayload {
     """
-    \`BulkModifyDomainsUnion\` returning either a \`DomainBulkResult\`, or \`DomainErrorType\` object.
+    'BulkModifyDomainsUnion' returning either a 'DomainBulkResult', or 'DomainErrorType' object.
     """
     result: BulkModifyDomainsUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`AddOrganizationsDomains\` and \`RemoveOrganizationsDomains\` mutation,
-  allowing for users to add/remove multiple domains belonging to their org,
-  and support any errors that may occur
+  This union is used with the 'AddOrganizationsDomains' and 'RemoveOrganizationsDomains' mutation,
+                  allowing for users to add/remove multiple domains belonging to their org,
+                  and support any errors that may occur
   """
   union BulkModifyDomainsUnion = DomainError | DomainBulkResult
 
@@ -5291,14 +5296,14 @@ export const getTypeNames = () => gql`
 
   type CreateDomainPayload {
     """
-    \`CreateDomainUnion\` returning either a \`Domain\`, or \`CreateDomainError\` object.
+    'CreateDomainUnion' returning either a 'Domain', or 'CreateDomainError' object.
     """
     result: CreateDomainUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`CreateDomain\` mutation,
+  This union is used with the 'CreateDomain' mutation,
   allowing for users to create a domain and add it to their org,
   and support any errors that may occur
   """
@@ -5474,7 +5479,7 @@ export const getTypeNames = () => gql`
 
   type FavouriteDomainPayload {
     """
-    \`CreateDomainUnion\` returning either a \`Domain\`, or \`CreateDomainError\` object.
+    'CreateDomainUnion' returning either a 'Domain', or 'CreateDomainError' object.
     """
     result: CreateDomainUnion
     clientMutationId: String
@@ -5490,14 +5495,14 @@ export const getTypeNames = () => gql`
 
   type RemoveDomainPayload {
     """
-    \`RemoveDomainUnion\` returning either a \`DomainResultType\`, or \`DomainErrorType\` object.
+    'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     """
     result: RemoveDomainUnion!
     clientMutationId: String
   }
 
   """
-  This union is used with the \`RemoveDomain\` mutation,
+  This union is used with the 'RemoveDomain' mutation,
   allowing for users to remove a domain belonging to their org,
   and support any errors that may occur
   """
@@ -5538,7 +5543,7 @@ export const getTypeNames = () => gql`
 
   type RemoveOrganizationsDomainsPayload {
     """
-    \`BulkModifyDomainsUnion\` returning either a \`DomainBulkResult\`, or \`DomainErrorType\` object.
+    'BulkModifyDomainsUnion' returning either a 'DomainBulkResult', or 'DomainErrorType' object.
     """
     result: BulkModifyDomainsUnion!
     clientMutationId: String
@@ -5606,7 +5611,7 @@ export const getTypeNames = () => gql`
 
   type UnfavouriteDomainPayload {
     """
-    \`RemoveDomainUnion\` returning either a \`DomainResultType\`, or \`DomainErrorType\` object.
+    'RemoveDomainUnion' returning either a 'DomainResultType', or 'DomainErrorType' object.
     """
     result: RemoveDomainUnion!
     clientMutationId: String
@@ -5622,14 +5627,14 @@ export const getTypeNames = () => gql`
 
   type UpdateDomainPayload {
     """
-    \`UpdateDomainUnion\` returning either a \`Domain\`, or \`DomainError\` object.
+    'UpdateDomainUnion' returning either a 'Domain', or 'DomainError' object.
     """
     result: UpdateDomainUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`UpdateDomain\` mutation,
+  This union is used with the 'UpdateDomain' mutation,
   allowing for users to update a domain belonging to their org,
   and support any errors that may occur
   """
@@ -5680,14 +5685,14 @@ export const getTypeNames = () => gql`
 
   type ArchiveOrganizationPayload {
     """
-    \`RemoveOrganizationUnion\` returning either an \`OrganizationResult\`, or \`OrganizationError\` object.
+    'RemoveOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     """
     result: RemoveOrganizationUnion!
     clientMutationId: String
   }
 
   """
-  This union is used with the \`RemoveOrganization\` mutation,
+  This union is used with the 'RemoveOrganization' mutation,
   allowing for users to remove an organization they belong to,
   and support any errors that may occur
   """
@@ -5733,14 +5738,14 @@ export const getTypeNames = () => gql`
 
   type CreateOrganizationPayload {
     """
-    \`CreateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
+    'CreateOrganizationUnion' returning either an 'Organization', or 'OrganizationError' object.
     """
     result: CreateOrganizationUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`CreateOrganization\` mutation,
+  This union is used with the 'CreateOrganization' mutation,
   allowing for users to create an organization, and support any errors that may occur
   """
   union CreateOrganizationUnion = OrganizationError | Organization
@@ -5820,7 +5825,7 @@ export const getTypeNames = () => gql`
 
   type RemoveOrganizationPayload {
     """
-    \`RemoveOrganizationUnion\` returning either an \`OrganizationResult\`, or \`OrganizationError\` object.
+    'RemoveOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     """
     result: RemoveOrganizationUnion!
     clientMutationId: String
@@ -5836,14 +5841,14 @@ export const getTypeNames = () => gql`
 
   type UpdateOrganizationPayload {
     """
-    \`UpdateOrganizationUnion\` returning either an \`Organization\`, or \`OrganizationError\` object.
+    'UpdateOrganizationUnion' returning either an 'Organization', or 'OrganizationError' object.
     """
     result: UpdateOrganizationUnion!
     clientMutationId: String
   }
 
   """
-  This union is used with the \`UpdateOrganization\` mutation,
+  This union is used with the 'UpdateOrganization' mutation,
   allowing for users to update an organization, and support any errors that may occur
   """
   union UpdateOrganizationUnion = OrganizationError | Organization
@@ -5933,14 +5938,14 @@ export const getTypeNames = () => gql`
 
   type VerifyOrganizationPayload {
     """
-    \`VerifyOrganizationUnion\` returning either an \`OrganizationResult\`, or \`OrganizationError\` object.
+    'VerifyOrganizationUnion' returning either an 'OrganizationResult', or 'OrganizationError' object.
     """
     result: VerifyOrganizationUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`VerifyOrganization\` mutation,
+  This union is used with the 'VerifyOrganization' mutation,
   allowing for super admins to verify an organization,
   and support any errors that may occur
   """
@@ -5956,14 +5961,14 @@ export const getTypeNames = () => gql`
 
   type AuthenticatePayload {
     """
-    Authenticate union returning either a \`authResult\` or \`authenticateError\` object.
+    Authenticate union returning either a 'authResult' or 'authenticateError' object.
     """
     result: AuthenticateUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`authenticate\` mutation, allowing for the user to authenticate, and support any errors that may occur
+  This union is used with the 'authenticate' mutation, allowing for the user to authenticate, and support any errors that may occur
   """
   union AuthenticateUnion = AuthResult | AuthenticateError
 
@@ -6017,14 +6022,14 @@ export const getTypeNames = () => gql`
 
   type CloseAccountOtherPayload {
     """
-    \`CloseAccountUnion\` returning either a \`CloseAccountResult\`, or \`CloseAccountError\` object.
+    'CloseAccountUnion' returning either a 'CloseAccountResult', or 'CloseAccountError' object.
     """
     result: CloseAccountUnion
     clientMutationId: String
   }
 
   """
-  This union is used for the \`closeAccount\` mutation, to support successful or errors that may occur.
+  This union is used for the 'closeAccount' mutation, to support successful or errors that may occur.
   """
   union CloseAccountUnion = CloseAccountResult | CloseAccountError
 
@@ -6063,7 +6068,7 @@ export const getTypeNames = () => gql`
 
   type CloseAccountSelfPayload {
     """
-    \`CloseAccountUnion\` returning either a \`CloseAccountResult\`, or \`CloseAccountError\` object.
+    'CloseAccountUnion' returning either a 'CloseAccountResult', or 'CloseAccountError' object.
     """
     result: CloseAccountUnion
     clientMutationId: String
@@ -6075,14 +6080,14 @@ export const getTypeNames = () => gql`
 
   type RefreshTokensPayload {
     """
-    Refresh tokens union returning either a \`authResult\` or \`authenticateError\` object.
+    Refresh tokens union returning either a 'authResult' or 'authenticateError' object.
     """
     result: RefreshTokensUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`refreshTokens\` mutation, allowing for the user to refresh their tokens, and support any errors that may occur
+  This union is used with the 'refreshTokens' mutation, allowing for the user to refresh their tokens, and support any errors that may occur
   """
   union RefreshTokensUnion = AuthResult | AuthenticateError
 
@@ -6092,14 +6097,14 @@ export const getTypeNames = () => gql`
 
   type RemovePhoneNumberPayload {
     """
-    \`RemovePhoneNumberUnion\` returning either a \`RemovePhoneNumberResult\`, or \`RemovePhoneNumberError\` object.
+    'RemovePhoneNumberUnion' returning either a 'RemovePhoneNumberResult', or 'RemovePhoneNumberError' object.
     """
     result: RemovePhoneNumberUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`RemovePhoneNumber\` mutation, allowing for users to remove their phone number, and support any errors that may occur
+  This union is used with the 'RemovePhoneNumber' mutation, allowing for users to remove their phone number, and support any errors that may occur
   """
   union RemovePhoneNumberUnion = RemovePhoneNumberError | RemovePhoneNumberResult
 
@@ -6134,14 +6139,14 @@ export const getTypeNames = () => gql`
 
   type ResetPasswordPayload {
     """
-    \`ResetPasswordUnion\` returning either a \`ResetPasswordResult\`, or \`ResetPasswordError\` object.
+    'ResetPasswordUnion' returning either a 'ResetPasswordResult', or 'ResetPasswordError' object.
     """
     result: ResetPasswordUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`ResetPassword\` mutation, allowing for users to reset their password, and support any errors that may occur
+  This union is used with the 'ResetPassword' mutation, allowing for users to reset their password, and support any errors that may occur
   """
   union ResetPasswordUnion = ResetPasswordError | ResetPasswordResult
 
@@ -6222,14 +6227,14 @@ export const getTypeNames = () => gql`
 
   type SetPhoneNumberPayload {
     """
-    \`SetPhoneNumberUnion\` returning either a \`SetPhoneNumberResult\`, or \`SetPhoneNumberError\` object.
+    'SetPhoneNumberUnion' returning either a 'SetPhoneNumberResult', or 'SetPhoneNumberError' object.
     """
     result: SetPhoneNumberUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`setPhoneNumber\` mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
+  This union is used with the 'setPhoneNumber' mutation, allowing for users to send a verification code to their phone, and support any errors that may occur
   """
   union SetPhoneNumberUnion = SetPhoneNumberError | SetPhoneNumberResult
 
@@ -6273,14 +6278,14 @@ export const getTypeNames = () => gql`
 
   type SignInPayload {
     """
-    \`SignInUnion\` returning either a \`regularSignInResult\`, \`tfaSignInResult\`, or \`signInError\` object.
+    'SignInUnion' returning either a 'regularSignInResult', 'tfaSignInResult', or 'signInError' object.
     """
     result: SignInUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`SignIn\` mutation, allowing for multiple styles of logging in, and support any errors that may occur
+  This union is used with the 'SignIn' mutation, allowing for multiple styles of logging in, and support any errors that may occur
   """
   union SignInUnion = AuthResult | SignInError | TFASignInResult
 
@@ -6346,14 +6351,14 @@ export const getTypeNames = () => gql`
 
   type SignUpPayload {
     """
-    \`SignUpUnion\` returning either a \`TFASignInResult\`, or \`SignUpError\` object.
+    'SignUpUnion' returning either a 'TFASignInResult', or 'SignUpError' object.
     """
     result: SignUpUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`signUp\` mutation, allowing for the user to sign up, and support any errors that may occur.
+  This union is used with the 'signUp' mutation, allowing for the user to sign up, and support any errors that may occur.
   """
   union SignUpUnion = TFASignInResult | SignUpError
 
@@ -6412,14 +6417,14 @@ export const getTypeNames = () => gql`
 
   type UpdateUserPasswordPayload {
     """
-    \`UpdateUserPasswordUnion\` returning either a \`UpdateUserPasswordResultType\`, or \`UpdateUserPasswordError\` object.
+    'UpdateUserPasswordUnion' returning either a 'UpdateUserPasswordResultType', or 'UpdateUserPasswordError' object.
     """
     result: UpdateUserPasswordUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`updateUserPassword\` mutation, allowing for users to update their password, and support any errors that may occur
+  This union is used with the 'updateUserPassword' mutation, allowing for users to update their password, and support any errors that may occur
   """
   union UpdateUserPasswordUnion = UpdateUserPasswordError | UpdateUserPasswordResultType
 
@@ -6468,14 +6473,14 @@ export const getTypeNames = () => gql`
 
   type UpdateUserProfilePayload {
     """
-    \`UpdateUserProfileUnion\` returning either a \`UpdateUserProfileResult\`, or \`UpdateUserProfileError\` object.
+    'UpdateUserProfileUnion' returning either a 'UpdateUserProfileResult', or 'UpdateUserProfileError' object.
     """
     result: UpdateUserProfileUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`updateUserProfile\` mutation, allowing for users to update their profile, and support any errors that may occur
+  This union is used with the 'updateUserProfile' mutation, allowing for users to update their profile, and support any errors that may occur
   """
   union UpdateUserProfileUnion = UpdateUserProfileError | UpdateUserProfileResult
 
@@ -6544,14 +6549,14 @@ export const getTypeNames = () => gql`
 
   type VerifyAccountPayload {
     """
-    \`VerifyAccountUnion\` returning either a \`VerifyAccountResult\`, or \`VerifyAccountError\` object.
+    'VerifyAccountUnion' returning either a 'VerifyAccountResult', or 'VerifyAccountError' object.
     """
     result: VerifyAccountUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`verifyAccount\` mutation, allowing for users to verify their account, and support any errors that may occur
+  This union is used with the 'verifyAccount' mutation, allowing for users to verify their account, and support any errors that may occur
   """
   union VerifyAccountUnion = VerifyAccountError | VerifyAccountResult
 
@@ -6590,14 +6595,14 @@ export const getTypeNames = () => gql`
 
   type verifyPhoneNumberPayload {
     """
-    \`VerifyPhoneNumberUnion\` returning either a \`VerifyPhoneNumberResult\`, or \`VerifyPhoneNumberError\` object.
+    'VerifyPhoneNumberUnion' returning either a 'VerifyPhoneNumberResult', or 'VerifyPhoneNumberError' object.
     """
     result: VerifyPhoneNumberUnion
     clientMutationId: String
   }
 
   """
-  This union is used with the \`verifyPhoneNumber\` mutation, allowing for users to verify their phone number, and support any errors that may occur
+  This union is used with the 'verifyPhoneNumber' mutation, allowing for users to verify their phone number, and support any errors that may occur
   """
   union VerifyPhoneNumberUnion = VerifyPhoneNumberError | VerifyPhoneNumberResult
 

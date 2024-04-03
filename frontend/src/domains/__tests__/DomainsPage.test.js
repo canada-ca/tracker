@@ -35,6 +35,7 @@ describe('<DomainsPage />', () => {
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: true,
+          filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
         },
       },
       result: {
@@ -115,7 +116,13 @@ describe('<DomainsPage />', () => {
     {
       request: {
         query: PAGINATED_DOMAINS,
-        variables: { first: 10, orderBy: { field: 'DOMAIN', direction: 'ASC' }, search: '', isAffiliated: false },
+        variables: {
+          first: 10,
+          orderBy: { field: 'DOMAIN', direction: 'ASC' },
+          search: '',
+          isAffiliated: false,
+          filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
+        },
       },
       result: {
         data: {
@@ -203,6 +210,7 @@ describe('<DomainsPage />', () => {
           orderBy: { field: 'DOMAIN', direction: 'ASC' },
           search: '',
           isAffiliated: false,
+          filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
         },
       },
       result: {
