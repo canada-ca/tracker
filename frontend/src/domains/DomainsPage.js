@@ -192,7 +192,7 @@ export default function DomainsPage() {
 
   return (
     <Box w="100%" px={4}>
-      <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
+      <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
         </Heading>
