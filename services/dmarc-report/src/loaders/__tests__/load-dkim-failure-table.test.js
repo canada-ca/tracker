@@ -1,4 +1,3 @@
-const { mapGuidance } = require('../../utils')
 const { loadDkimFailureTable } = require('../load-dkim-failure-table')
 
 describe('given the loadDkimFailureTable function', () => {
