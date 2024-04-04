@@ -17,11 +17,11 @@ const loadTables = async ({
     { resources: fullPassResources },
     { resources: spfFailureResources },
   ] = await Promise.all([
-    loadCategoryTotals({ domain, cosmosDate }),
-    loadDkimFailureTable({ domain, cosmosDate }),
-    loadDmarcFailureTable({ domain, cosmosDate }),
-    loadFullPassTable({ domain, cosmosDate }),
-    loadSpfFailureTable({ domain, cosmosDate }),
+    loadCategoryTotals({ domain, date: cosmosDate }),
+    loadDkimFailureTable({ domain, date: cosmosDate }),
+    loadDmarcFailureTable({ domain, date: cosmosDate }),
+    loadFullPassTable({ domain, date: cosmosDate }),
+    loadSpfFailureTable({ domain, date: cosmosDate }),
   ])
 
   let categoryTotals

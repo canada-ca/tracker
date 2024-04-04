@@ -38,19 +38,21 @@ describe('given the loadFullPassTable function', () => {
         date: '2021-01-01',
       })
 
-      const fullPassList = [
-        {
-          sourceIpAddress: '12.34.56.78',
-          envelopeFrom: 'envelopeFrom.ca',
-          headerFrom: 'headerFrom.ca',
-          spfDomains: 'spfDomains.ca',
-          dkimDomains: 'dkimDomains.ca',
-          dkimSelectors: 'selector1',
-          totalMessages: 2,
-          dnsHost: 'dns.ca',
-          id: 1,
-        },
-      ]
+      const fullPassList = {
+        resources: [
+          {
+            sourceIpAddress: '12.34.56.78',
+            envelopeFrom: 'envelopeFrom.ca',
+            headerFrom: 'headerFrom.ca',
+            spfDomains: 'spfDomains.ca',
+            dkimDomains: 'dkimDomains.ca',
+            dkimSelectors: 'selector1',
+            totalMessages: 2,
+            dnsHost: 'dns.ca',
+            id: 1,
+          },
+        ],
+      }
 
       expect(summary).toEqual(fullPassList)
     })

@@ -77,11 +77,13 @@ describe('given the upsertSummary function', () => {
       _to: summary._id,
       startDate: '2021-01-01',
     })
-    loadCategoryTotals = jest.fn().mockReturnValue({ pass: 1, fail: 1, passDkimOnly: 1, passSpfOnly: 1 })
-    loadDkimFailureTable = jest.fn().mockReturnValue([{ key: 'value' }])
-    loadDmarcFailureTable = jest.fn().mockReturnValue([{ key: 'value' }])
-    loadFullPassTable = jest.fn().mockReturnValue([{ key: 'value' }])
-    loadSpfFailureTable = jest.fn().mockReturnValue([{ key: 'value' }])
+    loadCategoryTotals = jest
+      .fn()
+      .mockReturnValue({ resources: [{ pass: 1, fail: 1, passDkimOnly: 1, passSpfOnly: 1 }] })
+    loadDkimFailureTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
+    loadDmarcFailureTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
+    loadFullPassTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
+    loadSpfFailureTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
   })
 
   afterEach(async () => {

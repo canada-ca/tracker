@@ -26,10 +26,7 @@ describe('given the loadCategoryTotals function', () => {
         })
 
         const expectedResult = {
-          pass: 0,
-          fail: 0,
-          passDkimOnly: 0,
-          passSpfOnly: 0,
+          resources: [],
         }
 
         expect(categoryTotals).toEqual(expectedResult)
@@ -42,9 +39,7 @@ describe('given the loadCategoryTotals function', () => {
             query: jest.fn().mockReturnValueOnce({
               fetchAll() {
                 return {
-                  resources: [
-                    { pass: 1, fail: 2, passDkimOnly: 3, passSpfOnly: 4 },
-                  ],
+                  resources: [{ pass: 1, fail: 2, passDkimOnly: 3, passSpfOnly: 4 }],
                 }
               },
             }),
@@ -59,10 +54,7 @@ describe('given the loadCategoryTotals function', () => {
         })
 
         const expectedResult = {
-          pass: 1,
-          fail: 2,
-          passDkimOnly: 3,
-          passSpfOnly: 4,
+          resources: [{ pass: 1, fail: 2, passDkimOnly: 3, passSpfOnly: 4 }],
         }
 
         expect(categoryTotals).toEqual(expectedResult)

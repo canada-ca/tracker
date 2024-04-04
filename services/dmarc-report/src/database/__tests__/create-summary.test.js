@@ -45,11 +45,13 @@ describe('given the createSummary function', () => {
       _from: org._id,
       _to: domain._id,
     })
-    loadCategoryTotals = jest.fn().mockReturnValue({ pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 })
-    loadDkimFailureTable = jest.fn().mockReturnValue([])
-    loadDmarcFailureTable = jest.fn().mockReturnValue([])
-    loadFullPassTable = jest.fn().mockReturnValue([])
-    loadSpfFailureTable = jest.fn().mockReturnValue([])
+    loadCategoryTotals = jest
+      .fn()
+      .mockReturnValue({ resources: [{ pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 }] })
+    loadDkimFailureTable = jest.fn().mockReturnValue({ resources: [] })
+    loadDmarcFailureTable = jest.fn().mockReturnValue({ resources: [] })
+    loadFullPassTable = jest.fn().mockReturnValue({ resources: [] })
+    loadSpfFailureTable = jest.fn().mockReturnValue({ resources: [] })
   })
 
   afterEach(async () => {
@@ -72,7 +74,6 @@ describe('given the createSummary function', () => {
         loadDmarcFailureTable,
         loadFullPassTable,
         loadSpfFailureTable,
-        calculatePercentages,
       })({ date: 'thirtyDays', domain: 'domain.ca' })
 
       const checkSummaryCursor = await query`FOR summary IN dmarcSummaries RETURN summary`

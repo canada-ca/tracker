@@ -39,20 +39,22 @@ describe('given the loadSpfFailureTable function', () => {
         date: '2021-01-01',
       })
 
-      const spfFailureList = [
-        {
-          sourceIpAddress: '12.34.56.78',
-          envelopeFrom: 'envelopeFrom.ca',
-          headerFrom: 'headerFrom.ca',
-          spfDomains: 'spfDomain.com',
-          spfResults: 'softfail',
-          spfAligned: false,
-          totalMessages: 294,
-          id: 1,
-          dnsHost: 'dns.ca',
-          guidance: 'agg1',
-        },
-      ]
+      const spfFailureList = {
+        resources: [
+          {
+            sourceIpAddress: '12.34.56.78',
+            envelopeFrom: 'envelopeFrom.ca',
+            headerFrom: 'headerFrom.ca',
+            spfDomains: 'spfDomain.com',
+            spfResults: 'softfail',
+            spfAligned: false,
+            totalMessages: 294,
+            id: 1,
+            dnsHost: 'dns.ca',
+            guidance: 'agg1',
+          },
+        ],
+      }
 
       expect(summary).toEqual(spfFailureList)
     })
