@@ -74,11 +74,6 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.wildcardSibling ${comparison} true
           `
-          } else if (filterValue === 'scan-pending') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER d.webScanPending ${comparison} true
-          `
           }
         }
       })
