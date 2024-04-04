@@ -3,7 +3,7 @@ import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
-import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
+import { checkSuperAdmin, superAdminRequired, userRequired, verifiedRequired } from '../../../auth'
 import { loadUserByKey } from '../../../user/loaders'
 import { loadAllOrganizationDomainStatuses } from '../../loaders'
 import dbschema from '../../../../database.json'
@@ -14,7 +14,8 @@ import frenchMessages from '../../../locale/fr/messages'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given getAllOrganizationDomainStatuses', () => {
-  let query, drop, truncate, schema, collections, orgOne, orgTwo, superAdminOrg, domainOne, domainTwo, i18n, user
+  // eslint-disable-next-line no-unused-vars
+  let query, drop, truncate, schema, collections, superAdminOrg, domainOne, domainTwo, i18n, user
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -92,59 +93,13 @@ describe('given getAllOrganizationDomainStatuses', () => {
         },
       },
     })
-    orgOne = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'definitely-treasury-board-secretariat',
-          acronym: 'NTBS',
-          name: 'Definitely Treasury Board of Canada Secretariat',
-          zone: 'NFED',
-          sector: 'NTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'definitivement-secretariat-conseil-tresor',
-          acronym: 'NPSCT',
-          name: 'Définitivement Secrétariat du Conseil du Trésor du Canada',
-          zone: 'NPFED',
-          sector: 'NPTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
-    orgTwo = await collections.organizations.save({
-      orgDetails: {
-        en: {
-          slug: 'not-treasury-board-secretariat',
-          acronym: 'NTBS',
-          name: 'Not Treasury Board of Canada Secretariat',
-          zone: 'NFED',
-          sector: 'NTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-        fr: {
-          slug: 'ne-pas-secretariat-conseil-tresor',
-          acronym: 'NPSCT',
-          name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-          zone: 'NPFED',
-          sector: 'NPTBS',
-          country: 'Canada',
-          province: 'Ontario',
-          city: 'Ottawa',
-        },
-      },
-    })
+
     domainOne = await collections.domains.save({
       domain: 'domain.one',
       status: {
         https: 'fail',
         hsts: 'pass',
+        certificates: 'pass',
         ciphers: 'pass',
         curves: 'pass',
         protocols: 'pass',
@@ -152,12 +107,16 @@ describe('given getAllOrganizationDomainStatuses', () => {
         dkim: 'pass',
         dmarc: 'pass',
       },
+      rcode: 'NOERROR',
+      blocked: false,
+      wildcardSibling: false,
     })
     domainTwo = await collections.domains.save({
       domain: 'domain.two',
       status: {
         https: 'pass',
         hsts: 'fail',
+        certificates: 'pass',
         ciphers: 'fail',
         curves: 'pass',
         protocols: 'fail',
@@ -165,14 +124,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         dkim: 'pass',
         dmarc: 'fail',
       },
-    })
-    await collections.claims.save({
-      _from: orgOne._id,
-      _to: domainOne._id,
-    })
-    await collections.claims.save({
-      _from: orgTwo._id,
-      _to: domainTwo._id,
+      rcode: 'NOERROR',
+      blocked: false,
+      wildcardSibling: false,
     })
   })
   afterEach(async () => {
@@ -192,7 +146,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
           schema,
           source: `
             query {
-              getAllOrganizationDomainStatuses
+              getAllOrganizationDomainStatuses(filters: [])
             }
           `,
           rootValue: null,
@@ -215,6 +169,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
                 }),
               }),
               verifiedRequired: verifiedRequired({}),
+              superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
@@ -231,7 +186,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
         ]
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to load all organization statuses but login is required and they are not a super admin.`,
+          `User: ${user._key} attempted to access controlled functionality without sufficient privileges.`,
         ])
       })
     })
@@ -249,7 +204,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
           schema,
           source: `
             query {
-              getAllOrganizationDomainStatuses
+              getAllOrganizationDomainStatuses(filters: [])
             }
           `,
           rootValue: null,
@@ -272,6 +227,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
                 }),
               }),
               verifiedRequired: verifiedRequired({}),
+              superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
@@ -286,9 +242,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
-"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
+            getAllOrganizationDomainStatuses: `domain,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
+"domain.one","fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
+"domain.two","pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
           },
         }
 
@@ -307,7 +263,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
           schema,
           source: `
             query {
-              getAllOrganizationDomainStatuses
+              getAllOrganizationDomainStatuses(filters: [])
             }
           `,
           rootValue: null,
@@ -330,6 +286,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
                 }),
               }),
               verifiedRequired: verifiedRequired({}),
+              superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
@@ -347,7 +304,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to load all organization statuses but login is required and they are not a super admin.`,
+          `User: ${user._key} attempted to access controlled functionality without sufficient privileges.`,
         ])
       })
     })
@@ -365,7 +322,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
           schema,
           source: `
             query {
-              getAllOrganizationDomainStatuses
+              getAllOrganizationDomainStatuses(filters: [])
             }
           `,
           rootValue: null,
@@ -388,6 +345,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
                 }),
               }),
               verifiedRequired: verifiedRequired({}),
+              superAdminRequired: superAdminRequired({ i18n }),
               loginRequiredBool: loginRequiredBool,
             },
             loaders: {
@@ -401,9 +359,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `Organization name (English),Nom de l'organisation (Français),Domain,HTTPS,HSTS,Ciphers,Curves,Protocols,SPF,DKIM,DMARC
-"Definitely Treasury Board of Canada Secretariat","Définitivement Secrétariat du Conseil du Trésor du Canada","domain.one","fail","pass","pass","pass","pass","pass","pass","pass"
-"Not Treasury Board of Canada Secretariat","Ne Pas Secrétariat du Conseil Trésor du Canada","domain.two","pass","fail","fail","pass","fail","pass","pass","fail"`,
+            getAllOrganizationDomainStatuses: `domain,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
+"domain.one","fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
+"domain.two","pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
           },
         }
         expect(response).toEqual(expectedResponse)

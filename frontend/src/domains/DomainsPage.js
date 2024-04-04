@@ -12,23 +12,19 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import {
-  PAGINATED_DOMAINS as FORWARD,
-  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
-  IS_USER_SUPER_ADMIN,
-} from '../graphql/queries'
+import { PAGINATED_DOMAINS as FORWARD, GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useUserVar } from '../utilities/userState'
 import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import withSuperAdmin from '../app/withSuperAdmin'
 
 export default function DomainsPage() {
   const { hasAffiliation } = useUserVar()
-  const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
@@ -41,6 +37,7 @@ export default function DomainsPage() {
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
     {
+      variables: { filters },
       onError(error) {
         toast({
           title: error.message,
@@ -97,6 +94,41 @@ export default function DomainsPage() {
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
   ]
+
+  const StatusExportButton = withSuperAdmin(() => {
+    return (
+      <ExportButton
+        order={{ base: 1, md: 2 }}
+        fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+        dataFunction={async () => {
+          toast({
+            title: t`Getting domain statuses`,
+            description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          const result = await getAllOrgDomainStatuses()
+          if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+            toast({
+              title: t`No data found`,
+              description: t`No data found when retrieving all domain statuses.`,
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+              position: 'top-left',
+            })
+
+            throw t`No data found`
+          }
+
+          return result.data?.getAllOrganizationDomainStatuses
+        }}
+        isLoading={allOrgDomainStatusesLoading}
+      />
+    )
+  })
 
   const domainList = loading ? (
     <LoadingMessage>
@@ -164,41 +196,7 @@ export default function DomainsPage() {
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
         </Heading>
-
-        {data?.isUserSuperAdmin && (
-          <ExportButton
-            order={{ base: 2, md: 1 }}
-            ml="auto"
-            mt={{ base: '4', md: 0 }}
-            fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
-            dataFunction={async () => {
-              toast({
-                title: t`Getting domain statuses`,
-                description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
-                status: 'info',
-                duration: 9000,
-                isClosable: true,
-                position: 'top-left',
-              })
-              const result = await getAllOrgDomainStatuses()
-              if (result.data?.getAllOrganizationDomainStatuses === undefined) {
-                toast({
-                  title: t`No data found`,
-                  description: t`No data found when retrieving all domain statuses.`,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                  position: 'top-left',
-                })
-
-                throw t`No data found`
-              }
-
-              return result.data?.getAllOrganizationDomainStatuses
-            }}
-            isLoading={allOrgDomainStatusesLoading}
-          />
-        )}
+        <StatusExportButton />
       </Flex>
 
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
