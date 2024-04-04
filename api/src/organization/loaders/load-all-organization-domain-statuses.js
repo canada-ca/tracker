@@ -5,7 +5,7 @@ export const loadAllOrganizationDomainStatuses =
   ({ query, userKey, i18n }) =>
   async ({ filters }) => {
     let domains
-    let domainFilters = aql`FILTER v.archived != true`
+    let domainFilters = aql`FILTER d.archived != true`
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -16,68 +16,68 @@ export const loadAllOrganizationDomainStatuses =
         if (filterCategory === 'dmarc-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.dmarc ${comparison} ${filterValue}
+          FILTER d.status.dmarc ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'dkim-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.dkim ${comparison} ${filterValue}
+          FILTER d.status.dkim ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'https-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.https ${comparison} ${filterValue}
+          FILTER d.status.https ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'spf-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.spf ${comparison} ${filterValue}
+          FILTER d.status.spf ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'ciphers-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.ciphers ${comparison} ${filterValue}
+          FILTER d.status.ciphers ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'curves-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.curves ${comparison} ${filterValue}
+          FILTER d.status.curves ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'hsts-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.hsts ${comparison} ${filterValue}
+          FILTER d.status.hsts ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'protocols-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.protocols ${comparison} ${filterValue}
+          FILTER d.status.protocols ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'certificates-status') {
           domainFilters = aql`
           ${domainFilters}
-          FILTER v.status.certificates ${comparison} ${filterValue}
+          FILTER d.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
           if (filterValue === 'nxdomain') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER v.rcode ${comparison} "NXDOMAIN"
+            FILTER d.rcode ${comparison} "NXDOMAIN"
           `
           } else if (filterValue === 'blocked') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER v.blocked ${comparison} true
+            FILTER d.blocked ${comparison} true
           `
           } else if (filterValue === 'wildcard-sibling') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER v.wildcardSibling ${comparison} true
+            FILTER d.wildcardSibling ${comparison} true
           `
           } else if (filterValue === 'scan-pending') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER domain.webScanPending ${comparison} true
+            FILTER d.webScanPending ${comparison} true
           `
           }
         }
@@ -91,11 +91,19 @@ export const loadAllOrganizationDomainStatuses =
           FOR d IN domains
             ${domainFilters}
             RETURN {
-              domain: d.domain,
-              status: d.status,
-              rcode: d.rcode,
-              blocked: d.blocked,
-              wildcardSibling: d.wildcardSibling,
+              "domain": d.domain,
+              "https": d.status.https,
+              "hsts": d.status.hsts,
+              "certificates": d.status.certificates,
+              "ciphers": d.status.ciphers,
+              "curves": d.status.curves,
+              "protocols": d.status.protocols,
+              "spf": d.status.spf,
+              "dkim": d.status.dkim,
+              "dmarc": d.status.dmarc,
+              "rcode": d.rcode,
+              "blocked": d.blocked,
+              "wildcardSibling": d.wildcardSibling
             }
           `
       ).all()
