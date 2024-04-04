@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: progress-report
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/progress-report:master-f556653-1711550161 # {"$imagepolicy": "flux-system:progress-report"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/progress-report:master-03a215e-1712233905 # {"$imagepolicy": "flux-system:progress-report"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -45,16 +45,6 @@ spec:
                     secretKeyRef:
                       name: api
                       key: NOTIFICATION_ORG_PROGRESS_REPORT
-                - name: SERVICE_ACCOUNT_EMAIL
-                  valueFrom:
-                    secretKeyRef:
-                      name: api
-                      key: SERVICE_ACCOUNT_EMAIL
-                - name: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
-                  valueFrom:
-                    secretKeyRef:
-                      name: api
-                      key: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
                 - name: UNCLAIMED_ORG_ID
                   valueFrom:
                     secretKeyRef:
