@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Flex, Heading, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -22,9 +22,12 @@ import { useLazyQuery, useQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useUserVar } from '../utilities/userState'
+import { DomainListFilters } from './DomainListFilters'
+import { FilterList } from './FilterList'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export default function DomainsPage() {
-  const { isLoggedIn, hasAffiliation } = useUserVar()
+  const { hasAffiliation } = useUserVar()
   const { data } = useQuery(IS_USER_SUPER_ADMIN)
   const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -33,6 +36,7 @@ export default function DomainsPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
   const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
+  const [filters, setFilters] = useState([])
 
   const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
     GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
@@ -65,6 +69,7 @@ export default function DomainsPage() {
         orderBy: { field: orderField, direction: orderDirection },
         search: debouncedSearchTerm,
         isAffiliated,
+        filters,
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first',
@@ -75,7 +80,6 @@ export default function DomainsPage() {
   if (error) return <ErrorFallbackMessage error={error} />
 
   const orderByOptions = [
-    { value: 'DOMAIN', text: t`Domain` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
     { value: 'CERTIFICATES_STATUS', text: t`Certificates Status` },
@@ -87,52 +91,71 @@ export default function DomainsPage() {
     { value: 'DMARC_STATUS', text: t`DMARC Status` },
   ]
 
+  const filterTagOptions = [
+    { value: `NXDOMAIN`, text: `NXDOMAIN` },
+    { value: `BLOCKED`, text: t`Blocked` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `SCAN_PENDING`, text: t`Scan Pending` },
+  ]
+
   const domainList = loading ? (
     <LoadingMessage>
       <Trans>Domains</Trans>
     </LoadingMessage>
   ) : (
-    <ListOf
-      elements={nodes}
-      ifEmpty={() => (
-        <Text layerStyle="loadingMessage">
-          <Trans>No Domains</Trans>
-        </Text>
-      )}
-      mb="4"
-    >
-      {(
-        {
-          id,
-          domain,
-          status,
-          hasDMARCReport,
-          archived,
-          rcode,
-          blocked,
-          wildcardSibling,
-          webScanPending,
-          userHasPermission,
-        },
-        index,
-      ) => (
-        <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
-          <DomainCard
-            id={id}
-            url={domain}
-            status={status}
-            hasDMARCReport={hasDMARCReport}
-            isArchived={archived}
-            rcode={rcode}
-            blocked={blocked}
-            wildcardSibling={wildcardSibling}
-            webScanPending={webScanPending}
-            userHasPermission={userHasPermission}
-            mb="3"
+    <Box>
+      <ABTestWrapper insiderVariantName="B">
+        <ABTestVariant name="B">
+          <DomainListFilters
+            filters={filters}
+            setFilters={setFilters}
+            statusOptions={orderByOptions}
+            filterTagOptions={filterTagOptions}
           />
-        </ErrorBoundary>
-      )}
-    </ListOf>
+        </ABTestVariant>
+      </ABTestWrapper>
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => (
+          <Text layerStyle="loadingMessage">
+            <Trans>No Domains</Trans>
+          </Text>
+        )}
+        mb="4"
+      >
+        {(
+          {
+            id,
+            domain,
+            status,
+            hasDMARCReport,
+            archived,
+            rcode,
+            blocked,
+            wildcardSibling,
+            webScanPending,
+            userHasPermission,
+          },
+          index,
+        ) => (
+          <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+            <DomainCard
+              id={id}
+              url={domain}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+              isArchived={archived}
+              rcode={rcode}
+              blocked={blocked}
+              wildcardSibling={wildcardSibling}
+              webScanPending={webScanPending}
+              userHasPermission={userHasPermission}
+              mb="3"
+            />
+          </ErrorBoundary>
+        )}
+      </ListOf>
+    </Box>
   )
 
   return (
@@ -224,18 +247,23 @@ export default function DomainsPage() {
           setOrderField={setOrderField}
           setOrderDirection={setOrderDirection}
           resetToFirstPage={resetToFirstPage}
-          orderByOptions={orderByOptions}
+          orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
         />
-        {isLoggedIn() && (
-          <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
-              <Trans>Filters:</Trans>
-            </Text>
-            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-          </Flex>
-        )}
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+          <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              <FilterList filters={filters} setFilters={setFilters} />
+            </ABTestVariant>
+          </ABTestWrapper>
+        </Flex>
+
         {domainList}
 
         <RelayPaginationControls
