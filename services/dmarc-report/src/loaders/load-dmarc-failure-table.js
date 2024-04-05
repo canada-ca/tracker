@@ -2,11 +2,11 @@ const loadDmarcFailureTable =
   ({ container }) =>
   async ({ domain, date }) => {
     // Get dmarc failure
-    const { resources } = await container.items
+    return container.items
       .query({
         query: `
           SELECT * FROM (
-            SELECT 
+            SELECT
               f.source_ip_address AS sourceIpAddress,
               f.envelope_from AS envelopeFrom,
               f.header_from AS headerFrom,
@@ -28,8 +28,6 @@ const loadDmarcFailureTable =
         ],
       })
       .fetchAll()
-
-    return resources
   }
 
 module.exports = {
