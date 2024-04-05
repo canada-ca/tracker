@@ -19,12 +19,15 @@ from sslyze.scanner.models import CipherSuitesScanAttempt, ServerScanResult
 from sslyze.server_setting import (
     ServerNetworkLocation, ServerNetworkConfiguration,
 )
+from service_identity.cryptography import verify_certificate_hostname
+from service_identity.exceptions import VerificationError, CertificateError
 
 from scan.tls_scanner.query_crlite import query_crlite
 
 logger = logging.getLogger()
 
 CONNECT_TIMEOUT = 1
+
 
 @dataclass
 class AcceptedCipherSuites:
@@ -99,9 +102,9 @@ class CertificateChainInfo:
     certificate_chain: list[CertificateInfo] = None
     passed_validation: bool = None
 
-    def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult):
+    def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult, bad_hostname: bool = None):
         cert_chain = cert_deployment.received_certificate_chain
-        self.bad_hostname = not cert_deployment.leaf_certificate_subject_matches_hostname
+        self.bad_hostname = bad_hostname
         self.must_have_staple = cert_deployment.leaf_certificate_has_must_staple_extension
         self.leaf_certificate_is_ev = cert_deployment.leaf_certificate_is_ev
         self.received_chain_contains_anchor_certificate = cert_deployment.received_chain_contains_anchor_certificate
@@ -111,7 +114,6 @@ class CertificateChainInfo:
         self.certificate_chain = [CertificateInfo(cert) for cert in cert_chain]
         self.path_validation_results = self.get_path_validation_result_info(cert_deployment.path_validation_results)
         self.passed_validation = bool(cert_deployment.received_certificate_chain)
-
 
     @staticmethod
     def get_path_validation_result_info(path_validation_results: list[PathValidationResult]) -> list[PathValidationResultInfo]:
@@ -291,7 +293,20 @@ class TLSResult:
         try:
             cert_info = scan_result.scan_result.certificate_info.result
             cert_deployment = cert_info.certificate_deployments[0]
-            return CertificateChainInfo(cert_deployment)
+            bad_hostname = None
+            try:
+                verify_certificate_hostname(cert_deployment.received_certificate_chain[0], scan_result.server_location.hostname)
+                bad_hostname = False
+            except VerificationError:
+                bad_hostname = True
+            except CertificateError as e:
+                if "Certificate does not contain any `subjectAltName`s." in str(e):
+                    bad_hostname = True
+                else:
+                    print(f"Unknown CertificateError while verifying hostname for '{str(scan_result.server_location.hostname)}': {str(e)}")
+            except Exception as e:
+                print(f"Unknown error while verifying hostname for '{str(scan_result.server_location.hostname)}': {str(e)}")
+            return CertificateChainInfo(cert_deployment=cert_deployment, bad_hostname=bad_hostname)
         except AttributeError:
             return None
 
@@ -359,7 +374,6 @@ class TLSResult:
             return supports_tls_compression
         except AttributeError:
             return None
-
 
 
 def scan_tls(domain: str, ip_address: str) -> TLSResult:
