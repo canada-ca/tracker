@@ -119,7 +119,7 @@ class CertificateChainInfo:
     def get_path_validation_result_info(path_validation_results: list[PathValidationResult]) -> list[PathValidationResultInfo]:
         results = []
         for validation_result in path_validation_results:
-            results.append(PathValidationResultInfo(openssl_error_string=validation_result.openssl_error_string,
+            results.append(PathValidationResultInfo(openssl_error_string=validation_result.validation_error,
                                                     was_validation_successful=validation_result.was_validation_successful,
                                                     trust_store=TrustStoreInfo(name=validation_result.trust_store.name,
                                                                                version=validation_result.trust_store.version)))
