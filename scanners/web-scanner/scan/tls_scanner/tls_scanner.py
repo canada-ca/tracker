@@ -55,10 +55,10 @@ class CertificateInfo:
     san_list: list[str] = None
 
     def __init__(self, cert: Certificate):
-        self.expired_cert = True if cert.not_valid_after < datetime.datetime.now() else False
+        self.expired_cert = True if cert.not_valid_after_utc < datetime.datetime.now(datetime.UTC) else False
         self.self_signed_cert = True if cert.issuer == cert.subject else False
-        self.not_valid_before = str(cert.not_valid_before)
-        self.not_valid_after = str(cert.not_valid_after)
+        self.not_valid_before = str(cert.not_valid_before_utc)
+        self.not_valid_after = str(cert.not_valid_after_utc)
         self.issuer = cert.issuer.rfc4514_string()
         self.subject = cert.subject.rfc4514_string()
         self.common_names = get_common_names(cert.subject)
