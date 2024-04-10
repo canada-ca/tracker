@@ -1,6 +1,7 @@
 import re
 from typing import Optional, Union
 from urllib.parse import urlsplit
+import urllib3
 
 import logging
 import requests
@@ -20,6 +21,8 @@ TIMEOUT_ERROR = "TIMEOUT_ERROR"
 UNKNOWN_ERROR = "UNKNOWN_ERROR"
 
 DEFAULT_REQUEST_HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0"}
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 @dataclass
