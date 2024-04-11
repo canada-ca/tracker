@@ -403,7 +403,7 @@ def process_results(results):
     ):
         phase = "assess"
 
-        if dkim_status and spf_status:
+        if dkim_status in ["info", "pass"] and spf_status == "pass":
             phase = "deploy"
 
             if any(tag in all_dmarc_tags for tag in ["dmarc5", "dmarc6"]):
