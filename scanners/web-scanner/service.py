@@ -24,6 +24,13 @@ SERVER_LIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVER_LIST.split(",")
 
 
+def scan_web_and_catch(domain, ip_address):
+    try:
+        return scan_web(domain=domain, ip_address=ip_address)
+    except Exception as e:
+        logger.error(f"Error scanning '{domain}' at IP address '{ip_address}': {str(e)}")
+
+
 def process_results(results):
     # report = {}
     #
@@ -100,7 +107,7 @@ async def scan_service():
             logger.info(f"Starting web scan on '{domain}' at IP address '{ip_address}'")
             with ProcessPoolExecutor(max_workers=1) as executor:
                 scan_results = await loop.run_in_executor(
-                    executor, functools.partial(scan_web, domain=domain, ip_address=ip_address)
+                    executor, functools.partial(scan_web_and_catch, domain=domain, ip_address=ip_address)
                 )
 
         except TimeoutError:
