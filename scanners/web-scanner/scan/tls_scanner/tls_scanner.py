@@ -227,11 +227,14 @@ class TLSResult:
         self.supports_fallback_scsv = self.get_supports_fallback_scsv(scan_results)
         self.supports_tls_compression = self.get_supports_tls_compression(scan_results)
 
-        scan_results_as_dict = json.loads(ServerScanResultAsJson.from_orm(scan_results).json())
-
         if scan_results.connectivity_error_trace:
-            logger.info(
-                f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}': {json.dumps(scan_results_as_dict)}")
+            connectivity_error_log = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
+            try:
+                scan_results_as_dict = json.loads(ServerScanResultAsJson.from_orm(scan_results).json())
+                logging.info(f"{connectivity_error_log}: {json.dumps(scan_results_as_dict)}")
+            except Exception:
+                tls_result_string = f"Error converting scan results to JSON - using TLSResult object instead: {self.asdict()}"
+                logging.error(f"{connectivity_error_log}: {tls_result_string}")
             self.error = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
             return
 
