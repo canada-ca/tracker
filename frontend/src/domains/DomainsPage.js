@@ -24,7 +24,7 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
 
 export default function DomainsPage() {
-  const { hasAffiliation } = useUserVar()
+  const { hasAffiliation, isLoggedIn } = useUserVar()
   const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
@@ -249,18 +249,20 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
         />
-        <Flex align="center" mb="2">
-          <Text mr="2" fontWeight="bold" fontSize="lg">
-            <Trans>Filters:</Trans>
-          </Text>
-          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-          <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
-          <ABTestWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <FilterList filters={filters} setFilters={setFilters} />
-            </ABTestVariant>
-          </ABTestWrapper>
-        </Flex>
+        {isLoggedIn() && (
+          <Flex align="center" mb="2">
+            <Text mr="2" fontWeight="bold" fontSize="lg">
+              <Trans>Filters:</Trans>
+            </Text>
+            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+            <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <FilterList filters={filters} setFilters={setFilters} />
+              </ABTestVariant>
+            </ABTestWrapper>
+          </Flex>
+        )}
 
         {domainList}
 
