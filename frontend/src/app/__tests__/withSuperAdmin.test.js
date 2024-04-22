@@ -6,6 +6,8 @@ import { IS_USER_SUPER_ADMIN } from '../../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { en } from 'make-plural/plurals'
+import { UserVarProvider } from '../../utilities/userState'
+import { makeVar } from '@apollo/client'
 
 // Mock component to wrap with the HOC
 const MockComponent = () => <div>Mock Component</div>
@@ -50,7 +52,9 @@ describe('withSuperAdmin', () => {
     const { findByText } = render(
       <MockedProvider mocks={[mocks[0]]} addTypename={false}>
         <I18nProvider i18n={i18n}>
-          <SuperAdminComponent />
+          <UserVarProvider userVar={makeVar({ jwt: 'jwt', tfaSendMethod: 'email', userName: 'test.user@gc.ca' })}>
+            <SuperAdminComponent />
+          </UserVarProvider>
         </I18nProvider>
       </MockedProvider>,
     )
