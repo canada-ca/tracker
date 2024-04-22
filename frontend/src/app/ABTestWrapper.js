@@ -7,12 +7,14 @@ export function ABTestVariant({ children }) {
 }
 
 export function ABTestWrapper({ children, insiderVariantName = 'B' }) {
-  const { currentUser } = useUserVar()
+  const {
+    currentUser: { insideUser },
+  } = useUserVar()
   let childIndex = 0
 
   // only one variant
   if (!children.length) {
-    if (currentUser?.insideUser) {
+    if (insideUser) {
       if (children.props.name === insiderVariantName) return <>{children}</>
       else return <></>
     } else {
@@ -21,7 +23,7 @@ export function ABTestWrapper({ children, insiderVariantName = 'B' }) {
     }
   }
   // A + B variants
-  if (currentUser?.insideUser) {
+  if (insideUser) {
     childIndex = children.findIndex((variant) => variant.props.name === insiderVariantName)
   } else {
     childIndex = children.findIndex((variant) => variant.props.name !== insiderVariantName)
