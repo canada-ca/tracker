@@ -394,17 +394,17 @@ def process_results(results):
         all_dmarc_tags = None
 
     # Check DMARC phase (https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna)
-    phase = "not implemented"
+    phase = "assess"
 
     rua_addresses = dmarc.get("tags", {}).get("rua", {}).get("value", [])
     if (
         any(tag in all_dmarc_tags for tag in ["dmarc4", "dmarc5", "dmarc6"])
         and len(rua_addresses) > 0
     ):
-        phase = "assess"
+        phase = "deploy"
 
         if dkim_status in ["info", "pass"] and spf_status == "pass":
-            phase = "deploy"
+            phase = "enforce"
 
             if any(tag in all_dmarc_tags for tag in ["dmarc5", "dmarc6"]):
                 phase = "maintain"
