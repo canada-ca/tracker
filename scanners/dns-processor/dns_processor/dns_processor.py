@@ -406,7 +406,10 @@ def process_results(results):
         if dkim_status in ["info", "pass"] and spf_status == "pass":
             phase = "enforce"
 
-            if any(tag in all_dmarc_tags for tag in ["dmarc5", "dmarc6"]):
+            if (
+                any(tag in all_dmarc_tags for tag in ["dmarc6"])
+                and "dmarc20" in all_dmarc_tags
+            ):
                 phase = "maintain"
 
     dmarc_results = {
