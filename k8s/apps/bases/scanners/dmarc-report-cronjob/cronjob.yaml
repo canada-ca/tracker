@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: dmarc-report
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:master-ab645b1-1712319272 # {"$imagepolicy": "flux-system:dmarc-report"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:master-f404c8c-1714065042 # {"$imagepolicy": "flux-system:dmarc-report"}
               env:
                 - name: DB_NAME
                   valueFrom:
