@@ -168,6 +168,7 @@ def process_tls_results(tls_results):
         if len(accepted_cipher_suites[suite_list]) > 0:
             protocol_status = "fail"
             negative_tags.append("ssl18")
+            break
     if protocol_status == "pass":
         positive_tags.append("ssl18")
 
