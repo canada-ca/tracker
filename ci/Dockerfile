@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # Python, don't write bytecode!
 ENV PYTHONDONTWRITEBYTECODE 1
