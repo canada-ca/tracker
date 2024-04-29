@@ -65,7 +65,9 @@ def process_tls_results(tls_results):
                 strength = "weak"
                 negative_tags.append("ssl6")
 
-            accepted_cipher_suites[protocol].append({"name": cipher_suite, "strength": strength})
+            accepted_cipher_suites[protocol].append(
+                {"name": cipher_suite, "strength": strength}
+            )
 
     weak_curve = False
     for curve in tls_results["accepted_elliptic_curves"]:
@@ -84,33 +86,45 @@ def process_tls_results(tls_results):
         accepted_elliptic_curves.append({"name": curve, "strength": strength})
 
     try:
-        signature_algorithm = tls_results["certificate_chain_info"]["certificate_chain"][0][
-            "signature_hash_algorithm"]
+        signature_algorithm = tls_results["certificate_chain_info"][
+            "certificate_chain"
+        ][0]["signature_hash_algorithm"]
     except ValueError:
         signature_algorithm = None
     except TypeError:
         signature_algorithm = None
 
     try:
-        if tls_results["certificate_chain_info"]["certificate_chain"][0]["expired_cert"]:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0][
+            "expired_cert"
+        ]:
             negative_tags.append("ssl10")
     except TypeError:
         pass
 
     try:
-        if tls_results["certificate_chain_info"]["certificate_chain"][0]["self_signed_cert"]:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0][
+            "self_signed_cert"
+        ]:
             negative_tags.append("ssl11")
     except TypeError:
         pass
 
     try:
-        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked"]:
+        if tls_results["certificate_chain_info"]["certificate_chain"][0][
+            "cert_revoked"
+        ]:
             negative_tags.append("ssl12")
     except TypeError:
         pass
 
     try:
-        if tls_results["certificate_chain_info"]["certificate_chain"][0]["cert_revoked_status"] is None:
+        if (
+            tls_results["certificate_chain_info"]["certificate_chain"][0][
+                "cert_revoked_status"
+            ]
+            is None
+        ):
             neutral_tags.append("ssl13")
     except TypeError:
         pass
@@ -152,11 +166,14 @@ def process_tls_results(tls_results):
         "ssl_2_0_cipher_suites",
         "ssl_3_0_cipher_suites",
         "tls_1_0_cipher_suites",
-        "tls_1_1_cipher_suites"
+        "tls_1_1_cipher_suites",
     ]
 
     # certificate status
-    if any(tag in negative_tags for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16"]):
+    if any(
+        tag in negative_tags
+        for tag in ["ssl5", "ssl10", "ssl11", "ssl12", "ssl15", "ssl16"]
+    ):
         certificate_status = "fail"
     else:
         certificate_status = "pass"
@@ -167,7 +184,8 @@ def process_tls_results(tls_results):
     for suite_list in unaccepted_tls_protocols:
         if len(accepted_cipher_suites[suite_list]) > 0:
             protocol_status = "fail"
-            negative_tags.append("ssl18")
+            negative_tags.append("ssl24")
+            break
     if protocol_status == "pass":
         positive_tags.append("ssl18")
 
@@ -200,7 +218,7 @@ def process_tls_results(tls_results):
         "protocol_status": protocol_status,
         "cipher_status": cipher_status,
         "curve_status": curve_status,
-        "certificate_status": certificate_status
+        "certificate_status": certificate_status,
     }
 
     return processed_tags
@@ -247,7 +265,9 @@ def process_connection_results(connection_results):
         http_eventually_upgrades = None
         try:
             # find index of first https upgrade
-            first_https_index = list(conn["scheme"] == "https" for conn in http_connections).index(True)
+            first_https_index = list(
+                conn["scheme"] == "https" for conn in http_connections
+            ).index(True)
 
             # check if HTTP connection is immediately upgraded (redirected) to HTTPS
             if first_https_index == 1:
@@ -265,7 +285,7 @@ def process_connection_results(connection_results):
         redirect_url = http_connections[0]["connection"]["redirect_to"]
         if redirect_url is not None:
             parsed_url = urlparse(redirect_url)
-            redirect_url = f'{parsed_url.scheme}://{parsed_url.hostname}'
+            redirect_url = f"{parsed_url.scheme}://{parsed_url.hostname}"
             if redirect_url != f'https://{connection_results["domain"]}':
                 negative_tags.append("https14")
         else:
@@ -293,7 +313,9 @@ def process_connection_results(connection_results):
             include_subdomains = False
             preload = False
 
-            directives = [directive.strip() for directive in hsts.split(";") if len(directive) > 0]
+            directives = [
+                directive.strip() for directive in hsts.split(";") if len(directive) > 0
+            ]
 
             for directive in directives:
                 match directive:
@@ -307,10 +329,15 @@ def process_connection_results(connection_results):
             hsts_parsed = {
                 "max_age": max_age,
                 "include_subdomains": include_subdomains,
-                "preload": preload
+                "preload": preload,
             }
 
-            if hsts and isinstance(max_age, int) and max_age > 0 and "https14" not in negative_tags:
+            if (
+                hsts
+                and isinstance(max_age, int)
+                and max_age > 0
+                and "https14" not in negative_tags
+            ):
                 hsts_status = "pass"
             else:
                 hsts_status = "fail"
@@ -324,10 +351,19 @@ def process_connection_results(connection_results):
     if http_live and not https_live:
         negative_tags.append("https6")
 
-    if https_live and http_live and not (http_immediately_upgrades or http_eventually_upgrades):
+    if (
+        https_live
+        and http_live
+        and not (http_immediately_upgrades or http_eventually_upgrades)
+    ):
         negative_tags.append("https7")
 
-    if https_live and http_live and not http_immediately_upgrades and http_eventually_upgrades:
+    if (
+        https_live
+        and http_live
+        and not http_immediately_upgrades
+        and http_eventually_upgrades
+    ):
         negative_tags.append("https8")
 
     if https_live and not hsts:
@@ -358,19 +394,19 @@ def process_connection_results(connection_results):
 
     # merge results
     processed_connection_results = {
-                                       "neutral_tags": neutral_tags,
-                                       "positive_tags": positive_tags,
-                                       "negative_tags": negative_tags,
-                                       "hsts_status": hsts_status,
-                                       "https_status": https_status,
-                                       "http_live": http_live,
-                                       "https_live": https_live,
-                                       "http_immediately_upgrades": http_immediately_upgrades,
-                                       "http_eventually_upgrades": http_eventually_upgrades,
-                                       "https_immediately_downgrades": https_immediately_downgrades,
-                                       "https_eventually_downgrades": https_eventually_downgrades,
-                                       "hsts_parsed": hsts_parsed
-                                   } | connection_results
+        "neutral_tags": neutral_tags,
+        "positive_tags": positive_tags,
+        "negative_tags": negative_tags,
+        "hsts_status": hsts_status,
+        "https_status": https_status,
+        "http_live": http_live,
+        "https_live": https_live,
+        "http_immediately_upgrades": http_immediately_upgrades,
+        "http_eventually_upgrades": http_eventually_upgrades,
+        "https_immediately_downgrades": https_immediately_downgrades,
+        "https_eventually_downgrades": https_eventually_downgrades,
+        "hsts_parsed": hsts_parsed,
+    } | connection_results
 
     return processed_connection_results
 
@@ -383,9 +419,15 @@ def process_results(results):
         "ip_address": results["tls_result"]["request_ip_address"],
         "server_location": results["tls_result"]["server_location"],
         "certificate_chain_info": results["tls_result"]["certificate_chain_info"],
-        "supports_ecdh_key_exchange": results["tls_result"].get("supports_ecdh_key_exchange", None),
-        "heartbleed_vulnerable": results["tls_result"].get("is_vulnerable_to_heartbleed", None),
-        "ccs_injection_vulnerable": results["tls_result"].get("is_vulnerable_to_ccs_injection", None),
+        "supports_ecdh_key_exchange": results["tls_result"].get(
+            "supports_ecdh_key_exchange", None
+        ),
+        "heartbleed_vulnerable": results["tls_result"].get(
+            "is_vulnerable_to_heartbleed", None
+        ),
+        "ccs_injection_vulnerable": results["tls_result"].get(
+            "is_vulnerable_to_ccs_injection", None
+        ),
         "robot_vulnerable": results["tls_result"].get("is_vulnerable_to_robot", None),
         "accepted_cipher_suites": processed_tls_results["accepted_cipher_suites"],
         "accepted_elliptic_curves": processed_tls_results["accepted_elliptic_curves"],
@@ -396,11 +438,15 @@ def process_results(results):
         "certificate_status": processed_tls_results["certificate_status"],
         "protocol_status": processed_tls_results["protocol_status"],
         "cipher_status": processed_tls_results["cipher_status"],
-        "curve_status": processed_tls_results["curve_status"]
+        "curve_status": processed_tls_results["curve_status"],
     }
 
     processed_connection_results = process_connection_results(results["chain_result"])
 
     timestamp = results.get("timestamp")
 
-    return {"tls_result": tls_result, "connection_results": processed_connection_results, "timestamp": timestamp}
+    return {
+        "tls_result": tls_result,
+        "connection_results": processed_connection_results,
+        "timestamp": timestamp,
+    }
