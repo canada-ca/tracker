@@ -41,7 +41,7 @@ export function DomainCard({
 }) {
   const location = useLocation()
   const toast = useToast()
-  const { isLoggedIn, isEmailValidated } = useUserVar()
+  const { isLoggedIn, isEmailValidated, hasAffiliation } = useUserVar()
 
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
@@ -208,38 +208,40 @@ export function DomainCard({
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
 
-        <Stack
-          fontSize="sm"
-          justifySelf="flex-end"
-          alignSelf="stretch"
-          justifyContent="center"
-          ml={{ base: 0, md: '4' }}
-        >
-          <Button
-            variant="primary"
-            as={RouteLink}
-            to={{
-              pathname: isLoggedIn() ? `/domains/${url}` : '/sign-in',
-              state: { from: location.pathname },
-            }}
-            px="10"
+        {hasAffiliation() && (
+          <Stack
+            fontSize="sm"
+            justifySelf="flex-end"
+            alignSelf="stretch"
+            justifyContent="center"
+            ml={{ base: 0, md: '4' }}
           >
-            <Text whiteSpace="noWrap">
-              <Trans>View Results</Trans>
-            </Text>
-          </Button>
-          {hasDMARCReport && (
             <Button
               variant="primary"
               as={RouteLink}
-              to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+              to={{
+                pathname: isLoggedIn() ? `/domains/${url}` : '/sign-in',
+                state: { from: location.pathname },
+              }}
+              px="10"
             >
               <Text whiteSpace="noWrap">
-                <Trans>DMARC Report</Trans>
+                <Trans>View Results</Trans>
               </Text>
             </Button>
-          )}
-        </Stack>
+            {hasDMARCReport && (
+              <Button
+                variant="primary"
+                as={RouteLink}
+                to={`/domains/${url}/dmarc-report/LAST30DAYS/${new Date().getFullYear()}`}
+              >
+                <Text whiteSpace="noWrap">
+                  <Trans>DMARC Report</Trans>
+                </Text>
+              </Button>
+            )}
+          </Stack>
+        )}
         <Stack ml={4}>
           {isEmailValidated() && userHasPermission && <ScanDomainButton domainUrl={url} />}
           {isLoggedIn() &&

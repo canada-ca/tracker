@@ -293,6 +293,7 @@ describe('<DomainsPage />', () => {
                 jwt: null,
                 tfaSendMethod: null,
                 userName: null,
+                affiliations: { totalCount: 1 },
               })}
             >
               <ChakraProvider theme={theme}>
@@ -326,6 +327,7 @@ describe('<DomainsPage />', () => {
               userVar={makeVar({
                 userName: 'testUser@test.com',
                 emailValidated: true,
+                affiliations: { totalCount: 1 },
               })}
             >
               <ChakraProvider theme={theme}>
