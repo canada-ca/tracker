@@ -10,7 +10,7 @@ guidance_file = open(f"{current_directory}/tls-guidance.json")
 guidance = json.load(guidance_file)
 
 
-def process_tls_results(tls_results):
+def process_tls_results(tls_results, web_server_present):
     neutral_tags = []
     positive_tags = []
     negative_tags = []
@@ -207,6 +207,15 @@ def process_tls_results(tls_results):
         ssl_status = "pass"
     else:
         ssl_status = "fail"
+
+    # if endpoint is live and no certificate detected, set status to fail
+    if ssl_status == "info" and web_server_present:
+        ssl_status = "fail"
+        certificate_status = "fail"
+        protocol_status = "fail"
+        cipher_status = "fail"
+        curve_status = "fail"
+        negative_tags.append("ssl2")
 
     processed_tags = {
         "neutral_tags": neutral_tags,
@@ -412,7 +421,15 @@ def process_connection_results(connection_results):
 
 
 def process_results(results):
-    processed_tls_results = process_tls_results(results["tls_result"])
+    processed_connection_results = process_connection_results(results["chain_result"])
+
+    web_server_present = processed_connection_results.get(
+        "http_live", False
+    ) or processed_connection_results.get("https_live", False)
+
+    processed_tls_results = process_tls_results(
+        results["tls_result"], web_server_present
+    )
 
     tls_result = {
         "domain": results["tls_result"]["request_domain"],
@@ -440,8 +457,6 @@ def process_results(results):
         "cipher_status": processed_tls_results["cipher_status"],
         "curve_status": processed_tls_results["curve_status"],
     }
-
-    processed_connection_results = process_connection_results(results["chain_result"])
 
     timestamp = results.get("timestamp")
 
