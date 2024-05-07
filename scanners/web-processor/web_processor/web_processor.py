@@ -26,7 +26,7 @@ def process_tls_results(tls_results, web_server_present):
     if tls_results.get("error"):
         # if endpoint is live and no certificate detected, set status to fail
         if (
-            tls_results.get("scan_status", None) == "NO_NETWORK_CONNECTIVITY"
+            tls_results.get("scan_status", None) == "ERROR_NO_CONNECTIVITY"
             and web_server_present
         ):
             ssl_status = "fail"
