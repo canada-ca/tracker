@@ -24,6 +24,18 @@ def process_tls_results(tls_results, web_server_present):
     curve_status = "info"
 
     if tls_results.get("error"):
+        # if endpoint is live and no certificate detected, set status to fail
+        if (
+            tls_results.get("scan_status", None) == "NO_NETWORK_CONNECTIVITY"
+            and web_server_present
+        ):
+            ssl_status = "fail"
+            certificate_status = "fail"
+            protocol_status = "fail"
+            cipher_status = "fail"
+            curve_status = "fail"
+            negative_tags.append("ssl2")
+
         processed_tags = {
             "neutral_tags": neutral_tags,
             "positive_tags": positive_tags,
@@ -207,15 +219,6 @@ def process_tls_results(tls_results, web_server_present):
         ssl_status = "pass"
     else:
         ssl_status = "fail"
-
-    # if endpoint is live and no certificate detected, set status to fail
-    if ssl_status == "info" and web_server_present:
-        ssl_status = "fail"
-        certificate_status = "fail"
-        protocol_status = "fail"
-        cipher_status = "fail"
-        curve_status = "fail"
-        negative_tags.append("ssl2")
 
     processed_tags = {
         "neutral_tags": neutral_tags,
