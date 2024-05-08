@@ -1,16 +1,17 @@
 import base64
+import json
 import logging
 import os
-import json
-import time
 import shutil
+import time
 
 import dkim
 import dns
 import nacl
 import tldextract
-from checkdmarc import check_domains, DNSException, SPFError, DMARCError, \
-    parse_dmarc_report_uri
+from checkdmarc import DNSException, check_ns, check_mx, get_base_domain
+from checkdmarc.dmarc import DMARCError, parse_dmarc_report_uri, check_dmarc
+from checkdmarc.spf import SPFError, check_spf
 from dkim import dnsplug, crypto, KeyFormatError, UnparsableKeyError
 from dkim.util import InvalidTagValueList
 from dns import resolver
@@ -70,7 +71,16 @@ class DMARCScanner:
 
         try:
             # Perform "checkdmarc" scan on provided domain.
-            scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True, timeout=5.0)))
+            # scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True, timeout=5.0)))
+            scan_result = {
+                "domain": self.domain,
+                "base_domain": get_base_domain(self.domain),
+                "ns": check_ns(self.domain),
+                "mx": check_mx(self.domain, skip_tls=True),
+                "spf": check_spf(self.domain),
+                "dmarc": check_dmarc(self.domain, ignore_unrelated_records=True)
+            }
+
         except (DNSException, SPFError, DMARCError) as e:
             logging.error(f"Failed to check the given domains for DMARC/SPF records. ({e})")
             return {
