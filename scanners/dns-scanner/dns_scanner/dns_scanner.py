@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 import time
 import re
+import os
+import logging
 
 import dns.resolver
-from checkdmarc import *
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers
 from dns.exception import Timeout
 
