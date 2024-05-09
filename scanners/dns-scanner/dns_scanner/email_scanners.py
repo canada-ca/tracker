@@ -71,14 +71,14 @@ class DMARCScanner:
 
         try:
             # Perform "checkdmarc" scan on provided domain.
-            scan_result = {
+            scan_result = json.loads(json.dumps({
                 "domain": self.domain,
                 "base_domain": get_base_domain(self.domain),
                 "ns": check_ns(self.domain),
                 "mx": check_mx(self.domain, skip_tls=True),
                 "spf": check_spf(self.domain),
                 "dmarc": check_dmarc(self.domain, ignore_unrelated_records=True)
-            }
+            }))
 
         except (DNSException, SPFError, DMARCError) as e:
             logging.error(f"Failed to check the given domains for DMARC/SPF records. ({e})")
