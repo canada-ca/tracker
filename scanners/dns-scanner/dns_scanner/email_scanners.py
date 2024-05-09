@@ -71,7 +71,6 @@ class DMARCScanner:
 
         try:
             # Perform "checkdmarc" scan on provided domain.
-            # scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True, timeout=5.0)))
             scan_result = {
                 "domain": self.domain,
                 "base_domain": get_base_domain(self.domain),
