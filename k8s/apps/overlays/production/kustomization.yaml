@@ -26,6 +26,6 @@ replicas:
   - name: dns-scanner
     count: 6
   - name: web-scanner
-    count: 13
+    count: 20
 components:
 #  - ../../bases/frontend/maintenance-override-component
