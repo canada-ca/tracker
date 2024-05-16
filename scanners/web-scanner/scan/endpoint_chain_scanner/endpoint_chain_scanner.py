@@ -12,7 +12,7 @@ from dataclasses import dataclass, field, asdict
 logger = logging.getLogger(__name__)
 
 # Set the default timeout for requests (connect, read)
-TIMEOUT = (1.0, 10)
+TIMEOUT = (2.0, 10)
 
 CONNECTION_ERROR = "CONNECTION_ERROR"
 CONNECTION_TIMEOUT_ERROR = "CONNECTION_TIMEOUT_ERROR"
