@@ -26,7 +26,7 @@ from scan.tls_scanner.query_crlite import query_crlite
 
 logger = logging.getLogger()
 
-CONNECT_TIMEOUT = 10
+CONNECT_TIMEOUT = 2
 
 
 @dataclass
