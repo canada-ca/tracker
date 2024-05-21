@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 
-export const loadVerifiedRuaDomains =
+export const loadAllVerifiedRuaDomains =
   ({ query, userKey, i18n }) =>
   async () => {
     let verifiedRuaDomains
