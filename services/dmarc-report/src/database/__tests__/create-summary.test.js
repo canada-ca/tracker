@@ -1,25 +1,12 @@
 const { dbNameFromFile } = require('arango-tools')
 
 const { createSummary } = require('../create-summary')
-const { calculatePercentages } = require('../../utils')
 const { arangoConnection } = require('../index')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the createSummary function', () => {
-  let query,
-    truncate,
-    collections,
-    transaction,
-    dbName,
-    arangoDB,
-    domain,
-    org,
-    loadCategoryTotals,
-    loadDkimFailureTable,
-    loadDmarcFailureTable,
-    loadFullPassTable,
-    loadSpfFailureTable
+  let query, truncate, collections, transaction, dbName, arangoDB, domain, org
 
   beforeAll(async () => {
     dbName = dbNameFromFile(__filename)
@@ -65,16 +52,19 @@ describe('given the createSummary function', () => {
 
   describe('date is thirtyDays', () => {
     it('inserts the summary into arango', async () => {
+      const tableData = {
+        categoryTotals: { pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        categoryPercentages: {
+          totalMessages: 0,
+          categoryPercentages: { fail: 0, pass: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        },
+        detailTables: { dkimFailure: [], dmarcFailure: [], fullPass: [], spfFailure: [] },
+      }
       await createSummary({
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-      })({ date: 'thirtyDays', domain: 'domain.ca' })
+      })({ date: 'thirtyDays', domain: 'domain.ca', ...tableData })
 
       const checkSummaryCursor = await query`FOR summary IN dmarcSummaries RETURN summary`
 
@@ -114,12 +104,6 @@ describe('given the createSummary function', () => {
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        calculatePercentages,
       })({ date: 'thirtyDays', domain: 'domain.ca' })
 
       const checkSummaryEdgeCursor = await query`FOR edge IN domainsToDmarcSummaries RETURN edge`
@@ -146,17 +130,19 @@ describe('given the createSummary function', () => {
   })
   describe('date is not thirtyDays', () => {
     it('inserts the summary into arango', async () => {
+      const tableData = {
+        categoryTotals: { pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        categoryPercentages: {
+          totalMessages: 0,
+          categoryPercentages: { fail: 0, pass: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        },
+        detailTables: { dkimFailure: [], dmarcFailure: [], fullPass: [], spfFailure: [] },
+      }
       await createSummary({
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        calculatePercentages,
-      })({ date: '2021-01-01', domain: 'domain.ca' })
+      })({ date: '2021-01-01', domain: 'domain.ca', ...tableData })
 
       const checkSummaryCursor = await query`FOR summary IN dmarcSummaries RETURN summary`
 
@@ -192,17 +178,19 @@ describe('given the createSummary function', () => {
       expect(checkSummary).toEqual(expectedResult)
     })
     it('inserts the edge into arango', async () => {
+      const tableData = {
+        categoryTotals: { pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        categoryPercentages: {
+          totalMessages: 0,
+          categoryPercentages: { fail: 0, pass: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        },
+        detailTables: { dkimFailure: [], dmarcFailure: [], fullPass: [], spfFailure: [] },
+      }
       await createSummary({
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        calculatePercentages,
-      })({ date: '2021-01-01', domain: 'domain.ca' })
+      })({ date: '2021-01-01', domain: 'domain.ca', ...tableData })
 
       const checkSummaryEdgeCursor = await query`FOR edge IN domainsToDmarcSummaries RETURN edge`
 

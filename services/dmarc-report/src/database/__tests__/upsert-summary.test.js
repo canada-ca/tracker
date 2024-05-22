@@ -3,6 +3,7 @@ const { calculatePercentages } = require('../../utils')
 const { upsertSummary } = require('../upsert-summary')
 const { arangoConnection } = require('../index')
 const { dbNameFromFile } = require('arango-tools')
+const { loadTables } = require('../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -32,9 +33,14 @@ describe('given the upsertSummary function', () => {
   })
 
   beforeEach(async () => {
-    domain = await collections.domains.save({
-      domain: 'domain.ca',
-    })
+    domain = (
+      await collections.domains.save(
+        {
+          domain: 'domain.ca',
+        },
+        { returnNew: true },
+      )
+    ).new
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -97,17 +103,28 @@ describe('given the upsertSummary function', () => {
 
   describe('date is thirtyDays', () => {
     it('upserts the given summary', async () => {
-      await upsertSummary({
-        transaction,
-        collections,
-        query,
+      const tableData = await loadTables({
         loadCategoryTotals,
         loadDkimFailureTable,
         loadDmarcFailureTable,
         loadFullPassTable,
         loadSpfFailureTable,
-        calculatePercentages,
-      })({ date: 'thirtyDays', domain: 'domain.ca' })
+      })({
+        domain: domain.domain,
+        date: 'thirtyDays',
+      })
+
+      await upsertSummary({
+        transaction,
+        collections,
+        query,
+      })({
+        date: 'thirtyDays',
+        domain: 'domain.ca',
+        categoryTotals: tableData.categoryTotals,
+        categoryPercentages: tableData.categoryPercentages,
+        detailTables: tableData.detailTables,
+      })
 
       const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
       const checkSummary = await summaryCursor.next()
@@ -142,17 +159,28 @@ describe('given the upsertSummary function', () => {
   })
   describe('date is not thirtyDays', () => {
     it('upserts the given summary', async () => {
-      await upsertSummary({
-        transaction,
-        collections,
-        query,
+      const tableData = await loadTables({
         loadCategoryTotals,
         loadDkimFailureTable,
         loadDmarcFailureTable,
         loadFullPassTable,
         loadSpfFailureTable,
-        calculatePercentages,
-      })({ date: '2021-01-01', domain: 'domain.ca' })
+      })({
+        domain: domain.domain,
+        date: '2021-01-01',
+      })
+
+      await upsertSummary({
+        transaction,
+        collections,
+        query,
+      })({
+        date: '2021-01-01',
+        domain: 'domain.ca',
+        categoryTotals: tableData.categoryTotals,
+        categoryPercentages: tableData.categoryPercentages,
+        detailTables: tableData.detailTables,
+      })
 
       const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
       const checkSummary = await summaryCursor.next()

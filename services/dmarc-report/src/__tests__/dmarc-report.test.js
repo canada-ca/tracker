@@ -1,6 +1,5 @@
 const { createOwnership, createSummary, removeSummary, upsertSummary, arangoConnection } = require('../database')
 const { loadArangoDates } = require('../loaders')
-const { calculatePercentages } = require('../utils')
 
 const { dmarcReport } = require('../dmarc-report')
 const { dbNameFromFile } = require('arango-tools')
@@ -64,6 +63,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: jest.fn().mockReturnValue([]),
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       expect(consoleOutput[0]).toEqual('Org: ECR cannot be found in datastore')
@@ -85,6 +109,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: jest.fn().mockReturnValue([]),
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       expect(consoleOutput[1]).toEqual('\tdomain.ca cannot be found in the datastore')
@@ -106,6 +155,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN ownership RETURN item`
@@ -149,6 +223,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN ownership FILTER item._from == ${org2._id} RETURN item`
@@ -172,6 +271,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN ownership RETURN item`
@@ -211,6 +335,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: jest.fn().mockReturnValue('2021-01-01'),
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       expect(consoleOutput[2]).toEqual('\t\tOwnership of domain.ca is already assigned to ACR')
@@ -247,6 +396,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN domainsToDmarcSummaries FILTER item._to == ${summary._id} RETURN item`
@@ -270,6 +444,31 @@ describe('given the dmarcReport function', () => {
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN dmarcSummaries RETURN item`
@@ -308,14 +507,39 @@ describe('given the dmarcReport function', () => {
               },
             ],
           }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [] }),
+          loadDkimFailure: jest.fn().mockReturnValue({ resources: [] }),
+          loadDmarcFailure: jest.fn().mockReturnValue({ resources: [] }),
+          loadFullPass: jest.fn().mockReturnValue({ resources: [] }),
+          loadSpfFailure: jest.fn().mockReturnValue({ resources: [] }),
         }),
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN domainsToDmarcSummaries RETURN item`
@@ -348,25 +572,35 @@ describe('given the dmarcReport function', () => {
           transaction,
           collections,
           query,
-          loadCategoryTotals: jest.fn().mockReturnValue({
-            resources: [
-              {
-                pass: 0,
-                fail: 0,
-                passDkimOnly: 0,
-                passSpfOnly: 0,
-              },
-            ],
-          }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          calculatePercentages,
         }),
         upsertSummary: jest.fn().mockReturnValue([]),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN dmarcSummaries RETURN item`
@@ -451,24 +685,34 @@ describe('given the dmarcReport function', () => {
           transaction,
           collections,
           query,
-          loadCategoryTotals: jest.fn().mockReturnValue({
-            resources: [
-              {
-                pass: 1,
-                fail: 1,
-                passDkimOnly: 1,
-                passSpfOnly: 1,
-              },
-            ],
-          }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          calculatePercentages,
         }),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 1,
+            fail: 1,
+            passDkimOnly: 1,
+            passSpfOnly: 1,
+          },
+          categoryPercentages: {
+            totalMessages: 4,
+            categoryPercentages: {
+              pass: 25,
+              fail: 25,
+              passDkimOnly: 25,
+              passSpfOnly: 25,
+            },
+          },
+          detailTables: {
+            dkimFailure: [{ key: 'value' }],
+            dmarcFailure: [{ key: 'value' }],
+            fullPass: [{ key: 'value' }],
+            spfFailure: [{ key: 'value' }],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN dmarcSummaries RETURN item`
@@ -552,44 +796,39 @@ describe('given the dmarcReport function', () => {
           transaction,
           collections,
           query,
-          loadCategoryTotals: jest.fn().mockReturnValue({
-            resources: [
-              {
-                pass: 0,
-                fail: 0,
-                passDkimOnly: 0,
-                passSpfOnly: 0,
-              },
-            ],
-          }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          calculatePercentages,
         }),
         upsertSummary: upsertSummary({
           transaction,
           collections,
           query,
-          loadCategoryTotals: jest.fn().mockReturnValue({
-            resources: [
-              {
-                pass: 0,
-                fail: 0,
-                passDkimOnly: 0,
-                passSpfOnly: 0,
-              },
-            ],
-          }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          calculatePercentages,
         }),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const checkCursor =
@@ -623,44 +862,39 @@ describe('given the dmarcReport function', () => {
           transaction,
           collections,
           query,
-          loadCategoryTotals: jest.fn().mockReturnValue({
-            resources: [
-              {
-                pass: 0,
-                fail: 0,
-                passDkimOnly: 0,
-                passSpfOnly: 0,
-              },
-            ],
-          }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [] }),
-          calculatePercentages,
         }),
         upsertSummary: upsertSummary({
           transaction,
           collections,
           query,
-          loadCategoryTotals: jest.fn().mockReturnValue({
-            resources: [
-              {
-                pass: 1,
-                fail: 1,
-                passDkimOnly: 1,
-                passSpfOnly: 1,
-              },
-            ],
-          }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          calculatePercentages,
         }),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 0,
+            fail: 0,
+            passDkimOnly: 0,
+            passSpfOnly: 0,
+          },
+          categoryPercentages: {
+            totalMessages: 0,
+            categoryPercentages: {
+              pass: 0,
+              fail: 0,
+              passDkimOnly: 0,
+              passSpfOnly: 0,
+            },
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+        }),
       })
 
       const sumIdCursor =
@@ -774,24 +1008,34 @@ describe('given the dmarcReport function', () => {
           transaction,
           collections,
           query,
-          loadCategoryTotals: jest.fn().mockReturnValue({
-            resources: [
-              {
-                pass: 1,
-                fail: 1,
-                passDkimOnly: 1,
-                passSpfOnly: 1,
-              },
-            ],
-          }),
-          loadDkimFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadDmarcFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadFullPassTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          loadSpfFailureTable: jest.fn().mockReturnValue({ resources: [{ key: 'value' }] }),
-          calculatePercentages,
         }),
         cosmosDates: ['2021-01-01'],
         currentDate: '2021-01-01',
+        updateNoOwnerDomainMailStatus: jest.fn().mockReturnValue([]),
+        updateDomainMailStatus: jest.fn().mockReturnValue([]),
+        loadTables: jest.fn().mockReturnValue({
+          categoryTotals: {
+            pass: 1,
+            fail: 1,
+            passDkimOnly: 1,
+            passSpfOnly: 1,
+          },
+          categoryPercentages: {
+            totalMessages: 4,
+            categoryPercentages: {
+              pass: 25,
+              fail: 25,
+              passDkimOnly: 25,
+              passSpfOnly: 25,
+            },
+          },
+          detailTables: {
+            dkimFailure: [{ key: 'value' }],
+            dmarcFailure: [{ key: 'value' }],
+            fullPass: [{ key: 'value' }],
+            spfFailure: [{ key: 'value' }],
+          },
+        }),
       })
 
       const checkCursor = await query`FOR item IN dmarcSummaries RETURN item`

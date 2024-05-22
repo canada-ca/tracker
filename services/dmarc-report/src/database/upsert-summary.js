@@ -40,10 +40,10 @@ const upsertSummary =
               categoryPercentages: ${summary.categoryPercentages},
               categoryTotals: ${summary.categoryTotals},
               detailTables: {
-                dkimFailure: ${summary.detailTables.dkimFailureTable},
-                dmarcFailure: ${summary.detailTables.dmarcFailureTable},
-                fullPass: ${summary.detailTables.fullPassTable},
-                spfFailure: ${summary.detailTables.spfFailureTable},
+                dkimFailure: ${summary.detailTables.dkimFailure},
+                dmarcFailure: ${summary.detailTables.dmarcFailure},
+                fullPass: ${summary.detailTables.fullPass},
+                spfFailure: ${summary.detailTables.spfFailure},
               },
               totalMessages: ${summary.totalMessages},
             }

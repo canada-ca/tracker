@@ -45,10 +45,10 @@ const loadTables =
       categoryTotals,
       categoryPercentages,
       detailTables: {
-        dkimFailureTable,
-        dmarcFailureTable,
-        fullPassTable,
-        spfFailureTable,
+        dkimFailure: dkimFailureTable,
+        dmarcFailure: dmarcFailureTable,
+        fullPass: fullPassTable,
+        spfFailure: spfFailureTable,
       },
     }
   }
