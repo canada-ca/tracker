@@ -44,6 +44,10 @@ export const updateDomain = new mutationWithClientMutationId({
       description: 'Comment describing reason for adding out-of-scope domain.',
       type: OutsideDomainCommentEnum,
     },
+    ignoreRua: {
+      description: 'Boolean value that determines if the domain should ignore rua reports.',
+      type: GraphQLBoolean,
+    },
   }),
   outputFields: () => ({
     result: {
@@ -199,6 +203,7 @@ export const updateDomain = new mutationWithClientMutationId({
       domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
       lastRan: domain.lastRan,
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
+      ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
     }
 
     try {

@@ -193,6 +193,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             claimTags
             hidden
             archived
+            ignoreRua
             rcode
             organizations(first: 1) {
               totalCount
@@ -1106,4 +1107,10 @@ export const MY_TRACKER_DOMAINS = gql`
     }
   }
   ${Status.fragments.requiredFields}
+`
+
+export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
+  query GetAllVerifiedRuaDomains {
+    getAllVerifiedRuaDomains
+  }
 `

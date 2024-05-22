@@ -230,6 +230,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
                   outsideComment: values.outsideComment,
+                  ignoreRua: values.ignoreRua,
                 },
               })
             } else if (mutation === 'create') {
@@ -256,7 +257,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
               <ModalBody>
                 <Stack spacing={4} p={25}>
                   <DomainField name="domainUrl" label={t`New Domain URL:`} placeholder={t`New Domain URL`} />
-
                   <ABTestWrapper insiderVariantName="B">
                     <ABTestVariant name="A">
                       <FieldArray
@@ -370,6 +370,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                       </Text>
                     </FormControl>
                   )}
+                  <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <Flex align="center">
                     <Tooltip label={t`Prevent this domain from being counted in your organization's summaries.`}>
                       <QuestionOutlineIcon tabIndex={0} />
@@ -440,6 +441,28 @@ const ArchiveDomainSwitch = withSuperAdmin(({ defaultChecked, handleChange, orgC
           <Trans>Note: This could affect results for multiple organizations</Trans>
         )}
       </Text>
+    </Box>
+  )
+})
+
+const IgnoreRuaToggle = withSuperAdmin(({ defaultChecked, handleChange }) => {
+  return (
+    <Box>
+      <Flex align="center">
+        <label>
+          <Switch
+            colorScheme="blue"
+            isFocusable={true}
+            name="ignoreRua"
+            mx="2"
+            defaultChecked={defaultChecked}
+            onChange={handleChange}
+          />
+        </label>
+        <Badge variant="outline" color="gray.900" p="1.5">
+          <Trans>Ignore RUA</Trans>
+        </Badge>
+      </Flex>
     </Box>
   )
 })

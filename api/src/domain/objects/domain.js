@@ -356,6 +356,11 @@ export const domainType = new GraphQLObjectType({
         })
       },
     },
+    ignoreRua: {
+      description: 'Value that determines if a domain is ignoring rua reports.',
+      type: GraphQLBoolean,
+      resolve: ({ ignoreRua }) => ignoreRua,
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',
