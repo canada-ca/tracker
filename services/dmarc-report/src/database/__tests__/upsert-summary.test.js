@@ -1,5 +1,3 @@
-const { calculatePercentages } = require('../../utils')
-
 const { upsertSummary } = require('../upsert-summary')
 const { arangoConnection } = require('../index')
 const { dbNameFromFile } = require('arango-tools')
