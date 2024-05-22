@@ -10,10 +10,13 @@ module.exports.dmarcReport = async ({
   loadCheckOrg,
   loadCheckDomain,
   loadOrgOwner,
+  updateDomainMailStatus,
+  updateNoOwnerDomainMailStatus,
   createSummary,
   upsertSummary,
   cosmosDates,
   currentDate,
+  loadTables,
 }) => {
   // get org acronyms
   const orgAcronyms = Object.keys(ownerships)
@@ -38,7 +41,7 @@ module.exports.dmarcReport = async ({
 
       await Promise.all(
         domains.map(async (domain) => {
-          await updateDomain(
+          await updateDomain({
             loadCheckDomain,
             domain,
             loadOrgOwner,
@@ -52,12 +55,16 @@ module.exports.dmarcReport = async ({
             createSummary,
             currentDate,
             upsertSummary,
+            updateDomainMailStatus,
             loadArangoThirtyDaysCount,
-          )
+            loadTables,
+          })
         }),
       )
     }
   }
+  // Update send status for all domains without ownership
+  await updateNoOwnerDomainMailStatus()
 
   console.info('Completed assigning ownerships.')
 }
