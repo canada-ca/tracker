@@ -8,23 +8,24 @@ export const loadAllVerifiedRuaDomains =
       verifiedRuaDomains = (
         await query`
             FOR org IN organizations
-            FILTER org.verified == true
-            SORT org.orgDetails.en.acronym ASC
-            LET domains = (
-                FOR domain,claim IN 1..1 OUTBOUND org claims
-                    FILTER domain.archived != true
-                    FILTER domain.ignoreRua != true
-                    FILTER domain.rcode != "NXDOMAIN"
-                    LET validRua = (
-                        FOR v,e IN 1..1 OUTBOUND domain domainsDNS
-                            SORT v.timestamp DESC
-                            LIMIT 1
-                            RETURN "dmarc10" IN v.dmarc.positiveTags
-                    )[0]
-                    FILTER validRua == true
-                    RETURN domain.domain
-            )
-            RETURN { key: CONCAT(org.orgDetails.en.acronym, "-", org.orgDetails.fr.acronym), domains }
+              FILTER org.verified == true
+              SORT org.orgDetails.en.acronym ASC
+              LET domains = (
+                  FOR domain,claim IN 1..1 OUTBOUND org claims
+                      FILTER domain.archived != true
+                      FILTER domain.ignoreRua != true
+                      FILTER domain.rcode != "NXDOMAIN"
+                      LET validRua = (
+                          FOR v,e IN 1..1 OUTBOUND domain domainsDNS
+                              SORT v.timestamp DESC
+                              LIMIT 1
+                              RETURN "dmarc10" IN v.dmarc.positiveTags
+                      )[0]
+                      FILTER validRua == true
+                      SORT domain.domain ASC
+                      RETURN domain.domain
+              )
+              RETURN { key: CONCAT(org.orgDetails.en.acronym, "-", org.orgDetails.fr.acronym), domains }
         `
       ).all()
     } catch (err) {
