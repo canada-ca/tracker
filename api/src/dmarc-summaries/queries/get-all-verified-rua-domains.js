@@ -12,11 +12,11 @@ export const getAllVerifiedRuaDomains = {
       loaders: { loadAllVerifiedRuaDomains },
     },
   ) => {
-    // const user = await userRequired()
-    // verifiedRequired({ user })
+    const user = await userRequired()
+    verifiedRequired({ user })
 
-    // const isSuperAdmin = await checkSuperAdmin()
-    // superAdminRequired({ user, isSuperAdmin })
+    const isSuperAdmin = await checkSuperAdmin()
+    superAdminRequired({ user, isSuperAdmin })
 
     const ruaDomains = await loadAllVerifiedRuaDomains({ ...args })
 
