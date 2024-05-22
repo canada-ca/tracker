@@ -1107,3 +1107,9 @@ export const MY_TRACKER_DOMAINS = gql`
   }
   ${Status.fragments.requiredFields}
 `
+
+export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
+  query GetAllVerifiedRuaDomains {
+    getAllVerifiedRuaDomains
+  }
+`
