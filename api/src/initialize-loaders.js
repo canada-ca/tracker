@@ -14,6 +14,7 @@ import {
   loadSpfFailureConnectionsBySumId,
   loadStartDateFromPeriod,
   loadDmarcYearlySumEdge,
+  loadAllVerifiedRuaDomains,
 } from './dmarc-summaries/loaders'
 import {
   loadDomainByKey,
@@ -368,6 +369,11 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       query,
       language,
       cleanseInput,
+      i18n,
+    }),
+    loadAllVerifiedRuaDomains: loadAllVerifiedRuaDomains({
+      query,
+      userKey,
       i18n,
     }),
   }
