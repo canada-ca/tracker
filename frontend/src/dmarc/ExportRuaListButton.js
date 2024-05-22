@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Button, useToast } from '@chakra-ui/react'
-import { arrayOf, object, string, func } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
-import { GET_ALL_VERIFIED_RUA_DOMAINS as EXPORT } from '../graphql/queries'
 import { useLazyQuery } from '@apollo/client'
+import { GET_ALL_VERIFIED_RUA_DOMAINS as EXPORT } from '../graphql/queries'
 
-export function ExportRuaListButton({ ...props }) {
+export function ExportRuaListButton(props) {
   const toast = useToast()
-  const [getData, { loading }] = useLazyQuery(EXPORT)
+  const [getData, { loading, error }] = useLazyQuery(EXPORT)
   const date = new Date().toLocaleDateString()
-  const download = async () => {
+
+  const download = useCallback(async () => {
     toast({
       title: t`Getting domain statuses`,
       description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
@@ -18,6 +18,8 @@ export function ExportRuaListButton({ ...props }) {
       isClosable: true,
       position: 'top-left',
     })
+
+    let a
     try {
       const result = await getData()
       if (result?.data?.allVerifiedRUA === null) {
@@ -32,15 +34,23 @@ export function ExportRuaListButton({ ...props }) {
         throw t`No data found`
       }
 
-      const a = document.createElement('a')
+      a = document.createElement('a')
       a.href = 'data:text/json;charset=utf-8,' + encodeURI(result?.data?.getAllVerifiedRuaDomains)
       a.download = `tracker_verified_rua_domains_${date}.json`
       document.body.appendChild(a)
       a.click()
-      document.body.removeChild(a)
     } catch (err) {
       console.log(err)
+    } finally {
+      if (a) {
+        document.body.removeChild(a)
+      }
     }
+  }, [getData, toast, date])
+
+  if (error) {
+    console.error(error)
+    return null
   }
 
   return (
@@ -48,10 +58,4 @@ export function ExportRuaListButton({ ...props }) {
       <Trans>Export RUA List</Trans>
     </Button>
   )
-}
-
-ExportRuaListButton.propTypes = {
-  jsonData: arrayOf(object),
-  fileName: string,
-  dataFunction: func,
 }
