@@ -1,4 +1,5 @@
 """This module provides utility functions related to gql, for internal use."""
+
 import os
 import re
 

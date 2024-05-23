@@ -1,5 +1,6 @@
 """This module defines the Domain class, which models organizations monitored by Tracker
 and offers methods to get data about them."""
+
 import json
 
 from slugify import slugify
