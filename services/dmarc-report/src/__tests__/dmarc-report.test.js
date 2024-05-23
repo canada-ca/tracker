@@ -55,7 +55,7 @@ describe('given the dmarcReport function', () => {
         loadArangoThirtyDaysCount: jest.fn().mockReturnValue([]),
         loadCheckOrg: jest.fn().mockReturnValue(false),
         loadCheckDomain: jest.fn().mockReturnValue([]),
-        loadOrgOwner: jest.fn().mockReturnValue([]),
+        loadOrgOwner: jest.fn().mockReturnValue(['ACR']),
         createOwnership: jest.fn().mockReturnValue([]),
         removeOwnership: jest.fn().mockReturnValue([]),
         removeSummary: jest.fn().mockReturnValue([]),
@@ -254,7 +254,7 @@ describe('given the dmarcReport function', () => {
       const checkOwner = await checkCursor.next()
 
       expect(checkOwner).toBeUndefined()
-      expect(consoleOutput[2]).toEqual('\t\tRemoving domain.ca ownership to: domain.ca')
+      expect(consoleOutput[2]).toEqual('\t\tRemoving domain.ca ownership from: ACR')
     })
     it('creates new ownership', async () => {
       await dmarcReport({
