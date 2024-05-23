@@ -37,7 +37,7 @@ const updateDomain = async ({
   }
   // if the domain is owned by another org, remove ownership and assign a new one
   else if (orgOwner !== orgAcronymEn) {
-    console.info(`\t\tRemoving ${domain} ownership to: ${domain}`)
+    console.info(`\t\tRemoving ${domain} ownership from: ${orgOwner}`)
     await removeOwnership({ domain, orgAcronymEn })
 
     console.info(`\t\tAssigning ${domain} ownership to: ${String(orgAcronym)}`)
