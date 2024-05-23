@@ -372,6 +372,17 @@ export const createDomain = new mutationWithClientMutationId({
       },
     })
 
+    await publish({
+      channel: `domains.${returnDomain._key}.easm`,
+      msg: {
+        domain: returnDomain.domain,
+        domain_key: returnDomain._key,
+        hash: returnDomain.hash,
+        user_key: null, // only used for One Time Scans
+        shared_id: null, // only used for One Time Scans
+      },
+    })
+
     return {
       ...returnDomain,
       claimTags: tags.map((tag) => {
