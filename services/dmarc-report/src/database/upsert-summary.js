@@ -1,28 +1,6 @@
-const { loadTables } = require('../loaders')
-
 const upsertSummary =
-  ({
-    transaction,
-    collections,
-    query,
-    loadCategoryTotals,
-    loadDkimFailureTable,
-    loadDmarcFailureTable,
-    loadFullPassTable,
-    loadSpfFailureTable,
-  }) =>
-  async ({ date, domain }) => {
-    const { categoryTotals, dkimFailureTable, dmarcFailureTable, fullPassTable, spfFailureTable, categoryPercentages } =
-      await loadTables({
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        domain,
-        date,
-      })
-
+  ({ transaction, collections, query }) =>
+  async ({ date, domain, categoryTotals, categoryPercentages, detailTables }) => {
     // get current summary info
     const edgeCursor = await query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
@@ -42,12 +20,7 @@ const upsertSummary =
     const summary = {
       ...categoryPercentages,
       categoryTotals,
-      detailTables: {
-        dkimFailure: dkimFailureTable,
-        dmarcFailure: dmarcFailureTable,
-        fullPass: fullPassTable,
-        spfFailure: spfFailureTable,
-      },
+      detailTables,
     }
 
     // Generate list of collections names

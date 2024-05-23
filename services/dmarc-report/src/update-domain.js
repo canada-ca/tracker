@@ -1,4 +1,4 @@
-const updateDomain = async (
+const updateDomain = async ({
   loadCheckDomain,
   domain,
   loadOrgOwner,
@@ -8,12 +8,14 @@ const updateDomain = async (
   removeOwnership,
   loadArangoDates,
   cosmosDates,
+  updateDomainMailStatus,
   removeSummary,
   createSummary,
   currentDate,
   upsertSummary,
   loadArangoThirtyDaysCount,
-) => {
+  loadTables,
+}) => {
   // check to see if domain exists
   const checkDomain = await loadCheckDomain({ domain })
   if (!checkDomain) {
@@ -57,8 +59,13 @@ const updateDomain = async (
     }
   }
 
-  // handle non thirty day dates
+  // handle non-thirty day dates
   for (const date of cosmosDates) {
+    // Get DMARC table data
+    const { categoryTotals, categoryPercentages, detailTables } = await loadTables({
+      domain,
+      date,
+    })
     // if date is not in arango initialize it
     if (arangoDates.indexOf(date) === -1) {
       // initialize summary
@@ -66,17 +73,25 @@ const updateDomain = async (
       await createSummary({
         date,
         domain,
+        categoryTotals,
+        categoryPercentages,
+        detailTables,
       })
     } else if (date === currentDate) {
       // update current month
       console.info(`\t\tUpdating ${date} for ${domain}`)
-      await upsertSummary({ date, domain })
+      await upsertSummary({ date, domain, categoryTotals, categoryPercentages, detailTables })
     }
   }
 
-  // handle thirty day dates
+  // handle thirty-day dates
   const thirtyDayCount = await loadArangoThirtyDaysCount({
     domain,
+  })
+
+  const thirtyDayTables = await loadTables({
+    domain,
+    date: 'thirtyDays',
   })
 
   // check to see if thirty days period is found in the arango
@@ -86,12 +101,35 @@ const updateDomain = async (
     await createSummary({
       date: 'thirtyDays',
       domain,
+      categoryTotals: thirtyDayTables.categoryTotals,
+      categoryPercentages: thirtyDayTables.categoryPercentages,
+      detailTables: thirtyDayTables.detailTables,
     })
   } else {
     // update thirty day summary
     console.info(`\t\tUpdating Thirty Days for ${domain}`)
-    await upsertSummary({ date: 'thirtyDays', domain })
+    await upsertSummary({
+      date: 'thirtyDays',
+      domain,
+      categoryTotals: thirtyDayTables.categoryTotals,
+      categoryPercentages: thirtyDayTables.categoryPercentages,
+      detailTables: thirtyDayTables.detailTables,
+    })
   }
+
+  // update domain mail status
+  let sendsEmail = 'false'
+  if (
+    [
+      thirtyDayTables.categoryTotals.pass,
+      thirtyDayTables.categoryTotals.passDkimOnly,
+      thirtyDayTables.categoryTotals.passSpfOnly,
+    ].some((total) => total > 0)
+  ) {
+    sendsEmail = 'true'
+  }
+  console.info(`\t\tUpdating domain mail status for ${domain} to ${sendsEmail}`)
+  await updateDomainMailStatus({ domain, sendsEmail })
 }
 
 module.exports = {

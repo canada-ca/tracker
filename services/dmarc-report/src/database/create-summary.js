@@ -1,36 +1,10 @@
-const { loadTables } = require('../loaders')
 const createSummary =
-  ({
-    transaction,
-    collections,
-    query,
-    loadCategoryTotals,
-    loadDkimFailureTable,
-    loadDmarcFailureTable,
-    loadFullPassTable,
-    loadSpfFailureTable,
-  }) =>
-  async ({ date, domain }) => {
-    const { categoryTotals, dkimFailureTable, dmarcFailureTable, fullPassTable, spfFailureTable, categoryPercentages } =
-      await loadTables({
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        domain,
-        date,
-      })
-
+  ({ transaction, collections, query }) =>
+  async ({ date, domain, categoryTotals, categoryPercentages, detailTables }) => {
     const summary = {
       ...categoryPercentages,
       categoryTotals,
-      detailTables: {
-        dkimFailure: dkimFailureTable,
-        dmarcFailure: dmarcFailureTable,
-        fullPass: fullPassTable,
-        spfFailure: spfFailureTable,
-      },
+      detailTables,
     }
 
     // Generate list of collections names

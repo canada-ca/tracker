@@ -13,6 +13,8 @@ const {
   removeSummary,
   upsertSummary,
   arangoConnection,
+  updateDomainMailStatus,
+  updateNoOwnerDomainMailStatus,
 } = require('./src/database')
 const {
   loadArangoDates,
@@ -27,6 +29,7 @@ const {
   loadOrgOwner,
   loadDomainOwnership,
   loadSpfFailureTable,
+  loadTables,
 } = require('./src/loaders')
 const { dmarcReport } = require('./src/dmarc-report')
 
@@ -65,42 +68,12 @@ const {
     transaction,
     collections,
     query,
-    loadCategoryTotals: loadCategoryTotals({
-      container: summariesContainer,
-    }),
-    loadDkimFailureTable: loadDkimFailureTable({
-      container: summariesContainer,
-    }),
-    loadDmarcFailureTable: loadDmarcFailureTable({
-      container: summariesContainer,
-    }),
-    loadFullPassTable: loadFullPassTable({
-      container: summariesContainer,
-    }),
-    loadSpfFailureTable: loadSpfFailureTable({
-      container: summariesContainer,
-    }),
   })
 
   const setupUpsertSummary = upsertSummary({
     transaction,
     collections,
     query,
-    loadCategoryTotals: loadCategoryTotals({
-      container: summariesContainer,
-    }),
-    loadDkimFailureTable: loadDkimFailureTable({
-      container: summariesContainer,
-    }),
-    loadDmarcFailureTable: loadDmarcFailureTable({
-      container: summariesContainer,
-    }),
-    loadFullPassTable: loadFullPassTable({
-      container: summariesContainer,
-    }),
-    loadSpfFailureTable: loadSpfFailureTable({
-      container: summariesContainer,
-    }),
   })
 
   const setupCreateOwnership = createOwnership({
@@ -117,6 +90,24 @@ const {
 
   const setupRemoveSummary = removeSummary({ transaction, collections, query })
 
+  const setupLoadTables = loadTables({
+    loadCategoryTotals: loadCategoryTotals({
+      container: summariesContainer,
+    }),
+    loadDkimFailureTable: loadDkimFailureTable({
+      container: summariesContainer,
+    }),
+    loadDmarcFailureTable: loadDmarcFailureTable({
+      container: summariesContainer,
+    }),
+    loadFullPassTable: loadFullPassTable({
+      container: summariesContainer,
+    }),
+    loadSpfFailureTable: loadSpfFailureTable({
+      container: summariesContainer,
+    }),
+  })
+
   const ownerships = await loadDomainOwnership()
 
   await dmarcReport({
@@ -126,11 +117,14 @@ const {
     loadCheckOrg: loadCheckOrg({ query }),
     loadCheckDomain: loadCheckDomain({ query }),
     loadOrgOwner: loadOrgOwner({ query }),
+    updateDomainMailStatus: updateDomainMailStatus({ query }),
+    updateNoOwnerDomainMailStatus: updateNoOwnerDomainMailStatus({ query }),
     createOwnership: setupCreateOwnership,
     removeOwnership: setupRemoveOwnership,
     removeSummary: setupRemoveSummary,
     createSummary: setupCreateSummary,
     upsertSummary: setupUpsertSummary,
+    loadTables: setupLoadTables,
     cosmosDates,
     currentDate,
   })
