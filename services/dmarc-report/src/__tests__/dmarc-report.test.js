@@ -215,7 +215,7 @@ describe('given the dmarcReport function', () => {
         loadArangoThirtyDaysCount: jest.fn().mockReturnValue([]),
         loadCheckOrg: jest.fn().mockReturnValue(true),
         loadCheckDomain: jest.fn().mockReturnValue(true),
-        loadOrgOwner: jest.fn().mockReturnValue([]),
+        loadOrgOwner: jest.fn().mockReturnValue(['ACR']),
         createOwnership: createOwnership({ transaction, collections, query }),
         removeOwnership: jest.fn().mockReturnValue([]),
         removeSummary: jest.fn().mockReturnValue([]),
