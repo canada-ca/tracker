@@ -409,10 +409,15 @@ def process_results(results):
             if any(tag in all_dmarc_tags for tag in ["dmarc5", "dmarc6"]):
                 phase = "maintain"
 
+    has_cyber_rua = False
+    if "dmarc10" in dmarc_tags["positive_tags"]:
+        has_cyber_rua = True
+
     dmarc_results = {
         "status": dmarc_status,
         "location": dmarc.get("location", None),
         "record": dmarc.get("record", None),
+        "has_cyber_rua": has_cyber_rua,
         "p_policy": dmarc.get("tags", {}).get("p", {}).get("value", None),
         "sp_policy": dmarc.get("tags", {}).get("sp", {}).get("value", None),
         "pct": dmarc.get("tags", {}).get("pct", {}).get("value", None),
