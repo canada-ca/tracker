@@ -286,7 +286,8 @@ async def run(loop):
                 domain.update({"phase": dmarc_phase})
                 domain.update({"wildcardSibling": wildcard_sibling})
                 domain.update({"rcode": rcode})
-                domain.update({"webScanPending": True})
+                # domain.update({"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")})
+                # domain.update({"webScanPending": True})
 
                 # If we have no IPs, we can't do web scans. Set all web statuses to info
                 if not results.get("resolve_ips", None):
