@@ -15,13 +15,7 @@ export const loadAllVerifiedRuaDomains =
                       FILTER domain.archived != true
                       FILTER domain.ignoreRua != true
                       FILTER domain.rcode != "NXDOMAIN"
-                      LET validRua = (
-                          FOR v,e IN 1..1 OUTBOUND domain domainsDNS
-                              SORT v.timestamp DESC
-                              LIMIT 1
-                              RETURN "dmarc10" IN v.dmarc.positiveTags
-                      )[0]
-                      FILTER validRua == true
+                      FILTER domain.hasCyberRua == true
                       SORT domain.domain ASC
                       RETURN domain.domain
               )
