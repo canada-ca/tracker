@@ -10,18 +10,27 @@ import {
   Flex,
   ListItem,
   OrderedList,
+  Step,
+  StepIcon,
+  StepIndicator,
+  StepNumber,
+  StepSeparator,
+  StepStatus,
+  StepTitle,
+  Stepper,
   Text,
+  useSteps,
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { object, string } from 'prop-types'
 import { GuidanceTagList } from './GuidanceTagList'
 import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceSummaryCategories } from './GuidanceSummaryCategories'
-import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
-import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued'
 
-export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) {
+export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
+  const steps = [t`Assess`, t`Deploy`, t`Enforce`, t`Maintain`]
   let dmarcSteps
+  let dmarcStepIndex
   switch (dmarcPhase) {
     case 'assess':
       dmarcSteps = [
@@ -30,6 +39,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         t`Deploy initial DMARC records with policy of none; and`,
         t`Collect and analyze DMARC reports.`,
       ]
+      dmarcStepIndex = 0
       break
     case 'deploy':
       dmarcSteps = [
@@ -38,6 +48,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         t`Deploy DKIM records and keys for all domains and senders; and`,
         t`Monitor DMARC reports and correct misconfigurations.`,
       ]
+      dmarcStepIndex = 1
       break
     case 'enforce':
       dmarcSteps = [
@@ -45,6 +56,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         t`Upgrade DMARC policy to reject (gradually increment enforcement from 25% to 100%); and`,
         t`Reject all messages from non-mail domains.`,
       ]
+      dmarcStepIndex = 2
       break
     case 'maintain':
       dmarcSteps = [
@@ -52,11 +64,17 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         t`Correct misconfigurations and update records as required; and`,
         t`Rotate DKIM keys annually.`,
       ]
+      dmarcStepIndex = 3
       break
     default:
       dmarcSteps = undefined
       break
   }
+
+  const { activeStep } = useSteps({
+    index: dmarcStepIndex,
+    count: 4,
+  })
 
   const formatTimestamp = (ts) => {
     const dateTime = ts.split('T')
@@ -152,15 +170,35 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
       <Text fontsize="lg">
-        <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+        <Trans>
+          <b>Last Scanned:</b> {formatTimestamp(timestamp)}
+        </Trans>
       </Text>
       {emailSummary}
       <Box mb={4} ml="4">
-        <Text fontWeight="bold" fontSize="2xl">
-          <Trans>DMARC Implementation Phase: {dmarcPhase.toUpperCase()}</Trans>
+        <Text fontWeight="bold" fontSize="2xl" mb="2">
+          <Trans>DMARC Implementation Phase</Trans>
         </Text>
+        <Stepper index={activeStep} mb="2">
+          {steps.map((step, index) => (
+            <Step key={index}>
+              <StepIndicator>
+                <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
+              </StepIndicator>
+
+              <Box flexShrink="0">
+                <StepTitle>{step}</StepTitle>
+              </Box>
+
+              <StepSeparator />
+            </Step>
+          ))}
+        </Stepper>
         {dmarcSteps && (
           <Box px="2" py="1">
+            <Text fontWeight="bold" mb="1">
+              <Trans>Next Steps:</Trans>
+            </Text>
             <OrderedList>{dmarcStepList}</OrderedList>
           </Box>
         )}
@@ -313,9 +351,6 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          <Text>
-            <Trans>Latest Scan:</Trans>
-          </Text>
           {mxRecords.hosts.map(({ preference, hostname, addresses }, idx) => {
             return (
               <Flex key={idx} px="2">
@@ -361,33 +396,6 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
                 </Trans>
               </Text>
             </Box>
-          )}
-          {mxRecordDiff.edges.length > 1 && (
-            <ABTestWrapper>
-              <ABTestVariant name="B">
-                <Text fontSize="xl" fontWeight="bold">
-                  <Trans>Changes:</Trans>
-                </Text>
-                {mxRecordDiff.edges.map(({ node }, idx) => {
-                  if (idx !== mxRecordDiff.edges.length - 1) {
-                    const nextNode = mxRecordDiff.edges[idx + 1].node
-                    return (
-                      <ReactDiffViewer
-                        key={idx}
-                        newValue={node.mxRecords.hosts}
-                        oldValue={nextNode.mxRecords.hosts}
-                        rightTitle={node.timestamp}
-                        leftTitle={nextNode.timestamp}
-                        splitView={true}
-                        compareMethod={DiffMethod.JSON}
-                        hideLineNumbers={true}
-                        showDiffOnly={true}
-                      />
-                    )
-                  }
-                })}
-              </ABTestVariant>
-            </ABTestWrapper>
           )}
         </AccordionPanel>
       </AccordionItem>
@@ -445,5 +453,4 @@ EmailGuidance.propTypes = {
   dnsResults: object,
   dmarcPhase: string,
   status: object,
-  mxRecordDiff: object,
 }

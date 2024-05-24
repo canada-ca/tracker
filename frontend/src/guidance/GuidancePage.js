@@ -56,7 +56,6 @@ function GuidancePage() {
     domain: domainName,
     web: webScan,
     dnsScan,
-    mxRecordDiff,
     organizations,
     dmarcPhase,
     rcode,
@@ -133,12 +132,7 @@ function GuidancePage() {
             {dnsScan.edges.length === 0 ? (
               noScanData
             ) : (
-              <EmailGuidance
-                dnsResults={dnsResults}
-                dmarcPhase={dmarcPhase}
-                status={status}
-                mxRecordDiff={mxRecordDiff}
-              />
+              <EmailGuidance dnsResults={dnsResults} dmarcPhase={dmarcPhase} status={status} />
             )}
           </TabPanel>
         </TabPanels>
