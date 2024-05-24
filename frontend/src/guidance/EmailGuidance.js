@@ -177,7 +177,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status }) {
       {emailSummary}
       <Box mb={4} ml="4">
         <Text fontWeight="bold" fontSize="2xl" mb="2">
-          <Trans>DMARC Implementation Phase</Trans>
+          <Trans>DMARC Implementation Phase: {steps[dmarcStepIndex]}</Trans>
         </Text>
         <Stepper index={activeStep} mb="2">
           {steps.map((step, index) => (
