@@ -3,7 +3,7 @@ attrs==23.2.0
 certifi==2023.7.22
 cffi==1.15.1
 charset-normalizer==2.1.1
-cryptography==42.0.5
+cryptography==42.0.7
 idna==3.7
 nassl==5.1.0
 nats-py==2.6.0
