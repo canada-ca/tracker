@@ -1,15 +1,20 @@
 import { GraphQLObjectType } from 'graphql'
 
 import { categorizedSummaryType } from '../../summaries'
+import { GraphQLDate } from 'graphql-scalars'
 
 export const organizationSummaryType = new GraphQLObjectType({
   name: 'OrganizationSummary',
   description: 'Summaries based on domains that the organization has claimed.',
   fields: () => ({
+    date: {
+      type: GraphQLDate,
+      description: 'Date that the summary was computed.',
+      resolve: ({ date }) => date,
+    },
     dmarc: {
       type: categorizedSummaryType,
-      description:
-        'Summary based on DMARC scan results for a given organization.',
+      description: 'Summary based on DMARC scan results for a given organization.',
       resolve: ({ dmarc }, _) => {
         let percentPass, percentageFail
         if (dmarc.total <= 0) {
@@ -41,8 +46,7 @@ export const organizationSummaryType = new GraphQLObjectType({
     },
     https: {
       type: categorizedSummaryType,
-      description:
-        'Summary based on HTTPS scan results for a given organization.',
+      description: 'Summary based on HTTPS scan results for a given organization.',
       resolve: ({ https }, _) => {
         let percentPass, percentageFail
         if (https.total <= 0) {
@@ -74,8 +78,7 @@ export const organizationSummaryType = new GraphQLObjectType({
     },
     mail: {
       type: categorizedSummaryType,
-      description:
-        'Summary based on mail scan results for a given organization.',
+      description: 'Summary based on mail scan results for a given organization.',
       resolve: ({ mail }, _) => {
         let percentPass, percentageFail
         if (mail.total <= 0) {
@@ -107,8 +110,7 @@ export const organizationSummaryType = new GraphQLObjectType({
     },
     web: {
       type: categorizedSummaryType,
-      description:
-        'Summary based on web scan results for a given organization.',
+      description: 'Summary based on web scan results for a given organization.',
       resolve: ({ web }, _) => {
         let percentPass, percentageFail
         if (web.total <= 0) {
@@ -142,35 +144,19 @@ export const organizationSummaryType = new GraphQLObjectType({
       type: categorizedSummaryType,
       description: 'Summary based on DMARC phases for a given organization.',
       resolve: ({ dmarc_phase }, _) => {
-        let percentNotImplemented,
-          percentAsses,
-          percentDeploy,
-          percentEnforce,
-          percentMaintain
+        let percentNotImplemented, percentAssess, percentDeploy, percentEnforce, percentMaintain
         if (dmarc_phase.total <= 0) {
           percentNotImplemented = 0
-          percentAsses = 0
+          percentAssess = 0
           percentDeploy = 0
           percentEnforce = 0
           percentMaintain = 0
         } else {
-          percentNotImplemented = Number(
-            ((dmarc_phase.not_implemented / dmarc_phase.total) * 100).toFixed(
-              1,
-            ),
-          )
-          percentAsses = Number(
-            ((dmarc_phase.assess / dmarc_phase.total) * 100).toFixed(1),
-          )
-          percentDeploy = Number(
-            ((dmarc_phase.deploy / dmarc_phase.total) * 100).toFixed(1),
-          )
-          percentEnforce = Number(
-            ((dmarc_phase.enforce / dmarc_phase.total) * 100).toFixed(1),
-          )
-          percentMaintain = Number(
-            ((dmarc_phase.maintain / dmarc_phase.total) * 100).toFixed(1),
-          )
+          percentNotImplemented = Number(((dmarc_phase.not_implemented / dmarc_phase.total) * 100).toFixed(1))
+          percentAssess = Number(((dmarc_phase.assess / dmarc_phase.total) * 100).toFixed(1))
+          percentDeploy = Number(((dmarc_phase.deploy / dmarc_phase.total) * 100).toFixed(1))
+          percentEnforce = Number(((dmarc_phase.enforce / dmarc_phase.total) * 100).toFixed(1))
+          percentMaintain = Number(((dmarc_phase.maintain / dmarc_phase.total) * 100).toFixed(1))
         }
 
         const categories = [
@@ -182,7 +168,7 @@ export const organizationSummaryType = new GraphQLObjectType({
           {
             name: 'assess',
             count: dmarc_phase.assess,
-            percentage: percentAsses,
+            percentage: percentAssess,
           },
           {
             name: 'deploy',
@@ -204,6 +190,134 @@ export const organizationSummaryType = new GraphQLObjectType({
         return {
           categories,
           total: dmarc_phase.total,
+        }
+      },
+    },
+    ssl: {
+      type: categorizedSummaryType,
+      description: 'Summary based on SSL scan results for a given organization.',
+      resolve: ({ ssl }, _) => {
+        let percentPass, percentageFail
+        if (ssl.total <= 0) {
+          percentPass = 0
+          percentageFail = 0
+        } else {
+          percentPass = Number(((ssl.pass / ssl.total) * 100).toFixed(1))
+          percentageFail = Number(((ssl.fail / ssl.total) * 100).toFixed(1))
+        }
+
+        const categories = [
+          {
+            name: 'pass',
+            count: ssl.pass,
+            percentage: percentPass,
+          },
+          {
+            name: 'fail',
+            count: ssl.fail,
+            percentage: percentageFail,
+          },
+        ]
+
+        return {
+          categories,
+          total: ssl.total,
+        }
+      },
+    },
+    webConnections: {
+      type: categorizedSummaryType,
+      description: 'Summary based on HTTPS and HSTS scan results for a given organization.',
+      resolve: ({ web_connections }, _) => {
+        let percentPass, percentageFail
+        if (web_connections.total <= 0) {
+          percentPass = 0
+          percentageFail = 0
+        } else {
+          percentPass = Number(((web_connections.pass / web_connections.total) * 100).toFixed(1))
+          percentageFail = Number(((web_connections.fail / web_connections.total) * 100).toFixed(1))
+        }
+
+        const categories = [
+          {
+            name: 'pass',
+            count: web_connections.pass,
+            percentage: percentPass,
+          },
+          {
+            name: 'fail',
+            count: web_connections.fail,
+            percentage: percentageFail,
+          },
+        ]
+
+        return {
+          categories,
+          total: web_connections.total,
+        }
+      },
+    },
+    spf: {
+      type: categorizedSummaryType,
+      description: 'Summary based on SPF scan results for a given organization.',
+      resolve: ({ spf }, _) => {
+        let percentPass, percentageFail
+        if (spf.total <= 0) {
+          percentPass = 0
+          percentageFail = 0
+        } else {
+          percentPass = Number(((spf.pass / spf.total) * 100).toFixed(1))
+          percentageFail = Number(((spf.fail / spf.total) * 100).toFixed(1))
+        }
+
+        const categories = [
+          {
+            name: 'pass',
+            count: spf.pass,
+            percentage: percentPass,
+          },
+          {
+            name: 'fail',
+            count: spf.fail,
+            percentage: percentageFail,
+          },
+        ]
+
+        return {
+          categories,
+          total: spf.total,
+        }
+      },
+    },
+    dkim: {
+      type: categorizedSummaryType,
+      description: 'Summary based on DKIM scan results for a given organization.',
+      resolve: ({ dkim }, _) => {
+        let percentPass, percentageFail
+        if (dkim.total <= 0) {
+          percentPass = 0
+          percentageFail = 0
+        } else {
+          percentPass = Number(((dkim.pass / dkim.total) * 100).toFixed(1))
+          percentageFail = Number(((dkim.fail / dkim.total) * 100).toFixed(1))
+        }
+
+        const categories = [
+          {
+            name: 'pass',
+            count: dkim.pass,
+            percentage: percentPass,
+          },
+          {
+            name: 'fail',
+            count: dkim.fail,
+            percentage: percentageFail,
+          },
+        ]
+
+        return {
+          categories,
+          total: dkim.total,
         }
       },
     },

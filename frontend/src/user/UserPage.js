@@ -36,13 +36,10 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { createValidationSchema } from '../utilities/fieldRequirements'
 import { useUserVar } from '../utilities/userState'
-import {
-  SEND_EMAIL_VERIFICATION,
-  CLOSE_ACCOUNT,
-  SIGN_OUT,
-} from '../graphql/mutations'
+import { SEND_EMAIL_VERIFICATION, CLOSE_ACCOUNT_SELF, SIGN_OUT } from '../graphql/mutations'
 import { NotificationBanner } from '../app/NotificationBanner'
-// import { InsideUserSwitch } from './InsideUserSwitch'
+import { InsideUserSwitch } from './InsideUserSwitch'
+import { EmailUpdatesSwitch } from './EmailUpdatesSwitch'
 
 export default function UserPage() {
   const toast = useToast()
@@ -50,81 +47,75 @@ export default function UserPage() {
   const { i18n } = useLingui()
   const [emailSent, setEmailSent] = useState(false)
   const { logout } = useUserVar()
-  const [sendEmailVerification, { loading: loadEmailVerification }] =
-    useMutation(SEND_EMAIL_VERIFICATION, {
-      onError(error) {
+  const [sendEmailVerification, { loading: loadEmailVerification }] = useMutation(SEND_EMAIL_VERIFICATION, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: t`Unable to send verification email`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted() {
+      toast({
+        title: t`Email successfully sent`,
+        description: t`Check your associated Tracker email for the verification link`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+      setEmailSent(true)
+    },
+  })
+
+  const [closeAccount, { loading: loadingCloseAccount }] = useMutation(CLOSE_ACCOUNT_SELF, {
+    onError(error) {
+      toast({
+        title: i18n._(t`An error occurred.`),
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ closeAccount }) {
+      if (closeAccount.result.__typename === 'CloseAccountResult') {
         toast({
-          title: error.message,
-          description: t`Unable to send verification email`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
-      onCompleted() {
-        toast({
-          title: t`Email successfully sent`,
-          description: t`Check your associated Tracker email for the verification link`,
+          title: i18n._(t`Account Closed Successfully`),
+          description: i18n._(t`Tracker account has been successfully closed.`),
           status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-        setEmailSent(true)
-      },
-    })
-
-  const [closeAccount, { loading: loadingCloseAccount }] = useMutation(
-    CLOSE_ACCOUNT,
-    {
-      onError(error) {
+        closeAccountOnClose()
+        history.push('/')
+      } else if (closeAccount.result.__typename === 'CloseAccountError') {
         toast({
-          title: i18n._(t`An error occurred.`),
-          description: error.message,
+          title: i18n._(t`Unable to close the account.`),
+          description: closeAccount.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      },
-      onCompleted({ closeAccount }) {
-        if (closeAccount.result.__typename === 'CloseAccountResult') {
-          toast({
-            title: i18n._(t`Account Closed Successfully`),
-            description: i18n._(
-              t`Tracker account has been successfully closed.`,
-            ),
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          closeAccountOnClose()
-          history.push('/')
-        } else if (closeAccount.result.__typename === 'CloseAccountError') {
-          toast({
-            title: i18n._(t`Unable to close the account.`),
-            description: closeAccount.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: i18n._(t`Incorrect send method received.`),
-            description: i18n._(t`Incorrect closeAccount.result typename.`),
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect closeAccount.result typename.')
-        }
-      },
+      } else {
+        toast({
+          title: i18n._(t`Incorrect send method received.`),
+          description: i18n._(t`Incorrect closeAccount.result typename.`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect closeAccount.result typename.')
+      }
     },
-  )
+  })
 
   const [signOut] = useMutation(SIGN_OUT, {
     onCompleted() {
@@ -132,11 +123,7 @@ export default function UserPage() {
     },
   })
 
-  const {
-    isOpen: closeAccountIsOpen,
-    onOpen: closeAccountOnOpen,
-    onClose: closeAccountOnClose,
-  } = useDisclosure()
+  const { isOpen: closeAccountIsOpen, onOpen: closeAccountOnOpen, onClose: closeAccountOnClose } = useDisclosure()
 
   const {
     loading: queryUserLoading,
@@ -164,7 +151,8 @@ export default function UserPage() {
     tfaSendMethod,
     emailValidated,
     phoneValidated,
-    // insideUser,
+    insideUser,
+    receiveUpdateEmails,
   } = queryUserData?.userPage
 
   return (
@@ -172,9 +160,7 @@ export default function UserPage() {
       {tfaSendMethod === 'NONE' && queryUserData?.isUserAdmin && (
         <NotificationBanner bg="blue.200">
           <WarningTwoIcon color="orange.300" mr="2" />
-          <Trans>
-            Admin accounts must activate a multi-factor authentication option.
-          </Trans>
+          <Trans>Admin accounts must activate a multi-factor authentication option.</Trans>
         </NotificationBanner>
       )}
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} width="100%">
@@ -214,7 +200,8 @@ export default function UserPage() {
             </Button>
           )}
 
-          {/* <InsideUserSwitch insideUser={insideUser || false} /> */}
+          <InsideUserSwitch insideUser={insideUser || false} />
+          <EmailUpdatesSwitch receiveUpdateEmails={receiveUpdateEmails || false} />
 
           <Flex mt="auto">
             <Button
@@ -231,11 +218,7 @@ export default function UserPage() {
           </Flex>
         </Box>
 
-        <Modal
-          isOpen={closeAccountIsOpen}
-          onClose={closeAccountOnClose}
-          motionPreset="slideInBottom"
-        >
+        <Modal isOpen={closeAccountIsOpen} onClose={closeAccountOnClose} motionPreset="slideInBottom">
           <Formik
             validateOnBlur={false}
             initialValues={{
@@ -262,39 +245,22 @@ export default function UserPage() {
                   <ModalCloseButton />
                   <ModalBody>
                     <Trans>
-                      This action CANNOT be reversed, are you sure you wish to
-                      to close the account {displayName}?
+                      This action CANNOT be reversed, are you sure you wish to to close the account {displayName}?
                     </Trans>
 
                     <Text mb="1rem">
-                      <Trans>
-                        Enter "{userName}" below to confirm removal. This field
-                        is case-sensitive.
-                      </Trans>
+                      <Trans>Enter "{userName}" below to confirm removal. This field is case-sensitive.</Trans>
                     </Text>
 
-                    <FormField
-                      name="matchEmail"
-                      label={t`User Email`}
-                      placeholder={userName}
-                    />
+                    <FormField name="matchEmail" label={t`User Email`} placeholder={userName} />
                   </ModalBody>
 
                   <ModalFooter>
-                    <Button
-                      variant="primaryOutline"
-                      mr="4"
-                      onClick={closeAccountOnClose}
-                    >
+                    <Button variant="primaryOutline" mr="4" onClick={closeAccountOnClose}>
                       <Trans>Cancel</Trans>
                     </Button>
 
-                    <Button
-                      variant="primary"
-                      mr="4"
-                      type="submit"
-                      isLoading={loadingCloseAccount}
-                    >
+                    <Button variant="primary" mr="4" type="submit" isLoading={loadingCloseAccount}>
                       <Trans>Confirm</Trans>
                     </Button>
                   </ModalFooter>

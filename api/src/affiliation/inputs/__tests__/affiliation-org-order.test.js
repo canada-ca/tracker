@@ -9,17 +9,13 @@ describe('given the affiliationOrder input object', () => {
       const demoType = affiliationOrgOrder.getFields()
 
       expect(demoType).toHaveProperty('direction')
-      expect(demoType.direction.type).toMatchObject(
-        GraphQLNonNull(OrderDirection),
-      )
+      expect(demoType.direction.type).toMatchObject(new GraphQLNonNull(OrderDirection))
     })
     it('has a field field', () => {
       const demoType = affiliationOrgOrder.getFields()
 
       expect(demoType).toHaveProperty('field')
-      expect(demoType.field.type).toMatchObject(
-        GraphQLNonNull(AffiliationOrgOrderField),
-      )
+      expect(demoType.field.type).toMatchObject(new GraphQLNonNull(AffiliationOrgOrderField))
     })
   })
 })

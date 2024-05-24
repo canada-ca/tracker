@@ -16,7 +16,7 @@ export function InsideUserSwitch({ insideUser }) {
     {
       onError: ({ message }) => {
         toast({
-          title: t`An error occurred while updating your insider preference.`,
+          title: t`An error occurred while updating your inside user preference.`,
           description: message,
           status: 'error',
           duration: 9000,
@@ -25,11 +25,10 @@ export function InsideUserSwitch({ insideUser }) {
         })
       },
       onCompleted({ updateUserProfile }) {
-        console.log(updateUserProfile)
         if (updateUserProfile.result.__typename === 'UpdateUserProfileResult') {
           toast({
-            title: t`Insider status changed`,
-            description: t`You have successfully updated your insider preference.`,
+            title: t`Inside user status changed`,
+            description: t`You have successfully updated your inside user preference.`,
             status: 'success',
             duration: 9000,
             isClosable: true,
@@ -43,7 +42,7 @@ export function InsideUserSwitch({ insideUser }) {
           updateUserProfile.result.__typename === 'UpdateUserProfileError'
         ) {
           toast({
-            title: t`Unable to update to your insider status, please try again.`,
+            title: t`Unable to update to your inside user status, please try again.`,
             description: updateUserProfile.result.description,
             status: 'error',
             duration: 9000,
@@ -75,7 +74,7 @@ export function InsideUserSwitch({ insideUser }) {
         isFocusable={true}
         id="Inside User"
         name="Inside User"
-        aria-label="Inside User"
+        aria-label="Feature Preview"
         mx="2"
         defaultChecked={insideUser}
         onChange={async (e) =>

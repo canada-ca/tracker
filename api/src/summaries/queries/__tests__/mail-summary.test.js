@@ -49,23 +49,25 @@ describe('given mailSummary query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'mail',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        mail: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
@@ -75,9 +77,9 @@ describe('given mailSummary query', () => {
       await drop()
     })
     it('returns mail summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             mailSummary {
               total
@@ -89,14 +91,14 @@ describe('given mailSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -139,9 +141,9 @@ describe('given mailSummary query', () => {
     describe('given unsuccessful mail summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 mailSummary {
                   total
@@ -153,8 +155,8 @@ describe('given mailSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -162,16 +164,12 @@ describe('given mailSummary query', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(`Unable to load mail summary. Please try again.`),
-          ]
+          const error = [new GraphQLError(`Unable to load mail summary. Please try again.`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve mail summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve mail summary.`])
         })
       })
     })
@@ -194,9 +192,9 @@ describe('given mailSummary query', () => {
     describe('given unsuccessful mail summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 mailSummary {
                   total
@@ -208,8 +206,8 @@ describe('given mailSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -217,18 +215,12 @@ describe('given mailSummary query', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              'Impossible de charger le résumé du courrier. Veuillez réessayer.',
-            ),
-          ]
+          const error = [new GraphQLError('Impossible de charger le résumé du courrier. Veuillez réessayer.')]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve mail summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve mail summary.`])
         })
       })
     })

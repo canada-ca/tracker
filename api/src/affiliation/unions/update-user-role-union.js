@@ -8,9 +8,9 @@ export const updateUserRoleUnion = new GraphQLUnionType({
   types: [affiliationError, updateUserRoleResultType],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return updateUserRoleResultType
+      return updateUserRoleResultType.name
     } else {
-      return affiliationError
+      return affiliationError.name
     }
   },
 })

@@ -3,53 +3,56 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
-import { Domain, Selectors } from '../../scalars'
+import { Domain, SelectorsInput } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
+import { OutsideDomainCommentEnum } from '../../enums'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
-  description:
-    'Mutation allows the modification of domains if domain is updated through out its life-cycle',
+  description: 'Mutation allows the modification of domains if domain is updated through out its life-cycle',
   inputFields: () => ({
     domainId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the domain that is being updated.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
-      description:
-        'The global ID of the organization used for permission checks.',
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'The global ID of the organization used for permission checks.',
     },
     domain: {
       type: Domain,
       description: 'The new url of the of the old domain.',
     },
     selectors: {
-      type: new GraphQLList(Selectors),
-      description:
-        'The updated DKIM selector strings corresponding to this domain.',
+      type: new GraphQLList(SelectorsInput),
+      description: 'The updated DKIM selector strings corresponding to this domain.',
     },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
     },
     hidden: {
-      description:
-        "Value that determines if the domain is excluded from an organization's score.",
+      description: "Value that determines if the domain is excluded from an organization's score.",
       type: GraphQLBoolean,
     },
     archived: {
-      description:
-        'Value that determines if the domain is excluded from the scanning process.',
+      description: 'Value that determines if the domain is excluded from the scanning process.',
+      type: GraphQLBoolean,
+    },
+    outsideComment: {
+      description: 'Comment describing reason for adding out-of-scope domain.',
+      type: OutsideDomainCommentEnum,
+    },
+    ignoreRua: {
+      description: 'Boolean value that determines if the domain should ignore rua reports.',
       type: GraphQLBoolean,
     },
   }),
   outputFields: () => ({
     result: {
       type: updateDomainUnion,
-      description:
-        '`UpdateDomainUnion` returning either a `Domain`, or `DomainError` object.',
+      description: '`UpdateDomainUnion` returning either a `Domain`, or `DomainError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -58,6 +61,7 @@ export const updateDomain = new mutationWithClientMutationId({
     {
       i18n,
       query,
+      language,
       collections,
       transaction,
       userKey,
@@ -104,6 +108,24 @@ export const updateDomain = new mutationWithClientMutationId({
       hidden = null
     }
 
+    let outsideComment
+    if (typeof args.outsideComment !== 'undefined') {
+      outsideComment = cleanseInput(args.outsideComment)
+    } else {
+      outsideComment = ''
+    }
+
+    if (tags?.find(({ en }) => en === 'OUTSIDE')) {
+      if (outsideComment === '') {
+        console.warn(`User: ${userKey} attempted to create a domain with the OUTSIDE tag without providing a comment.`)
+        return {
+          _type: 'error',
+          code: 400,
+          description: i18n._(t`Please provide a comment when adding an outside domain.`),
+        }
+      }
+    }
+
     // Check to see if domain exists
     const domain = await loadDomainByKey.load(domainId)
 
@@ -135,20 +157,14 @@ export const updateDomain = new mutationWithClientMutationId({
     // Check permission
     const permission = await checkPermission({ orgId: org._id })
 
-    if (
-      permission !== 'user' &&
-      permission !== 'admin' &&
-      permission !== 'super_admin'
-    ) {
+    if (!['admin', 'owner', 'super_admin'].includes(permission)) {
       console.warn(
         `User: ${userKey} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact organization user for help with updating this domain.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization user for help with updating this domain.`),
       }
     }
 
@@ -175,9 +191,7 @@ export const updateDomain = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to update domain that does not belong to the given organization.`,
-        ),
+        description: i18n._(t`Unable to update domain that does not belong to the given organization.`),
       }
     }
 
@@ -188,8 +202,8 @@ export const updateDomain = new mutationWithClientMutationId({
     const domainToInsert = {
       domain: updatedDomain.toLowerCase() || domain.domain.toLowerCase(),
       lastRan: domain.lastRan,
-      selectors: selectors || domain.selectors,
       archived: typeof archived !== 'undefined' ? archived : domain?.archived,
+      ignoreRua: typeof args.ignoreRua !== 'undefined' ? args.ignoreRua : domain?.ignoreRua,
     }
 
     try {
@@ -219,22 +233,19 @@ export const updateDomain = new mutationWithClientMutationId({
           RETURN MERGE({ id: claim._key, _type: "claim" }, claim)
       `
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
-      )
+      console.error(`Database error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
     }
     let claim
     try {
       claim = await claimCursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`,
-      )
+      console.error(`Cursor error occurred when user: ${userKey} running loadDomainByKey: ${err}`)
     }
 
     const claimToInsert = {
       tags: tags || claim?.tags,
       hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
+      firstSeen: typeof claim?.firstSeen === 'undefined' ? new Date().toISOString() : claim?.firstSeen,
     }
 
     try {
@@ -252,9 +263,97 @@ export const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction step error occurred when user: ${userKey} attempted to update domain edge, error: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to update domain edge. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to update domain edge. Please try again.`))
+    }
+
+    if (selectors) {
+      // Get current selectors
+      let selectorCursor
+      try {
+        selectorCursor = await query`
+        FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToSelectors
+          RETURN v
+      `
+      } catch (err) {
+        console.error(`Database error occurred when user: ${userKey} when getting current selectors: ${err}`)
+      }
+
+      let oldSelectors
+      try {
+        oldSelectors = await selectorCursor.all()
+      } catch (err) {
+        console.error(`Cursor error occurred when user: ${userKey} when getting current selectors: ${err}`)
+      }
+
+      // Remove old selector edges if no longer in use
+      const oldSelectorStrings = oldSelectors.map((selector) => selector.selector)
+      const selectorsToRemove = oldSelectors.filter((selector) => !selectors.includes(selector.selector))
+
+      if (selectorsToRemove.length > 0) {
+        try {
+          await trx.step(
+            () =>
+              query`
+              FOR selector IN ${selectorsToRemove}
+                FOR v, e IN 1..1 ANY ${domain._id} domainsToSelectors
+                  FILTER e._to == selector._id
+                  REMOVE e IN domainsToSelectors
+          `,
+          )
+        } catch (err) {
+          console.error(
+            `Transaction step error occurred when user: ${userKey} attempted to remove old selector edges, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+        }
+      }
+
+      // Ensure new selectors are already in database, add new edges
+      const newSelectorsToAdd = selectors.filter((selector) => !oldSelectorStrings.includes(selector))
+
+      if (newSelectorsToAdd.length > 0) {
+        let newSelectorsCursor
+        try {
+          newSelectorsCursor = await trx.step(
+            () =>
+              query`
+              FOR sel IN ${newSelectorsToAdd}
+                UPSERT { selector: sel }
+                  INSERT { selector: sel }
+                  UPDATE { }
+                  IN selectors
+                  RETURN NEW
+          `,
+          )
+        } catch (err) {
+          console.error(
+            `Transaction step error occurred when user: ${userKey} attempted to insert new selectors, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+        }
+
+        let newSelectors
+        try {
+          newSelectors = await newSelectorsCursor.all()
+        } catch (err) {
+          console.error(`Cursor error occurred when user: ${userKey} when getting new selectors: ${err}`)
+        }
+
+        try {
+          await trx.step(
+            () =>
+              query`
+              FOR selector IN ${newSelectors}
+                INSERT { _from: ${domain._id}, _to: selector._id } IN domainsToSelectors
+              `,
+          )
+        } catch (err) {
+          console.error(
+            `Transaction step error occurred when user: ${userKey} attempted to insert new selector edges, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to update domain. Please try again.`))
+        }
+      }
     }
 
     // Commit transaction
@@ -283,20 +382,16 @@ export const updateDomain = new mutationWithClientMutationId({
     }
     if (
       typeof selectors !== 'undefined' &&
-      JSON.stringify(domainToInsert.selectors) !==
-        JSON.stringify(domain.selectors)
+      JSON.stringify(domainToInsert.selectors) !== JSON.stringify(domain.selectors)
     ) {
       updatedProperties.push({
         name: 'selectors',
         oldValue: domain.selectors,
-        newValue: domainToInsert.selectors,
+        newValue: selectors,
       })
     }
 
-    if (
-      typeof tags !== 'undefined' &&
-      JSON.stringify(claim.tags) !== JSON.stringify(tags)
-    ) {
+    if (typeof tags !== 'undefined' && JSON.stringify(claim.tags) !== JSON.stringify(tags)) {
       updatedProperties.push({
         name: 'tags',
         oldValue: claim.tags,
@@ -332,6 +427,7 @@ export const updateDomain = new mutationWithClientMutationId({
           resourceType: 'domain', // user, org, domain
           updatedProperties,
         },
+        reason: outsideComment !== '' ? outsideComment : null,
       })
     }
 
@@ -349,15 +445,19 @@ export const updateDomain = new mutationWithClientMutationId({
         target: {
           resource: domain.domain,
           resourceType: 'domain', // user, org, domain
-          updatedProperties: [
-            { name: 'archived', oldValue: domain.archived, newValue: archived },
-          ],
+          updatedProperties: [{ name: 'archived', oldValue: domain.archived, newValue: archived }],
         },
       })
     }
 
     returnDomain.id = returnDomain._key
 
-    return returnDomain
+    return {
+      ...returnDomain,
+      claimTags: claimToInsert.tags.map((tag) => {
+        return tag[language]
+      }),
+      hidden,
+    }
   },
 })

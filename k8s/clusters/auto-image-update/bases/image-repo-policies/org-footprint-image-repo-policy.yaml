@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: org-footprint
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: org-footprint
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: org-footprint
+  policy:
+    numerical:
+      order: asc

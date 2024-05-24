@@ -1,4 +1,4 @@
-import { GraphQLEnumType } from 'graphql'
+import {GraphQLEnumType} from 'graphql'
 
 export const DmarcSummaryOrderField = new GraphQLEnumType({
   name: 'DmarcSummaryOrderField',

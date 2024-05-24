@@ -8,9 +8,9 @@ export const removeUserFromOrgUnion = new GraphQLUnionType({
   types: [affiliationError, removeUserFromOrgResultType],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return removeUserFromOrgResultType
+      return removeUserFromOrgResultType.name
     } else {
-      return affiliationError
+      return affiliationError.name
     }
   },
 })

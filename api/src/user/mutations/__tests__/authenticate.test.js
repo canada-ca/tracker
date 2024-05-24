@@ -14,12 +14,16 @@ import { tokenize, verifyToken } from '../../../auth'
 import { loadUserByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
 import { collectionNames } from '../../../collection-names'
+import jwt from 'jsonwebtoken'
+import ms from 'ms'
 
 const {
   DB_PASS: rootPass,
   DB_URL: url,
   SIGN_IN_KEY,
   REFRESH_TOKEN_EXPIRY,
+  AUTH_TOKEN_EXPIRY,
+  REFRESH_KEY,
 } = process.env
 
 describe('authenticate user account', () => {
@@ -96,12 +100,13 @@ describe('authenticate user account', () => {
         const mockedCookie = jest.fn()
         const mockedResponse = { cookie: mockedCookie }
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               authenticate(
                 input: {
+                  sendMethod: EMAIL
                   authenticationCode: 123456
                   authenticateToken: "${token}"
                 }
@@ -126,8 +131,8 @@ describe('authenticate user account', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             query,
             collections: collectionNames,
             transaction,
@@ -145,7 +150,7 @@ describe('authenticate user account', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -158,7 +163,7 @@ describe('authenticate user account', () => {
                   displayName: 'Test Account',
                   preferredLang: 'FRENCH',
                   phoneValidated: false,
-                  emailValidated: false,
+                  emailValidated: true,
                 },
               },
             },
@@ -183,9 +188,7 @@ describe('authenticate user account', () => {
           secure: true,
         })
 
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully authenticated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully authenticated their account.`])
       })
     })
     describe('user has rememberMe enabled', () => {
@@ -220,12 +223,26 @@ describe('authenticate user account', () => {
         const mockedCookie = jest.fn()
         const mockedResponse = { cookie: mockedCookie }
 
-        const response = await graphql(
+        const authToken = tokenize({
+          expiresIn: AUTH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key },
+          secret: String(SIGN_IN_KEY),
+        })
+        const refreshToken = tokenize({
+          expiresIn: REFRESH_TOKEN_EXPIRY,
+          parameters: { userKey: user._key, uuid: '456' },
+          secret: String(REFRESH_KEY),
+        })
+
+        const mockedTokenize = jest.fn().mockReturnValueOnce(authToken).mockReturnValueOnce(refreshToken)
+
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               authenticate(
                 input: {
+                  sendMethod: EMAIL
                   authenticationCode: 123456
                   authenticateToken: "${token}"
                 }
@@ -250,16 +267,17 @@ describe('authenticate user account', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             query,
             collections: collectionNames,
             transaction,
             uuidv4,
             response: mockedResponse,
+            jwt,
             auth: {
               bcrypt,
-              tokenize: mockTokenize,
+              tokenize: mockedTokenize,
               verifyToken: verifyToken({}),
             },
             validators: {
@@ -269,20 +287,20 @@ describe('authenticate user account', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
             authenticate: {
               result: {
-                authToken: 'token',
+                authToken: authToken,
                 user: {
                   id: `${toGlobalId('user', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
                   preferredLang: 'FRENCH',
                   phoneValidated: false,
-                  emailValidated: false,
+                  emailValidated: true,
                 },
               },
             },
@@ -300,16 +318,14 @@ describe('authenticate user account', () => {
 
         expect(user.tfaCode).toEqual(null)
 
-        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', 'token', {
+        expect(mockedCookie).toHaveBeenCalledWith('refresh_token', refreshToken, {
           httpOnly: true,
-          maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+          maxAge: ms(REFRESH_TOKEN_EXPIRY),
           sameSite: true,
           secure: true,
         })
 
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully authenticated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully authenticated their account.`])
       })
     })
   })
@@ -336,12 +352,13 @@ describe('authenticate user account', () => {
             parameters: { userKey: undefined },
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -366,8 +383,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -385,7 +402,7 @@ describe('authenticate user account', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -399,9 +416,7 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userKey`,
-          ])
+          expect(consoleOutput).toEqual([`Authentication token does not contain the userKey`])
         })
       })
       describe('when userKey is not a field in the token parameters', () => {
@@ -410,12 +425,13 @@ describe('authenticate user account', () => {
             parameters: {},
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -440,8 +456,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -459,7 +475,7 @@ describe('authenticate user account', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -473,9 +489,7 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userKey`,
-          ])
+          expect(consoleOutput).toEqual([`Authentication token does not contain the userKey`])
         })
       })
       describe('when user cannot be found in database', () => {
@@ -484,12 +498,13 @@ describe('authenticate user account', () => {
             parameters: { userKey: 1 },
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -514,8 +529,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -535,7 +550,7 @@ describe('authenticate user account', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -549,23 +564,42 @@ describe('authenticate user account', () => {
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to authenticate, no account is associated with this id.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 1 attempted to authenticate, no account is associated with this id.`])
         })
       })
       describe('when tfa codes do not match', () => {
+        beforeAll(async () => {
+          // Generate DB Items
+          ;({ query, drop, truncate, collections, transaction } = await ensure({
+            variables: {
+              dbname: dbNameFromFile(__filename),
+              username: 'root',
+              rootPassword: rootPass,
+              password: rootPass,
+              url,
+            },
+
+            schema: dbschema,
+          }))
+        })
+        afterEach(async () => {
+          await truncate()
+        })
+        afterAll(async () => {
+          await drop()
+        })
         it('returns an error message', async () => {
           const token = tokenize({
             parameters: { userKey: 123 },
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -590,8 +624,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -613,11 +647,9 @@ describe('authenticate user account', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError('Incorrect TFA code. Please sign in again.'),
-          ]
+          const error = [new GraphQLError('Incorrect TFA code. Please sign in again.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -633,12 +665,13 @@ describe('authenticate user account', () => {
               secret: String(SIGN_IN_KEY),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -663,15 +696,13 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 uuidv4,
                 auth: {
@@ -694,11 +725,9 @@ describe('authenticate user account', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to authenticate. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to authenticate. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -715,12 +744,13 @@ describe('authenticate user account', () => {
               secret: String(SIGN_IN_KEY),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -745,16 +775,14 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 uuidv4,
                 auth: {
@@ -777,11 +805,9 @@ describe('authenticate user account', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to authenticate. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to authenticate. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -812,12 +838,13 @@ describe('authenticate user account', () => {
             parameters: { userKey: undefined },
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -842,8 +869,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -861,24 +888,21 @@ describe('authenticate user account', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const error = {
             data: {
               authenticate: {
                 result: {
                   code: 400,
-                  description:
-                    'La valeur du jeton est incorrecte, veuillez vous connecter à nouveau.',
+                  description: 'La valeur du jeton est incorrecte, veuillez vous connecter à nouveau.',
                 },
               },
             },
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userKey`,
-          ])
+          expect(consoleOutput).toEqual([`Authentication token does not contain the userKey`])
         })
       })
       describe('when userKey is not a field in the token parameters', () => {
@@ -887,12 +911,13 @@ describe('authenticate user account', () => {
             parameters: {},
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -917,8 +942,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -936,24 +961,21 @@ describe('authenticate user account', () => {
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const error = {
             data: {
               authenticate: {
                 result: {
                   code: 400,
-                  description:
-                    'La valeur du jeton est incorrecte, veuillez vous connecter à nouveau.',
+                  description: 'La valeur du jeton est incorrecte, veuillez vous connecter à nouveau.',
                 },
               },
             },
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Authentication token does not contain the userKey`,
-          ])
+          expect(consoleOutput).toEqual([`Authentication token does not contain the userKey`])
         })
       })
       describe('when user cannot be found in database', () => {
@@ -962,12 +984,13 @@ describe('authenticate user account', () => {
             parameters: { userKey: 1 },
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -992,8 +1015,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1013,38 +1036,56 @@ describe('authenticate user account', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               authenticate: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de s'authentifier. Veuillez réessayer.",
+                  description: "Impossible de s'authentifier. Veuillez réessayer.",
                 },
               },
             },
           }
 
           expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 1 attempted to authenticate, no account is associated with this id.`,
-          ])
+          expect(consoleOutput).toEqual([`User: 1 attempted to authenticate, no account is associated with this id.`])
         })
       })
       describe('when tfa codes do not match', () => {
+        beforeAll(async () => {
+          // Generate DB Items
+          ;({ query, drop, truncate, collections, transaction } = await ensure({
+            variables: {
+              dbname: dbNameFromFile(__filename),
+              username: 'root',
+              rootPassword: rootPass,
+              password: rootPass,
+              url,
+            },
+
+            schema: dbschema,
+          }))
+        })
+        afterEach(async () => {
+          await truncate()
+        })
+        afterAll(async () => {
+          await drop()
+        })
         it('returns an error message', async () => {
           const token = tokenize({
             parameters: { userKey: 123 },
             secret: String(SIGN_IN_KEY),
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 654321
                     authenticateToken: "${token}"
                   }
@@ -1069,8 +1110,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1092,11 +1133,9 @@ describe('authenticate user account', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError('Code TFA incorrect. Veuillez vous reconnecter.'),
-          ]
+          const error = [new GraphQLError('Code TFA incorrect. Veuillez vous reconnecter.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1112,12 +1151,13 @@ describe('authenticate user account', () => {
               secret: String(SIGN_IN_KEY),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -1142,15 +1182,13 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 uuidv4,
                 auth: {
@@ -1173,13 +1211,9 @@ describe('authenticate user account', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de s'authentifier. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de s'authentifier. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1196,12 +1230,13 @@ describe('authenticate user account', () => {
               secret: String(SIGN_IN_KEY),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 authenticate(
                   input: {
+                    sendMethod: EMAIL
                     authenticationCode: 123456
                     authenticateToken: "${token}"
                   }
@@ -1226,16 +1261,14 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue(),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 uuidv4,
                 auth: {
@@ -1258,13 +1291,9 @@ describe('authenticate user account', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de s'authentifier. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de s'authentifier. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

@@ -8,9 +8,9 @@ export const refreshTokensUnion = new GraphQLUnionType({
   types: [authResultType, authenticateError],
   resolveType({ _type }) {
     if (_type === 'authResult') {
-      return authResultType
+      return authResultType.name
     } else {
-      return authenticateError
+      return authenticateError.name
     }
   },
 })

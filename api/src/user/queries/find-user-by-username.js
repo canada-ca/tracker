@@ -8,7 +8,7 @@ export const findUserByUsername = {
   type: userSharedType,
   args: {
     userName: {
-      type: GraphQLNonNull(GraphQLEmailAddress),
+      type: new GraphQLNonNull(GraphQLEmailAddress),
       description: 'Email address of user you wish to gather data for.',
     },
   },

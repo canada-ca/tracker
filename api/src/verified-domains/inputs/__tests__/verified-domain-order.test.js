@@ -9,17 +9,13 @@ describe('given the verifiedDomainOrder input object', () => {
       const demoType = verifiedDomainOrder.getFields()
 
       expect(demoType).toHaveProperty('direction')
-      expect(demoType.direction.type).toMatchObject(
-        GraphQLNonNull(OrderDirection),
-      )
+      expect(demoType.direction.type).toMatchObject(new GraphQLNonNull(OrderDirection))
     })
     it('has a field field', () => {
       const demoType = verifiedDomainOrder.getFields()
 
       expect(demoType).toHaveProperty('field')
-      expect(demoType.field.type).toMatchObject(
-        GraphQLNonNull(VerifiedDomainOrderField),
-      )
+      expect(demoType.field.type).toMatchObject(new GraphQLNonNull(VerifiedDomainOrderField))
     })
   })
 })

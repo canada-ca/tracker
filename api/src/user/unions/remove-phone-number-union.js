@@ -1,8 +1,5 @@
 import { GraphQLUnionType } from 'graphql'
-import {
-  removePhoneNumberErrorType,
-  removePhoneNumberResultType,
-} from '../objects'
+import { removePhoneNumberErrorType, removePhoneNumberResultType } from '../objects'
 
 export const removePhoneNumberUnion = new GraphQLUnionType({
   name: 'RemovePhoneNumberUnion',
@@ -11,9 +8,9 @@ export const removePhoneNumberUnion = new GraphQLUnionType({
   types: [removePhoneNumberErrorType, removePhoneNumberResultType],
   resolveType({ _type }) {
     if (_type === 'result') {
-      return removePhoneNumberResultType
+      return removePhoneNumberResultType.name
     } else {
-      return removePhoneNumberErrorType
+      return removePhoneNumberErrorType.name
     }
   },
 })

@@ -40,92 +40,92 @@ export function EditableUserPhoneNumber({ detailValue, ...props }) {
   const [setPhoneNumber, { error: _setPhoneNumberError }] = useMutation(
     SET_PHONE_NUMBER,
     {
-      onError: ({ message }) => {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while updating your phone number.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ setPhoneNumber }) {
+      if (setPhoneNumber.result.__typename === 'SetPhoneNumberResult') {
+        setPhoneCodeSent(true)
+      } else if (setPhoneNumber.result.__typename === 'SetPhoneNumberError') {
         toast({
-          title: t`An error occurred while updating your phone number.`,
-          description: message,
+          title: t`Unable to update your phone number, please try again.`,
+          description: setPhoneNumber.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      },
-      onCompleted({ setPhoneNumber }) {
-        if (setPhoneNumber.result.__typename === 'SetPhoneNumberResult') {
-          setPhoneCodeSent(true)
-        } else if (setPhoneNumber.result.__typename === 'SetPhoneNumberError') {
-          toast({
-            title: t`Unable to update your phone number, please try again.`,
-            description: setPhoneNumber.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: t`Incorrect send method received.`,
-            description: t`Incorrect setPhoneNumber.result typename.`,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect setPhoneNumber.result typename.')
-        }
-      },
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect setPhoneNumber.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect setPhoneNumber.result typename.')
+      }
     },
+  },
   )
 
   const [verifyPhoneNumber, { error: __verifyPhoneNumberError }] = useMutation(
     VERIFY_PHONE_NUMBER,
     {
-      onError: ({ message }) => {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while verifying your phone number.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ verifyPhoneNumber }) {
+      if (verifyPhoneNumber.result.__typename === 'VerifyPhoneNumberResult') {
         toast({
-          title: t`An error occurred while verifying your phone number.`,
-          description: message,
+          title: t`Changed User Phone Number`,
+          description: t`You have successfully updated your phone number.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        onClose()
+        setPhoneCodeSent(false)
+      } else if (
+          verifyPhoneNumber.result.__typename === 'VerifyPhoneNumberError'
+        ) {
+        toast({
+          title: t`Unable to verify your phone number, please try again.`,
+          description: verifyPhoneNumber.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      },
-      onCompleted({ verifyPhoneNumber }) {
-        if (verifyPhoneNumber.result.__typename === 'VerifyPhoneNumberResult') {
-          toast({
-            title: t`Changed User Phone Number`,
-            description: t`You have successfully updated your phone number.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          onClose()
-          setPhoneCodeSent(false)
-        } else if (
-          verifyPhoneNumber.result.__typename === 'VerifyPhoneNumberError'
-        ) {
-          toast({
-            title: t`Unable to verify your phone number, please try again.`,
-            description: verifyPhoneNumber.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: t`Incorrect send method received.`,
-            description: t`Incorrect verifyPhoneNumber.result typename.`,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect verifyPhoneNumber.result typename.')
-        }
-      },
+      } else {
+        toast({
+          title: t`Incorrect send method received.`,
+          description: t`Incorrect verifyPhoneNumber.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect verifyPhoneNumber.result typename.')
+      }
     },
+  },
   )
 
   const setPhoneModal = (
@@ -160,21 +160,19 @@ export function EditableUserPhoneNumber({ detailValue, ...props }) {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Stack spacing="4" p="6">
+                <Stack spacing="4">
+                  <Text>
+                    <Trans>If available, please use a managed device provided by your organization.</Trans>
+                  </Text>
                   {detailValue && (
-                    <Stack>
-                      <Heading as="h3" size="sm">
-                        <Trans>Current Phone Number:</Trans>
-                      </Heading>
-
-                      <Text>{detailValue}</Text>
-                    </Stack>
+                    <Text fontSize="md">
+                      <Trans>
+                        <b>Current Phone Number:</b> {detailValue}
+                      </Trans>
+                    </Text>
                   )}
 
-                  <PhoneNumberField
-                    name="phoneNumber"
-                    label={t`New Phone Number:`}
-                  />
+                  <PhoneNumberField name="phoneNumber" label={t`New Phone Number:`} />
                 </Stack>
               </ModalBody>
 
@@ -221,7 +219,7 @@ export function EditableUserPhoneNumber({ detailValue, ...props }) {
           }}
         >
           {({ handleSubmit, isSubmitting }) => (
-            <form id="form" onSubmit={handleSubmit}>
+            <form id="form" role="form" onSubmit={handleSubmit}>
               <ModalHeader>
                 <Trans>Verify</Trans>
               </ModalHeader>

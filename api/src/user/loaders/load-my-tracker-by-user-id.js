@@ -8,21 +8,11 @@ export const loadMyTrackerByUserId =
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`
-        WITH users
-        LET favDomainKeys = (
+        WITH users, domains
+        LET favDomains = (
             FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
                 OPTIONS {order: "bfs"}
-                RETURN v._key
-        )
-        LET favDomains = (
-            FOR domain IN domains
-                FILTER domain._key IN favDomainKeys
-                RETURN {
-                    id: domain._key,
-                    _type: "domain",
-                    "phase": domain.phase,
-                    "httpsStatus": domain.status.https
-                }
+                RETURN { "id": v._key, "phase": v.phase, "https": v.status.https, "dmarc": v.status.dmarc, "_type": "domain" }
         )
         RETURN { "domains": favDomains }
         `
@@ -49,6 +39,11 @@ export const loadMyTrackerByUserId =
         fail: 0,
         total: 0,
       },
+      dmarc: {
+        pass: 0,
+        fail: 0,
+        total: 0,
+      },
       dmarc_phase: {
         not_implemented: 0,
         assess: 0,
@@ -59,19 +54,23 @@ export const loadMyTrackerByUserId =
       },
     }
 
-    domainsInfo.domains.forEach(({ phase, httpsStatus }) => {
+    domainsInfo.domains.forEach(({ phase, https, dmarc }) => {
       // calculate https summary
-      if (httpsStatus === 'pass') {
+      if (https === 'pass') {
         returnSummaries.https.pass++
         returnSummaries.https.total++
-      } else if (httpsStatus === 'fail') {
+      } else if (https === 'fail') {
         returnSummaries.https.fail++
         returnSummaries.https.total++
       }
 
+      // calculate DMARC summary
+      if (dmarc === 'pass') returnSummaries.dmarc.pass++
+      else if (dmarc === 'fail') returnSummaries.dmarc.fail++
+      returnSummaries.dmarc.total++
+
       // calculate dmarcPhase summary
-      if (phase === 'not implemented')
-        returnSummaries.dmarc_phase.not_implemented++
+      if (phase === 'not implemented') returnSummaries.dmarc_phase.not_implemented++
       else if (phase === 'assess') returnSummaries.dmarc_phase.assess++
       else if (phase === 'deploy') returnSummaries.dmarc_phase.deploy++
       else if (phase === 'enforce') returnSummaries.dmarc_phase.enforce++

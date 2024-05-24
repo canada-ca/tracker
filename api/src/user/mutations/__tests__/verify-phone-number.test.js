@@ -79,9 +79,9 @@ describe('user send password reset email', () => {
         })
       })
       it('returns a successful status message', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                 result {
@@ -99,8 +99,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             query,
@@ -116,7 +116,7 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -125,22 +125,19 @@ describe('user send password reset email', () => {
                 user: {
                   displayName: 'Test Account',
                 },
-                status:
-                  'Successfully verified phone number, and set TFA send method to text.',
+                status: 'Successfully verified phone number, and set TFA send method to text.',
               },
             },
           },
         }
 
         expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully two factor authenticated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully two factor authenticated their account.`])
       })
       it('updates the user phoneValidated to true', async () => {
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                 result {
@@ -158,8 +155,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             query,
@@ -175,7 +172,7 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const cursor = await query`
           FOR user IN users
@@ -185,9 +182,7 @@ describe('user send password reset email', () => {
         user = await cursor.next()
 
         expect(user.phoneValidated).toEqual(true)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully two factor authenticated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully two factor authenticated their account.`])
       })
     })
     describe('users language is set to french', () => {
@@ -206,9 +201,9 @@ describe('user send password reset email', () => {
         })
       })
       it('returns a successful status message', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                 result {
@@ -226,8 +221,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             query,
@@ -243,7 +238,7 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -260,14 +255,12 @@ describe('user send password reset email', () => {
         }
 
         expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully two factor authenticated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully two factor authenticated their account.`])
       })
       it('updates the user phoneValidated to true', async () => {
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                 result {
@@ -285,8 +278,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             query,
@@ -302,7 +295,7 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const cursor = await query`
           FOR user IN users
@@ -312,9 +305,7 @@ describe('user send password reset email', () => {
         user = await cursor.next()
 
         expect(user.phoneValidated).toEqual(true)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully two factor authenticated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully two factor authenticated their account.`])
       })
     })
   })
@@ -336,9 +327,9 @@ describe('user send password reset email', () => {
       })
       describe('the two factor code is not 6 digits long', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyPhoneNumber(input: { twoFactorCode: 123 }) {
                   result {
@@ -356,8 +347,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query,
@@ -374,15 +365,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description:
-                    'Two factor code length is incorrect. Please try again.',
+                  description: 'Two factor code length is incorrect. Please try again.',
                 },
               },
             },
@@ -396,9 +386,9 @@ describe('user send password reset email', () => {
       })
       describe('tfa codes do not match', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyPhoneNumber(input: { twoFactorCode: 654321 }) {
                   result {
@@ -416,8 +406,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query,
@@ -435,15 +425,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description:
-                    'Two factor code is incorrect. Please try again.',
+                  description: 'Two factor code is incorrect. Please try again.',
                 },
               },
             },
@@ -458,9 +447,9 @@ describe('user send password reset email', () => {
       describe('given a transaction step error', () => {
         describe('when upserting users phone validation status', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                     result {
@@ -478,16 +467,14 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: 123,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
@@ -501,13 +488,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to two factor authenticate. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to two factor authenticate. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -519,9 +502,9 @@ describe('user send password reset email', () => {
       describe('given a transaction commit error', () => {
         describe('when committing changes', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                     result {
@@ -539,17 +522,15 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: 123,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
@@ -563,13 +544,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to two factor authenticate. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to two factor authenticate. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -596,9 +573,9 @@ describe('user send password reset email', () => {
       })
       describe('the two factor code is not 6 digits long', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyPhoneNumber(input: { twoFactorCode: 123 }) {
                   result {
@@ -616,8 +593,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query,
@@ -634,15 +611,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description:
-                    'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
+                  description: 'La longueur du code à deux facteurs est incorrecte. Veuillez réessayer.',
                 },
               },
             },
@@ -656,9 +632,9 @@ describe('user send password reset email', () => {
       })
       describe('tfa codes do not match', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 verifyPhoneNumber(input: { twoFactorCode: 654321 }) {
                   result {
@@ -676,8 +652,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query,
@@ -695,15 +671,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyPhoneNumber: {
                 result: {
                   code: 400,
-                  description:
-                    'Le code à deux facteurs est incorrect. Veuillez réessayer.',
+                  description: 'Le code à deux facteurs est incorrect. Veuillez réessayer.',
                 },
               },
             },
@@ -718,9 +693,9 @@ describe('user send password reset email', () => {
       describe('given a transaction step error', () => {
         describe('when upserting users phone validation status', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                     result {
@@ -738,16 +713,14 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: 123,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
@@ -761,13 +734,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de s'authentifier par deux facteurs. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -779,9 +748,9 @@ describe('user send password reset email', () => {
       describe('given a transaction commit error', () => {
         describe('when committing changes', () => {
           it('throws an error', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                     result {
@@ -799,17 +768,15 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: 123,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 auth: {
                   userRequired: jest.fn().mockReturnValue({
@@ -823,13 +790,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                "Impossible de s'authentifier par deux facteurs. Veuillez réessayer.",
-              ),
-            ]
+            const error = [new GraphQLError("Impossible de s'authentifier par deux facteurs. Veuillez réessayer.")]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

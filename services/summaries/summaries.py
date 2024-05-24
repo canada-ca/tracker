@@ -1,13 +1,7 @@
 import os
-import re
 import sys
-import time
-import json
 import logging
-import traceback
-import emoji
-import random
-import datetime
+from datetime import date, timedelta
 from arango import ArangoClient
 from dotenv import load_dotenv
 
@@ -15,97 +9,126 @@ load_dotenv()
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
-DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
-DB_HOST = os.getenv("DB_HOST")
+DB_URL = os.getenv("DB_URL")
 
-SCAN_TYPES = ["https", "ssl", "dkim", "spf", "dmarc"]
-CHARTS = {"mail": ["dmarc", "spf", "dkim"], "web": ["https", "ssl"],
-          "https": ["https"]}
+CHARTS = {
+    # tier 1
+    "https": ["https"],
+    "dmarc": ["dmarc"],
+    # tier 2
+    "web_connections": ["https", "hsts"],
+    "ssl": ["ssl"],
+    "spf": ["spf"],
+    "dkim": ["dkim"],
+    # tier 3
+    "mail": ["dmarc", "spf", "dkim"],
+    "web": ["https", "hsts", "ssl"],
+}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def update_scan_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                          password=DB_PASS, port=DB_PORT):
-    logging.info(f"Updating scan summaries...")
+def is_domain_hidden(domain, db):
+    """Check if a domain is hidden
+
+    :param domain: domain to check
+    :param db: active arangodb connection
+    :return: True if domain is hidden, False otherwise
+    """
+
+    claims = db.collection("claims").find({"_to": domain["_id"]})
+    for claim in claims:
+        hidden = claim.get("hidden")
+        if hidden != None and hidden == True:
+            return True
+    return False
+
+
+def domain_has_verified_claim(domain, db):
+    cursor = db.aql.execute(
+        """
+            FOR v, e IN 1..1 INBOUND @domain_id claims
+                FILTER v.verified == true
+                RETURN v
+            """,
+        bind_vars={"domain_id": domain["_id"]},
+    )
+    if cursor.empty():
+        return False
+    return True
+
+
+def ignore_domain(domain):
+    """Check if a domain should be ignored
+
+    :param domain: domain to check
+    :return: True if domain should be ignored, False otherwise
+    """
+
+    if (
+        domain == None
+        or domain.get("archived") is True
+        or domain.get("blocked") is True
+        or domain.get("rcode") == "NXDOMAIN"
+    ):
+        return True
+    return False
+
+
+def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
+    logging.info(f"Updating chart summaries...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
-    for scan_type in SCAN_TYPES:
-        scan_pass = 0
-        scan_fail = 0
-        scan_total = 0
-        for domain in db.collection("domains"):
-            archived = domain.get("archived")
-            if archived != True:
-                # We don't want to count domains not passing or failing
-                # (i.e unreachable or unscanned) towards the total.
-                if domain.get("status", {}).get(scan_type) == "fail":
-                    scan_total = scan_total + 1
-                    scan_fail = scan_fail + 1
-
-                elif domain.get("status", {}).get(scan_type):
-                    scan_total = scan_total + 1
-                    scan_pass = scan_pass + 1
-
-        current_summary = db.collection("scanSummaries").get(
-            {"_key": scan_type})
-
-        summary_exists = current_summary is not None
-
-        if not summary_exists:
-            db.collection("scanSummaries").insert(
-                {
-                    "_key": scan_type,
-                    "pass": scan_pass,
-                    "fail": scan_fail,
-                    "total": scan_total,
-                }
-            )
-        else:
-            db.collection("scanSummaries").update_match(
-                {"_key": scan_type},
-                {"pass": scan_pass, "fail": scan_fail, "total": scan_total},
-            )
-
-        logging.info(f"{scan_type} scan summary updated.")
-
-    logging.info(f"Scan summary update completed.")
-
-
-def update_dmarc_phase_chart_summaries(db):
-    """Update the dmarc phase chart summaries in the database
-
-    :param db: active arangodb connection
-    """
+    # Gather summaries from domain statuses
+    chartSummaries = {}
+    for chart_type, scan_types in CHARTS.items():
+        chartSummaries[chart_type] = {
+            "scan_types": scan_types,
+            "pass": 0,
+            "fail": 0,
+            "total": 0,
+        }
 
     # DMARC phases:
     # 0. Not Implemented
-    # 1. Assess
-    # 2. Deploy
-    # 3. Enforce
-    # 4. Maintain
-
     not_implemented_count = 0
+    # 1. Assess
     assess_count = 0
+    # 2. Deploy
     deploy_count = 0
+    # 3. Enforce
     enforce_count = 0
+    # 4. Maintain
     maintain_count = 0
 
-    domain_total = 0
-
     for domain in db.collection("domains"):
-        archived = domain.get("archived")
-        if archived != True:
-            phase = domain.get("phase")
+        if (
+            ignore_domain(domain) is False
+            and domain_has_verified_claim(domain, db) is True
+        ):
+            # Update chart summaries
+            for chart_type in chartSummaries:
+                chart = chartSummaries[chart_type]
+                category_status = []
+                for scan_type in chart["scan_types"]:
+                    category_status.append(domain.get("status", {}).get(scan_type))
+                if "fail" in category_status:
+                    chart["fail"] += 1
+                    chart["total"] += 1
+                elif "info" not in category_status:
+                    chart["pass"] += 1
+                    chart["total"] += 1
 
-            if phase is None:
+            # Update DMARC phase summaries
+            phase = domain.get("phase")
+            if phase is None or domain.get("status", {}).get("dmarc") == "info":
                 logging.info(
-                    f"Property \"phase\" does not exist for domain \"{domain['domain']}\".")
+                    f"No DMARC scan data available for domain \"{domain['domain']}\"."
+                )
                 continue
 
             if phase == "not implemented":
@@ -119,132 +142,114 @@ def update_dmarc_phase_chart_summaries(db):
             elif phase == "maintain":
                 maintain_count = maintain_count + 1
 
-    domain_total = not_implemented_count + assess_count + deploy_count + \
-                   enforce_count + maintain_count
+    # Update DMARC phase summaries in DB
+    dmarc_phase_summary = {
+        "not_implemented": not_implemented_count,
+        "assess": assess_count,
+        "deploy": deploy_count,
+        "enforce": enforce_count,
+        "maintain": maintain_count,
+        "total": not_implemented_count
+        + assess_count
+        + deploy_count
+        + enforce_count
+        + maintain_count,
+    }
 
-    current_summary = db.collection("chartSummaries").get(
-        {"_key": "dmarc_phase"})
-
-    summary_exists = current_summary is not None
-
-    if not summary_exists:
-        db.collection("chartSummaries").insert(
-            {
-                "_key": "dmarc_phase",
-                "not_implemented": not_implemented_count,
-                "assess": assess_count,
-                "deploy": deploy_count,
-                "enforce": enforce_count,
-                "maintain": maintain_count,
-                "total": domain_total,
-            }
-        )
-    else:
-        db.collection("chartSummaries").update_match(
-            {"_key": "dmarc_phase"},
-            {
-                "not_implemented": not_implemented_count,
-                "assess": assess_count,
-                "deploy": deploy_count,
-                "enforce": enforce_count,
-                "maintain": maintain_count,
-                "total": domain_total, },
-        )
-
-    logging.info("DMARC phase scan summary updated.")
-
-
-def update_chart_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                           password=DB_PASS, port=DB_PORT):
-    logging.info(f"Updating chart summaries...")
-
-    # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
-    db = client.db(name, username=user, password=password)
-
-    for chart_type, scan_types in CHARTS.items():
-        pass_count = 0
-        fail_count = 0
-        domain_total = 0
-        for domain in db.collection("domains"):
-            archived = domain.get("archived")
-            if archived != True:
-                category_status = []
-                for scan_type in scan_types:
-                    category_status.append(domain.get("status", {}).get(scan_type))
-
-                if "fail" in category_status:
-                    fail_count = fail_count + 1
-                elif "info" not in category_status:
-                    pass_count = pass_count + 1
-
-        domain_total = pass_count + fail_count
-        current_summary = db.collection("chartSummaries").get(
-            {"_key": chart_type})
-
-        summary_exists = current_summary is not None
-
-        if not summary_exists:
-            db.collection("chartSummaries").insert(
-                {
-                    "_key": chart_type,
-                    "pass": pass_count,
-                    "fail": fail_count,
-                    "total": domain_total,
-                }
-            )
-        else:
-            db.collection("chartSummaries").update_match(
-                {"_key": chart_type},
-                {"pass": pass_count, "fail": fail_count, "total": domain_total},
-            )
-
-        logging.info(f"{chart_type} scan summary updated.")
-
-    # handle DMARC phase summary
-    update_dmarc_phase_chart_summaries(db)
-
+    # Update chart summaries in DB
+    db.collection("chartSummaries").insert(
+        {
+            "date": date.today().isoformat(),
+            **chartSummaries,
+            "dmarc_phase": dmarc_phase_summary,
+        }
+    )
     logging.info(f"Chart summary update completed.")
 
 
-def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
-                         password=DB_PASS, port=DB_PORT):
+def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PASS):
     logging.info(f"Updating organization summary values...")
 
     # Establish DB connection
-    connection_string = f"http://{host}:{port}"
-    client = ArangoClient(hosts=connection_string)
+    client = ArangoClient(hosts=host)
     db = client.db(name, username=user, password=password)
 
     for org in db.collection("organizations"):
-        dmarc_pass = 0
-        dmarc_fail = 0
+        # tier 1
         https_fail = 0
         https_pass = 0
+        dmarc_pass = 0
+        dmarc_fail = 0
+
+        # tier 2
+        web_connections_fail = 0
+        web_connections_pass = 0
+        ssl_fail = 0
+        ssl_pass = 0
+        spf_fail = 0
+        spf_pass = 0
+        dkim_fail = 0
+        dkim_pass = 0
+
+        # tier 3
         web_fail = 0
         web_pass = 0
         mail_fail = 0
         mail_pass = 0
+
+        # dmarc phase
         dmarc_phase_not_implemented = 0
         dmarc_phase_assess = 0
         dmarc_phase_deploy = 0
         dmarc_phase_enforce = 0
         dmarc_phase_maintain = 0
-        domain_total = 0
 
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
-            archived = domain.get("archived")
-            hidden = claim.get("hidden")
-            if hidden != True and archived != True:
-                domain_total = domain_total + 1
+            if ignore_domain(domain) is False:
+                # tier 1
+                # https
+                if domain.get("status", {}).get("https") == "pass":
+                    https_pass = https_pass + 1
+                elif domain.get("status", {}).get("https") == "fail":
+                    https_fail = https_fail + 1
+                # dmarc
                 if domain.get("status", {}).get("dmarc") == "pass":
                     dmarc_pass = dmarc_pass + 1
-                else:
+                elif domain.get("status", {}).get("dmarc") == "fail":
                     dmarc_fail = dmarc_fail + 1
 
+                # tier 2
+                # web connections
+                if (
+                    domain.get("status", {}).get("https") == "pass"
+                    and domain.get("status", {}).get("hsts") == "pass"
+                ):
+                    web_connections_pass = web_connections_pass + 1
+                elif (
+                    domain.get("status", {}).get("https") == "fail"
+                    or domain.get("status", {}).get("hsts") == "fail"
+                ):
+                    web_connections_fail = web_connections_fail + 1
+                # ssl/tls
+                if domain.get("status", {}).get("ssl") == "pass":
+                    ssl_pass = ssl_pass + 1
+                elif domain.get("status", {}).get("ssl") == "fail":
+                    ssl_fail = ssl_fail + 1
+                # spf
+                if domain.get("status", {}).get("spf") == "pass":
+                    spf_pass = spf_pass + 1
+                elif domain.get("status", {}).get("spf") == "fail":
+                    spf_fail = spf_fail + 1
+                # dkim
+                if domain.get("status", {}).get("dkim") == "pass":
+                    dkim_pass = dkim_pass + 1
+                elif domain.get("status", {}).get("dkim") == "fail":
+                    dkim_fail = dkim_fail + 1
+
+                # tier 3
+                # web
                 if (
                     domain.get("status", {}).get("ssl") == "pass"
                     and domain.get("status", {}).get("https") == "pass"
@@ -255,26 +260,26 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
                     or domain.get("status", {}).get("https") == "fail"
                 ):
                     web_fail = web_fail + 1
-
-                if domain.get("status", {}).get("https") == "pass":
-                    https_pass = https_pass + 1
-                if domain.get("status", {}).get("https") == "fail":
-                    https_fail = https_fail + 1
-
+                # mail
                 if (
                     domain.get("status", {}).get("dmarc") == "pass"
                     and domain.get("status", {}).get("spf") == "pass"
                     and domain.get("status", {}).get("dkim") == "pass"
                 ):
                     mail_pass = mail_pass + 1
-                else:
+                elif (
+                    domain.get("status", {}).get("dmarc") == "fail"
+                    or domain.get("status", {}).get("spf") == "fail"
+                    or domain.get("status", {}).get("dkim") == "fail"
+                ):
                     mail_fail = mail_fail + 1
 
+                # dmarc phase
                 phase = domain.get("phase")
-
-                if phase is None:
+                if phase is None or domain.get("status", {}).get("dmarc") == "info":
                     logging.info(
-                        f"Property \"phase\" does not exist for domain \"${domain['domain']}\".")
+                        f"No DMARC scan data available for domain \"{domain['domain']}\"."
+                    )
                     continue
 
                 if phase == "not implemented":
@@ -288,50 +293,87 @@ def update_org_summaries(host=DB_HOST, name=DB_NAME, user=DB_USER,
                 elif phase == "maintain":
                     dmarc_phase_maintain = dmarc_phase_maintain + 1
 
+        dmarc_phase_total = (
+            dmarc_phase_not_implemented
+            + dmarc_phase_assess
+            + dmarc_phase_deploy
+            + dmarc_phase_enforce
+            + dmarc_phase_maintain
+        )
+
         summary_data = {
-            "summaries": {
-                "dmarc": {
-                    "pass": dmarc_pass,
-                    "fail": dmarc_fail,
-                    "total": dmarc_pass + dmarc_fail
-                },
-                "web": {
-                    "pass": web_pass,
-                    "fail": web_fail,
-                    "total": web_pass + web_fail,
-                    # Don't count non web-hosting domains
-                },
-                "mail": {
-                    "pass": mail_pass,
-                    "fail": mail_fail,
-                    "total": domain_total,
-                },
-                "dmarc_phase": {
-                    "not_implemented": dmarc_phase_not_implemented,
-                    "assess": dmarc_phase_assess,
-                    "deploy": dmarc_phase_deploy,
-                    "enforce": dmarc_phase_enforce,
-                    "maintain": dmarc_phase_maintain,
-                    "total": domain_total,
-                },
-                "https": {
-                    "pass": https_pass,
-                    "fail": https_fail,
-                    "total": https_pass + https_fail
-                    # Don't count non web-hosting domains
-                }
-            }
+            "date": date.today().isoformat(),
+            "dmarc": {
+                "pass": dmarc_pass,
+                "fail": dmarc_fail,
+                "total": dmarc_pass + dmarc_fail,
+            },
+            "web": {
+                "pass": web_pass,
+                "fail": web_fail,
+                "total": web_pass + web_fail,
+                # Don't count non web-hosting domains
+            },
+            "mail": {
+                "pass": mail_pass,
+                "fail": mail_fail,
+                "total": mail_pass + mail_fail,
+            },
+            "dmarc_phase": {
+                "not_implemented": dmarc_phase_not_implemented,
+                "assess": dmarc_phase_assess,
+                "deploy": dmarc_phase_deploy,
+                "enforce": dmarc_phase_enforce,
+                "maintain": dmarc_phase_maintain,
+                "total": dmarc_phase_total,
+            },
+            "https": {
+                "pass": https_pass,
+                "fail": https_fail,
+                "total": https_pass + https_fail,
+                # Don't count non web-hosting domains
+            },
+            "ssl": {
+                "pass": ssl_pass,
+                "fail": ssl_fail,
+                "total": ssl_pass + ssl_fail,
+                # Don't count non web-hosting domains
+            },
+            "spf": {
+                "pass": spf_pass,
+                "fail": spf_fail,
+                "total": spf_pass + spf_fail,
+            },
+            "dkim": {
+                "pass": dkim_pass,
+                "fail": dkim_fail,
+                "total": dkim_pass + dkim_fail,
+            },
+            "web_connections": {
+                "pass": web_connections_pass,
+                "fail": web_connections_fail,
+                "total": web_connections_pass + web_connections_fail,
+                # Don't count non web-hosting domains
+            },
         }
 
-        org.update(summary_data)
+        current_summary = org.get("summaries")
+        if current_summary is not None:
+            if current_summary.get("date") is None:
+                current_summary.update(
+                    {"date": (date.today() - timedelta(days=1)).isoformat()}
+                )
+            db.collection("organizationSummaries").insert(
+                {"organization": org.get("_id"), **current_summary}
+            )
+        org.update({"summaries": summary_data})
         db.collection("organizations").update(org)
 
     logging.info(f"Organization summary value update completed.")
 
 
 if __name__ == "__main__":
-    logging.info(emoji.emojize("Summary service started :rocket:"))
-    update_scan_summaries()
+    logging.info("Summary service started")
     update_chart_summaries()
     update_org_summaries()
     logging.info(f"Summary service shutting down...")

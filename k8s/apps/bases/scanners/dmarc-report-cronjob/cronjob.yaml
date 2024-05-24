@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: dmarc-report
@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: dmarc-report
-              image: gcr.io/track-compliance/dmarc-report:master-770f2e2-1674589724 # {"$imagepolicy": "flux-system:dmarc-report"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:master-92b51ac-1716485084 # {"$imagepolicy": "flux-system:dmarc-report"}
               env:
                 - name: DB_NAME
                   valueFrom:

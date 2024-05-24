@@ -3,5 +3,13 @@ kind: Kustomization
 resources:
   - api
   - frontend
-  - scanners/tls-processor
-  - scanners/tls-scanner
+  - scanners/dns-scanner
+  - scanners/dns-processor
+  - scanners/web-scanner
+  - scanners/web-processor
+  - scanners/dmarc-report-cronjob
+  - scanners/domain-dispatcher-cronjob
+  - scanners/summaries-cronjob
+  - scanners/domain-discovery
+  - azure-defender-easm/add-domain-to-easm
+  - azure-defender-easm/label-known-easm-assets-cronjob

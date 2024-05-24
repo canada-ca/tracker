@@ -22,9 +22,7 @@ describe('given the closeAccountUnion', () => {
           authResult: {},
         }
 
-        expect(closeAccountUnion.resolveType(obj)).toMatchObject(
-          closeAccountResult,
-        )
+        expect(closeAccountUnion.resolveType(obj)).toMatch(closeAccountResult.name)
       })
     })
     describe('testing the closeAccountError', () => {
@@ -36,9 +34,7 @@ describe('given the closeAccountUnion', () => {
           description: 'text',
         }
 
-        expect(closeAccountUnion.resolveType(obj)).toMatchObject(
-          closeAccountError,
-        )
+        expect(closeAccountUnion.resolveType(obj)).toMatch(closeAccountError.name)
       })
     })
   })

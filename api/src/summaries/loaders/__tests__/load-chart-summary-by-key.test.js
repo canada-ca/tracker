@@ -36,29 +36,30 @@ describe('given the loadChartSummaryByKey function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'web',
-        total: 1000,
-        fail: 500,
-        pass: 500,
-      })
-      await collections.chartSummaries.save({
-        _key: 'mail',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2021-01-01',
+        web: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
+        mail: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
@@ -71,8 +72,8 @@ describe('given the loadChartSummaryByKey function', () => {
       it('returns a single summary', async () => {
         const expectedCursor = await query`
           FOR summary IN chartSummaries
-            FILTER summary._key == "web"
-            RETURN MERGE({ id: summary._key }, summary)
+            SORT summary.date DESC LIMIT 1
+            RETURN summary.web
         `
         const expectedSummary = await expectedCursor.next()
 
@@ -88,7 +89,8 @@ describe('given the loadChartSummaryByKey function', () => {
         const expectedSummaries = []
         const expectedCursor = await query`
           FOR summary IN chartSummaries
-            RETURN MERGE({ id: summary._key }, summary)
+            SORT summary.date DESC LIMIT 1
+            RETURN summary
         `
 
         while (expectedCursor.hasMore) {
@@ -121,17 +123,13 @@ describe('given the loadChartSummaryByKey function', () => {
       })
       describe('given a database error', () => {
         it('raises an error', async () => {
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load summary. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load summary. Please try again.'))
           }
 
           expect(consoleErrorOutput).toEqual([
@@ -142,7 +140,7 @@ describe('given the loadChartSummaryByKey function', () => {
       describe('given a cursor error', () => {
         it('raises an error', async () => {
           const cursor = {
-            forEach() {
+            next() {
               throw new Error('Cursor error occurred.')
             },
           }
@@ -152,9 +150,7 @@ describe('given the loadChartSummaryByKey function', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load summary. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load summary. Please try again.'))
           }
 
           expect(consoleErrorOutput).toEqual([
@@ -180,17 +176,13 @@ describe('given the loadChartSummaryByKey function', () => {
       })
       describe('given a database error', () => {
         it('raises an error', async () => {
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadChartSummaryByKey({ query, userKey: '1234', i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Impossible de charger le résumé. Veuillez réessayer.'),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le résumé. Veuillez réessayer.'))
           }
 
           expect(consoleErrorOutput).toEqual([
@@ -201,7 +193,7 @@ describe('given the loadChartSummaryByKey function', () => {
       describe('given a cursor error', () => {
         it('raises an error', async () => {
           const cursor = {
-            forEach() {
+            next() {
               throw new Error('Cursor error occurred.')
             },
           }
@@ -211,9 +203,7 @@ describe('given the loadChartSummaryByKey function', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Impossible de charger le résumé. Veuillez réessayer.'),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le résumé. Veuillez réessayer.'))
           }
 
           expect(consoleErrorOutput).toEqual([

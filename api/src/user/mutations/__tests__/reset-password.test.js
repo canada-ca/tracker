@@ -55,9 +55,9 @@ describe('reset users password', () => {
       }))
     })
     beforeEach(async () => {
-      await graphql(
+      await graphql({
         schema,
-        `
+        source: `
           mutation {
             signUp(
               input: {
@@ -69,17 +69,16 @@ describe('reset users password', () => {
               }
             ) {
               result {
-                ... on AuthResult {
-                  user {
-                    id
-                  }
+                ... on TFASignInResult {
+                  authenticateToken
+                  sendMethod
                 }
               }
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           query,
           collections: collectionNames,
           transaction,
@@ -103,7 +102,7 @@ describe('reset users password', () => {
             get: (text) => text,
           },
         },
-      )
+      })
     })
     afterEach(async () => {
       await truncate()
@@ -138,9 +137,9 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               resetPassword (
                 input: {
@@ -161,8 +160,8 @@ describe('reset users password', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -180,7 +179,7 @@ describe('reset users password', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -193,16 +192,14 @@ describe('reset users password', () => {
         }
 
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully reset their password.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully reset their password.`])
 
         consoleOutput.length = 0
         const mockedResponse = { cookie: jest.fn() }
 
-        const testSignIn = await graphql(
+        const testSignIn = await graphql({
           schema,
-          `
+          source: `
             mutation {
               signIn(
                 input: {
@@ -222,8 +219,8 @@ describe('reset users password', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -245,22 +242,21 @@ describe('reset users password', () => {
               sendAuthEmail: mockNotify,
             },
           },
-        )
+        })
 
         const expectedTestSignIn = {
           data: {
             signIn: {
               result: {
-                authToken: 'token',
+                authenticateToken: 'token',
+                sendMethod: 'email',
               },
             },
           },
         }
 
         expect(testSignIn).toEqual(expectedTestSignIn)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully signed in, and sent auth msg.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
       })
       it('resets failed login attempts', async () => {
         const userCursor = await query`
@@ -275,9 +271,9 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               resetPassword (
                 input: {
@@ -298,8 +294,8 @@ describe('reset users password', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -317,7 +313,7 @@ describe('reset users password', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const checkCursor = await query`
           FOR user IN users
@@ -356,9 +352,9 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               resetPassword (
                 input: {
@@ -379,8 +375,8 @@ describe('reset users password', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -398,7 +394,7 @@ describe('reset users password', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -411,16 +407,14 @@ describe('reset users password', () => {
         }
 
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully reset their password.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully reset their password.`])
 
         consoleOutput.length = 0
         const mockedResponse = { cookie: jest.fn() }
 
-        const testSignIn = await graphql(
+        const testSignIn = await graphql({
           schema,
-          `
+          source: `
             mutation {
               signIn(
                 input: {
@@ -440,8 +434,8 @@ describe('reset users password', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -463,22 +457,21 @@ describe('reset users password', () => {
               sendAuthEmail: mockNotify,
             },
           },
-        )
+        })
 
         const expectedTestSignIn = {
           data: {
             signIn: {
               result: {
-                authToken: 'token',
+                authenticateToken: 'token',
+                sendMethod: 'email',
               },
             },
           },
         }
 
         expect(testSignIn).toEqual(expectedTestSignIn)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully signed in, and sent auth msg.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
       })
       it('resets failed login attempts', async () => {
         const userCursor = await query`
@@ -493,9 +486,9 @@ describe('reset users password', () => {
           parameters: { userKey: user._key, currentPassword: user.password },
         })
 
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               resetPassword (
                 input: {
@@ -516,8 +509,8 @@ describe('reset users password', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -535,7 +528,7 @@ describe('reset users password', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const checkCursor = await query`
           FOR user IN users
@@ -570,9 +563,9 @@ describe('reset users password', () => {
             parameters: {},
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -593,8 +586,8 @@ describe('reset users password', () => {
               }
             }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -613,15 +606,14 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               resetPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Incorrect token value. Please request a new email.',
+                  description: 'Incorrect token value. Please request a new email.',
                 },
               },
             },
@@ -639,9 +631,9 @@ describe('reset users password', () => {
             parameters: { userKey: undefined },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -662,8 +654,8 @@ describe('reset users password', () => {
               }
             }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -682,15 +674,14 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               resetPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Incorrect token value. Please request a new email.',
+                  description: 'Incorrect token value. Please request a new email.',
                 },
               },
             },
@@ -708,9 +699,9 @@ describe('reset users password', () => {
             parameters: { userKey: 1, currentPassword: 'secretPassword' },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -731,8 +722,8 @@ describe('reset users password', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -751,7 +742,7 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -770,90 +761,15 @@ describe('reset users password', () => {
           ])
         })
       })
-      describe('password in token does not match users current password', () => {
-        it('returns an error message', async () => {
-          const resetToken = tokenize({
-            parameters: {
-              userKey: 123,
-              currentPassword: 'secretPassword',
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              resetPassword (
-                input: {
-                  password: "newpassword123"
-                  confirmPassword: "newpassword123"
-                  resetToken: "${resetToken}"
-                }
-              ) {
-                result {
-                  ... on ResetPasswordError {
-                    code
-                    description
-                  }
-                  ... on ResetPasswordResult {
-                    status
-                  }
-                }
-              }
-            }
-          `,
-            null,
-            {
-              i18n,
-              query,
-              collections: collectionNames,
-              transaction,
-              auth: {
-                bcrypt,
-                tokenize,
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    password: 'notTheRightPassword',
-                  }),
-                },
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              resetPassword: {
-                result: {
-                  code: 400,
-                  description:
-                    'Unable to reset password. Please request a new email.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to reset password, however the current password does not match the current hashed password in the db.`,
-          ])
-        })
-      })
       describe('new passwords do not match', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
             parameters: { userKey: 123, currentPassword: 'currentPassword' },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -874,8 +790,8 @@ describe('reset users password', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -897,7 +813,7 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -922,9 +838,9 @@ describe('reset users password', () => {
             parameters: { userKey: 123, currentPassword: 'currentPassword' },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -945,8 +861,8 @@ describe('reset users password', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -968,7 +884,7 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -997,9 +913,9 @@ describe('reset users password', () => {
               },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   resetPassword (
                     input: {
@@ -1020,15 +936,13 @@ describe('reset users password', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 auth: {
                   bcrypt,
@@ -1047,11 +961,9 @@ describe('reset users password', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to reset password. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to reset password. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1070,9 +982,9 @@ describe('reset users password', () => {
               },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   resetPassword (
                     input: {
@@ -1093,16 +1005,14 @@ describe('reset users password', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 auth: {
                   bcrypt,
@@ -1121,11 +1031,9 @@ describe('reset users password', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to reset password. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to reset password. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1156,9 +1064,9 @@ describe('reset users password', () => {
             parameters: {},
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -1179,8 +1087,8 @@ describe('reset users password', () => {
               }
             }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1199,15 +1107,14 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               resetPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail.',
+                  description: 'La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -1225,9 +1132,9 @@ describe('reset users password', () => {
             parameters: { userKey: undefined },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -1248,8 +1155,8 @@ describe('reset users password', () => {
               }
             }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1268,15 +1175,14 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               resetPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail.',
+                  description: 'La valeur du jeton est incorrecte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -1294,9 +1200,9 @@ describe('reset users password', () => {
             parameters: { userKey: 1, currentPassword: 'secretPassword' },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -1317,8 +1223,8 @@ describe('reset users password', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1337,15 +1243,14 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               resetPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
+                  description: 'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
                 },
               },
             },
@@ -1357,90 +1262,15 @@ describe('reset users password', () => {
           ])
         })
       })
-      describe('password in token does not match users current password', () => {
-        it('returns an error message', async () => {
-          const resetToken = tokenize({
-            parameters: {
-              userKey: 123,
-              currentPassword: 'secretPassword',
-            },
-          })
-
-          const response = await graphql(
-            schema,
-            `
-            mutation {
-              resetPassword (
-                input: {
-                  password: "newpassword123"
-                  confirmPassword: "newpassword123"
-                  resetToken: "${resetToken}"
-                }
-              ) {
-                result {
-                  ... on ResetPasswordError {
-                    code
-                    description
-                  }
-                  ... on ResetPasswordResult {
-                    status
-                  }
-                }
-              }
-            }
-          `,
-            null,
-            {
-              i18n,
-              query,
-              collections: collectionNames,
-              transaction,
-              auth: {
-                bcrypt,
-                tokenize,
-                verifyToken: verifyToken({}),
-              },
-              validators: {
-                cleanseInput,
-              },
-              loaders: {
-                loadUserByKey: {
-                  load: jest.fn().mockReturnValue({
-                    _key: 123,
-                    password: 'notTheRightPassword',
-                  }),
-                },
-              },
-            },
-          )
-
-          const error = {
-            data: {
-              resetPassword: {
-                result: {
-                  code: 400,
-                  description:
-                    'Impossible de réinitialiser le mot de passe. Veuillez demander un nouvel e-mail.',
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: 123 attempted to reset password, however the current password does not match the current hashed password in the db.`,
-          ])
-        })
-      })
       describe('new passwords do not match', () => {
         it('returns an error message', async () => {
           const resetToken = tokenize({
             parameters: { userKey: 123, currentPassword: 'currentPassword' },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -1461,8 +1291,8 @@ describe('reset users password', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1484,15 +1314,14 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               resetPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Les nouveaux mots de passe ne correspondent pas.',
+                  description: 'Les nouveaux mots de passe ne correspondent pas.',
                 },
               },
             },
@@ -1510,9 +1339,9 @@ describe('reset users password', () => {
             parameters: { userKey: 123, currentPassword: 'currentPassword' },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               resetPassword (
                 input: {
@@ -1533,8 +1362,8 @@ describe('reset users password', () => {
               }
             }
           `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1556,7 +1385,7 @@ describe('reset users password', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1585,9 +1414,9 @@ describe('reset users password', () => {
               },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   resetPassword (
                     input: {
@@ -1608,15 +1437,13 @@ describe('reset users password', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 auth: {
                   bcrypt,
@@ -1635,13 +1462,9 @@ describe('reset users password', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de réinitialiser le mot de passe. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1660,9 +1483,9 @@ describe('reset users password', () => {
               },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   resetPassword (
                     input: {
@@ -1683,16 +1506,14 @@ describe('reset users password', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 auth: {
                   bcrypt,
@@ -1711,13 +1532,9 @@ describe('reset users password', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de réinitialiser le mot de passe. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de réinitialiser le mot de passe. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

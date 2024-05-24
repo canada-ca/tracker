@@ -1,0 +1,10 @@
+certifi==2023.7.22
+charset-normalizer==2.0.12
+idna==3.7
+nats-py==2.6.0
+PyJWT==2.4.0
+python-arango==7.3.4
+python-dotenv==0.20.0
+requests==2.32.0
+requests-toolbelt==0.9.1
+urllib3==1.26.18

@@ -33,21 +33,21 @@ describe('signing the user out', () => {
       const mockedCookie = jest.fn()
       const mockedResponse = { cookie: mockedCookie }
 
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           mutation {
             signOut(input: {}) {
               status
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           response: mockedResponse,
         },
-      )
+      })
 
       const expectedResult = {
         data: {
@@ -85,21 +85,21 @@ describe('signing the user out', () => {
       const mockedCookie = jest.fn()
       const mockedResponse = { cookie: mockedCookie }
 
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           mutation {
             signOut(input: {}) {
               status
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           response: mockedResponse,
         },
-      )
+      })
 
       const expectedResult = {
         data: {

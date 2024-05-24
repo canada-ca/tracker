@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { Guidance, Summary, Status } from './fragments'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations(
@@ -8,6 +9,8 @@ export const PAGINATED_ORGANIZATIONS = gql`
     $direction: OrderDirection!
     $search: String
     $includeSuperAdminOrg: Boolean
+    $isVerified: Boolean
+    $isAffiliated: Boolean
   ) {
     findMyOrganizations(
       after: $after
@@ -15,6 +18,8 @@ export const PAGINATED_ORGANIZATIONS = gql`
       orderBy: { field: $field, direction: $direction }
       search: $search
       includeSuperAdminOrg: $includeSuperAdminOrg
+      isVerified: $isVerified
+      isAffiliated: $isAffiliated
     ) {
       edges {
         cursor
@@ -25,6 +30,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
           slug
           domainCount
           verified
+          userHasPermission
           summaries {
             dmarc {
               total
@@ -55,38 +61,53 @@ export const PAGINATED_ORGANIZATIONS = gql`
   }
 `
 
-export const HTTPS_AND_DMARC_SUMMARY = gql`
+export const LANDING_PAGE_SUMMARIES = gql`
   query LandingPageSummaries {
+    # Tier 1
     httpsSummary {
-      total
-      categories {
-        name
-        count
-        percentage
-      }
+      ...RequiredSummaryFields
+    }
+    dmarcSummary {
+      ...RequiredSummaryFields
+    }
+    # Tier 2
+    webConnectionsSummary {
+      ...RequiredSummaryFields
+    }
+    sslSummary {
+      ...RequiredSummaryFields
+    }
+    spfSummary {
+      ...RequiredSummaryFields
+    }
+    dkimSummary {
+      ...RequiredSummaryFields
     }
     dmarcPhaseSummary {
-      total
-      categories {
-        name
-        count
-        percentage
-      }
+      ...RequiredSummaryFields
+    }
+    # Tier 3
+    webSummary {
+      ...RequiredSummaryFields
+    }
+    mailSummary {
+      ...RequiredSummaryFields
     }
   }
+  ${Summary.fragments.requiredFields}
 `
 
 export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!) {
+  query GetOrganizationDomainsStatusesCSV($orgSlug: Slug!, $filters: [DomainFilter]) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
-      toCsv
+      toCsv(filters: $filters)
     }
   }
 `
 
 export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetAllOrganizationDomainStatuses {
-    getAllOrganizationDomainStatuses
+  query GetAllOrganizationDomainStatuses($filters: [DomainFilter]) {
+    getAllOrganizationDomainStatuses(filters: $filters)
   }
 `
 
@@ -122,390 +143,18 @@ export const GET_ONE_TIME_SSL_SCANS = gql`
   }
 `
 
-export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
-  query FindDomainByDomain($domain: DomainScalar!) {
-    findDomainByDomain(domain: $domain) {
-      id
-      domain
-      lastRan
-      status {
-        https
-        ssl
-      }
-      archived
-      organizations(first: 5, orderBy: { field: NAME, direction: ASC }) {
-        edges {
-          node {
-            name
-            acronym
-            slug
-          }
-        }
-      }
-      dmarcPhase
-      hasDMARCReport
-      web {
-        https(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              implementation
-              enforced
-              hsts
-              hstsAge
-              preloaded
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        ssl(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              ccsInjectionVulnerable
-              heartbleedVulnerable
-              supportsEcdhKeyExchange
-              acceptableCiphers
-              acceptableCurves
-              strongCiphers
-              strongCurves
-              weakCiphers
-              weakCurves
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      email {
-        dkim(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              results(first: 10) {
-                edges {
-                  cursor
-                  node {
-                    selector
-                    negativeGuidanceTags(first: 5) {
-                      edges {
-                        cursor
-                        node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
-                        }
-                      }
-                    }
-                    neutralGuidanceTags(first: 5) {
-                      edges {
-                        cursor
-                        node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
-                        }
-                      }
-                    }
-                    positiveGuidanceTags(first: 5) {
-                      edges {
-                        cursor
-                        node {
-                          tagId
-                          tagName
-                          guidance
-                          refLinks {
-                            description
-                            refLink
-                          }
-                          refLinksTech {
-                            description
-                            refLink
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        dmarc(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              record
-              pPolicy
-              spPolicy
-              pct
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        spf(first: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
-          edges {
-            cursor
-            node {
-              id
-              timestamp
-              lookups
-              record
-              spfDefault
-              negativeGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              neutralGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-              positiveGuidanceTags(first: 5) {
-                edges {
-                  cursor
-                  node {
-                    tagId
-                    tagName
-                    guidance
-                    refLinks {
-                      description
-                      refLink
-                    }
-                    refLinksTech {
-                      description
-                      refLink
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
   query PaginatedOrgAffiliations(
     $orgSlug: Slug!
     $first: Int
     $after: String
     $search: String
+    $orderBy: AffiliationUserOrder
+    $includePending: Boolean
   ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after, search: $search) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy, includePending: $includePending) {
         edges {
           node {
             id
@@ -530,16 +179,11 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
 `
 
 export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
-  query PaginatedOrgDomains(
-    $orgSlug: Slug!
-    $first: Int
-    $after: String
-    $search: String
-  ) {
+  query PaginatedOrgDomains($orgSlug: Slug!, $first: Int, $after: String, $search: String, $filters: [DomainFilter]) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
       name
-      domains(first: $first, after: $after, search: $search) {
+      domains(first: $first, after: $after, search: $search, filters: $filters) {
         edges {
           node {
             id
@@ -549,6 +193,8 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             claimTags
             hidden
             archived
+            ignoreRua
+            rcode
             organizations(first: 1) {
               totalCount
             }
@@ -566,33 +212,368 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
   }
 `
 
-export const ORG_DETAILS_PAGE = gql`
-  query OrgDetails($slug: Slug!) {
-    organization: findOrganizationBySlug(orgSlug: $slug) {
-      id
-      name
-      acronym
-      verified
-      summaries {
-        https {
-          total
-          categories {
+export const DOMAIN_GUIDANCE_PAGE = gql`
+  query DomainGuidancePage($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
+      domain
+      lastRan
+      rcode
+      blocked
+      wildcardSibling
+      webScanPending
+      status {
+        ...RequiredDomainStatusFields
+      }
+      organizations(first: 20) {
+        edges {
+          node {
             name
-            count
-            percentage
+            acronym
+            slug
           }
         }
-        dmarcPhase {
-          total
-          categories {
-            name
-            count
-            percentage
+      }
+      dmarcPhase
+      hasDMARCReport
+      userHasPermission
+      mxRecordDiff(limit: 10, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        totalCount
+        edges {
+          node {
+            id
+            timestamp
+            mxRecords {
+              hosts {
+                preference
+                hostname
+                addresses
+              }
+              warnings
+            }
+          }
+        }
+      }
+      dnsScan(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        edges {
+          cursor
+          node {
+            id
+            domain
+            timestamp
+            baseDomain
+            recordExists
+            # cnameRecord
+            mxRecords {
+              hosts {
+                preference
+                hostname
+                addresses
+              }
+              warnings
+              error
+            }
+            nsRecords {
+              hostnames
+              warnings
+              error
+            }
+            dkim {
+              positiveTags {
+                ...RequiredGuidanceTagFields
+              }
+              neutralTags {
+                ...RequiredGuidanceTagFields
+              }
+              negativeTags {
+                ...RequiredGuidanceTagFields
+              }
+              selectors {
+                selector
+                record
+                keyLength
+                keyType
+                positiveTags {
+                  ...RequiredGuidanceTagFields
+                }
+                neutralTags {
+                  ...RequiredGuidanceTagFields
+                }
+                negativeTags {
+                  ...RequiredGuidanceTagFields
+                }
+              }
+            }
+            dmarc {
+              record
+              pPolicy
+              spPolicy
+              pct
+              positiveTags {
+                ...RequiredGuidanceTagFields
+              }
+              neutralTags {
+                ...RequiredGuidanceTagFields
+              }
+              negativeTags {
+                ...RequiredGuidanceTagFields
+              }
+            }
+            spf {
+              lookups
+              record
+              spfDefault
+              positiveTags {
+                ...RequiredGuidanceTagFields
+              }
+              neutralTags {
+                ...RequiredGuidanceTagFields
+              }
+              negativeTags {
+                ...RequiredGuidanceTagFields
+              }
+            }
+          }
+        }
+      }
+      web(limit: 1, orderBy: { field: TIMESTAMP, direction: DESC }) {
+        edges {
+          node {
+            timestamp
+            domain
+            results {
+              ipAddress
+              status
+              results {
+                timestamp
+                tlsResult {
+                  ipAddress
+                  certificateStatus
+                  sslStatus
+                  protocolStatus
+                  cipherStatus
+                  curveStatus
+                  supportsEcdhKeyExchange
+                  heartbleedVulnerable
+                  robotVulnerable
+                  ccsInjectionVulnerable
+                  acceptedCipherSuites {
+                    ssl2_0CipherSuites {
+                      name
+                      strength
+                    }
+                    ssl3_0CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_0CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_1CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_2CipherSuites {
+                      name
+                      strength
+                    }
+                    tls1_3CipherSuites {
+                      name
+                      strength
+                    }
+                  }
+                  acceptedEllipticCurves {
+                    name
+                    strength
+                  }
+                  positiveTags {
+                    ...RequiredGuidanceTagFields
+                  }
+                  neutralTags {
+                    ...RequiredGuidanceTagFields
+                  }
+                  negativeTags {
+                    ...RequiredGuidanceTagFields
+                  }
+                  certificateChainInfo {
+                    pathValidationResults {
+                      opensslErrorString
+                      wasValidationSuccessful
+                      trustStore {
+                        name
+                        version
+                      }
+                    }
+                    badHostname
+                    mustHaveStaple
+                    leafCertificateIsEv
+                    receivedChainContainsAnchorCertificate
+                    receivedChainHasValidOrder
+                    verifiedChainHasSha1Signature
+                    verifiedChainHasLegacySymantecAnchor
+                    passedValidation
+                    certificateChain {
+                      notValidBefore
+                      notValidAfter
+                      issuer
+                      subject
+                      expiredCert
+                      selfSignedCert
+                      certRevoked
+                      certRevokedStatus
+                      commonNames
+                      serialNumber
+                      signatureHashAlgorithm
+                      sanList
+                    }
+                  }
+                }
+                connectionResults {
+                  httpLive
+                  httpsLive
+                  httpsStatus
+                  hstsStatus
+                  httpImmediatelyUpgrades
+                  httpEventuallyUpgrades
+                  httpsImmediatelyDowngrades
+                  httpsEventuallyDowngrades
+                  hstsParsed {
+                    maxAge
+                    includeSubdomains
+                    preload
+                  }
+                  positiveTags {
+                    ...RequiredGuidanceTagFields
+                  }
+                  neutralTags {
+                    ...RequiredGuidanceTagFields
+                  }
+                  negativeTags {
+                    ...RequiredGuidanceTagFields
+                  }
+                  httpChainResult {
+                    scheme
+                    domain
+                    uri
+                    hasRedirectLoop
+                    connections {
+                      uri
+                      connection {
+                        statusCode
+                        redirectTo
+                        headers
+                        blockedCategory
+                        HSTS
+                      }
+                      error
+                      scheme
+                    }
+                  }
+                  httpsChainResult {
+                    scheme
+                    domain
+                    uri
+                    hasRedirectLoop
+                    connections {
+                      uri
+                      connection {
+                        statusCode
+                        redirectTo
+                        headers
+                        blockedCategory
+                        HSTS
+                      }
+                      error
+                      scheme
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   }
+  ${Status.fragments.requiredFields}
+  ${Guidance.fragments.requiredFields}
+`
+
+export const ORG_DETAILS_PAGE = gql`
+  query OrgDetails($slug: Slug!, $month: PeriodEnums!, $year: Year!) {
+    organization: findOrganizationBySlug(orgSlug: $slug) {
+      id
+      name
+      acronym
+      verified
+      userHasPermission
+      summaries {
+        https {
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
+        }
+        dkim {
+          ...RequiredSummaryFields
+        }
+        spf {
+          ...RequiredSummaryFields
+        }
+        ssl {
+          ...RequiredSummaryFields
+        }
+        webConnections {
+          ...RequiredSummaryFields
+        }
+        dmarcPhase {
+          ...RequiredSummaryFields
+        }
+        web {
+          ...RequiredSummaryFields
+        }
+        mail {
+          ...RequiredSummaryFields
+        }
+      }
+      historicalSummaries(month: $month, year: $year, sortDirection: DESC) {
+        totalCount
+        edges {
+          node {
+            date
+            https {
+              ...RequiredSummaryFields
+            }
+            dmarc {
+              ...RequiredSummaryFields
+            }
+            dkim {
+              ...RequiredSummaryFields
+            }
+            spf {
+              ...RequiredSummaryFields
+            }
+            ssl {
+              ...RequiredSummaryFields
+            }
+            webConnections {
+              ...RequiredSummaryFields
+            }
+            dmarcPhase {
+              ...RequiredSummaryFields
+            }
+            web {
+              ...RequiredSummaryFields
+            }
+            mail {
+              ...RequiredSummaryFields
+            }
+          }
+        }
+      }
+    }
+  }
+  ${Summary.fragments.requiredFields}
 `
 
 export const PAGINATED_ORG_DOMAINS = gql`
@@ -602,15 +583,11 @@ export const PAGINATED_ORG_DOMAINS = gql`
     $after: String
     $orderBy: DomainOrder
     $search: String
+    $filters: [DomainFilter]
   ) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
-      domains(
-        first: $first
-        after: $after
-        orderBy: $orderBy
-        search: $search
-      ) {
+      domains(first: $first, after: $after, orderBy: $orderBy, search: $search, filters: $filters) {
         pageInfo {
           hasNextPage
           endCursor
@@ -623,33 +600,30 @@ export const PAGINATED_ORG_DOMAINS = gql`
             id
             domain
             status {
-              ciphers
-              curves
-              dkim
-              dmarc
-              hsts
-              https
-              # policy
-              protocols
-              spf
-              ssl
+              ...RequiredDomainStatusFields
             }
             hasDMARCReport
             claimTags
             hidden
             archived
+            rcode
+            blocked
+            wildcardSibling
+            webScanPending
+            userHasPermission
           }
         }
       }
     }
   }
+  ${Status.fragments.requiredFields}
 `
 
 export const PAGINATED_ORG_AFFILIATIONS = gql`
-  query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
+  query OrgUsersNext($slug: Slug!, $first: Int, $after: String, $search: String, $orderBy: AffiliationUserOrder) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
-      affiliations(first: $first, after: $after) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy) {
         pageInfo {
           hasNextPage
           endCursor
@@ -679,31 +653,32 @@ export const PAGINATED_DOMAINS = gql`
     $after: String
     $orderBy: DomainOrder
     $search: String
+    $isAffiliated: Boolean
+    $filters: [DomainFilter]
   ) {
     findMyDomains(
       first: $first
       after: $after
       orderBy: $orderBy
       search: $search
+      isAffiliated: $isAffiliated
+      filters: $filters
     ) {
       edges {
         cursor
         node {
           id
           domain
+          rcode
+          blocked
+          wildcardSibling
+          webScanPending
           status {
-            ciphers
-            curves
-            dkim
-            dmarc
-            hsts
-            https
-            # policy
-            protocols
-            spf
+            ...RequiredDomainStatusFields
           }
           archived
           hasDMARCReport
+          userHasPermission
           __typename
         }
         __typename
@@ -718,6 +693,7 @@ export const PAGINATED_DOMAINS = gql`
       __typename
     }
   }
+  ${Status.fragments.requiredFields}
 `
 
 export const QUERY_CURRENT_USER = gql`
@@ -732,6 +708,7 @@ export const QUERY_CURRENT_USER = gql`
       phoneValidated
       emailValidated
       insideUser
+      receiveUpdateEmails
     }
     isUserAdmin
   }
@@ -767,13 +744,7 @@ export const DMARC_REPORT_GRAPH = gql`
 `
 
 export const PAGINATED_DMARC_REPORT = gql`
-  query PaginatedDmarcReport(
-    $domain: DomainScalar!
-    $month: PeriodEnums!
-    $year: Year!
-    $after: String
-    $first: Int
-  ) {
+  query PaginatedDmarcReport($domain: DomainScalar!, $month: PeriodEnums!, $year: Year!, $after: String, $first: Int) {
     findDomainByDomain(domain: $domain) {
       id
       dmarcSummaryByPeriod(month: $month, year: $year) {
@@ -894,6 +865,7 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
     $after: String
     $orderBy: DmarcSummaryOrder
     $search: String
+    $isAffiliated: Boolean
   ) {
     findMyDmarcSummaries(
       month: $month
@@ -902,6 +874,7 @@ export const PAGINATED_DMARC_REPORT_SUMMARY_TABLE = gql`
       after: $after
       orderBy: $orderBy
       search: $search
+      isAffiliated: $isAffiliated
     ) {
       pageInfo {
         hasNextPage
@@ -1000,18 +973,8 @@ export const IS_LOGIN_REQUIRED = gql`
 `
 
 export const FIND_MY_USERS = gql`
-  query FindMyUsers(
-    $first: Int
-    $after: String
-    $orderBy: AffiliationUserOrder
-    $search: String
-  ) {
-    findMyUsers(
-      orderBy: $orderBy
-      first: $first
-      after: $after
-      search: $search
-    ) {
+  query FindMyUsers($first: Int, $after: String, $orderBy: UserOrder, $search: String) {
+    findMyUsers(orderBy: $orderBy, first: $first, after: $after, search: $search) {
       edges {
         cursor
         node {
@@ -1047,61 +1010,6 @@ export const FIND_MY_USERS = gql`
     }
   }
 `
-export const WEBCHECK_ORGS = gql`
-  query FindMyWebCheckOrgs(
-    $after: String
-    $first: Int!
-    $orderBy: OrganizationOrder!
-    $search: String
-  ) {
-    findMyWebCheckOrganizations(
-      first: $first
-      after: $after
-      orderBy: $orderBy
-      search: $search
-    ) {
-      totalCount
-      edges {
-        cursor
-        node {
-          id
-          acronym
-          name
-          slug
-          tags {
-            edges {
-              id
-              severity
-            }
-            totalCount
-          }
-          domains {
-            totalCount
-            edges {
-              id
-              domain
-              lastRan
-              tags {
-                edges {
-                  id
-                  firstDetected
-                  severity
-                }
-                totalCount
-              }
-            }
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
-      }
-    }
-  }
-`
 
 export const AUDIT_LOGS = gql`
   query FindAuditLogs(
@@ -1112,14 +1020,7 @@ export const AUDIT_LOGS = gql`
     $search: String
     $filters: LogFilters
   ) {
-    findAuditLogs(
-      orgId: $orgId
-      first: $first
-      after: $after
-      orderBy: $orderBy
-      search: $search
-      filters: $filters
-    ) {
+    findAuditLogs(orgId: $orgId, first: $first, after: $after, orderBy: $orderBy, search: $search, filters: $filters) {
       edges {
         node {
           id
@@ -1161,42 +1062,24 @@ export const MY_TRACKER_SUMMARY = gql`
     findMyTracker {
       summaries {
         https {
-          categories {
-            name
-            count
-            percentage
-          }
-          total
+          ...RequiredSummaryFields
+        }
+        dmarc {
+          ...RequiredSummaryFields
         }
         dmarcPhase {
-          categories {
-            name
-            count
-            percentage
-          }
-          total
+          ...RequiredSummaryFields
         }
       }
-      domainCount
     }
   }
+  ${Summary.fragments.requiredFields}
 `
 
 export const MY_TRACKER_DOMAINS = gql`
-  query FindMyTracker(
-    $first: Int
-    $after: String
-    $orderBy: DomainOrder
-    $search: String
-  ) {
+  query FindMyTracker($first: Int, $after: String, $orderBy: DomainOrder, $search: String) {
     findMyTracker {
-      domains(
-        orderBy: $orderBy
-        search: $search
-        first: $first
-        after: $after
-        myTracker: true
-      ) {
+      domains(orderBy: $orderBy, search: $search, first: $first, after: $after) {
         pageInfo {
           hasNextPage
           hasPreviousPage
@@ -1210,22 +1093,24 @@ export const MY_TRACKER_DOMAINS = gql`
             domain
             hasDMARCReport
             status {
-              ciphers
-              curves
-              dkim
-              dmarc
-              hsts
-              https
-              # policy
-              protocols
-              spf
-              ssl
+              ...RequiredDomainStatusFields
             }
             archived
+            rcode
+            blocked
+            wildcardSibling
+            webScanPending
           }
           cursor
         }
       }
     }
+  }
+  ${Status.fragments.requiredFields}
+`
+
+export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
+  query GetAllVerifiedRuaDomains {
+    getAllVerifiedRuaDomains
   }
 `

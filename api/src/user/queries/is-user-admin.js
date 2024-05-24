@@ -8,8 +8,7 @@ export const isUserAdmin = {
   args: {
     orgId: {
       type: GraphQLID,
-      description:
-        'Optional org id to see if user is an admin for the requested org.',
+      description: 'Optional org id to see if user is an admin for the requested org.',
     },
   },
   resolve: async (
@@ -47,17 +46,13 @@ export const isUserAdmin = {
       userAdmin = await query`
         WITH users, affiliations
         FOR v, e IN 1..1 INBOUND ${user._id} affiliations
-        FILTER e.permission == "admin" || e.permission == "super_admin"
+        FILTER e.permission IN ["admin", "owner", "super_admin"]
         LIMIT 1
         RETURN e.permission
       `
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to verify if user is an admin, please try again.`),
-      )
+      console.error(`Database error occurred when user: ${userKey} was seeing if they were an admin, err: ${err}`)
+      throw new Error(i18n._(t`Unable to verify if user is an admin, please try again.`))
     }
 
     if (userAdmin.count > 0) {

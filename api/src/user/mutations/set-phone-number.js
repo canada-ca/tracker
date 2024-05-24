@@ -14,15 +14,14 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     'This mutation is used for setting a new phone number for a user, and sending a code for verifying the new number.',
   inputFields: () => ({
     phoneNumber: {
-      type: GraphQLNonNull(GraphQLPhoneNumber),
+      type: new GraphQLNonNull(GraphQLPhoneNumber),
       description: 'The phone number that the text message will be sent to.',
     },
   }),
   outputFields: () => ({
     result: {
       type: setPhoneNumberUnion,
-      description:
-        '`SetPhoneNumberUnion` returning either a `SetPhoneNumberResult`, or `SetPhoneNumberError` object.',
+      description: '`SetPhoneNumberUnion` returning either a `SetPhoneNumberResult`, or `SetPhoneNumberError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -53,12 +52,9 @@ export const setPhoneNumber = new mutationWithClientMutationId({
       iv: crypto.randomBytes(12).toString('hex'),
     }
 
-    const cipher = crypto.createCipheriv(
-      'aes-256-ccm',
-      String(CIPHER_KEY),
-      Buffer.from(phoneDetails.iv, 'hex'),
-      { authTagLength: 16 },
-    )
+    const cipher = crypto.createCipheriv('aes-256-ccm', String(CIPHER_KEY), Buffer.from(phoneDetails.iv, 'hex'), {
+      authTagLength: 16,
+    })
     let encrypted = cipher.update(phoneNumber, 'utf8', 'hex')
     encrypted += cipher.final('hex')
 
@@ -96,18 +92,14 @@ export const setPhoneNumber = new mutationWithClientMutationId({
         `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred for user: ${user._key} when upserting phone number information: ${err}`,
-      )
+      console.error(`Trx step error occurred for user: ${user._key} when upserting phone number information: ${err}`)
       throw new Error(i18n._(t`Unable to set phone number, please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred for user: ${user._key} when upserting phone number information: ${err}`,
-      )
+      console.error(`Trx commit error occurred for user: ${user._key} when upserting phone number information: ${err}`)
       throw new Error(i18n._(t`Unable to set phone number, please try again.`))
     }
 
@@ -121,9 +113,7 @@ export const setPhoneNumber = new mutationWithClientMutationId({
     return {
       _type: 'regular',
       user: user,
-      status: i18n._(
-        t`Phone number has been successfully set, you will receive a verification text message shortly.`,
-      ),
+      status: i18n._(t`Phone number has been successfully set, you will receive a verification text message shortly.`),
     }
   },
 })

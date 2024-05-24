@@ -24,11 +24,7 @@ export const userPersonalType = new GraphQLObjectType({
     phoneNumber: {
       type: GraphQLPhoneNumber,
       description: 'The phone number the user has setup with tfa.',
-      resolve: (
-        { phoneDetails },
-        _args,
-        { validators: { decryptPhoneNumber } },
-      ) => {
+      resolve: ({ phoneDetails }, _args, { validators: { decryptPhoneNumber } }) => {
         if (typeof phoneDetails === 'undefined' || phoneDetails === null) {
           return null
         }
@@ -60,6 +56,11 @@ export const userPersonalType = new GraphQLObjectType({
       description: 'Does the user want to see new features in progress.',
       resolve: ({ insideUser }) => insideUser,
     },
+    receiveUpdateEmails: {
+      type: GraphQLBoolean,
+      description: 'Does the user want to receive update emails.',
+      resolve: ({ receiveUpdateEmails }) => receiveUpdateEmails,
+    },
     affiliations: {
       type: affiliationConnection.connectionType,
       description: 'Users affiliations to various organizations.',
@@ -74,11 +75,7 @@ export const userPersonalType = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      resolve: async (
-        { _id },
-        args,
-        { loaders: { loadAffiliationConnectionsByUserId } },
-      ) => {
+      resolve: async ({ _id }, args, { loaders: { loadAffiliationConnectionsByUserId } }) => {
         const affiliations = await loadAffiliationConnectionsByUserId({
           userId: _id,
           ...args,

@@ -13,16 +13,16 @@ describe('given the checkUserBelongsToOrg function', () => {
     let query, drop, truncate, collections, user, org
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -68,8 +68,7 @@ describe('given the checkUserBelongsToOrg function', () => {
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
-          permission: 'admin',
-          owner: true,
+          permission: 'owner',
         })
       })
       it('returns true', async () => {
@@ -121,9 +120,7 @@ describe('given the checkUserBelongsToOrg function', () => {
       })
       describe('database error occurs', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
             i18n,
@@ -134,11 +131,7 @@ describe('given the checkUserBelongsToOrg function', () => {
           try {
             await testCheckUserBelongsToOrg({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `Unable to load affiliation information. Please try again.`,
-              ),
-            )
+            expect(err).toEqual(new Error(`Unable to load affiliation information. Please try again.`))
           }
           expect(consoleOutput).toEqual([
             `Database error when checking to see if user: 123 belongs to org: 123: Error: Database error occurred`,
@@ -161,9 +154,7 @@ describe('given the checkUserBelongsToOrg function', () => {
       })
       describe('database error occurs', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const testCheckUserBelongsToOrg = checkUserBelongsToOrg({
             i18n,
@@ -174,11 +165,7 @@ describe('given the checkUserBelongsToOrg function', () => {
           try {
             await testCheckUserBelongsToOrg({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `Impossible de charger les informations d'affiliation. Veuillez réessayer.`,
-              ),
-            )
+            expect(err).toEqual(new Error(`Impossible de charger les informations d'affiliation. Veuillez réessayer.`))
           }
           expect(consoleOutput).toEqual([
             `Database error when checking to see if user: 123 belongs to org: 123: Error: Database error occurred`,

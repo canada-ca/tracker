@@ -52,6 +52,7 @@ describe('<DmarcByDomainPage />', () => {
             direction: 'DESC',
           },
           search: '',
+          isAffiliated: true,
         },
       },
       result: { data: rawDmarcReportSummaryTableData },
@@ -68,6 +69,7 @@ describe('<DmarcByDomainPage />', () => {
             direction: 'DESC',
           },
           search: '',
+          isAffiliated: true,
         },
       },
       result: {
@@ -114,7 +116,7 @@ describe('<DmarcByDomainPage />', () => {
     const { getAllByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
         >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -133,7 +135,7 @@ describe('<DmarcByDomainPage />', () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
         >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -151,7 +153,7 @@ describe('<DmarcByDomainPage />', () => {
     const { findByRole, findByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
         >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
@@ -170,7 +172,7 @@ describe('<DmarcByDomainPage />', () => {
     const { findByRole, findByText, getByRole } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
+          userVar={makeVar({ jwt: 'somejwt', tfaSendMethod: null, userName: null, affiliations: { totalCount: 1 } })}
         >
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>

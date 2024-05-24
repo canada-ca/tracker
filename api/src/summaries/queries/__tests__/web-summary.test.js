@@ -48,23 +48,25 @@ describe('given webSummary query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'web',
-        total: 1000,
-        fail: 500,
-        pass: 500,
+        date: '2020-10-02',
+        web: {
+          total: 1000,
+          fail: 500,
+          pass: 500,
+        },
       })
     })
     afterEach(async () => {
@@ -74,9 +76,9 @@ describe('given webSummary query', () => {
       await drop()
     })
     it('returns web summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             webSummary {
               total
@@ -88,14 +90,14 @@ describe('given webSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -138,9 +140,9 @@ describe('given webSummary query', () => {
     describe('given unsuccessful web summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 webSummary {
                   total
@@ -152,8 +154,8 @@ describe('given webSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -161,16 +163,12 @@ describe('given webSummary query', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(`Unable to load web summary. Please try again.`),
-          ]
+          const error = [new GraphQLError(`Unable to load web summary. Please try again.`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve web summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve web summary.`])
         })
       })
     })
@@ -193,9 +191,9 @@ describe('given webSummary query', () => {
     describe('given unsuccessful web summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 webSummary {
                   total
@@ -207,8 +205,8 @@ describe('given webSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -216,18 +214,12 @@ describe('given webSummary query', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              'Impossible de charger le résumé web. Veuillez réessayer.',
-            ),
-          ]
+          const error = [new GraphQLError('Impossible de charger le résumé web. Veuillez réessayer.')]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve web summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve web summary.`])
         })
       })
     })

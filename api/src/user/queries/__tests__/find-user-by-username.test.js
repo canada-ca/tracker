@@ -40,16 +40,16 @@ describe('given the findUserByUsername query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -124,9 +124,9 @@ describe('given the findUserByUsername query', () => {
             `
           })
           it('will return specified user', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findUserByUsername(
                     userName: "test.accounttwo@istio.actually.exists"
@@ -136,8 +136,8 @@ describe('given the findUserByUsername query', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: user._key,
                 query: query,
@@ -158,7 +158,7 @@ describe('given the findUserByUsername query', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -185,9 +185,9 @@ describe('given the findUserByUsername query', () => {
             })
           })
           it('will return specified user', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findUserByUsername(
                     userName: "test.accounttwo@istio.actually.exists"
@@ -197,8 +197,8 @@ describe('given the findUserByUsername query', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: user._key,
                 query: query,
@@ -219,7 +219,7 @@ describe('given the findUserByUsername query', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -261,9 +261,9 @@ describe('given the findUserByUsername query', () => {
             `
           })
           it('will return specified user', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findUserByUsername(
                     userName: "test.accounttwo@istio.actually.exists"
@@ -273,8 +273,8 @@ describe('given the findUserByUsername query', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: user._key,
                 query: query,
@@ -295,7 +295,7 @@ describe('given the findUserByUsername query', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -322,9 +322,9 @@ describe('given the findUserByUsername query', () => {
             })
           })
           it('will return specified user', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findUserByUsername(
                     userName: "test.accounttwo@istio.actually.exists"
@@ -334,8 +334,8 @@ describe('given the findUserByUsername query', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: user._key,
                 query: query,
@@ -356,7 +356,7 @@ describe('given the findUserByUsername query', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
             const expectedResponse = {
               data: {
@@ -390,9 +390,9 @@ describe('given the findUserByUsername query', () => {
       })
       describe('if the user is an admin for a different organization', () => {
         it('will return specified user', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findUserByUsername(
                   userName: "test.accounttwo@istio.actually.exists"
@@ -402,8 +402,8 @@ describe('given the findUserByUsername query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query: query,
@@ -422,17 +422,15 @@ describe('given the findUserByUsername query', () => {
                 cleanseInput,
               },
             },
-          )
-          expect(response.errors).toEqual([
-            new GraphQLError('User could not be queried.'),
-          ])
+          })
+          expect(response.errors).toEqual([new GraphQLError('User could not be queried.')])
         })
       })
       describe('if the user is only a user for their organization(s)', () => {
         it('will return error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findUserByUsername(
                   userName: "test.accounttwo@istio.actually.exists"
@@ -442,8 +440,8 @@ describe('given the findUserByUsername query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query: query,
@@ -462,14 +460,12 @@ describe('given the findUserByUsername query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = [new GraphQLError(`User could not be queried.`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User 123 is not permitted to query users.`,
-          ])
+          expect(consoleOutput).toEqual([`User 123 is not permitted to query users.`])
         })
       })
     })
@@ -490,9 +486,9 @@ describe('given the findUserByUsername query', () => {
       })
       describe('if the user is an admin for a different organization', () => {
         it('will return specified user', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findUserByUsername(
                   userName: "test.accounttwo@istio.actually.exists"
@@ -502,8 +498,8 @@ describe('given the findUserByUsername query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query: query,
@@ -522,17 +518,15 @@ describe('given the findUserByUsername query', () => {
                 cleanseInput,
               },
             },
-          )
-          expect(response.errors).toEqual([
-            new GraphQLError(`L'utilisateur n'a pas pu être interrogé.`),
-          ])
+          })
+          expect(response.errors).toEqual([new GraphQLError(`L'utilisateur n'a pas pu être interrogé.`)])
         })
       })
       describe('if the user is only a user for their organization(s)', () => {
         it('will return error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findUserByUsername(
                   userName: "test.accounttwo@istio.actually.exists"
@@ -542,8 +536,8 @@ describe('given the findUserByUsername query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
               query: query,
@@ -562,16 +556,12 @@ describe('given the findUserByUsername query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(`L'utilisateur n'a pas pu être interrogé.`),
-          ]
+          const error = [new GraphQLError(`L'utilisateur n'a pas pu être interrogé.`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User 123 is not permitted to query users.`,
-          ])
+          expect(consoleOutput).toEqual([`User 123 is not permitted to query users.`])
         })
       })
     })

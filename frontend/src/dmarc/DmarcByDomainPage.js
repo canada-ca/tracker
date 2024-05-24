@@ -19,6 +19,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link as RouteLink } from 'react-router-dom'
+import withSuperAdmin from '../app/withSuperAdmin'
 
 import { TrackerTable } from '../components/TrackerTable'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
@@ -28,53 +29,44 @@ import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { toConstantCase } from '../helpers/toConstantCase'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { MonthSelect } from '../components/MonthSelect'
-
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
+import { ExportRuaListButton } from './ExportRuaListButton'
+import { useUserVar } from '../utilities/userState'
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
+  const { isLoggedIn, hasAffiliation } = useUserVar()
 
   const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
   const displayLimitOptions = [5, 10, 20, 50, 100]
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
 
   const [selectedPeriod, setSelectedPeriod] = useState('LAST30DAYS')
-  const [selectedYear, setSelectedYear] = useState(
-    currentDate.getFullYear().toString(),
-  )
-  const [selectedDate, setSelectedDate] = useState(
-    `LAST30DAYS, ${currentDate.getFullYear()}`,
-  )
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString())
+  const [selectedDate, setSelectedDate] = useState(`LAST30DAYS, ${currentDate.getFullYear()}`)
   const [orderBy, setOrderBy] = useState({
     field: 'TOTAL_MESSAGES',
     direction: 'DESC',
   })
-
   const { isOpen, onToggle } = useDisclosure()
 
-  const {
-    loading,
-    error,
-    nodes,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-    next,
-    previous,
-    isLoadingMore,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: selectedTableDisplayLimit,
-    variables: {
-      month: selectedPeriod,
-      year: selectedYear,
-      search: debouncedSearchTerm,
-      orderBy: orderBy,
-    },
-    relayRoot: 'findMyDmarcSummaries',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, error, nodes, resetToFirstPage, hasNextPage, hasPreviousPage, next, previous, isLoadingMore } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      recordsPerPage: selectedTableDisplayLimit,
+      variables: {
+        month: selectedPeriod,
+        year: selectedYear,
+        search: debouncedSearchTerm,
+        orderBy: orderBy,
+        isAffiliated,
+      },
+      relayRoot: 'findMyDmarcSummaries',
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -112,14 +104,7 @@ export default function DmarcByDomainPage() {
     return curData
   }, [nodes])
 
-  const [
-    domain,
-    totalMessages,
-    fullPassPercentage,
-    passSpfOnlyPercentage,
-    passDkimOnlyPercentage,
-    failPercentage,
-  ] = [
+  const [domain, totalMessages, fullPassPercentage, passSpfOnlyPercentage, passDkimOnlyPercentage, failPercentage] = [
     {
       Header: i18n._(t`Domain`),
       accessor: 'domain',
@@ -190,15 +175,7 @@ export default function DmarcByDomainPage() {
         ],
       },
     ],
-    [
-      domain,
-      totalMessages,
-      fullPassPercentage,
-      passSpfOnlyPercentage,
-      passDkimOnlyPercentage,
-      failPercentage,
-      i18n,
-    ],
+    [domain, totalMessages, fullPassPercentage, passSpfOnlyPercentage, passDkimOnlyPercentage, failPercentage, i18n],
   )
 
   // DMARC Summary Table setup
@@ -235,20 +212,17 @@ export default function DmarcByDomainPage() {
     resetToFirstPage()
   }
 
+  const RuaDomainsExportButton = withSuperAdmin(() => {
+    return <ExportRuaListButton ml="auto" />
+  })
+
   return (
     <Box width="100%" px="2">
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>DMARC Summaries</Trans>
       </Heading>
-
       <Flex align="center" mb={2}>
-        <Text
-          as="label"
-          htmlFor="data-date-range"
-          fontWeight="bold"
-          textAlign="center"
-          mr={1}
-        >
+        <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>
           <Trans>Showing data for period: </Trans>
         </Text>
         <MonthSelect
@@ -259,39 +233,41 @@ export default function DmarcByDomainPage() {
         />
 
         {loading && (
-          <Stack
-            isInline
-            justifyContent="center"
-            w={{ base: '100%', md: '50%' }}
-          >
+          <Stack isInline justifyContent="center" w={{ base: '100%', md: '50%' }}>
             <Text fontWeight="bold" ml={{ md: 'auto' }} mr="1.5em">
               <Trans>Loading Data...</Trans>
             </Text>
-            <Spinner
-              size="md"
-              speed="0.6s"
-              color="primary"
-              emptyColor="accent"
-              thickness="0.175em"
-            />
+            <Spinner size="md" speed="0.6s" color="primary" emptyColor="accent" thickness="0.175em" />
           </Stack>
         )}
       </Flex>
+      <Flex>
+        <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
+          <InputLeftElement>
+            <SearchIcon />
+          </InputLeftElement>
+          <Input
+            borderColor="black"
+            type="text"
+            placeholder={t`Search for a domain`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              resetToFirstPage()
+            }}
+          />
+        </InputGroup>
 
-      <InputGroup w={{ base: '100%', md: '50%' }} mb={{ base: '8px', md: '0' }}>
-        <InputLeftElement>
-          <SearchIcon />
-        </InputLeftElement>
-        <Input
-          type="text"
-          placeholder={t`Search for a domain`}
-          onChange={(e) => {
-            setSearchTerm(e.target.value)
-            resetToFirstPage()
-          }}
-        />
-      </InputGroup>
-
+        <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" />
+        <RuaDomainsExportButton />
+      </Flex>
+      {isLoggedIn() && (
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+        </Flex>
+      )}
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls
@@ -307,7 +283,6 @@ export default function DmarcByDomainPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
-        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
         <InfoPanel isOpen={isOpen} onToggle={onToggle}>
           <InfoBox title={t`Domain`} info={t`The domain address.`} />
           <InfoBox
@@ -316,24 +291,23 @@ export default function DmarcByDomainPage() {
           />
           <InfoBox
             title={t`Full Pass %`}
-            info={t`Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments.`}
+            info={t`Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements.`}
           />
           <InfoBox
             title={t`Fail SPF %`}
-            info={t`Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments.`}
+            info={t`Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements.`}
           />
           <InfoBox
             title={t`Fail DKIM %`}
-            info={t`Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments.`}
+            info={t`Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements.`}
           />
           <InfoBox
             title={t`Full Fail %`}
-            info={t`Shows the percentage of emails from the domain that fail both SPF and DKIM requirments.`}
+            info={t`Shows the percentage of emails from the domain that fail both SPF and DKIM requirements.`}
           />
           <Divider borderColor="gray.500" />
           <Trans>
-            A more detailed breakdown of each domain can be found by clicking on
-            its address in the first column.
+            A more detailed breakdown of each domain can be found by clicking on its address in the first column.
           </Trans>
         </InfoPanel>
       </ErrorBoundary>

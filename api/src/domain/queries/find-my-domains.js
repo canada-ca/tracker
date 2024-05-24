@@ -1,7 +1,7 @@
-import { GraphQLBoolean, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLString, GraphQLList } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
-import { domainOrder } from '../inputs'
+import { domainFilter, domainOrder } from '../inputs'
 import { domainConnection } from '../objects'
 
 export const findMyDomains = {
@@ -14,12 +14,19 @@ export const findMyDomains = {
     },
     ownership: {
       type: GraphQLBoolean,
-      description:
-        'Limit domains to those that belong to an organization that has ownership.',
+      description: 'Limit domains to those that belong to an organization that has ownership.',
     },
     search: {
       type: GraphQLString,
       description: 'String used to search for domains.',
+    },
+    isAffiliated: {
+      type: GraphQLBoolean,
+      description: 'Filter the results based on the users affiliation.',
+    },
+    filters: {
+      type: new GraphQLList(domainFilter),
+      description: 'Filters used to limit domains returned.',
     },
     ...connectionArgs,
   },
@@ -28,12 +35,7 @@ export const findMyDomains = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        loginRequiredBool,
-        verifiedRequired,
-      },
+      auth: { checkSuperAdmin, userRequired, loginRequiredBool, verifiedRequired },
       loaders: { loadDomainConnectionsByUserId },
     },
   ) => {

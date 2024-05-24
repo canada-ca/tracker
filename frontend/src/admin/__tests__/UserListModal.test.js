@@ -10,11 +10,7 @@ import { en } from 'make-plural/plurals'
 
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
-import {
-  UPDATE_USER_ROLE,
-  INVITE_USER_TO_ORG,
-  REMOVE_USER_FROM_ORG,
-} from '../../graphql/mutations'
+import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG, REMOVE_USER_FROM_ORG } from '../../graphql/mutations'
 import { UserListModal } from '../UserListModal'
 import userEvent from '@testing-library/user-event'
 import canada from '../../theme/canada'
@@ -60,17 +56,11 @@ describe('<UserListModal />', () => {
   it('can be opened and closed', async () => {
     const { getByRole, queryByText } = render(
       <MockedProvider cache={createCache()}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
-                <UserListModalExample
-                  mutation="update"
-                  permission="ADMIN"
-                  editingUserRole="USER"
-                />
+                <UserListModalExample mutation="update" permission="ADMIN" editingUserRole="USER" />
               </MemoryRouter>
             </I18nProvider>
           </ChakraProvider>
@@ -93,9 +83,7 @@ describe('<UserListModal />', () => {
     // modal closed
     userEvent.click(closeModalButton)
 
-    await waitFor(() =>
-      expect(queryByText(/test-username/)).not.toBeInTheDocument(),
-    )
+    await waitFor(() => expect(queryByText(/test-username/)).not.toBeInTheDocument())
   })
 
   describe('admin is updating a user', () => {
@@ -129,11 +117,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="update"
-                      editingUserRole="USER"
-                      permission="ADMIN"
-                    />
+                    <UserListModalExample mutation="update" editingUserRole="USER" permission="ADMIN" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -153,12 +137,8 @@ describe('<UserListModal />', () => {
           name: /Role:/,
         })
         expect(roleChangeSelect.options.length).toEqual(2)
-        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-          /USER/,
-        )
-        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
-          /ADMIN/,
-        )
+        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
         // select new role and update
         userEvent.selectOptions(roleChangeSelect, 'ADMIN')
@@ -169,9 +149,7 @@ describe('<UserListModal />', () => {
 
         // check for "error" toast
         await waitFor(() => {
-          expect(
-            getAllByText(/Unable to change user role, please try again./)[0],
-          )
+          expect(getAllByText(/Unable to change user role, please try again./)[0])
         })
       })
       it('a client-side error occurs', async () => {
@@ -211,11 +189,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="update"
-                      editingUserRole="USER"
-                      permission="ADMIN"
-                    />
+                    <UserListModalExample mutation="update" editingUserRole="USER" permission="ADMIN" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -235,12 +209,8 @@ describe('<UserListModal />', () => {
           name: /Role:/,
         })
         expect(roleChangeSelect.options.length).toEqual(2)
-        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-          /USER/,
-        )
-        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
-          /ADMIN/,
-        )
+        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
         // select new role and update
         userEvent.selectOptions(roleChangeSelect, 'ADMIN')
@@ -251,9 +221,7 @@ describe('<UserListModal />', () => {
 
         // check for "error" toast
         await waitFor(() => {
-          expect(
-            getAllByText(/Unable to update user role./)[0],
-          ).toBeInTheDocument()
+          expect(getAllByText(/Unable to update user role./)[0]).toBeInTheDocument()
         })
       })
       it('a type error occurs', async () => {
@@ -293,11 +261,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="update"
-                      editingUserRole="USER"
-                      permission="ADMIN"
-                    />
+                    <UserListModalExample mutation="update" editingUserRole="USER" permission="ADMIN" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -317,12 +281,8 @@ describe('<UserListModal />', () => {
           name: /Role:/,
         })
         expect(roleChangeSelect.options.length).toEqual(2)
-        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-          /USER/,
-        )
-        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
-          /ADMIN/,
-        )
+        expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+        expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
         // select new role and update
         userEvent.selectOptions(roleChangeSelect, 'ADMIN')
@@ -333,9 +293,7 @@ describe('<UserListModal />', () => {
 
         // check for "error" toast
         await waitFor(() => {
-          expect(
-            getAllByText(/Incorrect send method received./)[0],
-          ).toBeInTheDocument()
+          expect(getAllByText(/Incorrect send method received./)[0]).toBeInTheDocument()
         })
       })
     })
@@ -378,11 +336,7 @@ describe('<UserListModal />', () => {
                 <ChakraProvider theme={canada}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/']}>
-                      <UserListModalExample
-                        mutation="update"
-                        editingUserRole="USER"
-                        permission="ADMIN"
-                      />
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="ADMIN" />
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
@@ -402,12 +356,8 @@ describe('<UserListModal />', () => {
             name: /Role:/,
           })
           expect(roleChangeSelect.options.length).toEqual(2)
-          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-            /USER/,
-          )
-          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
-            /ADMIN/,
-          )
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
           // select new role and update
           userEvent.selectOptions(roleChangeSelect, 'ADMIN')
@@ -418,10 +368,46 @@ describe('<UserListModal />', () => {
 
           // check for "success" toast
           await waitFor(() => {
-            expect(
-              getAllByText(/The user's role has been successfully updated/)[0],
-            ).toBeInTheDocument()
+            expect(getAllByText(/The user's role has been successfully updated/)[0]).toBeInTheDocument()
           })
+        })
+        it('admin can not change user role to "OWNER"', async () => {
+          const { getByRole, queryByText } = render(
+            <MockedProvider mocks={[]} cache={createCache()}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: null,
+                  tfaSendMethod: null,
+                  userName: null,
+                })}
+              >
+                <ChakraProvider theme={canada}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter initialEntries={['/']}>
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="ADMIN" />
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ChakraProvider>
+              </UserVarProvider>
+            </MockedProvider>,
+          )
+
+          // modal closed
+          const openModalButton = getByRole('button', { name: /Open Modal/ })
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+          // modal opened
+          userEvent.click(openModalButton)
+
+          // get select element, verify options
+          const roleChangeSelect = getByRole('combobox', {
+            name: /Role:/,
+          })
+          expect(roleChangeSelect.options.length).toEqual(2)
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
+          expect(roleChangeSelect).not.toHaveTextContent(/OWNER/)
+          expect(roleChangeSelect).not.toHaveTextContent(/SUPER_ADMIN/)
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
           const { getByRole, queryByText } = render(
@@ -436,11 +422,7 @@ describe('<UserListModal />', () => {
                 <ChakraProvider theme={canada}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/']}>
-                      <UserListModalExample
-                        mutation="update"
-                        editingUserRole="USER"
-                        permission="ADMIN"
-                      />
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="ADMIN" />
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
@@ -460,17 +442,13 @@ describe('<UserListModal />', () => {
             name: /Role:/,
           })
           expect(roleChangeSelect.options.length).toEqual(2)
-          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-            /USER/,
-          )
-          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
-            /ADMIN/,
-          )
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
           expect(roleChangeSelect).not.toHaveTextContent(/SUPER_ADMIN/)
         })
       })
       describe('admin is updating user with "ADMIN" privileges', () => {
-        it('admin cannot downgrade user to "USER"', async () => {
+        it('admin can downgrade user to "USER"', async () => {
           const { getByRole, queryByText } = render(
             <MockedProvider mocks={[]} cache={createCache()}>
               <UserVarProvider
@@ -483,11 +461,7 @@ describe('<UserListModal />', () => {
                 <ChakraProvider theme={canada}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/']}>
-                      <UserListModalExample
-                        mutation="update"
-                        editingUserRole="ADMIN"
-                        permission="ADMIN"
-                      />
+                      <UserListModalExample mutation="update" editingUserRole="ADMIN" permission="ADMIN" />
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
@@ -506,11 +480,11 @@ describe('<UserListModal />', () => {
           const roleChangeSelect = getByRole('combobox', {
             name: /Role:/,
           })
-          expect(roleChangeSelect.options.length).toEqual(1)
-          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-            /ADMIN/,
-          )
-          expect(roleChangeSelect).not.toHaveTextContent(/USER/)
+          expect(roleChangeSelect.options.length).toEqual(2)
+          expect(roleChangeSelect.value).toEqual('ADMIN')
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
+          expect(roleChangeSelect).toHaveTextContent(/USER/)
         })
       })
     })
@@ -553,11 +527,7 @@ describe('<UserListModal />', () => {
                 <ChakraProvider theme={canada}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/']}>
-                      <UserListModalExample
-                        mutation="update"
-                        editingUserRole="USER"
-                        permission="SUPER_ADMIN"
-                      />
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="SUPER_ADMIN" />
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
@@ -576,13 +546,9 @@ describe('<UserListModal />', () => {
           const roleChangeSelect = getByRole('combobox', {
             name: /Role:/,
           })
-          expect(roleChangeSelect.options.length).toEqual(2)
-          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-            /USER/,
-          )
-          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
-            /ADMIN/,
-          )
+          expect(roleChangeSelect.options.length).toEqual(3)
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
           // select new role and update
           userEvent.selectOptions(roleChangeSelect, 'ADMIN')
@@ -594,9 +560,81 @@ describe('<UserListModal />', () => {
 
           // check for "success" toast
           await waitFor(() => {
-            expect(
-              getAllByText(/The user's role has been successfully updated/)[0],
-            ).toBeInTheDocument()
+            expect(getAllByText(/The user's role has been successfully updated/)[0]).toBeInTheDocument()
+          })
+        })
+        it('admin can change user role to "OWNER"', async () => {
+          const mocks = [
+            {
+              request: {
+                query: UPDATE_USER_ROLE,
+                variables: {
+                  orgId: orgId,
+                  role: 'OWNER',
+                  userName: editingUserName,
+                },
+              },
+              result: {
+                data: {
+                  updateUserRole: {
+                    result: {
+                      status: 'User role was updated successfully',
+                      __typename: 'UpdateUserRoleResult',
+                    },
+                    __typename: 'UpdateUserRolePayload',
+                  },
+                },
+              },
+            },
+          ]
+
+          const { getAllByText, getByRole, queryByText } = render(
+            <MockedProvider mocks={mocks} cache={createCache()}>
+              <UserVarProvider
+                userVar={makeVar({
+                  jwt: null,
+                  tfaSendMethod: null,
+                  userName: null,
+                })}
+              >
+                <ChakraProvider theme={canada}>
+                  <I18nProvider i18n={i18n}>
+                    <MemoryRouter initialEntries={['/']}>
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="SUPER_ADMIN" />
+                    </MemoryRouter>
+                  </I18nProvider>
+                </ChakraProvider>
+              </UserVarProvider>
+            </MockedProvider>,
+          )
+
+          // modal closed
+          const openModalButton = getByRole('button', { name: /Open Modal/ })
+          expect(queryByText(/test-username/)).not.toBeInTheDocument()
+
+          // modal opened
+          userEvent.click(openModalButton)
+
+          // get select element, verify options
+          const roleChangeSelect = getByRole('combobox', {
+            name: /Role:/,
+          })
+          expect(roleChangeSelect.options.length).toEqual(3)
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
+          expect(Object.values(roleChangeSelect.options)[2]).toHaveTextContent(/OWNER/)
+
+          // select new role and update
+          userEvent.selectOptions(roleChangeSelect, 'OWNER')
+          const confirmUserUpdateButton = getByRole('button', {
+            name: /Confirm/i,
+          })
+
+          userEvent.click(confirmUserUpdateButton)
+
+          // check for "success" toast
+          await waitFor(() => {
+            expect(getAllByText(/The user's role has been successfully updated/)[0]).toBeInTheDocument()
           })
         })
         it('admin can not change user role to "SUPER_ADMIN"', async () => {
@@ -612,11 +650,7 @@ describe('<UserListModal />', () => {
                 <ChakraProvider theme={canada}>
                   <I18nProvider i18n={i18n}>
                     <MemoryRouter initialEntries={['/']}>
-                      <UserListModalExample
-                        mutation="update"
-                        editingUserRole="USER"
-                        permission="SUPER_ADMIN"
-                      />
+                      <UserListModalExample mutation="update" editingUserRole="USER" permission="SUPER_ADMIN" />
                     </MemoryRouter>
                   </I18nProvider>
                 </ChakraProvider>
@@ -635,13 +669,9 @@ describe('<UserListModal />', () => {
           const roleChangeSelect = getByRole('combobox', {
             name: /Role:/,
           })
-          expect(roleChangeSelect.options.length).toEqual(2)
-          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(
-            /USER/,
-          )
-          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(
-            /ADMIN/,
-          )
+          expect(roleChangeSelect.options.length).toEqual(3)
+          expect(Object.values(roleChangeSelect.options)[0]).toHaveTextContent(/USER/)
+          expect(Object.values(roleChangeSelect.options)[1]).toHaveTextContent(/ADMIN/)
           expect(roleChangeSelect).not.toHaveTextContent(/SUPER_ADMIN/)
         })
       })
@@ -678,10 +708,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="remove"
-                      permission="ADMIN"
-                    />
+                    <UserListModalExample mutation="remove" permission="ADMIN" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -742,10 +769,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="remove"
-                      permission="ADMIN"
-                    />
+                    <UserListModalExample mutation="remove" permission="ADMIN" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -784,7 +808,6 @@ describe('<UserListModal />', () => {
                 orgId: orgId,
                 requestedRole: 'USER',
                 userName: editingUserName,
-                preferredLang: 'ENGLISH',
               },
             },
             result: {
@@ -807,11 +830,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="create"
-                      permission="ADMIN"
-                      editingUserRole="USER"
-                    />
+                    <UserListModalExample mutation="create" permission="ADMIN" editingUserRole="USER" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -835,12 +854,8 @@ describe('<UserListModal />', () => {
         })
 
         expect(newUserRoleSelect.options.length).toEqual(2)
-        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
-          /USER/,
-        )
-        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
-          /ADMIN/,
-        )
+        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(/USER/)
+        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
         const confirmUserInviteButton = getByRole('button', {
           name: /Confirm/i,
@@ -861,7 +876,6 @@ describe('<UserListModal />', () => {
                 orgId: orgId,
                 requestedRole: 'USER',
                 userName: editingUserName,
-                preferredLang: 'ENGLISH',
               },
             },
             result: {
@@ -890,11 +904,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="create"
-                      permission="ADMIN"
-                      editingUserRole="USER"
-                    />
+                    <UserListModalExample mutation="create" permission="ADMIN" editingUserRole="USER" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -918,12 +928,8 @@ describe('<UserListModal />', () => {
         })
 
         expect(newUserRoleSelect.options.length).toEqual(2)
-        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
-          /USER/,
-        )
-        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
-          /ADMIN/,
-        )
+        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(/USER/)
+        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
         const confirmUserInviteButton = getByRole('button', {
           name: /Confirm/i,
@@ -944,7 +950,6 @@ describe('<UserListModal />', () => {
                 orgId: orgId,
                 requestedRole: 'USER',
                 userName: editingUserName,
-                preferredLang: 'ENGLISH',
               },
             },
             result: {
@@ -973,11 +978,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="create"
-                      permission="ADMIN"
-                      editingUserRole="USER"
-                    />
+                    <UserListModalExample mutation="create" permission="ADMIN" editingUserRole="USER" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -1001,12 +1002,8 @@ describe('<UserListModal />', () => {
         })
 
         expect(newUserRoleSelect.options.length).toEqual(2)
-        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
-          /USER/,
-        )
-        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
-          /ADMIN/,
-        )
+        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(/USER/)
+        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
         const confirmUserInviteButton = getByRole('button', {
           name: /Confirm/i,
@@ -1015,9 +1012,7 @@ describe('<UserListModal />', () => {
 
         // check for "success" toast and modal to close
         await waitFor(() => {
-          expect(
-            getAllByText(/Incorrect send method received./)[0],
-          ).toBeVisible()
+          expect(getAllByText(/Incorrect send method received./)[0]).toBeVisible()
         })
       })
     })
@@ -1032,7 +1027,6 @@ describe('<UserListModal />', () => {
                 orgId: orgId,
                 requestedRole: 'USER',
                 userName: editingUserName,
-                preferredLang: 'ENGLISH',
               },
             },
             result: {
@@ -1061,11 +1055,7 @@ describe('<UserListModal />', () => {
               <ChakraProvider theme={canada}>
                 <I18nProvider i18n={i18n}>
                   <MemoryRouter initialEntries={['/']}>
-                    <UserListModalExample
-                      mutation="create"
-                      permission="ADMIN"
-                      editingUserRole="USER"
-                    />
+                    <UserListModalExample mutation="create" permission="ADMIN" editingUserRole="USER" />
                   </MemoryRouter>
                 </I18nProvider>
               </ChakraProvider>
@@ -1089,12 +1079,8 @@ describe('<UserListModal />', () => {
         })
 
         expect(newUserRoleSelect.options.length).toEqual(2)
-        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
-          /USER/,
-        )
-        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
-          /ADMIN/,
-        )
+        expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(/USER/)
+        expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(/ADMIN/)
 
         const confirmUserInviteButton = getByRole('button', {
           name: /Confirm/i,
@@ -1124,7 +1110,6 @@ describe('<UserListModal />', () => {
               orgId: orgId,
               requestedRole: 'ADMIN',
               userName: editingUserName,
-              preferredLang: 'ENGLISH',
             },
           },
           result: {
@@ -1153,11 +1138,7 @@ describe('<UserListModal />', () => {
             <ChakraProvider theme={canada}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
-                  <UserListModalExample
-                    mutation="create"
-                    permission="ADMIN"
-                    editingUserRole="USER"
-                  />
+                  <UserListModalExample mutation="create" permission="ADMIN" editingUserRole="USER" />
                 </MemoryRouter>
               </I18nProvider>
             </ChakraProvider>
@@ -1178,12 +1159,8 @@ describe('<UserListModal />', () => {
       })
 
       expect(newUserRoleSelect.options.length).toEqual(2)
-      expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(
-        /USER/,
-      )
-      expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(
-        /ADMIN/,
-      )
+      expect(Object.values(newUserRoleSelect.options)[0]).toHaveTextContent(/USER/)
+      expect(Object.values(newUserRoleSelect.options)[1]).toHaveTextContent(/ADMIN/)
       userEvent.selectOptions(newUserRoleSelect, 'ADMIN')
 
       const confirmUserInviteButton = getByRole('button', {

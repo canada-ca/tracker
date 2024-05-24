@@ -2,28 +2,33 @@ import { GraphQLNonNull, GraphQLString, GraphQLInt } from 'graphql'
 import { mutationWithClientMutationId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 import { authenticateUnion } from '../unions'
+import { TfaSendMethodEnum } from '../../enums'
+import ms from 'ms'
 
-const { SIGN_IN_KEY, REFRESH_KEY, REFRESH_TOKEN_EXPIRY } = process.env
+const { REFRESH_KEY, REFRESH_TOKEN_EXPIRY, AUTHENTICATED_KEY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
   description:
     'This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.',
   inputFields: () => ({
+    sendMethod: {
+      type: new GraphQLNonNull(TfaSendMethodEnum),
+      description: 'The method that the user wants to receive their authentication code by.',
+    },
     authenticationCode: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt),
       description: 'Security code found in text msg, or email inbox.',
     },
     authenticateToken: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The JWT that is retrieved from the sign in mutation.',
     },
   }),
   outputFields: () => ({
     result: {
       type: authenticateUnion,
-      description:
-        'Authenticate union returning either a `authResult` or `authenticateError` object.',
+      description: 'Authenticate union returning either a `authResult` or `authenticateError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -36,6 +41,7 @@ export const authenticate = new mutationWithClientMutationId({
       collections,
       transaction,
       uuidv4,
+      jwt,
       auth: { tokenize, verifyToken },
       loaders: { loadUserByKey },
       validators: { cleanseInput },
@@ -44,6 +50,7 @@ export const authenticate = new mutationWithClientMutationId({
     // Cleanse Inputs
     const authenticationCode = args.authenticationCode
     const authenticationToken = cleanseInput(args.authenticateToken)
+    const sendMethod = cleanseInput(args.sendMethod)
 
     // Gather token parameters
     const tokenParameters = verifyToken({
@@ -51,10 +58,7 @@ export const authenticate = new mutationWithClientMutationId({
       secret: String(SIGN_IN_KEY),
     })
 
-    if (
-      tokenParameters.userKey === 'undefined' ||
-      typeof tokenParameters.userKey === 'undefined'
-    ) {
+    if (tokenParameters.userKey === 'undefined' || typeof tokenParameters.userKey === 'undefined') {
       console.warn(`Authentication token does not contain the userKey`)
       return {
         _type: 'error',
@@ -68,9 +72,7 @@ export const authenticate = new mutationWithClientMutationId({
 
     // Replace with userRequired()
     if (typeof user === 'undefined') {
-      console.warn(
-        `User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`,
-      )
+      console.warn(`User: ${tokenParameters.userKey} attempted to authenticate, no account is associated with this id.`)
       return {
         _type: 'error',
         code: 400,
@@ -85,9 +87,7 @@ export const authenticate = new mutationWithClientMutationId({
       const refreshInfo = {
         refreshId,
         rememberMe: user.refreshInfo.rememberMe,
-        expiresAt: new Date(
-          new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
-        ),
+        expiresAt: new Date(new Date().getTime() + ms(REFRESH_TOKEN_EXPIRY)),
       }
 
       // Setup Transaction
@@ -117,19 +117,47 @@ export const authenticate = new mutationWithClientMutationId({
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
+      // verify user email
+      if (sendMethod === 'email' && !user.emailValidated) {
+        try {
+          await trx.step(
+            () => query`
+              WITH users
+              UPSERT { _key: ${user._key} }
+                INSERT {
+                  emailValidated: true,
+                }
+                UPDATE {
+                  emailValidated: true,
+                }
+                IN users
+            `,
+          )
+          user.emailValidated = true
+        } catch (err) {
+          console.error(
+            `Trx step error occurred when setting email validated to true for user: ${user._key} during authentication: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
+        }
+      }
+
       try {
         await trx.commit()
       } catch (err) {
-        console.error(
-          `Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`,
-        )
+        console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
         throw new Error(i18n._(t`Unable to authenticate. Please try again.`))
       }
 
-      const token = tokenize({ parameters: { userKey: user._key } })
+      const token = tokenize({
+        expiresIn: AUTH_TOKEN_EXPIRY,
+        parameters: { userKey: user._key },
+        secret: String(AUTHENTICATED_KEY),
+      })
+
       const refreshToken = tokenize({
+        expiresIn: REFRESH_TOKEN_EXPIRY,
         parameters: { userKey: user._key, uuid: refreshId },
-        expPeriod: 168,
         secret: String(REFRESH_KEY),
       })
 
@@ -143,8 +171,9 @@ export const authenticate = new mutationWithClientMutationId({
 
       // if user wants to stay logged in create normal http cookie
       if (user.refreshInfo.rememberMe) {
+        const tokenMaxAgeSeconds = jwt.decode(refreshToken).exp - jwt.decode(refreshToken).iat
         cookieData = {
-          maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
+          maxAge: tokenMaxAgeSeconds * 1000,
           httpOnly: true,
           secure: true,
           sameSite: true,
@@ -153,9 +182,7 @@ export const authenticate = new mutationWithClientMutationId({
 
       response.cookie('refresh_token', refreshToken, cookieData)
 
-      console.info(
-        `User: ${user._key} successfully authenticated their account.`,
-      )
+      console.info(`User: ${user._key} successfully authenticated their account.`)
 
       return {
         _type: 'authResult',
@@ -163,9 +190,36 @@ export const authenticate = new mutationWithClientMutationId({
         user,
       }
     } else {
-      console.warn(
-        `User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`,
-      )
+      console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
+      // reset tfa code
+      const trx = await transaction(collections)
+      try {
+        await trx.step(
+          () => query`
+            WITH users
+            UPSERT { _key: ${user._key} }
+              INSERT {
+                tfaCode: null,
+              }
+              UPDATE {
+                tfaCode: null,
+              }
+              IN users
+          `,
+        )
+      } catch (err) {
+        console.error(
+          `Trx step error occurred when clearing tfa code on attempt timeout for user: ${user._key} during authentication: ${err}`,
+        )
+        throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
+      }
+
+      try {
+        await trx.commit()
+      } catch (err) {
+        console.error(`Trx commit error occurred while user: ${user._key} attempted to authenticate: ${err}`)
+        throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
+      }
       throw new Error(i18n._(t`Incorrect TFA code. Please sign in again.`))
     }
   },

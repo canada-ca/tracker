@@ -9,15 +9,14 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
   description: "Mutation to remove domain from user's personal myTracker view.",
   inputFields: () => ({
     domainId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the domain you wish to favourite.',
     },
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(removeDomainUnion),
-      description:
-        '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
+      type: new GraphQLNonNull(removeDomainUnion),
+      description: '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -39,9 +38,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
     verifiedRequired({ user })
 
     // Cleanse input
-    const { type: _domainType, id: domainId } = fromGlobalId(
-      cleanseInput(args.domainId),
-    )
+    const { type: _domainType, id: domainId } = fromGlobalId(cleanseInput(args.domainId))
 
     // Get domain from db
     const domain = await loadDomainByKey.load(domainId)
@@ -67,9 +64,7 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
             RETURN e
       `
     } catch (err) {
-      console.error(
-        `Database error occurred while running check to see if domain already favourited: ${err}`,
-      )
+      console.error(`Database error occurred while running check to see if domain already favourited: ${err}`)
       throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
     }
 
@@ -77,22 +72,16 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
     try {
       checkUserDomain = await checkDomainCursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred while running check to see if domain already favourited: ${err}`,
-      )
+      console.error(`Cursor error occurred while running check to see if domain already favourited: ${err}`)
       throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
     }
 
     if (typeof checkUserDomain === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to unfavourite a domain, however domain is not favourited.`,
-      )
+      console.warn(`User: ${userKey} attempted to unfavourite a domain, however domain is not favourited.`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to unfavourite domain, domain is not favourited.`,
-        ),
+        description: i18n._(t`Unable to unfavourite domain, domain is not favourited.`),
       }
     }
 
@@ -117,34 +106,22 @@ export const unfavouriteDomain = new mutationWithClientMutationId({
           `,
       )
     } catch (err) {
-      console.error(
-        `Transaction step error occurred for user: ${userKey} when removing domain edge: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to unfavourite domain. Please try again.`),
-      )
+      console.error(`Transaction step error occurred for user: ${userKey} when removing domain edge: ${err}`)
+      throw new Error(i18n._(t`Unable to unfavourite domain. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Transaction commit error occurred while user: ${userKey} was unfavouriting domain: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to unfavourite domain. Please try again.`),
-      )
+      console.error(`Transaction commit error occurred while user: ${userKey} was unfavouriting domain: ${err}`)
+      throw new Error(i18n._(t`Unable to unfavourite domain. Please try again.`))
     }
 
-    console.info(
-      `User: ${userKey} successfully removed domain ${domain.domain} from favourites.`,
-    )
+    console.info(`User: ${userKey} successfully removed domain ${domain.domain} from favourites.`)
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully removed domain: ${domain.domain} from favourites.`,
-      ),
+      status: i18n._(t`Successfully removed domain: ${domain.domain} from favourites.`),
       domain,
     }
   },

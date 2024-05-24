@@ -9,7 +9,7 @@ describe('given the guidanceTag gql object', () => {
       const demoType = guidanceTagType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a tagId field', () => {
       const demoType = guidanceTagType.getFields()
@@ -33,15 +33,13 @@ describe('given the guidanceTag gql object', () => {
       const demoType = guidanceTagType.getFields()
 
       expect(demoType).toHaveProperty('refLinks')
-      expect(demoType.refLinks.type).toMatchObject(GraphQLList(refLinksType))
+      expect(demoType.refLinks.type).toMatchObject(new GraphQLList(refLinksType))
     })
     it('has a refLinksTechnical field', () => {
       const demoType = guidanceTagType.getFields()
 
       expect(demoType).toHaveProperty('refLinksTech')
-      expect(demoType.refLinksTech.type).toMatchObject(
-        GraphQLList(refLinksType),
-      )
+      expect(demoType.refLinksTech.type).toMatchObject(new GraphQLList(refLinksType))
     })
   })
   describe('testing the field resolvers', () => {
@@ -49,9 +47,7 @@ describe('given the guidanceTag gql object', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('guidanceTag', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('guidanceTag', 1))
       })
     })
     describe('testing the tagId resolver', () => {
@@ -65,18 +61,14 @@ describe('given the guidanceTag gql object', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagType.getFields()
 
-        expect(demoType.tagName.resolve({ tagName: 'tagName' })).toEqual(
-          'tagName',
-        )
+        expect(demoType.tagName.resolve({ tagName: 'tagName' })).toEqual('tagName')
       })
     })
     describe('testing the guidance resolver', () => {
       it('returns the resolved value', () => {
         const demoType = guidanceTagType.getFields()
 
-        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual(
-          'guidance',
-        )
+        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual('guidance')
       })
     })
     describe('testing the refLinks resolver', () => {

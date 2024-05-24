@@ -4,7 +4,7 @@
   "description": "creates the database according to a setup file",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint",
     "start": "node --dns-result-order=ipv4first --experimental-json-modules --experimental-vm-modules index.js"
   },
   "keywords": [],
@@ -16,16 +16,13 @@
     "json-placeholder-replacer": "^1.0.35"
   },
   "devDependencies": {
-    "eslint": "^8.11.0",
+    "eslint": "^8.30.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^26.1.2",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.3.0",
-    "eslint-plugin-standard": "^4.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0",
     "prettier": "^2.6.0"
   }
 }

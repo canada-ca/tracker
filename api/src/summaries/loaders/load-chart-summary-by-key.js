@@ -9,27 +9,21 @@ export const loadChartSummaryByKey = ({ query, userKey, i18n }) =>
       cursor = await query`
         WITH chartSummaries
         FOR summary IN chartSummaries
-          FILTER summary._key IN ${keys}
-          RETURN MERGE({ id: summary._key }, summary)
+          SORT summary.date DESC LIMIT 1
+          RETURN summary
       `
     } catch (err) {
-      console.error(
-        `Database error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`,
-      )
+      console.error(`Database error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`)
       throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }
 
-    const summaryMap = {}
+    let summariesMap
     try {
-      await cursor.forEach((summary) => {
-        summaryMap[summary._key] = summary
-      })
+      summariesMap = await cursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`,
-      )
+      console.error(`Cursor error occurred when user: ${userKey} running loadChartSummaryByKey: ${err}`)
       throw new Error(i18n._(t`Unable to load summary. Please try again.`))
     }
 
-    return keys.map((key) => summaryMap[key])
+    return keys.map((key) => summariesMap[key])
   })

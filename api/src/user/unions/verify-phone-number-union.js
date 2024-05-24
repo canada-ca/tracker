@@ -1,8 +1,5 @@
 import { GraphQLUnionType } from 'graphql'
-import {
-  verifyPhoneNumberErrorType,
-  verifyPhoneNumberResultType,
-} from '../objects'
+import { verifyPhoneNumberErrorType, verifyPhoneNumberResultType } from '../objects'
 
 export const verifyPhoneNumberUnion = new GraphQLUnionType({
   name: 'VerifyPhoneNumberUnion',
@@ -11,9 +8,9 @@ export const verifyPhoneNumberUnion = new GraphQLUnionType({
   types: [verifyPhoneNumberErrorType, verifyPhoneNumberResultType],
   resolveType({ _type }) {
     if (_type === 'success') {
-      return verifyPhoneNumberResultType
+      return verifyPhoneNumberResultType.name
     } else {
-      return verifyPhoneNumberErrorType
+      return verifyPhoneNumberErrorType.name
     }
   },
 })

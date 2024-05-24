@@ -8,13 +8,8 @@ import { createMutationSchema } from '../../../mutation'
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput, slugify } from '../../../validators'
-import {
-  checkPermission,
-  userRequired,
-  verifiedRequired,
-  tfaRequired,
-} from '../../../auth'
-import { loadDomainByKey } from '../../loaders'
+import { checkPermission, userRequired, verifiedRequired, tfaRequired, checkDomainPermission } from '../../../auth'
+import { loadDkimSelectorsByDomainId, loadDomainByKey } from '../../loaders'
 import { loadOrgByKey } from '../../../organization/loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
@@ -45,6 +40,18 @@ describe('updating a domain', () => {
 
   describe('given a successful domain update', () => {
     let org, domain
+    const i18n = setupI18n({
+      locale: 'en',
+      localeData: {
+        en: { plurals: {} },
+        fr: { plurals: {} },
+      },
+      locales: ['en', 'fr'],
+      messages: {
+        en: englishMessages.messages,
+        fr: frenchMessages.messages,
+      },
+    })
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections, transaction } = await ensure({
@@ -92,11 +99,21 @@ describe('updating a domain', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
+      })
+      const selector1 = await collections.selectors.save({ selector: 'selector1' })
+      const selector2 = await collections.selectors.save({ selector: 'selector2' })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector2._id,
       })
       await collections.claims.save({
         _to: domain._id,
         _from: org._id,
+        tags: [],
       })
     })
     afterEach(async () => {
@@ -115,9 +132,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -137,13 +154,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -157,12 +179,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -178,16 +207,14 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -210,13 +237,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -230,12 +262,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -251,16 +290,14 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates domain and selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -284,13 +321,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -304,12 +346,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -325,9 +374,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
     })
@@ -341,9 +388,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -363,13 +410,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -383,12 +435,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -404,16 +463,14 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -436,13 +493,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -456,12 +518,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -477,16 +546,14 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates domain and selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -510,13 +577,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -530,12 +602,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -551,9 +630,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
     })
@@ -567,9 +644,9 @@ describe('updating a domain', () => {
       })
       describe('user updates domain', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -589,13 +666,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -609,12 +691,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -630,16 +719,14 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -662,13 +749,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -682,12 +774,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -703,16 +802,14 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
       describe('user updates domain and selectors', () => {
         it('returns updated domain', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -736,13 +833,18 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               query,
               collections: collectionNames,
               transaction,
               userKey: user._key,
               auth: {
+                checkDomainPermission: checkDomainPermission({
+                  i18n,
+                  userKey: user._key,
+                  query,
+                }),
                 checkPermission: checkPermission({ userKey: user._key, query }),
                 userRequired: userRequired({
                   userKey: user._key,
@@ -756,12 +858,19 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: loadDomainByKey({ query }),
                 loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
                 loadUserByKey: loadUserByKey({ query }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -777,9 +886,7 @@ describe('updating a domain', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully updated domain: ${domain._key}.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
     })
@@ -803,9 +910,9 @@ describe('updating a domain', () => {
       })
       describe('domain cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -833,8 +940,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -851,6 +958,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn(),
                 },
@@ -860,7 +974,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -881,9 +995,9 @@ describe('updating a domain', () => {
       })
       describe('organization cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -911,8 +1025,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -929,6 +1043,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -938,7 +1059,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -959,9 +1080,9 @@ describe('updating a domain', () => {
       })
       describe('user does not belong to org', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -989,8 +1110,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1007,6 +1128,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1016,7 +1144,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1038,9 +1166,9 @@ describe('updating a domain', () => {
       })
       describe('domain and org do not have any edges', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1068,8 +1196,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
@@ -1086,6 +1214,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1095,15 +1230,14 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to update domain that does not belong to the given organization.',
+                  description: 'Unable to update domain that does not belong to the given organization.',
                 },
               },
             },
@@ -1118,9 +1252,9 @@ describe('updating a domain', () => {
       describe('database error occurs', () => {
         describe('while checking for edge connections', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1148,8 +1282,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -1166,6 +1300,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1175,11 +1316,9 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to update domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1191,9 +1330,9 @@ describe('updating a domain', () => {
       describe('transaction step error occurs', () => {
         describe('when running domain upsert', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1221,15 +1360,13 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -1243,6 +1380,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1252,11 +1396,9 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to update domain. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1267,9 +1409,9 @@ describe('updating a domain', () => {
       })
       describe('transaction commit error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1297,16 +1439,19 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest
+                .fn()
+                .mockReturnValueOnce({ count: 1 })
+                .mockReturnValueOnce({ count: 1 })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) }),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
-                commit: jest
-                  .fn()
-                  .mockRejectedValue(new Error('trx commit error')),
+                commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
               }),
               userKey: 123,
               auth: {
@@ -1320,6 +1465,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: 123,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1329,11 +1481,9 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError('Unable to update domain. Please try again.'),
-          ]
+          const error = [new GraphQLError('Unable to update domain. Please try again.')]
 
           expect(response.errors).toEqual(error)
         })
@@ -1356,9 +1506,9 @@ describe('updating a domain', () => {
       })
       describe('domain cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1386,8 +1536,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1404,6 +1554,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn(),
                 },
@@ -1413,15 +1570,14 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de mettre à jour un domaine inconnu.',
+                  description: 'Impossible de mettre à jour un domaine inconnu.',
                 },
               },
             },
@@ -1435,9 +1591,9 @@ describe('updating a domain', () => {
       })
       describe('organization cannot be found', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1465,8 +1621,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1483,6 +1639,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1492,15 +1655,14 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de mettre à jour le domaine dans un org inconnu.',
+                  description: 'Impossible de mettre à jour le domaine dans un org inconnu.',
                 },
               },
             },
@@ -1514,9 +1676,9 @@ describe('updating a domain', () => {
       })
       describe('user does not belong to org', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1544,8 +1706,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -1562,6 +1724,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1571,7 +1740,7 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -1593,9 +1762,9 @@ describe('updating a domain', () => {
       })
       describe('domain and org do not have any edges', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
             mutation {
               updateDomain (
                 input: {
@@ -1623,8 +1792,8 @@ describe('updating a domain', () => {
               }
             }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query: jest.fn().mockReturnValue({ count: 0 }),
               collections: collectionNames,
@@ -1641,6 +1810,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1650,15 +1826,14 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateDomain: {
                 result: {
                   code: 400,
-                  description:
-                    "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée.",
+                  description: "Impossible de mettre à jour un domaine qui n'appartient pas à l'organisation donnée.",
                 },
               },
             },
@@ -1673,9 +1848,9 @@ describe('updating a domain', () => {
       describe('database error occurs', () => {
         describe('while checking for edge connections', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1703,8 +1878,8 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockRejectedValue(new Error('database error')),
                 collections: collectionNames,
@@ -1721,6 +1896,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: user._key,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1730,13 +1912,9 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1748,9 +1926,9 @@ describe('updating a domain', () => {
       describe('transaction step error occurs', () => {
         describe('when running domain upsert', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1778,15 +1956,13 @@ describe('updating a domain', () => {
                 }
               }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query: jest.fn().mockReturnValue({ count: 1 }),
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('trx step error')),
+                  step: jest.fn().mockRejectedValue(new Error('trx step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -1800,6 +1976,13 @@ describe('updating a domain', () => {
                   slugify,
                 },
                 loaders: {
+                  loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                    query,
+                    userKey: 123,
+                    cleanseInput,
+                    i18n,
+                    auth: { loginRequiredBool: true },
+                  }),
                   loadDomainByKey: {
                     load: jest.fn().mockReturnValue({}),
                   },
@@ -1809,13 +1992,9 @@ describe('updating a domain', () => {
                   loadUserByKey: { load: jest.fn() },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le domaine. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1826,9 +2005,9 @@ describe('updating a domain', () => {
       })
       describe('transaction commit error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateDomain (
                   input: {
@@ -1856,16 +2035,19 @@ describe('updating a domain', () => {
                 }
               }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
-              query: jest.fn().mockReturnValue({ count: 1 }),
+              query: jest
+                .fn()
+                .mockReturnValue({ count: 1 })
+                .mockReturnValueOnce({ count: 1 })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) })
+                .mockReturnValueOnce({ all: jest.fn().mockReturnValue([]) }),
               collections: collectionNames,
               transaction: jest.fn().mockReturnValue({
                 step: jest.fn(),
-                commit: jest
-                  .fn()
-                  .mockRejectedValue(new Error('trx commit error')),
+                commit: jest.fn().mockRejectedValue(new Error('trx commit error')),
               }),
               userKey: 123,
               auth: {
@@ -1879,6 +2061,13 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
+                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                  query,
+                  userKey: user._key,
+                  cleanseInput,
+                  i18n,
+                  auth: { loginRequiredBool: true },
+                }),
                 loadDomainByKey: {
                   load: jest.fn().mockReturnValue({}),
                 },
@@ -1888,13 +2077,9 @@ describe('updating a domain', () => {
                 loadUserByKey: { load: jest.fn() },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              'Impossible de mettre à jour le domaine. Veuillez réessayer.',
-            ),
-          ]
+          const error = [new GraphQLError('Impossible de mettre à jour le domaine. Veuillez réessayer.')]
 
           expect(response.errors).toEqual(error)
         })

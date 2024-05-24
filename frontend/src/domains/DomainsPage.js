@@ -1,56 +1,55 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
 
 import { ListOf } from '../components/ListOf'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import {
-  PAGINATED_DOMAINS as FORWARD,
-  GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
-} from '../graphql/queries'
+import { PAGINATED_DOMAINS as FORWARD, GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
-import { SubdomainWarning } from './SubdomainWarning'
+import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
+import { useUserVar } from '../utilities/userState'
+import { DomainListFilters } from './DomainListFilters'
+import { FilterList } from './FilterList'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import withSuperAdmin from '../app/withSuperAdmin'
 
 export default function DomainsPage() {
+  const { hasAffiliation, isLoggedIn } = useUserVar()
   const toast = useToast()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
+  const [filters, setFilters] = useState([])
 
-  const [
-    getAllOrgDomainStatuses,
-    { loading: allOrgDomainStatusesLoading, _error, _data },
-  ] = useLazyQuery(GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV, {
-    onError(error) {
-      toast({
-        title: error.message,
-        description: t`An error occured when you attempted to download all domain statuses.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-left',
-      })
+  const [getAllOrgDomainStatuses, { loading: allOrgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+    GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV,
+    {
+      variables: { filters },
+      onError(error) {
+        toast({
+          title: error.message,
+          description: t`An error occurred when you attempted to download all domain statuses.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
     },
-  })
+  )
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -58,36 +57,29 @@ export default function DomainsPage() {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: domainsPerPage,
-    relayRoot: 'findMyDomains',
-    variables: {
-      orderBy: { field: orderField, direction: orderDirection },
-      search: debouncedSearchTerm,
-    },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      recordsPerPage: domainsPerPage,
+      relayRoot: 'findMyDomains',
+      variables: {
+        orderBy: { field: orderField, direction: orderDirection },
+        search: debouncedSearchTerm,
+        isAffiliated,
+        filters,
+      },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   const { isOpen, onToggle } = useDisclosure()
 
   if (error) return <ErrorFallbackMessage error={error} />
 
   const orderByOptions = [
-    { value: 'DOMAIN', text: t`Domain` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
+    { value: 'CERTIFICATES_STATUS', text: t`Certificates Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
     { value: 'CURVES_STATUS', text: t`Curves Status` },
     { value: 'PROTOCOLS_STATUS', text: t`Protocols Status` },
@@ -96,110 +88,131 @@ export default function DomainsPage() {
     { value: 'DMARC_STATUS', text: t`DMARC Status` },
   ]
 
+  const filterTagOptions = [
+    { value: `NXDOMAIN`, text: `NXDOMAIN` },
+    { value: `BLOCKED`, text: t`Blocked` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `SCAN_PENDING`, text: t`Scan Pending` },
+  ]
+
+  const StatusExportButton = withSuperAdmin(() => {
+    return (
+      <ExportButton
+        order={{ base: 1, md: 2 }}
+        fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
+        dataFunction={async () => {
+          toast({
+            title: t`Getting domain statuses`,
+            description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          const result = await getAllOrgDomainStatuses()
+          if (result.data?.getAllOrganizationDomainStatuses === undefined) {
+            toast({
+              title: t`No data found`,
+              description: t`No data found when retrieving all domain statuses.`,
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+              position: 'top-left',
+            })
+
+            throw t`No data found`
+          }
+
+          return result.data?.getAllOrganizationDomainStatuses
+        }}
+        isLoading={allOrgDomainStatusesLoading}
+      />
+    )
+  })
+
   const domainList = loading ? (
     <LoadingMessage>
       <Trans>Domains</Trans>
     </LoadingMessage>
   ) : (
-    <ListOf
-      elements={nodes}
-      ifEmpty={() => (
-        <Text layerStyle="loadingMessage">
-          <Trans>No Domains</Trans>
-        </Text>
-      )}
-      mb="4"
-    >
-      {({ id, domain, status, hasDMARCReport, archived }, index) => (
-        <ErrorBoundary
-          key={`${id}:${index}`}
-          FallbackComponent={ErrorFallbackMessage}
-        >
-          <DomainCard
-            id={id}
-            url={domain}
-            status={status}
-            hasDMARCReport={hasDMARCReport}
-            isArchived={archived}
-            mb="3"
+    <Box>
+      <ABTestWrapper insiderVariantName="B">
+        <ABTestVariant name="B">
+          <DomainListFilters
+            filters={filters}
+            setFilters={setFilters}
+            statusOptions={orderByOptions}
+            filterTagOptions={filterTagOptions}
           />
-        </ErrorBoundary>
-      )}
-    </ListOf>
+        </ABTestVariant>
+      </ABTestWrapper>
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => (
+          <Text layerStyle="loadingMessage">
+            <Trans>No Domains</Trans>
+          </Text>
+        )}
+        mb="4"
+      >
+        {(
+          {
+            id,
+            domain,
+            status,
+            hasDMARCReport,
+            archived,
+            rcode,
+            blocked,
+            wildcardSibling,
+            webScanPending,
+            userHasPermission,
+          },
+          index,
+        ) => (
+          <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+            <DomainCard
+              id={id}
+              url={domain}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+              isArchived={archived}
+              rcode={rcode}
+              blocked={blocked}
+              wildcardSibling={wildcardSibling}
+              webScanPending={webScanPending}
+              userHasPermission={userHasPermission}
+              mb="3"
+            />
+          </ErrorBoundary>
+        )}
+      </ListOf>
+    </Box>
   )
 
   return (
     <Box w="100%" px={4}>
-      <Flex
-        flexDirection="row"
-        align="center"
-        mb="4"
-        flexWrap={{ base: 'wrap', md: 'nowrap' }}
-      >
+      <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
         </Heading>
-
-        <ExportButton
-          order={{ base: 2, md: 1 }}
-          ml="auto"
-          mt={{ base: '4', md: 0 }}
-          fileName={`Tracker_all_domains_${new Date().toLocaleDateString()}`}
-          dataFunction={async () => {
-            toast({
-              title: t`Getting domain statuses`,
-              description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
-              status: 'info',
-              duration: 9000,
-              isClosable: true,
-              position: 'top-left',
-            })
-            const result = await getAllOrgDomainStatuses()
-            if (result.data?.getAllOrganizationDomainStatuses === undefined) {
-              toast({
-                title: t`No data found`,
-                description: t`No data found when retrieving all domain statuses.`,
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-                position: 'top-left',
-              })
-
-              throw t`No data found`
-            }
-
-            return result.data?.getAllOrganizationDomainStatuses
-          }}
-          isLoading={allOrgDomainStatusesLoading}
-        />
+        <StatusExportButton />
       </Flex>
 
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Ciphers`}
-          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`Curves`}
-          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`HSTS`}
-          info={t`Shows if the domain meets the HSTS requirements.`}
-        />
+        {/* Web statuses */}
         <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
         />
-        <InfoBox
-          title={t`Protocols`}
-          info={t`Shows if the domain uses acceptable protocols.`}
-        />
-        <InfoBox
-          title={t`SPF`}
-          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
-        />
+        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
+        <InfoBox title={t`Certificates`} info={t`Shows if the domain has a valid SSL certificate.`} />
+        <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
+        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
+        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
+        {/* Email statuses */}
+        <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
         <InfoBox
           title={t`DKIM`}
           info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
@@ -208,6 +221,14 @@ export default function DomainsPage() {
           title={t`DMARC`}
           info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
         />
+        {/* Tags */}
+        <InfoBox title={t`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
+        <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
+        <InfoBox
+          title={t`WILDCARD`}
+          info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
+        />
+        <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -224,11 +245,24 @@ export default function DomainsPage() {
           setOrderField={setOrderField}
           setOrderDirection={setOrderDirection}
           resetToFirstPage={resetToFirstPage}
-          orderByOptions={orderByOptions}
+          orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
           placeholder={t`Search for a domain`}
+          onToggle={onToggle}
         />
-
-        <SubdomainWarning mb="4" />
+        {isLoggedIn() && (
+          <Flex align="center" mb="2">
+            <Text mr="2" fontWeight="bold" fontSize="lg">
+              <Trans>Filters:</Trans>
+            </Text>
+            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+            <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <FilterList filters={filters} setFilters={setFilters} />
+              </ABTestVariant>
+            </ABTestWrapper>
+          </Flex>
+        )}
 
         {domainList}
 
@@ -244,7 +278,6 @@ export default function DomainsPage() {
           previous={previous}
           isLoadingMore={isLoadingMore}
         />
-        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
       </ErrorBoundary>
     </Box>
   )

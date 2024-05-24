@@ -1,12 +1,13 @@
 """This module defines the Domain class, which models organizations monitored by Tracker
 and offers methods to get data about them."""
+
 import json
 
 from slugify import slugify
 
-import domain as dom
-from formatting import format_summary
-import queries
+from tracker_client import domain as dom
+from tracker_client import queries
+from tracker_client.formatting import format_summary
 
 
 class Organization:
@@ -76,17 +77,20 @@ class Organization:
         return self.acronym + " " + self.name
 
     def __repr__(self):
-        return "Organization(client=%r, name=%r, acronym=%r, zone=%r, sector=%r, country=%r, province=%r, city=%r, verified=%r, domain_count=%r)" % (
-            self.client,
-            self.name,
-            self.acronym,
-            self.zone,
-            self.sector,
-            self.country,
-            self.province,
-            self.city,
-            self.verified,
-            self.domain_count,
+        return (
+            "Organization(client=%r, name=%r, acronym=%r, zone=%r, sector=%r, country=%r, province=%r, city=%r, verified=%r, domain_count=%r)"
+            % (
+                self.client,
+                self.name,
+                self.acronym,
+                self.zone,
+                self.sector,
+                self.country,
+                self.province,
+                self.city,
+                self.verified,
+                self.domain_count,
+            )
         )
 
     def get_summary(self):

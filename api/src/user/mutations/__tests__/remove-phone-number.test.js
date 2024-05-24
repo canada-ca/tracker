@@ -86,9 +86,9 @@ describe('testing the removePhoneNumber mutation', () => {
           })
         })
         it('executes mutation successfully', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -103,8 +103,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -116,7 +116,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -129,14 +129,12 @@ describe('testing the removePhoneNumber mutation', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully removed their phone number.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully removed their phone number.`])
         })
         it('sets phoneDetails to null', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -151,8 +149,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -164,18 +162,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneDetails).toEqual(null)
         })
         it('sets phoneValidated to false', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -190,8 +186,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -203,18 +199,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneValidated).toEqual(false)
         })
         it('changes tfaSendMethod to email', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -229,8 +223,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -242,11 +236,9 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.tfaSendMethod).toEqual('email')
         })
@@ -266,9 +258,9 @@ describe('testing the removePhoneNumber mutation', () => {
           })
         })
         it('executes mutation successfully', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -283,8 +275,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -296,7 +288,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -309,14 +301,12 @@ describe('testing the removePhoneNumber mutation', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully removed their phone number.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully removed their phone number.`])
         })
         it('sets phoneDetails to null', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -331,8 +321,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -344,18 +334,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneDetails).toEqual(null)
         })
         it('sets phoneValidated to false', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -370,8 +358,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -383,18 +371,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneValidated).toEqual(false)
         })
         it('changes tfaSendMethod to email', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -409,8 +395,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -422,11 +408,9 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.tfaSendMethod).toEqual('none')
         })
@@ -462,9 +446,9 @@ describe('testing the removePhoneNumber mutation', () => {
           })
         })
         it('executes mutation successfully', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -479,8 +463,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -492,7 +476,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -505,14 +489,12 @@ describe('testing the removePhoneNumber mutation', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully removed their phone number.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully removed their phone number.`])
         })
         it('sets phoneDetails to null', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -527,8 +509,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -540,18 +522,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneDetails).toEqual(null)
         })
         it('sets phoneValidated to false', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -566,8 +546,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -579,18 +559,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneValidated).toEqual(false)
         })
         it('changes tfaSendMethod to email', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -605,8 +583,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -618,11 +596,9 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.tfaSendMethod).toEqual('email')
         })
@@ -642,9 +618,9 @@ describe('testing the removePhoneNumber mutation', () => {
           })
         })
         it('executes mutation successfully', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -659,8 +635,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -672,7 +648,7 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -685,14 +661,12 @@ describe('testing the removePhoneNumber mutation', () => {
           }
 
           expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully removed their phone number.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully removed their phone number.`])
         })
         it('sets phoneDetails to null', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -707,8 +681,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -720,18 +694,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneDetails).toEqual(null)
         })
         it('sets phoneValidated to false', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -746,8 +718,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -759,18 +731,16 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.phoneValidated).toEqual(false)
         })
         it('changes tfaSendMethod to email', async () => {
-          await graphql(
+          await graphql({
             schema,
-            `
+            source: `
               mutation {
                 removePhoneNumber(input: {}) {
                   result {
@@ -785,8 +755,8 @@ describe('testing the removePhoneNumber mutation', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               collections: collectionNames,
               query,
@@ -798,11 +768,9 @@ describe('testing the removePhoneNumber mutation', () => {
                 }),
               },
             },
-          )
+          })
 
-          user = await loadUserByKey({ query, userKey: user._key }).load(
-            user._key,
-          )
+          user = await loadUserByKey({ query, userKey: user._key }).load(user._key)
 
           expect(user.tfaSendMethod).toEqual('none')
         })
@@ -830,16 +798,12 @@ describe('testing the removePhoneNumber mutation', () => {
         describe('when running upsert', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('transaction step error occurred.'),
-                ),
+              step: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removePhoneNumber(input: {}) {
                     result {
@@ -854,8 +818,8 @@ describe('testing the removePhoneNumber mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 collections: collectionNames,
                 query,
@@ -864,13 +828,9 @@ describe('testing the removePhoneNumber mutation', () => {
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove phone number. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove phone number. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -884,16 +844,12 @@ describe('testing the removePhoneNumber mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn(),
-              commit: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('transaction step error occurred.'),
-                ),
+              commit: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removePhoneNumber(input: {}) {
                     result {
@@ -908,8 +864,8 @@ describe('testing the removePhoneNumber mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 collections: collectionNames,
                 query,
@@ -918,13 +874,9 @@ describe('testing the removePhoneNumber mutation', () => {
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Unable to remove phone number. Please try again.',
-              ),
-            ]
+            const error = [new GraphQLError('Unable to remove phone number. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -953,16 +905,12 @@ describe('testing the removePhoneNumber mutation', () => {
         describe('when running upsert', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('transaction step error occurred.'),
-                ),
+              step: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removePhoneNumber(input: {}) {
                     result {
@@ -977,8 +925,8 @@ describe('testing the removePhoneNumber mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 collections: collectionNames,
                 query,
@@ -987,13 +935,9 @@ describe('testing the removePhoneNumber mutation', () => {
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de supprimer le numéro de téléphone. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de supprimer le numéro de téléphone. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1007,16 +951,12 @@ describe('testing the removePhoneNumber mutation', () => {
           it('throws an error', async () => {
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn(),
-              commit: jest
-                .fn()
-                .mockRejectedValue(
-                  new Error('transaction step error occurred.'),
-                ),
+              commit: jest.fn().mockRejectedValue(new Error('transaction step error occurred.')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   removePhoneNumber(input: {}) {
                     result {
@@ -1031,8 +971,8 @@ describe('testing the removePhoneNumber mutation', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 collections: collectionNames,
                 query,
@@ -1041,13 +981,9 @@ describe('testing the removePhoneNumber mutation', () => {
                   userRequired: jest.fn().mockReturnValue({ _key: 123 }),
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de supprimer le numéro de téléphone. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de supprimer le numéro de téléphone. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

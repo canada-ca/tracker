@@ -15,6 +15,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowDownIcon, ArrowUpIcon, SearchIcon } from '@chakra-ui/icons'
 import { RelayPaginationControls } from './RelayPaginationControls'
 import { array, bool, func, number, string } from 'prop-types'
+import { InfoButton } from './InfoPanel'
 
 export function SearchBox({
   selectedDisplayLimit,
@@ -31,37 +32,15 @@ export function SearchBox({
   resetToFirstPage,
   orderByOptions,
   placeholder,
+  onToggle,
   ...props
 }) {
-  const orderIconName =
-    orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
+  const orderIconName = orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
   return (
-    <Box
-      {...props}
-      bg="gray.100"
-      p="2"
-      mb="4"
-      borderColor="gray.300"
-      borderWidth="1px"
-    >
-      <Flex
-        direction={{ base: 'column', md: 'row' }}
-        alignItems={{ base: 'stretch', md: 'center' }}
-      >
-        <Flex
-          direction="row"
-          minW={{ base: '100%', md: '50%' }}
-          alignItems="center"
-          flexGrow={1}
-        >
-          <Text
-            as="label"
-            htmlFor="Search-for-field"
-            fontSize="md"
-            fontWeight="bold"
-            textAlign="center"
-            mr={2}
-          >
+    <Box {...props} bg="gray.100" p="2" mb="4" borderColor="gray.300" borderWidth="1px">
+      <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'stretch', md: 'center' }}>
+        <Flex direction="row" minW={{ base: '100%', md: '50%' }} alignItems="center" flexGrow={1}>
+          <Text as="label" htmlFor="Search-for-field" fontSize="md" fontWeight="bold" textAlign="center" mr={2}>
             <Trans>Search: </Trans>
           </Text>
           <InputGroup flexGrow={1}>
@@ -81,20 +60,16 @@ export function SearchBox({
             />
           </InputGroup>
         </Flex>
+        {onToggle && <InfoButton bg="gray.50" onToggle={onToggle} />}
         <Stack isInline align="center" ml={{ md: '5%' }}>
-          <Text
-            as="label"
-            htmlFor="Sort-by-field"
-            fontSize="md"
-            fontWeight="bold"
-            textAlign="center"
-          >
+          <Text as="label" htmlFor="Sort-by-field" fontSize="md" fontWeight="bold" textAlign="center">
             <Trans>Sort by: </Trans>
           </Text>
           <Select
             id="Sort-by-field"
             aria-label="Sort by field"
             w="fit-content"
+            borderColor="black"
             size="md"
             onChange={(e) => {
               setOrderField(e.target.value)
@@ -114,9 +89,10 @@ export function SearchBox({
             icon={orderIconName}
             color="primary"
             bg="white"
+            borderColor="black"
+            borderWidth="1px"
             onClick={() => {
-              const newOrderDirection =
-                orderDirection === 'ASC' ? 'DESC' : 'ASC'
+              const newOrderDirection = orderDirection === 'ASC' ? 'DESC' : 'ASC'
               setOrderDirection(newOrderDirection)
               resetToFirstPage()
             }}
@@ -157,4 +133,5 @@ SearchBox.propTypes = {
   orderByOptions: array,
   placeholder: string,
   inputAriaLabel: string,
+  onToggle: func,
 }

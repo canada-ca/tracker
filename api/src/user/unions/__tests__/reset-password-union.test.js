@@ -1,7 +1,4 @@
-import {
-  resetPasswordErrorType,
-  resetPasswordResultType,
-} from '../../objects/index'
+import { resetPasswordErrorType, resetPasswordResultType } from '../../objects/index'
 import { resetPasswordUnion } from '../reset-password-union'
 
 describe('given the resetPasswordUnion', () => {
@@ -25,9 +22,7 @@ describe('given the resetPasswordUnion', () => {
           authResult: {},
         }
 
-        expect(resetPasswordUnion.resolveType(obj)).toMatchObject(
-          resetPasswordResultType,
-        )
+        expect(resetPasswordUnion.resolveType(obj)).toMatch(resetPasswordResultType.name)
       })
     })
     describe('testing the resetPasswordErrorType', () => {
@@ -39,9 +34,7 @@ describe('given the resetPasswordUnion', () => {
           description: 'text',
         }
 
-        expect(resetPasswordUnion.resolveType(obj)).toMatchObject(
-          resetPasswordErrorType,
-        )
+        expect(resetPasswordUnion.resolveType(obj)).toMatch(resetPasswordErrorType.name)
       })
     })
   })

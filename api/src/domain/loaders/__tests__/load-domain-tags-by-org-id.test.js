@@ -1,12 +1,12 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
-import { setupI18n } from '@lingui/core'
+import {ensure, dbNameFromFile} from 'arango-tools'
+import {setupI18n} from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import { loadDomainTagsByOrgId } from '../index'
+import {loadDomainTagsByOrgId} from '../index'
 import dbschema from '../../../../database.json'
 
-const { DB_PASS: rootPass, DB_URL: url } = process.env
+const {DB_PASS: rootPass, DB_URL: url} = process.env
 
 describe('given the load domain connection using org id function', () => {
   let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
@@ -25,7 +25,7 @@ describe('given the load domain connection using org id function', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({ query, drop, truncate, collections } = await ensure({
+      ;({query, drop, truncate, collections} = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -141,8 +141,8 @@ describe('given the load domain connection using org id function', () => {
 
         const expectedStructure = {
           edges: [
-            { id: 'CVE-2022-12345', severity: 'high' },
-            { id: 'CVE-2022-54321', severity: 'low' },
+            {id: 'CVE-2022-12345', severity: 'high'},
+            {id: 'CVE-2022-54321', severity: 'low'},
           ],
           totalCount: 2,
         }
@@ -177,8 +177,8 @@ describe('given the load domain connection using org id function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: { plurals: {} },
-          fr: { plurals: {} },
+          en: {plurals: {}},
+          fr: {plurals: {}},
         },
         locales: ['en', 'fr'],
         messages: {

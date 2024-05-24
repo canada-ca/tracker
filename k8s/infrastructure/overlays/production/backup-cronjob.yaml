@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   labels:
@@ -7,7 +7,8 @@ metadata:
   namespace: db
 spec:
   concurrencyPolicy: Replace
-  failedJobsHistoryLimit: 0
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
@@ -34,6 +35,9 @@ spec:
                   name: dump
               image: rclone/rclone
               name: upload
+              resources:
+                requests:
+                  cpu: 100m
           initContainers:
             - args:
                 - arangodump
@@ -58,10 +62,13 @@ spec:
               volumeMounts:
                 - mountPath: /tmp/dump
                   name: dump
+              resources:
+                requests:
+                  cpu: 500m
           restartPolicy: Never
           volumes:
             - emptyDir: {}
               name: dump
-  schedule: 59 3 * * *
+  schedule: 0 0 * * *
   startingDeadlineSeconds: 180
-  successfulJobsHistoryLimit: 0
+

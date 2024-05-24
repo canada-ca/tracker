@@ -5,13 +5,11 @@ import { t } from '@lingui/macro'
 
 export const sendEmailVerification = new mutationWithClientMutationId({
   name: 'SendEmailVerification',
-  description:
-    'This mutation is used for re-sending a verification email if it failed during user creation.',
+  description: 'This mutation is used for re-sending a verification email if it failed during user creation.',
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(GraphQLEmailAddress),
-      description:
-        'The users email address used for sending the verification email.',
+      type: new GraphQLNonNull(GraphQLEmailAddress),
+      description: 'The users email address used for sending the verification email.',
     },
   }),
   outputFields: () => ({
@@ -42,6 +40,7 @@ export const sendEmailVerification = new mutationWithClientMutationId({
 
     if (typeof user !== 'undefined') {
       const token = tokenize({
+        expiresIn: '1h',
         parameters: { userKey: user._key },
       })
 

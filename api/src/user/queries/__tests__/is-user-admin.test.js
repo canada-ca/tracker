@@ -40,16 +40,16 @@ describe('given the isUserAdmin query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.users.save({
@@ -109,15 +109,15 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
@@ -135,7 +135,7 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -156,15 +156,15 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
@@ -182,7 +182,7 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -203,15 +203,15 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return false', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
@@ -229,7 +229,7 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -252,15 +252,15 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
@@ -278,7 +278,7 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -299,15 +299,15 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return true', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
@@ -325,7 +325,7 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -346,15 +346,15 @@ describe('given the isUserAdmin query', () => {
           `
         })
         it('will return false', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin (orgId: "${toGlobalId('organizations', org._key)}")
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               userKey: user._key,
               query: query,
               auth: {
@@ -372,7 +372,7 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const expectedResponse = {
             data: {
@@ -402,20 +402,18 @@ describe('given the isUserAdmin query', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -432,13 +430,9 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
-          const error = [
-            new GraphQLError(
-              `Unable to verify if user is an admin, please try again.`,
-            ),
-          ]
-  
+          })
+          const error = [new GraphQLError(`Unable to verify if user is an admin, please try again.`)]
+
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Database error occurred when user: 123 was seeing if they were an admin, err: Error: Database error occurred.`,
@@ -462,20 +456,18 @@ describe('given the isUserAdmin query', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 isUserAdmin
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 123,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
               auth: {
                 checkPermission: jest.fn(),
                 userRequired: jest.fn().mockReturnValue({
@@ -492,14 +484,12 @@ describe('given the isUserAdmin query', () => {
                 cleanseInput,
               },
             },
-          )
-  
+          })
+
           const error = [
-            new GraphQLError(
-              `Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer.`,
-            ),
+            new GraphQLError(`Impossible de vérifier si l'utilisateur est un administrateur, veuillez réessayer.`),
           ]
-  
+
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Database error occurred when user: 123 was seeing if they were an admin, err: Error: Database error occurred.`,

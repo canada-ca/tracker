@@ -97,37 +97,23 @@ export const loadAuditLogsByOrgId =
         `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadAuditLogsByOrgId.`,
       )
       throw new Error(
-        i18n._(
-          t`You must provide a \`first\` or \`last\` value to properly paginate the \`Log\` connection.`,
-        ),
+        i18n._(t`You must provide a \`first\` or \`last\` value to properly paginate the \`Log\` connection.`),
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadAuditLogsByOrgId.`,
-      )
+      console.warn(`User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadAuditLogsByOrgId.`)
       throw new Error(
-        i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`Log\` connection is not supported.`,
-        ),
+        i18n._(t`Passing both \`first\` and \`last\` to paginate the \`Log\` connection is not supported.`),
       )
     } else if (typeof first === 'number' || typeof last === 'number') {
       /* istanbul ignore else */
       if (first < 0 || last < 0) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-        console.warn(
-          `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadAuditLogsByOrgId.`,
-        )
-        throw new Error(
-          i18n._(
-            t`\`${argSet}\` on the \`Log\` connection cannot be less than zero.`,
-          ),
-        )
+        console.warn(`User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadAuditLogsByOrgId.`)
+        throw new Error(i18n._(t`\`${argSet}\` on the \`Log\` connection cannot be less than zero.`))
       } else if (first > 100 || last > 100) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         const amount = typeof first !== 'undefined' ? first : last
-        console.warn(
-          `User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadAuditLogsByOrgId.`,
-        )
+        console.warn(`User: ${userKey} attempted to have \`${argSet}\` set to ${amount} for: loadAuditLogsByOrgId.`)
         throw new Error(
           i18n._(
             t`Requesting \`${amount}\` records on the \`Log\` connection exceeds the \`${argSet}\` limit of 100 records.`,
@@ -141,12 +127,8 @@ export const loadAuditLogsByOrgId =
     } else {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
-      console.warn(
-        `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadAuditLogsByOrgId.`,
-      )
-      throw new Error(
-        i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
-      )
+      console.warn(`User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadAuditLogsByOrgId.`)
+      throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
     }
 
     let hasNextPageFilter = aql`FILTER TO_NUMBER(log._key) > TO_NUMBER(LAST(retrievedLogs)._key)`
@@ -239,11 +221,7 @@ export const loadAuditLogsByOrgId =
         )
       `
     } else {
-      throw new Error(
-        i18n._(
-          t`Cannot query audit logs on organization without admin permission or higher.`,
-        ),
-      )
+      throw new Error(i18n._(t`Cannot query audit logs on organization without admin permission or higher.`))
     }
 
     let logQuery = aql``

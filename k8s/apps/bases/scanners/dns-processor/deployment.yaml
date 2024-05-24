@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: dns-processor
   labels:
     app: dns-processor
-  name: dns-processor
   namespace: scanners
 spec:
   replicas: 1
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: dns-processor
-          image: gcr.io/track-compliance/dns-processor:master-da60eb6-1670860902 # {"$imagepolicy": "flux-system:dns-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:master-0d0fe33-1716483725 # {"$imagepolicy": "flux-system:dns-processor"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -39,8 +39,29 @@ spec:
             - name: SUBSCRIBE_TO
               value: domains.*.dns
             - name: QUEUE_GROUP
-              value: dnsprocessor
+              value: dns_processor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
+            - name: NOTIFICATION_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: NOTIFICATION_API_KEY
+            - name: NOTIFICATION_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: NOTIFICATION_API_URL
+            - name: NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: NOTIFICATION_ASSET_CHANGE_ALERT_EMAIL
+            - name: ALERT_SUBS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ALERT_SUBS
+                  optional: true
           resources: {}
 status: {}

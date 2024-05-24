@@ -66,7 +66,7 @@ def test_client_execute_query_transport_server_error(mocker, capsys):
     mocker.patch("tracker_client.client.get_auth_token")
     mocker.patch("tracker_client.client.create_client")
     test_client = Client()
-    test_client.gql_client.execute = mocker.MagicMock(side_effect=TransportServerError)
+    test_client.gql_client.execute = mocker.MagicMock(side_effect=TransportServerError("test error"))
 
     with pytest.raises(TransportServerError):
         test_client.execute_query(None)

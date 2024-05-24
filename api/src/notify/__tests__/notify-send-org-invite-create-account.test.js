@@ -4,10 +4,7 @@ import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import { sendOrgInviteCreateAccount } from '../index'
 
-const {
-  NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN,
-  NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR,
-} = process.env
+const { NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL } = process.env
 
 describe('given the sendOrgInviteCreateAccount function', () => {
   let i18n
@@ -67,18 +64,20 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         })
         await mockedSendOrgInviteCreateAccount({
           user,
-          orgName: 'Test Org',
+          orgNameEN: 'Test Org EN',
+          orgNameFR: 'Test Org FR',
           createAccountLink: 'TestLink.ca',
         })
 
         expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-          NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_EN,
+          NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL,
           user.userName,
           {
             personalisation: {
               create_account_link: 'TestLink.ca',
               display_name: user.userName,
-              organization_name: 'Test Org',
+              organization_name_en: 'Test Org EN',
+              organization_name_fr: 'Test Org FR',
             },
           },
         )
@@ -86,9 +85,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
     })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
-        const sendEmail = jest
-          .fn()
-          .mockRejectedValue(new Error('Notification error occurred.'))
+        const sendEmail = jest.fn().mockRejectedValue(new Error('Notification error occurred.'))
         const notifyClient = {
           sendEmail,
         }
@@ -110,9 +107,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
             createAccountLink: 'TestLink.ca',
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to send org invite email. Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to send org invite email. Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -155,18 +150,20 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         })
         await mockedSendOrgInviteCreateAccount({
           user,
-          orgName: 'Test Org',
+          orgNameEN: 'Test Org EN',
+          orgNameFR: 'Test Org FR',
           createAccountLink: 'TestLink.ca',
         })
 
         expect(notifyClient.sendEmail).toHaveBeenCalledWith(
-          NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_FR,
+          NOTIFICATION_ORG_INVITE_CREATE_ACCOUNT_BILINGUAL,
           user.userName,
           {
             personalisation: {
               create_account_link: 'TestLink.ca',
               display_name: user.userName,
-              organization_name: 'Test Org',
+              organization_name_en: 'Test Org EN',
+              organization_name_fr: 'Test Org FR',
             },
           },
         )
@@ -174,9 +171,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
     })
     describe('an error occurs while sending email', () => {
       it('throws an error message', async () => {
-        const sendEmail = jest
-          .fn()
-          .mockRejectedValue(new Error('Notification error occurred.'))
+        const sendEmail = jest.fn().mockRejectedValue(new Error('Notification error occurred.'))
         const notifyClient = {
           sendEmail,
         }
@@ -198,9 +193,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
             createAccountLink: 'TestLink.ca',
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to send org invite email. Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to send org invite email. Please try again.'))
         }
 
         expect(consoleOutput).toEqual([

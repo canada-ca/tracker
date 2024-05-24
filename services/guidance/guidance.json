@@ -28,11 +28,11 @@
       },
       "ssl2": {
         "en": {
-          "tagName": "Missing",
+          "tagName": "TLS Certificate Missing",
           "guidance": "Follow implementation guide",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
@@ -44,11 +44,11 @@
           ]
         },
         "fr": {
-          "tagName": "Missing",
+          "tagName": "Certificat TLS manquant",
           "guidance": "Suivre le guide de mise en œuvre",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -63,7 +63,7 @@
       "ssl3": {
         "en": {
           "tagName": "RC4",
-          "guidance": "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18.01",
+          "guidance": "Cipher list contains RC4 stream cipher",
           "refLinksGuide": [
             {
               "description": "1.6 Websites and services hardening",
@@ -79,7 +79,7 @@
         },
         "fr": {
           "tagName": "RC4",
-          "guidance": "La liste de chiffrement acceptée contient le chiffrement de flux RC4, interdit par le BOD 18.01",
+          "guidance": "La liste de chiffrement contient le chiffrement de flux RC4.",
           "refLinksGuide": [
             {
               "description": "1.6 Renforcement de la sécurité des sites Web et des services",
@@ -97,7 +97,7 @@
       "ssl4": {
         "en": {
           "tagName": "3DES",
-          "guidance": "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01",
+          "guidance": "Cipher list contains 3DES symmetric-key block cipher",
           "refLinksGuide": [
             {
               "description": "1.6 Websites and services hardening",
@@ -113,7 +113,7 @@
         },
         "fr": {
           "tagName": "3DES",
-          "guidance": "La liste de chiffrement acceptée contient le chiffrement par blocs à clé symétrique 3DES, interdit par le BOD 18-01",
+          "guidance": "La liste de chiffrement acceptée contient le chiffrement par blocs à clé symétrique 3DES",
           "refLinksGuide": [
             {
               "description": "1.6 Renforcement de la sécurité des sites Web et des services",
@@ -130,11 +130,11 @@
       },
       "ssl5": {
         "en": {
-          "tagName": "Acceptable-certificate",
+          "tagName": "Acceptable Certificate",
           "guidance": "Certificate chain signed using SHA-256/SHA-384/AEAD",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3/1.4 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
@@ -146,11 +146,11 @@
           ]
         },
         "fr": {
-          "tagName": "Acceptable-certificate",
+          "tagName": "Certificat acceptable",
           "guidance": "Chaîne de certificats signée en utilisant SHA-256/SHA-384/AEAD",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3/1.4 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -164,7 +164,7 @@
       },
       "ssl6": {
         "en": {
-          "tagName": "Invalid-cipher",
+          "tagName": "Invalid Cipher",
           "guidance": "One or more ciphers in use are not compliant with guidelines",
           "refLinksGuide": [
             {
@@ -180,7 +180,7 @@
           ]
         },
         "fr": {
-          "tagName": "Invalid-cipher",
+          "tagName": "Cipher invalide",
           "guidance": "Un ou plusieurs chiffrements utilisés ne sont pas conformes aux directives",
           "refLinksGuide": [
             {
@@ -198,7 +198,7 @@
       },
       "ssl7": {
         "en": {
-          "tagName": "Vulnerability-heartbleed",
+          "tagName": "Heartbleed Vulnerability",
           "guidance": "Vulnerable to heartbleed bug",
           "refLinksGuide": [
             {
@@ -214,7 +214,7 @@
           ]
         },
         "fr": {
-          "tagName": "Vulnerability-heartbleed",
+          "tagName": "Vulnérabilité Heartbleed",
           "guidance": "Vulnérable au bogue Heartbleed",
           "refLinksGuide": [
             {
@@ -232,7 +232,7 @@
       },
       "ssl8": {
         "en": {
-          "tagName": "Vulnerability-ccs-injection",
+          "tagName": "CCS Injection Vulnerability",
           "guidance": "Vulnerable to OpenSSL CCS Injection",
           "refLinksGuide": [
             {
@@ -243,7 +243,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Vulnerability-ccs-injection",
+          "tagName": "Vulnérabilité d'injection de CCS",
           "guidance": "Vulnérable à l'injection CCS d'OpenSSL",
           "refLinksGuide": [
             {
@@ -256,7 +256,7 @@
       },
       "ssl9": {
         "en": {
-          "tagName": "Unreachable",
+          "tagName": "TLS-unreachable",
           "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
           "refLinksGuide": [
             {
@@ -267,15 +267,415 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Unreachable",
+          "tagName": "Vulnérabilité d'injection de CCS",
           "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
           "refLinksGuide": [
             {
-              "description": "1.1 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.1 Durcissement des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "ssl10": {
+        "en": {
+          "tagName": "Certificate Expired",
+          "guidance": "TLS certificate is expired",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Certificat expiré",
+          "guidance": "Le certificat TLS a expiré",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
           "refLinksTechnical": [""]
+        }
+      },
+      "ssl11": {
+        "en": {
+          "tagName": "Certificate Self-signed",
+          "guidance": "TLS certificate is self-signed",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "certificat auto-signé",
+          "guidance": "Le certificat TLS est auto-signé",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "ssl12": {
+        "en": {
+          "tagName": "Certificate Revoked",
+          "guidance": "TLS certificate has been revoked",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Certificat révoqué",
+          "guidance": "Le certificat TLS a été révoqué",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "ssl13": {
+        "en": {
+          "tagName": "Certificate Revocation Unknown",
+          "guidance": "Revocation status of TLS certificate could not be checked",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Révocation de certificat inconnue",
+          "guidance": "L'état de révocation du certificat TLS n'a pas pu être vérifié",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "ssl14": {
+        "en": {
+          "tagName": "Bad Chain",
+          "guidance": "TLS certificate chain is invalid",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Mauvaise chaîne",
+          "guidance": "La chaîne de certificats TLS n'est pas valide",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "ssl15": {
+        "en": {
+          "tagName": "Bad Hostname",
+          "guidance": "Hostname does not match certificate",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Mauvais nom d'hôte",
+          "guidance": "La validation du nom d'hôte du point de terminaison HTTPS a échoué",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "ssl16": {
+        "en": {
+          "tagName": "Failed Validation",
+          "guidance": "Certificate bundle failed validation.",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Mauvais nom d'hôte",
+          "guidance": "La validation de la liasse de certificats a échoué.",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "ssl17": {
+        "en": {
+          "tagName": "Invalid Curve",
+          "guidance": "The server supports an invalid curve.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "See ITSP.40.062 for approved curve list",
+              "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#tab4"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "Courbe invalide",
+          "guidance": "Le serveur prend en charge une courbe invalide.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "Voir ITSP.40.062 pour la liste des courbes approuvées.",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062#tab4"
+            }
+          ]
+        }
+      },
+      "ssl18": {
+        "en": {
+          "tagName": "Valid TLS Protocol Configuration",
+          "guidance": "The TLS protocol configuration is valid. Tracker did not find any issues with the TLS protocol configuration.",
+          "refLinksGuide": [
+            {
+              "description": "1.5 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": []
+        },
+        "fr": {
+          "tagName": "Configuration valide du protocole TLS",
+          "guidance": "La configuration du protocole TLS est valide. Tracker n'a pas trouvé de problème avec la configuration du protocole TLS.",
+          "refLinksGuide": [
+            {
+              "description": "1.5 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": []
+        }
+      },
+      "ssl19": {
+        "en": {
+          "tagName": "Valid Cipher Configuration",
+          "guidance": "The cipher configuration is valid. Tracker did not find any issues with the cipher configuration.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": []
+        },
+        "fr": {
+          "tagName": "Configuration du chiffrement valide",
+          "guidance": "La configuration du chiffrement est valide. Le traqueur n'a trouvé aucun problème avec la configuration du chiffrement.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": []
+        }
+      },
+      "ssl20": {
+        "en": {
+          "tagName": "Valid Curve Configuration",
+          "guidance": "The curve configuration is valid. Tracker did not find any issues with the curve configuration.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": []
+        },
+        "fr": {
+          "tagName": "Configuration des courbes valides",
+          "guidance": "La configuration de la courbe est valide. Tracker n'a pas trouvé de problème avec la configuration de la courbe.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": []
+        }
+      },
+      "ssl21": {
+        "en": {
+          "tagName": "Valid Certificate Configuration",
+          "guidance": "The certificate configuration is valid. Tracker did not find any issues with the certificate configuration.",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": []
+        },
+        "fr": {
+          "tagName": "Configuration d'un certificat valide",
+          "guidance": "La configuration du certificat est valide. Tracker n'a pas trouvé de problème avec la configuration du certificat.",
+          "refLinksGuide": [
+            {
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": []
+        }
+      },
+      "ssl22": {
+        "en": {
+          "tagName": "Phase Out Curve",
+          "guidance": "The server supports a curve that has been marked for transition.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "See ITSP.40.062 for approved curve list",
+              "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#tab4"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "Courbe de sortie de phase",
+          "guidance": "Le serveur prend en charge une courbe qui a été marquée pour la transition.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "Voir ITSP.40.062 pour la liste des courbes approuvées.",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062#tab4"
+            }
+          ]
+        }
+      },
+      "ssl23": {
+        "en": {
+          "tagName": "Phase Out Cipher",
+          "guidance": "The server supports a cipher that has been marked for transition.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "See ITSP.40.062 for approved curve list",
+              "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#tab4"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "Chiffre de sortie de phase",
+          "guidance": "Le serveur prend en charge un algorithme de chiffrement qui a été marqué pour la transition.",
+          "refLinksGuide": [
+            {
+              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "Voir ITSP.40.062 pour la liste des courbes approuvées.",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062#tab4"
+            }
+          ]
+        }
+      },
+      "ssl24": {
+        "en": {
+          "tagName": "Invalid TLS Protocol Configuration",
+          "guidance": "The server supports known weak protocols.",
+          "refLinksGuide": [
+            {
+              "description": "1.5 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "See ITSP.40.062 for approved curve list",
+              "ref_link": "https://cyber.gc.ca/en/guidance/guidance-securely-configuring-network-protocols-itsp40062#tab4"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "Configuration du protocole TLS non valide",
+          "guidance": "Le serveur prend en charge les protocoles faibles connus.",
+          "refLinksGuide": [
+            {
+              "description": "1.5 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "Voir ITSP.40.062 pour la liste des courbes approuvées.",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/conseils-sur-la-configuration-securisee-des-protocoles-reseau-itsp40062#tab4"
+            }
+          ]
         }
       }
     }
@@ -319,7 +719,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -335,7 +735,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -353,7 +753,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -369,7 +769,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -387,7 +787,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.7 Default Results",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
             }
           ]
         },
@@ -403,7 +803,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.7 Default Results (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.7"
             }
           ]
         }
@@ -421,7 +821,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -437,7 +837,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -455,7 +855,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -471,7 +871,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -489,7 +889,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -505,7 +905,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -523,7 +923,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         },
@@ -539,7 +939,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.2 Mechanisms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.2"
             }
           ]
         }
@@ -557,7 +957,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
             }
           ]
         },
@@ -573,7 +973,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 6.1 redirect: Redirected Query (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-6.1"
             }
           ]
         }
@@ -591,7 +991,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 5.3 a",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
             }
           ]
         },
@@ -607,7 +1007,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 5.3 a (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-5.3"
             }
           ]
         }
@@ -625,7 +1025,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
             }
           ]
         },
@@ -641,7 +1041,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 4.6.4 DNS Lookup Limits (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-4.6.4"
             }
           ]
         }
@@ -659,7 +1059,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -675,7 +1075,41 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
+            }
+          ]
+        }
+      },
+      "spf13": {
+        "en": {
+          "tagName": "Invalid",
+          "guidance": "SPF record is not properly formed",
+          "refLinksGuide": [
+            {
+              "description": "Implementation Guidance: Email Domain Protection",
+              "ref_link": "https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7208 (SPF), 3 SPF Records",
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "L'enregistrement SPF est correctement formé",
+          "guidance": "L'enregistrement SPF n'est pas correctement formé",
+          "refLinksGuide": [
+            {
+              "description": "Directives de mise en œuvre - protection du domaine de courrier",
+              "ref_link": "https://www.cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -711,22 +1145,22 @@
       },
       "https2": {
         "en": {
-          "tagName": "Missing",
+          "tagName": "HTTPS Missing",
           "guidance": "Follow implementation guide",
           "refLinksGuide": [
             {
-              "description": "1. Websites and services hardening",
+              "description": "1.1 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Missing",
+          "tagName": "HTTPS manquant",
           "guidance": "Suivre le guide de mise en œuvre",
           "refLinksGuide": [
             {
-              "description": "1. Renforcement de la sécurité des sites Web et des services",
+              "description": "1.1 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -735,7 +1169,7 @@
       },
       "https3": {
         "en": {
-          "tagName": "Downgraded",
+          "tagName": "HTTPS Downgraded",
           "guidance": "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.",
           "refLinksGuide": [
             {
@@ -746,7 +1180,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Downgraded",
+          "tagName": "HTTPS rétrogradé",
           "guidance": "Le point de terminaison HTTPS canonique redirige en interne vers HTTP. Suivez les instructions.",
           "refLinksGuide": [
             {
@@ -759,46 +1193,22 @@
       },
       "https4": {
         "en": {
-          "tagName": "Bad-chain",
+          "tagName": "Bad Chain",
           "guidance": "HTTPS certificate chain is invalid",
           "refLinksGuide": [
             {
-              "description": "1.4 Websites and services hardening",
+              "description": "1.3 Websites and services hardening",
               "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
             }
           ],
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Bad-chain",
+          "tagName": "Mauvaise chaîne",
           "guidance": "La chaîne de certificats HTTPS n'est pas valide",
           "refLinksGuide": [
             {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
-              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-            }
-          ],
-          "refLinksTechnical": [""]
-        }
-      },
-      "https5": {
-        "en": {
-          "tagName": "Bad-hostname",
-          "guidance": "HTTPS endpoint failed hostname validation",
-          "refLinksGuide": [
-            {
-              "description": "1.1 Websites and services hardening",
-              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-            }
-          ],
-          "refLinksTechnical": [""]
-        },
-        "fr": {
-          "tagName": "Bad-hostname",
-          "guidance": "La validation du nom d'hôte du point de terminaison HTTPS a échoué",
-          "refLinksGuide": [
-            {
-              "description": "1.1 Renforcement de la sécurité des sites Web et des services",
+              "description": "1.3 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -807,7 +1217,7 @@
       },
       "https6": {
         "en": {
-          "tagName": "Not-enforced",
+          "tagName": "Not Enforced",
           "guidance": "Domain does not enforce HTTPS",
           "refLinksGuide": [
             {
@@ -818,7 +1228,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Not-enforced",
+          "tagName": "Non appliqué",
           "guidance": "Le domaine n'applique pas le protocole HTTPS",
           "refLinksGuide": [
             {
@@ -831,7 +1241,7 @@
       },
       "https7": {
         "en": {
-          "tagName": "Weakly-enforced",
+          "tagName": "Weakly Enforced",
           "guidance": "Domain does not default to HTTPS",
           "refLinksGuide": [
             {
@@ -842,7 +1252,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Weakly-enforced",
+          "tagName": "Faiblement appliqué",
           "guidance": "Le domaine ne fonctionne pas par défaut en HTTPS",
           "refLinksGuide": [
             {
@@ -855,8 +1265,8 @@
       },
       "https8": {
         "en": {
-          "tagName": "Moderately-enforced",
-          "guidance": "Domain defaults to HTTPS, but eventually redirects to HTTP",
+          "tagName": "Moderately Enforced",
+          "guidance": "Domain does not redirect to HTTPS on first redirect, but eventually does redirect to HTTPS.",
           "refLinksGuide": [
             {
               "description": "1.1 Websites and services hardening",
@@ -866,8 +1276,8 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Moderately-enforced",
-          "guidance": "Le domaine passe par défaut en HTTPS, mais finit par être redirigé en HTTP",
+          "tagName": "Modérément appliqué",
+          "guidance": "Le domaine ne redirige pas vers HTTPS lors de la première redirection, mais finit par rediriger vers HTTPS.",
           "refLinksGuide": [
             {
               "description": "1.1 Renforcement de la sécurité des sites Web et des services",
@@ -879,7 +1289,7 @@
       },
       "https9": {
         "en": {
-          "tagName": "HSTS-missing",
+          "tagName": "HSTS Missing",
           "guidance": "HTTP Strict Transport Security (HSTS) not implemented",
           "refLinksGuide": [
             {
@@ -890,7 +1300,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-missing",
+          "tagName": "HSTS manquant",
           "guidance": "HTTP Strict Transport Security (HSTS) non implémenté",
           "refLinksGuide": [
             {
@@ -903,7 +1313,7 @@
       },
       "https10": {
         "en": {
-          "tagName": "HSTS-short-age",
+          "tagName": "HSTS Short Age",
           "guidance": "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year",
           "refLinksGuide": [
             {
@@ -914,7 +1324,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-short-age",
+          "tagName": "HSTS âge court",
           "guidance": "L'âge maximum de la politique HTTP Strict Transport Security (HSTS) est inférieur à un an.",
           "refLinksGuide": [
             {
@@ -927,7 +1337,7 @@
       },
       "https11": {
         "en": {
-          "tagName": "HSTS-preload-ready",
+          "tagName": "HSTS Preload Ready",
           "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
           "refLinksGuide": [
             {
@@ -938,7 +1348,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-preload-ready",
+          "tagName": "HSTS précharge prête",
           "guidance": "Domaine non préchargé par HSTS, mais prêt à l'être",
           "refLinksGuide": [
             {
@@ -951,7 +1361,7 @@
       },
       "https12": {
         "en": {
-          "tagName": "HSTS-not-preloaded",
+          "tagName": "HSTS Not Preloaded",
           "guidance": "Domain not pre-loaded by HSTS",
           "refLinksGuide": [
             {
@@ -962,7 +1372,7 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "HSTS-not-preloaded",
+          "tagName": "HSTS non préchargé",
           "guidance": "Domaine non préchargé par HSTS",
           "refLinksGuide": [
             {
@@ -975,102 +1385,6 @@
       },
       "https13": {
         "en": {
-          "tagName": "Certificate-expired",
-          "guidance": "HTTPS certificate is expired",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Websites and services hardening",
-              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-            }
-          ],
-          "refLinksTechnical": [""]
-        },
-        "fr": {
-          "tagName": "Certificate-expired",
-          "guidance": "Le certificat HTTPS a expiré",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
-              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-            }
-          ],
-          "refLinksTechnical": [""]
-        }
-      },
-      "https14": {
-        "en": {
-          "tagName": "Certificate-self-signed",
-          "guidance": "HTTPS certificate is self-signed",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Websites and services hardening",
-              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-            }
-          ],
-          "refLinksTechnical": [""]
-        },
-        "fr": {
-          "tagName": "Certificate-self-signed",
-          "guidance": "Le certificat HTTPS est auto-signé",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
-              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-            }
-          ],
-          "refLinksTechnical": [""]
-        }
-      },
-      "https15": {
-        "en": {
-          "tagName": "Certificate-revoked",
-          "guidance": "HTTPS certificate has been revoked",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Websites and services hardening",
-              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-            }
-          ],
-          "refLinksTechnical": [""]
-        },
-        "fr": {
-          "tagName": "Certificate-revoked",
-          "guidance": "Le certificat HTTPS a été révoqué",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
-              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-            }
-          ],
-          "refLinksTechnical": [""]
-        }
-      },
-      "https16": {
-        "en": {
-          "tagName": "Certificate-revocation-unknown",
-          "guidance": "Revocation status of HTTPS certificate could not be checked",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Websites and services hardening",
-              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
-            }
-          ],
-          "refLinksTechnical": [""]
-        },
-        "fr": {
-          "tagName": "Certificate-revocation-unknown",
-          "guidance": "L'état de révocation du certificat HTTPS n'a pas pu être vérifié",
-          "refLinksGuide": [
-            {
-              "description": "1.4 Renforcement de la sécurité des sites Web et des services",
-              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
-            }
-          ],
-          "refLinksTechnical": [""]
-        }
-      },
-      "https17": {
-        "en": {
           "tagName": "Unreachable",
           "guidance": "If the domain is used for web hosting, it must be resolvable by DNS",
           "refLinksGuide": [
@@ -1082,11 +1396,83 @@
           "refLinksTechnical": [""]
         },
         "fr": {
-          "tagName": "Unreachable",
+          "tagName": "Inaccessible",
           "guidance": "Si le domaine est utilisé pour l'hébergement web, il doit être résoluble par DNS.",
           "refLinksGuide": [
             {
               "description": "1.1 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "https14": {
+        "en": {
+          "tagName": "HTTP Does Not Redirect to Same Host",
+          "guidance": "HTTP requests should redirect to HTTPS on the same host, this ensures that HSTS is applied to the domain.",
+          "refLinksGuide": [
+            {
+              "description": "1.1/1.2 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "HTTP ne redirige pas vers le même hôte",
+          "guidance": "Les requêtes HTTP doivent être redirigées vers HTTPS sur le même hôte, ce qui garantit que HSTS est appliqué au domaine.",
+          "refLinksGuide": [
+            {
+              "description": "1.1/1.2 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "https15": {
+        "en": {
+          "tagName": "Valid HTTPS Configuration",
+          "guidance": "There is a valid HTTPS configuration for the domain. Tracker did not find any issues with the configuration.",
+          "refLinksGuide": [
+            {
+              "description": "1.1 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Configuration HTTPS valide",
+          "guidance": "Il existe une configuration HTTPS valide pour le domaine.",
+          "refLinksGuide": [
+            {
+              "description": "1.1 Renforcement de la sécurité des sites Web et des services",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
+            }
+          ],
+          "refLinksTechnical": [""]
+        }
+      },
+      "https16": {
+        "en": {
+          "tagName": "Valid HSTS Configuration",
+          "guidance": "There is a valid HSTS configuration for the domain. Tracker did not find any issues with the configuration.",
+          "refLinksGuide": [
+            {
+              "description": "1.2 Websites and services hardening",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html#cha1"
+            }
+          ],
+          "refLinksTechnical": [""]
+        },
+        "fr": {
+          "tagName": "Configuration HSTS valide",
+          "guidance": "Il existe une configuration HSTS valide pour le domaine.",
+          "refLinksGuide": [
+            {
+              "description": "1.2 Renforcement de la sécurité des sites Web et des services",
               "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html#cha5"
             }
           ],
@@ -1134,7 +1520,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6 Policy",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6"
             }
           ]
         },
@@ -1150,7 +1536,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6 Policy (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6"
             }
           ]
         }
@@ -1168,7 +1554,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1184,7 +1570,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6 Policy (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6"
             }
           ]
         }
@@ -1202,7 +1588,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1218,7 +1604,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1236,7 +1622,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1252,7 +1638,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1270,7 +1656,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1286,7 +1672,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1304,7 +1690,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1320,7 +1706,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1338,7 +1724,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1354,7 +1740,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1372,7 +1758,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1388,7 +1774,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1406,7 +1792,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1422,7 +1808,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1440,7 +1826,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1456,7 +1842,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1474,7 +1860,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1490,7 +1876,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1508,7 +1894,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1524,7 +1910,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1542,7 +1928,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         },
@@ -1558,7 +1944,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         }
@@ -1576,7 +1962,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         },
@@ -1592,7 +1978,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         }
@@ -1610,7 +1996,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1626,7 +2012,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1644,7 +2030,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1660,7 +2046,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1678,7 +2064,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1694,7 +2080,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1712,7 +2098,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1728,7 +2114,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1746,7 +2132,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1762,7 +2148,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1780,7 +2166,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1796,7 +2182,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1814,7 +2200,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         },
@@ -1830,7 +2216,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 7.1 Verifying External Destinations (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-7.1"
             }
           ]
         }
@@ -1848,7 +2234,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         },
@@ -1864,7 +2250,41 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+            }
+          ]
+        }
+      },
+      "dmarc24": {
+        "en": {
+          "tagName": "RUA-NOT-CCCS",
+          "guidance": "RUA must include CCCS (\"mailto:dmarc@cyber.gc.ca\")",
+          "refLinksGuide": [
+            {
+              "description": "B.3.1 DMARC Records",
+              "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7489 (DMARC), 6.3 General Record Format",
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "RUA-NOT-CCCS",
+          "guidance": "EVU muss CCCS enthalten (\"mailto:dmarc@cyber.gc.ca\")",
+          "refLinksGuide": [
+            {
+              "description": "B.3.1 Enregistrements DMARC",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 7489 (DMARC), 6.3 General Record Format (EN)",
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-6.3"
             }
           ]
         }
@@ -1909,7 +2329,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         },
@@ -1925,7 +2345,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM) (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         }
@@ -1943,7 +2363,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         },
@@ -1959,7 +2379,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance (EN)",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         }
@@ -1977,7 +2397,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         },
@@ -1993,7 +2413,7 @@
           "refLinksTechnical": [
             {
               "description": "Microsoft DKIM Guidance (EN)",
-              "tech_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
+              "ref_link": "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
             }
           ]
         }
@@ -2011,7 +2431,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2027,7 +2447,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2045,7 +2465,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2061,7 +2481,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2079,7 +2499,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2095,7 +2515,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2113,7 +2533,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2129,7 +2549,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2147,7 +2567,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2163,7 +2583,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2205,7 +2625,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         },
@@ -2221,7 +2641,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
             }
           ]
         }
@@ -2239,7 +2659,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         },
@@ -2255,7 +2675,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         }
@@ -2273,7 +2693,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         },
@@ -2289,7 +2709,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 3.6 Key Management and Representation (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.6"
             }
           ]
         }
@@ -2316,6 +2736,88 @@
             }
           ],
           "refLinksTechnical": [""]
+        }
+      },
+      "dkim15": {
+        "en": {
+          "tagName": "P-empty",
+          "guidance": "Public key is empty",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 DKIM Records",
+              "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms",
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+          ]
+        },
+        "fr": {
+          "tagName": "P-empty",
+          "guidance": "La clé publique est vide",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 Enregistrements DKIM",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
+            }
+          ],
+          "refLinksTechnical": [
+            {
+              "description": "RFC 6376 (DKIM), 3.3 Signing and Verification Algorithms (EN)",
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-3.3"
+            }
+          ]
+        }
+      },
+      "dkim16": {
+        "en": {
+          "tagName": "Selectors Not Given",
+          "guidance": "Tracker is unaware of the selectors used by the domain, please implement selectors for this domain and Tracker should detect them. If you have implemented selectors and Tracker is still not detecting them, please contact us at zzTBSCybers@tbs-sct.gc.ca.",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 DKIM Records",
+              "ref_link": "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
+            }
+          ],
+          "refLinksTechnical": []
+        },
+        "fr": {
+          "tagName": "Sélecteurs non indiqués",
+          "guidance": "Tracker ne connaît pas les sélecteurs utilisés par le domaine, veuillez implémenter des sélecteurs pour ce domaine et Tracker devrait les détecter. Si vous avez implémenté des sélecteurs et que Tracker ne les détecte toujours pas, veuillez nous contacter à l'adresse zzTBSCybers@tbs-sct.gc.ca.",
+          "refLinksGuide": [
+            {
+              "description": "B.2.1 Enregistrements DKIM",
+              "ref_link": "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
+            }
+          ],
+          "refLinksTechnical": []
+        }
+      },
+      "dkim17": {
+        "en": {
+          "tagName": "Domain Does Not Send Email",
+          "guidance": "Tracker has not detected valid email being sent from this domain. DKIM is only required for domains that send email",
+          "refLinksGuide": [
+            {
+              "description": "1. General email requirements",
+              "ref_link": "https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html#cha1"
+            }
+          ],
+          "refLinksTechnical": []
+        },
+        "fr": {
+          "tagName": "Le domaine n'envoie pas d'email",
+          "guidance": "Tracker n'a pas détecté d'email valide envoyé depuis ce domaine. DKIM n'est nécessaire que pour les domaines qui envoient du courrier électronique.",
+          "refLinksGuide": [
+            {
+              "description": "1. Exigences générales en matière de courriel",
+              "ref_link": "https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/courriels.html#cha1"
+            }
+          ],
+          "refLinksTechnical": []
         }
       }
     }
@@ -2347,16 +2849,7 @@
       },
       "dkimScanSummaryCriteria": {
         "pass": ["dkim7", "dkim8"],
-        "fail": [
-          "dkim2",
-          "dkim3",
-          "dkim4",
-          "dkim5",
-          "dkim6",
-          "dkim9",
-          "dkim11",
-          "dkim12"
-        ],
+        "fail": ["dkim2", "dkim3", "dkim4", "dkim5", "dkim6", "dkim9", "dkim11", "dkim12"],
         "warning": ["dkim10", "dkim13"],
         "info": ["dkim1"]
       },
@@ -2414,7 +2907,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -2430,7 +2923,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -2448,7 +2941,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         },
@@ -2464,7 +2957,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 3 SPF Records (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-3"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-3"
             }
           ]
         }
@@ -2482,7 +2975,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 2.6 Reults of Evaluation",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
             }
           ]
         },
@@ -2498,7 +2991,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7208 (SPF), 2.6 Reults of Evaluation (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
+              "ref_link": "https://tools.ietf.org/html/rfc7208#section-2.6"
             }
           ]
         }
@@ -2516,7 +3009,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -2532,7 +3025,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }
@@ -2550,7 +3043,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -2566,7 +3059,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }
@@ -2584,7 +3077,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         },
@@ -2600,7 +3093,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM) (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376"
+              "ref_link": "https://tools.ietf.org/html/rfc6376"
             }
           ]
         }
@@ -2618,7 +3111,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 7.5 _domainkey DNS TXT Resource Record Tag Specifications",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
             }
           ]
         },
@@ -2634,7 +3127,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 7.5 _domainkey DNS TXT Resource Record Tag Specifications (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-7.5"
             }
           ]
         }
@@ -2652,7 +3145,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 6 Verifier Actions",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-6"
             }
           ]
         },
@@ -2668,7 +3161,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 6376 (DKIM), 6 Verifier Actions (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc6376#section-6"
+              "ref_link": "https://tools.ietf.org/html/rfc6376#section-6"
             }
           ]
         }
@@ -2686,7 +3179,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -2702,7 +3195,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }
@@ -2720,7 +3213,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         },
@@ -2736,7 +3229,7 @@
           "refLinksTechnical": [
             {
               "description": "RFC 7489 (DMARC), 3.1 Identifier Alignment (EN)",
-              "tech_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
+              "ref_link": "https://tools.ietf.org/html/rfc7489#section-3.1"
             }
           ]
         }

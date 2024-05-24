@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from '@chakra-ui/react'
+import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -16,8 +9,6 @@ import { UserList } from './UserList'
 
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { AuditLogTable } from './AuditLogTable'
-import { ABTestingWrapper } from '../app/ABTestWrapper'
-import { ABTestVariant } from '../app/ABTestVariant'
 
 export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
   return (
@@ -30,45 +21,32 @@ export function AdminPanel({ activeMenu, orgSlug, permission, orgId }) {
           <Tab borderTopWidth="4px">
             <Trans>Users</Trans>
           </Tab>
-          <ABTestingWrapper insiderVariantName="B">
-            <ABTestVariant name="B">
-              <Tab borderTopWidth="4px">
-                <Trans>Activity</Trans>
-              </Tab>
-            </ABTestVariant>
-          </ABTestingWrapper>
+          <Tab borderTopWidth="4px">
+            <Trans>Activity</Trans>
+          </Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <AdminDomains
+              <AdminDomains orgSlug={orgSlug} orgId={orgId} />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <UserList
+                includePending={true}
+                activeMenu={activeMenu}
                 permission={permission}
                 orgSlug={orgSlug}
-                domainsPerPage={10}
                 orgId={orgId}
               />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <UserList
-                activeMenu={activeMenu}
-                permission={permission}
-                orgSlug={orgSlug}
-                usersPerPage={10}
-                orgId={orgId}
-              />
+              <AuditLogTable orgId={orgId} />
             </ErrorBoundary>
-          </TabPanel>
-          <TabPanel>
-            <ABTestingWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <AuditLogTable orgId={orgId} />
-                </ErrorBoundary>
-              </ABTestVariant>
-            </ABTestingWrapper>
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import {GraphQLObjectType, GraphQLString} from 'graphql'
 
 export const inviteUserToOrgResultType = new GraphQLObjectType({
   name: 'InviteUserToOrgResult',
@@ -9,7 +9,7 @@ export const inviteUserToOrgResultType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'Informs the user if the invite or invite email was successfully sent.',
-      resolve: ({ status }) => status,
+      resolve: ({status}) => status,
     },
   }),
 })

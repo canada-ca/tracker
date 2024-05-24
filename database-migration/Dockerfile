@@ -8,6 +8,7 @@ COPY package.json .
 COPY package-lock.json .
 COPY .env.example .
 COPY index.js .
+COPY database.json .
 
 RUN npm ci
 

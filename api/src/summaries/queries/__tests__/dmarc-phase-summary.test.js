@@ -49,26 +49,28 @@ describe('given dmarcPhaseSummary query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.chartSummaries.save({
-        _key: 'dmarc_phase',
-        not_implemented: 200,
-        assess: 200,
-        deploy: 200,
-        enforce: 200,
-        maintain: 200,
-        total: 1000,
+        date: '2021-01-01',
+        dmarc_phase: {
+          not_implemented: 200,
+          assess: 200,
+          deploy: 200,
+          enforce: 200,
+          maintain: 200,
+          total: 1000,
+        },
       })
     })
     afterEach(async () => {
@@ -78,9 +80,9 @@ describe('given dmarcPhaseSummary query', () => {
       await drop()
     })
     it('returns dmarc phase summary', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             dmarcPhaseSummary {
               total
@@ -92,14 +94,14 @@ describe('given dmarcPhaseSummary query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           loaders: {
             loadChartSummaryByKey: loadChartSummaryByKey({ query }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -157,9 +159,9 @@ describe('given dmarcPhaseSummary query', () => {
     describe('given unsuccessful dmarc phase summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 dmarcPhaseSummary {
                   total
@@ -171,8 +173,8 @@ describe('given dmarcPhaseSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -180,18 +182,12 @@ describe('given dmarcPhaseSummary query', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              `Unable to load DMARC phase summary. Please try again.`,
-            ),
-          ]
+          const error = [new GraphQLError(`Unable to load DMARC phase summary. Please try again.`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve DMARC phase summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve DMARC phase summary.`])
         })
       })
     })
@@ -214,9 +210,9 @@ describe('given dmarcPhaseSummary query', () => {
     describe('given unsuccessful dmarc phase summary retrieval', () => {
       describe('summary cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 dmarcPhaseSummary {
                   total
@@ -228,8 +224,8 @@ describe('given dmarcPhaseSummary query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               loaders: {
                 loadChartSummaryByKey: {
@@ -237,18 +233,12 @@ describe('given dmarcPhaseSummary query', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              'Impossible de charger le résumé DMARC. Veuillez réessayer.',
-            ),
-          ]
+          const error = [new GraphQLError('Impossible de charger le résumé DMARC. Veuillez réessayer.')]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User could not retrieve DMARC phase summary.`,
-          ])
+          expect(consoleOutput).toEqual([`User could not retrieve DMARC phase summary.`])
         })
       })
     })

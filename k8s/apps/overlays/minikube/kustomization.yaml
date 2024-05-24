@@ -6,23 +6,24 @@ resources:
   - ../../bases/scanners/scanner-platform
   - ../../bases/scanners/dns-processor
   - ../../bases/scanners/dns-scanner
-  - ../../bases/scanners/https-processor
-  - ../../bases/scanners/https-scanner
-  - ../../bases/scanners/tls-processor
-  - ../../bases/scanners/tls-scanner
+  - ../../bases/scanners/web-processor
+  - ../../bases/scanners/web-scanner
   - ../../bases/scanners/dmarc-report-cronjob
   - ../../bases/scanners/domain-dispatcher-cronjob
-  - ../../bases/scanners/guidance-cronjob
   - ../../bases/scanners/summaries-cronjob
+  - ../../bases/scanners/domain-discovery
 replicas:
-- name: tracker-frontend
-  count: 1
-- name: tracker-api
-  count: 1
-- name: dns-scanner
-  count: 1
-- name: tls-scanner
-  count: 1
-- name: https-scanner
-  count: 1
-
+  - name: tracker-frontend
+    count: 1
+  - name: tracker-api
+    count: 1
+  - name: dns-scanner
+    count: 1
+  - name: dns-processor
+    count: 1
+  - name: web-scanner
+    count: 1
+  - name: web-processor
+    count: 1
+components:
+#  - ../../bases/frontend/maintenance-override-component

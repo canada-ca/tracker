@@ -8,11 +8,12 @@ resources:
 - backup-cronjob.yaml
 - backup-service-account.yaml
 - storage-classes.yaml
-- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/jaeger.yaml
-- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/kiali.yaml
+#- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/jaeger.yaml
+#- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/kiali.yaml
 #- https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/prometheus.yaml
 patchesStrategicMerge:
   - arangodb-retain-storage-patch.yaml
+  - arangodb-memory-limit-patch.yaml
   - certificate-issuer-patch.yaml
   - cert-manager-service-account-patch.yaml
 patchesJSON6902:
@@ -27,4 +28,3 @@ patchesJSON6902:
     - op: add
       path: /spec/components/ingressGateways/0/k8s/service/loadBalancerIP
       value: 34.95.5.243
-      

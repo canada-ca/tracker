@@ -22,9 +22,7 @@ describe('given the removeUserFromOrgUnion', () => {
           authResult: {},
         }
 
-        expect(removeUserFromOrgUnion.resolveType(obj)).toMatchObject(
-          removeUserFromOrgResultType,
-        )
+        expect(removeUserFromOrgUnion.resolveType(obj)).toMatch(removeUserFromOrgResultType.name)
       })
     })
     describe('testing the affiliationError', () => {
@@ -36,9 +34,7 @@ describe('given the removeUserFromOrgUnion', () => {
           description: 'text',
         }
 
-        expect(removeUserFromOrgUnion.resolveType(obj)).toMatchObject(
-          affiliationError,
-        )
+        expect(removeUserFromOrgUnion.resolveType(obj)).toMatch(affiliationError.name)
       })
     })
   })

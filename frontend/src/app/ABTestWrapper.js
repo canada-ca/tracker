@@ -2,22 +2,19 @@ import React from 'react'
 import { any, string } from 'prop-types'
 import { useUserVar } from '../utilities/userState'
 
-const isInsiderUser = ({ userName, insideUser }) => {
-  return userName.endsWith('@tbs-sct.gc.ca') || insideUser
+export function ABTestVariant({ children }) {
+  return <>{children}</>
 }
 
-export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
-  const { currentUser } = useUserVar()
+export function ABTestWrapper({ children, insiderVariantName = 'B' }) {
+  const {
+    currentUser: { insideUser },
+  } = useUserVar()
   let childIndex = 0
 
   // only one variant
   if (!children.length) {
-    if (
-      isInsiderUser({
-        userName: currentUser?.userName || '',
-        insideUser: currentUser?.insideUser || false,
-      })
-    ) {
+    if (insideUser) {
       if (children.props.name === insiderVariantName) return <>{children}</>
       else return <></>
     } else {
@@ -26,24 +23,18 @@ export function ABTestingWrapper({ children, insiderVariantName = 'B' }) {
     }
   }
   // A + B variants
-  if (
-    isInsiderUser({
-      userName: currentUser?.userName || '',
-      insideUser: currentUser?.insideUser || false,
-    })
-  ) {
-    childIndex = children.findIndex(
-      (variant) => variant.props.name === insiderVariantName,
-    )
+  if (insideUser) {
+    childIndex = children.findIndex((variant) => variant.props.name === insiderVariantName)
   } else {
-    childIndex = children.findIndex(
-      (variant) => variant.props.name !== insiderVariantName,
-    )
+    childIndex = children.findIndex((variant) => variant.props.name !== insiderVariantName)
   }
   return <>{children[childIndex]}</>
 }
 
-ABTestingWrapper.propTypes = {
+ABTestVariant.propTypes = {
+  children: any,
+}
+ABTestWrapper.propTypes = {
   insiderVariantName: string,
   children: any,
 }

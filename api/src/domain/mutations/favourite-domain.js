@@ -9,15 +9,14 @@ export const favouriteDomain = new mutationWithClientMutationId({
   description: "Mutation to add domain to user's personal myTracker view.",
   inputFields: () => ({
     domainId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the domain you wish to favourite.',
     },
   }),
   outputFields: () => ({
     result: {
       type: createDomainUnion,
-      description:
-        '`CreateDomainUnion` returning either a `Domain`, or `CreateDomainError` object.',
+      description: '`CreateDomainUnion` returning either a `Domain`, or `CreateDomainError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -39,17 +38,13 @@ export const favouriteDomain = new mutationWithClientMutationId({
     verifiedRequired({ user })
 
     // Cleanse input
-    const { type: _domainType, id: domainId } = fromGlobalId(
-      cleanseInput(args.domainId),
-    )
+    const { type: _domainType, id: domainId } = fromGlobalId(cleanseInput(args.domainId))
 
     // Get domain from db
     const domain = await loadDomainByKey.load(domainId)
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to favourite ${domainId} however no domain is associated with that id.`,
-      )
+      console.warn(`User: ${userKey} attempted to favourite ${domainId} however no domain is associated with that id.`)
       return {
         _type: 'error',
         code: 400,
@@ -67,9 +62,7 @@ export const favouriteDomain = new mutationWithClientMutationId({
             RETURN e
       `
     } catch (err) {
-      console.error(
-        `Database error occurred while running check to see if domain already favourited: ${err}`,
-      )
+      console.error(`Database error occurred while running check to see if domain already favourited: ${err}`)
       throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
     }
 
@@ -77,22 +70,16 @@ export const favouriteDomain = new mutationWithClientMutationId({
     try {
       checkUserDomain = await checkDomainCursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred while running check to see if domain already favourited: ${err}`,
-      )
+      console.error(`Cursor error occurred while running check to see if domain already favourited: ${err}`)
       throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
     }
 
     if (typeof checkUserDomain !== 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to favourite a domain, however user already has that domain favourited.`,
-      )
+      console.warn(`User: ${userKey} attempted to favourite a domain, however user already has that domain favourited.`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to favourite domain, user has already favourited it.`,
-        ),
+        description: i18n._(t`Unable to favourite domain, user has already favourited it.`),
       }
     }
 
@@ -111,24 +98,18 @@ export const favouriteDomain = new mutationWithClientMutationId({
           `,
       )
     } catch (err) {
-      console.error(
-        `Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`,
-      )
+      console.error(`Transaction step error occurred for user: ${userKey} when inserting new domain edge: ${err}`)
       throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Transaction commit error occurred while user: ${userKey} was creating domain: ${err}`,
-      )
+      console.error(`Transaction commit error occurred while user: ${userKey} was creating domain: ${err}`)
       throw new Error(i18n._(t`Unable to favourite domain. Please try again.`))
     }
 
-    console.info(
-      `User: ${userKey} successfully favourited domain ${domain.domain}.`,
-    )
+    console.info(`User: ${userKey} successfully favourited domain ${domain.domain}.`)
 
     return {
       ...domain,

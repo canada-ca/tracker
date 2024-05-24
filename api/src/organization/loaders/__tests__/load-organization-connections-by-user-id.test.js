@@ -2125,6 +2125,56 @@ describe('given the load organization connections by user id function', () => {
               })
             })
           })
+          describe('isAffiliated is set to true', () => {
+            it('returns organizations', async () => {
+              const connectionLoader = loadOrgConnectionsByUserId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                auth: { loginRequired: true },
+                language: 'en',
+                i18n,
+              })
+
+              const connectionArgs = {
+                first: 5,
+                isAffiliated: true,
+              }
+              const orgs = await connectionLoader({ ...connectionArgs })
+
+              const orgLoader = loadOrgByKey({ query, language: 'en' })
+              const expectedOrgs = await orgLoader.loadMany([orgOne._key, orgTwo._key])
+
+              expectedOrgs[0].id = expectedOrgs[0]._key
+              expectedOrgs[1].id = expectedOrgs[1]._key
+
+              const expectedStructure = {
+                edges: [
+                  {
+                    cursor: toGlobalId('organization', expectedOrgs[0]._key),
+                    node: {
+                      ...expectedOrgs[0],
+                    },
+                  },
+                  {
+                    cursor: toGlobalId('organization', expectedOrgs[1]._key),
+                    node: {
+                      ...expectedOrgs[1],
+                    },
+                  },
+                ],
+                totalCount: 2,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  startCursor: toGlobalId('organization', expectedOrgs[0]._key),
+                  endCursor: toGlobalId('organization', expectedOrgs[1]._key),
+                },
+              }
+
+              expect(orgs).toEqual(expectedStructure)
+            })
+          })
           describe('isSuperAdmin is set to true', () => {
             it('returns organizations', async () => {
               const connectionLoader = loadOrgConnectionsByUserId({

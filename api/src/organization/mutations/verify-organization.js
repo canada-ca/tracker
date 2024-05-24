@@ -9,15 +9,14 @@ export const verifyOrganization = new mutationWithClientMutationId({
   description: 'Mutation allows the verification of an organization.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the organization to be verified.',
     },
   }),
   outputFields: () => ({
     result: {
       type: verifyOrganizationUnion,
-      description:
-        '`VerifyOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
+      description: '`VerifyOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -102,54 +101,38 @@ export const verifyOrganization = new mutationWithClientMutationId({
           `,
       )
     } catch (err) {
-      console.error(
-        `Transaction error occurred while upserting verified org: ${orgKey}, err: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to verify organization. Please try again.`),
-      )
+      console.error(`Transaction error occurred while upserting verified org: ${orgKey}, err: ${err}`)
+      throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
     }
 
-    // Set all affiliation owner fields to false
+    // unarchive all archived affiliated domains
     try {
       await trx.step(
-        () => query`
-          WITH affiliations, organizations, users
-          FOR v, e IN 1..1 OUTBOUND ${currentOrg._id} affiliations
-            UPSERT { _key: e._key }
-              INSERT { owner: false }
-              UPDATE { owner: false }
-              IN affiliations
-          RETURN e
-        `,
+        () =>
+          query`
+            WITH domains, claims
+            FOR v, e IN 1..1 OUTBOUND ${currentOrg._id} claims
+              FILTER v.archived == true
+              UPDATE v WITH { archived: false } IN domains
+          `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred when clearing owners for org: ${orgKey}: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to verify organization. Please try again.`),
-      )
+      console.error(`Transaction error occurred while unarchiving affiliated domains for org: ${orgKey}, err: ${err}`)
+      throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Transaction error occurred while committing newly verified org: ${orgKey}, err: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to verify organization. Please try again.`),
-      )
+      console.error(`Transaction error occurred while committing newly verified org: ${orgKey}, err: ${err}`)
+      throw new Error(i18n._(t`Unable to verify organization. Please try again.`))
     }
 
     console.info(`User: ${userKey}, successfully verified org: ${orgKey}.`)
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully verified organization: ${currentOrg.slug}.`,
-      ),
+      status: i18n._(t`Successfully verified organization: ${currentOrg.slug}.`),
       organization: currentOrg,
     }
   },

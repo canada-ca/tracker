@@ -1,0 +1,48 @@
+name: Set/Remove Maintenance Page
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment:
+        # Which deployment to adjust maintenance page
+        description: 'Which deployment to adjust'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: choice
+        options:
+          - 'staging'
+          - 'production'
+          - 'gke'
+
+      onOff:
+        # Turning the maintenance page on or off
+        description: 'Turn the maintenance page on or off'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: choice
+        options:
+          - 'on'
+          - 'off'
+
+jobs:
+  update_value:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.TRACKER_SUIVI_WRITE_REPO_PAT }}
+
+    - name: Update maintenance value
+      run: |
+        if [ "${{ inputs.onOff }}" == "on" ]; then PREFIX=""; else PREFIX="#"; fi
+        sed -i "s/\s*#\{0,1\}\s*\(- \.\.\/\.\.\/bases\/frontend\/maintenance-override-component\)/${PREFIX}  \1/g" k8s/apps/overlays/${{ inputs.deployment }}/kustomization.yaml
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Set maintenance page ${{ inputs.onOff }} for ${{ inputs.deployment }}
+        commit_author: ${{ github.triggering_actor }} <${{ github.triggering_actor }}@users.noreply.github.com>
+        file_pattern: 'k8s/apps/overlays/${{ inputs.deployment }}/kustomization.yaml'

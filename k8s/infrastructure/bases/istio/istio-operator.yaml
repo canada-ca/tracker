@@ -6,7 +6,7 @@ metadata:
 spec:
   # https://istio.io/latest/news/releases/1.9.x/announcing-1.9/#mirroring-of-images-on-gcr-io
   hub: gcr.io/istio-release
-  tag: 1.16.2-distroless
+  tag: 1.20.3-distroless
   meshConfig:
     accessLogFile: /dev/stdout
     enableTracing: true
@@ -32,11 +32,6 @@ spec:
         hpaSpec:
           maxReplicas: 6
           minReplicas: 2
-          metrics:
-            - type: Resource
-              resource:
-                name: cpu
-                targetAverageUtilization: 80
           scaleTargetRef:
             apiVersion: apps/v1
             kind: Deployment
@@ -75,11 +70,6 @@ spec:
         hpaSpec:
           maxReplicas: 6
           minReplicas: 2
-          metrics:
-            - type: Resource
-              resource:
-                name: cpu
-                targetAverageUtilization: 80
           scaleTargetRef:
             apiVersion: apps/v1
             kind: Deployment

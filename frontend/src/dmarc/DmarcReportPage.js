@@ -1,15 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
-import {
-  Accordion,
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  Link,
-  Text,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Accordion, Box, Divider, Flex, Heading, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -20,13 +11,14 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { DmarcReportSummaryGraph } from './DmarcReportSummaryGraph'
 
 import { TrackerTable } from '../components/TrackerTable'
-import { InfoBox, InfoPanel, InfoButton } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { TrackerAccordionItem as AccordionItem } from '../components/TrackerAccordionItem'
 import { useDocumentTitle } from '../utilities/useDocumentTitle'
 import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../graphql/queries'
 import { MonthSelect } from '../components/MonthSelect'
+import { NotificationBanner } from '../app/NotificationBanner'
 
 export default function DmarcReportPage() {
   const { domainSlug, period, year } = useParams()
@@ -38,17 +30,17 @@ export default function DmarcReportPage() {
 
   const [selectedPeriod, setSelectedPeriod] = useState(period)
   const [selectedYear, setSelectedYear] = useState(year)
-  const [selectedDate, setSelectedDate] = useState(
-    `${selectedPeriod}, ${selectedYear}`,
-  )
+  const [selectedDate, setSelectedDate] = useState(`${selectedPeriod}, ${selectedYear}`)
 
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen: fullPassOpen, onToggle: fullPassToggle } = useDisclosure()
+  const { isOpen: failDkimOpen, onToggle: failDkimToggle } = useDisclosure()
+  const { isOpen: failSpfOpen, onToggle: failSpfToggle } = useDisclosure()
+  const { isOpen: failDmarcOpen, onToggle: failDmarcToggle } = useDisclosure()
 
   // Allows the use of forward/backward navigation
   if (selectedPeriod !== period) setSelectedPeriod(period)
   if (selectedYear !== year) setSelectedPeriod(year)
-  if (selectedDate !== `${period}, ${year}`)
-    setSelectedDate(`${period}, ${year}`)
+  if (selectedDate !== `${period}, ${year}`) setSelectedDate(`${period}, ${year}`)
 
   const {
     loading: graphLoading,
@@ -80,9 +72,7 @@ export default function DmarcReportPage() {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
-    history.replace(
-      `/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`,
-    )
+    history.replace(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`)
   }
 
   // Set DMARC bar graph Loading
@@ -94,7 +84,20 @@ export default function DmarcReportPage() {
     )
   }
 
-  if (!graphData?.findDomainByDomain?.hasDMARCReport) {
+  if (tableError || graphError) {
+    return (
+      <Box align="center" w="100%" px={4}>
+        <Text textAlign="center" fontSize="2xl" fontWeight="bold">
+          <Trans>
+            Error while retrieving DMARC data for {domainSlug}. <br />
+            This could be due to insufficient user privileges or the domain does not exist in the system.
+          </Trans>
+        </Text>
+      </Box>
+    )
+  }
+
+  if (graphData?.findDomainByDomain?.hasDMARCReport === false) {
     return (
       <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="3xl" fontWeight="bold">
@@ -128,16 +131,14 @@ export default function DmarcReportPage() {
     }
 
     const formattedGraphData = {
-      periods: graphData.findDomainByDomain.yearlyDmarcSummaries.map(
-        (entry) => {
-          return {
-            month: entry.month,
-            year: entry.year,
-            ...entry.categoryTotals,
-            ...entry.categoryPercentages,
-          }
-        },
-      ),
+      periods: graphData.findDomainByDomain.yearlyDmarcSummaries.map((entry) => {
+        return {
+          month: entry.month,
+          year: entry.year,
+          ...entry.categoryTotals,
+          ...entry.categoryPercentages,
+        }
+      }),
     }
     formattedGraphData.strengths = strengths
     graphDisplay = (
@@ -214,6 +215,74 @@ export default function DmarcReportPage() {
     accessor: 'disposition',
   }
 
+  const glossary = {
+    sourceIpAddress: {
+      title: sourceIpAddress.Header,
+      info: t`The IP address of sending server.`,
+    },
+    envelopeFrom: {
+      title: envelopeFrom.Header,
+      info: t`Domain from Simple Mail Transfer Protocol (SMTP) banner message.`,
+    },
+    dkimDomains: {
+      title: dkimDomains.Header,
+      info: t`The domains used for DKIM validation.`,
+    },
+    dkimSelectors: {
+      title: dkimSelectors.Header,
+      info: t`Pointer to a DKIM public key record in DNS.`,
+    },
+    totalMessages: {
+      title: totalMessages.Header,
+      info: t`The Total Messages from this sender.`,
+    },
+    dnsHost: {
+      title: dnsHost.Header,
+      info: t`Host from reverse DNS of source IP address.`,
+    },
+    spfDomains: {
+      title: spfDomains.Header,
+      info: t`Domains used for SPF validation.`,
+    },
+    headerFrom: {
+      title: headerFrom.Header,
+      info: t`The address/domain used in the "From" field.`,
+    },
+    guidance: {
+      title: guidance.Header,
+      info: t`Details for a given guidance tag can be found on the wiki, see below.`,
+    },
+    spfAligned: {
+      title: spfAligned.Header,
+      info: t`Is SPF aligned. Can be true or false.`,
+    },
+    spfResults: {
+      title: spfResults.Header,
+      info: t`The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error.`,
+    },
+    dkimAligned: {
+      title: dkimAligned.Header,
+      info: t`Is DKIM aligned. Can be true or false.`,
+    },
+    dkimResults: {
+      title: dkimResults.Header,
+      info: t`The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error.`,
+    },
+    disposition: {
+      title: disposition.Header,
+      info: t`The DMARC enforcement action that the receiver took, either none, quarantine, or reject.`,
+    },
+  }
+
+  const generalGlossary = (
+    <>
+      <InfoBox title={glossary.sourceIpAddress.title} info={glossary.sourceIpAddress.info} />
+      <InfoBox title={glossary.dnsHost.title} info={glossary.dnsHost.info} />
+      <InfoBox title={glossary.envelopeFrom.title} info={glossary.envelopeFrom.info} />
+      <InfoBox title={glossary.headerFrom.title} info={glossary.headerFrom.info} />
+    </>
+  )
+
   const dataToCsv = (columns, data) => {
     let csvOutput = columns.map((column) => column.Header).join(',')
     data.forEach((entry) => {
@@ -247,10 +316,7 @@ export default function DmarcReportPage() {
     )
   }
   // DKIM Failure query no longer loading, check if data exists
-  else if (
-    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
-      ?.dkimFailure?.edges.length > 0
-  ) {
+  else if (tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables?.dkimFailure?.edges.length > 0) {
     const dkimFailureColumns = [
       {
         Header: t`DKIM Failures by IP Address`,
@@ -271,17 +337,16 @@ export default function DmarcReportPage() {
     ]
 
     // Convert boolean values to string and properly format
-    const dkimFailureNodes =
-      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
-        (edge) => {
-          const node = { ...edge.node }
-          node.dkimAligned = node.dkimAligned.toString()
-          node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
-          node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
-          node.dkimResults = node.dkimResults.replace(/,/g, ', ')
-          return node
-        },
-      )
+    const dkimFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dkimFailure.edges.map(
+      (edge) => {
+        const node = { ...edge.node }
+        node.dkimAligned = node.dkimAligned.toString()
+        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+        node.dkimResults = node.dkimResults.replace(/,/g, ', ')
+        return node
+      },
+    )
 
     dkimFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -293,9 +358,8 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search DKIM Failing Items`}
           fileName={fileName}
-          exportDataFunction={() =>
-            dataToCsv(dkimFailureColumns[0].columns, dkimFailureNodes)
-          }
+          exportDataFunction={() => dataToCsv(dkimFailureColumns[0].columns, dkimFailureNodes)}
+          onToggle={failDkimToggle}
         />
       </ErrorBoundary>
     )
@@ -325,10 +389,7 @@ export default function DmarcReportPage() {
     )
   }
   // Full pass query no longer loading, check if data exists
-  else if (
-    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables?.fullPass
-      ?.edges.length > 0
-  ) {
+  else if (tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables?.fullPass?.edges.length > 0) {
     const fullPassColumns = [
       {
         Header: t`Fully Aligned by IP Address`,
@@ -347,16 +408,13 @@ export default function DmarcReportPage() {
     ]
 
     // Convert boolean values to string and properly format
-    const fullPassNodes =
-      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map(
-        (edge) => {
-          const node = { ...edge.node }
-          node.spfDomains = node.spfDomains.replace(/,/g, ', ')
-          node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
-          node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
-          return node
-        },
-      )
+    const fullPassNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.fullPass.edges.map((edge) => {
+      const node = { ...edge.node }
+      node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+      node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+      node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+      return node
+    })
 
     fullPassTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -368,9 +426,8 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search Fully Aligned Items`}
           fileName={fileName}
-          exportDataFunction={() =>
-            dataToCsv(fullPassColumns[0].columns, fullPassNodes)
-          }
+          exportDataFunction={() => dataToCsv(fullPassColumns[0].columns, fullPassNodes)}
+          onToggle={fullPassToggle}
         />
       </ErrorBoundary>
     )
@@ -400,10 +457,7 @@ export default function DmarcReportPage() {
     )
   }
   // SPF Failure query no longer loading, check if data exists
-  else if (
-    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
-      ?.spfFailure?.edges.length > 0
-  ) {
+  else if (tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables?.spfFailure?.edges.length > 0) {
     const spfFailureColumns = [
       {
         Header: t`SPF Failures by IP Address`,
@@ -422,15 +476,14 @@ export default function DmarcReportPage() {
       },
     ]
     // Convert boolean values to string and properly format
-    const spfFailureNodes =
-      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
-        (edge) => {
-          const node = { ...edge.node }
-          node.spfAligned = node.spfAligned.toString()
-          node.spfDomains = node.spfDomains.replace(/,/g, ', ')
-          return node
-        },
-      )
+    const spfFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.spfFailure.edges.map(
+      (edge) => {
+        const node = { ...edge.node }
+        node.spfAligned = node.spfAligned.toString()
+        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+        return node
+      },
+    )
 
     spfFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -442,9 +495,8 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search SPF Failing Items`}
           fileName={fileName}
-          exportDataFunction={() =>
-            dataToCsv(spfFailureColumns[0].columns, spfFailureNodes)
-          }
+          exportDataFunction={() => dataToCsv(spfFailureColumns[0].columns, spfFailureNodes)}
+          onToggle={failSpfToggle}
         />
       </ErrorBoundary>
     )
@@ -479,10 +531,7 @@ export default function DmarcReportPage() {
     )
   }
   // DMARC Failure query no longer loading, check if data exists
-  else if (
-    tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables
-      ?.dmarcFailure?.edges.length > 0
-  ) {
+  else if (tableData?.findDomainByDomain?.dmarcSummaryByPeriod?.detailTables?.dmarcFailure?.edges.length > 0) {
     const dmarcFailureColumns = [
       {
         Header: t`DMARC Failures by IP Address`,
@@ -502,20 +551,19 @@ export default function DmarcReportPage() {
     ]
 
     // Convert boolean values to string and properly format
-    const dmarcFailureNodes =
-      tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
-        (edge) => {
-          const node = { ...edge.node }
+    const dmarcFailureNodes = tableData.findDomainByDomain.dmarcSummaryByPeriod.detailTables.dmarcFailure.edges.map(
+      (edge) => {
+        const node = { ...edge.node }
 
-          // calculate dmarcFailStats totals
-          dmarcFailStats[node.disposition] += node.totalMessages
+        // calculate dmarcFailStats totals
+        dmarcFailStats[node.disposition] += node.totalMessages
 
-          node.spfDomains = node.spfDomains.replace(/,/g, ', ')
-          node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
-          node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
-          return node
-        },
-      )
+        node.spfDomains = node.spfDomains.replace(/,/g, ', ')
+        node.dkimDomains = node.dkimDomains.replace(/,/g, ', ')
+        node.dkimSelectors = node.dkimSelectors.replace(/,/g, ', ')
+        return node
+      },
+    )
 
     dmarcFailureTable = (
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
@@ -527,9 +575,8 @@ export default function DmarcReportPage() {
           frontendPagination={true}
           searchPlaceholder={t`Search DMARC Failing Items`}
           fileName={fileName}
-          exportDataFunction={() =>
-            dataToCsv(dmarcFailureColumns[0].columns, dmarcFailureNodes)
-          }
+          exportDataFunction={() => dataToCsv(dmarcFailureColumns[0].columns, dmarcFailureNodes)}
+          onToggle={failDmarcToggle}
         />
       </ErrorBoundary>
     )
@@ -547,22 +594,23 @@ export default function DmarcReportPage() {
     )
   }
 
-  const fakeEmailDomainBlocks =
-    dmarcFailStats.reject + dmarcFailStats.quarantine
+  const fakeEmailDomainBlocks = dmarcFailStats.reject + dmarcFailStats.quarantine
   const domainSpoofingVolume = fakeEmailDomainBlocks + dmarcFailStats.none
 
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+      <NotificationBanner bg="yellow.200" my="4">
+        <Text fontWeight="medium">
+          <Trans>
+            <b>The following data may have recently changed.</b> We've made enhancements to our DMARC data tables to
+            provide a more accurate view of the information.
+          </Trans>
+        </Text>
+      </NotificationBanner>
       <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
-        <AccordionItem buttonLabel={t`Fully Aligned by IP Address`}>
-          {fullPassTable}
-        </AccordionItem>
-        <AccordionItem buttonLabel={t`DKIM Failures by IP Address`}>
-          {dkimFailureTable}
-        </AccordionItem>
-        <AccordionItem buttonLabel={t`SPF Failures by IP Address`}>
-          {spfFailureTable}
-        </AccordionItem>
+        <AccordionItem buttonLabel={t`Fully Aligned by IP Address`}>{fullPassTable}</AccordionItem>
+        <AccordionItem buttonLabel={t`DKIM Failures by IP Address`}>{dkimFailureTable}</AccordionItem>
+        <AccordionItem buttonLabel={t`SPF Failures by IP Address`}>{spfFailureTable}</AccordionItem>
         <AccordionItem buttonLabel={t`DMARC Failures by IP Address`}>
           {dmarcFailureTable}
           <Box py="2">
@@ -574,10 +622,7 @@ export default function DmarcReportPage() {
             </Flex>
             <Flex>
               <Text fontWeight="bold" mr="1">
-                <Trans>
-                  Volume of messages spoofing domain (reject + quarantine +
-                  none):
-                </Trans>
+                <Trans>Volume of messages spoofing domain (reject + quarantine + none):</Trans>
               </Text>
               <Text>{domainSpoofingVolume}</Text>
             </Flex>
@@ -589,20 +634,13 @@ export default function DmarcReportPage() {
 
   return (
     <Box width="100%" px="2" mx="auto" overflow="hidden" pb="4">
-      <Box d={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
+      <Box display={{ md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr 1fr' }}>
         <Box />
         <Heading as="h1" textAlign="center" mb="4">
           {domainSlug.toUpperCase()}
         </Heading>
         <Flex>
-          <Link
-            ml="auto"
-            my="auto"
-            color="teal.600"
-            whiteSpace="noWrap"
-            to={`/domains/${domainSlug}`}
-            as={RouteLink}
-          >
+          <Link ml="auto" my="auto" color="teal.600" whiteSpace="noWrap" to={`/domains/${domainSlug}`} as={RouteLink}>
             <Trans>Guidance</Trans>
             <LinkIcon ml="4px" aria-hidden="true" />
           </Link>
@@ -612,13 +650,7 @@ export default function DmarcReportPage() {
       {graphDisplay}
 
       <Flex align="center" mb={2}>
-        <Text
-          as="label"
-          htmlFor="data-date-range"
-          fontWeight="bold"
-          textAlign="center"
-          mr={1}
-        >
+        <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>
           <Trans>Showing data for period: </Trans>
         </Text>
         <MonthSelect
@@ -630,67 +662,55 @@ export default function DmarcReportPage() {
       </Flex>
 
       {tableDisplay}
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
-      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
-        <InfoBox
-          title="Source IP Address"
-          info="The IP address of sending server."
-        />
-        <InfoBox
-          title="DNS Host"
-          info="Host from reverse DNS of source IP address."
-        />
-        <InfoBox
-          title="Envelope From"
-          info="Domain from Simple Mail Transfer Protocol (SMTP) banner message."
-        />
-        <InfoBox
-          title="Header From"
-          info='The address/domain used in the "From" field.'
-        />
-        <InfoBox
-          title="Total Messages"
-          info="The Total Messages from this sender."
-        />
-        <InfoBox
-          title="DKIM Domains"
-          info="The domains used for DKIM validation."
-        />
-        <InfoBox
-          title="DKIM Selectors"
-          info="Pointer to a DKIM public key record in DNS."
-        />
-        <InfoBox
-          title="DKIM Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, temp-error, or perm-error."
-        />
-        <InfoBox
-          title="DKIM Aligned"
-          info="Is DKIM aligned. Can be true or false."
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="SPF Results"
-          info="The results of DKIM verification of the message. Can be pass, fail, neutral, soft-fail, temp-error, or perm-error."
-        />
-        <InfoBox
-          title="SPF Aligned"
-          info="Is SPF aligned. Can be true or false."
-        />
-        <InfoBox title="SPF Domains" info="Domains used for SPF validation." />
-        <InfoBox
-          title="Disposition"
-          info="The DMARC enforcement action that the receiver took, either none, quarantine, or reject."
-        />
-        <InfoBox
-          title="Guidance"
-          info="Details for a given guidance tag can be found on the wiki, see below."
-        />
+
+      <InfoPanel isOpen={fullPassOpen} onToggle={fullPassToggle}>
+        {generalGlossary}
+        <InfoBox title={glossary.spfDomains.title} info={glossary.spfDomains.info} />
+        <InfoBox title={glossary.dkimDomains.title} info={glossary.dkimDomains.info} />
+        <InfoBox title={glossary.dkimSelectors.title} info={glossary.dkimSelectors.info} />
+        <InfoBox title={glossary.totalMessages.title} info={glossary.totalMessages.info} />
         <Divider borderColor="gray.500" />
-        <Link
-          isExternal
-          href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags"
-        >
+        <Link isExternal href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags">
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
+
+      <InfoPanel isOpen={failDkimOpen} onToggle={failDkimToggle}>
+        {generalGlossary}
+        <InfoBox title={glossary.dkimDomains.title} info={glossary.dkimDomains.info} />
+        <InfoBox title={glossary.dkimSelectors.title} info={glossary.dkimSelectors.info} />
+        <InfoBox title={glossary.dkimResults.title} info={glossary.dkimResults.info} />
+        <InfoBox title={glossary.dkimAligned.title} info={glossary.dkimAligned.info} />
+        <InfoBox title={glossary.totalMessages.title} info={glossary.totalMessages.info} />
+        <InfoBox title={glossary.guidance.title} info={glossary.guidance.info} />
+        <Divider borderColor="gray.500" />
+        <Link isExternal href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags">
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
+
+      <InfoPanel isOpen={failSpfOpen} onToggle={failSpfToggle}>
+        {generalGlossary}
+        <InfoBox title={glossary.spfDomains.title} info={glossary.spfDomains.info} />
+        <InfoBox title={glossary.spfResults.title} info={glossary.spfResults.info} />
+        <InfoBox title={glossary.spfAligned.title} info={glossary.spfAligned.info} />
+        <InfoBox title={glossary.totalMessages.title} info={glossary.totalMessages.info} />
+        <InfoBox title={glossary.guidance.title} info={glossary.guidance.info} />
+        <Divider borderColor="gray.500" />
+        <Link isExternal href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags">
+          https://github.com/canada-ca/tracker/wiki/Guidance-Tags
+        </Link>
+      </InfoPanel>
+
+      <InfoPanel isOpen={failDmarcOpen} onToggle={failDmarcToggle}>
+        {generalGlossary}
+        <InfoBox title={glossary.spfDomains.title} info={glossary.spfDomains.info} />
+        <InfoBox title={glossary.dkimDomains.title} info={glossary.dkimDomains.info} />
+        <InfoBox title={glossary.dkimSelectors.title} info={glossary.dkimSelectors.info} />
+        <InfoBox title={glossary.disposition.title} info={glossary.disposition.info} />
+        <InfoBox title={glossary.totalMessages.title} info={glossary.totalMessages.info} />
+        <Divider borderColor="gray.500" />
+        <Link isExternal href="https://github.com/canada-ca/tracker/wiki/Guidance-Tags">
           https://github.com/canada-ca/tracker/wiki/Guidance-Tags
         </Link>
       </InfoPanel>

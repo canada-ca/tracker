@@ -13,11 +13,7 @@ import { UserList } from '../UserList'
 import { UserVarProvider } from '../../utilities/userState'
 import { createCache } from '../../client'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../../graphql/queries'
-import {
-  UPDATE_USER_ROLE,
-  INVITE_USER_TO_ORG,
-  REMOVE_USER_FROM_ORG,
-} from '../../graphql/mutations'
+import { UPDATE_USER_ROLE, INVITE_USER_TO_ORG, REMOVE_USER_FROM_ORG } from '../../graphql/mutations'
 import { rawOrgUserListData } from '../../fixtures/orgUserListData'
 
 const i18n = setupI18n({
@@ -34,14 +30,26 @@ const successMocks = [
   {
     request: {
       query: FORWARD,
-      variables: { first: 10, orgSlug: 'test-org.slug', search: '' },
+      variables: {
+        first: 20,
+        orgSlug: 'test-org.slug',
+        search: '',
+        includePending: true,
+        orderBy: { direction: 'ASC', field: 'PERMISSION' },
+      },
     },
     result: { data: rawOrgUserListData },
   },
   {
     request: {
       query: FORWARD,
-      variables: { first: 10, orgSlug: 'test-org.slug' },
+      variables: {
+        first: 20,
+        orgSlug: 'test-org.slug',
+        search: '',
+        includePending: true,
+        orderBy: { direction: 'ASC', field: 'PERMISSION' },
+      },
     },
     result: { data: rawOrgUserListData },
   },
@@ -49,9 +57,7 @@ const successMocks = [
     request: {
       query: UPDATE_USER_ROLE,
       variables: {
-        userName:
-          rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
-            .user.userName,
+        userName: rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node.user.userName,
         orgId: rawOrgUserListData.findOrganizationBySlug.id,
         role: 'ADMIN',
       },
@@ -94,9 +100,7 @@ const successMocks = [
     request: {
       query: REMOVE_USER_FROM_ORG,
       variables: {
-        userId:
-          rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
-            .user.id,
+        userId: rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node.user.id,
         orgId: rawOrgUserListData.findOrganizationBySlug.id,
       },
     },
@@ -122,15 +126,13 @@ describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
     const { getByText } = render(
       <MockedProvider mocks={successMocks} cache={createCache()}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']}>
                 <UserList
+                  includePending={true}
                   permission={'SUPER_ADMIN'}
-                  usersPerPage={10}
                   orgSlug={'test-org.slug'}
                   orgId={rawOrgUserListData.findOrganizationBySlug.id}
                 />
@@ -143,10 +145,7 @@ describe('<UserList />', () => {
 
     await waitFor(() =>
       expect(
-        getByText(
-          rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node
-            .user.userName,
-        ),
+        getByText(rawOrgUserListData.findOrganizationBySlug.affiliations.edges[0].node.user.userName),
       ).toBeInTheDocument(),
     )
   })
@@ -156,13 +155,7 @@ describe('<UserList />', () => {
 
     // edit success
     it('updateUserRole elements render', async () => {
-      const {
-        getAllByText,
-        getByDisplayValue,
-        getByText,
-        findByLabelText,
-        findAllByLabelText,
-      } = render(
+      const { getAllByText, getByDisplayValue, getByText, findByLabelText, findAllByLabelText } = render(
         <MockedProvider mocks={successMocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
@@ -174,8 +167,8 @@ describe('<UserList />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <UserList
+                  includePending={true}
                   permission={'SUPER_ADMIN'}
-                  usersPerPage={10}
                   orgSlug={'test-org.slug'}
                   orgId={rawOrgUserListData.findOrganizationBySlug.id}
                 />
@@ -233,6 +226,7 @@ describe('<UserList />', () => {
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <UserList
+                    includePending={true}
                     permission={'SUPER_ADMIN'}
                     usersPerPage={10}
                     orgSlug={'test-org.slug'}
@@ -272,8 +266,8 @@ describe('<UserList />', () => {
               <I18nProvider i18n={i18n}>
                 <MemoryRouter initialEntries={['/']}>
                   <UserList
+                    includePending={true}
                     permission={'SUPER_ADMIN'}
-                    usersPerPage={10}
                     orgSlug={'test-org.slug'}
                     orgId={rawOrgUserListData.findOrganizationBySlug.id}
                   />

@@ -32,15 +32,10 @@ describe('<AdminPage />', () => {
   it('shows a list of the users organizations', async () => {
     const { getByText } = render(
       <MockedProvider mocks={mocks()} addTypename={false}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter
-                initialEntries={['/admin/organizations']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/admin/organizations']} initialIndex={0}>
                 <AdminPage />
               </MemoryRouter>
             </ChakraProvider>
@@ -67,10 +62,7 @@ describe('<AdminPage />', () => {
         >
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter
-                initialEntries={['/admin/organizations']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/admin/organizations']} initialIndex={0}>
                 <AdminPage />
               </MemoryRouter>
             </ChakraProvider>
@@ -107,10 +99,7 @@ describe('<AdminPage />', () => {
         >
           <I18nProvider i18n={i18n}>
             <ChakraProvider theme={theme}>
-              <MemoryRouter
-                initialEntries={['/admin/organizations']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/admin/organizations']} initialIndex={0}>
                 <AdminPage />
               </MemoryRouter>
             </ChakraProvider>
@@ -247,7 +236,13 @@ function mocks() {
     {
       request: {
         query: PAGINATED_ORG_DOMAINS_ADMIN_PAGE,
-        variables: { orgSlug: 'Wolf-Group', first: 10, search: '' },
+        variables: {
+          first: 20,
+          orgSlug: 'Wolf-Group',
+          search: '',
+          orderBy: { field: 'DOMAIN', direction: 'ASC' },
+          filters: [],
+        },
       },
       result: {
         data: {
@@ -295,7 +290,13 @@ function mocks() {
     {
       request: {
         query: PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE,
-        variables: { orgSlug: 'Wolf-Group', first: 10, search: '' },
+        variables: {
+          orgSlug: 'Wolf-Group',
+          first: 20,
+          search: '',
+          includePending: true,
+          orderBy: { field: 'PERMISSION', direction: 'ASC' },
+        },
       },
       result: {
         data: {

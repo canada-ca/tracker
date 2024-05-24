@@ -10,7 +10,7 @@ describe('given the user object', () => {
       const demoType = userSharedType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a displayName field', () => {
       const demoType = userSharedType.getFields()
@@ -31,27 +31,21 @@ describe('given the user object', () => {
       it('returns the resolved field', () => {
         const demoType = userSharedType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('user', '1'),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('user', '1'))
       })
     })
     describe('testing the displayName field', () => {
       it('returns the resolved value', () => {
         const demoType = userSharedType.getFields()
 
-        expect(
-          demoType.displayName.resolve({ displayName: 'Display Name' }),
-        ).toEqual('Display Name')
+        expect(demoType.displayName.resolve({ displayName: 'Display Name' })).toEqual('Display Name')
       })
     })
     describe('testing the userName field', () => {
       it('returns the resolved value', () => {
         const demoType = userSharedType.getFields()
 
-        expect(
-          demoType.userName.resolve({ userName: 'test@email.gc.ca' }),
-        ).toEqual('test@email.gc.ca')
+        expect(demoType.userName.resolve({ userName: 'test@email.gc.ca' })).toEqual('test@email.gc.ca')
       })
     })
   })

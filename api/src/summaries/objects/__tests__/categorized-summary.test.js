@@ -7,9 +7,7 @@ describe('given the categorized summary gql object', () => {
       const demoType = categorizedSummaryType.getFields()
 
       expect(demoType).toHaveProperty('categories')
-      expect(demoType.categories.type).toMatchObject(
-        GraphQLList(summaryCategoryType),
-      )
+      expect(demoType.categories.type).toMatchObject(new GraphQLList(summaryCategoryType))
     })
     it('has a total field', () => {
       const demoType = categorizedSummaryType.getFields()

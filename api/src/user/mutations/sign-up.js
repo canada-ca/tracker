@@ -6,52 +6,48 @@ import { GraphQLEmailAddress } from 'graphql-scalars'
 import { LanguageEnums } from '../../enums'
 import { signUpUnion } from '../unions'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
+import ms from 'ms'
 
-const { REFRESH_TOKEN_EXPIRY, REFRESH_KEY } = process.env
+const { REFRESH_TOKEN_EXPIRY, SIGN_IN_KEY, AUTH_TOKEN_EXPIRY } = process.env
 
 export const signUp = new mutationWithClientMutationId({
   name: 'SignUp',
-  description:
-    'This mutation allows for new users to sign up for our sites services.',
+  description: 'This mutation allows for new users to sign up for our sites services.',
   inputFields: () => ({
     displayName: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The name that will be displayed to other users.',
     },
     userName: {
-      type: GraphQLNonNull(GraphQLEmailAddress),
+      type: new GraphQLNonNull(GraphQLEmailAddress),
       description: 'Email address that the user will use to authenticate with.',
     },
     password: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The password the user will authenticate with.',
     },
     confirmPassword: {
-      type: GraphQLNonNull(GraphQLString),
-      description:
-        'A secondary password field used to confirm the user entered the correct password.',
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'A secondary password field used to confirm the user entered the correct password.',
     },
     preferredLang: {
-      type: GraphQLNonNull(LanguageEnums),
+      type: new GraphQLNonNull(LanguageEnums),
       description: 'The users preferred language.',
     },
     signUpToken: {
       type: GraphQLString,
-      description:
-        'A token sent by email, that will assign a user to an organization with a pre-determined role.',
+      description: 'A token sent by email, that will assign a user to an organization with a pre-determined role.',
     },
     rememberMe: {
       type: GraphQLBoolean,
       defaultValue: false,
-      description:
-        'Whether or not the user wants to stay signed in after leaving the site.',
+      description: 'Whether or not the user wants to stay signed in after leaving the site.',
     },
   }),
   outputFields: () => ({
     result: {
       type: signUpUnion,
-      description:
-        '`SignUpUnion` returning either a `AuthResult`, or `SignUpError` object.',
+      description: '`SignUpUnion` returning either a `TFASignInResult`, or `SignUpError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -62,12 +58,10 @@ export const signUp = new mutationWithClientMutationId({
       collections,
       query,
       transaction,
-      request,
-      response,
       uuidv4,
       auth: { bcrypt, tokenize, verifyToken },
       loaders: { loadOrgByKey, loadUserByUserName, loadUserByKey },
-      notify: { sendVerificationEmail },
+      notify: { sendAuthEmail },
       validators: { cleanseInput },
     },
   ) => {
@@ -82,9 +76,7 @@ export const signUp = new mutationWithClientMutationId({
 
     // Check to make sure password meets length requirement
     if (password.length < 12) {
-      console.warn(
-        `User: ${userName} tried to sign up but did not meet requirements.`,
-      )
+      console.warn(`User: ${userName} tried to sign up but did not meet requirements.`)
       return {
         _type: 'error',
         code: 400,
@@ -94,9 +86,7 @@ export const signUp = new mutationWithClientMutationId({
 
     // Check that password and password confirmation match
     if (password !== confirmPassword) {
-      console.warn(
-        `User: ${userName} tried to sign up but passwords do not match.`,
-      )
+      console.warn(`User: ${userName} tried to sign up but passwords do not match.`)
       return {
         _type: 'error',
         code: 400,
@@ -108,9 +98,7 @@ export const signUp = new mutationWithClientMutationId({
     const checkUser = await loadUserByUserName.load(userName)
 
     if (typeof checkUser !== 'undefined') {
-      console.warn(
-        `User: ${userName} tried to sign up, however there is already an account in use with that email.`,
-      )
+      console.warn(`User: ${userName} tried to sign up, however there is already an account in use with that email.`)
       return {
         _type: 'error',
         code: 400,
@@ -122,6 +110,7 @@ export const signUp = new mutationWithClientMutationId({
     const hashedPassword = bcrypt.hashSync(password, 10)
 
     const refreshId = uuidv4()
+    const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
     // Create User Structure for insert
     const user = {
@@ -132,14 +121,14 @@ export const signUp = new mutationWithClientMutationId({
       phoneValidated: false,
       emailValidated: false,
       insideUser: false,
+      receiveUpdateEmails: true,
       failedLoginAttempts: 0,
-      tfaSendMethod: 'none',
+      tfaSendMethod: 'email',
+      tfaCode: tfaCode,
       refreshInfo: {
         refreshId,
         rememberMe,
-        expiresAt: new Date(
-          new Date().getTime() + REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
-        ),
+        expiresAt: new Date(new Date().getTime() + ms(String(REFRESH_TOKEN_EXPIRY))),
       },
     }
 
@@ -151,7 +140,7 @@ export const signUp = new mutationWithClientMutationId({
       insertedUserCursor = await trx.step(
         () => query`
           WITH users
-          INSERT ${user} INTO users 
+          INSERT ${user} INTO users
           RETURN MERGE(
             {
               id: NEW._key,
@@ -172,9 +161,7 @@ export const signUp = new mutationWithClientMutationId({
     try {
       insertedUser = await insertedUserCursor.next()
     } catch (err) {
-      console.error(
-        `Cursor error occurred while user: ${userName} attempted to sign up, creating user: ${err}`,
-      )
+      console.error(`Cursor error occurred while user: ${userName} attempted to sign up, creating user: ${err}`)
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
@@ -190,29 +177,21 @@ export const signUp = new mutationWithClientMutationId({
       const tokenRequestedRole = cleanseInput(tokenParameters.requestedRole)
 
       if (userName !== tokenUserName) {
-        console.warn(
-          `User: ${userName} attempted to sign up with an invite token, however emails do not match.`,
-        )
+        console.warn(`User: ${userName} attempted to sign up with an invite token, however emails do not match.`)
         return {
           _type: 'error',
           code: 400,
-          description: i18n._(
-            t`Unable to sign up, please contact org admin for a new invite.`,
-          ),
+          description: i18n._(t`Unable to sign up, please contact org admin for a new invite.`),
         }
       }
 
       const checkOrg = await loadOrgByKey.load(tokenOrgKey)
       if (typeof checkOrg === 'undefined') {
-        console.warn(
-          `User: ${userName} attempted to sign up with an invite token, however the org could not be found.`,
-        )
+        console.warn(`User: ${userName} attempted to sign up with an invite token, however the org could not be found.`)
         return {
           _type: 'error',
           code: 400,
-          description: i18n._(
-            t`Unable to sign up, please contact org admin for a new invite.`,
-          ),
+          description: i18n._(t`Unable to sign up, please contact org admin for a new invite.`),
         }
       }
 
@@ -225,7 +204,6 @@ export const signUp = new mutationWithClientMutationId({
               _from: ${checkOrg._id},
               _to: ${insertedUser._id},
               permission: ${tokenRequestedRole},
-              owner: false
             } INTO affiliations
           `,
         )
@@ -240,48 +218,20 @@ export const signUp = new mutationWithClientMutationId({
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Transaction commit error occurred while user: ${userName} attempted to sign up: ${err}`,
-      )
+      console.error(`Transaction commit error occurred while user: ${userName} attempted to sign up: ${err}`)
       throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
     const returnUser = await loadUserByKey.load(insertedUser._key)
+    await sendAuthEmail({ user: returnUser })
 
-    // Generate JWTs
-    const token = tokenize({ parameters: { userKey: insertedUser._key } })
-
-    const verifyUrl = `https://${request.get('host')}/validate/${token}`
-
-    await sendVerificationEmail({ user: returnUser, verifyUrl })
-
-    const refreshToken = tokenize({
-      parameters: { userKey: user._key, uuid: refreshId },
-      expPeriod: 168,
-      secret: String(REFRESH_KEY),
+    const authenticateToken = tokenize({
+      expiresIn: AUTH_TOKEN_EXPIRY,
+      parameters: { userKey: insertedUser._key },
+      secret: String(SIGN_IN_KEY),
     })
 
-    // if the user does not want to stay logged in, create http session cookie
-    let cookieData = {
-      httpOnly: true,
-      secure: true,
-      sameSite: true,
-      expires: 0,
-    }
-
-    // if user wants to stay logged in create normal http cookie
-    if (rememberMe) {
-      cookieData = {
-        maxAge: REFRESH_TOKEN_EXPIRY * 60 * 24 * 60 * 1000,
-        httpOnly: true,
-        secure: true,
-        sameSite: true,
-      }
-    }
-
-    response.cookie('refresh_token', refreshToken, cookieData)
-
-    console.info(`User: ${userName} successfully created a new account.`)
+    console.info(`User: ${userName} successfully created a new account, and sent auth msg.`)
     await logActivity({
       transaction,
       collections,
@@ -297,9 +247,9 @@ export const signUp = new mutationWithClientMutationId({
     })
 
     return {
-      _type: 'authResult',
-      token,
-      user: returnUser,
+      _type: 'tfa',
+      sendMethod: 'email',
+      authenticateToken,
     }
   },
 })

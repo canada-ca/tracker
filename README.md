@@ -16,15 +16,12 @@ As is common with microservices projects, this repository is organized in the [m
 ```
 .
 ├── api
-├── app
 ├── ci
 ├── clients
 ├── CONTRIBUTING.md
-├── deploy
 ├── frontend
 ├── guidance
 ├── Makefile
-├── platform
 ├── README.md
 ├── scripts
 ├── SECURITY.md
@@ -35,7 +32,7 @@ The [ci](ci/README.md) folder contains an image used in the CI process, but the 
 
 The [frontend](frontend/README.md) and [api](api/README.md) folders contain the two main parts parts of the application.
 
-The [app](app/README.md), [platform](platform/README.md) and [deploy](deploy/README.md) folders contain the Kubernetes configuration needed to continuously deploy the tracker on the cloud provider of your choice.
+The [k8s](k8s/README.md) folder contain the Kubernetes configurations needed to continuously deploy the tracker on the cloud provider of your choice.
 
 The clients folder contains API clients offered as an alternative to Tracker's web frontend. Only a [Python client](clients/python/README.md) is available at this time.
 
@@ -43,11 +40,9 @@ The services folder contains smaller services dedicated to scanning or account c
 
 The scripts folder is a dumping ground for various utility scripts and codemods.
 
-
 ## Running it locally
 
 Running Tracker locally takes a few commands and a lot of RAM. See the instructions in the [app folder](app/README.md)
-
 
 ## Deploying to the cloud
 
@@ -75,23 +70,21 @@ $ make app env=<gke or aks>
 
 Tracker is now deployed. To add coninuous deployment functionality via [Flux](https://fluxcd.io/) (this will ensure the Tracker deployment stays up to date with all the latest changes), follow the instructions listed below.
 
-
 ### NOTE: Steps 1) and 2) are only required if the Tracker deployment should write back to this repository, updating image tags as necessary.
 
-
-1) Create SSH key:
-
-```
-ssh-keygen -q -N "" -C "flux-read-write" -f ./deploy/creds/readwrite/identity
-```
+1. Create SSH key:
 
 ```
-ssh-keygen github.com > ./deploy/creds/readwrite/known_hosts
+ssh-keygen -q -N "" -C "flux-read-write" -f ./k8s/clusters/auto-image-update/bases/creds/identity
 ```
 
-2) [Add key to repository](https://github.com/canada-ca/tracker/settings/keys/new)
+```
+ssh-keygen github.com > ./k8s/clusters/auto-image-update/bases/creds/known_hosts
+```
 
-3) Finally, run:
+2. [Add key to repository](https://github.com/canada-ca/tracker/settings/keys/new)
+
+3. Finally, run:
 
 ```
 $ make deploy env=<gke or aks>

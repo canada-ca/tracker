@@ -38,8 +38,8 @@ export const checkUserIsAdminForUser =
         WITH affiliations, organizations, users
         LET requestingUserOrgKeys = (
           FOR v, e IN 1 INBOUND ${requestingUserId} affiliations
-            FILTER e.permission == "admin"
-            RETURN v._key    
+            FILTER e.permission IN ["admin", "owner"]
+            RETURN v._key
         )
 
         LET requestedUser = (
@@ -50,6 +50,7 @@ export const checkUserIsAdminForUser =
 
         LET requestedUserOrgKeys = (
           FOR v, e IN 1 INBOUND requestedUser[0]._id affiliations
+            FILTER e.permission != "pending"
             RETURN v._key
         )
 
@@ -59,9 +60,7 @@ export const checkUserIsAdminForUser =
         console.error(
           `Database error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
         )
-        throw new Error(
-          i18n._(t`Permission error, not an admin for this user.`),
-        )
+        throw new Error(i18n._(t`Permission error, not an admin for this user.`))
       }
 
       let isAdmin
@@ -71,9 +70,7 @@ export const checkUserIsAdminForUser =
         console.error(
           `Cursor error when checking to see if user: ${userKey} has admin permission for user: ${userName}, error: ${err}`,
         )
-        throw new Error(
-          i18n._(t`Permission error, not an admin for this user.`),
-        )
+        throw new Error(i18n._(t`Permission error, not an admin for this user.`))
       }
 
       return isAdmin

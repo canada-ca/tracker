@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/preset-env": "^7.12.1",
-    "jscodeshift": "^0.13.1",
+    "@babel/preset-env": "^7.22.7",
+    "jscodeshift": "^0.15.0",
     "jscodeshift-helper": "^1.1.0"
   },
   "devDependencies": {

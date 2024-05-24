@@ -1,10 +1,10 @@
 {
   "type": "database",
-  "name": "{{DB_NAME}}",
-  "url": "{{DB_URL}}",
-  "rootPassword": "{{ROOT_PASS}}",
+  "name": "{{dbname}}",
+  "url": "{{url}}",
+  "rootPassword": "{{rootPassword}}",
   "options": [
-    { "type": "user", "username": "{{DB_USER}}", "password": "{{DB_PASS}}" },
+    { "type": "user", "username": "{{username}}", "password": "{{password}}" },
     {
       "type": "documentcollection",
       "name": "users",
@@ -34,7 +34,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "dkim",
+      "name": "selectors",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -43,7 +43,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "dkimResults",
+      "name": "auditLogs",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -52,7 +52,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "dmarc",
+      "name": "dns",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -61,7 +61,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "spf",
+      "name": "web",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -70,16 +70,7 @@
     },
     {
       "type": "documentcollection",
-      "name": "https",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "documentcollection",
-      "name": "ssl",
+      "name": "webScan",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -185,6 +176,24 @@
         "numberofshards": 6
       }
     },
+     {
+      "type": "documentcollection",
+      "name": "organizationSummaries",
+      "options": {
+        "replicationfactor": 3,
+        "writeconcern": 1,
+        "numberofshards": 6
+      }
+    },
+    {
+      "type": "edgecollection",
+      "name": "domainsToSelectors",
+      "options": {
+        "replicationFactor": 3,
+        "writeConcern": 1,
+        "numberOfShards": 6
+      }
+    },
     {
       "type": "edgecollection",
       "name": "affiliations",
@@ -205,7 +214,7 @@
     },
     {
       "type": "edgecollection",
-      "name": "domainsDKIM",
+      "name": "favourites",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -214,7 +223,7 @@
     },
     {
       "type": "edgecollection",
-      "name": "dkimToDkimResults",
+      "name": "domainsDNS",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -223,7 +232,7 @@
     },
     {
       "type": "edgecollection",
-      "name": "domainsDMARC",
+      "name": "domainsWeb",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -232,25 +241,7 @@
     },
     {
       "type": "edgecollection",
-      "name": "domainsSPF",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "edgecollection",
-      "name": "domainsHTTPS",
-      "options": {
-        "replicationFactor": 3,
-        "writeConcern": 1,
-        "numberOfShards": 6
-      }
-    },
-    {
-      "type": "edgecollection",
-      "name": "domainsSSL",
+      "name": "webToWebScans",
       "options": {
         "replicationFactor": 3,
         "writeConcern": 1,
@@ -330,6 +321,28 @@
             "fields": {
               "displayName": { "analyzers": ["text_en"] },
               "userName": { "analyzers": ["text_en"] }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "searchview",
+      "name": "auditLogSearch",
+      "options": {
+        "links": {
+          "auditLogs": {
+            "fields": {
+              "initiatedBy": {
+                "fields": {
+                  "userName": { "analyzers": ["text_en"] }
+                }
+              },
+              "target": {
+                "fields": {
+                  "resource": { "analyzers": ["text_en"] }
+                }
+              }
             }
           }
         }

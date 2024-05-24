@@ -1,8 +1,5 @@
 import { GraphQLUnionType } from 'graphql'
-import {
-  updateUserProfileErrorType,
-  updateUserProfileResultType,
-} from '../objects'
+import { updateUserProfileErrorType, updateUserProfileResultType } from '../objects'
 
 export const updateUserProfileUnion = new GraphQLUnionType({
   name: 'UpdateUserProfileUnion',
@@ -11,9 +8,9 @@ export const updateUserProfileUnion = new GraphQLUnionType({
   types: [updateUserProfileErrorType, updateUserProfileResultType],
   resolveType({ _type }) {
     if (_type === 'success') {
-      return updateUserProfileResultType
+      return updateUserProfileResultType.name
     } else {
-      return updateUserProfileErrorType
+      return updateUserProfileErrorType.name
     }
   },
 })

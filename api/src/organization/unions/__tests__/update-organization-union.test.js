@@ -22,9 +22,7 @@ describe('given the updateOrganizationUnion', () => {
           domain: {},
         }
 
-        expect(updateOrganizationUnion.resolveType(obj)).toMatchObject(
-          organizationType,
-        )
+        expect(updateOrganizationUnion.resolveType(obj)).toMatch(organizationType.name)
       })
     })
     describe('testing the organizationErrorType', () => {
@@ -36,9 +34,7 @@ describe('given the updateOrganizationUnion', () => {
           description: 'text',
         }
 
-        expect(updateOrganizationUnion.resolveType(obj)).toMatchObject(
-          organizationErrorType,
-        )
+        expect(updateOrganizationUnion.resolveType(obj)).toMatch(organizationErrorType.name)
       })
     })
   })

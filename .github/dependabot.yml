@@ -42,6 +42,20 @@ updates:
     time: "11:00"
   open-pull-requests-limit: 5
 
+- package-ecosystem: pip
+  directory: "/scanners/web-scanner"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 5
+
+- package-ecosystem: docker
+  directory: "/scanners/web-scanner"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 5
+
 - package-ecosystem: docker
   directory: "/services/auto-scan"
   schedule:

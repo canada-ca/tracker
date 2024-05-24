@@ -20,7 +20,7 @@ describe('tokenize()', () => {
       const token = tokenize({ secret: 'foo' })
 
       const decoded = jwt.verify(token, 'foo')
-      expect(decoded.exp - decoded.iat).toEqual(3600)
+      expect(decoded.exp - decoded.iat).toEqual(900)
     })
   })
 })

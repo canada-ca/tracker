@@ -7,11 +7,11 @@ export const affiliationOrgOrder = new GraphQLInputObjectType({
   description: 'Ordering options for affiliation connections.',
   fields: () => ({
     field: {
-      type: GraphQLNonNull(AffiliationOrgOrderField),
+      type: new GraphQLNonNull(AffiliationOrgOrderField),
       description: 'The field to order affiliations by.',
     },
     direction: {
-      type: GraphQLNonNull(OrderDirection),
+      type: new GraphQLNonNull(OrderDirection),
       description: 'The ordering direction.',
     },
   }),

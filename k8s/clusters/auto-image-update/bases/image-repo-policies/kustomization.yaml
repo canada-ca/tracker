@@ -2,18 +2,25 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - api-image-repo-policy.yaml
+  - database-migration-image-repo-policy.yaml
   - dmarc-report-image-repo-policy.yaml
   - dns-processor-image-repo-policy.yaml
   - dns-scanner-image-repo-policy.yaml
+  - domain-cleanup-image-repo-policy.yaml
+  - domain-discovery-image-repo-policy.yaml
   - domain-dispatcher-image-repo-policy.yaml
   - frontend-image-repo-policy.yaml
+  - frontend-maintenance-image-repo-policy.yaml
   - guidance-image-repo-policy.yaml
-  - https-processor-image-repo-policy.yaml
-  - https-scanner-image-repo-policy.yaml
   - log4shell-processor-image-repo-policy.yaml
   - log4shell-scanner-image-repo-policy.yaml
+  - org-footprint-image-repo-policy.yaml
+  - progress-report-image-repo-policy.yaml
   - spring4shell-scanner-image-repo-policy.yaml
   - summaries-image-repo-policy.yaml
   - super-admin-image-repo-policy.yaml
-  - tls-processor-image-repo-policy.yaml
-  - tls-scanner-image-repo-policy.yaml
+  - update-selectors-image-repo-policy.yaml
+  - web-processor-image-repo-policy.yaml
+  - web-scanner-image-repo-policy.yaml
+  - label-known-easm-assets-image-repo-policy.yaml
+  - add-domain-to-easm-image-repo-policy.yaml

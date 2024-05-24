@@ -92,9 +92,9 @@ describe('user send password reset email', () => {
 
         const token = tokenize({ parameters: { userKey: user._key } })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyAccount(input: { verifyTokenString: "${token}" }) {
                 result {
@@ -109,8 +109,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             userKey: user._key,
@@ -127,14 +127,13 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
             verifyAccount: {
               result: {
-                status:
-                  'Successfully email verified account, and set TFA send method to email.',
+                status: 'Successfully email verified account, and set TFA send method to email.',
               },
             },
           },
@@ -148,9 +147,7 @@ describe('user send password reset email', () => {
         user = await cursor.next()
 
         expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully email validated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully email validated their account.`])
       })
       it('sets emailValidated to true', async () => {
         let cursor = await query`
@@ -162,9 +159,9 @@ describe('user send password reset email', () => {
 
         const token = tokenize({ parameters: { userKey: user._key } })
 
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyAccount(input: { verifyTokenString: "${token}" }) {
                 result {
@@ -179,8 +176,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             userKey: user._key,
@@ -197,7 +194,7 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         cursor = await query`
             FOR user IN users
@@ -243,9 +240,9 @@ describe('user send password reset email', () => {
 
         const token = tokenize({ parameters: { userKey: user._key } })
 
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyAccount(input: { verifyTokenString: "${token}" }) {
                 result {
@@ -260,8 +257,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             userKey: user._key,
@@ -278,7 +275,7 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -300,9 +297,7 @@ describe('user send password reset email', () => {
 
         expect(response).toEqual(expectedResult)
         expect(user.emailValidated).toEqual(true)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully email validated their account.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully email validated their account.`])
       })
       it('sets emailValidated to true', async () => {
         let cursor = await query`
@@ -314,9 +309,9 @@ describe('user send password reset email', () => {
 
         const token = tokenize({ parameters: { userKey: user._key } })
 
-        await graphql(
+        await graphql({
           schema,
-          `
+          source: `
             mutation {
               verifyAccount(input: { verifyTokenString: "${token}" }) {
                 result {
@@ -331,8 +326,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             userKey: user._key,
@@ -349,7 +344,7 @@ describe('user send password reset email', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         cursor = await query`
             FOR user IN users
@@ -384,9 +379,9 @@ describe('user send password reset email', () => {
             parameters: {},
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -401,8 +396,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: 123,
@@ -427,15 +422,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to verify account. Please request a new email.',
+                  description: 'Unable to verify account. Please request a new email.',
                 },
               },
             },
@@ -453,9 +447,9 @@ describe('user send password reset email', () => {
             parameters: { userKey: undefined },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -470,8 +464,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: 123,
@@ -496,15 +490,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to verify account. Please request a new email.',
+                  description: 'Unable to verify account. Please request a new email.',
                 },
               },
             },
@@ -521,9 +514,9 @@ describe('user send password reset email', () => {
           const token = tokenize({
             parameters: { userKey: 1 },
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -538,8 +531,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: 1,
@@ -558,15 +551,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to verify account. Please request a new email.',
+                  description: 'Unable to verify account. Please request a new email.',
                 },
               },
             },
@@ -585,9 +577,9 @@ describe('user send password reset email', () => {
               parameters: { userKey: 123 },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -602,19 +594,15 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(
-                      new Error('Transaction step error occurred.'),
-                    ),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error occurred.')),
                 }),
                 auth: {
                   verifyToken: verifyToken({}),
@@ -635,11 +623,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to verify account. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to verify account. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -655,9 +641,9 @@ describe('user send password reset email', () => {
               parameters: { userKey: 123 },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -672,8 +658,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
@@ -681,11 +667,7 @@ describe('user send password reset email', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(
-                      new Error('Transaction commit error occurred.'),
-                    ),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error occurred.')),
                 }),
                 auth: {
                   verifyToken: verifyToken({}),
@@ -706,11 +688,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to verify account. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to verify account. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -741,9 +721,9 @@ describe('user send password reset email', () => {
             parameters: {},
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -758,8 +738,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: 123,
@@ -784,15 +764,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
+                  description: 'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -810,9 +789,9 @@ describe('user send password reset email', () => {
             parameters: { userKey: undefined },
           })
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -827,8 +806,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: 123,
@@ -853,15 +832,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
+                  description: 'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -878,9 +856,9 @@ describe('user send password reset email', () => {
           const token = tokenize({
             parameters: { userKey: 1 },
           })
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -895,8 +873,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: 1,
@@ -915,15 +893,14 @@ describe('user send password reset email', () => {
                 },
               },
             },
-          )
+          })
 
           const error = {
             data: {
               verifyAccount: {
                 result: {
                   code: 400,
-                  description:
-                    'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
+                  description: 'Impossible de vérifier le compte. Veuillez demander un nouvel e-mail.',
                 },
               },
             },
@@ -942,9 +919,9 @@ describe('user send password reset email', () => {
               parameters: { userKey: 123 },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -959,19 +936,15 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(
-                      new Error('Transaction step error occurred.'),
-                    ),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error occurred.')),
                 }),
                 auth: {
                   verifyToken: verifyToken({}),
@@ -992,13 +965,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de vérifier le compte. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de vérifier le compte. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1014,9 +983,9 @@ describe('user send password reset email', () => {
               parameters: { userKey: 123 },
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   verifyAccount(input: { verifyTokenString: "${token}" }) {
                     result {
@@ -1031,8 +1000,8 @@ describe('user send password reset email', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
@@ -1040,11 +1009,7 @@ describe('user send password reset email', () => {
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(
-                      new Error('Transaction commit error occurred.'),
-                    ),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error occurred.')),
                 }),
                 auth: {
                   verifyToken: verifyToken({}),
@@ -1065,13 +1030,9 @@ describe('user send password reset email', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de vérifier le compte. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de vérifier le compte. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

@@ -116,9 +116,7 @@ describe('<EditableUserPhoneNumber />', () => {
           fireEvent.click(confirmButton)
 
           await waitFor(() => {
-            expect(
-              getByText(/Phone number field must not be empty/i),
-            ).toBeInTheDocument()
+            expect(getByText(/Phone number field must not be empty/i)).toBeInTheDocument()
           })
         })
       })
@@ -160,14 +158,13 @@ describe('<EditableUserPhoneNumber />', () => {
             {
               request: {
                 query: VERIFY_PHONE_NUMBER,
-                variables: { twoFactorCode: 1234 },
+                variables: { twoFactorCode: 123456 },
               },
               result: {
                 data: {
                   verifyPhoneNumber: {
                     result: {
-                      status:
-                        'You have successfully verified your phone number.',
+                      status: 'You have successfully verified your phone number.',
                       user: {
                         id: '1234asdf',
                         phoneNumber: '+19025555555',
@@ -182,7 +179,7 @@ describe('<EditableUserPhoneNumber />', () => {
               },
             },
           ]
-          const { queryByText, getByText, getByRole, findByRole } = render(
+          const { queryByText, getByText, getByRole, getAllByRole } = render(
             <Suspense fallback="test loading">
               <MockedProvider addTypename={false} mocks={mocks}>
                 <UserVarProvider
@@ -223,30 +220,26 @@ describe('<EditableUserPhoneNumber />', () => {
           userEvent.clear(displayNameInput)
           userEvent.type(displayNameInput, '19025555555')
 
-          // ensure verify phone number modal is not open
-          expect(
-            queryByText(/Please enter your two factor code below/i),
-          ).not.toBeInTheDocument()
-
           const confirmButton = getByRole('button', { name: 'Confirm' })
           fireEvent.click(confirmButton)
 
-          const twoFactorCodeInput = await findByRole('textbox', {
-            name: /Please enter your two factor code below/i,
+          await waitFor(() => {
+            expect(queryByText(/Please enter your two factor code below/i)).toBeInTheDocument()
           })
 
-          userEvent.type(twoFactorCodeInput, '1234')
+          const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
+          const form = getByRole('form')
 
-          const confirmVerifyPhoneNumberButton = getByRole('button', {
-            name: 'Confirm',
+          fireEvent.change(twoFactorCode, {
+            target: {
+              value: '123456',
+            },
           })
 
-          userEvent.click(confirmVerifyPhoneNumberButton)
+          fireEvent.submit(form)
 
           await waitFor(() =>
-            expect(
-              queryByText(/You have successfully updated your phone number\./),
-            ).toBeInTheDocument(),
+            expect(queryByText(/You have successfully updated your phone number\./)).toBeInTheDocument(),
           )
         })
       })

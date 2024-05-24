@@ -5,7 +5,7 @@ steps:
   args:
     [
       '-c',
-      'docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arangodb arangodb',
+      'docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arangodb arangodb/arangodb:3.10.4',
     ]
 
 - name: mikewilliamson/wait-for
@@ -61,22 +61,17 @@ steps:
   args:
     - '-c'
     - |
-      echo "gcr.io/$PROJECT_ID/super-admin:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+      echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
 - name: 'gcr.io/cloud-builders/docker'
-  id: build-if-master
+  id: build
   entrypoint: 'bash'
   dir: services/super-admin
   args:
   - '-c'
   - |
-    if [[ "$BRANCH_NAME" == "master" ]]
-    then
-      image=$(cat /workspace/imagename)
-      docker build -t $image .
-    else
-      exit 0
-    fi
+    image=$(cat /workspace/imagename)
+    docker build -t $image .
 
 - name: 'gcr.io/cloud-builders/docker'
   id: push-if-master

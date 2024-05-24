@@ -8,8 +8,8 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import { checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
-import { loadDomainConnectionsByUserId } from '../../loaders'
+import { checkDomainPermission, checkSuperAdmin, userRequired, verifiedRequired } from '../../../auth'
+import { loadDkimSelectorsByDomainId, loadDomainConnectionsByUserId } from '../../loaders'
 import { loadUserByKey } from '../../../user'
 import dbschema from '../../../../database.json'
 
@@ -40,16 +40,16 @@ describe('given findMyDomainsQuery', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -91,7 +91,6 @@ describe('given findMyDomainsQuery', () => {
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -103,7 +102,6 @@ describe('given findMyDomainsQuery', () => {
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -111,6 +109,24 @@ describe('given findMyDomainsQuery', () => {
           spf: 'fail',
           ssl: 'fail',
         },
+      })
+      const selector1 = await collections.selectors.save({ selector: 'selector1' })
+      const selector2 = await collections.selectors.save({ selector: 'selector2' })
+      await collections.domainsToSelectors.save({
+        _from: domainOne._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domainTwo._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domainOne._id,
+        _to: selector2._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domainTwo._id,
+        _to: selector2._id,
       })
       await collections.claims.save({
         _to: domainOne._id,
@@ -129,9 +145,9 @@ describe('given findMyDomainsQuery', () => {
     })
     describe('user queries for their domains', () => {
       it('returns domains', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               findMyDomains(first: 5) {
                 edges {
@@ -153,11 +169,16 @@ describe('given findMyDomainsQuery', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             auth: {
+              checkDomainPermission: checkDomainPermission({
+                i18n,
+                userKey: user._key,
+                query,
+              }),
               checkSuperAdmin: checkSuperAdmin({
                 i18n,
                 userKey: user._key,
@@ -181,9 +202,16 @@ describe('given findMyDomainsQuery', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
               }),
+              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                auth: { loginRequiredBool: true },
+              }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -219,9 +247,7 @@ describe('given findMyDomainsQuery', () => {
           },
         }
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully retrieved their domains.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully retrieved their domains.`])
       })
     })
   })
@@ -243,13 +269,11 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDomains(first: 5) {
                   edges {
@@ -271,8 +295,8 @@ describe('given findMyDomainsQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 1,
               auth: {
@@ -290,11 +314,9 @@ describe('given findMyDomainsQuery', () => {
                 }),
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(`Unable to query domain(s). Please try again.`),
-          ]
+          const error = [new GraphQLError(`Unable to query domain(s). Please try again.`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -322,13 +344,11 @@ describe('given findMyDomainsQuery', () => {
     describe('given an error thrown during retrieving domains', () => {
       describe('user queries for their domains', () => {
         it('returns domains', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDomains(first: 5) {
                   edges {
@@ -350,8 +370,8 @@ describe('given findMyDomainsQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 1,
               auth: {
@@ -369,13 +389,9 @@ describe('given findMyDomainsQuery', () => {
                 }),
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              "Impossible d'interroger le(s) domaine(s). Veuillez réessayer.",
-            ),
-          ]
+          const error = [new GraphQLError("Impossible d'interroger le(s) domaine(s). Veuillez réessayer.")]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

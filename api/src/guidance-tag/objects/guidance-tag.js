@@ -6,8 +6,7 @@ import { nodeInterface } from '../../node'
 
 export const guidanceTagType = new GraphQLObjectType({
   name: 'GuidanceTag',
-  description:
-    'Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags',
+  description: 'Details for a given guidance tag based on https://github.com/canada-ca/tracker/wiki/Guidance-Tags',
   fields: () => ({
     id: globalIdField('guidanceTag'),
     tagId: {
@@ -22,17 +21,16 @@ export const guidanceTagType = new GraphQLObjectType({
     },
     guidance: {
       type: GraphQLString,
-      description:
-        'Guidance for changes to record, or to maintain current stance.',
+      description: 'Guidance for changes to record, or to maintain current stance.',
       resolve: ({ guidance }) => guidance,
     },
     refLinks: {
-      type: GraphQLList(refLinksType),
+      type: new GraphQLList(refLinksType),
       description: 'Links to implementation guidance for a given tag.',
       resolve: ({ refLinksGuide }) => refLinksGuide,
     },
     refLinksTech: {
-      type: GraphQLList(refLinksType),
+      type: new GraphQLList(refLinksType),
       description: 'Links to technical information for a given tag.',
       resolve: ({ refLinksTechnical }) => refLinksTechnical,
     },

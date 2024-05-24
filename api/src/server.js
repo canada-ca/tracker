@@ -1,9 +1,13 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
+import { json } from 'body-parser'
+
 import http from 'http'
-import { ApolloServerPluginLandingPageGraphQLPlayground as enablePlayground } from 'apollo-server-core'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer } from '@apollo/server'
+import { expressMiddleware } from '@apollo/server/express4'
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
+
 import requestLanguage from 'express-request-language'
 import { execute, subscribe, GraphQLSchema } from 'graphql'
 import depthLimit from 'graphql-depth-limit'
@@ -12,22 +16,14 @@ import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
-import { createSubscriptionSchema } from './subscription'
 
 const createSchema = () =>
   new GraphQLSchema({
     query: createQuerySchema(),
     mutation: createMutationSchema(),
-    subscription: createSubscriptionSchema(),
   })
 
-const createValidationRules = (
-  maxDepth,
-  complexityCost,
-  scalarCost,
-  objectCost,
-  listFactor,
-) => {
+const createValidationRules = (maxDepth, complexityCost, scalarCost, objectCost, listFactor) => {
   return [
     depthLimit(maxDepth),
     createComplexityLimitRule(complexityCost, {
@@ -52,15 +48,47 @@ export const Server = async ({
   context = {},
 }) => {
   const app = express()
-
-  app.use('*', cors())
-
-  app.use(cookieParser())
-
+  const httpServer = http.createServer(app)
+  const schema = createSchema()
+  const server = new ApolloServer({
+    schema,
+    validationRules: createValidationRules(maxDepth, complexityCost, scalarCost, objectCost, listFactor),
+    introspection: true,
+    tracing,
+    plugins: [
+      // eslint-disable-next-line new-cap
+      ApolloServerPluginLandingPageLocalDefault(),
+    ],
+  })
+  await server.start()
   app.use(
+    '/graphql',
+    cors(),
+    cookieParser(),
+    json(),
     requestLanguage({
       languages: ['en', 'fr'],
     }),
+    expressMiddleware(server, {
+      context,
+    }),
+    function (err, _req, res, _next) {
+      res.status(200).json({
+        error: {
+          errors: [
+            {
+              message: err,
+              locations: [
+                {
+                  line: 1,
+                  column: 1,
+                },
+              ],
+            },
+          ],
+        },
+      })
+    },
   )
 
   app.get('/alive', (_req, res) => {
@@ -70,47 +98,6 @@ export const Server = async ({
   app.get('/ready', (_req, res) => {
     res.json({ ok: 'yes' })
   })
-
-  // default error handler
-  app.use(function (err, _req, res, _next) {
-    res.status(200).json({
-      error: {
-        errors: [
-          {
-            message: err,
-            locations: [
-              {
-                line: 1,
-                column: 1,
-              },
-            ],
-          },
-        ],
-      },
-    })
-  })
-
-  const httpServer = http.createServer(app)
-
-  const schema = createSchema()
-
-  const server = new ApolloServer({
-    schema,
-    context,
-    validationRules: createValidationRules(
-      maxDepth,
-      complexityCost,
-      scalarCost,
-      objectCost,
-      listFactor,
-    ),
-    introspection: true,
-    tracing,
-    plugins: [enablePlayground()],
-  })
-
-  await server.start()
-  server.applyMiddleware({ app })
 
   SubscriptionServer.create(
     {

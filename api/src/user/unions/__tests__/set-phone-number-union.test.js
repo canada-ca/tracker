@@ -1,7 +1,4 @@
-import {
-  setPhoneNumberErrorType,
-  setPhoneNumberResultType,
-} from '../../objects/index'
+import { setPhoneNumberErrorType, setPhoneNumberResultType } from '../../objects/index'
 import { setPhoneNumberUnion } from '../index'
 
 describe('given the setPhoneNumberUnion', () => {
@@ -25,9 +22,7 @@ describe('given the setPhoneNumberUnion', () => {
           authResult: {},
         }
 
-        expect(setPhoneNumberUnion.resolveType(obj)).toMatchObject(
-          setPhoneNumberResultType,
-        )
+        expect(setPhoneNumberUnion.resolveType(obj)).toMatch(setPhoneNumberResultType.name)
       })
     })
     describe('testing the setPhoneNumberErrorType', () => {
@@ -39,9 +34,7 @@ describe('given the setPhoneNumberUnion', () => {
           description: 'text',
         }
 
-        expect(setPhoneNumberUnion.resolveType(obj)).toMatchObject(
-          setPhoneNumberErrorType,
-        )
+        expect(setPhoneNumberUnion.resolveType(obj)).toMatch(setPhoneNumberErrorType.name)
       })
     })
   })

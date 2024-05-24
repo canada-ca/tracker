@@ -1,25 +1,39 @@
 import React from 'react'
 import { any, bool, func, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
-import { Box, IconButton, Slide, Stack, Text } from '@chakra-ui/react'
-import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  IconButton,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
+import { QuestionOutlineIcon } from '@chakra-ui/icons'
 
 export function InfoPanel({ isOpen, onToggle, children }) {
+  const btnRef = React.useRef()
   return (
-    <Slide in={isOpen} direction="bottom" style={{ zIndex: 2 }}>
-      <Box
-        bg="white"
-        border="2px"
-        borderColor="gray.400"
-        rounded="md"
-        p="1em"
-        px="8"
-        py="8"
-      >
-        <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
-        <Stack direction="column">{children}</Stack>
-      </Box>
-    </Slide>
+    <Drawer isOpen={isOpen} placement="bottom" onClose={onToggle} finalFocusRef={btnRef}>
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>
+          <Trans>Glossary</Trans>
+        </DrawerHeader>
+
+        <DrawerBody>
+          <Stack direction="column">{children}</Stack>
+        </DrawerBody>
+
+        <DrawerFooter></DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   )
 }
 
@@ -35,25 +49,15 @@ export function InfoBox({ title, info }) {
   )
 }
 
-export function InfoButton({ isOpen, onToggle, ...props }) {
+export function InfoButton({ onToggle, ...props }) {
   return (
     <IconButton
-      icon={
-        isOpen ? (
-          <ArrowDownIcon boxSize="1.5rem" />
-        ) : (
-          <ArrowUpIcon boxSize="1.5rem" />
-        )
-      }
-      aria-label={isOpen ? 'Close glossary' : 'Open glossary'}
-      onClick={onToggle}
-      color="black"
-      bg="white"
-      borderColor="black"
-      borderWidth="2px"
-      isRound
-      my="2"
       {...props}
+      icon={<QuestionOutlineIcon />}
+      aria-label="Open glossary"
+      variant="primaryOutline"
+      mx="2"
+      onClick={onToggle}
     />
   )
 }
@@ -70,6 +74,5 @@ InfoBox.propTypes = {
 }
 
 InfoButton.propTypes = {
-  isOpen: bool,
   onToggle: func,
 }

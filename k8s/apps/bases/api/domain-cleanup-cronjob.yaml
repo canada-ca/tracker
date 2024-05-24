@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: domain-cleanup
+  namespace: api
+spec:
+  schedule: "00 5 * * *"
+  concurrencyPolicy: Replace
+  startingDeadlineSeconds: 180
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: domain-cleanup
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-4b24ebf-1709148343 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              env:
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_PASS
+                - name: DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_URL
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_NAME
+                - name: UNCLAIMED_ORG_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: UNCLAIMED_ORG_ID
+          restartPolicy: OnFailure

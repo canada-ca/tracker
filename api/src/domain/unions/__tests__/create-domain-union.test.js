@@ -22,7 +22,7 @@ describe('given the createDomainUnion', () => {
           domain: {},
         }
 
-        expect(createDomainUnion.resolveType(obj)).toMatchObject(domainType)
+        expect(createDomainUnion.resolveType(obj)).toMatch(domainType.name)
       })
     })
     describe('testing the domainErrorType', () => {
@@ -34,9 +34,7 @@ describe('given the createDomainUnion', () => {
           description: 'text',
         }
 
-        expect(createDomainUnion.resolveType(obj)).toMatchObject(
-          domainErrorType,
-        )
+        expect(createDomainUnion.resolveType(obj)).toMatch(domainErrorType.name)
       })
     })
   })

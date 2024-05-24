@@ -32,17 +32,12 @@ export const verifiedDomainType = new GraphQLObjectType({
       args: {
         orderBy: {
           type: verifiedOrganizationOrder,
-          description:
-            'Ordering options for verified organization connections.',
+          description: 'Ordering options for verified organization connections.',
         },
         ...connectionArgs,
       },
       description: 'The organization that this domain belongs to.',
-      resolve: async (
-        { _id },
-        args,
-        { loaders: { loadVerifiedOrgConnectionsByDomainId } },
-      ) => {
+      resolve: async ({ _id }, args, { loaders: { loadVerifiedOrgConnectionsByDomainId } }) => {
         const orgs = await loadVerifiedOrgConnectionsByDomainId({
           domainId: _id,
           ...args,

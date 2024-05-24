@@ -1,0 +1,3 @@
+email,role,orgSlug
+email@example.com,USER,example-slug
+adminEmail@example.com,ADMIN,another-example-slug

@@ -8,9 +8,9 @@ export const verifyAccountUnion = new GraphQLUnionType({
   types: [verifyAccountErrorType, verifyAccountResultType],
   resolveType({ _type }) {
     if (_type === 'success') {
-      return verifyAccountResultType
+      return verifyAccountResultType.name
     } else {
-      return verifyAccountErrorType
+      return verifyAccountErrorType.name
     }
   },
 })

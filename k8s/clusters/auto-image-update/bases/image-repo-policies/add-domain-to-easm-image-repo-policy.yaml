@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: add-domain-to-easm
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/add-domain-to-easm
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: add-domain-to-easm
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: add-domain-to-easm
+  policy:
+    numerical:
+      order: asc

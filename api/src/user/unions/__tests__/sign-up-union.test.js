@@ -1,12 +1,12 @@
-import { authResultType, signUpError } from '../../objects/index'
+import { tfaSignInResult, signUpError } from '../../objects/index'
 import { signUpUnion } from '../sign-up-union'
 
 describe('given the sign up union', () => {
   describe('testing the field types', () => {
-    it('contains authResultType type', () => {
+    it('contains tfaSignInResult type', () => {
       const demoType = signUpUnion.getTypes()
 
-      expect(demoType).toContain(authResultType)
+      expect(demoType).toContain(tfaSignInResult)
     })
     it('contains signUpError type', () => {
       const demoType = signUpUnion.getTypes()
@@ -18,11 +18,11 @@ describe('given the sign up union', () => {
     describe('testing the authResult type', () => {
       it('returns the correct type', () => {
         const obj = {
-          _type: 'authResult',
+          _type: 'tfa',
           authResult: {},
         }
 
-        expect(signUpUnion.resolveType(obj)).toMatchObject(authResultType)
+        expect(signUpUnion.resolveType(obj)).toMatch(tfaSignInResult.name)
       })
     })
     describe('testing the signUpError type', () => {
@@ -34,7 +34,7 @@ describe('given the sign up union', () => {
           description: 'text',
         }
 
-        expect(signUpUnion.resolveType(obj)).toMatchObject(signUpError)
+        expect(signUpUnion.resolveType(obj)).toMatch(signUpError.name)
       })
     })
   })

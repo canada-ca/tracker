@@ -16,7 +16,6 @@ const mockNotify = jest.fn()
 const tokenize = jest.fn().mockReturnValue('token')
 
 describe('user send password reset email', () => {
-
   let query, drop, truncate, collections, schema, request, i18n
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -42,16 +41,16 @@ describe('user send password reset email', () => {
   describe('successfully sends password reset email', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     afterEach(async () => {
       await truncate()
@@ -85,9 +84,9 @@ describe('user send password reset email', () => {
           })
         })
         it('returns status text', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 sendPasswordResetLink(
                   input: { userName: "test.account@istio.actually.exists" }
@@ -96,8 +95,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               query,
@@ -115,13 +114,12 @@ describe('user send password reset email', () => {
                 sendPasswordResetEmail: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
               sendPasswordResetLink: {
-                status:
-                  'If an account with this username is found, a password reset link will be found in your inbox.',
+                status: 'If an account with this username is found, a password reset link will be found in your inbox.',
               },
             },
           }
@@ -135,18 +133,14 @@ describe('user send password reset email', () => {
           const token = tokenize({
             parameters: { userKey: user._key, currentPassword: user.password },
           })
-          const resetUrl = `https://${request.get(
-            'host',
-          )}/reset-password/${token}`
+          const resetUrl = `https://${request.get('host')}/reset-password/${token}`
 
           expect(response).toEqual(expectedResult)
           expect(mockNotify).toHaveBeenCalledWith({
             user,
             resetUrl,
           })
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully sent a password reset email.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully sent a password reset email.`])
         })
       })
     })
@@ -175,9 +169,9 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               sendPasswordResetLink(
                 input: { userName: "test.account@istio.actually.exists" }
@@ -186,8 +180,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             query,
@@ -205,7 +199,7 @@ describe('user send password reset email', () => {
               sendPasswordResetEmail: mockNotify,
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
@@ -225,18 +219,14 @@ describe('user send password reset email', () => {
         const token = tokenize({
           parameters: { userKey: user._key, currentPassword: user.password },
         })
-        const resetUrl = `https://${request.get(
-          'host',
-        )}/reset-password/${token}`
+        const resetUrl = `https://${request.get('host')}/reset-password/${token}`
 
         expect(response).toEqual(expectedResult)
         expect(mockNotify).toHaveBeenCalledWith({
           user,
           resetUrl,
         })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully sent a password reset email.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully sent a password reset email.`])
       })
     })
   })
@@ -257,9 +247,9 @@ describe('user send password reset email', () => {
         })
       })
       it('returns status text', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               sendPasswordResetLink(
                 input: {
@@ -270,8 +260,8 @@ describe('user send password reset email', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             request,
             query,
@@ -291,13 +281,12 @@ describe('user send password reset email', () => {
               sendPasswordResetEmail: mockNotify,
             },
           },
-        )
+        })
 
         const expectedResult = {
           data: {
             sendPasswordResetLink: {
-              status:
-                'If an account with this username is found, a password reset link will be found in your inbox.',
+              status: 'If an account with this username is found, a password reset link will be found in your inbox.',
             },
           },
         }
@@ -325,9 +314,9 @@ describe('user send password reset email', () => {
       })
       describe('no user associated with account', () => {
         it('returns status text', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 sendPasswordResetLink(
                   input: {
@@ -338,8 +327,8 @@ describe('user send password reset email', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               query,
@@ -359,7 +348,7 @@ describe('user send password reset email', () => {
                 sendPasswordResetEmail: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResult = {
             data: {

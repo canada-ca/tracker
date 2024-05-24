@@ -59,6 +59,7 @@ describe('<OrganizationDomains />', () => {
               first: 10,
               orderBy: { field: 'DOMAIN', direction: 'ASC' },
               search: '',
+              filters: [{ filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' }],
             },
           },
           result: {
@@ -113,10 +114,7 @@ describe('<OrganizationDomains />', () => {
                   userName: null,
                 })}
               >
-                <MemoryRouter
-                  initialEntries={['/organization/tbs-sct-gc-ca']}
-                  initialIndex={0}
-                >
+                <MemoryRouter initialEntries={['/organization/tbs-sct-gc-ca']} initialIndex={0}>
                   <Route path="/organization/:orgSlug">
                     <OrganizationDomains orgSlug={orgSlug} />
                   </Route>

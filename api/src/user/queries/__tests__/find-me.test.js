@@ -23,16 +23,16 @@ describe('given the findMe query', () => {
     })
     // Generate DB Items
     ;({ query, drop, truncate, collections } = await ensure({
-    variables: {
-      dbname: dbNameFromFile(__filename),
-      username: 'root',
-      rootPassword: rootPass,
-      password: rootPass,
-      url,
-    },
+      variables: {
+        dbname: dbNameFromFile(__filename),
+        username: 'root',
+        rootPassword: rootPass,
+        password: rootPass,
+        url,
+      },
 
-    schema: dbschema,
-  }))
+      schema: dbschema,
+    }))
   })
 
   let consoleOutput = []
@@ -65,17 +65,17 @@ describe('given the findMe query', () => {
 
   describe('users successfully performs query', () => {
     it('will return specified user', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             findMe {
               id
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           auth: {
             userRequired: userRequired({
               userKey: user._key,
@@ -83,15 +83,14 @@ describe('given the findMe query', () => {
             }),
           },
           loaders: {
-            loadAffiliationConnectionsByUserId:
-              loadAffiliationConnectionsByUserId({
-                query,
-                userKey: user._key,
-                cleanseInput,
-              }),
+            loadAffiliationConnectionsByUserId: loadAffiliationConnectionsByUserId({
+              query,
+              userKey: user._key,
+              cleanseInput,
+            }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {

@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: org-footprint
+  namespace: api
+spec:
+  schedule: "30 10 * * *"
+  concurrencyPolicy: Replace
+  startingDeadlineSeconds: 180
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: org-footprint
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/org-footprint:master-e55917e-1710782061 # {"$imagepolicy": "flux-system:org-footprint"}
+              env:
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_PASS
+                - name: DB_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_URL
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: DB_NAME
+                - name: NOTIFICATION_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_API_KEY
+                - name: NOTIFICATION_API_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_API_URL
+                - name: NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_ORG_FOOTPRINT_BILINGUAL
+                - name: SERVICE_ACCOUNT_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: SERVICE_ACCOUNT_EMAIL
+                - name: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: REDIRECT_TO_SERVICE_ACCOUNT_EMAIL
+                - name: NOTIFICATION_PENDING_USERS
+                  valueFrom:
+                    secretKeyRef:
+                      name: api
+                      key: NOTIFICATION_PENDING_USERS
+          restartPolicy: OnFailure

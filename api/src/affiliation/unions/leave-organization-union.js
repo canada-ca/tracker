@@ -9,9 +9,9 @@ export const leaveOrganizationUnion = new GraphQLUnionType({
   types: [affiliationError, leaveOrganizationResultType],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return leaveOrganizationResultType
+      return leaveOrganizationResultType.name
     } else {
-      return affiliationError
+      return affiliationError.name
     }
   },
 })

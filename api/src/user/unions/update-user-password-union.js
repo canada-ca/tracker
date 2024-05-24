@@ -1,8 +1,5 @@
 import { GraphQLUnionType } from 'graphql'
-import {
-  updateUserPasswordErrorType,
-  updateUserPasswordResultType,
-} from '../objects'
+import { updateUserPasswordErrorType, updateUserPasswordResultType } from '../objects'
 
 export const updateUserPasswordUnion = new GraphQLUnionType({
   name: 'UpdateUserPasswordUnion',
@@ -11,9 +8,9 @@ export const updateUserPasswordUnion = new GraphQLUnionType({
   types: [updateUserPasswordErrorType, updateUserPasswordResultType],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return updateUserPasswordResultType
+      return updateUserPasswordResultType.name
     } else {
-      return updateUserPasswordErrorType
+      return updateUserPasswordErrorType.name
     }
   },
 })

@@ -1,4 +1,4 @@
-import { GraphQLScalarType, Kind, GraphQLError } from 'graphql'
+import {GraphQLScalarType, Kind, GraphQLError} from 'graphql'
 
 const validate = (value) => {
   const YEAR_REGEX = /^\d{4}$/

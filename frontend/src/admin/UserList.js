@@ -14,11 +14,10 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon, EmailIcon, MinusIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
-import { number, string } from 'prop-types'
+import { string } from 'prop-types'
 
 import { UserListModal } from './UserListModal'
 
-import { REMOVE_USER_FROM_ORG } from '../graphql/mutations'
 import { PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE as FORWARD } from '../graphql/queries'
 import { UserCard } from '../components/UserCard'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -26,15 +25,16 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
+import { bool } from 'prop-types'
 
-export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
+export function UserList({ includePending, permission, orgSlug, orgId }) {
   const [mutation, setMutation] = useState()
   const [addedUserName, setAddedUserName] = useState('')
   const [selectedRemoveUser, setSelectedRemoveUser] = useState({
     id: null,
     userName: null,
   })
-
+  const [usersPerPage, setUsersPerPage] = useState(20)
   const [editingUserRole, setEditingUserRole] = useState()
   const [editingUserName, setEditingUserName] = useState()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -47,23 +47,20 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: FORWARD,
-    recordsPerPage: usersPerPage,
-    variables: { orgSlug, search: debouncedSearchUser },
-    relayRoot: 'findOrganizationBySlug.affiliations',
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, hasNextPage, hasPreviousPage, resetToFirstPage } =
+    usePaginatedCollection({
+      fetchForward: FORWARD,
+      recordsPerPage: usersPerPage,
+      variables: {
+        orgSlug,
+        search: debouncedSearchUser,
+        includePending,
+        orderBy: { field: 'PERMISSION', direction: 'ASC' },
+      },
+      relayRoot: 'findOrganizationBySlug.affiliations',
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
 
   if (error) return <ErrorFallbackMessage error={error} />
 
@@ -76,17 +73,16 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
       <Trans>No users</Trans>
     </Text>
   ) : (
-    nodes.map((node) => {
-      const userRole = node.permission
+    nodes.map(({ id, permission: userRole, user }) => {
       return (
-        <Box key={`${node.user.userName}:${node.id}`}>
+        <Box key={`${user.userName}:${id}`}>
           <Flex align="center" w="100%">
             <Stack direction="row" flexGrow="0">
               <IconButton
                 aria-label="Remove User"
                 variant="danger"
                 onClick={() => {
-                  setSelectedRemoveUser(node.user)
+                  setSelectedRemoveUser(user)
                   setMutation('remove')
                   onOpen()
                 }}
@@ -99,7 +95,7 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
                 variant="primary"
                 onClick={() => {
                   setEditingUserRole(userRole)
-                  setEditingUserName(node.user.userName)
+                  setEditingUserName(user.userName)
                   setMutation('update')
                   onOpen()
                 }}
@@ -110,8 +106,8 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
             </Stack>
             <UserCard
               flexGrow="1"
-              userName={node.user.userName}
-              displayName={node.user.displayName}
+              userName={user.userName}
+              displayName={user.displayName}
               role={userRole}
               ml={{ base: 4, md: 0 }}
             />
@@ -124,61 +120,68 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 
   return (
     <Flex mb="6" w="100%" flexDirection="column">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault() // prevents page from refreshing
-          setMutation('create')
-          setEditingUserRole('USER')
-          setEditingUserName(addedUserName)
-          onOpen()
-        }}
-      >
-        <Flex
-          align="center"
-          flexDirection={{ base: 'column', md: 'row' }}
-          mb="2"
+      <Box bg="gray.100" p="2" mb="2" borderColor="gray.300" borderWidth="1px">
+        <form
+          id="form"
+          onSubmit={(e) => {
+            e.preventDefault() // prevents page from refreshing
+            setMutation('create')
+            setEditingUserRole('USER')
+            setEditingUserName(addedUserName)
+            onOpen()
+          }}
         >
-          <Text
-            as="label"
-            htmlFor="Search-for-user-field"
-            fontSize="md"
-            fontWeight="bold"
-            textAlign="center"
-            mr={2}
-          >
-            <Trans>Search: </Trans>
-          </Text>
-          <InputGroup
-            width={{ base: '100%', md: '75%' }}
-            mb={{ base: '8px', md: '0' }}
-            mr={{ base: '0', md: '4' }}
-          >
-            <InputLeftElement aria-hidden="true">
-              <EmailIcon color="gray.300" />
-            </InputLeftElement>
-            <Input
-              id="Search-for-user-field"
-              aria-label="new-user-input"
-              placeholder={t`user email`}
-              onChange={(e) => setAddedUserName(e.target.value)}
-            />
-          </InputGroup>
-
-          <Button
-            w={{ base: '100%', md: '25%' }}
-            variant="primary"
-            type="submit"
-          >
-            <AddIcon mr={2} aria-hidden="true" />
-            <Trans>Invite User</Trans>
-          </Button>
-        </Flex>
-      </form>
+          <Flex flexDirection={{ base: 'column', md: 'row' }} align="center">
+            <Text
+              as="label"
+              htmlFor="Search-for-domain-field"
+              fontSize="md"
+              fontWeight="bold"
+              textAlign="center"
+              mr={2}
+            >
+              <Trans>Search: </Trans>
+            </Text>
+            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
+              <InputLeftElement aria-hidden="true">
+                <EmailIcon color="gray.300" />
+              </InputLeftElement>
+              <Input
+                id="Search-for-user-field"
+                aria-label="new-user-input"
+                placeholder={t`User email`}
+                onChange={(e) => setAddedUserName(e.target.value)}
+              />
+            </InputGroup>
+            <Button w={{ base: '100%', md: '25%' }} variant="primary" type="submit">
+              <AddIcon mr={2} aria-hidden="true" />
+              <Trans>Invite User</Trans>
+            </Button>
+          </Flex>
+        </form>
+        <Divider borderBottomWidth="1px" borderBottomColor="black" />
+        <RelayPaginationControls
+          onlyPagination={false}
+          selectedDisplayLimit={usersPerPage}
+          setSelectedDisplayLimit={setUsersPerPage}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
+      </Box>
 
       {userList}
 
       <RelayPaginationControls
-        onlyPagination={true}
+        onlyPagination={false}
+        selectedDisplayLimit={usersPerPage}
+        setSelectedDisplayLimit={setUsersPerPage}
+        displayLimitOptions={[5, 10, 20, 50, 100]}
+        resetToFirstPage={resetToFirstPage}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
         next={next}
@@ -190,9 +193,7 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
         isOpen={isOpen}
         onClose={onClose}
         orgId={orgId}
-        editingUserName={
-          mutation === 'remove' ? selectedRemoveUser.userName : editingUserName
-        }
+        editingUserName={mutation === 'remove' ? selectedRemoveUser.userName : editingUserName}
         editingUserRole={editingUserRole}
         editingUserId={selectedRemoveUser.id}
         orgSlug={orgSlug}
@@ -206,6 +207,6 @@ export function UserList({ permission, orgSlug, usersPerPage, orgId }) {
 UserList.propTypes = {
   orgSlug: string,
   permission: string,
-  usersPerPage: number,
   orgId: string.isRequired,
+  includePending: bool,
 }

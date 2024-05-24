@@ -144,9 +144,9 @@ describe('given findMyOrganizationsQuery', () => {
         describe('user queries for their organizations', () => {
           describe('in english', () => {
             it('returns organizations', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   query {
                     findMyOrganizations(first: 5) {
                       edges {
@@ -173,8 +173,8 @@ describe('given findMyOrganizationsQuery', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   userKey: user._key,
                   auth: {
@@ -204,7 +204,7 @@ describe('given findMyOrganizationsQuery', () => {
                     }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -250,9 +250,7 @@ describe('given findMyOrganizationsQuery', () => {
                 },
               }
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User ${user._key} successfully retrieved their organizations.`,
-              ])
+              expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved their organizations.`])
             })
           })
         })
@@ -289,9 +287,9 @@ describe('given findMyOrganizationsQuery', () => {
         describe('user queries for their organizations', () => {
           describe('in french', () => {
             it('returns organizations', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   query {
                     findMyOrganizations(first: 5) {
                       edges {
@@ -318,8 +316,8 @@ describe('given findMyOrganizationsQuery', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   userKey: user._key,
                   auth: {
@@ -349,7 +347,7 @@ describe('given findMyOrganizationsQuery', () => {
                     }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -395,9 +393,7 @@ describe('given findMyOrganizationsQuery', () => {
                 },
               }
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User ${user._key} successfully retrieved their organizations.`,
-              ])
+              expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved their organizations.`])
             })
           })
         })
@@ -422,13 +418,11 @@ describe('given findMyOrganizationsQuery', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValueOnce(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValueOnce(new Error('Database error occurred.'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyOrganizations(first: 5) {
                   edges {
@@ -454,8 +448,8 @@ describe('given findMyOrganizationsQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: user._key,
               auth: {
@@ -474,13 +468,9 @@ describe('given findMyOrganizationsQuery', () => {
                 }),
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              'Unable to load organization(s). Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('Unable to load organization(s). Please try again.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -506,13 +496,11 @@ describe('given findMyOrganizationsQuery', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValueOnce(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValueOnce(new Error('Database error occurred.'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyOrganizations(first: 5) {
                   edges {
@@ -538,8 +526,8 @@ describe('given findMyOrganizationsQuery', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: user._key,
               auth: {
@@ -558,13 +546,9 @@ describe('given findMyOrganizationsQuery', () => {
                 }),
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError(
-              "Impossible de charger l'organisation (s). Veuillez réessayer.",
-            ),
-          ]
+          const error = [new GraphQLError("Impossible de charger l'organisation (s). Veuillez réessayer.")]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

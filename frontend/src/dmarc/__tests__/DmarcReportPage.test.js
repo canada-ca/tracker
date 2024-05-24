@@ -14,16 +14,10 @@ import DmarcReportPage from '../DmarcReportPage'
 
 import { createCache } from '../../client'
 import { UserVarProvider } from '../../utilities/userState'
-import { rawDmarcReportGraphData } from '../../fixtures/dmarcReportGraphData'
-import {
-  rawDmarcReportData,
-  rawDmarcReportGraphDataWithoutReport, // eslint-disable-line import/named
-  augustDmarcReportData,
-} from '../../fixtures/dmarcReportData.js'
-import {
-  DMARC_REPORT_GRAPH,
-  PAGINATED_DMARC_REPORT,
-} from '../../graphql/queries'
+import { rawDmarcReportGraphData, rawDmarcReportGraphDataWithoutReport } from '../../fixtures/dmarcReportGraphData'
+import { rawDmarcReportData, augustDmarcReportData } from '../../fixtures/dmarcReportData.js'
+
+import { DMARC_REPORT_GRAPH, PAGINATED_DMARC_REPORT } from '../../graphql/queries'
 
 // ** need to mock the ResizeObserver and polute the window object to avoid errors
 class ResizeObserver {
@@ -126,9 +120,7 @@ describe('<DmarcReportPage />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
-                  initialEntries={[
-                    `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-                  ]}
+                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
                   <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
@@ -156,9 +148,7 @@ describe('<DmarcReportPage />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
-                  initialEntries={[
-                    `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-                  ]}
+                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
                   <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
@@ -186,9 +176,7 @@ describe('<DmarcReportPage />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
-                  initialEntries={[
-                    `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-                  ]}
+                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
                   <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
@@ -216,9 +204,7 @@ describe('<DmarcReportPage />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
-                  initialEntries={[
-                    `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-                  ]}
+                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
                   <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">
@@ -239,9 +225,7 @@ describe('<DmarcReportPage />', () => {
     describe('changes period tables', () => {
       it('the url changes', async () => {
         const history = createMemoryHistory({
-          initialEntries: [
-            `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-          ],
+          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
           initialIndex: 0,
         })
         const { getByRole, findByRole } = render(
@@ -271,22 +255,16 @@ describe('<DmarcReportPage />', () => {
           name: /Showing data for period/i,
         })
 
-        expect(history.location.pathname).toEqual(
-          `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-        )
+        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
 
         userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`)
 
-        expect(history.location.pathname).toEqual(
-          `/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`,
-        )
+        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
       })
 
       it('the data changes', async () => {
         const history = createMemoryHistory({
-          initialEntries: [
-            `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-          ],
+          initialEntries: [`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`],
           initialIndex: 0,
         })
         const { getByRole, findByRole, queryByText } = render(
@@ -317,73 +295,37 @@ describe('<DmarcReportPage />', () => {
           name: /Showing data for period/i,
         })
 
-        expect(history.location.pathname).toEqual(
-          `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-        )
+        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`)
 
         // check current state of data
-        expect(
-          queryByText(/full-pass-dkim-domains-L30D.domain/),
-        ).toBeInTheDocument()
-        expect(
-          queryByText(/dkim-failure-dkim-domains-L30D.domain/),
-        ).toBeInTheDocument()
-        expect(
-          queryByText(/spf-failure-spf-domains-L30D.domain/),
-        ).toBeInTheDocument()
-        expect(
-          queryByText(/dmarc-failure-dkim-domains-L30D.domain/),
-        ).toBeInTheDocument()
+        expect(queryByText(/full-pass-dkim-domains-L30D.domain/)).toBeInTheDocument()
+        expect(queryByText(/dkim-failure-dkim-domains-L30D.domain/)).toBeInTheDocument()
+        expect(queryByText(/spf-failure-spf-domains-L30D.domain/)).toBeInTheDocument()
+        expect(queryByText(/dmarc-failure-dkim-domains-L30D.domain/)).toBeInTheDocument()
 
-        expect(
-          queryByText(/full-pass-dkim-domains-august.domain/),
-        ).not.toBeInTheDocument()
-        expect(
-          queryByText(/dkim-failure-dkim-domains-august.domain/),
-        ).not.toBeInTheDocument()
-        expect(
-          queryByText(/spf-failure-spf-domains-august.domain/),
-        ).not.toBeInTheDocument()
-        expect(
-          queryByText(/dmarc-failure-dkim-domains-august.domain/),
-        ).not.toBeInTheDocument()
+        expect(queryByText(/full-pass-dkim-domains-august.domain/)).not.toBeInTheDocument()
+        expect(queryByText(/dkim-failure-dkim-domains-august.domain/)).not.toBeInTheDocument()
+        expect(queryByText(/spf-failure-spf-domains-august.domain/)).not.toBeInTheDocument()
+        expect(queryByText(/dmarc-failure-dkim-domains-august.domain/)).not.toBeInTheDocument()
 
         // change date
         userEvent.selectOptions(periodSelector, `AUGUST, ${getDynamicYear()}`)
 
-        expect(history.location.pathname).toEqual(
-          `/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`,
-        )
+        expect(history.location.pathname).toEqual(`/domains/test-domain/dmarc-report/AUGUST/${getDynamicYear()}`)
 
         // page is loaded
         await findByRole('button', { name: /Fully Aligned by IP Address/i })
 
         // check new state of data
-        expect(
-          queryByText(/full-pass-dkim-domains-L30D.domain/),
-        ).not.toBeInTheDocument()
-        expect(
-          queryByText(/dkim-failure-dkim-domains-L30D.domain/),
-        ).not.toBeInTheDocument()
-        expect(
-          queryByText(/spf-failure-spf-domains-L30D.domain/),
-        ).not.toBeInTheDocument()
-        expect(
-          queryByText(/dmarc-failure-dkim-domains-L30D.domain/),
-        ).not.toBeInTheDocument()
+        expect(queryByText(/full-pass-dkim-domains-L30D.domain/)).not.toBeInTheDocument()
+        expect(queryByText(/dkim-failure-dkim-domains-L30D.domain/)).not.toBeInTheDocument()
+        expect(queryByText(/spf-failure-spf-domains-L30D.domain/)).not.toBeInTheDocument()
+        expect(queryByText(/dmarc-failure-dkim-domains-L30D.domain/)).not.toBeInTheDocument()
 
-        expect(
-          queryByText(/full-pass-dkim-domains-august.domain/),
-        ).toBeInTheDocument()
-        expect(
-          queryByText(/dkim-failure-dkim-domains-august.domain/),
-        ).toBeInTheDocument()
-        expect(
-          queryByText(/spf-failure-spf-domains-august.domain/),
-        ).toBeInTheDocument()
-        expect(
-          queryByText(/dmarc-failure-dkim-domains-august.domain/),
-        ).toBeInTheDocument()
+        expect(queryByText(/full-pass-dkim-domains-august.domain/)).toBeInTheDocument()
+        expect(queryByText(/dkim-failure-dkim-domains-august.domain/)).toBeInTheDocument()
+        expect(queryByText(/spf-failure-spf-domains-august.domain/)).toBeInTheDocument()
+        expect(queryByText(/dmarc-failure-dkim-domains-august.domain/)).toBeInTheDocument()
       })
     })
   })
@@ -435,9 +377,7 @@ describe('<DmarcReportPage />', () => {
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
                 <MemoryRouter
-                  initialEntries={[
-                    `/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`,
-                  ]}
+                  initialEntries={[`/domains/test-domain/dmarc-report/LAST30DAYS/${currentYear}`]}
                   initialIndex={0}
                 >
                   <Route path="/domains/:domainSlug/dmarc-report/:period?/:year?">

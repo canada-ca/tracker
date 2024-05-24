@@ -37,30 +37,21 @@ export function AuditLogTable({ orgId = null }) {
     setDebouncedSearchTerm(searchTerm)
   }, [searchTerm])
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: AUDIT_LOGS,
-    recordsPerPage: logsPerPage,
-    relayRoot: 'findAuditLogs',
-    variables: {
-      orgId,
-      orderBy: { field: orderField, direction: orderDirection },
-      search: debouncedSearchTerm,
-      filters: { resource: activeResourceFilters, action: activeActionFilters },
-    },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    errorPolicy: 'ignore', // allow partial success
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: AUDIT_LOGS,
+      recordsPerPage: logsPerPage,
+      relayRoot: 'findAuditLogs',
+      variables: {
+        orgId,
+        orderBy: { field: orderField, direction: orderDirection },
+        search: debouncedSearchTerm,
+        filters: { resource: activeResourceFilters, action: activeActionFilters },
+      },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+      errorPolicy: 'ignore', // allow partial success
+    })
 
   if (error) {
     return <ErrorFallbackMessage error={error} />
@@ -83,6 +74,8 @@ export function AuditLogTable({ orgId = null }) {
     { value: 'UPDATE', text: t`Update` },
     { value: 'REMOVE', text: t`Remove` },
     { value: 'DELETE', text: t`Delete` },
+    { value: 'EXPORT', text: t`Export` },
+    { value: 'SCAN', text: t`Scan` },
   ]
 
   let logTable
@@ -131,64 +124,54 @@ export function AuditLogTable({ orgId = null }) {
             </Tr>
           </Thead>
           <Tbody>
-            {nodes.map(
-              ({ id, timestamp, initiatedBy, action, target, reason }) => {
-                const formatTimestamp = (ts) => {
-                  const dateTime = ts.split('T')
-                  return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
-                }
-                const resourceType = resourceFilters.find(
-                  ({ value }) => target.resourceType.toUpperCase() === value,
-                )
-                action = actionFilters.find(
-                  ({ value }) => action.toUpperCase() === value,
-                )
-                if (typeof reason !== 'undefined') {
-                  if (reason === 'NONEXISTENT') {
-                    reason = <Trans>This domain no longer exists</Trans>
-                  } else if (reason === 'WRONG_ORG') {
-                    reason = (
-                      <Trans>
-                        This domain does not belong to this organization
-                      </Trans>
-                    )
-                  }
-                }
-                return (
-                  <Tr key={id}>
-                    <Td>{formatTimestamp(timestamp)}</Td>
-                    <Td>{initiatedBy?.userName}</Td>
-                    <Td>{action?.text.toUpperCase()}</Td>
-                    <Td>{resourceType?.text.toUpperCase()}</Td>
-                    <Td>{target?.resource}</Td>
-                    <Td>{target?.organization?.name}</Td>
-                    <Td>
-                      {target?.updatedProperties?.map(
-                        ({ name, oldValue, newValue }) => {
-                          return (
-                            <Box key={name}>
-                              <Flex>
-                                <Trans>Name:</Trans> {name}
-                              </Flex>
-                              <Flex>
-                                <Trans>Old Value:</Trans> {oldValue}
-                              </Flex>
-                              <Flex>
-                                <Trans>New Value:</Trans> {newValue}
-                              </Flex>
-                              {target?.updatedProperties?.length > 1 && (
-                                <Divider />
-                              )}
-                            </Box>
-                          )
-                        },
-                      )}
-                    </Td>
-                    <Td>{reason}</Td>
-                  </Tr>
-                )
-              },
-            )}
+            {nodes.map(({ id, timestamp, initiatedBy, action, target, reason }) => {
+              const formatTimestamp = (ts) => {
+                const dateTime = ts.split('T')
+                return dateTime[0] + ', ' + dateTime[1].substring(0, 5)
+              }
+              const resourceType = resourceFilters.find(({ value }) => target.resourceType.toUpperCase() === value)
+              action = actionFilters.find(({ value }) => action.toUpperCase() === value)
+              if (reason === 'NONEXISTENT') {
+                reason = <Trans>This domain no longer exists</Trans>
+              } else if (reason === 'WRONG_ORG') {
+                reason = <Trans>This domain does not belong to this organization</Trans>
+              } else if (reason === 'INVESTMENT') {
+                reason = <Trans>Organization is invested in the outside domain</Trans>
+              } else if (reason === 'OWNERSHIP') {
+                reason = <Trans>Organization owns this domain, but it is outside the allowed scope</Trans>
+              } else if (reason === 'OTHER') {
+                reason = <Trans>Other</Trans>
+              }
+              return (
+                <Tr key={id}>
+                  <Td>{formatTimestamp(timestamp)}</Td>
+                  <Td>{initiatedBy?.userName}</Td>
+                  <Td>{action?.text.toUpperCase()}</Td>
+                  <Td>{resourceType?.text.toUpperCase()}</Td>
+                  <Td>{target?.resource}</Td>
+                  <Td>{target?.organization?.name}</Td>
+                  <Td>
+                    {target?.updatedProperties?.map(({ name, oldValue, newValue }) => {
+                      return (
+                        <Box key={name}>
+                          <Flex>
+                            <Trans>Name:</Trans> {name}
+                          </Flex>
+                          <Flex>
+                            <Trans>Old Value:</Trans> {oldValue}
+                          </Flex>
+                          <Flex>
+                            <Trans>New Value:</Trans> {newValue}
+                          </Flex>
+                          {target?.updatedProperties?.length > 1 && <Divider />}
+                        </Box>
+                      )
+                    })}
+                  </Td>
+                  <Td>{reason}</Td>
+                </Tr>
+              )
+            })}
           </Tbody>
         </Table>
       </TableContainer>
@@ -227,33 +210,16 @@ export function AuditLogTable({ orgId = null }) {
                   borderRadius="full"
                   borderWidth="1px"
                   borderColor="gray.900"
-                  bg={
-                    activeResourceFilters.indexOf(value) < 0
-                      ? 'gray.50'
-                      : 'gray.900'
-                  }
-                  color={
-                    activeResourceFilters.indexOf(value) < 0
-                      ? 'gray.900'
-                      : 'gray.50'
-                  }
+                  bg={activeResourceFilters.indexOf(value) < 0 ? 'gray.50' : 'gray.900'}
+                  color={activeResourceFilters.indexOf(value) < 0 ? 'gray.900' : 'gray.50'}
                   as="button"
-                  _hover={
-                    activeResourceFilters.indexOf(value) < 0
-                      ? { bg: 'gray.200' }
-                      : { bg: 'gray.500' }
-                  }
+                  _hover={activeResourceFilters.indexOf(value) < 0 ? { bg: 'gray.200' } : { bg: 'gray.500' }}
                   onClick={() => {
                     let optionIdx = activeResourceFilters.indexOf(value)
                     if (optionIdx < 0) {
-                      setActiveResourceFilters([
-                        ...activeResourceFilters,
-                        value,
-                      ])
+                      setActiveResourceFilters([...activeResourceFilters, value])
                     } else {
-                      setActiveResourceFilters(
-                        activeResourceFilters.filter((tag) => tag !== value),
-                      )
+                      setActiveResourceFilters(activeResourceFilters.filter((tag) => tag !== value))
                     }
                   }}
                 >
@@ -275,30 +241,16 @@ export function AuditLogTable({ orgId = null }) {
                   borderRadius="full"
                   borderWidth="1px"
                   borderColor="gray.900"
-                  bg={
-                    activeActionFilters.indexOf(value) < 0
-                      ? 'gray.50'
-                      : 'gray.900'
-                  }
-                  color={
-                    activeActionFilters.indexOf(value) < 0
-                      ? 'gray.900'
-                      : 'gray.50'
-                  }
+                  bg={activeActionFilters.indexOf(value) < 0 ? 'gray.50' : 'gray.900'}
+                  color={activeActionFilters.indexOf(value) < 0 ? 'gray.900' : 'gray.50'}
                   as="button"
-                  _hover={
-                    activeActionFilters.indexOf(value) < 0
-                      ? { bg: 'gray.200' }
-                      : { bg: 'gray.500' }
-                  }
+                  _hover={activeActionFilters.indexOf(value) < 0 ? { bg: 'gray.200' } : { bg: 'gray.500' }}
                   onClick={() => {
                     let optionIdx = activeActionFilters.indexOf(value)
                     if (optionIdx < 0) {
                       setActiveActionFilters([...activeActionFilters, value])
                     } else {
-                      setActiveActionFilters(
-                        activeActionFilters.filter((tag) => tag !== value),
-                      )
+                      setActiveActionFilters(activeActionFilters.filter((tag) => tag !== value))
                     }
                   }}
                 >

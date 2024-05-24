@@ -8,12 +8,8 @@ import frenchMessages from '../../../locale/fr/messages'
 import { createQuerySchema } from '../../../query'
 import { createMutationSchema } from '../../../mutation'
 import { cleanseInput } from '../../../validators'
-import {
-  checkDomainPermission,
-  userRequired,
-  verifiedRequired,
-} from '../../../auth'
-import { loadDomainByDomain } from '../../loaders'
+import { checkDomainPermission, userRequired, verifiedRequired } from '../../../auth'
+import { loadDkimSelectorsByDomainId, loadDomainByDomain } from '../../loaders'
 import { loadUserByKey } from '../../../user/loaders'
 import dbschema from '../../../../database.json'
 
@@ -43,16 +39,16 @@ describe('given findDomainByDomain query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -86,7 +82,6 @@ describe('given findDomainByDomain query', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
-        selectors: ['selector1', 'selector2'],
         status: {
           dkim: 'pass',
           dmarc: 'pass',
@@ -94,6 +89,16 @@ describe('given findDomainByDomain query', () => {
           spf: 'fail',
           ssl: 'fail',
         },
+      })
+      const selector1 = await collections.selectors.save({ selector: 'selector1' })
+      const selector2 = await collections.selectors.save({ selector: 'selector2' })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector1._id,
+      })
+      await collections.domainsToSelectors.save({
+        _from: domain._id,
+        _to: selector2._id,
       })
       await collections.claims.save({
         _to: domain._id,
@@ -113,9 +118,9 @@ describe('given findDomainByDomain query', () => {
     })
     describe('authorized user queries domain by domain', () => {
       it('returns domain', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             query {
               findDomainByDomain(domain: "test.gc.ca") {
                 id
@@ -132,8 +137,8 @@ describe('given findDomainByDomain query', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             userKey: user._key,
             query: query,
@@ -155,9 +160,16 @@ describe('given findDomainByDomain query', () => {
             loaders: {
               loadDomainByDomain: loadDomainByDomain({ query }),
               loadUserByKey: loadUserByKey({ query }),
+              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                auth: { loginRequiredBool: true },
+              }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -177,9 +189,7 @@ describe('given findDomainByDomain query', () => {
           },
         }
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} successfully retrieved domain ${domain._key}.`,
-        ])
+        expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved domain ${domain._key}.`])
       })
     })
   })
@@ -202,9 +212,9 @@ describe('given findDomainByDomain query', () => {
       describe('given unsuccessful domain retrieval', () => {
         describe('domain cannot be found', () => {
           it('returns an appropriate error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findDomainByDomain(domain: "not-test.gc.ca") {
                     id
@@ -221,8 +231,8 @@ describe('given findDomainByDomain query', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: 1,
                 query: query,
@@ -242,11 +252,9 @@ describe('given findDomainByDomain query', () => {
                   },
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(`Unable to find the requested domain.`),
-            ]
+            const error = [new GraphQLError(`Unable to find the requested domain.`)]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
@@ -254,9 +262,9 @@ describe('given findDomainByDomain query', () => {
         })
         describe('user does not belong to an org which claims domain', () => {
           it('returns an appropriate error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 query {
                   findDomainByDomain(domain: "not-test.gc.ca") {
                     id
@@ -273,8 +281,8 @@ describe('given findDomainByDomain query', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 userKey: '1',
                 query: jest.fn(),
@@ -295,7 +303,7 @@ describe('given findDomainByDomain query', () => {
                   },
                 },
               },
-            )
+            })
 
             const error = [
               new GraphQLError(
@@ -326,9 +334,9 @@ describe('given findDomainByDomain query', () => {
       })
       describe('domain cannot be found', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findDomainByDomain(domain: "not-test.gc.ca") {
                   id
@@ -338,8 +346,8 @@ describe('given findDomainByDomain query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: 1,
               query: query,
@@ -359,11 +367,9 @@ describe('given findDomainByDomain query', () => {
                 },
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError('Impossible de trouver le domaine demandé.'),
-          ]
+          const error = [new GraphQLError('Impossible de trouver le domaine demandé.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([`User 1 could not retrieve domain.`])
@@ -371,9 +377,9 @@ describe('given findDomainByDomain query', () => {
       })
       describe('user does not belong to an org which claims domain', () => {
         it('returns an appropriate error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findDomainByDomain(domain: "not-test.gc.ca") {
                   id
@@ -390,8 +396,8 @@ describe('given findDomainByDomain query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: '1',
               query: jest.fn(),
@@ -412,7 +418,7 @@ describe('given findDomainByDomain query', () => {
                 },
               },
             },
-          )
+          })
 
           const error = [
             new GraphQLError(

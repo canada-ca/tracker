@@ -22,9 +22,7 @@ describe('given the updateUserRoleUnion', () => {
           authResult: {},
         }
 
-        expect(updateUserRoleUnion.resolveType(obj)).toMatchObject(
-          updateUserRoleResultType,
-        )
+        expect(updateUserRoleUnion.resolveType(obj)).toMatch(updateUserRoleResultType.name)
       })
     })
     describe('testing the affiliationError', () => {
@@ -36,9 +34,7 @@ describe('given the updateUserRoleUnion', () => {
           description: 'text',
         }
 
-        expect(updateUserRoleUnion.resolveType(obj)).toMatchObject(
-          affiliationError,
-        )
+        expect(updateUserRoleUnion.resolveType(obj)).toMatch(affiliationError.name)
       })
     })
   })

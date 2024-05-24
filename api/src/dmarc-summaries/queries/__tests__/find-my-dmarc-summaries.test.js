@@ -17,16 +17,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the findMyDmarcSummaries query', () => {
-  let query,
-    drop,
-    truncate,
-    schema,
-    collections,
-    org,
-    i18n,
-    user,
-    domain,
-    dmarcSummary1
+  let query, drop, truncate, schema, collections, org, i18n, user, domain, dmarcSummary1
 
   beforeAll(async () => {
     i18n = setupI18n({
@@ -65,16 +56,16 @@ describe('given the findMyDmarcSummaries query', () => {
     beforeAll(async () => {
       // Generate DB Items
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       mockedStartDateLoader = jest.fn().mockReturnValue('2021-01-01')
@@ -160,9 +151,9 @@ describe('given the findMyDmarcSummaries query', () => {
       await drop()
     })
     it('returns my dmarc summaries', async () => {
-      const response = await graphql(
+      const response = await graphql({
         schema,
-        `
+        source: `
           query {
             findMyDmarcSummaries(first: 5, month: JANUARY, year: "2021") {
               edges {
@@ -183,8 +174,8 @@ describe('given the findMyDmarcSummaries query', () => {
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           i18n,
           moment,
           userKey: user._key,
@@ -202,19 +193,17 @@ describe('given the findMyDmarcSummaries query', () => {
             verifiedRequired: verifiedRequired({ i18n }),
           },
           loaders: {
-            loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
-              {
-                query,
-                userKey: user._key,
-                cleanseInput,
-                auth: { loginRequired: true },
-                i18n,
-                loadStartDateFromPeriod: mockedStartDateLoader,
-              },
-            ),
+            loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
+              query,
+              userKey: user._key,
+              cleanseInput,
+              auth: { loginRequired: true },
+              i18n,
+              loadStartDateFromPeriod: mockedStartDateLoader,
+            }),
           },
         },
-      )
+      })
 
       const expectedResponse = {
         data: {
@@ -241,9 +230,7 @@ describe('given the findMyDmarcSummaries query', () => {
       }
 
       expect(response).toEqual(expectedResponse)
-      expect(consoleOutput).toEqual([
-        `User ${user._key} successfully retrieved their dmarc summaries`,
-      ])
+      expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved their dmarc summaries`])
     })
   })
   describe('given a unsuccessful query', () => {
@@ -264,9 +251,9 @@ describe('given the findMyDmarcSummaries query', () => {
       })
       describe('given the user is undefined', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDmarcSummaries(first: 5, month: JANUARY, year: "2021") {
                   edges {
@@ -287,8 +274,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               moment,
               userKey: undefined,
@@ -308,22 +295,18 @@ describe('given the findMyDmarcSummaries query', () => {
                 loadDmarcSummaryConnectionsByUserId: jest.fn(),
               },
             },
-          )
-          const error = [
-            new GraphQLError(`Authentication error. Please sign in.`),
-          ]
+          })
+          const error = [new GraphQLError(`Authentication error. Please sign in.`)]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to access controlled content, but userKey was undefined.`,
-          ])
+          expect(consoleOutput).toEqual([`User attempted to access controlled content, but userKey was undefined.`])
         })
       })
       describe('given a loader error', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDmarcSummaries(first: 5, month: JANUARY, year: "2021") {
                   edges {
@@ -344,8 +327,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               moment,
               userKey: user._key,
@@ -355,26 +338,18 @@ describe('given the findMyDmarcSummaries query', () => {
                 verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
-                  {
-                    query: jest
-                      .fn()
-                      .mockRejectedValue(new Error('Database error occurred.')),
-                    userKey: user._key,
-                    cleanseInput,
-                    auth: { loginRequired: true },
-                    i18n,
-                    loadStartDateFromPeriod: jest.fn(),
-                  },
-                ),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
+                  query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
+                  userKey: user._key,
+                  cleanseInput,
+                  auth: { loginRequired: true },
+                  i18n,
+                  loadStartDateFromPeriod: jest.fn(),
+                }),
               },
             },
-          )
-          const error = [
-            new GraphQLError(
-              `Unable to load DMARC summary data. Please try again.`,
-            ),
-          ]
+          })
+          const error = [new GraphQLError(`Unable to load DMARC summary data. Please try again.`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -400,9 +375,9 @@ describe('given the findMyDmarcSummaries query', () => {
       })
       describe('given the user is undefined', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDmarcSummaries(first: 5, month: JANUARY, year: "2021") {
                   edges {
@@ -423,8 +398,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               moment,
               userKey: undefined,
@@ -444,24 +419,18 @@ describe('given the findMyDmarcSummaries query', () => {
                 loadDmarcSummaryConnectionsByUserId: jest.fn(),
               },
             },
-          )
-          const error = [
-            new GraphQLError(
-              "Erreur d'authentification. Veuillez vous connecter.",
-            ),
-          ]
+          })
+          const error = [new GraphQLError("Erreur d'authentification. Veuillez vous connecter.")]
 
           expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User attempted to access controlled content, but userKey was undefined.`,
-          ])
+          expect(consoleOutput).toEqual([`User attempted to access controlled content, but userKey was undefined.`])
         })
       })
       describe('given a loader error', () => {
         it('returns an error', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyDmarcSummaries(first: 5, month: JANUARY, year: "2021") {
                   edges {
@@ -482,8 +451,8 @@ describe('given the findMyDmarcSummaries query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               moment,
               userKey: user._key,
@@ -493,26 +462,18 @@ describe('given the findMyDmarcSummaries query', () => {
                 verifiedRequired: jest.fn(),
               },
               loaders: {
-                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId(
-                  {
-                    query: jest
-                      .fn()
-                      .mockRejectedValue(new Error('Database error occurred.')),
-                    userKey: user._key,
-                    cleanseInput,
-                    auth: { loginRequired: true },
-                    i18n,
-                    loadStartDateFromPeriod: jest.fn(),
-                  },
-                ),
+                loadDmarcSummaryConnectionsByUserId: loadDmarcSummaryConnectionsByUserId({
+                  query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
+                  userKey: user._key,
+                  cleanseInput,
+                  auth: { loginRequired: true },
+                  i18n,
+                  loadStartDateFromPeriod: jest.fn(),
+                }),
               },
             },
-          )
-          const error = [
-            new GraphQLError(
-              'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
-            ),
-          ]
+          })
+          const error = [new GraphQLError('Impossible de charger les données de synthèse DMARC. Veuillez réessayer.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

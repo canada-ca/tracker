@@ -1,19 +1,17 @@
 import { t } from '@lingui/macro'
-import {
-  GraphQLBoolean,
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLString,
-} from 'graphql'
+import { GraphQLBoolean, GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql'
 import { connectionArgs, globalIdField } from 'graphql-relay'
 
 import { organizationSummaryType } from './organization-summary'
 import { nodeInterface } from '../../node'
-import { Acronym, Slug } from '../../scalars'
+import { Acronym, Slug, Year } from '../../scalars'
 import { affiliationUserOrder } from '../../affiliation/inputs'
 import { affiliationConnection } from '../../affiliation/objects'
-import { domainOrder } from '../../domain/inputs'
+import { domainOrder, domainFilter } from '../../domain/inputs'
 import { domainConnection } from '../../domain/objects'
+import { logActivity } from '../../audit-logs'
+import { OrderDirection, PeriodEnums } from '../../enums'
+import { orgSummaryConnection } from './organization-summary-connection'
 
 export const organizationType = new GraphQLObjectType({
   name: 'Organization',
@@ -64,11 +62,57 @@ export const organizationType = new GraphQLObjectType({
       description: 'Whether the organization is a verified organization.',
       resolve: ({ verified }) => verified,
     },
+    externallyManaged: {
+      type: GraphQLBoolean,
+      description: 'Whether the organization is externally managed.',
+      resolve: ({ externallyManaged }) => externallyManaged,
+    },
     summaries: {
       type: organizationSummaryType,
-      description:
-        'Summaries based on scan types that are preformed on the given organizations domains.',
+      description: 'Summaries based on scan types that are preformed on the given organizations domains.',
       resolve: ({ summaries }) => summaries,
+    },
+    historicalSummaries: {
+      type: orgSummaryConnection.connectionType,
+      description: 'Historical summaries based on scan types that are preformed on the given organizations domains.',
+      args: {
+        month: {
+          type: new GraphQLNonNull(PeriodEnums),
+          description: 'The month in which the returned data is relevant to.',
+        },
+        year: {
+          type: new GraphQLNonNull(Year),
+          description: 'The year in which the returned data is relevant to.',
+        },
+        sortDirection: {
+          type: new GraphQLNonNull(OrderDirection),
+          description: 'The direction in which to sort the data.',
+        },
+      },
+      resolve: async (
+        { _id },
+        args,
+        {
+          userKey,
+          auth: { userRequired, loginRequiredBool, verifiedRequired },
+          loaders: { loadOrganizationSummariesByPeriod },
+        },
+      ) => {
+        if (loginRequiredBool) {
+          const user = await userRequired()
+          verifiedRequired({ user })
+        }
+
+        const historicalSummaries = await loadOrganizationSummariesByPeriod({
+          orgId: _id,
+          period: args.month,
+          ...args,
+        })
+
+        console.info(`User: ${userKey} successfully retrieved their chart summaries.`)
+
+        return historicalSummaries
+      },
     },
     domainCount: {
       type: GraphQLInt,
@@ -79,33 +123,119 @@ export const organizationType = new GraphQLObjectType({
       type: GraphQLString,
       description:
         'CSV formatted output of all domains in the organization including their email and web scan statuses.',
+      args: {
+        filters: {
+          type: new GraphQLList(domainFilter),
+          description: 'Filters used to limit domains returned.',
+        },
+      },
       resolve: async (
         { _id },
-        _args,
-        { loaders: { loadOrganizationDomainStatuses } },
+        args,
+        {
+          i18n,
+          userKey,
+          query,
+          transaction,
+          collections,
+          auth: { checkPermission, userRequired, verifiedRequired },
+          loaders: { loadOrganizationDomainStatuses },
+        },
       ) => {
+        const user = await userRequired()
+        verifiedRequired({ user })
+
+        const permission = await checkPermission({ orgId: _id })
+        if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
+          console.error(
+            `User "${userKey}" attempted to retrieve CSV output for organization "${_id}". Permission: ${permission}`,
+          )
+          throw new Error(t`Permission Denied: Please contact organization user for help with retrieving this domain.`)
+        }
+
         const domains = await loadOrganizationDomainStatuses({
           orgId: _id,
+          ...args,
         })
         const headers = [
           'domain',
           'https',
           'hsts',
+          'certificates',
+          'protocols',
           'ciphers',
           'curves',
-          'protocols',
           'spf',
           'dkim',
           'dmarc',
+          'tags',
+          'hidden',
+          'rcode',
+          'blocked',
+          'wildcardSibling',
         ]
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
           let csvLine = `${domain.domain}`
-          csvLine += headers.slice(1).reduce((previousValue, currentHeader) => {
+          csvLine += headers.slice(1, 10).reduce((previousValue, currentHeader) => {
             return `${previousValue},${domain.status[currentHeader]}`
           }, '')
+          csvLine += `,${domain.tags.join('|')},${domain.hidden},${domain.rcode},${domain.blocked},${
+            domain.wildcardSibling
+          }`
           csvOutput += `\n${csvLine}`
         })
+
+        // Get org names to use in activity log
+        let orgNamesCursor
+        try {
+          orgNamesCursor = await query`
+            LET org = DOCUMENT(organizations, ${_id})
+            RETURN {
+              "orgNameEN": org.orgDetails.en.name,
+              "orgNameFR": org.orgDetails.fr.name,
+            }
+          `
+        } catch (err) {
+          console.error(
+            `Database error occurred when user: ${userKey} attempted to export org: ${_id}. Error while creating cursor for retrieving organization names. error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to export organization. Please try again.`))
+        }
+
+        let orgNames
+        try {
+          orgNames = await orgNamesCursor.next()
+        } catch (err) {
+          console.error(
+            `Cursor error occurred when user: ${userKey} attempted to export org: ${_id}. Error while retrieving organization names. error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to export organization. Please try again.`))
+        }
+
+        await logActivity({
+          transaction,
+          collections,
+          query,
+          initiatedBy: {
+            id: user._key,
+            userName: user.userName,
+            role: permission,
+          },
+          action: 'export',
+          target: {
+            resource: {
+              en: orgNames.orgNameEN,
+              fr: orgNames.orgNameFR,
+            },
+            organization: {
+              id: _id,
+              name: orgNames.orgNameEN,
+            }, // name of resource being acted upon
+            resourceType: 'organization',
+          },
+        })
+
         return csvOutput
       },
     },
@@ -119,12 +249,15 @@ export const organizationType = new GraphQLObjectType({
         },
         ownership: {
           type: GraphQLBoolean,
-          description:
-            'Limit domains to those that belong to an organization that has ownership.',
+          description: 'Limit domains to those that belong to an organization that has ownership.',
         },
         search: {
           type: GraphQLString,
           description: 'String used to search for domains.',
+        },
+        filters: {
+          type: new GraphQLList(domainFilter),
+          description: 'Filters used to limit domains returned.',
         },
         ...connectionArgs,
       },
@@ -132,10 +265,7 @@ export const organizationType = new GraphQLObjectType({
         { _id },
         args,
 
-        {
-          auth: { checkPermission },
-          loaders: { loadDomainConnectionsByOrgId },
-        },
+        { auth: { checkPermission }, loaders: { loadDomainConnectionsByOrgId } },
       ) => {
         // Check to see requesting users permission to the org is
         const permission = await checkPermission({ orgId: _id })
@@ -159,34 +289,39 @@ export const organizationType = new GraphQLObjectType({
           type: GraphQLString,
           description: 'String used to search for affiliated users.',
         },
+        includePending: {
+          type: GraphQLBoolean,
+          description: 'Exclude (false) or include only (true) pending affiliations in the results.',
+        },
         ...connectionArgs,
       },
       resolve: async (
         { _id },
         args,
-        {
-          i18n,
-          auth: { checkPermission },
-          loaders: { loadAffiliationConnectionsByOrgId },
-        },
+        { i18n, auth: { checkPermission }, loaders: { loadAffiliationConnectionsByOrgId } },
       ) => {
         const permission = await checkPermission({ orgId: _id })
-        if (permission === 'admin' || permission === 'super_admin') {
-          const affiliations = await loadAffiliationConnectionsByOrgId({
-            orgId: _id,
-            ...args,
-          })
-          return affiliations
+        if (['user', 'admin', 'owner', 'super_admin'].includes(permission) === false) {
+          throw new Error(i18n._(t`Cannot query affiliations on organization without admin permission or higher.`))
         }
-        throw new Error(
-          i18n._(
-            t`Cannot query affiliations on organization without admin permission or higher.`,
-          ),
-        )
+
+        const affiliations = await loadAffiliationConnectionsByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return affiliations
+      },
+    },
+    userHasPermission: {
+      type: GraphQLBoolean,
+      description:
+        'Value that determines if a user is affiliated with an organization, whether through organization affiliation, verified affiliation, or through super admin status.',
+      resolve: async ({ _id }, _args, { auth: { checkPermission } }) => {
+        const permission = await checkPermission({ orgId: _id })
+        return ['user', 'admin', 'super_admin', 'owner'].includes(permission)
       },
     },
   }),
   interfaces: [nodeInterface],
-  description:
-    'Organization object containing information for a given Organization.',
+  description: 'Organization object containing information for a given Organization.',
 })

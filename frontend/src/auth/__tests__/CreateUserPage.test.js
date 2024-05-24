@@ -48,15 +48,10 @@ describe('<CreateUserPage />', () => {
   it('renders', async () => {
     const { queryByText } = render(
       <MockedProvider mocks={mocks}>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/create-user/invited-token-test']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/create-user/invited-token-test']} initialIndex={0}>
                 <Route path="/create-user/:userOrgToken?">
                   <CreateUserPage />
                 </Route>
@@ -67,11 +62,7 @@ describe('<CreateUserPage />', () => {
       </MockedProvider>,
     )
 
-    await waitFor(() =>
-      expect(
-        queryByText(/Welcome to Tracker, please enter your details./),
-      ).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(queryByText(/Welcome to Tracker, please enter your details./)).toBeInTheDocument())
   })
 
   describe('given optional invited token', () => {
@@ -87,10 +78,7 @@ describe('<CreateUserPage />', () => {
           >
             <ChakraProvider theme={theme}>
               <I18nProvider i18n={i18n}>
-                <MemoryRouter
-                  initialEntries={['/create-user/invited-token-test']}
-                  initialIndex={0}
-                >
+                <MemoryRouter initialEntries={['/create-user/invited-token-test']} initialIndex={0}>
                   <Route path="/create-user/:userOrgToken?">
                     <CreateUserPage />
                   </Route>
@@ -103,9 +91,7 @@ describe('<CreateUserPage />', () => {
 
       await waitFor(() =>
         expect(
-          queryByText(
-            /Your account will automatically be linked to the organization that invited you./,
-          ),
+          queryByText(/Your account will automatically be linked to the organization that invited you./),
         ).toBeInTheDocument(),
       )
     })
@@ -141,9 +127,7 @@ describe('<CreateUserPage />', () => {
             fireEvent.blur(email)
           })
 
-          await waitFor(() =>
-            expect(queryByText(/Email cannot be empty/i)).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Email cannot be empty/i)).toBeInTheDocument())
         })
       })
 
@@ -175,11 +159,7 @@ describe('<CreateUserPage />', () => {
             fireEvent.blur(name)
           })
 
-          await waitFor(() =>
-            expect(
-              queryByText(/Display name cannot be empty/i),
-            ).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Display name cannot be empty/i)).toBeInTheDocument())
         })
       })
 
@@ -281,11 +261,7 @@ describe('<CreateUserPage />', () => {
 
           await waitFor(() => fireEvent.blur(languageSelect))
 
-          await waitFor(() =>
-            expect(
-              queryByText(/Select Preferred Language/),
-            ).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Select Preferred Language/)).toBeInTheDocument())
         })
 
         it('displays error message', async () => {
@@ -315,11 +291,7 @@ describe('<CreateUserPage />', () => {
             fireEvent.blur(languageSelect)
           })
 
-          await waitFor(() =>
-            expect(
-              queryByText(/Please choose your preferred language/i),
-            ).toBeInTheDocument(),
-          )
+          await waitFor(() => expect(queryByText(/Please choose your preferred language/i)).toBeInTheDocument())
         })
       })
     })
@@ -360,9 +332,7 @@ describe('<CreateUserPage />', () => {
 
           await waitFor(() => {
             fireEvent.blur(password)
-            expect(
-              queryByText(/Password must be at least 12 characters long/i),
-            ).toBeInTheDocument()
+            expect(queryByText(/Password must be at least 12 characters long/i)).toBeInTheDocument()
           })
         })
       })
@@ -427,16 +397,9 @@ describe('<CreateUserPage />', () => {
             data: {
               signUp: {
                 result: {
-                  user: {
-                    id: '1234asdf',
-                    jwt: 'user-jwt',
-                    tfaSendMethod: 'NONE',
-                    userName: 'UserName',
-                    emailValidated: true,
-                    preferredLang: 'ENGLISH',
-                  },
-                  authToken: 'some-auth-token',
-                  __typename: 'AuthResult',
+                  authenticateToken: '81560640-8d0d-4c20-bd10-ae589c66f137',
+                  sendMethod: 'email',
+                  __typename: 'TFASignInResult',
                 },
                 __typename: 'SignUpPayload',
               },
@@ -560,9 +523,7 @@ describe('<CreateUserPage />', () => {
       userEvent.click(createAccountButton)
 
       // expect error message
-      const orgCreationToast = await findByText(
-        /Your account could not be created/,
-      )
+      const orgCreationToast = await findByText(/Your account could not be created/)
       await waitFor(() => expect(orgCreationToast).toBeVisible())
     })
   })

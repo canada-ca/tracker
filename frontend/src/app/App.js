@@ -1,10 +1,5 @@
 import React, { Suspense, useEffect } from 'react'
-import {
-  Switch,
-  Link as RouteLink,
-  Redirect,
-  useLocation,
-} from 'react-router-dom'
+import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
 import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -29,8 +24,6 @@ import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
-import { ABTestingWrapper } from './ABTestWrapper'
-import { ABTestVariant } from './ABTestVariant'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -39,44 +32,25 @@ const DomainsPage = lazyWithRetry(() => import('../domains/DomainsPage'))
 const UserPage = lazyWithRetry(() => import('../user/UserPage'))
 const SignInPage = lazyWithRetry(() => import('../auth/SignInPage'))
 const DmarcReportPage = lazyWithRetry(() => import('../dmarc/DmarcReportPage'))
-const Organizations = lazyWithRetry(() =>
-  import('../organizations/Organizations'),
-)
-const OrganizationDetails = lazyWithRetry(() =>
-  import('../organizationDetails/OrganizationDetails'),
-)
+const Organizations = lazyWithRetry(() => import('../organizations/Organizations'))
+const OrganizationDetails = lazyWithRetry(() => import('../organizationDetails/OrganizationDetails'))
 const AdminPage = lazyWithRetry(() => import('../admin/AdminPage'))
-const ForgotPasswordPage = lazyWithRetry(() =>
-  import('../auth/ForgotPasswordPage'),
-)
-const ResetPasswordPage = lazyWithRetry(() =>
-  import('../auth/ResetPasswordPage'),
-)
-const DmarcByDomainPage = lazyWithRetry(() =>
-  import('../dmarc/DmarcByDomainPage'),
-)
-const TermsConditionsPage = lazyWithRetry(() =>
-  import('../termsConditions/TermsConditionsPage'),
-)
-const TwoFactorAuthenticatePage = lazyWithRetry(() =>
-  import('../auth/TwoFactorAuthenticatePage'),
-)
-const EmailValidationPage = lazyWithRetry(() =>
-  import('../auth/EmailValidationPage'),
-)
-const CreateOrganizationPage = lazyWithRetry(() =>
-  import('../createOrganization/CreateOrganizationPage'),
-)
+const ForgotPasswordPage = lazyWithRetry(() => import('../auth/ForgotPasswordPage'))
+const ResetPasswordPage = lazyWithRetry(() => import('../auth/ResetPasswordPage'))
+const DmarcByDomainPage = lazyWithRetry(() => import('../dmarc/DmarcByDomainPage'))
+const TermsConditionsPage = lazyWithRetry(() => import('../termsConditions/TermsConditionsPage'))
+const TwoFactorAuthenticatePage = lazyWithRetry(() => import('../auth/TwoFactorAuthenticatePage'))
+const EmailValidationPage = lazyWithRetry(() => import('../auth/EmailValidationPage'))
+const CreateOrganizationPage = lazyWithRetry(() => import('../createOrganization/CreateOrganizationPage'))
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
 const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod } =
-    useUserVar()
+  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, hasAffiliation } = useUserVar()
   const { i18n } = useLingui()
-  const { data } = useQuery(IS_LOGIN_REQUIRED, {})
+  const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
 
   // Close websocket on user jwt change (refresh/logout)
@@ -87,6 +61,59 @@ export function App() {
       wsClient.close()
     }
   }, [currentUser.jwt])
+
+  if (loading) return <LoadingMessage />
+
+  const notificationBanner = () => {
+    if (isLoggedIn()) {
+      if (isEmailValidated()) {
+        if (currentTFAMethod() === 'NONE') {
+          return (
+            <NotificationBanner bg="yellow.250">
+              <Text fontWeight="medium">
+                <Trans>
+                  To maximize your account's security,{' '}
+                  <Link textDecoration="underline" as={RouteLink} to="/user">
+                    please activate a multi-factor authentication option
+                  </Link>
+                  .
+                </Trans>
+              </Text>
+            </NotificationBanner>
+          )
+        }
+        if (!hasAffiliation()) {
+          return (
+            <NotificationBanner bg="yellow.250">
+              <Text fontWeight="medium">
+                <Trans>
+                  To view detailed scan results and other functionality,{' '}
+                  <Link textDecoration="underline" as={RouteLink} to="/organizations">
+                    please affiliate with an organization
+                  </Link>
+                  .
+                </Trans>
+              </Text>
+            </NotificationBanner>
+          )
+        }
+      } else {
+        return (
+          <NotificationBanner bg="yellow.250">
+            <Text fontWeight="medium">
+              <Trans>
+                To enable full app functionality and maximize your account's security,{' '}
+                <Link textDecoration="underline" as={RouteLink} to="/user">
+                  please verify your account
+                </Link>
+                .
+              </Trans>
+            </Text>
+          </NotificationBanner>
+        )
+      }
+    }
+  }
 
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
@@ -110,21 +137,21 @@ export function App() {
             <RouteLink to="/domains">
               <Trans>Domains</Trans>
             </RouteLink>
-            <RouteLink to="/dmarc-summaries">
-              <Trans>DMARC Summaries</Trans>
-            </RouteLink>
           </>
+        )}
+
+        {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
+          <RouteLink to="/dmarc-summaries">
+            <Trans>DMARC Summaries</Trans>
+          </RouteLink>
         )}
 
         {isLoggedIn() && (
           <>
-            <ABTestingWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <RouteLink to="/my-tracker">
-                  <Trans>myTracker</Trans>
-                </RouteLink>
-              </ABTestVariant>
-            </ABTestingWrapper>
+            <RouteLink to="/my-tracker">
+              <Trans>myTracker</Trans>
+            </RouteLink>
+
             <RouteLink to="/user">
               <Trans>Account Settings</Trans>
             </RouteLink>
@@ -140,49 +167,16 @@ export function App() {
         )}
       </Navigation>
 
-      {isLoggedIn() && !isEmailValidated() && (
-        <NotificationBanner bg="yellow.250">
-          <Text fontWeight="medium">
-            <Trans>
-              To enable full app functionality and maximize your account's
-              security,{' '}
-              <Link textDecoration="underline" as={RouteLink} to="/user">
-                please verify your account
-              </Link>
-              .
-            </Trans>
-          </Text>
-        </NotificationBanner>
-      )}
-
-      {isLoggedIn() && isEmailValidated() && currentTFAMethod() === 'NONE' && (
-        <NotificationBanner bg="yellow.250">
-          <Text fontWeight="medium">
-            <Trans>
-              To maximize your account's security,{' '}
-              <Link textDecoration="underline" as={RouteLink} to="/user">
-                please activate a multi-factor authentication option
-              </Link>
-              .
-            </Trans>
-          </Text>
-        </NotificationBanner>
-      )}
+      {notificationBanner()}
 
       <Main mb={{ base: '40px', md: 'none' }}>
         <Suspense fallback={<LoadingMessage />}>
           <Switch>
             <Page exact path="/" title={t`Home`}>
-              <LandingPage
-                loginRequired={data?.loginRequired}
-                isLoggedIn={isLoggedIn()}
-              />
+              <LandingPage loginRequired={data?.loginRequired} isLoggedIn={isLoggedIn()} />
             </Page>
 
-            <Page
-              path="/create-user/:userOrgToken?"
-              title={t`Create an Account`}
-            >
+            <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
               <CreateUserPage />
             </Page>
 
@@ -208,42 +202,17 @@ export function App() {
               title={t`Authenticate`}
             />
 
-            <Page
-              path="/forgot-password"
-              component={ForgotPasswordPage}
-              title={t`Forgot Password`}
-            />
+            <Page path="/forgot-password" component={ForgotPasswordPage} title={t`Forgot Password`} />
 
-            <Page
-              path="/reset-password/:resetToken"
-              component={ResetPasswordPage}
-              title={t`Reset Password`}
-            />
+            <Page path="/reset-password/:resetToken" component={ResetPasswordPage} title={t`Reset Password`} />
 
-            <Page
-              path="/terms-and-conditions"
-              component={TermsConditionsPage}
-              title={t`Terms & Conditions`}
-            />
+            <Page path="/terms-and-conditions" component={TermsConditionsPage} title={t`Terms & Conditions`} />
 
-            <Page
-              path="/contact-us"
-              component={ContactUsPage}
-              title={t`Contact Us`}
-            />
+            <Page path="/contact-us" component={ContactUsPage} title={t`Contact Us`} />
 
-            <Page
-              path="/guidance"
-              component={ReadGuidancePage}
-              title={t`Read guidance`}
-            />
+            <Page path="/guidance" component={ReadGuidancePage} title={t`Read guidance`} />
 
-            <PrivatePage
-              isLoginRequired={data?.loginRequired}
-              path="/organizations"
-              title={t`Organizations`}
-              exact
-            >
+            <PrivatePage isLoginRequired={data?.loginRequired} path="/organizations" title={t`Organizations`} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <Organizations />
@@ -265,9 +234,7 @@ export function App() {
             </PrivatePage>
 
             <Page path="/admin/:activeMenu?" title={t`Admin`}>
-              {isLoggedIn() &&
-              isEmailValidated() &&
-              currentTFAMethod() !== 'NONE' ? (
+              {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
                 <AdminPage isLoginRequired={data?.loginRequired} />
               ) : (
                 <Redirect
@@ -279,12 +246,7 @@ export function App() {
               )}
             </Page>
 
-            <PrivatePage
-              isLoginRequired={data?.loginRequired}
-              path="/domains"
-              title={t`Domains`}
-              exact
-            >
+            <PrivatePage isLoginRequired={data?.loginRequired} path="/domains" title={t`Domains`} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <DomainsPage />
@@ -292,12 +254,7 @@ export function App() {
               )}
             </PrivatePage>
 
-            <PrivatePage
-              isLoginRequired={data?.loginRequired}
-              path="/domains/:domainSlug/:activeTab?"
-              setTitle={false}
-              exact
-            >
+            <PrivatePage isLoginRequired={true} path="/domains/:domainSlug/:activeTab?" setTitle={false} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <GuidancePage />
@@ -306,7 +263,7 @@ export function App() {
             </PrivatePage>
 
             <PrivatePage
-              isLoginRequired={data?.loginRequired}
+              isLoginRequired={true}
               path="/domains/:domainSlug/dmarc-report/:period?/:year?"
               setTitle={false}
               exact
@@ -318,12 +275,7 @@ export function App() {
               )}
             </PrivatePage>
 
-            <PrivatePage
-              isLoginRequired={data?.loginRequired}
-              path="/dmarc-summaries"
-              title={t`DMARC Summaries`}
-              exact
-            >
+            <PrivatePage isLoginRequired={true} path="/dmarc-summaries" title={t`DMARC Summaries`} exact>
               {() => (
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <DmarcByDomainPage />
@@ -346,11 +298,7 @@ export function App() {
 
             <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
               {isLoggedIn() ? (
-                <ABTestingWrapper insiderVariantName="B">
-                  <ABTestVariant name="B">
-                    <MyTrackerPage />
-                  </ABTestVariant>
-                </ABTestingWrapper>
+                <MyTrackerPage />
               ) : (
                 <Redirect
                   to={{
@@ -366,9 +314,7 @@ export function App() {
             </Page>
 
             <Page path="/create-organization" title={t`Create Organization`}>
-              {isLoggedIn() &&
-              isEmailValidated() &&
-              currentTFAMethod() !== 'NONE' ? (
+              {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
                 <CreateOrganizationPage />
               ) : (
                 <Redirect
@@ -403,11 +349,7 @@ export function App() {
           <Trans>Terms & conditions</Trans>
         </Link>
 
-        <Link
-          href={'https://github.com/canada-ca/tracker/issues'}
-          isExternal={true}
-          ml="4"
-        >
+        <Link href={'https://github.com/canada-ca/tracker/issues'} isExternal={true} ml="4">
           <Trans>Report an Issue</Trans>
         </Link>
 

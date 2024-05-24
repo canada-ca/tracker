@@ -6,13 +6,11 @@ const { organizationType } = require('../objects')
 
 export const findOrganizationBySlug = {
   type: organizationType,
-  description:
-    'Select all information on a selected organization that a user has access to.',
+  description: 'Select all information on a selected organization that a user has access to.',
   args: {
     orgSlug: {
-      type: GraphQLNonNull(Slug),
-      description:
-        'The slugified organization name you want to retrieve data for.',
+      type: new GraphQLNonNull(Slug),
+      description: 'The slugified organization name you want to retrieve data for.',
     },
   },
   resolve: async (
@@ -21,12 +19,7 @@ export const findOrganizationBySlug = {
     {
       i18n,
       userKey,
-      auth: {
-        checkPermission,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
+      auth: { checkPermission, userRequired, verifiedRequired, loginRequiredBool },
       loaders: { loadOrgBySlug },
       validators: { cleanseInput },
     },
@@ -45,42 +38,25 @@ export const findOrganizationBySlug = {
 
     if (typeof org === 'undefined') {
       console.warn(`User ${userKey} could not retrieve organization.`)
-      throw new Error(
-        i18n._(t`No organization with the provided slug could be found.`),
-      )
+      throw new Error(i18n._(t`No organization with the provided slug could be found.`))
     }
+
+    // Check user permission for organization access
+    const permission = await checkPermission({ orgId: org._id })
 
     if (loginRequiredBool) {
-      // Check user permission for organization access
-      const permission = await checkPermission({ orgId: org._id })
-
-      if (!['super_admin', 'admin', 'user'].includes(permission)) {
+      if (!['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
         console.warn(`User ${userKey} could not retrieve organization.`)
-        throw new Error(
-          i18n._(
-            t`Permission Denied: Could not retrieve specified organization.`,
-          ),
-        )
+        throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
       }
     } else {
-      if (org.slugEN === 'super-admin' || org.slugFR === 'super-admin') {
-        // Check user permission for super-admin organization access
-        const permission = await checkPermission({ orgId: org._id })
-
-        if (!['super_admin', 'admin', 'user'].includes(permission)) {
-          console.warn(`User ${userKey} could not retrieve organization.`)
-          throw new Error(
-            i18n._(
-              t`Permission Denied: Could not retrieve specified organization.`,
-            ),
-          )
-        }
+      if (org.verified !== true && !['user', 'admin', 'owner', 'super_admin'].includes(permission)) {
+        console.warn(`User ${userKey} could not retrieve organization.`)
+        throw new Error(i18n._(t`Permission Denied: Could not retrieve specified organization.`))
       }
     }
 
-    console.info(
-      `User ${userKey} successfully retrieved organization ${org._key}.`,
-    )
+    console.info(`User ${userKey} successfully retrieved organization ${org._key}.`)
     org.id = org._key
     return org
   },

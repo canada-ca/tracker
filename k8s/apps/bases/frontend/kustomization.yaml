@@ -6,3 +6,5 @@ resources:
 - deployment.yaml
 - service.yaml
 - virtual-service.yaml
+- maintenance-deployment.yaml
+- maintenance-service.yaml

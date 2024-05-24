@@ -13,16 +13,16 @@ describe('given the checkOrgOwner function', () => {
     let query, drop, truncate, collections, user, org
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -68,8 +68,7 @@ describe('given the checkOrgOwner function', () => {
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
-          permission: 'admin',
-          owner: true,
+          permission: 'owner',
         })
       })
       it('returns true', async () => {
@@ -86,7 +85,6 @@ describe('given the checkOrgOwner function', () => {
           _from: org._id,
           _to: user._id,
           permission: 'admin',
-          owner: false,
         })
       })
       it('returns false', async () => {
@@ -123,9 +121,7 @@ describe('given the checkOrgOwner function', () => {
       })
       describe('database error occurs', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const testCheckOrgOwner = checkOrgOwner({
             i18n,
@@ -136,9 +132,7 @@ describe('given the checkOrgOwner function', () => {
           try {
             await testCheckOrgOwner({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(`Unable to load owner information. Please try again.`),
-            )
+            expect(err).toEqual(new Error(`Unable to load owner information. Please try again.`))
           }
           expect(consoleOutput).toEqual([
             `Database error when checking to see if user: 123 is the owner of: 123: Error: Database error occurred`,
@@ -148,9 +142,7 @@ describe('given the checkOrgOwner function', () => {
       describe('cursor error occurs', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockReturnValue({
-            next: jest
-              .fn()
-              .mockRejectedValue(new Error('Cursor error occurred')),
+            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred')),
           })
 
           const testCheckOrgOwner = checkOrgOwner({
@@ -162,9 +154,7 @@ describe('given the checkOrgOwner function', () => {
           try {
             await testCheckOrgOwner({ orgId: '123' })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(`Unable to load owner information. Please try again.`),
-            )
+            expect(err).toEqual(new Error(`Unable to load owner information. Please try again.`))
           }
           expect(consoleOutput).toEqual([
             `Cursor error when checking to see if user: 123 is the owner of: 123: Error: Cursor error occurred`,
@@ -187,9 +177,7 @@ describe('given the checkOrgOwner function', () => {
       })
       describe('database error occurs', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const testCheckOrgOwner = checkOrgOwner({
             i18n,
@@ -201,9 +189,7 @@ describe('given the checkOrgOwner function', () => {
             await testCheckOrgOwner({ orgId: '123' })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                `Impossible de charger les informations sur le propriétaire. Veuillez réessayer.`,
-              ),
+              new Error(`Impossible de charger les informations sur le propriétaire. Veuillez réessayer.`),
             )
           }
           expect(consoleOutput).toEqual([
@@ -214,9 +200,7 @@ describe('given the checkOrgOwner function', () => {
       describe('cursor error occurs', () => {
         it('throws an error', async () => {
           const mockedQuery = jest.fn().mockReturnValue({
-            next: jest
-              .fn()
-              .mockRejectedValue(new Error('Cursor error occurred')),
+            next: jest.fn().mockRejectedValue(new Error('Cursor error occurred')),
           })
 
           const testCheckOrgOwner = checkOrgOwner({
@@ -229,9 +213,7 @@ describe('given the checkOrgOwner function', () => {
             await testCheckOrgOwner({ orgId: '123' })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                `Impossible de charger les informations sur le propriétaire. Veuillez réessayer.`,
-              ),
+              new Error(`Impossible de charger les informations sur le propriétaire. Veuillez réessayer.`),
             )
           }
           expect(consoleOutput).toEqual([

@@ -11,24 +11,22 @@ export const removeDomain = new mutationWithClientMutationId({
   description: 'This mutation allows the removal of unused domains.',
   inputFields: () => ({
     domainId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the domain you wish to remove.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization you wish to remove the domain from.',
     },
     reason: {
-      type: GraphQLNonNull(DomainRemovalReasonEnum),
-      description:
-        'The reason given for why this domain is being removed from the organization.',
+      type: new GraphQLNonNull(DomainRemovalReasonEnum),
+      description: 'The reason given for why this domain is being removed from the organization.',
     },
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(removeDomainUnion),
-      description:
-        '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
+      type: new GraphQLNonNull(removeDomainUnion),
+      description: '`RemoveDomainUnion` returning either a `DomainResultType`, or `DomainErrorType` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -52,9 +50,7 @@ export const removeDomain = new mutationWithClientMutationId({
     tfaRequired({ user })
 
     // Cleanse Input
-    const { type: _domainType, id: domainId } = fromGlobalId(
-      cleanseInput(args.domainId),
-    )
+    const { type: _domainType, id: domainId } = fromGlobalId(cleanseInput(args.domainId))
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get domain from db
@@ -62,9 +58,7 @@ export const removeDomain = new mutationWithClientMutationId({
 
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`,
-      )
+      console.warn(`User: ${userKey} attempted to remove ${domainId} however no domain is associated with that id.`)
       return {
         _type: 'error',
         code: 400,
@@ -83,39 +77,34 @@ export const removeDomain = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to remove domain from unknown organization.`,
-        ),
+        description: i18n._(t`Unable to remove domain from unknown organization.`),
       }
     }
 
     // Get permission
     const permission = await checkPermission({ orgId: org._id })
 
-    // Check to see if domain belongs to verified check org
-    if (org.verified && permission !== 'super_admin') {
-      console.warn(
-        `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
-      )
-      return {
-        _type: 'error',
-        code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact super admin for help with removing domain.`,
-        ),
-      }
-    }
-
-    if (permission !== 'super_admin' && permission !== 'admin') {
+    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
       console.warn(
         `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} however they do not have permission in that org.`,
       )
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact organization admin for help with removing domain.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with removing domain.`),
+      }
+    }
+
+    // Check to see if domain belongs to verified check org
+    // if domain returns NXDOMAIN, allow removal
+    if (org.verified && permission !== 'super_admin' && domain.rcode !== 'NXDOMAIN') {
+      console.warn(
+        `User: ${userKey} attempted to remove ${domain.domain} in ${org.slug} but does not have permission to remove a domain from a verified check org.`,
+      )
+      return {
+        _type: 'error',
+        code: 403,
+        description: i18n._(t`Permission Denied: Please contact super admin for help with removing domain.`),
       }
     }
 
@@ -144,9 +133,7 @@ export const removeDomain = new mutationWithClientMutationId({
       console.error(
         `Error occurred for user: ${userKey}, when attempting to remove domain "${domain.domain}" from organization with slug "${org.slug}". Organization does not have claim for domain.`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove domain. Domain is not part of organization.`),
-      )
+      throw new Error(i18n._(t`Unable to remove domain. Domain is not part of organization.`))
     }
 
     // check to see if org removing domain has ownership
@@ -222,94 +209,76 @@ export const removeDomain = new mutationWithClientMutationId({
       // Remove scan data
 
       try {
-        // Remove DKIM data
+        // Remove web data
         await trx.step(async () => {
           await query`
-            WITH dkim, dkimResults, domains
-            FOR dkimV, domainsDkimEdge IN 1..1 OUTBOUND ${domain._id} domainsDKIM
-              FOR dkimResult, dkimToDkimResultsEdge In 1..1 OUTBOUND dkimV._id dkimToDkimResults
-                REMOVE dkimResult IN dkimResults
-                REMOVE dkimToDkimResultsEdge IN dkimToDkimResults
-                OPTIONS { waitForSync: true }
-              REMOVE dkimV IN dkim
-              REMOVE domainsDkimEdge IN domainsDKIM
+            WITH web, webScan, domains
+            FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
+              LET removeWebScansQuery = (
+                  FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
+                    REMOVE webScanV IN webScan
+                    REMOVE webToWebScansV IN webToWebScans
+                    OPTIONS { waitForSync: true }
+              )
+              REMOVE webV IN web
+              REMOVE domainsWebEdge IN domainsWeb
               OPTIONS { waitForSync: true }
           `
         })
       } catch (err) {
         console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove DKIM data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
       try {
-        // Remove DMARC data
+        // Remove DNS data
         await trx.step(async () => {
           await query`
-            WITH dmarc, domains
-            FOR dmarcV, domainsDmarcEdge IN 1..1 OUTBOUND ${domain._id} domainsDMARC
-              REMOVE dmarcV IN dmarc
-              REMOVE domainsDmarcEdge IN domainsDMARC
-          `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove DMARC data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
-      }
-
-      try {
-        // Remove HTTPS data
-        await trx.step(async () => {
-          await query`
-            WITH https, domains
-            FOR httpsV, domainsHttpsEdge IN 1..1 OUTBOUND ${domain._id} domainsHTTPS
-              REMOVE httpsV IN https
-              REMOVE domainsHttpsEdge IN domainsHTTPS
+            WITH dns, domains
+            FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
+              REMOVE dnsV IN dns
+              REMOVE domainsDNSEdge IN domainsDNS
               OPTIONS { waitForSync: true }
           `
         })
       } catch (err) {
         console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove HTTPS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
+      // remove favourites
       try {
-        // Remove SPF data
         await trx.step(async () => {
           await query`
-            WITH spf, domains
-            FOR spfV, domainsSpfEdge IN 1..1 OUTBOUND ${domain._id} domainsSPF
-              REMOVE spfV IN spf
-              REMOVE domainsSpfEdge IN domainsSPF
-              OPTIONS { waitForSync: true }
+            WITH favourites, domains
+            FOR fav IN favourites
+              FILTER fav._to == ${domain._id}
+              REMOVE fav IN favourites
           `
         })
       } catch (err) {
         console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove SPF data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
+      // remove DKIM selectors
       try {
-        // Remove SSL data
         await trx.step(async () => {
           await query`
-            WITH ssl, domains
-            FOR sslV, domainsSslEdge IN 1..1 OUTBOUND ${domain._id} domainsSSL
-              REMOVE sslV IN ssl
-              REMOVE domainsSslEdge IN domainsSSL
-              OPTIONS { waitForSync: true }
+            FOR e IN domainsToSelectors
+              FILTER e._from == ${domain._id}
+              REMOVE e IN domainsToSelectors
           `
         })
       } catch (err) {
         console.error(
-          `Trx step error occurred while user: ${userKey} attempted to remove SSL data for ${domain.domain} in org: ${org.slug}, error: ${err}`,
+          `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${org.slug}, error: ${err}`,
         )
         throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
@@ -365,9 +334,7 @@ export const removeDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
-    console.info(
-      `User: ${userKey} successfully removed domain: ${domain.domain} from org: ${org.slug}.`,
-    )
+    console.info(`User: ${userKey} successfully removed domain: ${domain.domain} from org: ${org.slug}.`)
     await logActivity({
       transaction,
       collections,
@@ -391,9 +358,7 @@ export const removeDomain = new mutationWithClientMutationId({
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully removed domain: ${domain.domain} from ${org.slug}.`,
-      ),
+      status: i18n._(t`Successfully removed domain: ${domain.domain} from ${org.slug}.`),
       domain,
     }
   },

@@ -1,4 +1,4 @@
-import { Kind, GraphQLError, GraphQLScalarType } from 'graphql'
+import {Kind, GraphQLError, GraphQLScalarType} from 'graphql'
 
 const validate = (value) => {
   const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/

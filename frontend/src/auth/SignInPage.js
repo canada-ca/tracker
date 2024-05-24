@@ -1,15 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import {
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  Heading,
-  Link,
-  Text,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Button, Checkbox, Flex, Heading, Link, Text, useToast } from '@chakra-ui/react'
 import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
@@ -20,10 +11,7 @@ import { PasswordField } from '../components/fields/PasswordField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useUserVar } from '../utilities/userState'
 import { activate } from '../utilities/i18n.config'
-import {
-  getRequirement,
-  schemaToValidation,
-} from '../utilities/fieldRequirements'
+import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
 import { SIGN_IN } from '../graphql/mutations'
 
 export default function SignInPage() {
@@ -60,6 +48,7 @@ export default function SignInPage() {
           userName: signIn.result.user.userName,
           emailValidated: signIn.result.user.emailValidated,
           insideUser: signIn.result.user.insideUser,
+          affiliations: signIn.result.user.affiliations,
         })
         if (signIn.result.user.preferredLang === 'ENGLISH') activate('en')
         else if (signIn.result.user.preferredLang === 'FRENCH') activate('fr')
@@ -78,12 +67,9 @@ export default function SignInPage() {
       // 2FA enabled
       else if (signIn.result.__typename === 'TFASignInResult') {
         // redirect to the authenticate page
-        history.push(
-          `/authenticate/${signIn.result.sendMethod.toLowerCase()}/${
-            signIn.result.authenticateToken
-          }`,
-          { from },
-        )
+        history.push(`/authenticate/${signIn.result.sendMethod.toLowerCase()}/${signIn.result.authenticateToken}`, {
+          from,
+        })
       }
       // Non server side error occurs
       else if (signIn.result.__typename === 'SignInError') {
@@ -127,19 +113,8 @@ export default function SignInPage() {
         }}
       >
         {({ handleSubmit, isSubmitting, handleChange }) => (
-          <form
-            onSubmit={handleSubmit}
-            role="form"
-            aria-label="form"
-            name="form"
-            autoComplete="on"
-          >
-            <Heading
-              as="h1"
-              fontSize="3xl"
-              mb="8"
-              textAlign={{ lg: 'left', md: 'center' }}
-            >
+          <form onSubmit={handleSubmit} role="form" aria-label="form" name="form" autoComplete="on">
+            <Heading as="h1" fontSize="3xl" mb="8" textAlign={{ lg: 'left', md: 'center' }}>
               <Trans>Login</Trans>
             </Heading>
 
@@ -150,42 +125,25 @@ export default function SignInPage() {
             </Box>
 
             <Box w={{ md: '100%', lg: '33%' }}>
-              <EmailField name="email" mb={4} />
+              <EmailField inputProps={{ autoFocus: true }} name="email" mb={4} />
 
               <PasswordField name="password" mb={2} />
 
               <Flex mb="4">
-                <Checkbox
-                  name="rememberMe"
-                  colorScheme="orange"
-                  borderColor="black"
-                  size="lg"
-                  onChange={handleChange}
-                >
+                <Checkbox name="rememberMe" colorScheme="orange" borderColor="black" size="lg" onChange={handleChange}>
                   <Text fontSize="md">
                     <Trans>Remember me</Trans>
                   </Text>
                 </Checkbox>
 
-                <Link
-                  as={RouteLink}
-                  to="/forgot-password"
-                  color="primary"
-                  ml="auto"
-                >
+                <Link as={RouteLink} to="/forgot-password" color="primary" ml="auto">
                   <Text>
                     <Trans>Forgot your password?</Trans>
                   </Text>
                 </Link>
               </Flex>
 
-              <Button
-                variant="primary"
-                isLoading={isSubmitting}
-                type="submit"
-                width="100%"
-                mb={5}
-              >
+              <Button variant="primary" isLoading={isSubmitting} type="submit" width="100%" mb={5}>
                 <Trans>Sign In</Trans>
               </Button>
 

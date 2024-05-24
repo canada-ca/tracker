@@ -17,9 +17,15 @@ export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
       const labelPadding = -width / 2 + 20
 
       const { colors } = theme
-      const color = d3
-        .scaleOrdinal()
-        .range(['#22485B', '#675292', '#A15196', '#D45087', '#F15E6B'])
+      const { tracker } = colors
+      const radialChartColours = [
+        tracker.cool.dark,
+        tracker.logo.yellow,
+        tracker.logo.lightOrange,
+        tracker.logo.orange,
+        tracker.logo.darkOrange,
+      ]
+      const color = d3.scaleOrdinal().range(radialChartColours)
 
       const categoryDisplay = {
         'not implemented': { name: t`0. Not Implemented`, color: colors.weak },
@@ -60,8 +66,7 @@ export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
       const keys = data.map((d, _i) => d.name)
       // number of arcs
       const numArcs = keys.length
-      const arcWidth =
-        (chartRadius - arcMinRadius - numArcs * arcPadding) / numArcs
+      const arcWidth = (chartRadius - arcMinRadius - numArcs * arcPadding) / numArcs
 
       const radialAxis = svg
         .append('g')
@@ -75,12 +80,7 @@ export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
         .append('text')
         .attr('x', labelPadding)
         .attr('y', (_d, i) => -getOuterRadius(i) + arcPadding / 2)
-        .text(
-          (d) =>
-            `${categoryDisplay[d.name].name}: ${
-              d.count
-            } - ${d.percentage.toFixed(2)}%`,
-        )
+        .text((d) => `${categoryDisplay[d.name].name}: ${d.count} - ${d.percentage.toFixed(2)}%`)
 
       // grey data paths
       const path = d3

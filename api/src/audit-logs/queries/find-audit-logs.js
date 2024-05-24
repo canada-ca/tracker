@@ -19,8 +19,7 @@ export const findAuditLogs = {
     },
     search: {
       type: GraphQLString,
-      description:
-        'String used to search for logs by initiant user or target resource.',
+      description: 'String used to search for logs by initiant user or target resource.',
     },
     filters: {
       type: logFilters,
@@ -48,19 +47,15 @@ export const findAuditLogs = {
 
     // Check to see if user belongs to org
     const permission = await checkPermission({ orgId: org?._id })
-    if (permission === 'admin' || permission === 'super_admin') {
-      const auditLogCollection = await loadAuditLogsByOrgId({
-        ...args,
-        orgId: org?._key,
-        permission,
-      })
-      console.info(`User: ${userKey} successfully retrieved audit logs.`)
-      return auditLogCollection
+    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+      throw new Error(i18n._(t`Cannot query audit logs on organization without admin permission or higher.`))
     }
-    throw new Error(
-      i18n._(
-        t`Cannot query audit logs on organization without admin permission or higher.`,
-      ),
-    )
+    const auditLogCollection = await loadAuditLogsByOrgId({
+      ...args,
+      orgId: org?._key,
+      permission,
+    })
+    console.info(`User: ${userKey} successfully retrieved audit logs.`)
+    return auditLogCollection
   },
 }

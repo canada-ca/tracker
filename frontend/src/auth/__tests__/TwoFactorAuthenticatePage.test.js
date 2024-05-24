@@ -28,15 +28,10 @@ describe('<TwoFactorAuthenticatePage />', () => {
   it('renders correctly', async () => {
     const { getByText } = render(
       <MockedProvider>
-        <UserVarProvider
-          userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}
-        >
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-              <MemoryRouter
-                initialEntries={['/authenticate/phone/authenticate-token-test']}
-                initialIndex={0}
-              >
+              <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
                 <Route path="/authenticate/:sendMethod/:authenticateToken">
                   <TwoFactorAuthenticatePage />
                 </Route>
@@ -47,9 +42,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
       </MockedProvider>,
     )
 
-    await waitFor(() =>
-      expect(getByText(/Two Factor Authentication/)).toBeInTheDocument(),
-    )
+    await waitFor(() => expect(getByText(/Two Factor Authentication/)).toBeInTheDocument())
   })
 
   describe('given no input', () => {
@@ -67,12 +60,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
               >
                 <ChakraProvider theme={theme}>
                   <I18nProvider i18n={i18n}>
-                    <MemoryRouter
-                      initialEntries={[
-                        '/authenticate/phone/authenticate-token-test',
-                      ]}
-                      initialIndex={0}
-                    >
+                    <MemoryRouter initialEntries={['/authenticate/phone/authenticate-token-test']} initialIndex={0}>
                       <Route path="/authenticate/:sendMethod/:authenticateToken">
                         <TwoFactorAuthenticatePage />
                       </Route>
@@ -86,9 +74,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           fireEvent.click(submitButton)
 
           await waitFor(() => {
-            expect(
-              getByText(/Code field must not be empty/i),
-            ).toBeInTheDocument()
+            expect(getByText(/Code field must not be empty/i)).toBeInTheDocument()
           })
         })
       })
@@ -107,6 +93,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },
@@ -126,7 +113,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         initialIndex: 0,
       })
 
-      const { container, getByRole, queryByText } = render(
+      const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
@@ -148,7 +135,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         </MockedProvider>,
       )
 
-      const twoFactorCode = container.querySelector('#twoFactorCode')
+      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
 
       fireEvent.change(twoFactorCode, {
@@ -160,9 +147,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
       fireEvent.submit(form)
 
       await waitFor(() => {
-        expect(
-          queryByText(/Unable to sign in to your account, please try again./i),
-        )
+        expect(queryByText(/Unable to sign in to your account, please try again./i))
       })
     })
     it('client-side error', async () => {
@@ -176,6 +161,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },
@@ -202,7 +188,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         initialIndex: 0,
       })
 
-      const { container, getByRole, queryByText } = render(
+      const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
@@ -224,7 +210,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         </MockedProvider>,
       )
 
-      const twoFactorCode = container.querySelector('#twoFactorCode')
+      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
 
       fireEvent.change(twoFactorCode, {
@@ -250,6 +236,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },
@@ -276,7 +263,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         initialIndex: 0,
       })
 
-      const { container, getByRole, queryByText } = render(
+      const { getAllByRole, getByRole, queryByText } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
@@ -298,7 +285,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         </MockedProvider>,
       )
 
-      const twoFactorCode = container.querySelector('#twoFactorCode')
+      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
 
       fireEvent.change(twoFactorCode, {
@@ -327,6 +314,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
           request: {
             query: AUTHENTICATE,
             variables: {
+              sendMethod: 'PHONE',
               authenticateToken: values.authenticateToken,
               authenticationCode: values.authenticationCode,
             },
@@ -358,7 +346,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         initialIndex: 0,
       })
 
-      const { container, getByRole } = render(
+      const { getAllByRole, getByRole } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <UserVarProvider
             userVar={makeVar({
@@ -380,7 +368,7 @@ describe('<TwoFactorAuthenticatePage />', () => {
         </MockedProvider>,
       )
 
-      const twoFactorCode = container.querySelector('#twoFactorCode')
+      const twoFactorCode = getAllByRole('textbox', { name: 'Please enter your pin code' })[0]
       const form = getByRole('form')
 
       fireEvent.change(twoFactorCode, {

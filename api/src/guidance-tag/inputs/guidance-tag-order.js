@@ -7,11 +7,11 @@ export const guidanceTagOrder = new GraphQLInputObjectType({
   description: 'Ordering options for guidance tag connections.',
   fields: () => ({
     field: {
-      type: GraphQLNonNull(GuidanceTagOrderField),
+      type: new GraphQLNonNull(GuidanceTagOrderField),
       description: 'The field to order guidance tags by.',
     },
     direction: {
-      type: GraphQLNonNull(OrderDirection),
+      type: new GraphQLNonNull(OrderDirection),
       description: 'The ordering direction.',
     },
   }),

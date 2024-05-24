@@ -1,10 +1,5 @@
 import crypto from 'crypto'
-import {
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLString,
-  GraphQLBoolean,
-} from 'graphql'
+import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLBoolean } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
@@ -21,7 +16,7 @@ describe('given the user object', () => {
       const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a userName field', () => {
       const demoType = userPersonalType.getFields()
@@ -69,9 +64,7 @@ describe('given the user object', () => {
       const demoType = userPersonalType.getFields()
 
       expect(demoType).toHaveProperty('affiliations')
-      expect(demoType.affiliations.type).toMatchObject(
-        affiliationConnection.connectionType,
-      )
+      expect(demoType.affiliations.type).toMatchObject(affiliationConnection.connectionType)
     })
   })
   describe('testing the field resolvers', () => {
@@ -79,27 +72,21 @@ describe('given the user object', () => {
       it('returns the resolved field', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('user', '1'),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('user', '1'))
       })
     })
     describe('testing the userName field', () => {
       it('returns the resolved value', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(
-          demoType.userName.resolve({ userName: 'test@email.gc.ca' }),
-        ).toEqual('test@email.gc.ca')
+        expect(demoType.userName.resolve({ userName: 'test@email.gc.ca' })).toEqual('test@email.gc.ca')
       })
     })
     describe('testing the displayName field', () => {
       it('returns the resolved value', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(
-          demoType.displayName.resolve({ displayName: 'display name' }),
-        ).toEqual('display name')
+        expect(demoType.displayName.resolve({ displayName: 'display name' })).toEqual('display name')
       })
     })
     describe('testing the phoneNumber field', () => {
@@ -146,14 +133,9 @@ describe('given the user object', () => {
             phoneNumber: '12345678912',
           }
 
-          const cipher = crypto.createCipheriv(
-            'aes-256-ccm',
-            String(CIPHER_KEY),
-            Buffer.from(phoneDetails.iv, 'hex'),
-            {
-              authTagLength: 16,
-            },
-          )
+          const cipher = crypto.createCipheriv('aes-256-ccm', String(CIPHER_KEY), Buffer.from(phoneDetails.iv, 'hex'), {
+            authTagLength: 16,
+          })
           let encrypted = cipher.update(phoneDetails.phoneNumber, 'utf8', 'hex')
           encrypted += cipher.final('hex')
 
@@ -177,36 +159,28 @@ describe('given the user object', () => {
       it('returns the resolved value', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(
-          demoType.preferredLang.resolve({ preferredLang: 'english' }),
-        ).toEqual('english')
+        expect(demoType.preferredLang.resolve({ preferredLang: 'english' })).toEqual('english')
       })
     })
     describe('testing the phoneValidated field', () => {
       it('returns the resolved value', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(
-          demoType.phoneValidated.resolve({ phoneValidated: true }),
-        ).toEqual(true)
+        expect(demoType.phoneValidated.resolve({ phoneValidated: true })).toEqual(true)
       })
     })
     describe('testing the emailValidated field', () => {
       it('returns the resolved value', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(
-          demoType.emailValidated.resolve({ emailValidated: true }),
-        ).toEqual(true)
+        expect(demoType.emailValidated.resolve({ emailValidated: true })).toEqual(true)
       })
     })
     describe('testing the tfaSendMethod field', () => {
       it('returns the resolved value', () => {
         const demoType = userPersonalType.getFields()
 
-        expect(
-          demoType.tfaSendMethod.resolve({ tfaSendMethod: 'phone' }),
-        ).toEqual('phone')
+        expect(demoType.tfaSendMethod.resolve({ tfaSendMethod: 'phone' })).toEqual('phone')
       })
     })
     describe('testing the affiliations field', () => {
@@ -246,9 +220,7 @@ describe('given the user object', () => {
             { first: 1 },
             {
               loaders: {
-                loadAffiliationConnectionsByUserId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+                loadAffiliationConnectionsByUserId: jest.fn().mockReturnValue(expectedResult),
               },
             },
           ),

@@ -9,7 +9,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
   description: 'This mutation allows the user to two factor authenticate.',
   inputFields: () => ({
     twoFactorCode: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt),
       description: 'The two factor code that was received via text message.',
     },
   }),
@@ -23,15 +23,7 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    {
-      i18n,
-      userKey,
-      query,
-      collections,
-      transaction,
-      auth: { userRequired },
-      loaders: { loadUserByKey },
-    },
+    { i18n, userKey, query, collections, transaction, auth: { userRequired }, loaders: { loadUserByKey } },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
@@ -46,17 +38,13 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Two factor code length is incorrect. Please try again.`,
-        ),
+        description: i18n._(t`Two factor code length is incorrect. Please try again.`),
       }
     }
 
     // Check that TFA codes match
     if (twoFactorCode !== user.tfaCode) {
-      console.warn(
-        `User: ${user._key} attempted to two factor authenticate, however the tfa codes do not match.`,
-      )
+      console.warn(`User: ${user._key} attempted to two factor authenticate, however the tfa codes do not match.`)
       return {
         _type: 'error',
         code: 400,
@@ -79,38 +67,26 @@ export const verifyPhoneNumber = new mutationWithClientMutationId({
         `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred when upserting the tfaValidate field for ${user._key}: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to two factor authenticate. Please try again.`),
-      )
+      console.error(`Trx step error occurred when upserting the tfaValidate field for ${user._key}: ${err}`)
+      throw new Error(i18n._(t`Unable to two factor authenticate. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred when upserting the tfaValidate field for ${user._key}: ${err}`,
-      )
-      throw new Error(
-        i18n._(t`Unable to two factor authenticate. Please try again.`),
-      )
+      console.error(`Trx commit error occurred when upserting the tfaValidate field for ${user._key}: ${err}`)
+      throw new Error(i18n._(t`Unable to two factor authenticate. Please try again.`))
     }
 
     await loadUserByKey.clear(userKey)
     const updatedUser = await loadUserByKey.load(userKey)
 
-    console.info(
-      `User: ${user._key} successfully two factor authenticated their account.`,
-    )
+    console.info(`User: ${user._key} successfully two factor authenticated their account.`)
 
     return {
       _type: 'success',
       user: updatedUser,
-      status: i18n._(
-        t`Successfully verified phone number, and set TFA send method to text.`,
-      ),
+      status: i18n._(t`Successfully verified phone number, and set TFA send method to text.`),
     }
   },
 })

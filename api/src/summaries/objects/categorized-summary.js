@@ -5,7 +5,7 @@ export const categorizedSummaryType = new GraphQLObjectType({
   name: 'CategorizedSummary',
   fields: () => ({
     categories: {
-      type: GraphQLList(summaryCategoryType),
+      type: new GraphQLList(summaryCategoryType),
       description: `List of SummaryCategory objects with data for different computed categories.`,
       resolve: ({ categories }) => categories,
     },

@@ -7,15 +7,14 @@ import { logActivity } from '../../audit-logs/mutations/log-activity'
 
 export const removeUserFromOrg = new mutationWithClientMutationId({
   name: 'RemoveUserFromOrg',
-  description:
-    'This mutation allows admins or higher to remove users from any organizations they belong to.',
+  description: 'This mutation allows admins or higher to remove users from any organizations they belong to.',
   inputFields: () => ({
     userId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The user id of the user to be removed.',
     },
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The organization that the user is to be removed from.',
     },
   }),
@@ -59,24 +58,12 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to remove user from unknown organization.`,
-        ),
+        description: i18n._(t`Unable to remove user from unknown organization.`),
       }
     }
 
     // Check requesting users permission
     const permission = await checkPermission({ orgId: requestedOrg._id })
-    if (permission === 'user' || typeof permission === 'undefined') {
-      console.warn(
-        `User: ${userKey} attempted to remove user: ${requestedUserKey} from org: ${requestedOrg._key}, however they do not have the permission to remove users.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(t`Unable to remove user from organization.`),
-      }
-    }
 
     // Get requested user
     const requestedUser = await loadUserByKey.load(requestedUserKey)
@@ -87,9 +74,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to remove unknown user from organization.`,
-        ),
+        description: i18n._(t`Unable to remove unknown user from organization.`),
       }
     }
 
@@ -106,11 +91,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
       )
-      throw new Error(
-        i18n._(
-          t`Unable to remove user from this organization. Please try again.`,
-        ),
-      )
+      throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
     }
 
     if (affiliationCursor.count < 1) {
@@ -120,9 +101,7 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to remove a user that already does not belong to this organization.`,
-        ),
+        description: i18n._(t`Unable to remove a user that already does not belong to this organization.`),
       }
     }
 
@@ -133,31 +112,39 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred when user: ${userKey} attempted to check the current permission of user: ${requestedUser._key} to see if they could be removed: ${err}`,
       )
-      throw new Error(
-        i18n._(
-          t`Unable to remove user from this organization. Please try again.`,
-        ),
+      throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
+    }
+
+    // Only admins, owners, and super admins can remove users
+    if (['admin', 'owner', 'super_admin'].includes(permission) === false) {
+      console.warn(
+        `User: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, but they do not have the right permission.`,
       )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with removing users.`),
+      }
     }
 
-    let canRemove
-    if (
-      permission === 'super_admin' &&
-      (affiliation.permission === 'admin' || affiliation.permission === 'user')
-    ) {
-      canRemove = true
-    } else if (permission === 'admin' && affiliation.permission === 'user') {
-      canRemove = true
-    } else {
-      canRemove = false
+    // Only super admins can remove super admins and owners
+    if (['owner', 'super_admin'].includes(affiliation.permission) && permission !== 'super_admin') {
+      console.warn(
+        `User: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, but they do not have the right permission.`,
+      )
+      return {
+        _type: 'error',
+        code: 400,
+        description: i18n._(t`Permission Denied: Please contact organization admin for help with removing users.`),
+      }
     }
 
-    if (canRemove) {
-      // Setup Transaction
-      const trx = await transaction(collections)
+    // Setup Transaction
+    const trx = await transaction(collections)
 
-      try {
-        await trx.step(async () => {
+    try {
+      await trx.step(
+        () =>
           query`
             WITH affiliations, organizations, users
             FOR aff IN affiliations
@@ -165,74 +152,52 @@ export const removeUserFromOrg = new mutationWithClientMutationId({
               FILTER aff._to == ${requestedUser._id}
               REMOVE aff IN affiliations
               RETURN true
-        `
-        })
-      } catch (err) {
-        console.error(
-          `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
-        )
-        throw new Error(
-          i18n._(
-            t`Unable to remove user from this organization. Please try again.`,
-          ),
-        )
-      }
-
-      try {
-        await trx.commit()
-      } catch (err) {
-        console.error(
-          `Trx commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
-        )
-        throw new Error(
-          i18n._(
-            t`Unable to remove user from this organization. Please try again.`,
-          ),
-        )
-      }
-
-      console.info(
-        `User: ${userKey} successfully removed user: ${requestedUser._key} from org: ${requestedOrg._key}.`,
+        `,
       )
-      await logActivity({
-        transaction,
-        collections,
-        query,
-        initiatedBy: {
-          id: user._key,
-          userName: user.userName,
-          role: permission,
-        },
-        action: 'remove',
-        target: {
-          resource: requestedUser.userName,
-          organization: {
-            id: requestedOrg._key,
-            name: requestedOrg.name,
-          }, // name of resource being acted upon
-          resourceType: 'user', // user, org, domain
-        },
-      })
-
-      return {
-        _type: 'regular',
-        status: i18n._(t`Successfully removed user from organization.`),
-        user: {
-          id: requestedUser.id,
-          userName: requestedUser.userName,
-        },
-      }
-    } else {
-      console.warn(
-        `User: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, but they do not have the right permission.`,
+    } catch (err) {
+      console.error(
+        `Trx step error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
       )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(
-          t`Permission Denied: Please contact organization admin for help with removing users.`,
-        ),
-      }
+      throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Trx commit error occurred when user: ${userKey} attempted to remove user: ${requestedUser._key} from org: ${requestedOrg._key}, error: ${err}`,
+      )
+      throw new Error(i18n._(t`Unable to remove user from this organization. Please try again.`))
+    }
+
+    console.info(`User: ${userKey} successfully removed user: ${requestedUser._key} from org: ${requestedOrg._key}.`)
+    await logActivity({
+      transaction,
+      collections,
+      query,
+      initiatedBy: {
+        id: user._key,
+        userName: user.userName,
+        role: permission,
+      },
+      action: 'remove',
+      target: {
+        resource: requestedUser.userName,
+        organization: {
+          id: requestedOrg._key,
+          name: requestedOrg.name,
+        }, // name of resource being acted upon
+        resourceType: 'user', // user, org, domain
+      },
+    })
+
+    return {
+      _type: 'regular',
+      status: i18n._(t`Successfully removed user from organization.`),
+      user: {
+        id: requestedUser.id,
+        userName: requestedUser.userName,
+      },
     }
   },
 })

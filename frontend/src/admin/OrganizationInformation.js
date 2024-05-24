@@ -30,22 +30,12 @@ import { REMOVE_ORGANIZATION, UPDATE_ORGANIZATION } from '../graphql/mutations'
 import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
-import {
-  getRequirement,
-  schemaToValidation,
-} from '../utilities/fieldRequirements'
+import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
+import withSuperAdmin from '../app/withSuperAdmin'
 
-export function OrganizationInformation({
-  orgSlug,
-  removeOrgCallback: setSelectedOrg,
-  ...props
-}) {
+export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelectedOrg, ...props }) {
   const toast = useToast()
-  const {
-    isOpen: isRemovalOpen,
-    onOpen: onRemovalOpen,
-    onClose: onRemovalClose,
-  } = useDisclosure()
+  const { isOpen: isRemovalOpen, onOpen: onRemovalOpen, onClose: onRemovalClose } = useDisclosure()
   const removeOrgBtnRef = useRef()
   const [isEditingOrg, setIsEditingOrg] = useState(false)
 
@@ -66,118 +56,105 @@ export function OrganizationInformation({
     },
   })
 
-  const [removeOrganization, { loading: removeOrgLoading }] = useMutation(
-    REMOVE_ORGANIZATION,
-    {
-      onError: ({ message }) => {
+  const [removeOrganization, { loading: removeOrgLoading }] = useMutation(REMOVE_ORGANIZATION, {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while removing this organization.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ removeOrganization }) {
+      // eslint-disable-next-line no-empty
+      if (removeOrganization.result.__typename === 'OrganizationResult') {
+      } else if (removeOrganization.result.__typename === 'OrganizationError') {
         toast({
-          title: t`An error occurred while removing this organization.`,
-          description: message,
+          title: t`Unable to remove this organization.`,
+          description: removeOrganization.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      },
-      onCompleted({ removeOrganization }) {
-        // eslint-disable-next-line no-empty
-        if (removeOrganization.result.__typename === 'OrganizationResult') {
-        } else if (
-          removeOrganization.result.__typename === 'OrganizationError'
-        ) {
-          toast({
-            title: t`Unable to remove this organization.`,
-            description: removeOrganization.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: t`Incorrect typename received.`,
-            description: t`Incorrect removeOrganization.result typename.`,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect removeOrganization.result typename.')
-        }
-      },
-      update: (cache, { data }) => {
-        if (data.removeOrganization.result.__typename !== 'OrganizationResult')
-          return
-
+      } else {
         toast({
-          title: t`Removed Organization`,
-          description: t`You have successfully removed ${data.removeOrganization.result.organization.name}.`,
+          title: t`Incorrect typename received.`,
+          description: t`Incorrect removeOrganization.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect removeOrganization.result typename.')
+      }
+    },
+    update: (cache, { data }) => {
+      if (data.removeOrganization.result.__typename !== 'OrganizationResult') return
+
+      toast({
+        title: t`Removed Organization`,
+        description: t`You have successfully removed ${data.removeOrganization.result.organization.name}.`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+
+      const removedOrgId = cache.identify(data.removeOrganization.result.organization)
+
+      // Set admin page org <Select> to none, as the current is removed
+      setSelectedOrg('none')
+
+      cache.evict({ id: removedOrgId })
+    },
+  })
+
+  const [updateOrganization, { loading: updateOrgLoading }] = useMutation(UPDATE_ORGANIZATION, {
+    onError: ({ message }) => {
+      toast({
+        title: t`An error occurred while updating this organization.`,
+        description: message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+    },
+    onCompleted({ updateOrganization }) {
+      if (updateOrganization.result.__typename === 'Organization') {
+        toast({
+          title: t`Updated Organization`,
+          description: t`You have successfully updated ${updateOrganization.result.name}.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-
-        const removedOrgId = cache.identify(
-          data.removeOrganization.result.organization,
-        )
-
-        // Set admin page org <Select> to none, as the current is removed
-        setSelectedOrg('none')
-
-        cache.evict({ id: removedOrgId })
-      },
-    },
-  )
-
-  const [updateOrganization, { loading: updateOrgLoading }] = useMutation(
-    UPDATE_ORGANIZATION,
-    {
-      onError: ({ message }) => {
+      } else if (updateOrganization.result.__typename === 'OrganizationError') {
         toast({
-          title: t`An error occurred while updating this organization.`,
-          description: message,
+          title: t`Unable to update this organization.`,
+          description: updateOrganization.result.description,
           status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
         })
-      },
-      onCompleted({ updateOrganization }) {
-        if (updateOrganization.result.__typename === 'Organization') {
-          toast({
-            title: t`Updated Organization`,
-            description: t`You have successfully updated ${updateOrganization.result.name}.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else if (
-          updateOrganization.result.__typename === 'OrganizationError'
-        ) {
-          toast({
-            title: t`Unable to update this organization.`,
-            description: updateOrganization.result.description,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        } else {
-          toast({
-            title: t`Incorrect typename received.`,
-            description: t`Incorrect updateOrganization.result typename.`,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          console.log('Incorrect updateOrganization.result typename.')
-        }
-      },
+      } else {
+        toast({
+          title: t`Incorrect typename received.`,
+          description: t`Incorrect updateOrganization.result typename.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        console.log('Incorrect updateOrganization.result typename.')
+      }
     },
-  )
+  })
 
   if (loading) {
     return (
@@ -199,10 +176,7 @@ export function OrganizationInformation({
   })
 
   const removeOrgValidationSchema = schemaToValidation({
-    orgName: getRequirement('field').matches(
-      org.name,
-      t`Organization name does not match.`,
-    ),
+    orgName: getRequirement('field').matches(org.name, t`Organization name does not match.`),
   })
 
   return (
@@ -219,10 +193,7 @@ export function OrganizationInformation({
             fontSize="3xl"
           >
             <Heading as="h1">
-              {org.name}{' '}
-              {org.verified && (
-                <CheckCircleIcon color="blue.500" boxSize="icons.md" />
-              )}
+              {org.name} {org.verified && <CheckCircleIcon color="blue.500" boxSize="icons.md" />}
             </Heading>
           </Stack>
 
@@ -304,10 +275,7 @@ export function OrganizationInformation({
               })
 
               // Close and reset form if successfully updated organization
-              if (
-                updateResponse.data.updateOrganization.result.__typename ===
-                'Organization'
-              ) {
+              if (updateResponse.data.updateOrganization.result.__typename === 'Organization') {
                 setIsEditingOrg(false)
                 formikHelpers.resetForm()
               }
@@ -322,23 +290,10 @@ export function OrganizationInformation({
                   mx="1rem"
                   mb="1.5rem"
                 >
-                  <Text
-                    fontWeight="bold"
-                    textAlign="center"
-                    mb="0.5em"
-                    gridColumn="span 4"
-                  >
-                    <Trans>
-                      Blank fields will not be included when updating the
-                      organization.
-                    </Trans>
+                  <Text fontWeight="bold" textAlign="center" mb="0.5em" gridColumn="span 4">
+                    <Trans>Blank fields will not be included when updating the organization.</Trans>
                   </Text>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="acronymEN" label={t`Acronym (EN)`} />
-                  </Box>
-                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                    <FormField name="acronymFR" label={t`Acronym (FR)`} />
-                  </Box>
+                  <AcronymFields />
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
                     <FormField name="nameEN" label={t`Name (EN)`} />
                   </Box>
@@ -360,10 +315,7 @@ export function OrganizationInformation({
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
                     <FormField name="cityEN" label={t`City (EN)`} />
                   </Box>
-                  <Box
-                    gridColumn={{ base: 'span 4', md: 'span 2' }}
-                    mb="0.5rem"
-                  >
+                  <Box gridColumn={{ base: 'span 4', md: 'span 2' }} mb="0.5rem">
                     <FormField name="cityFR" label={t`City (FR)`} />
                   </Box>
                   <Button
@@ -398,11 +350,7 @@ export function OrganizationInformation({
           </Formik>
         </Collapse>
 
-        <Grid
-          gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
-          gridRowGap="0.5em"
-          mx="1rem"
-        >
+        <Grid gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }} gridRowGap="0.5em" mx="1rem">
           <Text fontWeight="bold">
             <Trans>Slug:</Trans>{' '}
             <Box as="span" fontWeight="normal">
@@ -415,23 +363,6 @@ export function OrganizationInformation({
               {org.acronym}
             </Box>
           </Text>
-
-          {org.zone && (
-            <Text fontWeight="bold">
-              <Trans>Zone:</Trans>{' '}
-              <Box as="span" fontWeight="normal">
-                {org.zone}
-              </Box>
-            </Text>
-          )}
-          {org.sector && (
-            <Text fontWeight="bold">
-              <Trans>Sector:</Trans>{' '}
-              <Box as="span" fontWeight="normal">
-                {org.sector}
-              </Box>
-            </Text>
-          )}
 
           <Text fontWeight="bold">
             <Trans>City:</Trans>{' '}
@@ -489,34 +420,19 @@ export function OrganizationInformation({
                 <ModalCloseButton />
                 <ModalBody>
                   <Text>
-                    <Trans>
-                      Are you sure you want to permanently remove the
-                      organization "{org.name}"?
-                    </Trans>
+                    <Trans>Are you sure you want to permanently remove the organization "{org.name}"?</Trans>
                   </Text>
 
                   <br />
 
                   <Text mb="1rem">
-                    <Trans>
-                      Enter "{org.name}" below to confirm removal. This field is
-                      case-sensitive.
-                    </Trans>
+                    <Trans>Enter "{org.name}" below to confirm removal. This field is case-sensitive.</Trans>
                   </Text>
 
-                  <FormField
-                    name="orgName"
-                    label={t`Organization Name`}
-                    placeholder={org.name}
-                  />
+                  <FormField name="orgName" label={t`Organization Name`} placeholder={org.name} />
                 </ModalBody>
                 <ModalFooter>
-                  <Button
-                    variant="primary"
-                    isLoading={removeOrgLoading}
-                    type="submit"
-                    mr="4"
-                  >
+                  <Button variant="primary" isLoading={removeOrgLoading} type="submit" mr="4">
                     <Trans>Confirm</Trans>
                   </Button>
                 </ModalFooter>
@@ -529,8 +445,22 @@ export function OrganizationInformation({
   )
 }
 
+const AcronymFields = withSuperAdmin(() => {
+  return (
+    <>
+      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+        <FormField name="acronymEN" label={t`Acronym (EN)`} />
+      </Box>
+      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+        <FormField name="acronymFR" label={t`Acronym (FR)`} />
+      </Box>
+    </>
+  )
+})
+
 OrganizationInformation.propTypes = {
   orgSlug: string.isRequired,
   removeOrgCallback: func.isRequired,
   isLoginRequired: bool,
+  isUserSuperAdmin: bool,
 }

@@ -9,9 +9,9 @@ users to transfer ownership of a given organization, and support any errors that
   types: [affiliationError, transferOrgOwnershipResult],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return transferOrgOwnershipResult
+      return transferOrgOwnershipResult.name
     } else {
-      return affiliationError
+      return affiliationError.name
     }
   },
 })

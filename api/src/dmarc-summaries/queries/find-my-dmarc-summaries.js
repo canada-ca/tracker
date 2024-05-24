@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
 import { dmarcSummaryOrder } from '../inputs'
@@ -15,17 +15,20 @@ export const findMyDmarcSummaries = {
       description: 'Ordering options for dmarc summaries connections',
     },
     month: {
-      type: GraphQLNonNull(PeriodEnums),
+      type: new GraphQLNonNull(PeriodEnums),
       description: 'The month in which the returned data is relevant to.',
     },
     year: {
-      type: GraphQLNonNull(Year),
+      type: new GraphQLNonNull(Year),
       description: 'The year in which the returned data is relevant to.',
     },
     search: {
       type: GraphQLString,
-      description:
-        'An optional string used to filter the results based on domains.',
+      description: 'An optional string used to filter the results based on domains.',
+    },
+    isAffiliated: {
+      type: GraphQLBoolean,
+      description: 'Filter the results based on the users affiliation.',
     },
     ...connectionArgs,
   },
@@ -34,19 +37,12 @@ export const findMyDmarcSummaries = {
     args,
     {
       userKey,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
+      auth: { checkSuperAdmin, userRequired, verifiedRequired },
       loaders: { loadDmarcSummaryConnectionsByUserId },
     },
   ) => {
-    if (loginRequiredBool) {
-      const user = await userRequired()
-      verifiedRequired({ user })
-    }
+    const user = await userRequired()
+    verifiedRequired({ user })
 
     const isSuperAdmin = await checkSuperAdmin()
 

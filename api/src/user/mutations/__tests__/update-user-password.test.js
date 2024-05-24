@@ -56,9 +56,9 @@ describe('authenticate user account', () => {
       }))
     })
     beforeEach(async () => {
-      await graphql(
+      await graphql({
         schema,
-        `
+        source: `
           mutation {
             signUp(
               input: {
@@ -70,17 +70,16 @@ describe('authenticate user account', () => {
               }
             ) {
               result {
-                ... on AuthResult {
-                  user {
-                    id
-                  }
+                ... on TFASignInResult {
+                  authenticateToken
+                  sendMethod
                 }
               }
             }
           }
         `,
-        null,
-        {
+        rootValue: null,
+        contextValue: {
           query,
           collections: collectionNames,
           transaction,
@@ -104,7 +103,7 @@ describe('authenticate user account', () => {
             get: (text) => text,
           },
         },
-      )
+      })
       const userCursor = await query`
         FOR user IN users
           FILTER user.userName == "test.account@istio.actually.exists"
@@ -135,9 +134,9 @@ describe('authenticate user account', () => {
         })
       })
       it('returns a successful status message', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               updateUserPassword(
                 input: {
@@ -158,8 +157,8 @@ describe('authenticate user account', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -181,7 +180,7 @@ describe('authenticate user account', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -194,15 +193,13 @@ describe('authenticate user account', () => {
         }
 
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully updated their password.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their password.`])
 
         consoleOutput.length = 0
 
-        const authenticateResponse = await graphql(
+        const authenticateResponse = await graphql({
           schema,
-          `
+          source: `
             mutation {
               signIn(
                 input: {
@@ -218,8 +215,8 @@ describe('authenticate user account', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -239,7 +236,7 @@ describe('authenticate user account', () => {
               sendAuthEmail: mockNotfiy,
             },
           },
-        )
+        })
 
         const expectedAuthResponse = {
           data: {
@@ -252,9 +249,7 @@ describe('authenticate user account', () => {
         }
 
         expect(authenticateResponse).toEqual(expectedAuthResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully signed in, and sent auth msg.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
       })
     })
     describe('users language is set to french', () => {
@@ -273,9 +268,9 @@ describe('authenticate user account', () => {
         })
       })
       it('returns a successful status message', async () => {
-        const response = await graphql(
+        const response = await graphql({
           schema,
-          `
+          source: `
             mutation {
               updateUserPassword(
                 input: {
@@ -296,8 +291,8 @@ describe('authenticate user account', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -319,7 +314,7 @@ describe('authenticate user account', () => {
               loadUserByKey: loadUserByKey({ query }),
             },
           },
-        )
+        })
 
         const expectedResponse = {
           data: {
@@ -332,15 +327,13 @@ describe('authenticate user account', () => {
         }
 
         expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully updated their password.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully updated their password.`])
 
         consoleOutput.length = 0
 
-        const authenticateResponse = await graphql(
+        const authenticateResponse = await graphql({
           schema,
-          `
+          source: `
             mutation {
               signIn(
                 input: {
@@ -356,8 +349,8 @@ describe('authenticate user account', () => {
               }
             }
           `,
-          null,
-          {
+          rootValue: null,
+          contextValue: {
             i18n,
             query,
             collections: collectionNames,
@@ -377,7 +370,7 @@ describe('authenticate user account', () => {
               sendAuthEmail: mockNotfiy,
             },
           },
-        )
+        })
 
         const expectedAuthResponse = {
           data: {
@@ -390,9 +383,7 @@ describe('authenticate user account', () => {
         }
 
         expect(authenticateResponse).toEqual(expectedAuthResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully signed in, and sent auth msg.`,
-        ])
+        expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
       })
     })
   })
@@ -414,9 +405,9 @@ describe('authenticate user account', () => {
       })
       describe('the current password does not match the password in the database', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserPassword(
                   input: {
@@ -437,8 +428,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -457,15 +448,14 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateUserPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to update password, current password does not match. Please try again.',
+                  description: 'Unable to update password, current password does not match. Please try again.',
                 },
               },
             },
@@ -479,9 +469,9 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not match the new password confirmation', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserPassword(
                   input: {
@@ -502,8 +492,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -522,15 +512,14 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateUserPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to update password, new passwords do not match. Please try again.',
+                  description: 'Unable to update password, new passwords do not match. Please try again.',
                 },
               },
             },
@@ -544,9 +533,9 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not meet GoC requirements', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserPassword(
                   input: {
@@ -567,8 +556,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -587,15 +576,14 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = {
             data: {
               updateUserPassword: {
                 result: {
                   code: 400,
-                  description:
-                    'Unable to update password, passwords do not match requirements. Please try again.',
+                  description: 'Unable to update password, passwords do not match requirements. Please try again.',
                 },
               },
             },
@@ -610,9 +598,9 @@ describe('authenticate user account', () => {
       describe('transaction step error occurs', () => {
         describe('when updating password', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserPassword(
                     input: {
@@ -633,15 +621,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -658,11 +644,9 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to update password. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update password. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -674,9 +658,9 @@ describe('authenticate user account', () => {
       describe('transaction commit error occurs', () => {
         describe('when updating password', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserPassword(
                     input: {
@@ -697,16 +681,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -723,11 +705,9 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to update password. Please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to update password. Please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -754,9 +734,9 @@ describe('authenticate user account', () => {
       })
       describe('the current password does not match the password in the database', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserPassword(
                   input: {
@@ -777,8 +757,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -797,7 +777,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -819,9 +799,9 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not match the new password confirmation', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserPassword(
                   input: {
@@ -842,8 +822,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -862,7 +842,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -884,9 +864,9 @@ describe('authenticate user account', () => {
       })
       describe('the new password does not meet GoC requirements', () => {
         it('returns an error message', async () => {
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 updateUserPassword(
                   input: {
@@ -907,8 +887,8 @@ describe('authenticate user account', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               query,
               collections: collectionNames,
@@ -927,7 +907,7 @@ describe('authenticate user account', () => {
                 cleanseInput,
               },
             },
-          )
+          })
 
           const error = {
             data: {
@@ -950,9 +930,9 @@ describe('authenticate user account', () => {
       describe('transaction step error occurs', () => {
         describe('when updating password', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserPassword(
                     input: {
@@ -973,15 +953,13 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
-                  step: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction step error')),
+                  step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -998,13 +976,9 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le mot de passe. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le mot de passe. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1016,9 +990,9 @@ describe('authenticate user account', () => {
       describe('transaction commit error occurs', () => {
         describe('when updating password', () => {
           it('returns an error message', async () => {
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   updateUserPassword(
                     input: {
@@ -1039,16 +1013,14 @@ describe('authenticate user account', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 query,
                 collections: collectionNames,
                 transaction: jest.fn().mockReturnValue({
                   step: jest.fn().mockReturnValue({}),
-                  commit: jest
-                    .fn()
-                    .mockRejectedValue(new Error('Transaction commit error')),
+                  commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
                 }),
                 userKey: 123,
                 auth: {
@@ -1065,13 +1037,9 @@ describe('authenticate user account', () => {
                   cleanseInput,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de mettre à jour le mot de passe. Veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de mettre à jour le mot de passe. Veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

@@ -8,11 +8,11 @@ export const signInUnion = new GraphQLUnionType({
   types: [authResultType, signInError, tfaSignInResult],
   resolveType({ _type }) {
     if (_type === 'tfa') {
-      return tfaSignInResult
+      return tfaSignInResult.name
     } else if (_type === 'regular') {
-      return authResultType
+      return authResultType.name
     } else {
-      return signInError
+      return signInError.name
     }
   },
 })

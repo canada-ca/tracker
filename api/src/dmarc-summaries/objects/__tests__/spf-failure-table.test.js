@@ -1,10 +1,4 @@
-import {
-  GraphQLID,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLNonNull,
-} from 'graphql'
+import { GraphQLID, GraphQLInt, GraphQLString, GraphQLBoolean, GraphQLNonNull } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 
 import { spfFailureTableType } from '../spf-failure-table'
@@ -16,7 +10,7 @@ describe('given spfFailureTable gql object', () => {
       const demoType = spfFailureTableType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a dnsHost field', () => {
       const demoType = spfFailureTableType.getFields()
@@ -84,43 +78,35 @@ describe('given spfFailureTable gql object', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('spfFail', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('spfFail', 1))
       })
     })
     describe('testing the dnsHost resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
-        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual(
-          'dnsHost',
-        )
+        expect(demoType.dnsHost.resolve({ dnsHost: 'dnsHost' })).toEqual('dnsHost')
       })
     })
     describe('testing the envelopeFrom resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
-        expect(
-          demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' }),
-        ).toEqual('envelopeFrom')
+        expect(demoType.envelopeFrom.resolve({ envelopeFrom: 'envelopeFrom' })).toEqual('envelopeFrom')
       })
     })
     describe('testing the guidance resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
-        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual(
-          'guidance',
-        )
+        expect(demoType.guidance.resolve({ guidance: 'guidance' })).toEqual('guidance')
       })
     })
     describe('testing the guidanceTag resolver', () => {
       describe('guidance is not null', () => {
         it('returns resolved value', async () => {
           const demoType = spfFailureTableType.getFields()
-  
+
           const expectedResult = {
             _id: 'aggregateGuidanceTags/agg1',
             _key: 'agg1',
@@ -128,9 +114,7 @@ describe('given spfFailureTable gql object', () => {
             _type: 'guidanceTag',
             guidance: 'cool guidance for issue',
             id: 'agg1',
-            refLinksGuide: [
-              { description: 'Link Description', ref_link: 'www.link.ca' },
-            ],
+            refLinksGuide: [{ description: 'Link Description', ref_link: 'www.link.ca' }],
             refLinksTechnical: [
               {
                 description: 'Tech link description',
@@ -140,7 +124,7 @@ describe('given spfFailureTable gql object', () => {
             tagId: 'agg1',
             tagName: 'cool-tag-name',
           }
-  
+
           expect(
             await demoType.guidanceTag.resolve(
               { guidance: 'agg1' },
@@ -159,9 +143,9 @@ describe('given spfFailureTable gql object', () => {
       describe('guidance is null', () => {
         it('returns an empty obj', async () => {
           const demoType = spfFailureTableType.getFields()
-  
+
           const expectedResult = {}
-  
+
           expect(
             await demoType.guidanceTag.resolve(
               { guidance: null },
@@ -182,9 +166,7 @@ describe('given spfFailureTable gql object', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
-        expect(
-          demoType.headerFrom.resolve({ headerFrom: 'headerFrom' }),
-        ).toEqual('headerFrom')
+        expect(demoType.headerFrom.resolve({ headerFrom: 'headerFrom' })).toEqual('headerFrom')
       })
     })
     describe('testing the sourceIpAddress resolver', () => {
@@ -209,18 +191,14 @@ describe('given spfFailureTable gql object', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
-        expect(
-          demoType.spfDomains.resolve({ spfDomains: 'spfDomains' }),
-        ).toEqual('spfDomains')
+        expect(demoType.spfDomains.resolve({ spfDomains: 'spfDomains' })).toEqual('spfDomains')
       })
     })
     describe('testing the spfResults resolver', () => {
       it('returns the resolved value', () => {
         const demoType = spfFailureTableType.getFields()
 
-        expect(
-          demoType.spfResults.resolve({ spfResults: 'spfResults' }),
-        ).toEqual('spfResults')
+        expect(demoType.spfResults.resolve({ spfResults: 'spfResults' })).toEqual('spfResults')
       })
     })
     describe('testing the totalMessages resolver', () => {

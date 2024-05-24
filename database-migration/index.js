@@ -3,8 +3,7 @@ const { ensure } = require('arango-tools')
 
 config()
 
-const { DB_DESCRIPTION, DB_NAME, ROOT_PASS, DB_USER, DB_PASS, DB_URL } =
-  process.env
+const { DB_DESCRIPTION = './database.json', DB_NAME, ROOT_PASS, DB_USER, DB_PASS, DB_URL } = process.env
 
 const schema = require(DB_DESCRIPTION)
 

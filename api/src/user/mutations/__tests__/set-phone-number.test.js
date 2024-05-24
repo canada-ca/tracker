@@ -87,9 +87,9 @@ describe('user sets a new phone number', () => {
         })
         it('returns status text and updated user', async () => {
           const newPhoneNumber = '+12345678901'
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
@@ -107,8 +107,8 @@ describe('user sets a new phone number', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: user._key,
@@ -134,7 +134,7 @@ describe('user sets a new phone number', () => {
                 sendTfaTextMsg: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
@@ -161,9 +161,7 @@ describe('user sets a new phone number', () => {
             phoneNumber: newPhoneNumber,
             user,
           })
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully set phone number.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
           expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
         })
       })
@@ -183,9 +181,9 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and updated user', async () => {
             const newPhoneNumber = '+12345678901'
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -203,8 +201,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -230,7 +228,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -257,18 +255,14 @@ describe('user sets a new phone number', () => {
               phoneNumber: newPhoneNumber,
               user,
             })
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully set phone number.`,
-            ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
-              newPhoneNumber,
-            )
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as none', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -286,8 +280,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -313,7 +307,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -323,9 +317,9 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -343,8 +337,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -370,7 +364,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -394,9 +388,9 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and update user', async () => {
             const newPhoneNumber = '+12345678901'
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -414,8 +408,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -441,7 +435,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -468,18 +462,14 @@ describe('user sets a new phone number', () => {
               phoneNumber: newPhoneNumber,
               user,
             })
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully set phone number.`,
-            ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
-              newPhoneNumber,
-            )
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as email', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -497,8 +487,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -524,7 +514,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -534,9 +524,9 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -554,8 +544,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -581,7 +571,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -605,9 +595,9 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and updated user', async () => {
             const newPhoneNumber = '+12345678901'
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -625,8 +615,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -652,7 +642,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -679,18 +669,14 @@ describe('user sets a new phone number', () => {
               phoneNumber: newPhoneNumber,
               user,
             })
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully set phone number.`,
-            ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
-              newPhoneNumber,
-            )
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
           })
           it('sets tfaSendMethod to email', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -708,8 +694,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -735,7 +721,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -745,9 +731,9 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -765,8 +751,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -792,7 +778,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -830,9 +816,9 @@ describe('user sets a new phone number', () => {
         })
         it('returns status text and updated user', async () => {
           const newPhoneNumber = '+12345678901'
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               mutation {
                 setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
@@ -850,8 +836,8 @@ describe('user sets a new phone number', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               request,
               userKey: user._key,
@@ -877,7 +863,7 @@ describe('user sets a new phone number', () => {
                 sendTfaTextMsg: mockNotify,
               },
             },
-          )
+          })
 
           const expectedResult = {
             data: {
@@ -904,9 +890,7 @@ describe('user sets a new phone number', () => {
             phoneNumber: newPhoneNumber,
             user,
           })
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully set phone number.`,
-          ])
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
           expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
         })
       })
@@ -926,9 +910,9 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text and updated user', async () => {
             const newPhoneNumber = '+12345678901'
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -946,8 +930,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -973,7 +957,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -1000,18 +984,14 @@ describe('user sets a new phone number', () => {
               phoneNumber: newPhoneNumber,
               user,
             })
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully set phone number.`,
-            ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
-              newPhoneNumber,
-            )
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as none', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1029,8 +1009,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1056,7 +1036,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -1066,9 +1046,9 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1086,8 +1066,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1113,7 +1093,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -1137,9 +1117,9 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text', async () => {
             const newPhoneNumber = '+12345678901'
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1157,8 +1137,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1184,7 +1164,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -1211,18 +1191,14 @@ describe('user sets a new phone number', () => {
               phoneNumber: newPhoneNumber,
               user,
             })
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully set phone number.`,
-            ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
-              newPhoneNumber,
-            )
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
           })
           it('tfaSendMethod stays as email', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1240,8 +1216,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1267,7 +1243,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -1277,9 +1253,9 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1297,8 +1273,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1324,7 +1300,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -1348,9 +1324,9 @@ describe('user sets a new phone number', () => {
           })
           it('returns status text', async () => {
             const newPhoneNumber = '+12345678901'
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1368,8 +1344,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1395,7 +1371,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
             const expectedResult = {
               data: {
@@ -1422,18 +1398,14 @@ describe('user sets a new phone number', () => {
               phoneNumber: newPhoneNumber,
               user,
             })
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully set phone number.`,
-            ])
-            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(
-              newPhoneNumber,
-            )
+            expect(consoleOutput).toEqual([`User: ${user._key} successfully set phone number.`])
+            expect(decryptPhoneNumber(user.phoneDetails)).toEqual(newPhoneNumber)
           })
           it('sets tfaSendMethod to email', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1451,8 +1423,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1478,7 +1450,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -1488,9 +1460,9 @@ describe('user sets a new phone number', () => {
           })
           it('sets phoneValidated to false', async () => {
             const newPhoneNumber = '+12345678901'
-            await graphql(
+            await graphql({
               schema,
-              `
+              source: `
                 mutation {
                   setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                     result {
@@ -1508,8 +1480,8 @@ describe('user sets a new phone number', () => {
                   }
                 }
               `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: user._key,
@@ -1535,7 +1507,7 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
             user = await loadUserByUserName({
               query,
               userKey: '1',
@@ -1569,14 +1541,12 @@ describe('user sets a new phone number', () => {
             const newPhoneNumber = '+12345678901'
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
+              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
@@ -1594,8 +1564,8 @@ describe('user sets a new phone number', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
@@ -1622,11 +1592,9 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to set phone number, please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to set phone number, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1642,14 +1610,12 @@ describe('user sets a new phone number', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
+              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
@@ -1667,8 +1633,8 @@ describe('user sets a new phone number', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
@@ -1693,11 +1659,9 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError('Unable to set phone number, please try again.'),
-            ]
+            const error = [new GraphQLError('Unable to set phone number, please try again.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1728,14 +1692,12 @@ describe('user sets a new phone number', () => {
             const newPhoneNumber = '+12345678901'
 
             const mockedTransaction = jest.fn().mockReturnValue({
-              step: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction step error')),
+              step: jest.fn().mockRejectedValue(new Error('Transaction step error')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
@@ -1753,8 +1715,8 @@ describe('user sets a new phone number', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
@@ -1781,13 +1743,9 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de définir le numéro de téléphone, veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de définir le numéro de téléphone, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -1803,14 +1761,12 @@ describe('user sets a new phone number', () => {
 
             const mockedTransaction = jest.fn().mockReturnValue({
               step: jest.fn().mockReturnValue({}),
-              commit: jest
-                .fn()
-                .mockRejectedValue(new Error('Transaction commit error')),
+              commit: jest.fn().mockRejectedValue(new Error('Transaction commit error')),
             })
 
-            const response = await graphql(
+            const response = await graphql({
               schema,
-              `
+              source: `
               mutation {
                 setPhoneNumber(input: { phoneNumber: "${newPhoneNumber}" }) {
                   result {
@@ -1828,8 +1784,8 @@ describe('user sets a new phone number', () => {
                 }
               }
             `,
-              null,
-              {
+              rootValue: null,
+              contextValue: {
                 i18n,
                 request,
                 userKey: 123,
@@ -1854,13 +1810,9 @@ describe('user sets a new phone number', () => {
                   sendTfaTextMsg: mockNotify,
                 },
               },
-            )
+            })
 
-            const error = [
-              new GraphQLError(
-                'Impossible de définir le numéro de téléphone, veuillez réessayer.',
-              ),
-            ]
+            const error = [new GraphQLError('Impossible de définir le numéro de téléphone, veuillez réessayer.')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([

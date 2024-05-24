@@ -8,9 +8,9 @@ export const inviteUserToOrgUnion = new GraphQLUnionType({
   types: [affiliationError, inviteUserToOrgResultType],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return inviteUserToOrgResultType
+      return inviteUserToOrgResultType.name
     } else {
-      return affiliationError
+      return affiliationError.name
     }
   },
 })

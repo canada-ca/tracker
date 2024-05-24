@@ -4,6 +4,10 @@ export const DomainOrderField = new GraphQLEnumType({
   name: 'DomainOrderField',
   description: 'Properties by which domain connections can be ordered.',
   values: {
+    CERTIFICATES_STATUS: {
+      value: 'certificates-status',
+      description: 'Order domains by certificates status.',
+    },
     CIPHERS_STATUS: {
       value: 'ciphers-status',
       description: 'Order domains by ciphers status.',
@@ -43,6 +47,10 @@ export const DomainOrderField = new GraphQLEnumType({
     SPF_STATUS: {
       value: 'spf-status',
       description: 'Order domains by spf status.',
+    },
+    TAGS: {
+      value: 'tags',
+      description: 'Order domains by tags.',
     },
   },
 })

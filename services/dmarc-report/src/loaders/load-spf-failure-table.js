@@ -2,11 +2,11 @@ const loadSpfFailureTable =
   ({ container }) =>
   async ({ domain, date }) => {
     // Get spf failure
-    const { resources } = await container.items
+    return container.items
       .query({
         query: `
           SELECT * FROM (
-            SELECT 
+            SELECT
               f.source_ip_address AS sourceIpAddress,
               f.envelope_from AS envelopeFrom,
               f.header_from AS headerFrom,
@@ -28,8 +28,6 @@ const loadSpfFailureTable =
         ],
       })
       .fetchAll()
-
-    return resources
   }
 
 module.exports = {

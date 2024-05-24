@@ -1,30 +1,37 @@
 import React, { useState, useCallback } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { number, string } from 'prop-types'
+import { bool, string } from 'prop-types'
 
 import { DomainCard } from '../domains/DomainCard'
 import { ListOf } from '../components/ListOf'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
-import { InfoButton, InfoBox, InfoPanel } from '../components/InfoPanel'
+import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import {
   PAGINATED_ORG_DOMAINS as FORWARD,
+  GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
   MY_TRACKER_DOMAINS,
 } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
-import { SubdomainWarning } from '../domains/SubdomainWarning'
+import { useLazyQuery } from '@apollo/client'
+import { ExportButton } from '../components/ExportButton'
+import { DomainListFilters } from '../domains/DomainListFilters'
+import { FilterList } from '../domains/FilterList'
 
-export function OrganizationDomains({ orgSlug }) {
+export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
+  const [filters, setFilters] = useState([
+    { filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' },
+  ])
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -42,38 +49,34 @@ export function OrganizationDomains({ orgSlug }) {
           slug: orgSlug,
           orderBy: { field: orderField, direction: orderDirection },
           search: debouncedSearchTerm,
+          filters,
         }
 
-  const {
-    loading,
-    isLoadingMore,
-    error,
-    nodes,
-    next,
-    previous,
-    resetToFirstPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = usePaginatedCollection({
-    fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
-    recordsPerPage: domainsPerPage,
-    relayRoot:
-      orgSlug === 'my-tracker'
-        ? 'findMyTracker.domains'
-        : 'findOrganizationBySlug.domains',
-    variables: queryVariables,
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  })
+  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
+    usePaginatedCollection({
+      fetchForward: orgSlug === 'my-tracker' ? MY_TRACKER_DOMAINS : FORWARD,
+      recordsPerPage: domainsPerPage,
+      relayRoot: orgSlug === 'my-tracker' ? 'findMyTracker.domains' : 'findOrganizationBySlug.domains',
+      variables: queryVariables,
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    })
+
+  const [getOrgDomainStatuses, { loading: orgDomainStatusesLoading, _error, _data }] = useLazyQuery(
+    GET_ORGANIZATION_DOMAINS_STATUSES_CSV,
+    {
+      variables: { orgSlug, filters },
+    },
+  )
 
   const { isOpen, onToggle } = useDisclosure()
 
   if (error) return <ErrorFallbackMessage error={error} />
 
   const orderByOptions = [
-    { value: 'DOMAIN', text: t`Domain` },
     { value: 'HTTPS_STATUS', text: t`HTTPS Status` },
     { value: 'HSTS_STATUS', text: t`HSTS Status` },
+    { value: 'CERTIFICATES_STATUS', text: t`Certificates Status` },
     { value: 'CIPHERS_STATUS', text: t`Ciphers Status` },
     { value: 'CURVES_STATUS', text: t`Curves Status` },
     { value: 'PROTOCOLS_STATUS', text: t`Protocols Status` },
@@ -82,71 +85,113 @@ export function OrganizationDomains({ orgSlug }) {
     { value: 'DMARC_STATUS', text: t`DMARC Status` },
   ]
 
+  const filterTagOptions = [
+    { value: t`NEW`, text: t`New` },
+    { value: t`PROD`, text: t`Prod` },
+    { value: t`STAGING`, text: t`Staging` },
+    { value: t`TEST`, text: t`Test` },
+    { value: t`WEB`, text: t`Web` },
+    { value: t`INACTIVE`, text: t`Inactive` },
+    { value: t`OUTSIDE`, text: t`Outside` },
+    { value: `NXDOMAIN`, text: `NXDOMAIN` },
+    { value: `BLOCKED`, text: t`Blocked` },
+    { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
+    { value: `SCAN_PENDING`, text: t`Scan Pending` },
+    { value: `HIDDEN`, text: t`Hidden` },
+    { value: `ARCHIVED`, text: t`Archived` },
+  ]
+
   const domainList = loading ? (
     <LoadingMessage>
       <Trans>Domains</Trans>
     </LoadingMessage>
   ) : (
-    <ListOf
-      elements={nodes}
-      ifEmpty={() => (
-        <Text layerStyle="loadingMessage">
-          <Trans>No Domains</Trans>
-        </Text>
+    <Box>
+      {orgSlug !== 'my-tracker' && (
+        <DomainListFilters
+          filters={filters}
+          setFilters={setFilters}
+          statusOptions={orderByOptions}
+          filterTagOptions={filterTagOptions}
+        />
       )}
-      mb="4"
-    >
-      {(
-        { id, domain, status, hasDMARCReport, claimTags, hidden, archived },
-        index,
-      ) => (
-        <ErrorBoundary
-          key={`${id}:${index}`}
-          FallbackComponent={ErrorFallbackMessage}
-        >
-          <DomainCard
-            id={id}
-            url={domain}
-            status={status}
-            hasDMARCReport={hasDMARCReport}
-            tags={claimTags}
-            isHidden={hidden}
-            isArchived={archived}
-            mb="3"
-          />
-        </ErrorBoundary>
-      )}
-    </ListOf>
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => (
+          <Text layerStyle="loadingMessage">
+            <Trans>No Domains</Trans>
+          </Text>
+        )}
+        mb="4"
+      >
+        {(
+          {
+            id,
+            domain,
+            status,
+            hasDMARCReport,
+            claimTags,
+            hidden,
+            archived,
+            rcode,
+            blocked,
+            wildcardSibling,
+            webScanPending,
+            userHasPermission,
+          },
+          index,
+        ) => (
+          <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+            <DomainCard
+              id={id}
+              url={domain}
+              status={status}
+              hasDMARCReport={hasDMARCReport}
+              tags={claimTags}
+              isHidden={hidden}
+              rcode={rcode}
+              isArchived={archived}
+              blocked={blocked}
+              wildcardSibling={wildcardSibling}
+              webScanPending={webScanPending}
+              userHasPermission={userHasPermission}
+              mb="3"
+            />
+          </ErrorBoundary>
+        )}
+      </ListOf>
+    </Box>
   )
 
   return (
     <Box>
+      {userHasPermission && (
+        <ExportButton
+          ml="auto"
+          my="2"
+          mt={{ base: '4', md: 0 }}
+          fileName={`${orgName}_${new Date().toLocaleDateString()}_Tracker`}
+          dataFunction={async () => {
+            const result = await getOrgDomainStatuses()
+            return result.data?.findOrganizationBySlug?.toCsv
+          }}
+          isLoading={orgDomainStatusesLoading}
+        />
+      )}
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>
         <InfoBox title={t`Domain`} info={t`The domain address.`} />
-        <InfoBox
-          title={t`Ciphers`}
-          info={t`Shows if the domain uses only ciphers that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`Curves`}
-          info={t`Shows if the domain uses only curves that are strong or acceptable.`}
-        />
-        <InfoBox
-          title={t`HSTS`}
-          info={t`Shows if the domain meets the HSTS requirements.`}
-        />
+        {/* Web statuses */}
         <InfoBox
           title={t`HTTPS`}
           info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
         />
-        <InfoBox
-          title={t`Protocols`}
-          info={t`Shows if the domain uses acceptable protocols.`}
-        />
-        <InfoBox
-          title={t`SPF`}
-          info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`}
-        />
+        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
+        <InfoBox title={t`Certificates`} info={t`Shows if the domain has a valid SSL certificate.`} />
+        <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
+        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
+        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
+        {/* Email statuses */}
+        <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
         <InfoBox
           title={t`DKIM`}
           info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
@@ -155,6 +200,25 @@ export function OrganizationDomains({ orgSlug }) {
           title={t`DMARC`}
           info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
         />
+        {/* Tags */}
+        <InfoBox title={t`NEW`} info={t`Tag used to show domains as new to the system.`} />
+        <InfoBox title={t`PROD`} info={t`Tag used to show domains as a production environment.`} />
+        <InfoBox title={t`STAGING`} info={t`Tag used to show domains as a staging environment.`} />
+        <InfoBox title={t`TEST`} info={t`Tag used to show domains as a test environment.`} />
+        <InfoBox title={t`WEB`} info={t`Tag used to show domains as web-hosting.`} />
+        <InfoBox title={t`INACTIVE`} info={t`Tag used to show domains that are not active.`} />
+        <InfoBox title={t`OUTSIDE`} info={t`Tag used to show domains that are out of the organization's scope.`} />
+        <InfoBox
+          title={t`HIDDEN`}
+          info={t`Tag used to show domains as hidden from affecting the organization summary scores.`}
+        />
+        <InfoBox title={`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
+        <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
+        <InfoBox
+          title={t`WILDCARD`}
+          info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
+        />
+        <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
       </InfoPanel>
 
       <SearchBox
@@ -170,11 +234,19 @@ export function OrganizationDomains({ orgSlug }) {
         setOrderField={setOrderField}
         setOrderDirection={setOrderDirection}
         resetToFirstPage={resetToFirstPage}
-        orderByOptions={orderByOptions}
+        orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
         placeholder={t`Search for a domain`}
+        onToggle={onToggle}
       />
 
-      <SubdomainWarning mb="4" />
+      {orgSlug !== 'my-tracker' && (
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <FilterList filters={filters} setFilters={setFilters} />
+        </Flex>
+      )}
 
       {domainList}
 
@@ -190,9 +262,8 @@ export function OrganizationDomains({ orgSlug }) {
         previous={previous}
         isLoadingMore={isLoadingMore}
       />
-      <InfoButton isOpen={isOpen} onToggle={onToggle} left="50%" />
     </Box>
   )
 }
 
-OrganizationDomains.propTypes = { domainsPerPage: number, orgSlug: string }
+OrganizationDomains.propTypes = { orgSlug: string, orgName: string, userHasPermission: bool }

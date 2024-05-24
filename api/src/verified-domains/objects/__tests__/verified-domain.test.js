@@ -13,7 +13,7 @@ describe('given the verified domains object', () => {
       const demoType = verifiedDomainType.getFields()
 
       expect(demoType).toHaveProperty('id')
-      expect(demoType.id.type).toMatchObject(GraphQLNonNull(GraphQLID))
+      expect(demoType.id.type).toMatchObject(new GraphQLNonNull(GraphQLID))
     })
     it('has a domain field', () => {
       const demoType = verifiedDomainType.getFields()
@@ -37,9 +37,7 @@ describe('given the verified domains object', () => {
       const demoType = verifiedDomainType.getFields()
 
       expect(demoType).toHaveProperty('organizations')
-      expect(demoType.organizations.type).toMatchObject(
-        verifiedOrganizationConnection.connectionType,
-      )
+      expect(demoType.organizations.type).toMatchObject(verifiedOrganizationConnection.connectionType)
     })
   })
 
@@ -48,27 +46,21 @@ describe('given the verified domains object', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedDomainType.getFields()
 
-        expect(demoType.id.resolve({ id: '1' })).toEqual(
-          toGlobalId('verifiedDomain', 1),
-        )
+        expect(demoType.id.resolve({ id: '1' })).toEqual(toGlobalId('verifiedDomain', 1))
       })
     })
     describe('testing the domain resolver', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedDomainType.getFields()
 
-        expect(demoType.domain.resolve({ domain: 'test.gc.ca' })).toEqual(
-          'test.gc.ca',
-        )
+        expect(demoType.domain.resolve({ domain: 'test.gc.ca' })).toEqual('test.gc.ca')
       })
     })
     describe('testing the lastRan resolver', () => {
       it('returns the resolved value', () => {
         const demoType = verifiedDomainType.getFields()
 
-        expect(
-          demoType.lastRan.resolve({ lastRan: '2020-10-02T12:43:39Z' }),
-        ).toEqual('2020-10-02T12:43:39Z')
+        expect(demoType.lastRan.resolve({ lastRan: '2020-10-02T12:43:39Z' })).toEqual('2020-10-02T12:43:39Z')
       })
     })
     describe('testing the status resolver', () => {
@@ -146,9 +138,7 @@ describe('given the verified domains object', () => {
             { first: 1 },
             {
               loaders: {
-                loadVerifiedOrgConnectionsByDomainId: jest
-                  .fn()
-                  .mockReturnValue(expectedResult),
+                loadVerifiedOrgConnectionsByDomainId: jest.fn().mockReturnValue(expectedResult),
               },
             },
           ),

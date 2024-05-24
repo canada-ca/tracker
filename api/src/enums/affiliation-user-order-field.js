@@ -4,25 +4,17 @@ export const AffiliationUserOrderField = new GraphQLEnumType({
   name: 'AffiliationUserOrderField',
   description: 'Properties by which affiliation connections can be ordered.',
   values: {
-    USER_USERNAME: {
-      value: 'user-username',
-      description: 'Order affiliation edges by username.',
+    USERNAME: {
+      value: 'username',
+      description: 'Order affiliations by username.',
     },
-    USER_DISPLAYNAME: {
-      value: 'user-displayName',
-      description: 'Order affiliation edges by displayName.',
+    DISPLAY_NAME: {
+      value: 'display_name',
+      description: 'Order affiliations by display name.',
     },
-    USER_EMAIL_VALIDATED: {
-      value: 'user-emailValidated',
-      description: 'Order affiliation edges by user verification status.',
-    },
-    USER_INSIDER: {
-      value: 'user-insider',
-      description: 'Order affiliation edges by user insider status.',
-    },
-    USER_AFFILIATIONS_COUNT: {
-      value: 'user-affiliations-totalCount',
-      description: 'Order affiliation edges by amount of total affiliations.',
+    PERMISSION: {
+      value: 'permission',
+      description: 'Order affiliations by permission.',
     },
   },
 })

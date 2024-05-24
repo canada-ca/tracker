@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dns-scanner
+  labels:
+    app: dns-scanner
   namespace: scanners
 spec:
   selector:
@@ -15,8 +17,22 @@ spec:
     spec:
       containers:
         - name: dns-scanner
-          image: gcr.io/track-compliance/dns-scanner:master-1a088f0-1670861968 # {"$imagepolicy": "flux-system:dns-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-73debc4-1716389384 # {"$imagepolicy": "flux-system:dns-scanner"}
           env:
+            - name: DB_NAME
+              value: track_dmarc
+            - name: DB_URL
+              value: http://arangodb.db:8529
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
             - name: PYTHONWARNINGS
               value: ignore
             - name: PUBLISH_TO
@@ -24,7 +40,7 @@ spec:
             - name: SUBSCRIBE_TO
               value: domains.*
             - name: QUEUE_GROUP
-              value: dnsscanner
+              value: dns_scanner
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: SCAN_TIMEOUT
@@ -33,6 +49,20 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-          imagePullPolicy: Always
+            - name: AZURE_CONN_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: dmarc
+                  key: AZURE_CONN_STRING
+            - name: DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: dmarc
+                  key: DATABASE
+            - name: SUMMARIES_CONTAINER
+              valueFrom:
+                secretKeyRef:
+                  name: dmarc
+                  key: SUMMARIES_CONTAINER
           resources: {}
 status: {}

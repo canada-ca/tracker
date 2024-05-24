@@ -43,11 +43,7 @@ export const TwoFactorIcon = createIcon({
   viewBox: '0 0 100 118.23771',
   // path can also be an array of elements, if you have multiple paths, lines, shapes, etc.
   path: (
-    <g
-      transform="translate(0 -178.76229)"
-      fill="currentColor"
-      stroke="currentColor"
-    >
+    <g transform="translate(0 -178.76229)" fill="currentColor" stroke="currentColor">
       <rect ry="7.408333" y="227" height="70" width="100" />
       <path
         d="M14.953384 221.72513a35.046616 38.165482 0 0 1 17.523309-33.05228 35.046616 38.165482 0 0 1 35.046616 0 35.046616 38.165482 0 0 1 17.523307 33.05228"
@@ -81,14 +77,14 @@ export const UserIcon = createIcon({
     <g fill="none">
       <path
         d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-        stroke="black"
+        stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
-        stroke="black"
+        stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -161,13 +157,7 @@ export const RadioCheckedIcon = createIcon({
   viewBox: '0 0 19 17',
   path: (
     <g fill="none">
-      <path
-        d="M5 8L8 11L18 1"
-        stroke="#231F20"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M5 8L8 11L18 1" stroke="#231F20" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path
         d="M15 9V14.4444C15 14.857 14.8361 15.2527 14.5444 15.5444C14.2527 15.8361 13.857 16 13.4444 16H2.55556C2.143 16 1.74733 15.8361 1.45561 15.5444C1.16389 15.2527 1 14.857 1 14.4444V3.55556C1 3.143 1.16389 2.74733 1.45561 2.45561C1.74733 2.16389 2.143 2 2.55556 2H11.1111"
         stroke="#231F20"

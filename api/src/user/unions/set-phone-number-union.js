@@ -8,9 +8,9 @@ export const setPhoneNumberUnion = new GraphQLUnionType({
   types: [setPhoneNumberErrorType, setPhoneNumberResultType],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return setPhoneNumberResultType
+      return setPhoneNumberResultType.name
     } else {
-      return setPhoneNumberErrorType
+      return setPhoneNumberErrorType.name
     }
   },
 })

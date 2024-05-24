@@ -1,5 +1,6 @@
 import React from 'react'
 import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
 
 import { LandingPageSummaries } from './LandingPageSummaries'
@@ -26,24 +27,24 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
         <Text fontSize="xl">
           <Trans>
-            Canadians rely on the Government of Canada to provide secure digital
-            services. The Policy on Service and Digital guides government online
-            services to adopt good security practices for practices outlined in
-            the{' '}
+            Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
+            Digital guides government online services to adopt good security practices for practices outlined in the{' '}
             <Link
               href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
               isExternal
-              style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+              style={{ fontWeight: 'bold', textAlign: 'center' }}
             >
               email
+              <ExternalLinkIcon />
             </Link>{' '}
             and{' '}
             <Link
               href={i18n.locale === 'en' ? itpinUrlEn : itpinUrlFr}
               isExternal
-              style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+              style={{ fontWeight: 'bold', textAlign: 'center' }}
             >
               web
+              <ExternalLinkIcon />
             </Link>{' '}
             services. Track how government sites are becoming more secure.
           </Trans>

@@ -9,7 +9,7 @@ export const findDomainByDomain = {
   description: 'Retrieve a specific domain by providing a domain.',
   args: {
     domain: {
-      type: GraphQLNonNull(Domain),
+      type: new GraphQLNonNull(Domain),
       description: 'The domain you wish to retrieve information for.',
     },
   },
@@ -19,12 +19,7 @@ export const findDomainByDomain = {
     {
       i18n,
       userKey,
-      auth: {
-        checkDomainPermission,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
+      auth: { checkDomainPermission, userRequired, verifiedRequired, loginRequiredBool },
       loaders: { loadDomainByDomain },
       validators: { cleanseInput },
     },
@@ -53,16 +48,12 @@ export const findDomainByDomain = {
       if (!permitted) {
         console.warn(`User ${userKey} could not retrieve domain.`)
         throw new Error(
-          i18n._(
-            t`Permission Denied: Please contact organization user for help with retrieving this domain.`,
-          ),
+          i18n._(t`Permission Denied: Please contact organization user for help with retrieving this domain.`),
         )
       }
     }
 
-    console.info(
-      `User ${userKey} successfully retrieved domain ${domain._key}.`,
-    )
+    console.info(`User ${userKey} successfully retrieved domain ${domain._key}.`)
 
     return domain
   },

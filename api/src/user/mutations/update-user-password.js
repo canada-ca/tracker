@@ -6,20 +6,18 @@ import { updateUserPasswordUnion } from '../unions'
 
 export const updateUserPassword = new mutationWithClientMutationId({
   name: 'UpdateUserPassword',
-  description:
-    'This mutation allows the user to update their account password.',
+  description: 'This mutation allows the user to update their account password.',
   inputFields: () => ({
     currentPassword: {
-      type: GraphQLNonNull(GraphQLString),
-      description:
-        'The users current password to verify it is the current user.',
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'The users current password to verify it is the current user.',
     },
     updatedPassword: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The new password the user wishes to change to.',
     },
     updatedPasswordConfirm: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       description: 'A password confirmation of their new password.',
     },
   }),
@@ -33,14 +31,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    {
-      i18n,
-      query,
-      collections,
-      transaction,
-      auth: { bcrypt, userRequired },
-      validators: { cleanseInput },
-    },
+    { i18n, query, collections, transaction, auth: { bcrypt, userRequired }, validators: { cleanseInput } },
   ) => {
     // Cleanse Input
     const currentPassword = cleanseInput(args.currentPassword)
@@ -58,23 +49,17 @@ export const updateUserPassword = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to update password, current password does not match. Please try again.`,
-        ),
+        description: i18n._(t`Unable to update password, current password does not match. Please try again.`),
       }
     }
 
     // Check to see if new passwords match
     if (updatedPassword !== updatedPasswordConfirm) {
-      console.warn(
-        `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
-      )
+      console.warn(`User: ${user._key} attempted to update their password, however the new passwords do not match.`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to update password, new passwords do not match. Please try again.`,
-        ),
+        description: i18n._(t`Unable to update password, new passwords do not match. Please try again.`),
       }
     }
 
@@ -86,9 +71,7 @@ export const updateUserPassword = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to update password, passwords do not match requirements. Please try again.`,
-        ),
+        description: i18n._(t`Unable to update password, passwords do not match requirements. Please try again.`),
       }
     }
 
@@ -107,18 +90,14 @@ export const updateUserPassword = new mutationWithClientMutationId({
         `,
       )
     } catch (err) {
-      console.error(
-        `Trx step error occurred when user: ${user._key} attempted to update their password: ${err}`,
-      )
+      console.error(`Trx step error occurred when user: ${user._key} attempted to update their password: ${err}`)
       throw new Error(i18n._(t`Unable to update password. Please try again.`))
     }
 
     try {
       await trx.commit()
     } catch (err) {
-      console.error(
-        `Trx commit error occurred when user: ${user._key} attempted to update their password: ${err}`,
-      )
+      console.error(`Trx commit error occurred when user: ${user._key} attempted to update their password: ${err}`)
       throw new Error(i18n._(t`Unable to update password. Please try again.`))
     }
 

@@ -6,18 +6,15 @@ import { transferOrgOwnershipUnion } from '../unions'
 
 export const transferOrgOwnership = new mutationWithClientMutationId({
   name: 'TransferOrgOwnership',
-  description:
-    'This mutation allows a user to transfer org ownership to another user in the given org.',
+  description: 'This mutation allows a user to transfer org ownership to another user in the given org.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
-      description:
-        'Id of the organization the user is looking to transfer ownership of.',
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'Id of the organization the user is looking to transfer ownership of.',
     },
     userId: {
-      type: GraphQLNonNull(GraphQLID),
-      description:
-        'Id of the user that the org ownership is being transferred to.',
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'Id of the user that the org ownership is being transferred to.',
     },
   }),
   outputFields: () => ({
@@ -55,28 +52,11 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
 
     // ensure requested org is not undefined
     if (typeof org === 'undefined') {
-      console.warn(
-        `User: ${requestingUser._key} attempted to transfer org ownership of an undefined org.`,
-      )
+      console.warn(`User: ${requestingUser._key} attempted to transfer org ownership of an undefined org.`)
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to transfer ownership of undefined organization.`,
-        ),
-      }
-    }
-    // ensure org is not verified
-    else if (org.verified) {
-      console.warn(
-        `User: ${requestingUser._key} attempted to transfer ownership of a verified org: ${org.slug}.`,
-      )
-      return {
-        _type: 'error',
-        code: 400,
-        description: i18n._(
-          t`Unable to transfer ownership of a verified organization.`,
-        ),
+        description: i18n._(t`Unable to transfer ownership of undefined organization.`),
       }
     }
 
@@ -91,9 +71,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Permission Denied: Please contact org owner to transfer ownership.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact org owner to transfer ownership.`),
       }
     }
 
@@ -108,9 +86,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 400,
-        description: i18n._(
-          t`Unable to transfer ownership of an org to an undefined user.`,
-        ),
+        description: i18n._(t`Unable to transfer ownership of an org to an undefined user.`),
       }
     }
 
@@ -127,9 +103,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to transfer organization ownership. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 
     // check to see if requested user belongs to org
@@ -159,7 +133,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
 							FILTER aff._from == ${org._id}
 							FILTER aff._to == ${requestingUser._id}
 							UPDATE { _key: aff._key } WITH {
-								owner: false,
+								permission: "admin",
 							} IN affiliations
 							RETURN aff
 					`,
@@ -168,9 +142,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to transfer organization ownership. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 
     // set new org owner
@@ -183,7 +155,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
 							FILTER aff._from == ${org._id}
 							FILTER aff._to == ${requestedUser._id}
 							UPDATE { _key: aff._key } WITH {
-								owner: true,
+								permission: "owner",
 							} IN affiliations
 							RETURN aff
 					`,
@@ -192,9 +164,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       console.error(
         `Trx step error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to transfer organization ownership. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 
     // commit changes to the db
@@ -204,9 +174,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred for user: ${requestingUser._key} when they were attempting to transfer org: ${org.slug} ownership to user: ${requestedUser._key}: ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to transfer organization ownership. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to transfer organization ownership. Please try again.`))
     }
 
     console.info(
@@ -214,9 +182,7 @@ export const transferOrgOwnership = new mutationWithClientMutationId({
     )
     return {
       _type: 'regular',
-      status: i18n._(
-        t`Successfully transferred org: ${org.slug} ownership to user: ${requestedUser.userName}`,
-      ),
+      status: i18n._(t`Successfully transferred org: ${org.slug} ownership to user: ${requestedUser.userName}`),
     }
   },
 })

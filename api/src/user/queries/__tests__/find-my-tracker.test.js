@@ -143,9 +143,9 @@ describe('given findMyTracker query', () => {
         describe('user queries for myTracker', () => {
           describe('in english', () => {
             it('returns myTracker results', async () => {
-              const response = await graphql(
+              const response = await graphql({
                 schema,
-                `
+                source: `
                   query {
                     findMyTracker {
                       summaries {
@@ -167,7 +167,7 @@ describe('given findMyTracker query', () => {
                         }
                       }
                       domainCount
-                      domains(first: 10, myTracker: true) {
+                      domains(first: 10) {
                         pageInfo {
                           hasNextPage
                           hasPreviousPage
@@ -199,8 +199,8 @@ describe('given findMyTracker query', () => {
                     }
                   }
                 `,
-                null,
-                {
+                rootValue: null,
+                contextValue: {
                   i18n,
                   userKey: user._key,
                   auth: {
@@ -222,17 +222,16 @@ describe('given findMyTracker query', () => {
                       cleanseInput,
                       language: 'en',
                     }),
-                    loadDomainConnectionsByUserId:
-                      loadDomainConnectionsByUserId({
-                        query,
-                        userKey: user._key,
-                        cleanseInput,
-                        language: 'en',
-                        auth: { loginRequiredBool: true },
-                      }),
+                    loadDomainConnectionsByUserId: loadDomainConnectionsByUserId({
+                      query,
+                      userKey: user._key,
+                      cleanseInput,
+                      language: 'en',
+                      auth: { loginRequiredBool: true },
+                    }),
                   },
                 },
-              )
+              })
 
               const expectedResponse = {
                 data: {
@@ -299,9 +298,7 @@ describe('given findMyTracker query', () => {
                 },
               }
               expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User ${user._key} successfully retrieved personal domains.`,
-              ])
+              expect(consoleOutput).toEqual([`User ${user._key} successfully retrieved personal domains.`])
             })
           })
         })
@@ -326,13 +323,11 @@ describe('given findMyTracker query', () => {
       })
       describe('database error occurs', () => {
         it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValueOnce(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValueOnce(new Error('Database error occurred.'))
 
-          const response = await graphql(
+          const response = await graphql({
             schema,
-            `
+            source: `
               query {
                 findMyTracker {
                   summaries {
@@ -354,7 +349,7 @@ describe('given findMyTracker query', () => {
                     }
                   }
                   domainCount
-                  domains(first: 10, myTracker: true) {
+                  domains(first: 10) {
                     pageInfo {
                       hasNextPage
                       hasPreviousPage
@@ -386,8 +381,8 @@ describe('given findMyTracker query', () => {
                 }
               }
             `,
-            null,
-            {
+            rootValue: null,
+            contextValue: {
               i18n,
               userKey: user._key,
               auth: {
@@ -405,11 +400,9 @@ describe('given findMyTracker query', () => {
                 }),
               },
             },
-          )
+          })
 
-          const error = [
-            new GraphQLError('Unable to query domain(s). Please try again.'),
-          ]
+          const error = [new GraphQLError('Unable to query domain(s). Please try again.')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

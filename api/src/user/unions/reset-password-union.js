@@ -8,9 +8,9 @@ export const resetPasswordUnion = new GraphQLUnionType({
   types: [resetPasswordErrorType, resetPasswordResultType],
   resolveType({ _type }) {
     if (_type === 'regular') {
-      return resetPasswordResultType
+      return resetPasswordResultType.name
     } else {
-      return resetPasswordErrorType
+      return resetPasswordErrorType.name
     }
   },
 })

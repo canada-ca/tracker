@@ -14,24 +14,18 @@ export const loadDomainConnectionsByUserId =
     isSuperAdmin,
     myTracker,
     search,
+    isAffiliated,
+    filters = [],
   }) => {
     const userDBId = `users/${userKey}`
 
     let ownershipOrgsOnly = aql`
-      LET claimDomainKeys = (
-        FOR v, e IN 1..1 OUTBOUND orgId claims
-          OPTIONS {order: "bfs"}
-          RETURN v._key
-      )
+        FOR v, e IN 1..1 OUTBOUND org._id claims
     `
     if (typeof ownership !== 'undefined') {
       if (ownership) {
         ownershipOrgsOnly = aql`
-          LET claimDomainKeys = (
-            FOR v, e IN 1..1 OUTBOUND orgId ownership
-              OPTIONS {order: "bfs"}
-              RETURN v._key
-          )
+            FOR v, e IN 1..1 OUTBOUND org._id ownership
         `
       }
     }
@@ -86,6 +80,9 @@ export const loadDomainConnectionsByUserId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`afterVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`afterVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         afterTemplate = aql`
@@ -146,6 +143,9 @@ export const loadDomainConnectionsByUserId =
         } else if (orderBy.field === 'protocols-status') {
           documentField = aql`beforeVar.status.protocols`
           domainField = aql`domain.status.protocols`
+        } else if (orderBy.field === 'certificates-status') {
+          documentField = aql`beforeVar.status.certificates`
+          domainField = aql`domain.status.certificates`
         }
 
         beforeTemplate = aql`
@@ -162,18 +162,14 @@ export const loadDomainConnectionsByUserId =
         `User: ${userKey} did not have either \`first\` or \`last\` arguments set for: loadDomainConnectionsByUserId.`,
       )
       throw new Error(
-        i18n._(
-          t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`,
-        ),
+        i18n._(t`You must provide a \`first\` or \`last\` value to properly paginate the \`Domain\` connection.`),
       )
     } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
       console.warn(
         `User: ${userKey} attempted to have \`first\` and \`last\` arguments set for: loadDomainConnectionsByUserId.`,
       )
       throw new Error(
-        i18n._(
-          t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`,
-        ),
+        i18n._(t`Passing both \`first\` and \`last\` to paginate the \`Domain\` connection is not supported.`),
       )
     } else if (typeof first === 'number' || typeof last === 'number') {
       /* istanbul ignore else */
@@ -182,11 +178,7 @@ export const loadDomainConnectionsByUserId =
         console.warn(
           `User: ${userKey} attempted to have \`${argSet}\` set below zero for: loadDomainConnectionsByUserId.`,
         )
-        throw new Error(
-          i18n._(
-            t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`,
-          ),
-        )
+        throw new Error(i18n._(t`\`${argSet}\` on the \`Domain\` connection cannot be less than zero.`))
       } else if (first > 100 || last > 100) {
         const argSet = typeof first !== 'undefined' ? 'first' : 'last'
         const amount = typeof first !== 'undefined' ? first : last
@@ -209,9 +201,7 @@ export const loadDomainConnectionsByUserId =
       console.warn(
         `User: ${userKey} attempted to have \`${argSet}\` set as a ${typeSet} for: loadDomainConnectionsByUserId.`,
       )
-      throw new Error(
-        i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
-      )
+      throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
     }
 
     let hasNextPageFilter = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(LAST(retrievedDomains)._key)`
@@ -279,6 +269,10 @@ export const loadDomainConnectionsByUserId =
         domainField = aql`domain.status.protocols`
         hasNextPageDocumentField = aql`LAST(retrievedDomains).status.protocols`
         hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.protocols`
+      } else if (orderBy.field === 'certificates-status') {
+        domainField = aql`domain.status.certificates`
+        hasNextPageDocumentField = aql`LAST(retrievedDomains).status.certificates`
+        hasPreviousPageDocumentField = aql`FIRST(retrievedDomains).status.certificates`
       }
 
       hasNextPageFilter = aql`
@@ -316,6 +310,8 @@ export const loadDomainConnectionsByUserId =
         sortByField = aql`domain.status.policy ${orderBy.direction},`
       } else if (orderBy.field === 'protocols-status') {
         sortByField = aql`domain.status.protocols ${orderBy.direction},`
+      } else if (orderBy.field === 'certificates-status') {
+        sortByField = aql`domain.status.certificates ${orderBy.direction},`
       }
     }
 
@@ -326,63 +322,169 @@ export const loadDomainConnectionsByUserId =
       sortString = aql`ASC`
     }
 
+    let domainFilters = aql``
+    if (typeof filters !== 'undefined') {
+      filters.forEach(({ filterCategory, comparison, filterValue }) => {
+        if (comparison === '==') {
+          comparison = aql`==`
+        } else {
+          comparison = aql`!=`
+        }
+        if (filterCategory === 'dmarc-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dmarc ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'dkim-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.dkim ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'https-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.https ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'spf-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.spf ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'ciphers-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.ciphers ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'curves-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.curves ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'hsts-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.hsts ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'policy-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.policy ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'protocols-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.protocols ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'certificates-status') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER domain.status.certificates ${comparison} ${filterValue}
+        `
+        } else if (filterCategory === 'tags') {
+          if (filterValue === 'archived') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.archived ${comparison} true
+          `
+          } else if (filterValue === 'nxdomain') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.rcode ${comparison} "NXDOMAIN"
+          `
+          } else if (filterValue === 'blocked') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.blocked ${comparison} true
+          `
+          } else if (filterValue === 'wildcard-sibling') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.wildcardSibling ${comparison} true
+          `
+          } else if (filterValue === 'scan-pending') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.webScanPending ${comparison} true
+          `
+          }
+        }
+      })
+    }
+
     let domainKeysQuery
     if (myTracker) {
       domainKeysQuery = aql`
-      WITH favourites, users
-      LET domainKeys = (
+      WITH favourites, users, domains
+      LET collectedDomains = (
         FOR v, e IN 1..1 OUTBOUND ${userDBId} favourites
           OPTIONS {order: "bfs"}
-          RETURN v._key
+          RETURN v
       )
       `
     } else if (isSuperAdmin) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (FOR org IN organizations RETURN org._id)
-        FOR orgId IN orgIds
+      LET collectedDomains = UNIQUE(
+        FOR org IN organizations
           ${ownershipOrgsOnly}
-          RETURN APPEND(keys, claimDomainKeys)
-      ))
+            RETURN v
+      )
+    `
+    } else if (isAffiliated) {
+      domainKeysQuery = aql`
+      WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
+      LET collectedDomains = UNIQUE(
+        LET userAffiliations = (
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key
+          ${ownershipOrgsOnly}
+          FILTER v.archived != true
+          RETURN v
+      )
     `
     } else if (!loginRequiredBool) {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (FOR org IN organizations RETURN org._id)
-        FOR orgId IN orgIds
-          LET claimDomainKeys = (
-            FOR v, e IN 1..1 OUTBOUND orgId claims
-              OPTIONS {order: "bfs"} 
-              FILTER v.archived != true
-              RETURN v._key
-          )
-          RETURN APPEND(keys, claimDomainKeys)
-      ))
+      LET collectedDomains = UNIQUE(
+        LET userAffiliations = (
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
+        )
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key || org.verified == true
+          ${ownershipOrgsOnly}
+            FILTER v.archived != true
+            RETURN v
+      )
     `
     } else {
       domainKeysQuery = aql`
       WITH affiliations, domains, organizations, users, domainSearch, claims, ownership
-      LET domainKeys = UNIQUE(FLATTEN(
-        LET keys = []
-        LET orgIds = (
-          FOR v, e IN 1..1 ANY ${userDBId} affiliations
-            OPTIONS {order: "bfs"}
-            RETURN e._from
+      LET collectedDomains = UNIQUE(
+        LET userAffiliations = (
+          FOR v, e IN 1..1 INBOUND ${userDBId} affiliations
+            FILTER e.permission != "pending"
+            RETURN v
         )
-        FOR orgId IN orgIds
+        LET hasVerifiedOrgAffiliation = POSITION(userAffiliations[*].verified, true)
+
+        FOR org IN organizations
+          FILTER org._key IN userAffiliations[*]._key || (hasVerifiedOrgAffiliation == true && org.verified == true)
           ${ownershipOrgsOnly}
-          RETURN APPEND(keys, claimDomainKeys)
-      ))
+            FILTER v.archived != true
+            RETURN v
+      )
     `
     }
 
     let domainQuery = aql``
-    let loopString = aql`FOR domain IN domains`
-    let totalCount = aql`LENGTH(domainKeys)`
+    let loopString = aql`FOR domain IN collectedDomains`
+    let totalCount = aql`LENGTH(collectedDomains)`
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
@@ -392,7 +494,7 @@ export const loadDomainConnectionsByUserId =
             LET token = LOWER(tokenItem)
             FOR domain IN domainSearch
               SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
-              FILTER domain._key IN domainKeys
+              FILTER domain IN collectedDomains
               RETURN domain
         )
       `
@@ -404,7 +506,6 @@ export const loadDomainConnectionsByUserId =
     if (isSuperAdmin) {
       showArchivedDomains = aql``
     }
-
     let requestedDomainInfo
     try {
       requestedDomainInfo = await query`
@@ -417,8 +518,8 @@ export const loadDomainConnectionsByUserId =
 
       LET retrievedDomains = (
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${showArchivedDomains}
+          ${domainFilters}
           ${afterTemplate}
           ${beforeTemplate}
           SORT
@@ -429,8 +530,8 @@ export const loadDomainConnectionsByUserId =
 
       LET hasNextPage = (LENGTH(
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasNextPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain
@@ -438,8 +539,8 @@ export const loadDomainConnectionsByUserId =
 
       LET hasPreviousPage = (LENGTH(
         ${loopString}
-          FILTER domain._key IN domainKeys
           ${showArchivedDomains}
+          ${domainFilters}
           ${hasPreviousPageFilter}
           SORT ${sortByField} TO_NUMBER(domain._key) ${sortString} LIMIT 1
           RETURN domain

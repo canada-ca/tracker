@@ -1,68 +1,54 @@
-import { GraphQLString } from 'graphql'
-
-import { t } from '@lingui/macro'
+import { GraphQLString, GraphQLList } from 'graphql'
+import { domainFilter } from '../../domain/inputs'
 
 export const getAllOrganizationDomainStatuses = {
   type: GraphQLString,
-  description:
-    'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
+  description: 'CSV formatted output of all domains in all organizations including their email and web scan statuses.',
+  args: {
+    filters: {
+      type: new GraphQLList(domainFilter),
+      description: 'Filters used to limit domains returned.',
+    },
+  },
   resolve: async (
     _,
-    _args,
+    args,
     {
       userKey,
-      i18n,
-      auth: {
-        checkSuperAdmin,
-        userRequired,
-        verifiedRequired,
-        loginRequiredBool,
-      },
+      auth: { checkSuperAdmin, userRequired, verifiedRequired, superAdminRequired },
       loaders: { loadAllOrganizationDomainStatuses },
     },
   ) => {
-    if (loginRequiredBool) {
-      const user = await userRequired()
-      verifiedRequired({ user })
+    const user = await userRequired()
+    verifiedRequired({ user })
 
-      const isSuperAdmin = await checkSuperAdmin()
+    const isSuperAdmin = await checkSuperAdmin()
+    superAdminRequired({ user, isSuperAdmin })
 
-      if (!isSuperAdmin) {
-        console.warn(
-          `User: ${userKey} attempted to load all organization statuses but login is required and they are not a super admin.`,
-        )
-        throw new Error(
-          i18n._(
-            t`Permissions error. You do not have sufficient permissions to access this data.`,
-          ),
-        )
-      }
-    }
-
-    const domainStatuses = await loadAllOrganizationDomainStatuses()
+    const domainStatuses = await loadAllOrganizationDomainStatuses({ ...args })
 
     console.info(`User ${userKey} successfully retrieved all domain statuses.`)
 
     if (domainStatuses === undefined) return domainStatuses
 
     const headers = [
-      'Organization name (English)',
-      "Nom de l'organisation (Français)",
-      'Domain',
-      'HTTPS',
-      'HSTS',
-      'Ciphers',
-      'Curves',
-      'Protocols',
-      'SPF',
-      'DKIM',
-      'DMARC',
+      'domain',
+      'https',
+      'hsts',
+      'certificates',
+      'ciphers',
+      'curves',
+      'protocols',
+      'spf',
+      'dkim',
+      'dmarc',
+      'rcode',
+      'blocked',
+      'wildcardSibling',
     ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
-      const csvLine = headers
-        .map((header) => `"${domainStatus[header]}"`)
-        .join(',')
+      const csvLine = headers.map((header) => `"${domainStatus[header]}"`).join(',')
       csvOutput += `\n${csvLine}`
     })
 

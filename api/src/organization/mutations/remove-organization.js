@@ -10,15 +10,14 @@ export const removeOrganization = new mutationWithClientMutationId({
   description: 'This mutation allows the removal of unused organizations.',
   inputFields: () => ({
     orgId: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'The global id of the organization you wish you remove.',
     },
   }),
   outputFields: () => ({
     result: {
-      type: GraphQLNonNull(removeOrganizationUnion),
-      description:
-        '`RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
+      type: new GraphQLNonNull(removeOrganizationUnion),
+      description: '`RemoveOrganizationUnion` returning either an `OrganizationResult`, or `OrganizationError` object.',
       resolve: (payload) => payload,
     },
   }),
@@ -48,9 +47,7 @@ export const removeOrganization = new mutationWithClientMutationId({
 
     // Check to see if org exists
     if (!organization) {
-      console.warn(
-        `User: ${userKey} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
-      )
+      console.warn(`User: ${userKey} attempted to remove org: ${orgId}, but there is no org associated with that id.`)
       return {
         _type: 'error',
         code: 400,
@@ -61,7 +58,7 @@ export const removeOrganization = new mutationWithClientMutationId({
     // Get users permission
     const permission = await checkPermission({ orgId: organization._id })
 
-    if (permission !== 'super_admin' && permission !== 'admin') {
+    if (['owner', 'super_admin'].includes(permission) === false) {
       console.warn(
         `User: ${userKey} attempted to remove org: ${organization._key}, however the user does not have permission to this organization.`,
       )
@@ -82,9 +79,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       return {
         _type: 'error',
         code: 403,
-        description: i18n._(
-          t`Permission Denied: Please contact super admin for help with removing organization.`,
-        ),
+        description: i18n._(t`Permission Denied: Please contact super admin for help with removing organization.`),
       }
     }
 
@@ -103,9 +98,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${userKey} while attempting to get dmarcSummaryInfo while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     let dmarcSummaryCheckList
@@ -115,9 +108,7 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred for user: ${userKey} while attempting to get dmarcSummaryInfo while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     for (const ownership of dmarcSummaryCheckList) {
@@ -147,9 +138,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred for user: ${userKey} while attempting to remove dmarc summaries while removing org: ${organization._key}, ${err}`,
         )
-        throw new Error(
-          i18n._(t`Unable to remove organization. Please try again.`),
-        )
+        throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
       }
 
       try {
@@ -164,9 +153,7 @@ export const removeOrganization = new mutationWithClientMutationId({
         console.error(
           `Trx step error occurred for user: ${userKey} while attempting to remove ownerships while removing org: ${organization._key}, ${err}`,
         )
-        throw new Error(
-          i18n._(t`Unable to remove organization. Please try again.`),
-        )
+        throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
       }
     }
 
@@ -185,20 +172,18 @@ export const removeOrganization = new mutationWithClientMutationId({
             FOR v, e IN 1..1 INBOUND domain._id claims
               RETURN 1
           )
-          RETURN { 
-            _id: domain._id,
-            _key: domain._key,
-            domain: domain.domain,
-            count
+          RETURN {
+            "_id": domain._id,
+            "_key": domain._key,
+            "domain": domain.domain,
+            "count": count
           }
       `
     } catch (err) {
       console.error(
         `Database error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     let domainInfo
@@ -208,173 +193,88 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred for user: ${userKey} while attempting to gather domain count while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     for (const domain of domainInfo) {
       if (domain.count === 1) {
         try {
-          await trx.step(
-            () =>
-              query`
-                WITH claims, dkim, domains, domainsDKIM, organizations, dkimToDkimResults, dkimResults
-                LET dkimEdges = (
-                  FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM 
-                    RETURN { edgeKey: e._key, dkimId: e._to }
+          // Remove web data
+          await trx.step(async () => {
+            await query`
+              WITH web, webScan
+              FOR webV, domainsWebEdge IN 1..1 OUTBOUND ${domain._id} domainsWeb
+                LET removeWebScansQuery = (
+                  FOR webScanV, webToWebScansV In 1..1 OUTBOUND webV._id webToWebScans
+                    REMOVE webScanV IN webScan
+                    REMOVE webToWebScansV IN webToWebScans
+                    OPTIONS { waitForSync: true }
                 )
-                FOR dkimEdge IN dkimEdges
-                  LET dkimResultEdges = (
-                    FOR v, e IN 1..1 OUTBOUND dkimEdge.dkimId dkimToDkimResults
-                      RETURN { edgeKey: e._key, dkimResultId: e._to }
-                  )
-                  LET removeDkimResultEdges = (
-                    FOR dkimResultEdge IN dkimResultEdges 
-                      REMOVE dkimResultEdge.edgeKey IN dkimToDkimResults
-                      OPTIONS { waitForSync: true }
-                  )
-                  LET removeDkimResult = (
-                    FOR dkimResultEdge IN dkimResultEdges 
-                      LET key = PARSE_IDENTIFIER(dkimResultEdge.dkimResultId).key 
-                      REMOVE key IN dkimResults
-                      OPTIONS { waitForSync: true }
-                  )
-                RETURN true
-              `,
-          )
+                REMOVE webV IN web
+                REMOVE domainsWebEdge IN domainsWeb
+                OPTIONS { waitForSync: true }
+            `
+          })
         } catch (err) {
           console.error(
-            `Trx step error occurred when user: ${userKey} attempted to remove dkim results while removing org: ${organization._key}: ${err}`,
+            `Trx step error occurred while user: ${userKey} attempted to remove web data for ${domain.domain} in org: ${organization.slug}, ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable to remove organization. Please try again.`),
-          )
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
         try {
-          await Promise.all([
-            trx.step(
-              () =>
-                query`
-                WITH claims, dkim, domains, domainsDKIM, organizations
-                LET dkimEdges = (
-                  FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDKIM 
-                    RETURN { edgeKey: e._key, dkimId: e._to }
-                )
-                LET removeDkimEdges = (
-                  FOR dkimEdge IN dkimEdges 
-                    REMOVE dkimEdge.edgeKey IN domainsDKIM
-                    OPTIONS { waitForSync: true }
-                )
-                LET removeDkim = (
-                  FOR dkimEdge IN dkimEdges 
-                    LET key = PARSE_IDENTIFIER(dkimEdge.dkimId).key 
-                    REMOVE key IN dkim
-                    OPTIONS { waitForSync: true }
-                )
-                RETURN true
-              `,
-            ),
-            trx.step(
-              () =>
-                query`
-                WITH claims, dmarc, domains, domainsDMARC, organizations
-                LET dmarcEdges = (
-                  FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsDMARC 
-                    RETURN { edgeKey: e._key, dmarcId: e._to }
-                )
-                LET removeDmarcEdges = (
-                  FOR dmarcEdge IN dmarcEdges 
-                    REMOVE dmarcEdge.edgeKey IN domainsDMARC
-                    OPTIONS { waitForSync: true }
-                )
-                LET removeDmarc = (
-                  FOR dmarcEdge IN dmarcEdges 
-                    LET key = PARSE_IDENTIFIER(dmarcEdge.dmarcId).key 
-                    REMOVE key IN dmarc
-                    OPTIONS { waitForSync: true }
-                )
-                RETURN true
-              `,
-            ),
-            trx.step(
-              () =>
-                query`
-                WITH claims, domains, domainsSPF, organizations, spf
-                LET spfEdges = (
-                  FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSPF 
-                    RETURN { edgeKey: e._key, spfId: e._to }
-                )
-                LET removeSpfEdges = (
-                  FOR spfEdge IN spfEdges 
-                    REMOVE spfEdge.edgeKey IN domainsSPF
-                    OPTIONS { waitForSync: true }
-                )
-                LET removeSpf = (
-                  FOR spfEdge IN spfEdges 
-                    LET key = PARSE_IDENTIFIER(spfEdge.spfId).key 
-                    REMOVE key IN spf
-                    OPTIONS { waitForSync: true }
-                )
-                RETURN true
-              `,
-            ),
-            trx.step(
-              () =>
-                query`
-                WITH claims, domains, domainsHTTPS, https, organizations
-                LET httpsEdges = (
-                  FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsHTTPS 
-                    RETURN { edgeKey: e._key, httpsId: e._to }
-                )
-                LET removeHttpsEdges = (
-                  FOR httpsEdge IN httpsEdges 
-                    REMOVE httpsEdge.edgeKey IN domainsHTTPS
-                    OPTIONS { waitForSync: true }
-                )
-                LET removeHttps = (
-                  FOR httpsEdge IN httpsEdges 
-                    LET key = PARSE_IDENTIFIER(httpsEdge.httpsId).key 
-                    REMOVE key IN https
-                    OPTIONS { waitForSync: true }
-                )
-                RETURN true
-              `,
-            ),
-            trx.step(
-              () =>
-                query`
-                WITH claims, domains, domainsSSL, organizations, ssl
-                LET sslEdges = (
-                  FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsSSL 
-                    RETURN { edgeKey: e._key, sslId: e._to}
-                )
-                LET removeSslEdges = (
-                  FOR sslEdge IN sslEdges 
-                    REMOVE sslEdge.edgeKey IN domainsSSL
-                    OPTIONS { waitForSync: true }
-                )
-                LET removeSsl = (
-                  FOR sslEdge IN sslEdges 
-                    LET key = PARSE_IDENTIFIER(sslEdge.sslId).key 
-                    REMOVE key IN ssl
-                    OPTIONS { waitForSync: true }
-                )
-                RETURN true
-              `,
-            ),
-          ])
+          // Remove DNS data
+          await trx.step(async () => {
+            await query`
+            WITH dns
+            FOR dnsV, domainsDNSEdge IN 1..1 OUTBOUND ${domain._id} domainsDNS
+              REMOVE dnsV IN dns
+              REMOVE domainsDNSEdge IN domainsDNS
+              OPTIONS { waitForSync: true }
+          `
+          })
         } catch (err) {
           console.error(
-            `Trx step error occurred for user: ${userKey} while attempting to remove scan results while removing org: ${organization._key}, ${err}`,
+            `Trx step error occurred while user: ${userKey} attempted to remove DNS data for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable to remove organization. Please try again.`),
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
+        }
+
+        // remove favourites
+        try {
+          await trx.step(async () => {
+            await query`
+            WITH favourites, domains
+            FOR fav IN favourites
+              FILTER fav._to == ${domain._id}
+              REMOVE fav IN favourites
+          `
+          })
+        } catch (err) {
+          console.error(
+            `Trx step error occurred while user: ${userKey} attempted to remove favourites for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
           )
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
+        }
+
+        // remove DKIM selectors
+        try {
+          await trx.step(async () => {
+            await query`
+            FOR e IN domainsToSelectors
+              FILTER e._from == ${domain._id}
+              REMOVE e IN domainsToSelectors
+          `
+          })
+        } catch (err) {
+          console.error(
+            `Trx step error occurred while user: ${userKey} attempted to remove DKIM selectors for ${domain.domain} in org: ${organization.slug}, error: ${err}`,
+          )
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
 
         try {
+          // Remove domain
           await trx.step(
             () =>
               query`
@@ -385,13 +285,13 @@ export const removeOrganization = new mutationWithClientMutationId({
                     RETURN { edgeKey: e._key, domainId: e._to }
                 )
                 LET removeDomainEdges = (
-                  FOR domainEdge in domainEdges 
+                  FOR domainEdge in domainEdges
                     REMOVE domainEdge.edgeKey IN claims
                     OPTIONS { waitForSync: true }
                 )
                 LET removeDomain = (
-                  FOR domainEdge in domainEdges 
-                    LET key = PARSE_IDENTIFIER(domainEdge.domainId).key 
+                  FOR domainEdge in domainEdges
+                    LET key = PARSE_IDENTIFIER(domainEdge.domainId).key
                     REMOVE key IN domains
                     OPTIONS { waitForSync: true }
                 )
@@ -402,9 +302,7 @@ export const removeOrganization = new mutationWithClientMutationId({
           console.error(
             `Trx step error occurred for user: ${userKey} while attempting to remove domains while removing org: ${organization._key}, ${err}`,
           )
-          throw new Error(
-            i18n._(t`Unable to remove organization. Please try again.`),
-          )
+          throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
         }
       }
     }
@@ -428,39 +326,47 @@ export const removeOrganization = new mutationWithClientMutationId({
     }
 
     try {
-      await Promise.all([
-        trx.step(
-          () =>
-            query`
+      await trx.step(
+        () =>
+          query`
               WITH affiliations, organizations, users
               LET userEdges = (
                 FOR v, e IN 1..1 OUTBOUND ${organization._id} affiliations
                   RETURN { edgeKey: e._key, userKey: e._to }
               )
               LET removeUserEdges = (
-                FOR userEdge IN userEdges 
+                FOR userEdge IN userEdges
                   REMOVE userEdge.edgeKey IN affiliations
                   OPTIONS { waitForSync: true }
               )
               RETURN true
             `,
-        ),
-        trx.step(
-          () =>
-            query`
+      )
+
+      await trx.step(
+        () =>
+          query`
+              WITH organizations, organizationSummaries
+              FOR summary in organizationSummaries
+                FILTER summary.organization == ${organization._id}
+                REMOVE summary._key IN organizationSummaries
+                OPTIONS { waitForSync: true }
+            `,
+      )
+
+      await trx.step(
+        () =>
+          query`
               WITH organizations
               REMOVE ${organization._key} IN organizations
               OPTIONS { waitForSync: true }
             `,
-        ),
-      ])
+      )
     } catch (err) {
       console.error(
         `Trx step error occurred for user: ${userKey} while attempting to remove affiliations, and the org while removing org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
     try {
@@ -469,14 +375,10 @@ export const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Trx commit error occurred for user: ${userKey} while attempting remove of org: ${organization._key}, ${err}`,
       )
-      throw new Error(
-        i18n._(t`Unable to remove organization. Please try again.`),
-      )
+      throw new Error(i18n._(t`Unable to remove organization. Please try again.`))
     }
 
-    console.info(
-      `User: ${userKey} successfully removed org: ${organization._key}.`,
-    )
+    console.info(`User: ${userKey} successfully removed org: ${organization._key}.`)
     await logActivity({
       transaction,
       collections,
@@ -498,9 +400,7 @@ export const removeOrganization = new mutationWithClientMutationId({
 
     return {
       _type: 'result',
-      status: i18n._(
-        t`Successfully removed organization: ${organization.slug}.`,
-      ),
+      status: i18n._(t`Successfully removed organization: ${organization.slug}.`),
       organization,
     }
   },

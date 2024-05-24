@@ -6,9 +6,9 @@ metadata:
   labels:
     app: 'arangodb'
 spec:
-  image: arangodb/arangodb:3.10.4
+  image: arangodb/arangodb:3.10.5
   environment: Production
-  mode: Cluster
+  mode: Single
   tls:
     caSecretName: None
   externalAccess:
@@ -43,13 +43,19 @@ spec:
   coordinators:
     count: 3
   single:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        memory: 4.5Gi
     volumeClaimTemplate:
       spec:
+        storageClassName: fast-delete
         accessModes:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 10Gi
+            storage: 80Gi
         volumeMode: Filesystem
-    storageClassName: standard2
-
+        persistentVolumeReclaimPolicy: Delete
