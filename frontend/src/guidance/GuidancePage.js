@@ -14,6 +14,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
@@ -27,12 +28,15 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 
 function GuidancePage() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { domainSlug: domain } = useParams()
 
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
+    errorPolicy: 'all',
   })
 
   const history = useHistory()
@@ -46,10 +50,6 @@ function GuidancePage() {
         <Trans>Guidance results</Trans>
       </LoadingMessage>
     )
-  }
-
-  if (error) {
-    return <ErrorFallbackMessage error={error} />
   }
 
   const {
@@ -73,8 +73,21 @@ function GuidancePage() {
             This could be due to insufficient user privileges or the domain does not exist in the system.
           </Trans>
         </Text>
+        <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
+          <Trans>Request Invite</Trans>
+        </Button>
+        <RequestOrgInviteModal
+          onClose={onClose}
+          isOpen={isOpen}
+          orgId={data?.domain?.id}
+          orgName={data?.domain?.name}
+        />
       </Box>
     )
+  }
+
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
   }
 
   let guidanceResults
