@@ -1,5 +1,6 @@
 import React from 'react'
 import { ArrowLeftIcon } from '@chakra-ui/icons'
+
 import {
   Badge,
   Box,
@@ -76,12 +77,8 @@ function GuidancePage() {
         <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
           <Trans>Request Invite</Trans>
         </Button>
-        <RequestOrgInviteModal
-          onClose={onClose}
-          isOpen={isOpen}
-          orgId={data?.domain?.id}
-          orgName={data?.domain?.name}
-        />
+        <RequestOrgInviteModal onClose={onClose} isOpen={isOpen} orgId={organizations.edges[0].node.id} />
+        {/* <Organizations></Organizations> */}
       </Box>
     )
   }

@@ -230,6 +230,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             name
             acronym
             slug
+            id
           }
         }
       }
