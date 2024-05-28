@@ -154,6 +154,21 @@ async def main():
             domain_exists = cursor.batch()
 
             if domain_exists:
+                # check if claim exists
+                query = f"""
+                FOR claim IN claims
+                    FILTER claim._from == @org_id AND claim._to == @domain_id
+                    RETURN claim
+                """
+                bind_vars = {"org_id": org_id, "domain_id": domain_exists["_id"]}
+                cursor = db.aql.execute(query, bind_vars=bind_vars)
+                claim_exists = cursor.batch()
+
+                if claim_exists:
+                    logging.info(
+                        f"Claim for domain: {domain} in org: {org_id} already exists"
+                    )
+                    continue
                 # add domain to org
                 create_claim(org_id, domain_exists["_id"], domain)
             else:
@@ -194,6 +209,21 @@ async def main():
             domain_exists = cursor.batch()
 
             if domain_exists:
+                # check if claim exists
+                query = f"""
+                FOR claim IN claims
+                    FILTER claim._from == @org_id AND claim._to == @domain_id
+                    RETURN claim
+                """
+                bind_vars = {"org_id": org_id, "domain_id": domain_exists["_id"]}
+                cursor = db.aql.execute(query, bind_vars=bind_vars)
+                claim_exists = cursor.batch()
+
+                if claim_exists:
+                    logging.info(
+                        f"Claim for domain: {domain} in org: {org_id} already exists"
+                    )
+                    continue
                 # add domain to org
                 create_claim(UNCLAIMED_ID, domain_exists["_id"], domain)
             else:
