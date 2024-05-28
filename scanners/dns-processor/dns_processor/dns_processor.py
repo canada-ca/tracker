@@ -18,10 +18,10 @@ def get_dkim_tag_status(selector_tag_list, sends_email):
     if sends_email is "false":
         dkim_tags["neutral_tags"].append("dkim17")
         return dkim_tags, selector_tags, "info"
-    if sends_email is "unknown":
+    elif sends_email is "unknown":
         dkim_tags["neutral_tags"].append("dkim18")
         return dkim_tags, selector_tags, "info"
-    else:
+    elif sends_email is "true":
         dkim_tags["neutral_tags"].append("dkim19")
 
     # get dkim statuses
