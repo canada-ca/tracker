@@ -27,5 +27,7 @@ replicas:
     count: 6
   - name: web-scanner
     count: 20
+patchesStrategicMerge:
+  - update-selectors-enable-selector-removal-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component
