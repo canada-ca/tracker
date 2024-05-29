@@ -69,7 +69,57 @@ function GuidancePage() {
     userHasPermission,
   } = data.findDomainByDomain
 
+  let orgList
   if (!userHasPermission) {
+    //Insert code for organization list here
+    orgList = (
+      <ListOf
+        elements={organizations.edges.node}
+        ifEmpty={() => (
+          <Text layerStyle="loadingMessage">
+            <Trans>No Organizations</Trans>
+          </Text>
+        )}
+        mb="4"
+      >  
+        {({id, name, slug, acronym, domainCount, verified, summaries, userHasPermission}, index) => (
+          <ErrorBoundary key={`${slug}:${index}`} ErrorFallbackComponent={ErrorFallbackMessage}>
+            <Flex align="center">
+              <OrganizationCard
+                slug={slug}
+                name={name}
+                acronym={acronym}
+                domainCount={domainCount}
+                verified={verified}
+                summaries={summaries}
+                mb="3"
+                mr={userHaspermission ? '3rem' : '2'}
+                w="100%"
+                />
+              {isLoggedIn() && !userHasPermission && (
+                <>
+                <IconButton
+                  aria-label={t`Request Invite`}
+                  variant="primary"
+                  icon={<UserIcon color="white" boxSize="icons.md" />}
+                  onClick={() => {
+                    setOrginfo({id, name})
+                    onOpen()
+                  }}
+                  />
+                <RequestOrgInviteModal
+                  isOpen={inviteRequestIsOpen}
+                  onClose={onClose}
+                  orgId={orgInfo.id}
+                  orgName={orgInfo.name}
+                />
+                </>
+              )}
+            </Flex>
+          </ErrorBoundary>
+        )}
+      </ListOf>
+    )
     return (
       <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="2xl" fontWeight="bold">
@@ -81,20 +131,6 @@ function GuidancePage() {
         <Button ml="auto" order={{ base: 2, md: 1 }} variant="primary" onClick={onOpen}>
           <Trans>Request Invite</Trans>
         </Button>
-        <RequestOrgInviteModal onClose={onClose} isOpen={isOpen} orgId={organizations.edges[0].node.id} />
-        {/* <Organizations></Organizations> */}
-
-        <OrganizationCard
-          slug={slug}
-          name={name}
-          acronym={acronym}
-          domainCount={domainCount}
-          verified={verified}
-          summaries={summaries}
-          mb="3"
-          mr={userHasPermission ? '3rem' : '2'}
-          w="100%"
-        />
       </Box>
     )
   }
