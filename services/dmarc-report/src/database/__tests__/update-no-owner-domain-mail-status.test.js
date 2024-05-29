@@ -4,7 +4,7 @@ const { dbNameFromFile } = require('arango-tools')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the updateNoOwnerDomainMailStatus function', () => {
-  let query, truncate, collections, dbName, arangoDB, unownedDomain, ownedDomain, org
+  let query, truncate, collections, arangoCtx, dbName, arangoDB, unownedDomain, ownedDomain, org
 
   beforeAll(async () => {
     dbName = dbNameFromFile(__filename)
@@ -13,6 +13,7 @@ describe('given the updateNoOwnerDomainMailStatus function', () => {
       databaseName: dbName,
       rootPass,
     }))
+    arangoCtx = { collections, query }
   })
 
   beforeEach(async () => {
@@ -62,7 +63,7 @@ describe('given the updateNoOwnerDomainMailStatus function', () => {
     expect(beforeDataUnownedDomain.sendsEmail).toBe(undefined)
     expect(beforeDataOwnedDomain.sendsEmail).toBe('true')
 
-    await updateNoOwnerDomainMailStatus({ query })()
+    await updateNoOwnerDomainMailStatus({ arangoCtx })
 
     const afterDataUnownedDomain = await (await query`RETURN DOCUMENT('domains', ${unownedDomain._key})`).next()
     const afterDataOwnedDomain = await (await query`RETURN DOCUMENT('domains', ${ownedDomain._key})`).next()
