@@ -1,6 +1,4 @@
-const { createOwnership, createSummary, removeSummary, upsertSummary, arangoConnection } = require('../database')
-const { loadArangoDates } = require('../loaders')
-
+const { arangoConnection } = require('../database')
 const { dmarcReport } = require('../dmarc-report')
 const { dbNameFromFile } = require('arango-tools')
 

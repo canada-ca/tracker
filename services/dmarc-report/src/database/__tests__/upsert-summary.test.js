@@ -1,7 +1,6 @@
 const { upsertSummary } = require('../upsert-summary')
 const { arangoConnection } = require('../index')
 const { dbNameFromFile } = require('arango-tools')
-const { loadTables } = require('../../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
