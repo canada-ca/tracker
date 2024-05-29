@@ -6,7 +6,7 @@ const { arangoConnection } = require('../index')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the removeSummary function', () => {
-  let query, truncate, collections, transaction, dbName, arangoDB, domain, org, summary
+  let query, truncate, collections, transaction, arangoCtx, dbName, arangoDB, domain, org, summary
 
   beforeAll(async () => {
     dbName = dbNameFromFile(__filename)
@@ -15,6 +15,7 @@ describe('given the removeSummary function', () => {
       databaseName: dbName,
       rootPass,
     }))
+    arangoCtx = { query, collections, transaction }
   })
 
   beforeEach(async () => {
@@ -70,7 +71,8 @@ describe('given the removeSummary function', () => {
   })
 
   it('removes the summary', async () => {
-    await removeSummary({ transaction, collections, query })({
+    await removeSummary({
+      arangoCtx,
       domain: 'domain.ca',
       date: 'thirtyDays',
     })
@@ -82,7 +84,8 @@ describe('given the removeSummary function', () => {
     expect(dmarcSummaries).toBeUndefined()
   })
   it('removes the domainsToDmarcSummaries edge', async () => {
-    await removeSummary({ transaction, collections, query })({
+    await removeSummary({
+      arangoCtx,
       domain: 'domain.ca',
       date: 'thirtyDays',
     })
