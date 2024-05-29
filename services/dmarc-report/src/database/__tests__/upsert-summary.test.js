@@ -6,20 +6,7 @@ const { loadTables } = require('../../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the upsertSummary function', () => {
-  let query,
-    truncate,
-    collections,
-    transaction,
-    dbName,
-    arangoDB,
-    domain,
-    org,
-    summary,
-    loadCategoryTotals,
-    loadDkimFailureTable,
-    loadDmarcFailureTable,
-    loadFullPassTable,
-    loadSpfFailureTable
+  let query, truncate, collections, transaction, arangoCtx, dbName, arangoDB, domain, org, summary
 
   beforeAll(async () => {
     dbName = dbNameFromFile(__filename)
@@ -28,6 +15,7 @@ describe('given the upsertSummary function', () => {
       databaseName: dbName,
       rootPass,
     }))
+    arangoCtx = { collections, query, transaction }
   })
 
   beforeEach(async () => {
@@ -81,13 +69,6 @@ describe('given the upsertSummary function', () => {
       _to: summary._id,
       startDate: '2021-01-01',
     })
-    loadCategoryTotals = jest
-      .fn()
-      .mockReturnValue({ resources: [{ pass: 1, fail: 1, passDkimOnly: 1, passSpfOnly: 1 }] })
-    loadDkimFailureTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
-    loadDmarcFailureTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
-    loadFullPassTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
-    loadSpfFailureTable = jest.fn().mockReturnValue({ resources: [{ key: 'value' }] })
   })
 
   afterEach(async () => {
@@ -101,27 +82,31 @@ describe('given the upsertSummary function', () => {
 
   describe('date is thirtyDays', () => {
     it('upserts the given summary', async () => {
-      const tableData = await loadTables({
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-      })({
-        domain: domain.domain,
-        date: 'thirtyDays',
-      })
-
       await upsertSummary({
-        transaction,
-        collections,
-        query,
-      })({
+        arangoCtx,
         date: 'thirtyDays',
         domain: 'domain.ca',
-        categoryTotals: tableData.categoryTotals,
-        categoryPercentages: tableData.categoryPercentages,
-        detailTables: tableData.detailTables,
+        summaryData: {
+          categoryPercentages: {
+            fail: 25,
+            pass: 25,
+            passDkimOnly: 25,
+            passSpfOnly: 25,
+          },
+          categoryTotals: {
+            fail: 1,
+            pass: 1,
+            passDkimOnly: 1,
+            passSpfOnly: 1,
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+          totalMessages: 4,
+        },
       })
 
       const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
@@ -144,10 +129,10 @@ describe('given the upsertSummary function', () => {
           passSpfOnly: 1,
         },
         detailTables: {
-          dkimFailure: [{ key: 'value' }],
-          dmarcFailure: [{ key: 'value' }],
-          fullPass: [{ key: 'value' }],
-          spfFailure: [{ key: 'value' }],
+          dkimFailure: [],
+          dmarcFailure: [],
+          fullPass: [],
+          spfFailure: [],
         },
         totalMessages: 4,
       }
@@ -157,27 +142,31 @@ describe('given the upsertSummary function', () => {
   })
   describe('date is not thirtyDays', () => {
     it('upserts the given summary', async () => {
-      const tableData = await loadTables({
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-      })({
-        domain: domain.domain,
-        date: '2021-01-01',
-      })
-
       await upsertSummary({
-        transaction,
-        collections,
-        query,
-      })({
+        arangoCtx,
         date: '2021-01-01',
         domain: 'domain.ca',
-        categoryTotals: tableData.categoryTotals,
-        categoryPercentages: tableData.categoryPercentages,
-        detailTables: tableData.detailTables,
+        summaryData: {
+          categoryPercentages: {
+            fail: 25,
+            pass: 25,
+            passDkimOnly: 25,
+            passSpfOnly: 25,
+          },
+          categoryTotals: {
+            fail: 1,
+            pass: 1,
+            passDkimOnly: 1,
+            passSpfOnly: 1,
+          },
+          detailTables: {
+            dkimFailure: [],
+            dmarcFailure: [],
+            fullPass: [],
+            spfFailure: [],
+          },
+          totalMessages: 4,
+        },
       })
 
       const summaryCursor = await query`FOR item IN dmarcSummaries RETURN item`
@@ -200,10 +189,10 @@ describe('given the upsertSummary function', () => {
           passSpfOnly: 1,
         },
         detailTables: {
-          dkimFailure: [{ key: 'value' }],
-          dmarcFailure: [{ key: 'value' }],
-          fullPass: [{ key: 'value' }],
-          spfFailure: [{ key: 'value' }],
+          dkimFailure: [],
+          dmarcFailure: [],
+          fullPass: [],
+          spfFailure: [],
         },
         totalMessages: 4,
       }
