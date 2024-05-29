@@ -25,12 +25,6 @@ UNCLAIMED_ID = os.getenv("UNCLAIMED_ID")
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
-read_cols = [db.collection("domains").name]
-write_cols = [
-    db.collection("domains").name,
-    db.collection("claims").name,
-    db.collection("auditLogs").name,
-]
 
 
 async def main():
@@ -167,6 +161,12 @@ async def main():
 
     # main logic
     async def add_discovered_domain(domains, org_id):
+        read_cols = [db.collection("domains").name]
+        write_cols = [
+            db.collection("domains").name,
+            db.collection("claims").name,
+            db.collection("auditLogs").name,
+        ]
         for domain in domains:
             # check if domain exists in system
             domain_exists = get_domain_exists(domains)
