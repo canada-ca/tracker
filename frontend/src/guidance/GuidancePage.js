@@ -29,7 +29,11 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
-import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
+
+//Imports added to make the canned message with request invite button work
+import { ListOf } from '../components/ListOf'
+import { useCallback, useState } from 'react'
+import { Organizations, OrganizationCard, RequestOrgInviteModal } from '../organizations'
 
 function GuidancePage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -79,6 +83,18 @@ function GuidancePage() {
         </Button>
         <RequestOrgInviteModal onClose={onClose} isOpen={isOpen} orgId={organizations.edges[0].node.id} />
         {/* <Organizations></Organizations> */}
+
+        <OrganizationCard
+          slug={slug}
+          name={name}
+          acronym={acronym}
+          domainCount={domainCount}
+          verified={verified}
+          summaries={summaries}
+          mb="3"
+          mr={userHasPermission ? '3rem' : '2'}
+          w="100%"
+        />
       </Box>
     )
   }
