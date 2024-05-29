@@ -54,18 +54,26 @@ async def main():
             FILTER org.verified == true
             RETURN { "key": org._key, "id": org._id }
         """
-        cursor = db.aql.execute(query)
-        logging.info(f"Successfully fetched verified orgs")
-        return cursor.batch()
+        try:
+            cursor = db.aql.execute(query)
+            logging.info(f"Successfully fetched verified orgs")
+            return cursor.batch()
+        except Exception as e:
+            logging.error(f"Error occured when fetching verified orgs: {e}")
+            return []
 
     def get_org_domains(org_id):
         query = f"""
         FOR v, e IN 1..1 OUTBOUND @org_id claims
             RETURN v.domain
         """
-        cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
-        logging.info(f"Successfully fetched domains for org: {org_id}")
-        return cursor.batch()
+        try:
+            cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
+            logging.info(f"Successfully fetched domains for org: {org_id}")
+            return cursor.batch()
+        except Exception as e:
+            logging.error(f"Error occured when fetching domains for org: {org_id}: {e}")
+            return []
 
     def get_domain_exists(domain):
         query = """
@@ -195,6 +203,9 @@ async def main():
                 logging.info(f"Successfully committed transaction for domain: {domain}")
             except Exception as e:
                 logging.error(f"Failed to commit transaction for domain: {domain}: {e}")
+                # abort transaction
+                txn_db.abort_transaction()
+                continue
 
             # publish domain to NATS
             try:
