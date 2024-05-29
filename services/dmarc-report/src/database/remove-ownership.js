@@ -2,10 +2,7 @@ const removeOwnership =
   ({ transaction, collections, query }) =>
   async ({ domain, orgAcronymEn }) => {
     // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
+    const collectionStrings = Object.keys(collections)
     // setup Transaction
     const trx = await transaction(collectionStrings)
 
@@ -30,7 +27,8 @@ const removeOwnership =
     )
 
     // remove dmarcSummaries and dmarcSummaryEdges
-    await trx.step(() => query`
+    await trx.step(
+      () => query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -51,7 +49,8 @@ const removeOwnership =
           REMOVE key IN dmarcSummaries
       )
       RETURN true
-    `)
+    `,
+    )
 
     await trx.commit()
   }

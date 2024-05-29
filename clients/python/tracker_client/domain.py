@@ -1,5 +1,6 @@
 """This module defines the Domain class, which models domains monitored by Tracker
 and offers methods to get data about domains."""
+
 import json
 
 from tracker_client import organization as org

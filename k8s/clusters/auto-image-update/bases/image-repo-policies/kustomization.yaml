@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - api-image-repo-policy.yaml
+  - database-migration-image-repo-policy.yaml
   - dmarc-report-image-repo-policy.yaml
   - dns-processor-image-repo-policy.yaml
   - dns-scanner-image-repo-policy.yaml

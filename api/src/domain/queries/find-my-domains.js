@@ -1,7 +1,7 @@
-import { GraphQLBoolean, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLString, GraphQLList } from 'graphql'
 import { connectionArgs } from 'graphql-relay'
 
-import { domainOrder } from '../inputs'
+import { domainFilter, domainOrder } from '../inputs'
 import { domainConnection } from '../objects'
 
 export const findMyDomains = {
@@ -23,6 +23,10 @@ export const findMyDomains = {
     isAffiliated: {
       type: GraphQLBoolean,
       description: 'Filter the results based on the users affiliation.',
+    },
+    filters: {
+      type: new GraphQLList(domainFilter),
+      description: 'Filters used to limit domains returned.',
     },
     ...connectionArgs,
   },

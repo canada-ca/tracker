@@ -19,8 +19,9 @@ import { Search2Icon } from '@chakra-ui/icons'
 import { useMutation } from '@apollo/client'
 import { REQUEST_DISCOVERY } from '../graphql/mutations'
 import { Trans, t } from '@lingui/macro'
+import withSuperAdmin from '../app/withSuperAdmin'
 
-export function SubdomainDiscoveryButton({ orgId, orgSlug, domainUrl, ...props }) {
+function SubdomainDiscoveryButton({ orgId, orgSlug, domainUrl, ...props }) {
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [requestScan, { _loading, _error }] = useMutation(REQUEST_DISCOVERY, {
@@ -96,6 +97,8 @@ export function SubdomainDiscoveryButton({ orgId, orgSlug, domainUrl, ...props }
     </>
   )
 }
+
+export default withSuperAdmin(SubdomainDiscoveryButton)
 
 SubdomainDiscoveryButton.propTypes = {
   orgId: string.isRequired,

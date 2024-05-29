@@ -106,8 +106,8 @@ export const GET_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
 `
 
 export const GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV = gql`
-  query GetAllOrganizationDomainStatuses {
-    getAllOrganizationDomainStatuses
+  query GetAllOrganizationDomainStatuses($filters: [DomainFilter]) {
+    getAllOrganizationDomainStatuses(filters: $filters)
   }
 `
 
@@ -149,11 +149,12 @@ export const PAGINATED_ORG_AFFILIATIONS_ADMIN_PAGE = gql`
     $first: Int
     $after: String
     $search: String
+    $orderBy: AffiliationUserOrder
     $includePending: Boolean
   ) {
     findOrganizationBySlug(orgSlug: $orgSlug) {
       id
-      affiliations(first: $first, after: $after, search: $search, includePending: $includePending) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy, includePending: $includePending) {
         edges {
           node {
             id
@@ -192,6 +193,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             claimTags
             hidden
             archived
+            ignoreRua
             rcode
             organizations(first: 1) {
               totalCount
@@ -268,10 +270,12 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                 addresses
               }
               warnings
+              error
             }
             nsRecords {
               hostnames
               warnings
+              error
             }
             dkim {
               positiveTags {
@@ -616,10 +620,10 @@ export const PAGINATED_ORG_DOMAINS = gql`
 `
 
 export const PAGINATED_ORG_AFFILIATIONS = gql`
-  query OrgUsersNext($slug: Slug!, $first: Int, $after: String) {
+  query OrgUsersNext($slug: Slug!, $first: Int, $after: String, $search: String, $orderBy: AffiliationUserOrder) {
     findOrganizationBySlug(orgSlug: $slug) {
       id
-      affiliations(first: $first, after: $after) {
+      affiliations(first: $first, after: $after, search: $search, orderBy: $orderBy) {
         pageInfo {
           hasNextPage
           endCursor
@@ -644,8 +648,22 @@ export const PAGINATED_ORG_AFFILIATIONS = gql`
 `
 
 export const PAGINATED_DOMAINS = gql`
-  query Domains($first: Int, $after: String, $orderBy: DomainOrder, $search: String, $isAffiliated: Boolean) {
-    findMyDomains(first: $first, after: $after, orderBy: $orderBy, search: $search, isAffiliated: $isAffiliated) {
+  query Domains(
+    $first: Int
+    $after: String
+    $orderBy: DomainOrder
+    $search: String
+    $isAffiliated: Boolean
+    $filters: [DomainFilter]
+  ) {
+    findMyDomains(
+      first: $first
+      after: $after
+      orderBy: $orderBy
+      search: $search
+      isAffiliated: $isAffiliated
+      filters: $filters
+    ) {
       edges {
         cursor
         node {
@@ -955,7 +973,7 @@ export const IS_LOGIN_REQUIRED = gql`
 `
 
 export const FIND_MY_USERS = gql`
-  query FindMyUsers($first: Int, $after: String, $orderBy: AffiliationUserOrder, $search: String) {
+  query FindMyUsers($first: Int, $after: String, $orderBy: UserOrder, $search: String) {
     findMyUsers(orderBy: $orderBy, first: $first, after: $after, search: $search) {
       edges {
         cursor
@@ -1089,4 +1107,10 @@ export const MY_TRACKER_DOMAINS = gql`
     }
   }
   ${Status.fragments.requiredFields}
+`
+
+export const GET_ALL_VERIFIED_RUA_DOMAINS = gql`
+  query GetAllVerifiedRuaDomains {
+    getAllVerifiedRuaDomains
+  }
 `

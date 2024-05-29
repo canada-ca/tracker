@@ -8,8 +8,9 @@ const { loadDkimFailureTable } = require('./load-dkim-failure-table')
 const { loadDmarcFailureTable } = require('./load-dmarc-failure-table')
 const { loadFullPassTable } = require('./load-full-pass-table')
 const { loadOrgOwner } = require('./load-org-owner')
-const { loadDomainOwnership } = require('./load-ownerships')
+const { loadDomainOwnership, getDecodedData } = require('./load-ownerships')
 const { loadSpfFailureTable } = require('./load-spf-failure-table')
+const { loadTables } = require('./load-tables')
 
 module.exports = {
   loadArangoDates,
@@ -23,5 +24,7 @@ module.exports = {
   loadFullPassTable,
   loadOrgOwner,
   loadDomainOwnership,
+  getDecodedData,
   loadSpfFailureTable,
+  loadTables,
 }

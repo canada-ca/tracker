@@ -19,6 +19,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Link as RouteLink } from 'react-router-dom'
+import withSuperAdmin from '../app/withSuperAdmin'
 
 import { TrackerTable } from '../components/TrackerTable'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
@@ -29,16 +30,18 @@ import { toConstantCase } from '../helpers/toConstantCase'
 import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { MonthSelect } from '../components/MonthSelect'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
-
+import { ExportRuaListButton } from './ExportRuaListButton'
+import { useUserVar } from '../utilities/userState'
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
+  const { isLoggedIn, hasAffiliation } = useUserVar()
 
   const [selectedTableDisplayLimit, setSelectedTableDisplayLimit] = useState(10)
   const displayLimitOptions = [5, 10, 20, 50, 100]
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [isAffiliated, setIsAffiliated] = useState(true)
+  const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
 
   const [selectedPeriod, setSelectedPeriod] = useState('LAST30DAYS')
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString())
@@ -209,6 +212,10 @@ export default function DmarcByDomainPage() {
     resetToFirstPage()
   }
 
+  const RuaDomainsExportButton = withSuperAdmin(() => {
+    return <ExportRuaListButton ml="auto" />
+  })
+
   return (
     <Box width="100%" px="2">
       <Heading as="h1" textAlign="left" mb="4">
@@ -251,8 +258,16 @@ export default function DmarcByDomainPage() {
         </InputGroup>
 
         <InfoButton onToggle={onToggle} ml="100%" borderColor="black" borderWidth="1px" />
+        <RuaDomainsExportButton />
       </Flex>
-      <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+      {isLoggedIn() && (
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+        </Flex>
+      )}
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
         <RelayPaginationControls

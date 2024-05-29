@@ -1,32 +1,33 @@
-const { GITHUB_TOKEN, GITHUB_URL } = process.env
+const { Octokit } = require('octokit')
 
-const { GET_FILE_CONTENTS } = require('../graphql')
+const { GITHUB_TOKEN, GITHUB_BRANCH, GITHUB_FILE, GITHUB_OWNER, GITHUB_REPO } = process.env
 
-const loadDomainOwnership =
-  ({ fetch }) =>
-  async () => {
-    let repoInfo
+function getDecodedData(resp) {
+  const data = resp.data
+  const decodedContent = Buffer.from(data.content, 'base64').toString('utf-8')
+  return JSON.parse(decodedContent)
+}
 
-    try {
-      repoInfo = await fetch(GITHUB_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `bearer ${GITHUB_TOKEN}`,
-        },
-        body: JSON.stringify({ query: GET_FILE_CONTENTS }),
-      }).then((response) => response.json())
+async function loadDomainOwnership() {
+  try {
+    const octokit = new Octokit({
+      auth: GITHUB_TOKEN,
+    })
 
-      const domainOwnership = JSON.parse(repoInfo.data.repository.object.text)
-
-      return domainOwnership
-    } catch (err) {
-      console.error(
-        `Error occurred while fetching domain ownership information: ${err}`,
-      )
-    }
+    const resp = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: GITHUB_OWNER,
+      repo: GITHUB_REPO,
+      path: GITHUB_FILE,
+      ref: GITHUB_BRANCH,
+    })
+    return getDecodedData(resp)
+  } catch (err) {
+    console.error(`Error loading domain ownership: ${err}`)
+    throw err
   }
+}
 
 module.exports = {
   loadDomainOwnership,
+  getDecodedData,
 }

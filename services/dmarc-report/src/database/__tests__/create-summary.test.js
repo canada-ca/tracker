@@ -1,32 +1,19 @@
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
 
 const { createSummary } = require('../create-summary')
-const { calculatePercentages } = require('../../utils')
-const { databaseOptions } = require('../../../database-options')
+const { arangoConnection } = require('../index')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the createSummary function', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    transaction,
-    domain,
-    org,
-    loadCategoryTotals,
-    loadDkimFailureTable,
-    loadDmarcFailureTable,
-    loadFullPassTable,
-    loadSpfFailureTable
+  let query, truncate, collections, transaction, dbName, arangoDB, domain, org
 
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
+    dbName = dbNameFromFile(__filename)
+    ;({ collections, query, transaction, arangoDB, truncate } = await arangoConnection({
       url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      databaseName: dbName,
+      rootPass,
     }))
   })
 
@@ -45,13 +32,6 @@ describe('given the createSummary function', () => {
       _from: org._id,
       _to: domain._id,
     })
-    loadCategoryTotals = jest
-      .fn()
-      .mockReturnValue({ pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 })
-    loadDkimFailureTable = jest.fn().mockReturnValue([])
-    loadDmarcFailureTable = jest.fn().mockReturnValue([])
-    loadFullPassTable = jest.fn().mockReturnValue([])
-    loadSpfFailureTable = jest.fn().mockReturnValue([])
   })
 
   afterEach(async () => {
@@ -59,30 +39,32 @@ describe('given the createSummary function', () => {
   })
 
   afterAll(async () => {
-    await drop()
+    const systemDb = arangoDB.database('_system')
+    await systemDb.dropDatabase(dbName)
   })
 
   describe('date is thirtyDays', () => {
     it('inserts the summary into arango', async () => {
+      const tableData = {
+        categoryTotals: { pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        categoryPercentages: {
+          totalMessages: 0,
+          categoryPercentages: { fail: 0, pass: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        },
+        detailTables: { dkimFailure: [], dmarcFailure: [], fullPass: [], spfFailure: [] },
+      }
       await createSummary({
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        calculatePercentages,
-      })({ date: 'thirtyDays', domain: 'domain.ca' })
-  
-      const checkSummaryCursor =
-        await query`FOR summary IN dmarcSummaries RETURN summary`
-  
+      })({ date: 'thirtyDays', domain: 'domain.ca', ...tableData })
+
+      const checkSummaryCursor = await query`FOR summary IN dmarcSummaries RETURN summary`
+
       const checkSummary = await checkSummaryCursor.next()
-  
+
       expect(checkSummary).toBeDefined()
-  
+
       const expectedResult = {
         _id: checkSummary._id,
         _key: checkSummary._key,
@@ -107,7 +89,7 @@ describe('given the createSummary function', () => {
         },
         totalMessages: 0,
       }
-  
+
       expect(checkSummary).toEqual(expectedResult)
     })
     it('inserts the edge into arango', async () => {
@@ -115,26 +97,18 @@ describe('given the createSummary function', () => {
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        calculatePercentages,
       })({ date: 'thirtyDays', domain: 'domain.ca' })
-  
-      const checkSummaryEdgeCursor =
-        await query`FOR edge IN domainsToDmarcSummaries RETURN edge`
-  
+
+      const checkSummaryEdgeCursor = await query`FOR edge IN domainsToDmarcSummaries RETURN edge`
+
       const checkSummaryEdge = await checkSummaryEdgeCursor.next()
-  
+
       expect(checkSummaryEdge).toBeDefined()
-  
-      const checkSummaryCursor =
-        await query`FOR summary IN dmarcSummaries RETURN summary`
-  
+
+      const checkSummaryCursor = await query`FOR summary IN dmarcSummaries RETURN summary`
+
       const checkSummary = await checkSummaryCursor.next()
-  
+
       const expectedResult = {
         _id: checkSummaryEdge._id,
         _key: checkSummaryEdge._key,
@@ -143,31 +117,32 @@ describe('given the createSummary function', () => {
         _to: checkSummary._id,
         startDate: 'thirtyDays',
       }
-  
+
       expect(checkSummaryEdge).toEqual(expectedResult)
     })
   })
   describe('date is not thirtyDays', () => {
     it('inserts the summary into arango', async () => {
+      const tableData = {
+        categoryTotals: { pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        categoryPercentages: {
+          totalMessages: 0,
+          categoryPercentages: { fail: 0, pass: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        },
+        detailTables: { dkimFailure: [], dmarcFailure: [], fullPass: [], spfFailure: [] },
+      }
       await createSummary({
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        calculatePercentages,
-      })({ date: '2021-01-01', domain: 'domain.ca' })
-  
-      const checkSummaryCursor =
-        await query`FOR summary IN dmarcSummaries RETURN summary`
-  
+      })({ date: '2021-01-01', domain: 'domain.ca', ...tableData })
+
+      const checkSummaryCursor = await query`FOR summary IN dmarcSummaries RETURN summary`
+
       const checkSummary = await checkSummaryCursor.next()
-  
+
       expect(checkSummary).toBeDefined()
-  
+
       const expectedResult = {
         _id: checkSummary._id,
         _key: checkSummary._key,
@@ -192,34 +167,34 @@ describe('given the createSummary function', () => {
         },
         totalMessages: 0,
       }
-  
+
       expect(checkSummary).toEqual(expectedResult)
     })
     it('inserts the edge into arango', async () => {
+      const tableData = {
+        categoryTotals: { pass: 0, fail: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        categoryPercentages: {
+          totalMessages: 0,
+          categoryPercentages: { fail: 0, pass: 0, passDkimOnly: 0, passSpfOnly: 0 },
+        },
+        detailTables: { dkimFailure: [], dmarcFailure: [], fullPass: [], spfFailure: [] },
+      }
       await createSummary({
         transaction,
         collections,
         query,
-        loadCategoryTotals,
-        loadDkimFailureTable,
-        loadDmarcFailureTable,
-        loadFullPassTable,
-        loadSpfFailureTable,
-        calculatePercentages,
-      })({ date: '2021-01-01', domain: 'domain.ca' })
-  
-      const checkSummaryEdgeCursor =
-        await query`FOR edge IN domainsToDmarcSummaries RETURN edge`
-  
+      })({ date: '2021-01-01', domain: 'domain.ca', ...tableData })
+
+      const checkSummaryEdgeCursor = await query`FOR edge IN domainsToDmarcSummaries RETURN edge`
+
       const checkSummaryEdge = await checkSummaryEdgeCursor.next()
-  
+
       expect(checkSummaryEdge).toBeDefined()
-  
-      const checkSummaryCursor =
-        await query`FOR summary IN dmarcSummaries RETURN summary`
-  
+
+      const checkSummaryCursor = await query`FOR summary IN dmarcSummaries RETURN summary`
+
       const checkSummary = await checkSummaryCursor.next()
-  
+
       const expectedResult = {
         _id: checkSummaryEdge._id,
         _key: checkSummaryEdge._key,
@@ -228,7 +203,7 @@ describe('given the createSummary function', () => {
         _to: checkSummary._id,
         startDate: '2021-01-01',
       }
-  
+
       expect(checkSummaryEdge).toEqual(expectedResult)
     })
   })

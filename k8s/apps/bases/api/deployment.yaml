@@ -23,7 +23,7 @@ spec:
         app: tracker-api
     spec:
       initContainers:
-        - image: gcr.io/track-compliance/database-migration:test-0000003
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:master-35e7dd0-1711137075 # {"$imagepolicy": "flux-system:database-migration"}
           name: database-migration
           env:
             - name: DB_USER
@@ -48,13 +48,8 @@ spec:
                 secretKeyRef:
                   name: api
                   key: DB_URL
-            - name: DB_DESCRIPTION
-              value: /app/database.json
-          volumeMounts:
-            - name: database-config
-              mountPath: /app
       containers:
-        - image: gcr.io/track-compliance/api-js:master-168ac58-1706037325 # {"$imagepolicy": "flux-system:api"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/api-js:master-0d0fe33-1716483856 # {"$imagepolicy": "flux-system:api"}
           name: api
           ports:
             - containerPort: 4000
@@ -221,8 +216,4 @@ spec:
             requests:
               cpu: 300m
               memory: 70Mi
-      volumes:
-        - name: database-config
-          configMap:
-            name: database-config
 status: {}

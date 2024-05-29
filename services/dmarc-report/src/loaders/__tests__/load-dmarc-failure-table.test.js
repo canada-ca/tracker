@@ -39,20 +39,22 @@ describe('given the loadDmarcFailureTable function', () => {
         date: '2021-01-01',
       })
 
-      const dmarcFailureList = [
-        {
-          sourceIpAddress: '12.23.45.56',
-          envelopeFrom: 'envelopeFrom.ca',
-          headerFrom: 'headerFrom.ca',
-          spfDomains: 'spfDomains',
-          dkimDomains: '',
-          dkimSelectors: '',
-          disposition: 'none',
-          totalMessages: 294,
-          dnsHost: 'dns.ca',
-          id: 1,
-        },
-      ]
+      const dmarcFailureList = {
+        resources: [
+          {
+            sourceIpAddress: '12.23.45.56',
+            envelopeFrom: 'envelopeFrom.ca',
+            headerFrom: 'headerFrom.ca',
+            spfDomains: 'spfDomains',
+            dkimDomains: '',
+            dkimSelectors: '',
+            disposition: 'none',
+            totalMessages: 294,
+            dnsHost: 'dns.ca',
+            id: 1,
+          },
+        ],
+      }
 
       expect(summary).toEqual(dmarcFailureList)
     })

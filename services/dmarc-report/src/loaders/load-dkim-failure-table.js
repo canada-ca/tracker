@@ -1,8 +1,8 @@
 const loadDkimFailureTable =
-  ({ container, mapGuidance }) =>
+  ({ container }) =>
   async ({ domain, date }) => {
     // Get dkim failure
-    const { resources } = await container.items
+    return container.items
       .query({
         query: `
         SELECT * FROM (
@@ -29,11 +29,6 @@ const loadDkimFailureTable =
         ],
       })
       .fetchAll()
-
-    return resources.map((data) => {
-      data.guidance = mapGuidance(data.guidance)
-      return data
-    })
   }
 
 module.exports = {

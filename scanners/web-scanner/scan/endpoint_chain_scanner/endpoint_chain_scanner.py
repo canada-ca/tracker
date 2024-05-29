@@ -1,6 +1,7 @@
 import re
 from typing import Optional, Union
 from urllib.parse import urlsplit
+import urllib3
 
 import logging
 import requests
@@ -11,7 +12,7 @@ from dataclasses import dataclass, field, asdict
 logger = logging.getLogger(__name__)
 
 # Set the default timeout for requests (connect, read)
-TIMEOUT = (1.0, 10)
+TIMEOUT = (2.0, 10)
 
 CONNECTION_ERROR = "CONNECTION_ERROR"
 CONNECTION_TIMEOUT_ERROR = "CONNECTION_TIMEOUT_ERROR"
@@ -20,6 +21,8 @@ TIMEOUT_ERROR = "TIMEOUT_ERROR"
 UNKNOWN_ERROR = "UNKNOWN_ERROR"
 
 DEFAULT_REQUEST_HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0"}
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 @dataclass
@@ -35,7 +38,7 @@ class HTTPConnection:
         self.headers = dict(http_response.headers)
         if http_response.status_code == 403:
             content = http_response.text
-            category_search = re.search("ATTENTION: Access Denied(?:.|\n)*Category: (.*)(?:.|\n)*Access to this Web page is blocked in accordance with the Treasury Board of Canada Secretariat", content)
+            category_search = re.search("ATTENTION: Access Denied[\s\S]+Category: (.*)[\s\S]+Access to this Web page is blocked in accordance with the Treasury Board of Canada Secretariat", content)
             if category_search:
                 self.blocked_category = category_search.group(1)
 

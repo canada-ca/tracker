@@ -1,20 +1,19 @@
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
 
 const { createOwnership } = require('../create-ownership')
-const { databaseOptions } = require('../../../database-options')
+const { arangoConnection } = require('../index')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the createOwnership function', () => {
-  let query, drop, truncate, collections, transaction, domain, org
+  let query, truncate, collections, transaction, dbName, arangoDB, domain, org
 
   beforeAll(async () => {
-    ;({ query, drop, truncate, collections, transaction } = await ensure({
-      type: 'database',
-      name: dbNameFromFile(__filename),
+    dbName = dbNameFromFile(__filename)
+    ;({ collections, query, transaction, arangoDB, truncate } = await arangoConnection({
       url,
-      rootPassword: rootPass,
-      options: databaseOptions({ rootPass }),
+      databaseName: dbName,
+      rootPass,
     }))
   })
 
@@ -36,7 +35,10 @@ describe('given the createOwnership function', () => {
   })
 
   afterAll(async () => {
-    await drop()
+    try {
+      const systemDb = arangoDB.database('_system')
+      await systemDb.dropDatabase(dbName)
+    } catch (err) {}
   })
 
   it('creates the ownership in arango', async () => {

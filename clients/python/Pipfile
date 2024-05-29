@@ -5,10 +5,10 @@ name = "pypi"
 
 [packages]
 gql = ">=3.0.0a5"
-aiohttp = "*"
+aiohttp = "==3.9.5"
 websockets = "*"
 python-slugify = "*"
-cryptography = "~=41.0.7"
+cryptography = "~=42.0.0"
 
 [dev-packages]
 black = "*"

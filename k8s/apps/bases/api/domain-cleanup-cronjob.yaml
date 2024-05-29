@@ -4,7 +4,7 @@ metadata:
   name: domain-cleanup
   namespace: api
 spec:
-  schedule: "30 10 * * 0"
+  schedule: "00 5 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: domain-cleanup
-              image: gcr.io/track-compliance/services/domain-cleanup:master-a528fe0-1701118115 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-4b24ebf-1709148343 # {"$imagepolicy": "flux-system:domain-cleanup"}
               env:
                 - name: DB_PASS
                   valueFrom:

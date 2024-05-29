@@ -1,0 +1,49 @@
+steps:
+  - name: node:alpine
+    id: install
+    dir: database-migration
+    entrypoint: npm
+    args: ['ci', '--no-optional']
+
+  - name: node:alpine
+    id: lint
+    dir: database-migration
+    entrypoint: npm
+    args: ['run', lint]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: generate-image-name
+    entrypoint: 'bash'
+    dir: database-migration
+    args:
+      - '-c'
+      - |
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build
+    entrypoint: 'bash'
+    dir: database-migration
+    args:
+      - '-c'
+      - |
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-if-master
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi
+
+timeout: 1200s
+options:
+  machineType: 'E2_HIGHCPU_8'

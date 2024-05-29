@@ -7,7 +7,6 @@ import nats
 import functools
 import json
 import signal
-import traceback
 
 from clients.easm_client import run_disco_group, create_disco_group
 from clients.kusto_client import get_host_asset
@@ -20,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "add-domain-to-easm")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
+SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.easm")
 QUEUE_GROUP = os.getenv("QUEUE_GROUP", "add-domain-to-easm")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
@@ -67,9 +66,7 @@ async def run(loop):
                 logger.info(f"Skipping '{domain}' as it already exists in EASM.")
                 return
         except Exception as e:
-            logger.error(
-                f"Checking if asset exists in EASM: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-            )
+            logger.error(f"Checking if asset exists in EASM: {str(e)}")
             return
 
         try:
@@ -79,9 +76,7 @@ async def run(loop):
             # TODO delete disco group after run
             logger.info(f"Successfully added '{domain}' to EASM tooling.")
         except Exception as e:
-            logger.error(
-                f"Scanning subdomains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-            )
+            logger.error(f"Scanning subdomains: {str(e)}")
             return
 
     await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)

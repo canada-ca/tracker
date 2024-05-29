@@ -4,13 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = ">=2.18.4"
+requests = "==2.32.2"
 asyncio-nats-client = "*"
 python-dotenv = "*"
 
 [dev-packages]
-black = {editable = true, ref = "21.8b0", git = "https://github.com/psf/black.git"}
+black = "*"
 
 [scripts]
 service = "python3 service.py"
-black = "black -q -"

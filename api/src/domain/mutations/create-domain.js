@@ -163,6 +163,7 @@ export const createDomain = new mutationWithClientMutationId({
         ssl: 'info',
       },
       archived: archived,
+      ignoreRua: false,
     }
 
     // Check to see if domain already belongs to same org
@@ -362,6 +363,17 @@ export const createDomain = new mutationWithClientMutationId({
 
     await publish({
       channel: `domains.${returnDomain._key}`,
+      msg: {
+        domain: returnDomain.domain,
+        domain_key: returnDomain._key,
+        hash: returnDomain.hash,
+        user_key: null, // only used for One Time Scans
+        shared_id: null, // only used for One Time Scans
+      },
+    })
+
+    await publish({
+      channel: `domains.${returnDomain._key}.easm`,
       msg: {
         domain: returnDomain.domain,
         domain_key: returnDomain._key,

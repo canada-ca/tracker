@@ -19,12 +19,15 @@ from sslyze.scanner.models import CipherSuitesScanAttempt, ServerScanResult
 from sslyze.server_setting import (
     ServerNetworkLocation, ServerNetworkConfiguration,
 )
+from service_identity.cryptography import verify_certificate_hostname
+from service_identity.exceptions import VerificationError, CertificateError
 
 from scan.tls_scanner.query_crlite import query_crlite
 
 logger = logging.getLogger()
 
-CONNECT_TIMEOUT = 1
+CONNECT_TIMEOUT = 2
+
 
 @dataclass
 class AcceptedCipherSuites:
@@ -52,10 +55,10 @@ class CertificateInfo:
     san_list: list[str] = None
 
     def __init__(self, cert: Certificate):
-        self.expired_cert = True if cert.not_valid_after < datetime.datetime.now() else False
+        self.expired_cert = True if cert.not_valid_after_utc < datetime.datetime.now(datetime.UTC) else False
         self.self_signed_cert = True if cert.issuer == cert.subject else False
-        self.not_valid_before = str(cert.not_valid_before)
-        self.not_valid_after = str(cert.not_valid_after)
+        self.not_valid_before = str(cert.not_valid_before_utc)
+        self.not_valid_after = str(cert.not_valid_after_utc)
         self.issuer = cert.issuer.rfc4514_string()
         self.subject = cert.subject.rfc4514_string()
         self.common_names = get_common_names(cert.subject)
@@ -99,9 +102,9 @@ class CertificateChainInfo:
     certificate_chain: list[CertificateInfo] = None
     passed_validation: bool = None
 
-    def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult):
+    def __init__(self, cert_deployment: CertificateDeploymentAnalysisResult, bad_hostname: bool = None):
         cert_chain = cert_deployment.received_certificate_chain
-        self.bad_hostname = not cert_deployment.leaf_certificate_subject_matches_hostname
+        self.bad_hostname = bad_hostname
         self.must_have_staple = cert_deployment.leaf_certificate_has_must_staple_extension
         self.leaf_certificate_is_ev = cert_deployment.leaf_certificate_is_ev
         self.received_chain_contains_anchor_certificate = cert_deployment.received_chain_contains_anchor_certificate
@@ -112,12 +115,11 @@ class CertificateChainInfo:
         self.path_validation_results = self.get_path_validation_result_info(cert_deployment.path_validation_results)
         self.passed_validation = bool(cert_deployment.received_certificate_chain)
 
-
     @staticmethod
     def get_path_validation_result_info(path_validation_results: list[PathValidationResult]) -> list[PathValidationResultInfo]:
         results = []
         for validation_result in path_validation_results:
-            results.append(PathValidationResultInfo(openssl_error_string=validation_result.openssl_error_string,
+            results.append(PathValidationResultInfo(openssl_error_string=validation_result.validation_error,
                                                     was_validation_successful=validation_result.was_validation_successful,
                                                     trust_store=TrustStoreInfo(name=validation_result.trust_store.name,
                                                                                version=validation_result.trust_store.version)))
@@ -225,11 +227,14 @@ class TLSResult:
         self.supports_fallback_scsv = self.get_supports_fallback_scsv(scan_results)
         self.supports_tls_compression = self.get_supports_tls_compression(scan_results)
 
-        scan_results_as_dict = json.loads(ServerScanResultAsJson.from_orm(scan_results).json())
-
         if scan_results.connectivity_error_trace:
-            logger.info(
-                f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}': {json.dumps(scan_results_as_dict)}")
+            connectivity_error_log = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
+            try:
+                scan_results_as_dict = json.loads(ServerScanResultAsJson.from_orm(scan_results).json())
+                logging.info(f"{connectivity_error_log}: {json.dumps(scan_results_as_dict)}")
+            except Exception:
+                tls_result_string = f"Error converting scan results to JSON - using TLSResult object instead: {self.asdict()}"
+                logging.error(f"{connectivity_error_log}: {tls_result_string}")
             self.error = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
             return
 
@@ -291,7 +296,20 @@ class TLSResult:
         try:
             cert_info = scan_result.scan_result.certificate_info.result
             cert_deployment = cert_info.certificate_deployments[0]
-            return CertificateChainInfo(cert_deployment)
+            bad_hostname = None
+            try:
+                verify_certificate_hostname(cert_deployment.received_certificate_chain[0], scan_result.server_location.hostname)
+                bad_hostname = False
+            except VerificationError:
+                bad_hostname = True
+            except CertificateError as e:
+                if "Certificate does not contain any `subjectAltName`s." in str(e):
+                    bad_hostname = True
+                else:
+                    print(f"Unknown CertificateError while verifying hostname for '{str(scan_result.server_location.hostname)}': {str(e)}")
+            except Exception as e:
+                print(f"Unknown error while verifying hostname for '{str(scan_result.server_location.hostname)}': {str(e)}")
+            return CertificateChainInfo(cert_deployment=cert_deployment, bad_hostname=bad_hostname)
         except AttributeError:
             return None
 
@@ -359,7 +377,6 @@ class TLSResult:
             return supports_tls_compression
         except AttributeError:
             return None
-
 
 
 def scan_tls(domain: str, ip_address: str) -> TLSResult:

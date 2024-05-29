@@ -1,12 +1,13 @@
 """This module provides utility functions related to gql, for internal use."""
+
 import os
 import re
 
 from gql import Client
 from gql.transport.aiohttp import AIOHTTPTransport
 
-from queries import SIGNIN_MUTATION, TFA_AUTH
-from __version__ import __version__
+from tracker_client.queries import SIGNIN_MUTATION, TFA_AUTH
+from tracker_client.__version__ import __version__
 
 
 _JWT_RE = r"^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"

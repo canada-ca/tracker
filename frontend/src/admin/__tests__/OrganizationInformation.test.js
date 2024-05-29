@@ -70,8 +70,8 @@ const mocks = [
       query: UPDATE_ORGANIZATION,
       variables: {
         id: 'org-id',
-        acronymEN: 'NEWACREN',
-        acronymFR: 'NEWACRFR',
+        nameEN: 'NEW ACREN',
+        nameFR: 'NEW ACRFR',
         countryEN: 'Canada',
       },
     },
@@ -80,7 +80,7 @@ const mocks = [
         updateOrganization: {
           result: {
             id: 'org-id',
-            acronym: 'NEWACREN',
+            acronym: 'NEW ACREN',
             name: 'Org Name',
             slug: 'org-name',
             zone: 'org zone',
@@ -381,8 +381,8 @@ describe('<OrganizationInformation />', () => {
               query: UPDATE_ORGANIZATION,
               variables: {
                 id: 'org-id',
-                acronymEN: 'NEWACREN',
-                acronymFR: 'NEWACRFR',
+                nameEN: 'NEW ACREN',
+                nameFR: 'NEWA CRFR',
                 countryEN: 'Canada',
               },
             },
@@ -391,7 +391,7 @@ describe('<OrganizationInformation />', () => {
                 updateOrganization: {
                   result: {
                     id: 'org-id',
-                    acronym: 'NEWACREN',
+                    acronym: 'NEW ACREN',
                     name: 'Org Name',
                     slug: 'org-name',
                     zone: 'org zone',
@@ -517,11 +517,7 @@ describe('<OrganizationInformation />', () => {
                   <ChakraProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                        <OrganizationInformation
-                          isUserSuperAdmin={true}
-                          orgSlug="test-org"
-                          removeOrgCallback={() => {}}
-                        />
+                        <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                       </MemoryRouter>
                     </I18nProvider>
                   </ChakraProvider>
@@ -539,11 +535,11 @@ describe('<OrganizationInformation />', () => {
 
             await waitFor(() => expect(getByText(/Blank fields will not be included/)).toBeVisible())
 
-            const acronymENInput = await findByRole('textbox', {
-              name: 'Acronym (EN)',
+            const nameENInput = await findByRole('textbox', {
+              name: 'Name (EN)',
             })
-            const acronymFRInput = getByRole('textbox', {
-              name: 'Acronym (FR)',
+            const nameFRInput = getByRole('textbox', {
+              name: 'Name (FR)',
             })
             const countryENInput = getByRole('textbox', {
               name: 'Country (EN)',
@@ -552,8 +548,8 @@ describe('<OrganizationInformation />', () => {
               name: 'Confirm',
             })
 
-            userEvent.type(acronymENInput, 'NEWACREN')
-            userEvent.type(acronymFRInput, 'NEWACRFR')
+            userEvent.type(nameENInput, 'NEW ACREN')
+            userEvent.type(nameFRInput, 'NEW ACRFR')
             userEvent.type(countryENInput, 'Canada')
 
             userEvent.click(confrimOrganizationUpdateButton)
@@ -618,8 +614,8 @@ describe('<OrganizationInformation />', () => {
                   query: UPDATE_ORGANIZATION,
                   variables: {
                     id: 'org-id',
-                    acronymEN: 'NEWACREN',
-                    acronymFR: 'NEWACRFR',
+                    nameEN: 'NEW ACREN',
+                    nameFR: 'NEW ACRFR',
                     countryEN: 'Canada',
                   },
                 },
@@ -649,11 +645,7 @@ describe('<OrganizationInformation />', () => {
                   <ChakraProvider theme={theme}>
                     <I18nProvider i18n={i18n}>
                       <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                        <OrganizationInformation
-                          isUserSuperAdmin={true}
-                          orgSlug="test-org"
-                          removeOrgCallback={() => {}}
-                        />
+                        <OrganizationInformation orgSlug="test-org" removeOrgCallback={() => {}} />
                       </MemoryRouter>
                     </I18nProvider>
                   </ChakraProvider>
@@ -671,11 +663,11 @@ describe('<OrganizationInformation />', () => {
 
             await waitFor(() => expect(getByText(/Blank fields will not be included/)).toBeVisible())
 
-            const acronymENInput = await findByRole('textbox', {
-              name: 'Acronym (EN)',
+            const nameENInput = await findByRole('textbox', {
+              name: 'Name (EN)',
             })
-            const acronymFRInput = getByRole('textbox', {
-              name: 'Acronym (FR)',
+            const nameFRInput = getByRole('textbox', {
+              name: 'Name (FR)',
             })
             const countryENInput = getByRole('textbox', {
               name: 'Country (EN)',
@@ -684,8 +676,8 @@ describe('<OrganizationInformation />', () => {
               name: 'Confirm',
             })
 
-            userEvent.type(acronymENInput, 'NEWACREN')
-            userEvent.type(acronymFRInput, 'NEWACRFR')
+            userEvent.type(nameENInput, 'NEW ACREN')
+            userEvent.type(nameFRInput, 'NEW ACRFR')
             userEvent.type(countryENInput, 'Canada')
 
             userEvent.click(confrimOrganizationUpdateButton)

@@ -31,8 +31,9 @@ import { FormField } from '../components/fields/FormField'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { getRequirement, schemaToValidation } from '../utilities/fieldRequirements'
+import withSuperAdmin from '../app/withSuperAdmin'
 
-export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelectedOrg, isUserSuperAdmin, ...props }) {
+export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelectedOrg, ...props }) {
   const toast = useToast()
   const { isOpen: isRemovalOpen, onOpen: onRemovalOpen, onClose: onRemovalClose } = useDisclosure()
   const removeOrgBtnRef = useRef()
@@ -292,16 +293,7 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
                   <Text fontWeight="bold" textAlign="center" mb="0.5em" gridColumn="span 4">
                     <Trans>Blank fields will not be included when updating the organization.</Trans>
                   </Text>
-                  {isUserSuperAdmin && (
-                    <>
-                      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                        <FormField name="acronymEN" label={t`Acronym (EN)`} />
-                      </Box>
-                      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
-                        <FormField name="acronymFR" label={t`Acronym (FR)`} />
-                      </Box>
-                    </>
-                  )}
+                  <AcronymFields />
                   <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
                     <FormField name="nameEN" label={t`Name (EN)`} />
                   </Box>
@@ -452,6 +444,19 @@ export function OrganizationInformation({ orgSlug, removeOrgCallback: setSelecte
     </>
   )
 }
+
+const AcronymFields = withSuperAdmin(() => {
+  return (
+    <>
+      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+        <FormField name="acronymEN" label={t`Acronym (EN)`} />
+      </Box>
+      <Box gridColumn={{ base: 'span 4', md: 'span 2' }}>
+        <FormField name="acronymFR" label={t`Acronym (FR)`} />
+      </Box>
+    </>
+  )
+})
 
 OrganizationInformation.propTypes = {
   orgSlug: string.isRequired,

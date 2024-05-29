@@ -152,6 +152,11 @@ export const getTypeNames = () => gql`
       isAffiliated: Boolean
 
       """
+      Filters used to limit domains returned.
+      """
+      filters: [DomainFilter]
+
+      """
       Returns the items in the list that come after the specified cursor.
       """
       after: String
@@ -242,9 +247,9 @@ export const getTypeNames = () => gql`
     """
     getAllOrganizationDomainStatuses(
       """
-      Whether to include blocked domains in the output.
+      Filters used to limit domains returned.
       """
-      blocked: Boolean
+      filters: [DomainFilter]
     ): String
 
     """
@@ -324,7 +329,7 @@ export const getTypeNames = () => gql`
       """
       Ordering options for user affiliation
       """
-      orderBy: AffiliationUserOrder
+      orderBy: UserOrder
 
       """
       String used to search for users.
@@ -1399,7 +1404,7 @@ export const getTypeNames = () => gql`
       """
       The direction in which to sort the data.
       """
-      sortDirection: OrderDirection
+      sortDirection: OrderDirection!
     ): OrganizationSummaryConnection
 
     """
@@ -2232,29 +2237,19 @@ export const getTypeNames = () => gql`
   """
   enum AffiliationUserOrderField {
     """
-    Order affiliation edges by username.
+    Order affiliations by username.
     """
-    USER_USERNAME
+    USERNAME
 
     """
-    Order affiliation edges by displayName.
+    Order affiliations by display name.
     """
-    USER_DISPLAYNAME
+    DISPLAY_NAME
 
     """
-    Order affiliation edges by user verification status.
+    Order affiliations by permission.
     """
-    USER_EMAIL_VALIDATED
-
-    """
-    Order affiliation edges by user insider status.
-    """
-    USER_INSIDER
-
-    """
-    Order affiliation edges by amount of total affiliations.
-    """
-    USER_AFFILIATIONS_COUNT
+    PERMISSION
   }
 
   """
@@ -2467,6 +2462,11 @@ export const getTypeNames = () => gql`
     Additional warning info about the MX record.
     """
     warnings: [String]
+
+    """
+    Error message if the MX record could not be retrieved.
+    """
+    error: String
   }
 
   """
@@ -2499,6 +2499,11 @@ export const getTypeNames = () => gql`
     Additional warning info about the NS record.
     """
     warnings: [String]
+
+    """
+    Error message if the NS record could not be retrieved.
+    """
+    error: String
   }
 
   """
@@ -4123,6 +4128,41 @@ export const getTypeNames = () => gql`
     dmarc summary data
     """
     dmarc: CategorizedSummary
+
+    """
+    Summary based on mail scan results for all domains.
+    """
+    mail: CategorizedSummary
+
+    """
+    Summary based on web scan results for all domains.
+    """
+    web: CategorizedSummary
+
+    """
+    Summary based on DMARC phases for all domains.
+    """
+    dmarcPhase: CategorizedSummary
+
+    """
+    Summary based on SSL scan results for all domains.
+    """
+    ssl: CategorizedSummary
+
+    """
+    Summary based on HTTPS and HSTS scan results for all domains.
+    """
+    webConnections: CategorizedSummary
+
+    """
+    Summary based on SPF scan results for all domains.
+    """
+    spf: CategorizedSummary
+
+    """
+    Summary based on DKIM scan results for all domains.
+    """
+    dkim: CategorizedSummary
   }
 
   """
@@ -4341,6 +4381,51 @@ export const getTypeNames = () => gql`
     A cursor for use in pagination
     """
     cursor: String!
+  }
+
+  """
+  Ordering options for affiliation connections.
+  """
+  input UserOrder {
+    """
+    The field to order affiliations by.
+    """
+    field: UserOrderField!
+
+    """
+    The ordering direction.
+    """
+    direction: OrderDirection!
+  }
+
+  """
+  Properties by which affiliation connections can be ordered.
+  """
+  enum UserOrderField {
+    """
+    Order affiliation edges by username.
+    """
+    USER_USERNAME
+
+    """
+    Order affiliation edges by displayName.
+    """
+    USER_DISPLAYNAME
+
+    """
+    Order affiliation edges by user verification status.
+    """
+    USER_EMAIL_VALIDATED
+
+    """
+    Order affiliation edges by user insider status.
+    """
+    USER_INSIDER
+
+    """
+    Order affiliation edges by amount of total affiliations.
+    """
+    USER_AFFILIATIONS_COUNT
   }
 
   """

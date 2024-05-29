@@ -17,7 +17,7 @@ if __name__ == "__main__":
     from scan.web_scanner import scan_web
 
     if args.v:
-        logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s::%(name)::%(levelname)s] :: %(message)s')
+        logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s::%(name)s::%(levelname)s] :: %(message)s')
     else:
         logging.basicConfig(level=logging.WARNING, format='[%(asctime)s::%(name)s::%(levelname)s] :: %(message)s')
 

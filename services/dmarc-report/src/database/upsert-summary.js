@@ -1,47 +1,6 @@
 const upsertSummary =
-  ({
-    transaction,
-    collections,
-    query,
-    loadCategoryTotals,
-    loadDkimFailureTable,
-    loadDmarcFailureTable,
-    loadFullPassTable,
-    loadSpfFailureTable,
-    calculatePercentages,
-  }) =>
-  async ({ date, domain }) => {
-    let categoryTotals
-    let dkimFailureTable
-    let dmarcFailureTable
-    let fullPassTable
-    let spfFailureTable
-
-    if (date === 'thirtyDays') {
-      categoryTotals = await loadCategoryTotals({ domain, date: 'thirty_days' })
-      dkimFailureTable = await loadDkimFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
-      dmarcFailureTable = await loadDmarcFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
-      fullPassTable = await loadFullPassTable({ domain, date: 'thirty_days' })
-      spfFailureTable = await loadSpfFailureTable({
-        domain,
-        date: 'thirty_days',
-      })
-    } else {
-      categoryTotals = await loadCategoryTotals({ domain, date })
-      dkimFailureTable = await loadDkimFailureTable({ domain, date })
-      dmarcFailureTable = await loadDmarcFailureTable({ domain, date })
-      fullPassTable = await loadFullPassTable({ domain, date })
-      spfFailureTable = await loadSpfFailureTable({ domain, date })
-    }
-
-    const categoryPercentages = calculatePercentages({ ...categoryTotals })
-
+  ({ transaction, collections, query }) =>
+  async ({ date, domain, categoryTotals, categoryPercentages, detailTables }) => {
     // get current summary info
     const edgeCursor = await query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
@@ -61,19 +20,11 @@ const upsertSummary =
     const summary = {
       ...categoryPercentages,
       categoryTotals,
-      detailTables: {
-        dkimFailure: dkimFailureTable,
-        dmarcFailure: dmarcFailureTable,
-        fullPass: fullPassTable,
-        spfFailure: spfFailureTable,
-      },
+      detailTables,
     }
 
     // Generate list of collections names
-    const collectionStrings = []
-    for (const property in collections) {
-      collectionStrings.push(property.toString())
-    }
+    const collectionStrings = Object.keys(collections)
     // setup Transaction
     const trx = await transaction(collectionStrings)
 
@@ -84,7 +35,7 @@ const upsertSummary =
         FOR summary IN dmarcSummaries
           FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
           UPSERT { _key: summary._key }
-            INSERT ${summary} 
+            INSERT ${summary}
             UPDATE {
               categoryPercentages: ${summary.categoryPercentages},
               categoryTotals: ${summary.categoryTotals},

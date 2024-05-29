@@ -282,6 +282,7 @@ export const UPDATE_DOMAIN = gql`
     $archived: Boolean
     $hidden: Boolean
     $outsideComment: OutsideDomainCommentEnum
+    $ignoreRua: Boolean
   ) {
     updateDomain(
       input: {
@@ -293,6 +294,7 @@ export const UPDATE_DOMAIN = gql`
         archived: $archived
         hidden: $hidden
         outsideComment: $outsideComment
+        ignoreRua: $ignoreRua
       }
     ) {
       result {
@@ -305,6 +307,7 @@ export const UPDATE_DOMAIN = gql`
           hidden
           archived
           rcode
+          ignoreRua
         }
         ... on DomainError {
           code

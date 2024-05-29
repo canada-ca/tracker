@@ -135,15 +135,13 @@ describe('<App/>', () => {
       )
 
       expect(
-        queryByText(
-          /To enable full app functionality and maximize your account's security/,
-        ),
+        queryByText(/To enable full app functionality and maximize your account's security/),
       ).not.toBeInTheDocument()
     })
   })
 
   describe('user is logged in', () => {
-    it('renders <VerifyAccountNotificationBar /> when user not verified', () => {
+    it('renders <VerifyAccountNotificationBar /> when user not verified', async () => {
       const { getByText } = render(
         <MockedProvider>
           <UserVarProvider
@@ -163,11 +161,9 @@ describe('<App/>', () => {
           </UserVarProvider>
         </MockedProvider>,
       )
-      expect(
-        getByText(
-          /To enable full app functionality and maximize your account's security/,
-        ),
-      ).toBeInTheDocument()
+      await waitFor(() =>
+        expect(getByText(/To enable full app functionality and maximize your account's security/)).toBeInTheDocument(),
+      )
     })
     it('does not render <VerifyAccountNotificationBar /> if user is verified', () => {
       const { queryByText } = render(
@@ -190,15 +186,13 @@ describe('<App/>', () => {
         </MockedProvider>,
       )
       expect(
-        queryByText(
-          /To enable full app functionality and maximize your account's security/,
-        ),
+        queryByText(/To enable full app functionality and maximize your account's security/),
       ).not.toBeInTheDocument()
     })
   })
 
   describe('When login is not required', () => {
-    it('displays additional navbar options', () => {
+    it('displays additional navbar options', async () => {
       const { queryByRole } = render(
         <MockedProvider mocks={mocks}>
           <UserVarProvider
@@ -218,9 +212,7 @@ describe('<App/>', () => {
           </UserVarProvider>
         </MockedProvider>,
       )
-      expect(
-        queryByRole('link', { name: 'Organizations', hidden: false }),
-      ).toBeInTheDocument()
+      await waitFor(() => expect(queryByRole('link', { name: 'Organizations', hidden: false })).toBeInTheDocument())
     })
   })
 })

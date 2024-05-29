@@ -48,9 +48,9 @@ const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
 export function App() {
   // Hooks to be used with this functional component
-  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, isAffiliated } = useUserVar()
+  const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, hasAffiliation } = useUserVar()
   const { i18n } = useLingui()
-  const { data } = useQuery(IS_LOGIN_REQUIRED, {})
+  const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
 
   // Close websocket on user jwt change (refresh/logout)
@@ -61,6 +61,8 @@ export function App() {
       wsClient.close()
     }
   }, [currentUser.jwt])
+
+  if (loading) return <LoadingMessage />
 
   const notificationBanner = () => {
     if (isLoggedIn()) {
@@ -80,7 +82,7 @@ export function App() {
             </NotificationBanner>
           )
         }
-        if (!isAffiliated()) {
+        if (!hasAffiliation()) {
           return (
             <NotificationBanner bg="yellow.250">
               <Text fontWeight="medium">

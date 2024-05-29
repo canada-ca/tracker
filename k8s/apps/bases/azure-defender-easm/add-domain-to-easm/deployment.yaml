@@ -18,10 +18,10 @@ spec:
     spec:
       containers:
         - name: add-domain-to-easm
-          image: gcr.io/track-compliance/azure-defender-easm/add-domain-to-easm:master-5104232-1706728878 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-domain-to-easm:master-5104232-1706728878 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
           env:
             - name: SUBSCRIBE_TO
-              value: domains.*
+              value: domains.*.easm
             - name: QUEUE_GROUP
               value: add_domain_to_easm
             - name: NATS_SERVERS

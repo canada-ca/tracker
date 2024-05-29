@@ -147,7 +147,6 @@ def check_mx_diff(processed_results, domain_id):
 
     return mx_record_diff
 
-
 async def run(loop):
     async def error_cb(error):
         logger.error(error)
@@ -183,13 +182,26 @@ async def run(loop):
         user_key = payload.get("user_key")
         shared_id = payload.get("shared_id")
 
-        processed_results = process_results(results)
-        if processed_results.get("mx_records") is not None:
-            mx_record_diff = check_mx_diff(
-                processed_results=processed_results, domain_id=f"domains/{domain_key}"
-            )
-            processed_results["mx_records"].update({"diff": mx_record_diff})
+        try:
+            domain = db.collection("domains").get({"_key": domain_key})
+        except Exception as e:
+            logger.error(f"Error while fetching domain: {str(e)}")
+            return
 
+        results["sends_email"] = domain.get("sendsEmail", "unknown")
+
+        processed_results = process_results(results)
+        try:
+            if processed_results.get("mx_records") is not None:
+                mx_record_diff = check_mx_diff(
+                    processed_results=processed_results,
+                    domain_id=f"domains/{domain_key}",
+                )
+                processed_results["mx_records"].update({"diff": mx_record_diff})
+        except Exception as e:
+            logger.error(f"Checking MX diff: {str(e)}")
+
+        dmarc_location = processed_results.get("dmarc").get("location")
         dmarc_status = processed_results.get("dmarc").get("status")
         spf_status = processed_results.get("spf").get("status")
         dkim_status = processed_results.get("dkim").get("status")
@@ -202,7 +214,6 @@ async def run(loop):
                     snake_to_camel(processed_results)
                 )
 
-                domain = db.collection("domains").get({"_key": domain_key})
                 db.collection("domainsDNS").insert(
                     {
                         "_from": domain["_id"],
@@ -243,6 +254,11 @@ async def run(loop):
                         }
                     )
 
+                if "dmarcLocation" not in domain.keys():
+                    domain.update({"dmarcLocation": dmarc_location})
+                elif domain.get("dmarcLocation", None) != dmarc_location:
+                    domain.update({"dmarcLocation": dmarc_location})
+
                 for key, val in {
                     "dmarc": dmarc_status,
                     "spf": spf_status,
@@ -256,6 +272,7 @@ async def run(loop):
                 domain.update({"phase": dmarc_phase})
                 domain.update({"wildcardSibling": wildcard_sibling})
                 domain.update({"rcode": rcode})
+                domain.update({"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")})
                 domain.update({"webScanPending": True})
 
                 # If we have no IPs, we can't do web scans. Set all web statuses to info

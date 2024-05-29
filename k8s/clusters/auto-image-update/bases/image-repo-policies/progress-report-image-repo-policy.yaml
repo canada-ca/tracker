@@ -1,13 +1,13 @@
-apiVersion: image.toolkit.fluxcd.io/v1alpha2
+apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
   name: progress-report
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/services/progress-report
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/progress-report
   interval: 1m0s
 ---
-apiVersion: image.toolkit.fluxcd.io/v1alpha1
+apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
   name: progress-report

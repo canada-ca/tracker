@@ -76,7 +76,7 @@ describe('<Organisations />', () => {
               search: '',
               includeSuperAdminOrg: false,
               isVerified: true,
-              isAffiliated: true,
+              isAffiliated: false,
             },
           },
           result: {
@@ -93,6 +93,7 @@ describe('<Organisations />', () => {
                       domainCount: 5,
                       verified: true,
                       summaries,
+                      userHasPermission: false,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -107,6 +108,7 @@ describe('<Organisations />', () => {
                       domainCount: 5,
                       verified: true,
                       summaries,
+                      userHasPermission: false,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -133,6 +135,7 @@ describe('<Organisations />', () => {
               jwt: null,
               tfaSendMethod: null,
               userName: null,
+              affiliations: null,
             })}
           >
             <ChakraProvider theme={theme}>
@@ -162,7 +165,7 @@ describe('<Organisations />', () => {
               search: '',
               includeSuperAdminOrg: false,
               isVerified: true,
-              isAffiliated: true,
+              isAffiliated: false,
             },
           },
           result: {
@@ -179,6 +182,7 @@ describe('<Organisations />', () => {
                       domainCount: 5,
                       verified: true,
                       summaries,
+                      userHasPermission: false,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -221,6 +225,7 @@ describe('<Organisations />', () => {
                       domainCount: 5,
                       verified: true,
                       summaries,
+                      userHasPermission: false,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -263,6 +268,7 @@ describe('<Organisations />', () => {
                       domainCount: 5,
                       verified: true,
                       summaries,
+                      userHasPermission: false,
                       __typename: 'Organizations',
                     },
                     __typename: 'OrganizationsEdge',
@@ -312,6 +318,7 @@ describe('<Organisations />', () => {
               jwt: null,
               tfaSendMethod: null,
               userName: null,
+              affiliations: null,
             })}
           >
             <ChakraProvider theme={theme}>
@@ -390,6 +397,9 @@ describe('<Organisations />', () => {
                 jwt: 'somejwt',
                 tfaSendMethod: null,
                 userName: null,
+                affiliations: {
+                  totalCount: 1,
+                },
               })}
             >
               <ChakraProvider theme={theme}>
@@ -422,7 +432,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -468,7 +478,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -562,7 +572,7 @@ describe('<Organisations />', () => {
             search: '',
             includeSuperAdminOrg: false,
             isVerified: true,
-            isAffiliated: true,
+            isAffiliated: false,
           },
           data: {
             findMyOrganizations: {
@@ -606,7 +616,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -652,7 +662,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {
@@ -698,7 +708,7 @@ describe('<Organisations />', () => {
                 search: '',
                 includeSuperAdminOrg: false,
                 isVerified: true,
-                isAffiliated: true,
+                isAffiliated: false,
               },
             },
             result: {

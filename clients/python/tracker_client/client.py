@@ -1,4 +1,5 @@
 """This module defines the Client class, used to connect to the Tracker API."""
+
 from slugify import slugify
 from gql.transport.exceptions import (
     TransportQueryError,

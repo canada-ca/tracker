@@ -2,3 +2,4 @@ python-arango==7.3.4
 python-dotenv==0.20.0
 nats-py==2.6.0
 notifications-python-client==8.0.1
+requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
