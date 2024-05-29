@@ -6,7 +6,7 @@ const { databaseOptions } = require('../../../database-options')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadArangoDates function', () => {
-  let query, drop, truncate, collections
+  let query, arangoCtx, drop, truncate, collections
 
   beforeAll(async () => {
     ;({ query, drop, truncate, collections } = await ensure({
@@ -16,6 +16,7 @@ describe('given the loadArangoDates function', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
+    arangoCtx = { query }
   })
 
   afterEach(async () => {
@@ -99,9 +100,7 @@ describe('given the loadArangoDates function', () => {
       })
     })
     it('returns the current dates', async () => {
-      const loadCurrDatesFunc = loadArangoDates({ query })
-
-      const dates = await loadCurrDatesFunc({ domain: 'domain.ca' })
+      const dates = await loadArangoDates({ arangoCtx, domain: 'domain.ca' })
 
       const expectedDates = [
         '2020-01-01',
@@ -123,14 +122,13 @@ describe('given the loadArangoDates function', () => {
   })
   describe('given a db error', () => {
     it('throws an error', async () => {
-      const mockedQuery = jest
-        .fn()
-        .mockRejectedValue('Database error occurred.')
-
-      const loadCurrDatesFunc = loadArangoDates({ query: mockedQuery })
+      const mockedQuery = jest.fn().mockRejectedValue('Database error occurred.')
 
       try {
-        await loadCurrDatesFunc({
+        const _dates = await loadArangoDates({
+          arangoCtx: {
+            query: mockedQuery,
+          },
           domain: 'domain.ca',
         })
       } catch (err) {
