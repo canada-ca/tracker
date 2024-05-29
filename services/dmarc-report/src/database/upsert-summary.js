@@ -1,8 +1,6 @@
-const upsertSummary =
-  ({ transaction, collections, query }) =>
-  async ({ date, domain, summaryData }) => {
-    // get current summary info
-    const edgeCursor = await query`
+async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
+  // get current summary info
+  const edgeCursor = await arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -15,16 +13,16 @@ const upsertSummary =
         RETURN item._to
     `
 
-    const summaryId = await edgeCursor.next()
+  const summaryId = await edgeCursor.next()
 
-    // Generate list of collections names
-    const collectionStrings = Object.keys(collections)
-    // setup Transaction
-    const trx = await transaction(collectionStrings)
+  // Generate list of collections names
+  const collectionStrings = Object.keys(arangoCtx.collections)
+  // setup Transaction
+  const trx = await arangoCtx.transaction(collectionStrings)
 
-    // create summary
-    await trx.step(
-      () => query`
+  // create summary
+  await trx.step(
+    () => arangoCtx.query`
         WITH dmarcSummaries
         FOR summary IN dmarcSummaries
           FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
@@ -34,10 +32,10 @@ const upsertSummary =
             IN dmarcSummaries
           RETURN NEW
       `,
-    )
+  )
 
-    await trx.commit()
-  }
+  await trx.commit()
+}
 
 module.exports = {
   upsertSummary,

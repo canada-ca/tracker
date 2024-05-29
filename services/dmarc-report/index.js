@@ -6,31 +6,8 @@ require('dotenv-safe').config({
 const { CosmosClient } = require('@azure/cosmos')
 const moment = require('moment')
 
-const {
-  createOwnership,
-  createSummary,
-  removeOwnership,
-  removeSummary,
-  upsertSummary,
-  arangoConnection,
-  updateDomainMailStatus,
-  updateNoOwnerDomainMailStatus,
-} = require('./src/database')
-const {
-  loadArangoDates,
-  loadArangoThirtyDaysCount,
-  loadCategoryTotals,
-  loadCheckDomain,
-  loadCheckOrg,
-  loadCosmosDates,
-  loadDkimFailureTable,
-  loadDmarcFailureTable,
-  loadFullPassTable,
-  loadOrgOwner,
-  loadDomainOwnership,
-  loadSpfFailureTable,
-  loadTables,
-} = require('./src/loaders')
+const { arangoConnection } = require('./src/database')
+const { loadCosmosDates, loadDomainOwnership } = require('./src/loaders')
 const { dmarcReport } = require('./src/dmarc-report')
 
 const {
@@ -40,7 +17,7 @@ const {
   AZURE_CONN_STRING,
   DATABASE,
   SUMMARIES_CONTAINER,
-  UPDATE_ALL_DATES = false,
+  UPDATE_ALL_DATES: updateAllDates = false,
 } = process.env
 
 ;(async () => {
@@ -60,75 +37,17 @@ const {
   })
 
   const currentDate = moment().startOf('month').format('YYYY-MM-DD')
-  const cosmosDates = await loadCosmosDates({
-    container: summariesContainer,
-  })()
-
-  // setup factory functions
-  const setupCreateSummary = createSummary({
-    transaction,
-    collections,
-    query,
-  })
-
-  const setupUpsertSummary = upsertSummary({
-    transaction,
-    collections,
-    query,
-  })
-
-  const setupCreateOwnership = createOwnership({
-    transaction,
-    collections,
-    query,
-  })
-
-  const setupRemoveOwnership = removeOwnership({
-    transaction,
-    collections,
-    query,
-  })
-
-  const setupRemoveSummary = removeSummary({ transaction, collections, query })
-
-  const setupLoadTables = loadTables({
-    loadCategoryTotals: loadCategoryTotals({
-      container: summariesContainer,
-    }),
-    loadDkimFailureTable: loadDkimFailureTable({
-      container: summariesContainer,
-    }),
-    loadDmarcFailureTable: loadDmarcFailureTable({
-      container: summariesContainer,
-    }),
-    loadFullPassTable: loadFullPassTable({
-      container: summariesContainer,
-    }),
-    loadSpfFailureTable: loadSpfFailureTable({
-      container: summariesContainer,
-    }),
-  })
 
   const ownerships = await loadDomainOwnership()
 
+  const cosmosDates = await loadCosmosDates({ container: summariesContainer })
+
   await dmarcReport({
     ownerships,
-    loadArangoDates: loadArangoDates({ query }),
-    loadArangoThirtyDaysCount: loadArangoThirtyDaysCount({ query }),
-    loadCheckOrg: loadCheckOrg({ query }),
-    loadCheckDomain: loadCheckDomain({ query }),
-    loadOrgOwner: loadOrgOwner({ query }),
-    updateDomainMailStatus: updateDomainMailStatus({ query }),
-    updateNoOwnerDomainMailStatus: updateNoOwnerDomainMailStatus({ query }),
-    createOwnership: setupCreateOwnership,
-    removeOwnership: setupRemoveOwnership,
-    removeSummary: setupRemoveSummary,
-    createSummary: setupCreateSummary,
-    upsertSummary: setupUpsertSummary,
-    loadTables: setupLoadTables,
-    cosmosDates,
+    arangoCtx: { collections, query, transaction },
     currentDate,
+    cosmosDates,
     container: summariesContainer,
-    UPDATE_ALL_DATES,
+    updateAllDates,
   })
 })()

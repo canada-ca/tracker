@@ -1,16 +1,12 @@
-const loadCheckDomain =
-  ({ query }) =>
-  async ({ domain }) => {
-    const domainCursor = await query`
+const loadCheckDomain = async ({ arangoCtx, domain }) => {
+  const domainCursor = await arangoCtx.query`
       FOR domain in domains
         FILTER domain.domain == ${domain}
         RETURN domain
     `
 
-    const checkDomain = await domainCursor.next()
-
-    return checkDomain
-  }
+  return await domainCursor.next()
+}
 
 module.exports = {
   loadCheckDomain,

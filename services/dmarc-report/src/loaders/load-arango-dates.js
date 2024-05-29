@@ -1,7 +1,5 @@
-const loadArangoDates =
-  ({ query }) =>
-  async ({ domain }) => {
-    const dbStartDatesCursor = await query`
+async function loadArangoDates({ arangoCtx, domain }) {
+  const dbStartDatesCursor = await arangoCtx.query`
       LET domainId = FIRST(
         FOR domain in domains
           FILTER domain.domain == ${domain}
@@ -9,16 +7,15 @@ const loadArangoDates =
       )
       RETURN SORTED(UNIQUE(
           FOR edge IN domainsToDmarcSummaries
-              FILTER edge.startDate != "thirtyDays"
               FILTER edge._from == domainId
               RETURN edge.startDate
       ))
     `
 
-    const dbStartDates = await dbStartDatesCursor.next()
+  const dbStartDates = await dbStartDatesCursor.next()
 
-    return dbStartDates.sort()
-  }
+  return dbStartDates.sort()
+}
 
 module.exports = {
   loadArangoDates,
