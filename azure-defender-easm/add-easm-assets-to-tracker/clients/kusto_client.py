@@ -29,7 +29,7 @@ def get_labelled_org_assets_from_org_key(org_key):
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
     | where Labels has orgKey
-    | project AssetName, AssetUuid, Labels
+    | project AssetName
     """
     try:
         response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
@@ -48,7 +48,7 @@ def get_unlabelled_assets():
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
     | where Labels == '[]'
-    | project AssetName, AssetUuid, Labels
+    | project AssetName
     """
     try:
         response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
