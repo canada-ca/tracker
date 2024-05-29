@@ -130,6 +130,10 @@ const updateDomain = async ({
   }
   console.info(`\t\tUpdating domain mail status for ${domain} to ${sendsEmail}`)
   await updateDomainMailStatus({ domain, sendsEmail })
+
+  if (domain === 'nrc-cnrc.gc.ca') {
+    console.info(`\t\tFinished updating ${domain} with: ${JSON.stringify(thirtyDayTables)}`)
+  }
 }
 
 module.exports = {

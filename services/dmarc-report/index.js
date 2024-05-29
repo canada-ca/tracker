@@ -40,6 +40,7 @@ const {
   AZURE_CONN_STRING,
   DATABASE,
   SUMMARIES_CONTAINER,
+  UPDATE_ALL_DATES = false,
 } = process.env
 
 ;(async () => {
@@ -127,5 +128,7 @@ const {
     loadTables: setupLoadTables,
     cosmosDates,
     currentDate,
+    container: summariesContainer,
+    UPDATE_ALL_DATES,
   })
 })()

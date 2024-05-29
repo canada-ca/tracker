@@ -1,12 +1,6 @@
 const createSummary =
   ({ transaction, collections, query }) =>
-  async ({ date, domain, categoryTotals, categoryPercentages, detailTables }) => {
-    const summary = {
-      ...categoryPercentages,
-      categoryTotals,
-      detailTables,
-    }
-
+  async ({ date, domain, summaryData }) => {
     // Generate list of collections names
     const collectionStrings = Object.keys(collections)
     // setup Transaction
@@ -16,7 +10,7 @@ const createSummary =
     const summaryCursor = await trx.step(
       () => query`
       WITH dmarcSummaries
-      INSERT ${summary} INTO dmarcSummaries
+      INSERT ${summaryData} INTO dmarcSummaries
       RETURN NEW
     `,
     )

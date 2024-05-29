@@ -1,6 +1,6 @@
 const upsertSummary =
   ({ transaction, collections, query }) =>
-  async ({ date, domain, categoryTotals, categoryPercentages, detailTables }) => {
+  async ({ date, domain, summaryData }) => {
     // get current summary info
     const edgeCursor = await query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
@@ -17,12 +17,6 @@ const upsertSummary =
 
     const summaryId = await edgeCursor.next()
 
-    const summary = {
-      ...categoryPercentages,
-      categoryTotals,
-      detailTables,
-    }
-
     // Generate list of collections names
     const collectionStrings = Object.keys(collections)
     // setup Transaction
@@ -35,18 +29,8 @@ const upsertSummary =
         FOR summary IN dmarcSummaries
           FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
           UPSERT { _key: summary._key }
-            INSERT ${summary}
-            UPDATE {
-              categoryPercentages: ${summary.categoryPercentages},
-              categoryTotals: ${summary.categoryTotals},
-              detailTables: {
-                dkimFailure: ${summary.detailTables.dkimFailure},
-                dmarcFailure: ${summary.detailTables.dmarcFailure},
-                fullPass: ${summary.detailTables.fullPass},
-                spfFailure: ${summary.detailTables.spfFailure},
-              },
-              totalMessages: ${summary.totalMessages},
-            }
+            INSERT ${summaryData}
+            UPDATE ${summaryData}
             IN dmarcSummaries
           RETURN NEW
       `,
