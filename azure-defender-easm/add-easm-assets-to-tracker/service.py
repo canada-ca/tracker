@@ -34,7 +34,6 @@ async def main():
     logging.info("Successfully connected to NATS")
     # Create JetStream context.
     js = nc.jetstream()
-
     # Persist messages on 'foo's subject.
     await js.add_stream(name="domains", subjects=[f"{PUBLISH_TO}.*"])
 
@@ -61,13 +60,9 @@ async def main():
         FOR v, e IN 1..1 OUTBOUND @org_id claims
             RETURN v.domain
         """
-        try:
-            cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
-            logging.info(f"Successfully fetched domains for org: {org_id}")
-            return cursor.batch()
-        except Exception as e:
-            logging.error(f"Error occured when fetching domains for org: {org_id}: {e}")
-            return []
+        cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
+        logging.info(f"Successfully fetched domains for org: {org_id}")
+        return cursor.batch()
 
     def get_domain_exists(domain):
         query = """
@@ -161,12 +156,6 @@ async def main():
 
     # main logic
     async def add_discovered_domain(domains, org_id):
-        read_cols = [db.collection("domains").name]
-        write_cols = [
-            db.collection("domains").name,
-            db.collection("claims").name,
-            db.collection("auditLogs").name,
-        ]
         for domain in domains:
             # check if domain exists in system
             domain_exists = get_domain_exists(domains)
@@ -179,8 +168,13 @@ async def main():
                 continue
 
             # setup transaction
-            txn_db = db.begin_transaction(read=read_cols, write=write_cols)
-            # txn_aql = txn_db.aql
+            txn_db = db.begin_transaction(
+                write=[
+                    db.collection("domains").name,
+                    db.collection("claims").name,
+                    db.collection("auditLogs").name,
+                ],
+            )
             txn_col_domains = txn_db.collection("domains")
             txn_col_claims = txn_db.collection("claims")
             txn_col_audit_logs = txn_db.collection("auditLogs")
@@ -220,14 +214,9 @@ async def main():
                 )
                 logging.info(f"Published domain: {domain} to NATS")
             except Exception as e:
-                logging.error(e)
+                logging.error(f"Failed to publish domain: {domain} to NATS: {e}")
 
-    try:
-        verified_orgs = get_verified_orgs()
-    except Exception as e:
-        logging.error(e)
-        return
-
+    verified_orgs = get_verified_orgs()
     for org in verified_orgs:
         org_key = org["key"]
         org_id = org["id"]
@@ -235,21 +224,20 @@ async def main():
         try:
             domains = get_org_domains(org_id)
         except Exception as e:
-            logging.error(e)
+            logging.error(
+                f"Error when attempting to fetch domains for org {org_key}: {e}"
+            )
             continue
 
         try:
             labelled_assets = get_labelled_org_assets_from_org_key(org_key)
-        except Exception as e:
-            logging.error(e)
-            continue
-
-        labelled_domains = [asset["AssetName"] for asset in labelled_assets]
-        new_domains = list(set(labelled_domains) - set(domains))
-        try:
+            labelled_domains = [asset["AssetName"] for asset in labelled_assets]
+            new_domains = list(set(labelled_domains) - set(domains))
             await add_discovered_domain(new_domains, org_id)
         except Exception as e:
-            logging.error(e)
+            logging.error(
+                f"Error when attempting to add new assets to org {org_key}: {e}"
+            )
             continue
 
     try:
@@ -257,7 +245,7 @@ async def main():
         unclaimed_domains = [asset["AssetName"] for asset in unlabelled_assets]
         await add_discovered_domain(unclaimed_domains, UNCLAIMED_ID)
     except Exception as e:
-        logging.error(e)
+        logging.error(f"Error when attempting to add new assets to unclaimed org: {e}")
 
     logging.info("Closing NATS connection")
     await nc.close()
