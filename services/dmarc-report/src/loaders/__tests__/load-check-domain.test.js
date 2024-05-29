@@ -6,7 +6,7 @@ const { databaseOptions } = require('../../../database-options')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadCheckDomain function', () => {
-  let query, drop, truncate, collections, domain
+  let query, drop, truncate, collections, arangoCtx, domain
   beforeAll(async () => {
     ;({ query, drop, truncate, collections } = await ensure({
       type: 'database',
@@ -15,6 +15,7 @@ describe('given the loadCheckDomain function', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
+    arangoCtx = { query, collections }
   })
 
   beforeEach(async () => {
@@ -31,7 +32,8 @@ describe('given the loadCheckDomain function', () => {
     await drop()
   })
   it('returns the domain from the db', async () => {
-    const checkDomain = await loadCheckDomain({ query })({
+    const checkDomain = await loadCheckDomain({
+      arangoCtx,
       domain: 'domain.ca',
     })
 
