@@ -5,7 +5,7 @@ const { dbNameFromFile } = require('arango-tools')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the removeOwnership function', () => {
-  let query, truncate, collections, transaction, dbName, arangoDB, domain, org, summary
+  let query, truncate, collections, transaction, arangoCtx, dbName, arangoDB, domain, org, summary
 
   beforeAll(async () => {
     dbName = dbNameFromFile(__filename)
@@ -14,6 +14,7 @@ describe('given the removeOwnership function', () => {
       databaseName: dbName,
       rootPass,
     }))
+    arangoCtx = { collections, query, transaction }
   })
 
   beforeEach(async () => {
@@ -69,7 +70,8 @@ describe('given the removeOwnership function', () => {
   })
 
   it('removes the ownership', async () => {
-    await removeOwnership({ transaction, collections, query })({
+    await removeOwnership({
+      arangoCtx,
       domain: 'domain.ca',
       orgAcronymEn: 'ACR',
     })
@@ -81,7 +83,8 @@ describe('given the removeOwnership function', () => {
     expect(ownership).toBeUndefined()
   })
   it('removes domainsToDmarcSummaries', async () => {
-    await removeOwnership({ transaction, collections, query })({
+    await removeOwnership({
+      arangoCtx,
       domain: 'domain.ca',
       orgAcronymEn: 'ACR',
     })
@@ -93,7 +96,8 @@ describe('given the removeOwnership function', () => {
     expect(domainsToDmarcSummaries).toBeUndefined()
   })
   it('removes dmarc summary', async () => {
-    await removeOwnership({ transaction, collections, query })({
+    await removeOwnership({
+      arangoCtx,
       domain: 'domain.ca',
       orgAcronymEn: 'ACR',
     })

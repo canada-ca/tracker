@@ -1,14 +1,12 @@
-const updateDomainMailStatus =
-  ({ query }) =>
-  async ({ domain, sendsEmail }) => {
-    const updateDomainMailStatusCursor = await query`
+async function updateDomainMailStatus({ arangoCtx, domain, sendsEmail }) {
+  const updateDomainMailStatusCursor = await arangoCtx.query`
       FOR domain IN domains
         FILTER domain.domain == ${domain}
         UPDATE domain WITH { sendsEmail: ${sendsEmail} } IN domains
     `
 
-    await updateDomainMailStatusCursor.next()
-  }
+  await updateDomainMailStatusCursor.next()
+}
 
 module.exports = {
   updateDomainMailStatus,

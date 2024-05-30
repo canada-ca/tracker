@@ -1,14 +1,12 @@
-const removeSummary =
-  ({ transaction, collections, query }) =>
-  async ({ domain, date }) => {
-    // Generate list of collections names
-    const collectionStrings = Object.keys(collections)
+async function removeSummary({ arangoCtx, domain, date }) {
+  // Generate list of collections names
+  const collectionStrings = Object.keys(arangoCtx.collections)
 
-    // setup Transaction
-    const trx = await transaction(collectionStrings)
+  // setup Transaction
+  const trx = await arangoCtx.transaction(collectionStrings)
 
-    await trx.step(
-      () => query`
+  await trx.step(
+    () => arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -31,10 +29,10 @@ const removeSummary =
       )
       RETURN true
     `,
-    )
+  )
 
-    await trx.commit()
-  }
+  await trx.commit()
+}
 
 module.exports = {
   removeSummary,
