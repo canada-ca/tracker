@@ -30,5 +30,6 @@ replicas:
     count: 20
 patchesStrategicMerge:
   - update-selectors-enable-selector-removal-patch.yaml
+  - add-easm-assets-to-tracker-suspend-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component
