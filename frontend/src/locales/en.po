@@ -672,13 +672,13 @@ msgid "Contact"
 msgstr "Contact"
 
 #: src/app/App.js:211
-#: src/app/App.js:357
-#: src/app/ContactUsPage.js:39
+#: src/app/App.js:353
+#: src/app/ContactUsPage.js:52
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
 msgstr "Contact Us"
 
-#: src/app/ContactUsPage.js:9
+#: src/app/ContactUsPage.js:10
 msgid "Contact the Tracker Team"
 msgstr "Contact the Tracker Team"
 
@@ -1415,6 +1415,10 @@ msgstr "For details related to terms pertaining to privacy, please refer to"
 msgid "For organization admins interested in receiving email updates on new activity in their organizations."
 msgstr "For organization admins interested in receiving email updates on new activity in their organizations."
 
+#: src/app/ContactUsPage.js:40
+msgid "For questions and issues related to scan data, your organization's domain list, or getting help onboarding users, please contact TBS Cyber Security."
+msgstr "For questions and issues related to scan data, your organization's domain list, or getting help onboarding users, please contact TBS Cyber Security."
+
 #: src/guidance/GuidanceTagDetails.js:43
 #~ msgid "For technical implementation guidance:"
 #~ msgstr "For technical implementation guidance:"
@@ -1509,7 +1513,7 @@ msgstr "Go to page:"
 #~ msgid "Good Hostname"
 #~ msgstr "Good Hostname"
 
-#: src/app/ContactUsPage.js:14
+#: src/app/ContactUsPage.js:31
 msgid "Government of Canada Employees"
 msgstr "Government of Canada Employees"
 
@@ -1517,7 +1521,7 @@ msgstr "Government of Canada Employees"
 msgid "Graph direction:"
 msgstr "Graph direction:"
 
-#: src/app/App.js:361
+#: src/app/App.js:357
 #: src/dmarc/DmarcReportPage.js:194
 #: src/dmarc/DmarcReportPage.js:644
 msgid "Guidance"
@@ -1943,7 +1947,7 @@ msgstr "Incorrect verifyPhoneNumber.result typename."
 #~ msgid "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
 #~ msgstr "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for interpretations of this ITPIN."
 
-#: src/app/ContactUsPage.js:17
+#: src/app/ContactUsPage.js:34
 msgid "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for results interpretation and domain management."
 msgstr "Individuals from a departmental information technology group may contact the TBS Cyber Security mailbox for results interpretation and domain management."
 
@@ -2462,8 +2466,8 @@ msgid "Not available"
 msgstr "Not available"
 
 #: src/app/ContactUsPage.js:24
-msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
-msgstr "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
+#~ msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
+#~ msgstr "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 
 #: src/admin/AdminDomainModal.js:441
 msgid "Note: This could affect results for multiple organizations"
@@ -2860,9 +2864,9 @@ msgstr "Province:"
 msgid "ROBOT Vulnerable"
 msgstr "ROBOT Vulnerable"
 
-#: src/app/ReadGuidancePage.js:259
-#~ msgid "Read Guidance"
-#~ msgstr "Read Guidance"
+#: src/app/ContactUsPage.js:16
+msgid "Read Guidance"
+msgstr "Read Guidance"
 
 #: src/app/App.js:213
 msgid "Read guidance"
@@ -2926,7 +2930,6 @@ msgstr "Remove User"
 msgid "Removed Organization"
 msgstr "Removed Organization"
 
-#: src/app/App.js:353
 #: src/app/FloatingMenu.js:230
 #: src/app/SlideMessage.js:99
 msgid "Report an Issue"
@@ -3538,6 +3541,10 @@ msgstr "Subject:"
 msgid "Submit"
 msgstr "Submit"
 
+#: src/app/ContactUsPage.js:61
+msgid "Submit bug reports and feature requests through our <0>GitHub page</0>."
+msgstr "Submit bug reports and feature requests through our <0>GitHub page</0>."
+
 #: src/admin/UserListModal.js:153
 msgid "Successfully removed user {0}."
 msgstr "Successfully removed user {0}."
@@ -3694,6 +3701,10 @@ msgstr "Terms of Use"
 #: src/organizationDetails/OrganizationDomains.js:92
 msgid "Test"
 msgstr "Test"
+
+#: src/app/ContactUsPage.js:19
+msgid "The <0>\"Getting Started\" guide and FAQ section</0> will help you to understand Tracker's capabilities and limitations."
+msgstr "The <0>\"Getting Started\" guide and FAQ section</0> will help you to understand Tracker's capabilities and limitations."
 
 #: src/app/ReadGuidancePage.js:112
 #~ msgid "The <0>Tracker</0> platform"
@@ -3909,6 +3920,10 @@ msgstr "Total Messages"
 #: src/landing/LandingPage.js:25
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
+
+#: src/app/ContactUsPage.js:58
+msgid "Tracker GitHub"
+msgstr "Tracker GitHub"
 
 #: src/domains/SubdomainWarning.js:18
 #~ msgid "Tracker HSTS and HTTPS results display incorrectly when a domain has a non-compliant WWW subdomain. Check your WWW subdomain if your results appear incorrect. For example, the results for www.canada.ca in the Tracker platform are included in the results for canada.ca Work is in progress to separate the results."
