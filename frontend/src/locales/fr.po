@@ -1078,8 +1078,8 @@ msgstr "Domaine:"
 #: src/domains/DomainsPage.js:197
 #: src/organizationDetails/OrganizationDetails.js:132
 #: src/organizationDetails/OrganizationDomains.js:106
-#: src/summaries/Doughnut.js:49
-#: src/summaries/Doughnut.js:70
+#: src/summaries/Doughnut.js:53
+#: src/summaries/Doughnut.js:74
 #: src/user/MyTrackerPage.js:82
 msgid "Domains"
 msgstr "Domaines"
@@ -1979,7 +1979,7 @@ msgstr "Propriété intellectuelle, droits d'auteur et marques de commerce"
 #~ msgid "Internet facing domains"
 #~ msgstr "Domaines orientés vers l'Internet"
 
-#: src/summaries/Doughnut.js:33
+#: src/summaries/Doughnut.js:34
 msgid "Internet-facing"
 msgstr "orientés vers l'Internet"
 
@@ -2129,6 +2129,10 @@ msgstr "Courrier"
 #: src/guidance/EmailGuidance.js:311
 msgid "Mail Servers (MX)"
 msgstr "Serveurs de messagerie (MX)"
+
+#: src/summaries/Doughnut.js:36
+msgid "Mail-sending"
+msgstr "envoi de courrier"
 
 #: src/app/ReadGuidancePage.js:98
 msgid "Managing Your Domains:"
@@ -2380,7 +2384,7 @@ msgstr "Aucun protocole faible connu n'a été utilisé."
 #~ msgid "No scan data available for {0}."
 #~ msgstr "Aucune donnée d'analyse disponible pour {0}."
 
-#: src/summaries/Doughnut.js:104
+#: src/summaries/Doughnut.js:108
 msgid "No scan data for this organization."
 msgstr "Aucune donnée d'analyse pour cette organisation."
 
@@ -4290,7 +4294,7 @@ msgstr "Sécurité du Web :"
 msgid "Web Summary"
 msgstr "Résumé du site web"
 
-#: src/summaries/Doughnut.js:35
+#: src/summaries/Doughnut.js:38
 msgid "Web-hosting"
 msgstr "d'hébergement web"
 

@@ -29,11 +29,15 @@ export const Doughnut = ({
   })
   const { i18n } = useLingui()
 
-  const domainContext = ['email', 'spf', 'dkim'].includes(id) ? (
-    <Trans>Internet-facing</Trans>
-  ) : (
-    <Trans>Web-hosting</Trans>
-  )
+  const domainContext = () => {
+    if (['email', 'spf'].includes(id)) {
+      return <Trans>Internet-facing</Trans>
+    } else if (id === 'dkim') {
+      return <Trans>Mail-sending</Trans>
+    } else {
+      return <Trans>Web-hosting</Trans>
+    }
+  }
 
   const centerMessage = (
     <>
@@ -56,7 +60,7 @@ export const Doughnut = ({
         fontSize={i18n.locale === 'en' ? `${width / 256}rem` : `${width / 300}rem`}
         transform={`translate(${width / 2}, ${height / 2})`}
       >
-        {domainContext}
+        {domainContext()}
       </text>
       <text
         display={i18n.locale === 'en' ? 'inline' : 'none'}
