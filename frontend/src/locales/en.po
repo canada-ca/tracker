@@ -1078,8 +1078,8 @@ msgstr "Domain:"
 #: src/domains/DomainsPage.js:197
 #: src/organizationDetails/OrganizationDetails.js:132
 #: src/organizationDetails/OrganizationDomains.js:106
-#: src/summaries/Doughnut.js:49
-#: src/summaries/Doughnut.js:70
+#: src/summaries/Doughnut.js:53
+#: src/summaries/Doughnut.js:74
 #: src/user/MyTrackerPage.js:82
 msgid "Domains"
 msgstr "Domains"
@@ -2007,7 +2007,7 @@ msgstr "Intellectual Property, Copyright and Trademarks"
 #~ msgid "Internet facing domains"
 #~ msgstr "Internet facing domains"
 
-#: src/summaries/Doughnut.js:33
+#: src/summaries/Doughnut.js:34
 msgid "Internet-facing"
 msgstr "Internet-facing"
 
@@ -2157,6 +2157,10 @@ msgstr "Mail"
 #: src/guidance/EmailGuidance.js:311
 msgid "Mail Servers (MX)"
 msgstr "Mail Servers (MX)"
+
+#: src/summaries/Doughnut.js:36
+msgid "Mail-sending"
+msgstr "Mail-sending"
 
 #: src/app/ReadGuidancePage.js:98
 msgid "Managing Your Domains:"
@@ -2416,7 +2420,7 @@ msgstr "No known weak protocols used."
 #~ msgid "No scan data available for {0}."
 #~ msgstr "No scan data available for {0}."
 
-#: src/summaries/Doughnut.js:104
+#: src/summaries/Doughnut.js:108
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
@@ -4356,7 +4360,7 @@ msgstr "Web Security:"
 msgid "Web Summary"
 msgstr "Web Summary"
 
-#: src/summaries/Doughnut.js:35
+#: src/summaries/Doughnut.js:38
 msgid "Web-hosting"
 msgstr "Web-hosting"
 
