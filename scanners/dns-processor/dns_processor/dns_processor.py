@@ -67,7 +67,7 @@ def process_dkim(dkim_results, sends_email):
     dkim_err = dkim_results.get("error")
     dkim_tags = {}
 
-    if dkim_err or sends_email is not "true":
+    if dkim_err or sends_email != "true":
         return get_dkim_tag_status(dkim_tags, sends_email)
 
     for selector in dkim_results:
