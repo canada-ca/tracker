@@ -17,11 +17,11 @@ export default function ContactUsPage() {
           </Text>
           <Text>
             <Trans>
-              Read the{' '}
+              The{' '}
               <Link as={RouteLink} to="/guidance" color="blue.500">
                 "Getting Started" guide and FAQ section
               </Link>{' '}
-              before contacting the Tracker team. This will help you to understand the tool and its capabilities.
+              will help you to understand Tracker's capabilities and limitations.
             </Trans>
           </Text>
         </Box>
