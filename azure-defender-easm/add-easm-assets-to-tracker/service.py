@@ -231,8 +231,7 @@ async def main():
 
         try:
             labelled_assets = get_labelled_org_assets_from_org_key(org_key)
-            labelled_domains = [asset["AssetName"] for asset in labelled_assets]
-            new_domains = list(set(labelled_domains) - set(domains))
+            new_domains = list(set(labelled_assets) - set(domains))
             await add_discovered_domain(new_domains, org_id)
         except Exception as e:
             logging.error(
@@ -242,8 +241,7 @@ async def main():
 
     try:
         unlabelled_assets = get_unlabelled_assets()
-        unclaimed_domains = [asset["AssetName"] for asset in unlabelled_assets]
-        await add_discovered_domain(unclaimed_domains, UNCLAIMED_ID)
+        await add_discovered_domain(unlabelled_assets, UNCLAIMED_ID)
     except Exception as e:
         logging.error(f"Error when attempting to add new assets to unclaimed org: {e}")
 

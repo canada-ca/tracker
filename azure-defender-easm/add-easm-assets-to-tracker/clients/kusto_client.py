@@ -36,7 +36,7 @@ def get_labelled_org_assets_from_org_key(org_key):
         data = dataframe_from_result_table(response.primary_results[0]).to_dict(
             orient="records"
         )
-        return data
+        return [asset["AssetName"] for asset in data]
     except Exception as e:
         print(f"Failed to get labelled assets from org key: {e}")
         return []
@@ -55,7 +55,7 @@ def get_unlabelled_assets():
         data = dataframe_from_result_table(response.primary_results[0]).to_dict(
             orient="records"
         )
-        return data
+        return [asset["AssetName"] for asset in data]
     except Exception as e:
         print(f"Failed to get unlabelled assets: {e}")
         return []
