@@ -89,6 +89,66 @@ async function updateDomain({
         },
       }
     } else {
+      const dkimFailureTable = summaryData.detail_tables.dkim_failure || []
+      const dkimFailureTableFormatted = dkimFailureTable.map((row) => {
+        return {
+          sourceIpAddress: row.source_ip_address,
+          envelopeFrom: row.envelope_from,
+          headerFrom: row.header_from,
+          dkimDomains: row.dkim_domains,
+          dkimSelectors: row.dkim_selectors,
+          dkimResults: row.dkim_results,
+          dkimAligned: row.dkim_aligned,
+          totalMessages: row.total_messages,
+          dnsHost: row.dns_host,
+          id: row.cursor,
+          guidance: row.guidance,
+        }
+      })
+      const dmarcFailureTable = summaryData.detail_tables.dmarc_failure || []
+      const dmarcFailureTableFormatted = dmarcFailureTable.map((row) => {
+        return {
+          sourceIpAddress: row.source_ip_address,
+          envelopeFrom: row.envelope_from,
+          headerFrom: row.header_from,
+          spfDomains: row.spf_domains,
+          dkimDomains: row.dkim_domains,
+          dkimSelectors: row.dkim_selectors,
+          disposition: row.disposition,
+          totalMessages: row.total_messages,
+          dnsHost: row.dns_host,
+          id: row.cursor,
+        }
+      })
+      const fullPassTable = summaryData.detail_tables.full_pass || []
+      const fullPassTableFormatted = fullPassTable.map((row) => {
+        return {
+          sourceIpAddress: row.source_ip_address,
+          envelopeFrom: row.envelope_from,
+          headerFrom: row.header_from,
+          spfDomains: row.spf_domains,
+          dkimDomains: row.dkim_domains,
+          dkimSelectors: row.dkim_selectors,
+          totalMessages: row.total_messages,
+          dnsHost: row.dns_host,
+          id: row.cursor,
+        }
+      })
+      const spfFailureTable = summaryData.detail_tables.spf_failure || []
+      const spfFailureTableFormatted = spfFailureTable.map((row) => {
+        return {
+          sourceIpAddress: row.source_ip_address,
+          envelopeFrom: row.envelope_from,
+          headerFrom: row.header_from,
+          spfDomains: row.spf_domains,
+          spfResults: row.spf_results,
+          spfAligned: row.spf_aligned,
+          totalMessages: row.total_messages,
+          id: row.cursor,
+          dnsHost: row.dns_host,
+          guidance: row.guidance,
+        }
+      })
       summaryDataToInput = {
         categoryTotals: {
           pass: summaryData.category_totals.pass || 0,
@@ -97,10 +157,10 @@ async function updateDomain({
           passSpfOnly: summaryData.category_totals['pass-spf-only'] || 0,
         },
         detailTables: {
-          dkimFailure: summaryData.detail_tables.dkim_failure || [],
-          dmarcFailure: summaryData.detail_tables.dmarc_failure || [],
-          fullPass: summaryData.detail_tables.full_pass || [],
-          spfFailure: summaryData.detail_tables.spf_failure || [],
+          dkimFailure: dkimFailureTableFormatted,
+          dmarcFailure: dmarcFailureTableFormatted,
+          fullPass: fullPassTableFormatted,
+          spfFailure: spfFailureTableFormatted,
         },
       }
     }
