@@ -59,7 +59,7 @@ export default function ContactUsPage() {
           </Text>
           <Text>
             <Trans>
-              Report bugs and submit feature requests through our{' '}
+              Submit bug reports and feature requests through our{' '}
               <Link color="blue.500" href={'https://github.com/canada-ca/tracker/issues'} isExternal={true}>
                 GitHub page
               </Link>
