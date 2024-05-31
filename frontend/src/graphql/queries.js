@@ -231,6 +231,8 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             acronym
             slug
             id
+            domainCount
+            slug
           }
         }
       }
