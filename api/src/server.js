@@ -7,6 +7,7 @@ import http from 'http'
 import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
+import compression from 'compression'
 
 import requestLanguage from 'express-request-language'
 import { execute, subscribe, GraphQLSchema } from 'graphql'
@@ -65,6 +66,7 @@ export const Server = async ({
     '/graphql',
     cors(),
     cookieParser(),
+    compression(),
     json(),
     requestLanguage({
       languages: ['en', 'fr'],
