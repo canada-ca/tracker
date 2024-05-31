@@ -349,10 +349,6 @@ export function App() {
           <Trans>Terms & conditions</Trans>
         </Link>
 
-        <Link href={'https://github.com/canada-ca/tracker/issues'} isExternal={true} ml="4">
-          <Trans>Report an Issue</Trans>
-        </Link>
-
         <Link as={RouteLink} to="/contact-us" ml="4">
           <Trans>Contact Us</Trans>
         </Link>
