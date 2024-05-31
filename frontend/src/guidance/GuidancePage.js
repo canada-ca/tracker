@@ -36,21 +36,21 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 //Imports added to make the canned message with request invite button work
 import { ListOf } from '../components/ListOf'
 import { useCallback, useState, useEffect } from 'react'
-import { Organizations } from '../organizations/Organizations'
+//import { Organizations } from '../organizations/Organizations'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { OrganizationCard } from '../organizations/OrganizationCard'
-import { InfoBox, InfoPanel } from '../components/InfoPanel'
+//import { InfoBox, InfoPanel } from '../components/InfoPanel'
 import { ErrorBoundary } from 'react-error-boundary'
-import { SearchBox } from '../components/SearchBox'
+//import { SearchBox } from '../components/SearchBox'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
 import { PAGINATED_ORGANIZATIONS as FORWARD } from '../graphql/queries'
-import { CheckCircleIcon } from '@chakra-ui/icons'
-import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
-import { RelayPaginationControls } from '../components/RelayPaginationControls'
+//import { CheckCircleIcon } from '@chakra-ui/icons'
+//import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
+//import { RelayPaginationControls } from '../components/RelayPaginationControls'
 import { UserIcon } from '../theme/Icons'
 
 function GuidancePage() {
-  const { isOpen, onOpen, onClose, onToggle, inviteRequestIsOpen } = useDisclosure()
+  const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
   const { domainSlug: domain } = useParams()
 
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
@@ -120,12 +120,14 @@ function GuidancePage() {
     )
   }
 
+  const orgNodes = organizations.edges.map(({ node }) => node) // code to get nodes of the organisation
+
   let orgList
   if (!userHasPermission) {
     // Insert code for organization list here
     orgList = (
       <ListOf
-        elements={organizations.edges}
+        elements={organizations.edges }//replace this with orgNodes
         ifEmpty={() => (
           <Text layerStyle="loadingMessage">
             <Trans>No Organizations</Trans>
@@ -137,13 +139,13 @@ function GuidancePage() {
           <ErrorBoundary key={`${slug}:${index}`} ErrorFallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
               <OrganizationCard
-                id={organizations.edges[index].node.id}
-                slug={organizations.edges[index].node.slug}
-                name={organizations.edges[index].node.name}
-                acronym={organizations.edges[index].node.acronym}
-                domainCount={organizations.edges[index].node.domainCount}
-                verified={verified}
-                summaries={summaries}
+                id={organizations.edges[index].node.id}//replace these values with the simple name instead
+                slug={organizations.edges[index].node.slug}//replace these values with the simple name instead
+                name={organizations.edges[index].node.name}//replace these values with the simple name instead
+                acronym={organizations.edges[index].node.acronym}//replace these values with the simple name instead
+                domainCount={organizations.edges[index].node.domainCount}//replace these values with the simple name instead
+                verified={verified}//replace these values with the simple name instead
+                summaries={summaries}//replace these values with the simple name instead
                 mb="3"
                 mr={userHasPermission ? '3rem' : '2'}
                 w="100%"
@@ -155,11 +157,11 @@ function GuidancePage() {
                     variant="primary"
                     icon={<UserIcon color="white" boxSize="icons.md" />}
                     onClick={() => {
-                      //setOrgInfo({ id, name })
+                      setOrgInfo({ id, name })
                       onOpen()
                     }}
                   />
-                  <RequestOrgInviteModal isOpen={isOpen} onClose={onClose} orgId={id} orgName={name} />
+                  <RequestOrgInviteModal isOpen={isOpen} onClose={onClose} orgId={orgInfo.id} orgName={orgInfo.name} />
                 </>
               )}
             </Flex>
@@ -202,7 +204,7 @@ function GuidancePage() {
 
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
           {orgList}
-          <RelayPaginationControls
+          {/* <RelayPaginationControls
             onlyPagination={false}
             selectedDisplayLimit={orgsPerPage}
             setSelectedDisplayLimit={setOrgsPerPage}
@@ -213,7 +215,7 @@ function GuidancePage() {
             next={next}
             previous={previous}
             isLoadingMore={isLoadingMore}
-          />
+          /> */}
         </ErrorBoundary>
       </Box>
     )

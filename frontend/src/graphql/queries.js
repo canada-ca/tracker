@@ -233,6 +233,26 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             id
             domainCount
             slug
+            verified
+            userHasPermission
+            summaries {
+              dmarc {
+                total
+                categories {
+                  name
+                  count
+                  percentage
+                }
+              }
+              https {
+                total
+                categories {
+                  name
+                  count
+                  percentage
+                }
+              }
+            }
           }
         }
       }
