@@ -4,7 +4,7 @@ metadata:
   name: add-easm-assets-to-tracker
   namespace: flux-system
 spec:
-  image: gcr.io/track-compliance/add-easm-assets-to-tracker
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/add-easm-assets-to-tracker
   interval: 5m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
