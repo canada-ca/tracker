@@ -50,7 +50,7 @@ async def main():
         try:
             cursor = db.aql.execute(query)
             logging.info(f"Successfully fetched verified orgs")
-            return cursor.batch()
+            return [domain for domain in cursor]
         except Exception as e:
             logging.error(f"Error occured when fetching verified orgs: {e}")
             return []
@@ -62,7 +62,7 @@ async def main():
         """
         cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
         logging.info(f"Successfully fetched domains for org: {org_id}")
-        return cursor.batch()
+        return [domain for domain in cursor]
 
     def get_domain_exists(domain):
         query = """
