@@ -5,7 +5,7 @@ export const loadAdditionalFindingsByDomainId =
   async ({ domainId }) => {
     if (domainId === undefined) {
       console.warn(`User: ${userKey} did not set \`domainId\` argument for: loadAdditionalFindingsByDomainId.`)
-      throw new Error(i18n._(t`You must provide a \`domainId\` to retrieve a domain's EASM findings.`))
+      throw new Error(i18n._(t`You must provide a \`domainId\` to retrieve a domain's additional findings.`))
     }
 
     let cursor
@@ -18,9 +18,9 @@ export const loadAdditionalFindingsByDomainId =
     `
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userKey} was trying to gather EASM findings for domain: ${domainId}. Error: ${err}`,
+        `Database error occurred while user: ${userKey} was trying to gather additional findings for domain: ${domainId}. Error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to load EASM findings. Please try again.`))
+      throw new Error(i18n._(t`Unable to load additional findings. Please try again.`))
     }
 
     let finding
@@ -28,9 +28,9 @@ export const loadAdditionalFindingsByDomainId =
       finding = await cursor.next()
     } catch (err) {
       console.error(
-        `Cursor error occurred while user: ${userKey} was trying to gather EASM findings for domain: ${domainId}. Error: ${err}`,
+        `Cursor error occurred while user: ${userKey} was trying to gather additional findings for domain: ${domainId}. Error: ${err}`,
       )
-      throw new Error(i18n._(t`Unable to load EASM findings. Please try again.`))
+      throw new Error(i18n._(t`Unable to load additional findings. Please try again.`))
     }
 
     return finding

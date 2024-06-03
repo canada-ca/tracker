@@ -22,7 +22,7 @@ describe('loadAdditionalFindingsByDomainId', () => {
       require('../load-additional-findings-by-domain-id').loadAdditionalFindingsByDomainId
     const func = loadAdditionalFindingsByDomainId({ query: jest.fn(), userKey: 'userKey', i18n })
 
-    await expect(func({})).rejects.toThrow("You must provide a `domainId` to retrieve a domain's EASM findings.")
+    await expect(func({})).rejects.toThrow("You must provide a `domainId` to retrieve a domain's additional findings.")
   })
 
   it('throws an error when a database error occurs', async () => {
@@ -33,7 +33,9 @@ describe('loadAdditionalFindingsByDomainId', () => {
       require('../load-additional-findings-by-domain-id').loadAdditionalFindingsByDomainId
     const func = loadAdditionalFindingsByDomainId({ query, userKey: 'userKey', i18n })
 
-    await expect(func({ domainId: 'domainId' })).rejects.toThrow('Unable to load EASM findings. Please try again.')
+    await expect(func({ domainId: 'domainId' })).rejects.toThrow(
+      'Unable to load additional findings. Please try again.',
+    )
   })
 
   it('throws an error when a cursor error occurs', async () => {
@@ -47,7 +49,9 @@ describe('loadAdditionalFindingsByDomainId', () => {
       require('../load-additional-findings-by-domain-id').loadAdditionalFindingsByDomainId
     const func = loadAdditionalFindingsByDomainId({ query, userKey: 'userKey', i18n })
 
-    await expect(func({ domainId: 'domainId' })).rejects.toThrow('Unable to load EASM findings. Please try again.')
+    await expect(func({ domainId: 'domainId' })).rejects.toThrow(
+      'Unable to load additional findings. Please try again.',
+    )
   })
 
   it('returns the finding when everything is correct', async () => {

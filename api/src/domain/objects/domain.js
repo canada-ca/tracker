@@ -270,7 +270,7 @@ export const domainType = new GraphQLObjectType({
           console.warn(
             `User: ${userKey} attempted to access additional findings for domain: ${_id}, but does not have permission.`,
           )
-          throw new Error(t`Cannot query additonal findings without permission.`)
+          throw new Error(t`Cannot query additional findings without permission.`)
         }
 
         return await loadAdditionalFindingsByDomainId({
