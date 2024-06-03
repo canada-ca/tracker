@@ -28,7 +28,7 @@ FROM python:3.11.6-slim-bookworm
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONWARNINGS ignore
 
-WORKDIR /label-known-easm-assets
+WORKDIR /import-easm-additional-findings
 
 # Copy installed python modules
 COPY --from=python-builder /working/install/lib /usr/local/lib
