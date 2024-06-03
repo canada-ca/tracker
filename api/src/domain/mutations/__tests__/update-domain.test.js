@@ -201,7 +201,7 @@ describe('updating a domain', () => {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.canada.ca',
                   lastRan: null,
-                  selectors: [],
+                  selectors: ['selector1', 'selector2'],
                 },
               },
             },
