@@ -1,0 +1,34 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: generate-image-name
+    entrypoint: "bash"
+    dir: azure-defender-easm/add-easm-assets-to-tracker
+    args:
+      - "-c"
+      - |
+        echo "northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-easm-assets-to-tracker:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: build
+    entrypoint: "bash"
+    dir: azure-defender-easm/add-easm-assets-to-tracker
+    args:
+      - "-c"
+      - |
+        image=$(cat /workspace/imagename)
+        docker build -t $image .
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-if-master
+    entrypoint: "bash"
+    dir: azure-defender-easm/add-easm-assets-to-tracker
+    args:
+      - "-c"
+      - |
+        if [[ "$BRANCH_NAME" == "master" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi

@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: label-known-easm-assets
+  name: add-easm-assets-to-tracker
   namespace: azure-defender-easm
 spec:
-  schedule: "30 10 * * 5"
+  schedule: "30 10 * * 6"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
@@ -12,11 +12,11 @@ spec:
       template:
         metadata:
           labels:
-            app: label-known-easm-assets
+            app: add-easm-assets-to-tracker
         spec:
           containers:
-            - name: label-known-easm-assets
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-8296e62-1706728448 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+            - name: add-easm-assets-to-tracker
+              image: gcr.io/track-compliance/azure-defender-easm/add-easm-assets-to-tracker:master-17ff220-1697550117 # {"$imagepolicy": "flux-system:add-easm-assets-to-tracker"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -32,21 +32,10 @@ spec:
                   value: http://arangodb.db:8529
                 - name: DB_NAME
                   value: track_dmarc
-                - name: SUBSCRIPTION_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: azure-defender-easm
-                      key: SUBSCRIPTION_ID
-                - name: WORKSPACE_NAME
-                  valueFrom:
-                    secretKeyRef:
-                      name: azure-defender-easm
-                      key: WORKSPACE_NAME
-                - name: RESOURCE_GROUP
-                  valueFrom:
-                    secretKeyRef:
-                      name: azure-defender-easm
-                      key: RESOURCE_GROUP
+                - name: NATS_URL
+                  value: nats://localhost:4222
+                - name: PUBLISH_TO
+                  value: domains
                 - name: REGION
                   valueFrom:
                     secretKeyRef:
@@ -77,5 +66,10 @@ spec:
                     secretKeyRef:
                       name: azure-defender-easm
                       key: KUSTO_DATABASE
+                - name: UNCLAIMED_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: azure-defender-easm
+                      key: UNCLAIMED_ID
           restartPolicy: Never
       backoffLimit: 4
