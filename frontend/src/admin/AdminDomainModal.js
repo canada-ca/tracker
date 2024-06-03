@@ -8,11 +8,7 @@ import {
   Divider,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
-  Grid,
-  IconButton,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -31,14 +27,13 @@ import {
   Tooltip,
   useToast,
 } from '@chakra-ui/react'
-import { AddIcon, MinusIcon, QuestionOutlineIcon, SmallAddIcon } from '@chakra-ui/icons'
+import { AddIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import { array, bool, func, number, object, string } from 'prop-types'
-import { Field, FieldArray, Formik } from 'formik'
+import { FieldArray, Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
@@ -248,7 +243,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
             }
           }}
         >
-          {({ handleSubmit, handleChange, isSubmitting, values, errors, touched }) => (
+          {({ handleSubmit, handleChange, isSubmitting, values }) => (
             <form id="form" onSubmit={handleSubmit}>
               <ModalHeader>
                 {mutation === 'update' ? <Trans>Edit Domain Details</Trans> : <Trans>Add Domain Details</Trans>}
