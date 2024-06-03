@@ -35,7 +35,7 @@ def get_all_domains():
         RETURN { "domain": domain.domain, "id": domain._id }
     """
     cursor = db.aql.execute(query)
-    return cursor.batch()
+    return [domain for domain in cursor]
 
 
 def upsert_finding(finding):
