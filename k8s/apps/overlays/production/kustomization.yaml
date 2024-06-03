@@ -19,6 +19,7 @@ resources:
   - ../../bases/azure-defender-easm/add-domain-to-easm
   - ../../bases/azure-defender-easm/label-known-easm-assets-cronjob
   - ../../bases/azure-defender-easm/add-easm-assets-to-tracker-cronjob
+  - ../../bases/azure-defender-easm/import-easm-additional-findings-cronjob
 replicas:
   - name: tracker-api
     count: 2
@@ -31,5 +32,6 @@ replicas:
 patchesStrategicMerge:
   - update-selectors-enable-selector-removal-patch.yaml
   - add-easm-assets-to-tracker-suspend-patch.yaml
+  - import-easm-additional-findings-suspend-patch.yaml
 components:
 #  - ../../bases/frontend/maintenance-override-component
