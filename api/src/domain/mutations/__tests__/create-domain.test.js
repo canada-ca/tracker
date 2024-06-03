@@ -26,7 +26,7 @@ import { collectionNames } from '../../../collection-names'
 const { DB_PASS: rootPass, DB_URL: url, HASHING_SECRET } = process.env
 
 describe('create a domain', () => {
-  let query, drop, truncate, schema, collections, transaction, user, org
+  let query, drop, truncate, schema, collections, transaction, user, org, domain
 
   const consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
@@ -72,6 +72,24 @@ describe('create a domain', () => {
       }))
     })
     beforeEach(async () => {
+      domain = (
+        await collections.domains.save(
+          {
+            domain: 'test.gc.ca',
+            lastRan: '2021-01-01 12:00:00.000000',
+            selectors: [],
+            status: {
+              dkim: 'info',
+              dmarc: 'info',
+              https: 'info',
+              spf: 'info',
+              ssl: 'info',
+            },
+          },
+          { returnNew: true },
+        )
+      ).new
+
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         emailValidated: true,
@@ -126,7 +144,6 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -208,19 +225,14 @@ describe('create a domain', () => {
             },
           })
 
-          const domainCursor = await query`
-            FOR domain IN domains
-              RETURN domain
-          `
-          const domain = await domainCursor.next()
           const expectedResponse = {
             data: {
               createDomain: {
                 result: {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector1', 'selector2'],
+                  lastRan: '2021-01-01 12:00:00.000000',
+                  selectors: [],
                   status: {
                     dkim: 'INFO',
                     dmarc: 'INFO',
@@ -292,7 +304,6 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -374,20 +385,14 @@ describe('create a domain', () => {
             },
           })
 
-          const domainCursor = await query`
-            FOR domain IN domains
-              RETURN domain
-          `
-          const domain = await domainCursor.next()
-
           const expectedResponse = {
             data: {
               createDomain: {
                 result: {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector1', 'selector2'],
+                  lastRan: '2021-01-01 12:00:00.000000',
+                  selectors: [],
                   status: {
                     dkim: 'INFO',
                     dmarc: 'INFO',
@@ -435,7 +440,6 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -517,20 +521,14 @@ describe('create a domain', () => {
           },
         })
 
-        const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
-        const domain = await domainCursor.next()
-
         const expectedResponse = {
           data: {
             createDomain: {
               result: {
                 id: toGlobalId('domain', domain._key),
                 domain: 'test.gc.ca',
-                lastRan: null,
-                selectors: ['selector1', 'selector2'],
+                lastRan: '2021-01-01 12:00:00.000000',
+                selectors: [],
                 status: {
                   dkim: 'INFO',
                   dmarc: 'INFO',
@@ -593,202 +591,31 @@ describe('create a domain', () => {
           permission: 'super_admin',
         })
       })
-      describe('selectors are not added', () => {
-        beforeEach(async () => {
-          const domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            lastRan: null,
-            status: {
-              dkim: null,
-              dmarc: null,
-              https: null,
-              spf: null,
-              ssl: null,
-            },
-          })
-          const selector1 = await collections.selectors.save({ selector: 'selector1' })
-          const selector2 = await collections.selectors.save({ selector: 'selector2' })
-          await collections.domainsToSelectors.save({
-            _from: domain._id,
-            _to: selector1._id,
-          })
-          await collections.domainsToSelectors.save({
-            _from: domain._id,
-            _to: selector2._id,
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
+      beforeEach(async () => {
+        const selector1 = await collections.selectors.save({ selector: 'selector1' })
+        const selector2 = await collections.selectors.save({ selector: 'selector2' })
+        await collections.domainsToSelectors.save({
+          _from: domain._id,
+          _to: selector1._id,
         })
-        it('returns the domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              createDomain(
-                input: {
-                  orgId: "${toGlobalId('organization', secondOrg._key)}"
-                  domain: "test.gc.ca"
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    status {
-                      dkim
-                      dmarc
-                      https
-                      spf
-                      ssl
-                    }
-                    organizations(first: 5) {
-                      edges {
-                        node {
-                          id
-                          name
-                        }
-                      }
-                    }
-                  }
-                  ... on DomainError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
-            rootValue: null,
-            contextValue: {
-              request: {
-                language: 'en',
-              },
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              publish: jest.fn(),
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                saltedHash: saltedHash(HASHING_SECRET),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                  auth: { loginRequired: true },
-                }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-              validators: { cleanseInput, slugify },
-            },
-          })
-
-          const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
-          const domain = await domainCursor.next()
-
-          const expectedResponse = {
-            data: {
-              createDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector1', 'selector2'],
-                  status: {
-                    dkim: null,
-                    dmarc: null,
-                    https: null,
-                    spf: null,
-                    ssl: null,
-                  },
-                  organizations: {
-                    edges: [
-                      {
-                        node: {
-                          id: toGlobalId('organization', org._key),
-                          name: 'Treasury Board of Canada Secretariat',
-                        },
-                      },
-                      {
-                        node: {
-                          id: toGlobalId('organization', secondOrg._key),
-                          name: 'Communications Security Establishment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
-          ])
+        await collections.domainsToSelectors.save({
+          _from: domain._id,
+          _to: selector2._id,
+        })
+        await collections.claims.save({
+          _from: org._id,
+          _to: domain._id,
         })
       })
-      describe('selectors are the same', () => {
-        beforeEach(async () => {
-          const domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            selectors: ['selector1', 'selector2'],
-            lastRan: null,
-            status: {
-              dkim: null,
-              dmarc: null,
-              https: null,
-              spf: null,
-              ssl: null,
-            },
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
-        it('returns the domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
+      it('returns the domain', async () => {
+        const response = await graphql({
+          schema,
+          source: `
             mutation {
               createDomain(
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -821,287 +648,99 @@ describe('create a domain', () => {
               }
             }
           `,
-            rootValue: null,
-            contextValue: {
-              request: {
-                language: 'en',
-              },
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              publish: jest.fn(),
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                saltedHash: saltedHash(HASHING_SECRET),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                  auth: { loginRequired: true },
-                }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-              validators: { cleanseInput, slugify },
+          rootValue: null,
+          contextValue: {
+            request: {
+              language: 'en',
             },
-          })
+            query,
+            collections: collectionNames,
+            transaction,
+            userKey: user._key,
+            publish: jest.fn(),
+            auth: {
+              checkDomainPermission: checkDomainPermission({
+                i18n,
+                userKey: user._key,
+                query,
+              }),
+              checkPermission: checkPermission({ userKey: user._key, query }),
+              saltedHash: saltedHash(HASHING_SECRET),
+              userRequired: userRequired({
+                userKey: user._key,
+                loadUserByKey: loadUserByKey({ query }),
+              }),
+              checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
+              verifiedRequired: verifiedRequired({}),
+              tfaRequired: tfaRequired({}),
+            },
+            loaders: {
+              loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
+                query,
+                userKey: user._key,
+                cleanseInput,
+                i18n,
+                auth: { loginRequiredBool: true },
+              }),
+              loadDomainByDomain: loadDomainByDomain({ query }),
+              loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
+              loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
+                query,
+                language: 'en',
+                userKey: user._key,
+                cleanseInput,
+                auth: { loginRequired: true },
+              }),
+              loadUserByKey: loadUserByKey({ query }),
+            },
+            validators: { cleanseInput, slugify },
+          },
+        })
 
-          const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
-          const domain = await domainCursor.next()
-
-          const expectedResponse = {
-            data: {
-              createDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector1', 'selector2'],
-                  status: {
-                    dkim: null,
-                    dmarc: null,
-                    https: null,
-                    spf: null,
-                    ssl: null,
-                  },
-                  organizations: {
-                    edges: [
-                      {
-                        node: {
-                          id: toGlobalId('organization', org._key),
-                          name: 'Treasury Board of Canada Secretariat',
-                        },
+        const expectedResponse = {
+          data: {
+            createDomain: {
+              result: {
+                id: toGlobalId('domain', domain._key),
+                domain: 'test.gc.ca',
+                lastRan: '2021-01-01 12:00:00.000000',
+                selectors: ['selector1', 'selector2'],
+                status: {
+                  dkim: 'INFO',
+                  dmarc: 'INFO',
+                  https: 'INFO',
+                  spf: 'INFO',
+                  ssl: 'INFO',
+                },
+                organizations: {
+                  edges: [
+                    {
+                      node: {
+                        id: toGlobalId('organization', org._key),
+                        name: 'Treasury Board of Canada Secretariat',
                       },
-                      {
-                        node: {
-                          id: toGlobalId('organization', secondOrg._key),
-                          name: 'Communications Security Establishment',
-                        },
+                    },
+                    {
+                      node: {
+                        id: toGlobalId('organization', secondOrg._key),
+                        name: 'Communications Security Establishment',
                       },
-                    ],
-                  },
+                    },
+                  ],
                 },
               },
             },
-          }
+          },
+        }
 
-          expect(response).toEqual(expectedResponse)
+        expect(response).toEqual(expectedResponse)
 
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
-          ])
-        })
-      })
-      describe('new selectors are added', () => {
-        beforeEach(async () => {
-          const domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            selectors: ['selector1', 'selector2'],
-            lastRan: null,
-            status: {
-              dkim: null,
-              dmarc: null,
-              https: null,
-              spf: null,
-              ssl: null,
-            },
-          })
-          const selector1 = await collections.selectors.save({ selector: 'selector1' })
-          const selector2 = await collections.selectors.save({ selector: 'selector2' })
-          await collections.domainsToSelectors.save({
-            _from: domain._id,
-            _to: selector1._id,
-          })
-          await collections.domainsToSelectors.save({
-            _from: domain._id,
-            _to: selector2._id,
-          })
-          await collections.claims.save({
-            _from: org._id,
-            _to: domain._id,
-          })
-        })
-        it('returns the domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              createDomain(
-                input: {
-                  orgId: "${toGlobalId('organization', secondOrg._key)}"
-                  domain: "test.gc.ca"
-                  selectors: ["selector3", "selector4"]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                    status {
-                      dkim
-                      dmarc
-                      https
-                      spf
-                      ssl
-                    }
-                    organizations(first: 5) {
-                      edges {
-                        node {
-                          id
-                          name
-                        }
-                      }
-                    }
-                  }
-                  ... on DomainError {
-                    code
-                    description
-                  }
-                }
-              }
-            }
-          `,
-            rootValue: null,
-            contextValue: {
-              request: {
-                language: 'en',
-              },
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              publish: jest.fn(),
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                saltedHash: saltedHash(HASHING_SECRET),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                checkSuperAdmin: checkSuperAdmin({ userKey: user._key, query }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByDomain: loadDomainByDomain({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadOrgConnectionsByDomainId: loadOrgConnectionsByDomainId({
-                  query,
-                  language: 'en',
-                  userKey: user._key,
-                  cleanseInput,
-                  auth: { loginRequired: true },
-                }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-              validators: { cleanseInput, slugify },
-            },
-          })
-
-          const domainCursor = await query`
-            FOR domain IN domains
-              RETURN domain
-          `
-          const domain = await domainCursor.next()
-
-          const expectedResponse = {
-            data: {
-              createDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector1', 'selector2', 'selector3', 'selector4'],
-                  status: {
-                    dkim: null,
-                    dmarc: null,
-                    https: null,
-                    spf: null,
-                    ssl: null,
-                  },
-                  organizations: {
-                    edges: [
-                      {
-                        node: {
-                          id: toGlobalId('organization', org._key),
-                          name: 'Treasury Board of Canada Secretariat',
-                        },
-                      },
-                      {
-                        node: {
-                          id: toGlobalId('organization', secondOrg._key),
-                          name: 'Communications Security Establishment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
-          ])
-        })
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
+        ])
       })
       describe('lastRan is not changed', () => {
         beforeEach(async () => {
-          const domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            selectors: ['selector1', 'selector2'],
-            lastRan: '2021-01-01 12:00:00.000000',
-            status: {
-              dkim: null,
-              dmarc: null,
-              https: null,
-              spf: null,
-              ssl: null,
-            },
-          })
           await collections.claims.save({
             _from: org._id,
             _to: domain._id,
@@ -1116,7 +755,6 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -1197,12 +835,6 @@ describe('create a domain', () => {
               validators: { cleanseInput, slugify },
             },
           })
-
-          const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
-          const domain = await domainCursor.next()
 
           const expectedResponse = {
             data: {
@@ -1213,11 +845,11 @@ describe('create a domain', () => {
                   lastRan: '2021-01-01 12:00:00.000000',
                   selectors: ['selector1', 'selector2'],
                   status: {
-                    dkim: null,
-                    dmarc: null,
-                    https: null,
-                    spf: null,
-                    ssl: null,
+                    dkim: 'INFO',
+                    dmarc: 'INFO',
+                    https: 'INFO',
+                    spf: 'INFO',
+                    ssl: 'INFO',
                   },
                   organizations: {
                     edges: [
@@ -1249,18 +881,6 @@ describe('create a domain', () => {
       })
       describe('status do not changed', () => {
         beforeEach(async () => {
-          const domain = await collections.domains.save({
-            domain: 'test.gc.ca',
-            selectors: ['selector1', 'selector2'],
-            lastRan: '',
-            status: {
-              dkim: 'fail',
-              dmarc: 'fail',
-              https: 'fail',
-              spf: 'fail',
-              ssl: 'fail',
-            },
-          })
           await collections.claims.save({
             _from: org._id,
             _to: domain._id,
@@ -1275,7 +895,6 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
-                  selectors: ["selector1", "selector2"]
                 }
               ) {
                 result {
@@ -1357,26 +976,20 @@ describe('create a domain', () => {
             },
           })
 
-          const domainCursor = await query`
-          FOR domain IN domains
-            RETURN domain
-        `
-          const domain = await domainCursor.next()
-
           const expectedResponse = {
             data: {
               createDomain: {
                 result: {
                   id: toGlobalId('domain', domain._key),
                   domain: 'test.gc.ca',
-                  lastRan: '',
+                  lastRan: '2021-01-01 12:00:00.000000',
                   selectors: ['selector1', 'selector2'],
                   status: {
-                    dkim: 'FAIL',
-                    dmarc: 'FAIL',
-                    https: 'FAIL',
-                    spf: 'FAIL',
-                    ssl: 'FAIL',
+                    dkim: 'INFO',
+                    dmarc: 'INFO',
+                    https: 'INFO',
+                    spf: 'INFO',
+                    ssl: 'INFO',
                   },
                   organizations: {
                     edges: [
@@ -1432,7 +1045,7 @@ describe('create a domain', () => {
             source: `
               mutation {
                 createDomain(
-                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", selectors: ["selector1", "selector2"] }
+                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca" }
                 ) {
                   result {
                     ... on Domain {
@@ -1537,7 +1150,6 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -1645,7 +1257,6 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -1756,7 +1367,6 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -1857,7 +1467,6 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -1958,7 +1567,6 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -2066,7 +1674,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2169,7 +1776,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2279,7 +1885,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2387,7 +1992,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2501,7 +2105,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -2624,7 +2227,7 @@ describe('create a domain', () => {
             source: `
               mutation {
                 createDomain(
-                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca", selectors: ["selector1", "selector2"] }
+                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca" }
                 ) {
                   result {
                     ... on Domain {
@@ -2729,7 +2332,6 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -2838,7 +2440,6 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
-                    selectors: ["selector1", "selector2"]
                   }
                 ) {
                   result {
@@ -2949,7 +2550,6 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -3050,7 +2650,6 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -3151,7 +2750,6 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
-                      selectors: ["selector1", "selector2"]
                     }
                   ) {
                     result {
@@ -3259,7 +2857,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3362,7 +2959,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3472,7 +3068,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3580,7 +3175,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
@@ -3694,7 +3288,6 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
-                        selectors: ["selector1", "selector2"]
                       }
                     ) {
                       result {
