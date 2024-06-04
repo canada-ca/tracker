@@ -66,6 +66,10 @@ msgstr "<0>Numéro de téléphone actuel:</0> {detailValue}"
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Erreur:</0> {0}"
 
+#: src/app/ReadGuidancePage.js:470
+msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
+msgstr "<0>Suivre les indications de la section 2.4 de la <1>ITSP.40.065 v1.1</1>.</0>"
+
 #: src/guidance/EmailGuidance.js:323
 #: src/guidance/EmailGuidance.js:406
 msgid "<0>Hostname:</0> {hostname}"
@@ -75,7 +79,7 @@ msgstr "<0>Nom d'hôte:</0> {hostname}"
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
-#: src/admin/AdminDomainModal.js:367
+#: src/admin/AdminDomainModal.js:301
 msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 msgstr "<0>Note : </0>Les domaines situés en dehors du champ d'application du GC peuvent ne pas être analysés immédiatement."
 
@@ -197,7 +201,7 @@ msgstr "Ajouter"
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
-#: src/admin/AdminDomainModal.js:254
+#: src/admin/AdminDomainModal.js:249
 msgid "Add Domain Details"
 msgstr "Ajouter les détails du domaine"
 
@@ -339,8 +343,8 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de t�
 msgid "An error occurred while verifying your phone number."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre numéro de téléphone."
 
-#: src/admin/AdminDomainModal.js:64
-#: src/admin/AdminDomainModal.js:110
+#: src/admin/AdminDomainModal.js:59
+#: src/admin/AdminDomainModal.js:105
 #: src/admin/AdminDomains.js:119
 #: src/admin/UserListModal.js:50
 #: src/admin/UserListModal.js:140
@@ -376,7 +380,7 @@ msgstr "Appliquer"
 msgid "April"
 msgstr "Avril"
 
-#: src/admin/AdminDomainModal.js:433
+#: src/admin/AdminDomainModal.js:367
 msgid "Archive domain"
 msgstr "Archiver ce domaine"
 
@@ -622,7 +626,7 @@ msgstr "Les exigences de configuration pour les services de courrier électroniq
 msgid "Configuration requirements for web sites and services completely met"
 msgstr "Les exigences de configuration des sites et services web sont entièrement satisfaites"
 
-#: src/admin/AdminDomainModal.js:404
+#: src/admin/AdminDomainModal.js:338
 #: src/admin/AdminDomains.js:494
 #: src/admin/OrganizationInformation.js:345
 #: src/admin/OrganizationInformation.js:436
@@ -797,16 +801,16 @@ msgid "DKIM Results"
 msgstr "Résultats DKIM"
 
 #: src/admin/AdminDomainModal.js:295
-msgid "DKIM Selector"
-msgstr "Sélecteur DKIM"
+#~ msgid "DKIM Selector"
+#~ msgstr "Sélecteur DKIM"
 
 #: src/dmarc/DmarcReportPage.js:174
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
 #: src/admin/AdminDomainModal.js:267
-msgid "DKIM Selectors:"
-msgstr "Sélecteurs DKIM:"
+#~ msgid "DKIM Selectors:"
+#~ msgstr "Sélecteurs DKIM:"
 
 #: src/domains/DomainsPage.js:87
 #: src/organizationDetails/OrganizationDomains.js:84
@@ -1024,7 +1028,7 @@ msgstr "Domaine"
 msgid "Domain List"
 msgstr "Liste des domaines"
 
-#: src/app/ReadGuidancePage.js:471
+#: src/app/ReadGuidancePage.js:502
 msgid "Domain Name System (DNS) Services Management Configuration Requirements - Canada.ca"
 msgstr "Exigences de configuration pour la gestion des sites Web et des services"
 
@@ -1037,7 +1041,7 @@ msgstr "URL du domaine"
 msgid "Domain URL:"
 msgstr "URL du domaine:"
 
-#: src/admin/AdminDomainModal.js:76
+#: src/admin/AdminDomainModal.js:71
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
@@ -1057,7 +1061,7 @@ msgstr "Domaine supprimé"
 msgid "Domain removed from {orgSlug}"
 msgstr "Domaine supprimé de {orgSlug}"
 
-#: src/admin/AdminDomainModal.js:122
+#: src/admin/AdminDomainModal.js:117
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
@@ -1120,7 +1124,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/admin/AdminDomainModal.js:254
+#: src/admin/AdminDomainModal.js:249
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -1153,7 +1157,7 @@ msgstr "Courriel"
 msgid "Email Guidance"
 msgstr "Conseils par courriel"
 
-#: src/app/ReadGuidancePage.js:483
+#: src/app/ReadGuidancePage.js:514
 msgid "Email Management Services Configuration Requirements - Canada.ca"
 msgstr "Exigences en matière de configuration des services de gestion des courriels"
 
@@ -1379,7 +1383,7 @@ msgstr "Filtres :"
 #~ msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity."
 #~ msgstr "Si vous avez des questions ou des préoccupations, n’hésitez pas à communiquer avec l’équipe responsable de la cybersécurité du SCT."
 
-#: src/app/ReadGuidancePage.js:516
+#: src/app/ReadGuidancePage.js:547
 msgid "For any questions or concerns, please contact <0>TBS Cyber Security</0> ."
 msgstr "Si vous avez des questions ou des préoccupations, n’hésitez pas à communiquer avec l’<0>équipe responsable de la cybersécurité du SCT</0>."
 
@@ -1642,7 +1646,7 @@ msgstr "Vulnérabilité Heartbleed"
 msgid "Hidden"
 msgstr "Caché"
 
-#: src/admin/AdminDomainModal.js:388
+#: src/admin/AdminDomainModal.js:322
 msgid "Hide domain"
 msgstr "Cacher ce domaine"
 
@@ -1755,7 +1759,7 @@ msgstr "Si vous pensez que cela a été causé par un problème avec Tracker, ve
 msgid "If your organization has no affiliated users within Tracker, contact the <0>TBS Cyber Security</0> to assist in onboarding."
 msgstr "Si votre organisation n'a pas d'utilisateurs affiliés à Suivi, contactez l’<0>équipe responsable de la cybersécurité du SCT</0> pour vous aider à l'intégrer."
 
-#: src/admin/AdminDomainModal.js:463
+#: src/admin/AdminDomainModal.js:397
 msgid "Ignore RUA"
 msgstr "Ignorer la RUA"
 
@@ -1768,7 +1772,7 @@ msgstr "Immédiatement"
 #~ msgid "Implementation"
 #~ msgstr "Mise en œuvre"
 
-#: src/app/ReadGuidancePage.js:495
+#: src/app/ReadGuidancePage.js:526
 msgid "Implementation guidance: email domain protection (ITSP.40.065 v1.1) - Canadian Centre for Cyber Security"
 msgstr "Directives de mise en œuvre – protection du domaine de courrier (ITSP.40.065 v1.1) – Centre canadien pour la cybersécurité"
 
@@ -1809,7 +1813,7 @@ msgstr "Incorrect authenticate.result typename."
 msgid "Incorrect closeAccount.result typename."
 msgstr "Incorrect closeAccount.result typename."
 
-#: src/admin/AdminDomainModal.js:95
+#: src/admin/AdminDomainModal.js:90
 msgid "Incorrect createDomain.result typename."
 msgstr "Incorrect createDomain.result typename."
 
@@ -1838,8 +1842,8 @@ msgstr "Incorrect removeOrganization.result typename."
 msgid "Incorrect resetPassword.result typename."
 msgstr "Incorrect resetPassword.result typename."
 
-#: src/admin/AdminDomainModal.js:94
-#: src/admin/AdminDomainModal.js:142
+#: src/admin/AdminDomainModal.js:89
+#: src/admin/AdminDomainModal.js:137
 #: src/admin/AdminDomains.js:149
 #: src/admin/SuperAdminUserList.js:103
 #: src/admin/UserListModal.js:80
@@ -1882,7 +1886,7 @@ msgstr "Incorrect typename received."
 msgid "Incorrect update method received."
 msgstr "Méthode de mise à jour incorrecte reçue."
 
-#: src/admin/AdminDomainModal.js:143
+#: src/admin/AdminDomainModal.js:138
 msgid "Incorrect updateDomain.result typename."
 msgstr "Incorrect updateDomain.result typename."
 
@@ -2175,7 +2179,7 @@ msgstr "Surveiller les rapports DMARC."
 msgid "More details"
 msgstr "Plus de détails"
 
-#: src/app/ReadGuidancePage.js:503
+#: src/app/ReadGuidancePage.js:534
 msgid "Mozilla SSL Configuration Generator"
 msgstr "Générateur de configuration SSL de Mozilla"
 
@@ -2186,6 +2190,10 @@ msgstr "L'authentification multifactorielle (MFA) est active par défaut et util
 #: src/guidance/WebTLSResults.js:301
 msgid "Must Staple"
 msgstr "Agrafe obligatoire"
+
+#: src/app/ReadGuidancePage.js:466
+msgid "My domain does not send emails, how can I get my domain's DMARC, DKIM, and SPF compliance checks to pass?"
+msgstr "Mon domaine n'envoie pas d'e-mails, comment puis-je faire passer les contrôles de conformité DMARC, DKIM et SPF de mon domaine ?"
 
 #: src/admin/AdminDomains.js:164
 #: src/organizationDetails/OrganizationDomains.js:89
@@ -2255,11 +2263,11 @@ msgstr "Nouveau"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage:"
 
-#: src/admin/AdminDomainModal.js:259
+#: src/admin/AdminDomainModal.js:254
 msgid "New Domain URL"
 msgstr "Nouvelle URL de domaine"
 
-#: src/admin/AdminDomainModal.js:259
+#: src/admin/AdminDomainModal.js:254
 msgid "New Domain URL:"
 msgstr "Nouvelle URL de domaine:"
 
@@ -2437,11 +2445,11 @@ msgstr "Non disponible"
 #~ msgid "Note that compliance data does not automatically refresh. Modifications to domains could take 24 hours to update."
 #~ msgstr "Notez que les données de conformité ne sont pas automatiquement actualisées. La mise à jour des modifications apportées aux domaines peut prendre 24 heures."
 
-#: src/admin/AdminDomainModal.js:441
+#: src/admin/AdminDomainModal.js:375
 msgid "Note: This could affect results for multiple organizations"
 msgstr "Note : Cela pourrait affecter les résultats de plusieurs organisations"
 
-#: src/admin/AdminDomainModal.js:439
+#: src/admin/AdminDomainModal.js:373
 msgid "Note: This will affect results for {orgCount} organizations"
 msgstr "Note : Ceci affectera les résultats pour les organisations {orgCount}."
 
@@ -2527,7 +2535,7 @@ msgstr "Nom de l'organisation"
 msgid "Organization created"
 msgstr "Organisation créée"
 
-#: src/admin/AdminDomainModal.js:360
+#: src/admin/AdminDomainModal.js:294
 #: src/admin/AuditLogTable.js:139
 msgid "Organization is invested in the outside domain"
 msgstr "L'organisation est investie dans le domaine extérieur"
@@ -2545,7 +2553,7 @@ msgstr "Le nom de l'organisation ne correspond pas."
 msgid "Organization not updated"
 msgstr "Organisation non mise à jour"
 
-#: src/admin/AdminDomainModal.js:357
+#: src/admin/AdminDomainModal.js:291
 #: src/admin/AuditLogTable.js:141
 msgid "Organization owns this domain, but it is outside the allowed scope"
 msgstr "L'organisation possède ce domaine, mais il est en dehors du champ d'application autorisé"
@@ -2569,7 +2577,7 @@ msgstr "Organisation:"
 msgid "Organizations"
 msgstr "Organisations"
 
-#: src/admin/AdminDomainModal.js:363
+#: src/admin/AdminDomainModal.js:297
 #: src/admin/AuditLogTable.js:143
 msgid "Other"
 msgstr "Autres"
@@ -2687,7 +2695,7 @@ msgstr "Le champ du numéro de téléphone ne doit pas être vide"
 msgid "Phone number must be a valid phone number that is 10-15 digits long"
 msgstr "Le numéro de téléphone doit être un numéro de téléphone valide de 10 à 15 chiffres."
 
-#: src/admin/AdminDomainModal.js:397
+#: src/admin/AdminDomainModal.js:331
 msgid "Please allow up to 24 hours for summaries to reflect any changes."
 msgstr "Veuillez prévoir jusqu'à 24 heures pour que les résumés reflètent les changements éventuels."
 
@@ -2746,7 +2754,7 @@ msgstr "Positif"
 #~ msgid "Preloaded Status:"
 #~ msgstr "Statut préchargé:"
 
-#: src/admin/AdminDomainModal.js:375
+#: src/admin/AdminDomainModal.js:309
 msgid "Prevent this domain from being counted in your organization's summaries."
 msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre organisation."
 
@@ -2754,7 +2762,7 @@ msgstr "Empêchez ce domaine d'être comptabilisé dans les résumés de votre o
 #~ msgid "Prevent this domain from being scanned and being counted in any summaries."
 #~ msgstr "Empêchez ce domaine d'être scanné et d'être compté dans les résumés."
 
-#: src/admin/AdminDomainModal.js:419
+#: src/admin/AdminDomainModal.js:353
 msgid "Prevent this domain from being visible, scanned, and being counted in any summaries."
 msgstr "Empêchez ce domaine d'être visible, d'être scanné et d'être compté dans les résumés."
 
@@ -2782,7 +2790,7 @@ msgstr "Déclaration de confidentialité"
 msgid "Prod"
 msgstr "Prod"
 
-#: src/app/ReadGuidancePage.js:508
+#: src/app/ReadGuidancePage.js:539
 msgid "Protect domains that do not send email - GOV.UK (www.gov.uk)"
 msgstr "Protéger les domaines qui n'envoient pas de courrier électronique - GOV.UK (www.gov.uk)"
 
@@ -2836,7 +2844,7 @@ msgstr "Conseils de lecture"
 msgid "Read guidance"
 msgstr "Conseils de lecture"
 
-#: src/admin/AdminDomainModal.js:350
+#: src/admin/AdminDomainModal.js:284
 #: src/admin/AdminDomains.js:468
 #: src/admin/AuditLogTable.js:122
 msgid "Reason"
@@ -2856,7 +2864,7 @@ msgstr "La chaîne reçue a un ordre valide"
 msgid "Record:"
 msgstr "Record :"
 
-#: src/app/ReadGuidancePage.js:460
+#: src/app/ReadGuidancePage.js:491
 msgid "References:"
 msgstr "Références :"
 
@@ -3169,7 +3177,7 @@ msgstr "Voir les en-têtes"
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
-#: src/admin/AdminDomainModal.js:354
+#: src/admin/AdminDomainModal.js:288
 msgid "Select a reason for adding this outside domain"
 msgstr "Sélectionnez une raison pour l'ajout de ce domaine extérieur"
 
@@ -3734,7 +3742,7 @@ msgstr "Le pourcentage de services en contact avec l'internet qui ont une politi
 msgid "The percentage of web-hosting services that strongly enforce HTTPS"
 msgstr "Le pourcentage de services d'hébergement web qui appliquent fortement le protocole HTTPS"
 
-#: src/app/ReadGuidancePage.js:451
+#: src/app/ReadGuidancePage.js:457
 msgid "The process of detecting DKIM selectors is not immediate. It may take more than 24 hours for the selectors to appear in Tracker after the conditions are met."
 msgstr "Le processus de détection des sélecteurs DKIM n'est pas immédiat. Il peut s'écouler plus de 24 heures avant que les sélecteurs n'apparaissent dans Tracker lorsque les conditions sont remplies."
 
@@ -3881,12 +3889,16 @@ msgid "Tracker account has been successfully closed."
 msgstr "Le compte du traqueur a été fermé avec succès."
 
 #: src/app/ReadGuidancePage.js:444
-msgid "Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when 1) the domain has a DMARC RUA record which includes \"mailto:dmarc@cyber.gc.ca\"; and 2) the selector has been used to sign an email and passed DKIM validation."
-msgstr "Tracker ajoute automatiquement des sélecteurs DKIM à l'aide des rapports DMARC. Les sélecteurs seront ajoutés à Tracker lorsque 1) le domaine possède un enregistrement DMARC RUA qui inclut \"mailto:dmarc@cyber.gc.ca\" ; et 2) le sélecteur a été utilisé pour signer un courriel et a passé la validation DKIM."
+#~ msgid "Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when 1) the domain has a DMARC RUA record which includes \"mailto:dmarc@cyber.gc.ca\"; and 2) the selector has been used to sign an email and passed DKIM validation."
+#~ msgstr "Tracker ajoute automatiquement des sélecteurs DKIM à l'aide des rapports DMARC. Les sélecteurs seront ajoutés à Tracker lorsque 1) le domaine possède un enregistrement DMARC RUA qui inclut \"mailto:dmarc@cyber.gc.ca\" ; et 2) le sélecteur a été utilisé pour signer un courriel et a passé la validation DKIM."
 
 #: src/app/ReadGuidancePage.js:533
 #~ msgid "Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when 1) the domain has a DMARC RUA record which includes \"mailto:dmarc@cyber.gc.ca\"; and 2) the selector has been used to sign an email and passed DKIM validation. If the domain has not met these conditions, the selectors will not be added to Tracker."
 #~ msgstr "Tracker ajoute automatiquement des sélecteurs DKIM à l'aide des rapports DMARC. Les sélecteurs seront ajoutés à Tracker lorsque 1) le domaine possède un enregistrement DMARC RUA qui inclut \"mailto:dmarc@cyber.gc.ca\" ; et 2) le sélecteur a été utilisé pour signer un courriel et a passé la validation DKIM. Si le domaine ne remplit pas ces conditions, les sélecteurs ne seront pas ajoutés à Tracker."
+
+#: src/app/ReadGuidancePage.js:445
+msgid "Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when 1) the domain has a DMARC RUA record which includes \"mailto:dmarc@cyber.gc.ca\"; and 2) the selector has been used to sign an email and passed DKIM validation. If your DKIM selectors or any DMARC information is missing, please email <0>TBS Cyber Security</0>."
+msgstr "Tracker ajoute automatiquement des sélecteurs DKIM à l'aide des rapports DMARC. Les sélecteurs seront ajoutés à Tracker lorsque 1) le domaine possède un enregistrement DMARC RUA qui inclut « mailto:dmarc@cyber.gc.ca » ; et 2) le sélecteur a été utilisé pour signer un e-mail et a passé la validation DKIM. Si vos sélecteurs DKIM ou toute autre information DMARC sont manquants, veuillez envoyer un courriel à <0>TBS Cyber Security</0>."
 
 #: src/app/ReadGuidancePage.js:545
 #~ msgid "Tracker does not automatically add selectors, so it is likely that they are not in the system yet. More information can be found above in Getting Started."
@@ -3950,7 +3962,7 @@ msgstr "Impossible de fermer ce compte."
 msgid "Unable to create account, please try again."
 msgstr "Impossible de créer un compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:85
+#: src/admin/AdminDomainModal.js:80
 msgid "Unable to create new domain."
 msgstr "Impossible de créer un nouveau domaine."
 
@@ -4011,7 +4023,7 @@ msgstr "Impossible d'envoyer l'e-mail de vérification"
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/admin/AdminDomainModal.js:133
+#: src/admin/AdminDomainModal.js:128
 msgid "Unable to update domain."
 msgstr "Impossible de mettre à jour le domaine."
 
@@ -4358,7 +4370,7 @@ msgstr "Même si d’autres outils sont utiles en complément de Suivi, ils ne r
 msgid "Why do other tools show positive results for a domain while Tracker shows negative results?"
 msgstr "Pourquoi d'autres outils affichent-ils des résultats positifs pour un domaine alors que Suivi affiche des résultats négatifs ?"
 
-#: src/app/ReadGuidancePage.js:441
+#: src/app/ReadGuidancePage.js:442
 msgid "Why does the guidance page not show the domain’s DKIM selectors even though they exist?"
 msgstr "Pourquoi la page d'orientation n'affiche-t-elle pas les sélecteurs DKIM du domaine alors qu'ils existent ?"
 
@@ -4579,7 +4591,7 @@ msgstr "fort"
 msgid "weak"
 msgstr "faible"
 
-#: src/admin/AdminDomainModal.js:77
+#: src/admin/AdminDomainModal.js:72
 msgid "{0} was added to {orgSlug}"
 msgstr "{0} a été ajouté à {orgSlug}"
 
@@ -4599,7 +4611,7 @@ msgstr "{count} enregistrements..."
 msgid "{domainSlug} does not support aggregate data"
 msgstr "{domainSlug} ne supporte pas les données agrégées"
 
-#: src/admin/AdminDomainModal.js:124
+#: src/admin/AdminDomainModal.js:119
 msgid "{editingDomainUrl} from {orgSlug} successfully updated to {0}"
 msgstr "{editingDomainUrl} de {orgSlug} mis à jour avec succès à {0}"
 
