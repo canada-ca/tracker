@@ -14,3 +14,4 @@ resources:
   - azure-defender-easm/add-domain-to-easm
   - azure-defender-easm/label-known-easm-assets-cronjob
   - azure-defender-easm/add-easm-assets-to-tracker-cronjob
+  - azure-defender-easm/import-easm-additional-findings-cronjob
