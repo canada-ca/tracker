@@ -102,5 +102,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # main()
-    print(get_host_asset("cyber.gc.ca"))
+    main()
