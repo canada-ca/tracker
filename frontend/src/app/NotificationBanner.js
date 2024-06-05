@@ -49,7 +49,7 @@ export function NotificationBanner({ children, hideable = false, bannerId = '', 
             <Flex align="center" mt={{ base: '1rem', lg: 0 }}>
               <Button
                 onClick={handleDontShowAgain}
-                variant="primary"
+                variant="primaryOutline"
                 minWidth="fit-content"
                 ml={{ base: 0, lg: '2rem' }}
                 mr="2rem"
