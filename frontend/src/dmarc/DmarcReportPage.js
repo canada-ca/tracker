@@ -612,9 +612,13 @@ export default function DmarcReportPage() {
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
       <NotificationBanner status="info" my="4" hideable bannerId="dmarc-table-changes">
         <Box>
-          <AlertTitle>The following data may have recently changed.</AlertTitle>
+          <AlertTitle>
+            <Trans>The following data may have recently changed.</Trans>
+          </AlertTitle>
           <AlertDescription>
-            We've made enhancements to our DMARC data tables to provide a more accurate view of the information.
+            <Trans>
+              We've made enhancements to our DMARC data tables to provide a more accurate view of the information.
+            </Trans>
           </AlertDescription>
         </Box>
       </NotificationBanner>
