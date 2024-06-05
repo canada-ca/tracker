@@ -15,6 +15,7 @@ import { GraphQLDateTime } from 'graphql-scalars'
 import { dnsOrder } from '../../dns-scan/inputs'
 import { webOrder } from '../../web-scan/inputs/web-order'
 import { mxRecordConnection } from '../../dns-scan/objects/mx-record-connection'
+import { additionalFinding } from '../../additional-findings/objects/additional-finding'
 
 export const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -252,6 +253,28 @@ export const domainType = new GraphQLObjectType({
         return await loadWebConnectionsByDomainId({
           domainId: _id,
           ...args,
+        })
+      },
+    },
+    additionalFindings: {
+      type: additionalFinding,
+      description: 'Additional findings imported from an external ASM tool.',
+      resolve: async (
+        { _id },
+        _,
+        { userKey, auth: { checkDomainPermission, userRequired }, loaders: { loadAdditionalFindingsByDomainId } },
+      ) => {
+        await userRequired()
+        const permitted = await checkDomainPermission({ domainId: _id })
+        if (!permitted) {
+          console.warn(
+            `User: ${userKey} attempted to access additional findings for domain: ${_id}, but does not have permission.`,
+          )
+          throw new Error(t`Cannot query additional findings without permission.`)
+        }
+
+        return await loadAdditionalFindingsByDomainId({
+          domainId: _id,
         })
       },
     },
