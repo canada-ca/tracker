@@ -73,8 +73,8 @@ async def main():
         bind_vars = {"domain": domain}
         try:
             cursor = db.aql.execute(query, bind_vars=bind_vars)
-            batch = cursor.batch()
-            return len(batch) > 0
+            domains = [domain for domain in cursor]
+            return len(domains) > 0
         except Exception as e:
             logging.error(f"Error occured when checking if domain exists: {e}")
             return None

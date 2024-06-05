@@ -46,7 +46,7 @@ def upsert_finding(finding):
         IN additionalFindings
     """
     cursor = db.aql.execute(query)
-    return cursor.batch()
+    return [domain for domain in cursor]
 
 
 def remove_none_val_in_dict(dict):
