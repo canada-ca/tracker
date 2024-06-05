@@ -1,6 +1,17 @@
 import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { Accordion, Box, Divider, Flex, Heading, Link, Text, useDisclosure } from '@chakra-ui/react'
+import {
+  Accordion,
+  AlertDescription,
+  AlertTitle,
+  Box,
+  Divider,
+  Flex,
+  Heading,
+  Link,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -599,13 +610,13 @@ export default function DmarcReportPage() {
 
   const tableDisplay = (
     <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-      <NotificationBanner bg="yellow.200" my="4">
-        <Text fontWeight="medium">
-          <Trans>
-            <b>The following data may have recently changed.</b> We've made enhancements to our DMARC data tables to
-            provide a more accurate view of the information.
-          </Trans>
-        </Text>
+      <NotificationBanner status="info" my="4" hideable bannerId="dmarc-table-changes">
+        <Box>
+          <AlertTitle>The following data may have recently changed.</AlertTitle>
+          <AlertDescription>
+            We've made enhancements to our DMARC data tables to provide a more accurate view of the information.
+          </AlertDescription>
+        </Box>
       </NotificationBanner>
       <Accordion allowMultiple defaultIndex={[0, 1, 2, 3]}>
         <AccordionItem buttonLabel={t`Fully Aligned by IP Address`}>{fullPassTable}</AccordionItem>

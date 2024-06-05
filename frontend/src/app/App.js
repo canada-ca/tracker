@@ -69,7 +69,7 @@ export function App() {
       if (isEmailValidated()) {
         if (currentTFAMethod() === 'NONE') {
           return (
-            <NotificationBanner bg="yellow.250">
+            <NotificationBanner status="warning">
               <Text fontWeight="medium">
                 <Trans>
                   To maximize your account's security,{' '}
@@ -84,7 +84,7 @@ export function App() {
         }
         if (!hasAffiliation()) {
           return (
-            <NotificationBanner bg="yellow.250">
+            <NotificationBanner status="warning">
               <Text fontWeight="medium">
                 <Trans>
                   To view detailed scan results and other functionality,{' '}
@@ -99,7 +99,7 @@ export function App() {
         }
       } else {
         return (
-          <NotificationBanner bg="yellow.250">
+          <NotificationBanner status="warning">
             <Text fontWeight="medium">
               <Trans>
                 To enable full app functionality and maximize your account's security,{' '}
