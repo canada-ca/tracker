@@ -1,7 +1,6 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.helpers import dataframe_from_result_table
 
-
 import os
 from dotenv import load_dotenv
 

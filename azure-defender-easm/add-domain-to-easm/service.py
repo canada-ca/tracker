@@ -73,7 +73,6 @@ async def run(loop):
             logger.info(f"Adding '{domain}' to EASM tooling...")
             create_disco_group(name=domain, assets=[{"kind": "host", "name": domain}])
             run_disco_group(domain)
-            # TODO delete disco group after run
             logger.info(f"Successfully added '{domain}' to EASM tooling.")
         except Exception as e:
             logger.error(f"Scanning subdomains: {str(e)}")
@@ -103,4 +102,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    print(get_host_asset("cyber.gc.ca"))
