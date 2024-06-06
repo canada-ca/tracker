@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: add-easm-assets-to-tracker
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-easm-assets-to-tracker:master-42c2b72-1717417097 # {"$imagepolicy": "flux-system:add-easm-assets-to-tracker"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-easm-assets-to-tracker:master-fc973c2-1717613798 # {"$imagepolicy": "flux-system:add-easm-assets-to-tracker"}
               env:
                 - name: DB_PASS
                   valueFrom:

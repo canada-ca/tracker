@@ -1,0 +1,23 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: import-easm-additional-findings
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings
+  interval: 5m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: import-easm-additional-findings
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^master-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: import-easm-additional-findings
+  policy:
+    numerical:
+      order: asc

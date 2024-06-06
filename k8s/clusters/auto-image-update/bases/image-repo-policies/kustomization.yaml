@@ -25,3 +25,4 @@ resources:
   - label-known-easm-assets-image-repo-policy.yaml
   - add-domain-to-easm-image-repo-policy.yaml
   - add-easm-assets-to-tracker-image-repo-policy.yaml
+  - import-easm-additional-findings-image-repo-policy.yaml
