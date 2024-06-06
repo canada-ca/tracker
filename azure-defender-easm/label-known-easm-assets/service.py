@@ -16,6 +16,8 @@ DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 
+UNCLAIMED_ID = os.getenv("UNCLAIMED_ID")
+
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
@@ -25,11 +27,12 @@ def get_verified_orgs():
     query = """
     FOR org IN organizations
         FILTER org.verified == true
+        FILTER org._key != @unclaimed_id
         SORT org.en.name ASC
         RETURN { "key": org._key, "id": org._id }
     """
-    cursor = db.aql.execute(query)
-    return cursor.batch()
+    cursor = db.aql.execute(query, bind_vars={"unclaimed_id": UNCLAIMED_ID})
+    return [org for org in cursor]
 
 
 def get_org_domains(org_id):
@@ -41,7 +44,7 @@ def get_org_domains(org_id):
         RETURN v.domain
     """
     cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
-    return cursor.batch()
+    return [domain for domain in cursor]
 
 
 def extract_root_domains(subdomains):

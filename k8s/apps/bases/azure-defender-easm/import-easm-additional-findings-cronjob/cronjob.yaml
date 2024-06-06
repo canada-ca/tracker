@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: label-known-easm-assets
+  name: import-easm-additional-findings
   namespace: azure-defender-easm
 spec:
-  schedule: "30 10 * * 5"
+  schedule: "30 10 * * 0"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
@@ -12,11 +12,11 @@ spec:
       template:
         metadata:
           labels:
-            app: label-known-easm-assets
+            app: import-easm-additional-findings
         spec:
           containers:
-            - name: label-known-easm-assets
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-fc973c2-1717613798 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+            - name: import-easm-additional-findings
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings:master-42c2b72-1717417097 # {"$imagepolicy": "flux-system:import-easm-additional-findings"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -32,21 +32,6 @@ spec:
                   value: http://arangodb.db:8529
                 - name: DB_NAME
                   value: track_dmarc
-                - name: SUBSCRIPTION_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: azure-defender-easm
-                      key: SUBSCRIPTION_ID
-                - name: WORKSPACE_NAME
-                  valueFrom:
-                    secretKeyRef:
-                      name: azure-defender-easm
-                      key: WORKSPACE_NAME
-                - name: RESOURCE_GROUP
-                  valueFrom:
-                    secretKeyRef:
-                      name: azure-defender-easm
-                      key: RESOURCE_GROUP
                 - name: REGION
                   valueFrom:
                     secretKeyRef:
