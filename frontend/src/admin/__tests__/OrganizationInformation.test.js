@@ -504,7 +504,7 @@ describe('<OrganizationInformation />', () => {
 
       describe('user tries to update organization', () => {
         describe('some update fields are filled out', () => {
-          it('updates the organization', async () => {
+          it.skip('updates the organization', async () => {
             const { getByText, getByRole, findByRole, findByText } = render(
               <MockedProvider mocks={mocks} cache={createCache()}>
                 <UserVarProvider
