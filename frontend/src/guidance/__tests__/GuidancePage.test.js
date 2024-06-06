@@ -78,4 +78,25 @@ describe('<GuidancePage />', () => {
       expect(getByText(/amie.info/i)).toBeInTheDocument()
     })
   })
+
+  it('renders the loading message when the data is loading', async () => {
+    window.resizeTo(1024, 768)
+    const { getByText } = render(
+      <MockedProvider mocks={mocks}>
+        <UserVarProvider userVar={makeVar({ jwt: null, tfaSendMethod: null, userName: null })}>
+          <ChakraProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/domains/forces.gc.ca']} initialIndex={0}>
+                <Route path="/domains/:domainSlug">
+                  <GuidancePage />
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ChakraProvider>
+        </UserVarProvider>
+      </MockedProvider>,
+    )
+
+    expect(getByText(/Guidance results/i)).toBeInTheDocument()
+  })
 })
