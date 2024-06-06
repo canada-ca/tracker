@@ -87,7 +87,7 @@ msgstr "<0>Preference:</0> {preference}"
 msgid "<0>The following data may have recently changed.</0> We've made enhancements to our DMARC data tables to provide a more accurate view of the information."
 msgstr "<0>The following data may have recently changed.</0> We've made enhancements to our DMARC data tables to provide a more accurate view of the information."
 
-#: src/guidance/GuidancePage.js:86
+#: src/guidance/GuidancePage.js:162
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "A DNS request for this service has resulted in the following error code:"
 
@@ -838,7 +838,7 @@ msgstr "DMARC Configuration"
 msgid "DMARC Configuration Summary"
 msgstr "DMARC Configuration Summary"
 
-#: src/organizations/OrganizationCard.js:90
+#: src/organizations/OrganizationCard.js:99
 msgid "DMARC Configured"
 msgstr "DMARC Configured"
 
@@ -864,7 +864,7 @@ msgstr "DMARC Phases"
 
 #: src/dmarc/DmarcReportPage.js:82
 #: src/domains/DomainCard.js:238
-#: src/guidance/GuidancePage.js:186
+#: src/guidance/GuidancePage.js:262
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -1157,7 +1157,7 @@ msgid "Email"
 msgstr "Email"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:121
+#: src/guidance/GuidancePage.js:197
 msgid "Email Guidance"
 msgstr "Email Guidance"
 
@@ -1289,9 +1289,13 @@ msgstr "Envelope From"
 msgid "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 msgstr "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 
+#: src/guidance/GuidancePage.js:137
+msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
+msgstr "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the Domain does not exist in the system. You can request access to an Organization below to view the Domain results"
+
 #: src/guidance/GuidancePage.js:71
-msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
-msgstr "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
+#~ msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
+#~ msgstr "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 
 #: src/guidance/WebConnectionResults.js:143
 #: src/guidance/WebConnectionResults.js:184
@@ -1527,7 +1531,7 @@ msgstr "Guidance"
 #~ msgid "Guidance Tags"
 #~ msgstr "Guidance Tags"
 
-#: src/guidance/GuidancePage.js:46
+#: src/guidance/GuidancePage.js:72
 msgid "Guidance results"
 msgstr "Guidance results"
 
@@ -1603,7 +1607,7 @@ msgstr "HTTPS (443) Chain"
 msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
-#: src/organizations/OrganizationCard.js:82
+#: src/organizations/OrganizationCard.js:91
 #: src/organizations/Organizations.js:140
 msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
@@ -1763,7 +1767,7 @@ msgstr "If at any time you or your representatives wish to adjust or cancel thes
 msgid "If available, please use a managed device provided by your organization."
 msgstr "If available, please use a managed device provided by your organization."
 
-#: src/guidance/GuidancePage.js:91
+#: src/guidance/GuidancePage.js:167
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 
@@ -2349,6 +2353,7 @@ msgstr "No Domains"
 #~ msgid "No HTTPS configuration information available for this organization."
 #~ msgstr "No HTTPS configuration information available for this organization."
 
+#: src/guidance/GuidancePage.js:86
 #: src/organizations/Organizations.js:82
 msgid "No Organizations"
 msgstr "No Organizations"
@@ -2420,7 +2425,7 @@ msgstr "No known weak protocols used."
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
-#: src/guidance/GuidancePage.js:106
+#: src/guidance/GuidancePage.js:182
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
@@ -2578,7 +2583,7 @@ msgstr "Organization not updated"
 msgid "Organization owns this domain, but it is outside the allowed scope"
 msgstr "Organization owns this domain, but it is outside the allowed scope"
 
-#: src/guidance/GuidancePage.js:193
+#: src/guidance/GuidancePage.js:269
 msgid "Organization(s):"
 msgstr "Organization(s):"
 
@@ -2592,6 +2597,7 @@ msgstr "Organization:"
 #: src/app/App.js:135
 #: src/app/App.js:215
 #: src/app/FloatingMenu.js:103
+#: src/guidance/GuidancePage.js:145
 #: src/organizations/Organizations.js:73
 #: src/organizations/Organizations.js:130
 msgid "Organizations"
@@ -2932,6 +2938,7 @@ msgstr "Removed Organization"
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
+#: src/guidance/GuidancePage.js:110
 #: src/organizationDetails/OrganizationDetails.js:106
 #: src/organizations/Organizations.js:104
 #: src/organizations/RequestOrgInviteModal.js:62
@@ -3123,7 +3130,7 @@ msgstr "Scan Domain"
 #: src/admin/AdminDomains.js:174
 #: src/domains/DomainCard.js:152
 #: src/domains/DomainsPage.js:95
-#: src/guidance/GuidancePage.js:165
+#: src/guidance/GuidancePage.js:241
 #: src/organizationDetails/OrganizationDomains.js:99
 msgid "Scan Pending"
 msgstr "Scan Pending"
@@ -3253,7 +3260,7 @@ msgstr "Serial:"
 msgid "Services"
 msgstr "Services"
 
-#: src/organizations/OrganizationCard.js:76
+#: src/organizations/OrganizationCard.js:85
 msgid "Services: {domainCount}"
 msgstr "Services: {domainCount}"
 
@@ -4336,7 +4343,7 @@ msgid "Web Connections Summary"
 msgstr "Web Connections Summary"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:118
+#: src/guidance/GuidancePage.js:194
 msgid "Web Guidance"
 msgstr "Web Guidance"
 
@@ -4424,7 +4431,7 @@ msgstr "Wiki"
 #: src/admin/AdminDomains.js:173
 #: src/domains/DomainCard.js:145
 #: src/domains/DomainsPage.js:94
-#: src/guidance/GuidancePage.js:172
+#: src/guidance/GuidancePage.js:248
 #: src/organizationDetails/OrganizationDomains.js:98
 msgid "Wildcard"
 msgstr "Wildcard"

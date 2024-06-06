@@ -115,7 +115,14 @@ function GuidancePage() {
                       onOpen()
                     }}
                   />
-                  <RequestOrgInviteModal isOpen={isOpen} onClose={onClose} orgId={orgInfo.id} orgName={orgInfo.name} />
+                  {orgInfo.id === id && (
+                    <RequestOrgInviteModal
+                      isOpen={isOpen}
+                      onClose={onClose}
+                      orgId={orgInfo.id}
+                      orgName={orgInfo.name}
+                    />
+                  )}
                 </>
               )}
             </Flex>
@@ -129,8 +136,8 @@ function GuidancePage() {
         <Text textAlign="center" fontSize="2xl" fontWeight="bold">
           <Trans>
             Error while retrieving scan data for {domainName}. <br />
-            This could be due to insufficient user privileges or the domain does not exist in the system. You can
-            request access to an organizations below to view the domain results
+            This could be due to insufficient user privileges or the Domain does not exist in the system. You can
+            request access to an Organization below to view the Domain results
           </Trans>
         </Text>
 
