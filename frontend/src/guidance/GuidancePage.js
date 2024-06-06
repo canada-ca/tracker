@@ -124,9 +124,11 @@ function GuidancePage() {
           </Tab>
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
-              <Tab borderTopWidth="0.25">
-                <Trans>Additional Findings</Trans>
-              </Tab>
+              {additionalFindings && (
+                <Tab borderTopWidth="0.25">
+                  <Trans>Additional Findings</Trans>
+                </Tab>
+              )}
             </ABTestVariant>
           </ABTestWrapper>
         </TabList>
@@ -152,9 +154,11 @@ function GuidancePage() {
           </TabPanel>
           <ABTestWrapper>
             <ABTestVariant name="B">
-              <TabPanel>
-                <AdditionalFindings data={additionalFindings} />
-              </TabPanel>
+              {additionalFindings && (
+                <TabPanel>
+                  <AdditionalFindings data={additionalFindings} />
+                </TabPanel>
+              )}
             </ABTestVariant>
           </ABTestWrapper>
         </TabPanels>
