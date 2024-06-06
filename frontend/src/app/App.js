@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
-import { CSSReset, Flex, Link, Text } from '@chakra-ui/react'
+import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useQuery } from '@apollo/client'
@@ -24,6 +24,7 @@ import { LandingPage } from '../landing/LandingPage'
 import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
+import { ScrollToAnchor } from './ScrollToAnchor'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -168,6 +169,23 @@ export function App() {
       </Navigation>
 
       {notificationBanner()}
+      <NotificationBanner status="info" bannerId="automatic-dkim-selectors" hideable>
+        <Box>
+          <AlertTitle>
+            <Trans>Tracker now automatically manages your DKIM selectors.</Trans>
+          </AlertTitle>
+          <AlertDescription>
+            <Trans>
+              Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when
+              setting <Code>rua=mailto:dmarc@cyber.gc.ca</Code> in your DMARC record.{' '}
+              <Link as={RouteLink} to="/guidance#dkimSelectors" color="blue.500">
+                Learn more
+              </Link>
+              .
+            </Trans>
+          </AlertDescription>
+        </Box>
+      </NotificationBanner>
 
       <Main mb={{ base: '40px', md: 'none' }}>
         <Suspense fallback={<LoadingMessage />}>
@@ -357,6 +375,7 @@ export function App() {
           <Trans>Guidance</Trans>
         </Link>
       </Footer>
+      <ScrollToAnchor />
     </Flex>
   )
 }

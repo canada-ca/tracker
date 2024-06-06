@@ -149,7 +149,7 @@ msgstr "Account"
 msgid "Account Closed Successfully"
 msgstr "Account Closed Successfully"
 
-#: src/app/App.js:156
+#: src/app/App.js:157
 #: src/app/FloatingMenu.js:177
 #: src/user/UserPage.js:137
 msgid "Account Settings"
@@ -213,7 +213,7 @@ msgstr "Add Domain Details"
 msgid "Add User"
 msgstr "Add User"
 
-#: src/app/App.js:236
+#: src/app/App.js:254
 msgid "Admin"
 msgstr "Admin"
 
@@ -221,7 +221,7 @@ msgstr "Admin"
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
-#: src/app/App.js:164
+#: src/app/App.js:165
 msgid "Admin Profile"
 msgstr "Admin Profile"
 
@@ -420,7 +420,7 @@ msgstr "Audit Logs"
 msgid "August"
 msgstr "August"
 
-#: src/app/App.js:202
+#: src/app/App.js:220
 msgid "Authenticate"
 msgstr "Authenticate"
 
@@ -679,8 +679,8 @@ msgstr "Consider prioritizing websites and web services that exchange Protected 
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:211
-#: src/app/App.js:353
+#: src/app/App.js:229
+#: src/app/App.js:371
 #: src/app/ContactUsPage.js:52
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -731,12 +731,12 @@ msgid "Create Account"
 msgstr "Create Account"
 
 #: src/admin/AdminPage.js:137
-#: src/app/App.js:316
+#: src/app/App.js:334
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Create Organization"
 
-#: src/app/App.js:179
+#: src/app/App.js:197
 msgid "Create an Account"
 msgstr "Create an Account"
 
@@ -885,8 +885,8 @@ msgstr "DMARC Report for {domainSlug}"
 msgid "DMARC Status"
 msgstr "DMARC Status"
 
-#: src/app/App.js:145
-#: src/app/App.js:278
+#: src/app/App.js:146
+#: src/app/App.js:296
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:166
 #: src/dmarc/DmarcByDomainPage.js:222
@@ -1079,8 +1079,8 @@ msgid "Domain:"
 msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:19
-#: src/app/App.js:138
-#: src/app/App.js:249
+#: src/app/App.js:139
+#: src/app/App.js:267
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:135
 #: src/domains/DomainsPage.js:197
@@ -1205,7 +1205,7 @@ msgstr "Email Updates status changed"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:312
+#: src/app/App.js:330
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -1447,7 +1447,7 @@ msgstr "For questions and issues related to scan data, your organization's domai
 msgid "For users interested in using new features that are still in progress."
 msgstr "For users interested in using new features that are still in progress."
 
-#: src/app/App.js:205
+#: src/app/App.js:223
 #: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Forgot Password"
@@ -1533,7 +1533,7 @@ msgstr "Government of Canada Employees"
 msgid "Graph direction:"
 msgstr "Graph direction:"
 
-#: src/app/App.js:357
+#: src/app/App.js:375
 #: src/dmarc/DmarcReportPage.js:205
 #: src/dmarc/DmarcReportPage.js:659
 msgid "Guidance"
@@ -1686,8 +1686,8 @@ msgstr "Hidden"
 msgid "Hide domain"
 msgstr "Hide domain"
 
-#: src/app/App.js:129
-#: src/app/App.js:175
+#: src/app/App.js:130
+#: src/app/App.js:193
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Home"
@@ -2182,6 +2182,10 @@ msgstr "Mail-sending"
 msgid "Managing Your Domains:"
 msgstr "Managing Your Domains:"
 
+#: src/app/App.js:178
+msgid "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
+msgstr "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
+
 #: src/components/MonthSelect.js:19
 #: src/utilities/months.js:6
 msgid "March"
@@ -2613,8 +2617,8 @@ msgid "Organization:"
 msgstr "Organization:"
 
 #: src/admin/AdminPage.js:194
-#: src/app/App.js:135
-#: src/app/App.js:215
+#: src/app/App.js:136
+#: src/app/App.js:233
 #: src/app/FloatingMenu.js:103
 #: src/organizations/Organizations.js:73
 #: src/organizations/Organizations.js:130
@@ -2814,7 +2818,7 @@ msgstr "Prevent this domain from being visible, scanned, and being counted in an
 #~ msgid "Previous"
 #~ msgstr "Previous"
 
-#: src/app/App.js:345
+#: src/app/App.js:363
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:41
@@ -2888,7 +2892,7 @@ msgstr "ROBOT Vulnerable"
 msgid "Read Guidance"
 msgstr "Read Guidance"
 
-#: src/app/App.js:213
+#: src/app/App.js:231
 msgid "Read guidance"
 msgstr "Read guidance"
 
@@ -2990,7 +2994,7 @@ msgstr "Requirements: <0>Email Management Services Configuration Requirements</0
 msgid "Requirements: <0>Web Sites and Services Management Configuration Requirements</0>"
 msgstr "Requirements: <0>Web Sites and Services Management Configuration Requirements</0>"
 
-#: src/app/App.js:207
+#: src/app/App.js:225
 msgid "Reset Password"
 msgstr "Reset Password"
 
@@ -3473,7 +3477,7 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 #~ msgid "Siganture Hash:"
 #~ msgstr "Siganture Hash:"
 
-#: src/app/App.js:185
+#: src/app/App.js:203
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:122
 #: src/auth/SignInPage.js:147
@@ -3503,7 +3507,7 @@ msgstr "Sign Out."
 msgid "Signature Hash:"
 msgstr "Signature Hash:"
 
-#: src/app/App.js:123
+#: src/app/App.js:124
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -3699,11 +3703,11 @@ msgstr "Technical implementation guidance:"
 msgid "Termination"
 msgstr "Termination"
 
-#: src/app/App.js:209
+#: src/app/App.js:227
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/app/App.js:349
+#: src/app/App.js:367
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
@@ -3913,11 +3917,11 @@ msgstr "Time Generated (UTC)"
 #~ msgid "Timestamp"
 #~ msgstr "Timestamp"
 
-#: src/app/App.js:104
+#: src/app/App.js:105
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 
-#: src/app/App.js:74
+#: src/app/App.js:75
 msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 msgstr "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 
@@ -3925,7 +3929,7 @@ msgstr "To maximize your account's security, <0>please activate a multi-factor a
 #~ msgid "To receive DKIM scan results and guidance, you must add the DKIM selectors used for each domain. Organization administrators can add selectors in the “Admin Profile” by clicking the edit button of the domain for which they wish to add the selector. Common selectors to keep an for are “selector1”, and “selector2”."
 #~ msgstr "To receive DKIM scan results and guidance, you must add the DKIM selectors used for each domain. Organization administrators can add selectors in the “Admin Profile” by clicking the edit button of the domain for which they wish to add the selector. Common selectors to keep an for are “selector1”, and “selector2”."
 
-#: src/app/App.js:89
+#: src/app/App.js:90
 msgid "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 msgstr "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 
@@ -3989,6 +3993,10 @@ msgstr "Tracker logo outline"
 #: src/app/TopBanner.js:73
 msgid "Tracker logo text"
 msgstr "Tracker logo text"
+
+#: src/app/App.js:175
+msgid "Tracker now automatically manages your DKIM selectors."
+msgstr "Tracker now automatically manages your DKIM selectors."
 
 #: src/app/ReadGuidancePage.js:161
 msgid "Tracker results refresh every 24 hours."
@@ -4598,7 +4606,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:286
+#: src/app/App.js:304
 msgid "Your Account"
 msgstr "Your Account"
 
@@ -4638,8 +4646,8 @@ msgstr "contact us"
 #~ msgid "https://https-everywhere.canada.ca/en/help/"
 #~ msgstr "https://https-everywhere.canada.ca/en/help/"
 
-#: src/app/App.js:152
-#: src/app/App.js:299
+#: src/app/App.js:153
+#: src/app/App.js:317
 #: src/user/MyTrackerPage.js:33
 #: src/user/MyTrackerPage.js:59
 msgid "myTracker"
