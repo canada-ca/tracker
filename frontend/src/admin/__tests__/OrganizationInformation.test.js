@@ -551,7 +551,6 @@ describe('<OrganizationInformation />', () => {
             userEvent.type(nameENInput, 'NEW ACREN')
             userEvent.type(nameFRInput, 'NEW ACRFR')
             userEvent.type(countryENInput, 'Canada')
-
             userEvent.click(confrimOrganizationUpdateButton)
 
             const successfulUpdateToastText = await findByText(/You have successfully updated Org Name/)
