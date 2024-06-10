@@ -15,7 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { EmailIcon, WarningTwoIcon } from '@chakra-ui/icons'
+import { EmailIcon } from '@chakra-ui/icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { QUERY_CURRENT_USER } from '../graphql/queries'
 import { useHistory } from 'react-router-dom'
@@ -158,8 +158,7 @@ export default function UserPage() {
   return (
     <Box w="100%">
       {tfaSendMethod === 'NONE' && queryUserData?.isUserAdmin && (
-        <NotificationBanner bg="blue.200">
-          <WarningTwoIcon color="orange.300" mr="2" />
+        <NotificationBanner status="warning">
           <Trans>Admin accounts must activate a multi-factor authentication option.</Trans>
         </NotificationBanner>
       )}

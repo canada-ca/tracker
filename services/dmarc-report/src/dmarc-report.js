@@ -1,23 +1,8 @@
 const { updateDomain } = require('./update-domain')
+const { loadCheckOrg } = require('./loaders')
+const { updateNoOwnerDomainMailStatus } = require('./database')
 
-module.exports.dmarcReport = async ({
-  ownerships,
-  createOwnership,
-  removeOwnership,
-  removeSummary,
-  loadArangoDates,
-  loadArangoThirtyDaysCount,
-  loadCheckOrg,
-  loadCheckDomain,
-  loadOrgOwner,
-  updateDomainMailStatus,
-  updateNoOwnerDomainMailStatus,
-  createSummary,
-  upsertSummary,
-  cosmosDates,
-  currentDate,
-  loadTables,
-}) => {
+async function dmarcReport({ ownerships, arangoCtx, currentDate, cosmosDates, container, updateAllDates }) {
   // get org acronyms
   const orgAcronyms = Object.keys(ownerships)
 
@@ -25,7 +10,7 @@ module.exports.dmarcReport = async ({
   for (const orgAcronym of orgAcronyms) {
     const orgAcronymEn = orgAcronym.split('-')[0]
     // check if org exists
-    const checkOrg = await loadCheckOrg({ orgAcronymEn })
+    const checkOrg = await loadCheckOrg({ arangoCtx, orgAcronymEn })
     if (!checkOrg) {
       console.warn(`Org: ${orgAcronym} cannot be found in datastore`)
       continue
@@ -33,38 +18,45 @@ module.exports.dmarcReport = async ({
 
     console.info(`Updating DMARC summary info for org: ${String(orgAcronym)}`)
 
-    const batchSize = 20
+    const batchSize = 60
 
     for (let i = 0; i < ownerships[orgAcronym].length; i += batchSize) {
       // Batch update domains, process 20 at a time
       const domains = ownerships[orgAcronym].slice(i, i + batchSize)
 
-      await Promise.all(
-        domains.map(async (domain) => {
-          await updateDomain({
-            loadCheckDomain,
-            domain,
-            loadOrgOwner,
-            orgAcronym,
-            createOwnership,
-            orgAcronymEn,
-            removeOwnership,
-            loadArangoDates,
-            cosmosDates,
-            removeSummary,
-            createSummary,
-            currentDate,
-            upsertSummary,
-            updateDomainMailStatus,
-            loadArangoThirtyDaysCount,
-            loadTables,
-          })
+      console.log(`Checking ${domains.length} domains for ${orgAcronym}: ${domains}`)
+
+      const queryResults = await container.items
+        .query({
+          query: `
+            SELECT *
+            FROM c
+            WHERE ARRAY_CONTAINS(@domains, c.domain)
+          `,
+          parameters: [{ name: '@domains', value: domains }],
+        })
+        .fetchAll()
+
+      const promises = domains.map((domain) =>
+        updateDomain({
+          arangoCtx,
+          container,
+          domain,
+          orgAcronym,
+          orgAcronymEn,
+          queryResults,
+          currentDate,
+          cosmosDates,
+          updateAllDates,
         }),
       )
+      await Promise.all(promises)
     }
   }
   // Update send status for all domains without ownership
-  await updateNoOwnerDomainMailStatus()
+  await updateNoOwnerDomainMailStatus({ arangoCtx })
 
   console.info('Completed assigning ownerships.')
 }
+
+module.exports = { dmarcReport }

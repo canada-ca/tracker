@@ -1,14 +1,12 @@
-const createOwnership =
-  ({ transaction, collections, query }) =>
-  async ({ domain, orgAcronymEn }) => {
-    // Generate list of collections names
-    const collectionStrings = Object.keys(collections)
+async function createOwnership({ arangoCtx, domain, orgAcronymEn }) {
+  // Generate list of collections names
+  const collectionStrings = Object.keys(arangoCtx.collections)
 
-    // setup Transaction
-    const trx = await transaction(collectionStrings)
+  // setup Transaction
+  const trx = await arangoCtx.transaction(collectionStrings)
 
-    await trx.step(
-      () => query`
+  await trx.step(
+    () => arangoCtx.query`
       WITH domains, organizations, ownership
       LET domainId = FIRST(
         FOR domain IN domains
@@ -25,10 +23,10 @@ const createOwnership =
         _to: domainId,
       } INTO ownership
     `,
-    )
+  )
 
-    await trx.commit()
-  }
+  await trx.commit()
+}
 
 module.exports = {
   createOwnership,

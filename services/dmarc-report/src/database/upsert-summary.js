@@ -1,8 +1,6 @@
-const upsertSummary =
-  ({ transaction, collections, query }) =>
-  async ({ date, domain, categoryTotals, categoryPercentages, detailTables }) => {
-    // get current summary info
-    const edgeCursor = await query`
+async function upsertSummary({ arangoCtx, date, domain, summaryData }) {
+  // get current summary info
+  const edgeCursor = await arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -15,45 +13,29 @@ const upsertSummary =
         RETURN item._to
     `
 
-    const summaryId = await edgeCursor.next()
+  const summaryId = await edgeCursor.next()
 
-    const summary = {
-      ...categoryPercentages,
-      categoryTotals,
-      detailTables,
-    }
+  // Generate list of collections names
+  const collectionStrings = Object.keys(arangoCtx.collections)
+  // setup Transaction
+  const trx = await arangoCtx.transaction(collectionStrings)
 
-    // Generate list of collections names
-    const collectionStrings = Object.keys(collections)
-    // setup Transaction
-    const trx = await transaction(collectionStrings)
-
-    // create summary
-    await trx.step(
-      () => query`
+  // create summary
+  await trx.step(
+    () => arangoCtx.query`
         WITH dmarcSummaries
         FOR summary IN dmarcSummaries
           FILTER summary._key == PARSE_IDENTIFIER(${summaryId}).key
           UPSERT { _key: summary._key }
-            INSERT ${summary}
-            UPDATE {
-              categoryPercentages: ${summary.categoryPercentages},
-              categoryTotals: ${summary.categoryTotals},
-              detailTables: {
-                dkimFailure: ${summary.detailTables.dkimFailure},
-                dmarcFailure: ${summary.detailTables.dmarcFailure},
-                fullPass: ${summary.detailTables.fullPass},
-                spfFailure: ${summary.detailTables.spfFailure},
-              },
-              totalMessages: ${summary.totalMessages},
-            }
+            INSERT ${summaryData}
+            UPDATE ${summaryData}
             IN dmarcSummaries
           RETURN NEW
       `,
-    )
+  )
 
-    await trx.commit()
-  }
+  await trx.commit()
+}
 
 module.exports = {
   upsertSummary,

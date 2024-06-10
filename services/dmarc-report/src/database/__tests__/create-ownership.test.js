@@ -6,7 +6,7 @@ const { arangoConnection } = require('../index')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the createOwnership function', () => {
-  let query, truncate, collections, transaction, dbName, arangoDB, domain, org
+  let query, truncate, collections, transaction, arangoCtx, dbName, arangoDB, domain, org
 
   beforeAll(async () => {
     dbName = dbNameFromFile(__filename)
@@ -15,6 +15,7 @@ describe('given the createOwnership function', () => {
       databaseName: dbName,
       rootPass,
     }))
+    arangoCtx = { query, collections, transaction }
   })
 
   beforeEach(async () => {
@@ -42,7 +43,8 @@ describe('given the createOwnership function', () => {
   })
 
   it('creates the ownership in arango', async () => {
-    await createOwnership({ transaction, collections, query })({
+    await createOwnership({
+      arangoCtx,
       domain: 'domain.ca',
       orgAcronymEn: 'ACR',
     })

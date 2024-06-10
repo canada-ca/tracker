@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: update-selectors
+  namespace: scanners
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: update-selectors
+              env:
+                - name: REMOVE_SELECTORS
+                  value: "true"

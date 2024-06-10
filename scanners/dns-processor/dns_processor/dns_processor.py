@@ -10,14 +10,19 @@ guidance_file = open(f"{current_directory}/dns-guidance.json")
 guidance = json.load(guidance_file)
 
 
-def get_dkim_tag_status(selector_tag_list, domain_sends_mail):
+def get_dkim_tag_status(selector_tag_list, sends_email):
     selector_tags = {}
 
     dkim_tags = {"positive_tags": [], "negative_tags": [], "neutral_tags": []}
 
-    if domain_sends_mail is False:
+    if sends_email == "false":
         dkim_tags["neutral_tags"].append("dkim17")
         return dkim_tags, selector_tags, "info"
+    elif sends_email == "unknown":
+        dkim_tags["neutral_tags"].append("dkim18")
+        return dkim_tags, selector_tags, "info"
+    elif sends_email == "true":
+        dkim_tags["neutral_tags"].append("dkim19")
 
     # get dkim statuses
     dkim_statuses = []
@@ -58,12 +63,12 @@ def get_dkim_tag_status(selector_tag_list, domain_sends_mail):
     return dkim_tags, selector_tags, dkim_status
 
 
-def process_dkim(dkim_results, domain_sends_mail):
+def process_dkim(dkim_results, sends_email):
     dkim_err = dkim_results.get("error")
     dkim_tags = {}
 
-    if dkim_err or domain_sends_mail is False:
-        return get_dkim_tag_status(dkim_tags, domain_sends_mail)
+    if dkim_err or sends_email != "true":
+        return get_dkim_tag_status(dkim_tags, sends_email)
 
     for selector in dkim_results:
         dkim_tags[selector] = []
@@ -103,7 +108,7 @@ def process_dkim(dkim_results, domain_sends_mail):
         if t_enabled.lower() == "y":
             dkim_tags[selector].append("dkim13")
 
-    return get_dkim_tag_status(dkim_tags, domain_sends_mail)
+    return get_dkim_tag_status(dkim_tags, sends_email)
 
 
 def process_spf(spf_results):
@@ -368,7 +373,7 @@ def process_results(results):
         if (rcode == "NXDOMAIN" or results["dkim"] is None)
         else process_dkim(
             dkim_results=results["dkim"],
-            domain_sends_mail=results.get("domain_sends_mail", None),
+            sends_email=results.get("sends_email"),
         )
     )
 

@@ -4,7 +4,7 @@ metadata:
   name: label-known-easm-assets
   namespace: azure-defender-easm
 spec:
-  schedule: "30 10 * * 0"
+  schedule: "30 10 * * 5"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: label-known-easm-assets
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-8296e62-1706728448 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/label-known-easm-assets:master-fc973c2-1717613798 # {"$imagepolicy": "flux-system:label-known-easm-assets"}
               env:
                 - name: DB_PASS
                   valueFrom:

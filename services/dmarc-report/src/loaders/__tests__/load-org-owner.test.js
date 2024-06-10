@@ -6,7 +6,7 @@ const { databaseOptions } = require('../../../database-options')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadOrgOwner function', () => {
-  let query, drop, truncate, collections, domain, org
+  let query, drop, truncate, collections, arangoCtx, domain, org
 
   beforeAll(async () => {
     ;({ query, drop, truncate, collections } = await ensure({
@@ -16,6 +16,7 @@ describe('given the loadOrgOwner function', () => {
       rootPassword: rootPass,
       options: databaseOptions({ rootPass }),
     }))
+    arangoCtx = { query, collections }
   })
 
   beforeAll(async () => {
@@ -44,7 +45,7 @@ describe('given the loadOrgOwner function', () => {
   })
 
   it('returns the org that owns the given domain', async () => {
-    const orgOwner = await loadOrgOwner({ query })({ domain: 'domain.ca' })
+    const orgOwner = await loadOrgOwner({ arangoCtx, domain: 'domain.ca' })
 
     const expectedResult = 'ACR'
 

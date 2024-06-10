@@ -4,7 +4,7 @@ const { dbNameFromFile } = require('arango-tools')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the updateDomainMailStatus function', () => {
-  let query, truncate, collections, dbName, arangoDB, domain
+  let query, truncate, collections, arangoCtx, dbName, arangoDB, domain
 
   beforeAll(async () => {
     dbName = dbNameFromFile(__filename)
@@ -13,6 +13,7 @@ describe('given the updateDomainMailStatus function', () => {
       databaseName: dbName,
       rootPass,
     }))
+    arangoCtx = { query, collections }
   })
 
   beforeEach(async () => {
@@ -40,7 +41,7 @@ describe('given the updateDomainMailStatus function', () => {
     const beforeDataDomain = await (await query`RETURN DOCUMENT('domains', ${domain._key})`).next()
     expect(beforeDataDomain.sendsEmail).toEqual('unknown')
 
-    await updateDomainMailStatus({ query })({ domain: domain.domain, sendsEmail: 'true' })
+    await updateDomainMailStatus({ arangoCtx, domain: domain.domain, sendsEmail: 'true' })
 
     const afterDataDomain = await (await query`RETURN DOCUMENT('domains', ${domain._key})`).next()
     expect(afterDataDomain.sendsEmail).toEqual('true')

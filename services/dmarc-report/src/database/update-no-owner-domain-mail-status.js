@@ -1,8 +1,6 @@
-const updateNoOwnerDomainMailStatus =
-  ({ query }) =>
-  async () => {
-    console.info(`Updating no owner domain mail statuses`)
-    const updateNoOwnerDomainMailStatusCursor = await query`
+async function updateNoOwnerDomainMailStatus({ arangoCtx }) {
+  console.info(`Updating no owner domain mail statuses`)
+  const updateNoOwnerDomainMailStatusCursor = await arangoCtx.query`
       FOR domain IN domains
           LET ownerships = (
               FOR v,e IN 1 INBOUND domain._id ownership
@@ -13,8 +11,8 @@ const updateNoOwnerDomainMailStatus =
           UPDATE domain WITH { sendsEmail: "unknown" } IN domains
     `
 
-    await updateNoOwnerDomainMailStatusCursor.next()
-  }
+  await updateNoOwnerDomainMailStatusCursor.next()
+}
 
 module.exports = {
   updateNoOwnerDomainMailStatus,

@@ -1,13 +1,11 @@
-const removeOwnership =
-  ({ transaction, collections, query }) =>
-  async ({ domain, orgAcronymEn }) => {
-    // Generate list of collections names
-    const collectionStrings = Object.keys(collections)
-    // setup Transaction
-    const trx = await transaction(collectionStrings)
+async function removeOwnership({ arangoCtx, domain, orgAcronymEn }) {
+  // Generate list of collections names
+  const collectionStrings = Object.keys(arangoCtx.collections)
+  // setup Transaction
+  const trx = await arangoCtx.transaction(collectionStrings)
 
-    await trx.step(
-      () => query`
+  await trx.step(
+    () => arangoCtx.query`
       WITH domains, organizations, ownership
       LET domainId = FIRST(
         FOR domain IN domains
@@ -24,11 +22,11 @@ const removeOwnership =
         FILTER owner._to == domainId
         REMOVE { _key: owner._key } IN ownership
     `,
-    )
+  )
 
-    // remove dmarcSummaries and dmarcSummaryEdges
-    await trx.step(
-      () => query`
+  // remove dmarcSummaries and dmarcSummaryEdges
+  await trx.step(
+    () => arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -50,10 +48,10 @@ const removeOwnership =
       )
       RETURN true
     `,
-    )
+  )
 
-    await trx.commit()
-  }
+  await trx.commit()
+}
 
 module.exports = {
   removeOwnership,

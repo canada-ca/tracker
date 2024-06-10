@@ -1,3 +1,4 @@
+import { loadAdditionalFindingsByDomainId } from './additional-findings/loaders'
 import {
   loadAffiliationByKey,
   loadAffiliationConnectionsByUserId,
@@ -66,6 +67,11 @@ import { loadDnsConnectionsByDomainId, loadMxRecordDiffByDomainId } from './dns-
 
 export function initializeLoaders({ query, db, userKey, i18n, language, cleanseInput, loginRequiredBool, moment }) {
   return {
+    loadAdditionalFindingsByDomainId: loadAdditionalFindingsByDomainId({
+      query,
+      userKey,
+      i18n,
+    }),
     loadChartSummaryByKey: loadChartSummaryByKey({ query, userKey, i18n }),
     loadChartSummaryConnectionsByPeriod: loadChartSummaryConnectionsByPeriod({
       query,

@@ -1,31 +1,23 @@
-const createSummary =
-  ({ transaction, collections, query }) =>
-  async ({ date, domain, categoryTotals, categoryPercentages, detailTables }) => {
-    const summary = {
-      ...categoryPercentages,
-      categoryTotals,
-      detailTables,
-    }
+async function createSummary({ arangoCtx, date, domain, summaryData }) {
+  // Generate list of collections names
+  const collectionStrings = Object.keys(arangoCtx.collections)
+  // setup Transaction
+  const trx = await arangoCtx.transaction(collectionStrings)
 
-    // Generate list of collections names
-    const collectionStrings = Object.keys(collections)
-    // setup Transaction
-    const trx = await transaction(collectionStrings)
-
-    // create summary
-    const summaryCursor = await trx.step(
-      () => query`
+  // create summary
+  const summaryCursor = await trx.step(
+    () => arangoCtx.query`
       WITH dmarcSummaries
-      INSERT ${summary} INTO dmarcSummaries
+      INSERT ${summaryData} INTO dmarcSummaries
       RETURN NEW
     `,
-    )
+  )
 
-    const summaryDBInfo = await summaryCursor.next()
+  const summaryDBInfo = await summaryCursor.next()
 
-    // create edge
-    await trx.step(
-      () => query`
+  // create edge
+  await trx.step(
+    () => arangoCtx.query`
       WITH domains, dmarcSummaries, domainsToDmarcSummaries
       LET domainId = FIRST(
         FOR domain IN domains
@@ -38,10 +30,10 @@ const createSummary =
         startDate: ${date}
       } INTO domainsToDmarcSummaries
     `,
-    )
+  )
 
-    await trx.commit()
-  }
+  await trx.commit()
+}
 
 module.exports = {
   createSummary,

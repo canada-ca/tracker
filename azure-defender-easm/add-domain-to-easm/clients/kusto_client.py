@@ -1,7 +1,6 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.helpers import dataframe_from_result_table
 
-
 import os
 from dotenv import load_dotenv
 
@@ -29,6 +28,7 @@ def get_host_asset(host_name):
     EasmHostAsset
     | where Host == hostName
     | limit 1
+    | project Host, AssetUuid
     """
     response = KUSTO_CLIENT.execute(KUSTO_DATABASE, query)
     data = dataframe_from_result_table(response.primary_results[0]).to_dict(
