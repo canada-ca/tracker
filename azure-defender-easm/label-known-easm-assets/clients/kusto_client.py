@@ -1,11 +1,12 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.helpers import dataframe_from_result_table
 
-
+import logging
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger()
 
 KUSTO_CLUSTER = os.getenv("KUSTO_CLUSTER")
 REGION = os.getenv("REGION")
@@ -41,7 +42,7 @@ def get_unlabelled_org_assets_from_root(root):
         )
         return data
     except Exception as e:
-        print(f"Failed to get unlabelled assets from roots: {e}")
+        logging.error(f"Failed to get unlabelled assets from roots: {e}")
         return []
 
 
@@ -63,5 +64,5 @@ def get_unlabelled_org_assets_from_domains(domains):
         )
         return data
     except Exception as e:
-        print(f"Failed to get unlabelled assets: {e}")
+        logging.error(f"Failed to get unlabelled assets: {e}")
         return []
