@@ -27,11 +27,11 @@ def get_unlabelled_org_assets_from_root(root):
     query = f"""
     declare query_parameters(domainRoot:string = '{root}');
     EasmAsset
-    | where TimeGeneratedValue > ago(7d)
+    | where TimeGeneratedValue > ago(1d)
     | where AssetType == 'HOST'
     | where AssetName == domainRoot or AssetName endswith strcat('.', domainRoot)
     | where Labels == '[]'
-    | summarize by AssetName, AssetUuid, Labels
+    | project AssetName, AssetUuid, Labels
     | order by AssetName asc
     """
     try:
@@ -49,11 +49,11 @@ def get_unlabelled_org_assets_from_domains(domains):
     query = f"""
     declare query_parameters(domains:dynamic = dynamic({domains}));
     EasmAsset
-    | where TimeGeneratedValue > ago(7d)
+    | where TimeGeneratedValue > ago(1d)
     | where AssetType == 'HOST'
     | where AssetName in (domains)
     | where Labels == '[]'
-    | summarize by AssetName, AssetUuid, Labels
+    | project AssetName, AssetUuid, Labels
     | order by AssetName asc
     """
     try:
