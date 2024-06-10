@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 KUSTO_CLUSTER = os.getenv("KUSTO_CLUSTER")
 REGION = os.getenv("REGION")

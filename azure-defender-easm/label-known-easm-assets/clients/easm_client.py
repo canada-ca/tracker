@@ -5,11 +5,7 @@ from azure.defender.easm import EasmClient
 from dotenv import load_dotenv
 
 load_dotenv()
-
-logging.basicConfig(
-    level=logging.info, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
-)
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 SUB_ID = os.getenv("SUBSCRIPTION_ID")
 WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
