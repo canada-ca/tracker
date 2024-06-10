@@ -2,19 +2,21 @@ import logging
 import re
 from arango import ArangoClient
 import os
-from clients.kusto_client import (
-    get_unlabelled_org_assets_from_root,
-    get_unlabelled_org_assets_from_domains,
-)
-from clients.easm_client import label_assets
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
 logging.basicConfig(
-    level=logging.info, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
+    level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
 logger = logging.getLogger()
+
+from clients.kusto_client import (
+    get_unlabelled_org_assets_from_root,
+    get_unlabelled_org_assets_from_domains,
+)
+from clients.easm_client import label_assets
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
