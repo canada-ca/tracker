@@ -1,22 +1,18 @@
 import React from 'react'
-import { theme, ChakraProvider, Button } from '@chakra-ui/react'
+import { theme, ChakraProvider } from '@chakra-ui/react'
 import { MemoryRouter, Route } from 'react-router-dom'
-import { getAllByLabelText, render, waitFor, fireEvent } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import matchMediaPolyfill from 'mq-polyfill'
 import { makeVar } from '@apollo/client'
-import { en, fi } from 'make-plural/plurals'
+import { en } from 'make-plural/plurals'
 
 import GuidancePage from '../GuidancePage'
 
 import { UserVarProvider } from '../../utilities/userState'
-import {
-  rawDmarcGuidancePageData,
-  rawDomainGuidancePageDataNoAffiliations,
-  rawDomainGuidancePageDataNoAffiliationsTwo,
-} from '../../fixtures/dmarcGuidancePageData'
+import { rawDmarcGuidancePageData, rawDomainGuidancePageDataNoAffiliations } from '../../fixtures/dmarcGuidancePageData'
 import { DOMAIN_GUIDANCE_PAGE } from '../../graphql/queries'
 import { REQUEST_INVITE_TO_ORG } from '../../graphql/mutations'
 
