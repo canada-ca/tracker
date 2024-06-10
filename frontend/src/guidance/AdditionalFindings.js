@@ -25,6 +25,7 @@ import {
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro'
 import { any, object } from 'prop-types'
+import { useLingui } from '@lingui/react'
 
 export function AdditionalFindings({ data }) {
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
@@ -280,10 +281,15 @@ export function AdditionalFindings({ data }) {
 }
 
 function WebRequirementsLink({ children }) {
+  const { i18n } = useLingui()
   return (
     <Link
       isExternal
-      href="https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html"
+      href={
+        i18n.locale === 'en'
+          ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/web-sites.html'
+          : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/configurations-courantes-services-ti-integree/sites-web.html'
+      }
     >
       {children} <ExternalLinkIcon />
     </Link>
