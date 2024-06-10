@@ -1,7 +1,7 @@
 import React from 'react'
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { I18nProvider } from '@lingui/react'
 import { i18n } from '@lingui/core'
@@ -552,7 +552,9 @@ describe('<OrganizationInformation />', () => {
             userEvent.type(nameFRInput, 'NEW ACRFR')
             userEvent.type(countryENInput, 'Canada')
 
-            userEvent.click(confrimOrganizationUpdateButton)
+            await act(() => {
+              userEvent.click(confrimOrganizationUpdateButton)
+            })
 
             const successfulUpdateToastText = await findByText(/You have successfully updated Org Name/)
 
