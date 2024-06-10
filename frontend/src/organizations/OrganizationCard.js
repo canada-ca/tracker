@@ -114,4 +114,5 @@ OrganizationCard.propTypes = {
   verified: bool,
   summaries: object,
   domains: object,
+  disableLink: bool,
 }

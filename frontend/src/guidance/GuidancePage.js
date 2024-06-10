@@ -53,7 +53,7 @@ function GuidancePage() {
   let domainName, webScan, dnsScan, mxRecordDiff, organizations, dmarcPhase, rcode, status, userHasPermission
 
   if (data && data.findDomainByDomain) {
-    ;({
+    ({
       domain: domainName,
       web: webScan,
       dnsScan,
@@ -88,7 +88,7 @@ function GuidancePage() {
         )}
         mb="4"
       >
-        {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission, disableLink }, index) => (
+        {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission}, index) => (
           <ErrorBoundary key={`${slug}:${index}`} ErrorFallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
               <OrganizationCard
