@@ -901,3 +901,83 @@ export const rawDmarcGuidancePageData = {
     },
   },
 }
+
+export const rawDomainGuidancePageDataNoAffiliations = {
+  data: {
+    findDomainByDomain: {
+      domain: 'noaffiliations.gc.ca',
+      lastRan: null,
+      rcode: 'NOERROR',
+      blocked: false,
+      wildcardSibling: false,
+      webScanPending: false,
+      status: {
+        certificates: 'PASS',
+        ciphers: 'PASS',
+        curves: 'PASS',
+        dkim: 'FAIL',
+        dmarc: 'PASS',
+        hsts: 'PASS',
+        https: 'PASS',
+        protocols: 'PASS',
+        spf: 'PASS',
+        ssl: 'PASS',
+        __typename: 'DomainStatus',
+      },
+      organizations: {
+        edges: [
+          {
+            node: {
+              name: 'Test',
+              acronym: 'T',
+              slug: 'test',
+              id: 'b3JnYW5pemF0aW9uOjMyOTQ4',
+              domainCount: 1,
+              verified: true,
+              userHasPermission: false,
+              summaries: null,
+              __typename: 'Organization',
+            },
+            __typename: 'OrganizationEdge',
+          },
+          {
+            node: {
+              name: 'Test 2',
+              acronym: 'TT',
+              slug: 'test-2',
+              id: 'b3JnYW5pemF0aW9uOjk1NjEz',
+              domainCount: 1,
+              verified: true,
+              userHasPermission: false,
+              summaries: null,
+              __typename: 'Organization',
+            },
+            __typename: 'OrganizationEdge',
+          },
+          {
+            node: {
+              name: 'Test 3',
+              acronym: 'TTT',
+              slug: 'test-3',
+              id: 'b3JnYW5pemF0aW9uOjEwNzMwNA==',
+              domainCount: 1,
+              verified: true,
+              userHasPermission: false,
+              summaries: null,
+              __typename: 'Organization',
+            },
+            __typename: 'OrganizationEdge',
+          },
+        ],
+        __typename: 'OrganizationConnection',
+      },
+      dmarcPhase: 'assess',
+      hasDMARCReport: false,
+      userHasPermission: false,
+      mxRecordDiff: null,
+      dnsScan: null,
+      web: null,
+      __typename: 'Domain',
+    },
+  },
+}
