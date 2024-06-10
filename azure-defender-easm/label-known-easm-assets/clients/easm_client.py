@@ -5,6 +5,7 @@ from azure.defender.easm import EasmClient
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger(__name__)
 
 SUB_ID = os.getenv("SUBSCRIPTION_ID")
 WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
@@ -26,7 +27,7 @@ def label_assets(assets, label):
         asset_filter = f"uuid = {asset['AssetUuid']}"
         try:
             EASM_CLIENT.assets.update(body=update_request, filter=asset_filter)
-            logging.info(f"{asset['AssetName']} labeled with {label}")
+            logger.info(f"{asset['AssetName']} labeled with {label}")
         except Exception as e:
-            logging.error(f"Failed to label {asset['AssetName']}: {e}")
+            logger.error(f"Failed to label {asset['AssetName']}: {e}")
             continue
