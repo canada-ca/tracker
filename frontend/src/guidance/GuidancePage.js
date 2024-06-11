@@ -53,7 +53,7 @@ function GuidancePage() {
   let domainName, webScan, dnsScan, mxRecordDiff, organizations, dmarcPhase, rcode, status, userHasPermission
 
   if (data && data.findDomainByDomain) {
-    ;({
+    ({
       domain: domainName,
       web: webScan,
       dnsScan,
