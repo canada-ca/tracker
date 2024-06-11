@@ -203,7 +203,7 @@ export const webComponentCveType = new GraphQLObjectType({
     cvss3Score: {
       type: GraphQLString,
       description: `The severity of the CVE.`,
-      resolve: ({ Cvss3Score }) => Cvss3Score.toFixed(1),
+      resolve: ({ Cvss3Score }) => Cvss3Score,
     },
   }),
 })
