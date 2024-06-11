@@ -114,7 +114,7 @@ function GuidancePage() {
     )
 
     guidanceResults = (
-      <Tabs isFitted variant="enclosed-colored" defaultIndex={2}>
+      <Tabs isFitted variant="enclosed-colored" defaultIndex={0}>
         <TabList mb="4">
           <Tab borderTopWidth="0.25">
             <Trans>Web Guidance</Trans>
