@@ -49,8 +49,8 @@ describe('webConnectionType', () => {
     expect(fields.webComponentCves.type).toBeInstanceOf(GraphQLList)
     expect(fields.webComponentPorts.type).toBeInstanceOf(GraphQLList)
 
-    expect(fields.webComponentFirstSeen.type).toBe(GraphQLDateTime)
-    expect(fields.webComponentLastSeen.type).toBe(GraphQLDateTime)
+    expect(fields.webComponentFirstSeen.type).toBe(GraphQLString)
+    expect(fields.webComponentLastSeen.type).toBe(GraphQLString)
   })
 })
 
@@ -88,10 +88,10 @@ describe('webComponentPortType', () => {
     expect(fields.lastPortState.type).toBe(GraphQLString)
     expect(fields.lastPortState.description).toBe('The protocol the finding was discovered.')
 
-    expect(fields.portStateFirstSeen.type).toBe(GraphQLDateTime)
+    expect(fields.portStateFirstSeen.type).toBe(GraphQLString)
     expect(fields.portStateFirstSeen.description).toBe('The date the finding was discovered.')
 
-    expect(fields.portStateLastSeen.type).toBe(GraphQLDateTime)
+    expect(fields.portStateLastSeen.type).toBe(GraphQLString)
     expect(fields.portStateLastSeen.description).toBe('The date the finding was discovered.')
   })
 })

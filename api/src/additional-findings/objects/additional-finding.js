@@ -82,12 +82,12 @@ export const webConnectionType = new GraphQLObjectType({
       resolve: ({ WebComponentPorts }) => WebComponentPorts,
     },
     webComponentFirstSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: '',
       resolve: ({ WebComponentFirstSeen }) => WebComponentFirstSeen,
     },
     webComponentLastSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: '',
       resolve: ({ WebComponentLastSeen }) => WebComponentLastSeen,
     },
@@ -144,12 +144,12 @@ export const webComponentPortType = new GraphQLObjectType({
       resolve: ({ LastPortState }) => LastPortState,
     },
     portStateFirstSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The date the finding was discovered.`,
       resolve: ({ PortStateFirstSeen }) => PortStateFirstSeen,
     },
     portStateLastSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The date the finding was discovered.`,
       resolve: ({ PortStateLastSeen }) => PortStateLastSeen,
     },
@@ -203,7 +203,7 @@ export const webComponentCveType = new GraphQLObjectType({
     cvss3Score: {
       type: GraphQLString,
       description: `The severity of the CVE.`,
-      resolve: ({ Cvss3Score }) => Cvss3Score.toFixed(1),
+      resolve: ({ Cvss3Score }) => Cvss3Score,
     },
   }),
 })

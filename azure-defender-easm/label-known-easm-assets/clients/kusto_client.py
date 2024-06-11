@@ -1,11 +1,12 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.helpers import dataframe_from_result_table
 
-
+import logging
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger(__name__)
 
 KUSTO_CLUSTER = os.getenv("KUSTO_CLUSTER")
 REGION = os.getenv("REGION")
@@ -27,11 +28,11 @@ def get_unlabelled_org_assets_from_root(root):
     query = f"""
     declare query_parameters(domainRoot:string = '{root}');
     EasmAsset
-    | where TimeGeneratedValue > ago(7d)
+    | where TimeGeneratedValue > ago(1d)
     | where AssetType == 'HOST'
     | where AssetName == domainRoot or AssetName endswith strcat('.', domainRoot)
     | where Labels == '[]'
-    | summarize by AssetName, AssetUuid, Labels
+    | project AssetName, AssetUuid, Labels
     | order by AssetName asc
     """
     try:
@@ -41,7 +42,7 @@ def get_unlabelled_org_assets_from_root(root):
         )
         return data
     except Exception as e:
-        print(f"Failed to get unlabelled assets from roots: {e}")
+        logging.error(f"Failed to get unlabelled assets from roots: {e}")
         return []
 
 
@@ -49,11 +50,11 @@ def get_unlabelled_org_assets_from_domains(domains):
     query = f"""
     declare query_parameters(domains:dynamic = dynamic({domains}));
     EasmAsset
-    | where TimeGeneratedValue > ago(7d)
+    | where TimeGeneratedValue > ago(1d)
     | where AssetType == 'HOST'
     | where AssetName in (domains)
     | where Labels == '[]'
-    | summarize by AssetName, AssetUuid, Labels
+    | project AssetName, AssetUuid, Labels
     | order by AssetName asc
     """
     try:
@@ -63,5 +64,5 @@ def get_unlabelled_org_assets_from_domains(domains):
         )
         return data
     except Exception as e:
-        print(f"Failed to get unlabelled assets: {e}")
+        logging.error(f"Failed to get unlabelled assets: {e}")
         return []
