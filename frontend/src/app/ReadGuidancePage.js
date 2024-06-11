@@ -439,7 +439,7 @@ export default function ReadGuidancePage() {
             </UnorderedList>
           </ListItem>
           {/* 6 */}
-          <ListItem id="dkimSelectors">
+          <ListItem id="dkim-selectors">
             <Trans>Why does the guidance page not show the domain’s DKIM selectors even though they exist?</Trans>
             <UnorderedList>
               <ListItem>

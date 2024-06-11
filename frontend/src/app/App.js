@@ -179,7 +179,7 @@ export function App() {
             <Trans>
               Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when
               setting <Code>rua=mailto:dmarc@cyber.gc.ca</Code> in your DMARC record.{' '}
-              <Link as={RouteLink} to="/guidance#dkimSelectors" color="blue.500">
+              <Link as={RouteLink} to="/guidance#dkim-selectors" color="blue.500">
                 Learn more
               </Link>
               .
