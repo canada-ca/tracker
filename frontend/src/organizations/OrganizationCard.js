@@ -41,6 +41,12 @@ export function OrganizationCard({
     dmarcValue = Math.floor(dmarcValue)
   }
 
+  const linkProps = {
+    to: `${path}/${slug}`,
+    as: RouteLink,
+    _hover: { md: { bg: ['', 'gray.100'] } },
+  }
+
   return (
     <ListItem {...rest}>
       <Flex
@@ -50,10 +56,8 @@ export function OrganizationCard({
         rounded="md"
         direction={{ base: 'column', md: 'row' }}
         alignItems={{ base: 'flex-start', md: 'center' }}
-        _hover={!disableLink && { md: { bg: ['', 'gray.100'] } }}
         p="4"
-        as={!disableLink && RouteLink}
-        to={!disableLink && `${path}/${slug}`}
+        {...(disableLink ? {} : linkProps)}
       >
         <Box
           flexGrow={{ md: '2' }}
