@@ -303,7 +303,7 @@ export default function ReadGuidancePage() {
         </OrderedList>
       </Box>
 
-      <Heading>
+      <Heading id="faq" tabIndex="-1">
         <Trans>Frequently Asked Questions</Trans>
       </Heading>
       <Divider borderBottomColor="gray.900" mb="2" />

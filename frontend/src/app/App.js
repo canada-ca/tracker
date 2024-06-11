@@ -118,6 +118,7 @@ export function App() {
 
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
+      <ScrollToAnchor />
       <header>
         <CSSReset />
         <SkipLink invisible href="#main">
@@ -375,7 +376,6 @@ export function App() {
           <Trans>Guidance</Trans>
         </Link>
       </Footer>
-      <ScrollToAnchor />
     </Flex>
   )
 }
