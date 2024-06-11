@@ -11,8 +11,6 @@ function isInteractiveElement(element) {
 }
 
 function scrollToElement(element) {
-  // update focus to where the page is scrolled to
-  // unfortunately this doesn't work in safari (desktop and iOS) when blur() is called
   const originalTabIndex = element.getAttribute('tabindex')
   if ([null, 'none'].includes(originalTabIndex) && !isInteractiveElement(element)) {
     element.setAttribute('tabindex', -1)
@@ -61,7 +59,7 @@ export function ScrollToAnchor() {
     }
 
     if (location.hash) {
-      lastHash.current = location.hash.slice(1) // safe hash for further use after navigation
+      lastHash.current = location.hash.slice(1)
     } else {
       lastHash.current = ''
     }
