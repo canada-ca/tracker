@@ -82,12 +82,12 @@ export const webConnectionType = new GraphQLObjectType({
       resolve: ({ WebComponentPorts }) => WebComponentPorts,
     },
     webComponentFirstSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: '',
       resolve: ({ WebComponentFirstSeen }) => WebComponentFirstSeen,
     },
     webComponentLastSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: '',
       resolve: ({ WebComponentLastSeen }) => WebComponentLastSeen,
     },
@@ -144,12 +144,12 @@ export const webComponentPortType = new GraphQLObjectType({
       resolve: ({ LastPortState }) => LastPortState,
     },
     portStateFirstSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The date the finding was discovered.`,
       resolve: ({ PortStateFirstSeen }) => PortStateFirstSeen,
     },
     portStateLastSeen: {
-      type: GraphQLDateTime,
+      type: GraphQLString,
       description: `The date the finding was discovered.`,
       resolve: ({ PortStateLastSeen }) => PortStateLastSeen,
     },

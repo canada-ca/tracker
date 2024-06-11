@@ -33,9 +33,21 @@ msgstr "1. Assess"
 msgid "2. Deploy"
 msgstr "2. Deploy"
 
+#: src/guidance/AdditionalFindings.js:64
+msgid "2.1 Robust web application frameworks are used to aid in developing secure web applications."
+msgstr "2.1 Robust web application frameworks are used to aid in developing secure web applications."
+
+#: src/guidance/AdditionalFindings.js:111
+msgid "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
+msgstr "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
+
 #: src/summaries/RadialBarChart.js:41
 msgid "3. Enforce"
 msgstr "3. Enforce"
+
+#: src/guidance/AdditionalFindings.js:139
+msgid "3.1.2 Use a denial-of-service mitigation service"
+msgstr "3.1.2 Use a denial-of-service mitigation service"
 
 #: src/summaries/RadialBarChart.js:45
 msgid "4. Maintain"
@@ -75,6 +87,10 @@ msgstr "<0>Hostname:</0> {hostname}"
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
+#: src/guidance/AdditionalFindings.js:46
+msgid "<0>Last Scanned:</0> {0}"
+msgstr "<0>Last Scanned:</0> {0}"
+
 #: src/admin/AdminDomainModal.js:367
 msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 msgstr "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
@@ -91,7 +107,7 @@ msgstr "<0>Preference:</0> {preference}"
 #~ msgid "<0>The following data may have recently changed.</0><1>We've made enhancements to our DMARC data tables to provide a more accurate view of the information.</1>"
 #~ msgstr "<0>The following data may have recently changed.</0><1>We've made enhancements to our DMARC data tables to provide a more accurate view of the information.</1>"
 
-#: src/guidance/GuidancePage.js:86
+#: src/guidance/GuidancePage.js:88
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "A DNS request for this service has resulted in the following error code:"
 
@@ -208,6 +224,14 @@ msgstr "Add Domain Details"
 #: src/admin/UserListModal.js:219
 msgid "Add User"
 msgstr "Add User"
+
+#: src/guidance/AdditionalFindings.js:259
+msgid "Additional Findings"
+msgstr "Additional Findings"
+
+#: src/guidance/GuidancePage.js:128
+msgid "Additional Findings"
+msgstr "Additional Findings"
 
 #: src/app/App.js:236
 msgid "Admin"
@@ -686,6 +710,10 @@ msgstr "Contact Us"
 msgid "Contact the Tracker Team"
 msgstr "Contact the Tracker Team"
 
+#: src/guidance/AdditionalFindings.js:164
+msgid "Content Delivery Network"
+msgstr "Content Delivery Network"
+
 #: src/auth/EmailValidationPage.js:88
 msgid "Continue"
 msgstr "Continue"
@@ -744,6 +772,10 @@ msgstr "Create an Account"
 msgid "Create an organization"
 msgstr "Create an organization"
 
+#: src/guidance/AdditionalFindings.js:30
+msgid "Critical"
+msgstr "Critical"
+
 #: src/user/EditableUserDisplayName.js:148
 msgid "Current Display Name:"
 msgstr "Current Display Name:"
@@ -772,6 +804,10 @@ msgstr "Curves"
 #: src/organizationDetails/OrganizationDomains.js:81
 msgid "Curves Status"
 msgstr "Curves Status"
+
+#: src/guidance/AdditionalFindings.js:133
+msgid "DDOS Protection"
+msgstr "DDOS Protection"
 
 #: src/domains/DomainsPage.js:217
 #: src/organizationDetails/OrganizationDomains.js:196
@@ -868,7 +904,7 @@ msgstr "DMARC Phases"
 
 #: src/dmarc/DmarcReportPage.js:93
 #: src/domains/DomainCard.js:238
-#: src/guidance/GuidancePage.js:186
+#: src/guidance/GuidancePage.js:202
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -1165,7 +1201,7 @@ msgid "Email"
 msgstr "Email"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:121
+#: src/guidance/GuidancePage.js:123
 msgid "Email Guidance"
 msgstr "Email Guidance"
 
@@ -1297,7 +1333,7 @@ msgstr "Envelope From"
 msgid "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 msgstr "Error while retrieving DMARC data for {domainSlug}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 
-#: src/guidance/GuidancePage.js:71
+#: src/guidance/GuidancePage.js:73
 msgid "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 msgstr "Error while retrieving scan data for {domainName}. <0/>This could be due to insufficient user privileges or the domain does not exist in the system."
 
@@ -1399,6 +1435,13 @@ msgstr "Filter list to verified organizations only."
 msgid "Filters:"
 msgstr "Filters:"
 
+#: src/guidance/AdditionalFindings.js:83
+#: src/guidance/AdditionalFindings.js:147
+#: src/guidance/AdditionalFindings.js:178
+#: src/guidance/AdditionalFindings.js:209
+msgid "First Seen: {0}"
+msgstr "First Seen: {0}"
+
 #: src/app/ReadGuidancePage.js:198
 #~ msgid "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
 #~ msgstr "For any questions or concerns related to the ITPIN and related implementation guidance, contact TBS Cybersecurity (<0>zzTBSCybers@tbs-sct.gc.ca</0>)."
@@ -1451,6 +1494,10 @@ msgstr "Forgot Password"
 #: src/auth/SignInPage.js:141
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
+
+#: src/guidance/AdditionalFindings.js:58
+msgid "Frameworks"
+msgstr "Frameworks"
 
 #: src/createOrganization/CreateOrganizationPage.js:177
 #: src/createOrganization/CreateOrganizationPage.js:188
@@ -1539,7 +1586,7 @@ msgstr "Guidance"
 #~ msgid "Guidance Tags"
 #~ msgstr "Guidance Tags"
 
-#: src/guidance/GuidancePage.js:46
+#: src/guidance/GuidancePage.js:47
 msgid "Guidance results"
 msgstr "Guidance results"
 
@@ -1682,6 +1729,10 @@ msgstr "Hidden"
 msgid "Hide domain"
 msgstr "Hide domain"
 
+#: src/guidance/AdditionalFindings.js:30
+msgid "High"
+msgstr "High"
+
 #: src/app/App.js:129
 #: src/app/App.js:175
 #: src/app/FloatingMenu.js:175
@@ -1775,7 +1826,7 @@ msgstr "If at any time you or your representatives wish to adjust or cancel thes
 msgid "If available, please use a managed device provided by your organization."
 msgstr "If available, please use a managed device provided by your organization."
 
-#: src/guidance/GuidancePage.js:91
+#: src/guidance/GuidancePage.js:93
 msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 msgstr "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 
@@ -2111,6 +2162,13 @@ msgstr "Last 30 Days"
 #~ msgid "Last Scanned"
 #~ msgstr "Last Scanned"
 
+#: src/guidance/AdditionalFindings.js:86
+#: src/guidance/AdditionalFindings.js:150
+#: src/guidance/AdditionalFindings.js:181
+#: src/guidance/AdditionalFindings.js:212
+msgid "Last Seen: {0}"
+msgstr "Last Seen: {0}"
+
 #: src/guidance/EmailGuidance.js:317
 msgid "Latest Scan:"
 msgstr "Latest Scan:"
@@ -2162,6 +2220,10 @@ msgstr "Login to your account"
 msgid "Lookups:"
 msgstr "Lookups:"
 
+#: src/guidance/AdditionalFindings.js:30
+msgid "Low"
+msgstr "Low"
+
 #: src/summaries/HistoricalSummariesGraph.js:66
 msgid "Mail"
 msgstr "Mail"
@@ -2187,6 +2249,10 @@ msgstr "March"
 #: src/utilities/months.js:8
 msgid "May"
 msgstr "May"
+
+#: src/guidance/AdditionalFindings.js:30
+msgid "Medium"
+msgstr "Medium"
 
 #: src/app/FloatingMenu.js:146
 #: src/app/FloatingMenu.js:169
@@ -2347,6 +2413,14 @@ msgstr "New Value:"
 msgid "No"
 msgstr "No"
 
+#: src/guidance/AdditionalFindings.js:186
+msgid "No CDN found"
+msgstr "No CDN found"
+
+#: src/guidance/AdditionalFindings.js:155
+msgid "No DDOS Protection found"
+msgstr "No DDOS Protection found"
+
 #: src/guidance/EmailGuidance.js:260
 #~ msgid "No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated organization to add selectors."
 #~ msgstr "No DKIM selectors are currently attached to this domain. Please contact an admin of an affiliated organization to add selectors."
@@ -2416,6 +2490,10 @@ msgstr "No data found when retrieving all domain statuses."
 msgid "No data was found to export."
 msgstr "No data was found to export."
 
+#: src/guidance/AdditionalFindings.js:96
+msgid "No frameworks found"
+msgstr "No frameworks found"
+
 #: src/guidance/GuidanceTagList.js:44
 msgid "No guidance found for this category"
 msgstr "No guidance found for this category"
@@ -2428,6 +2506,10 @@ msgstr "No guidance found for this category"
 msgid "No known weak protocols used."
 msgstr "No known weak protocols used."
 
+#: src/guidance/AdditionalFindings.js:124
+msgid "No response headers found"
+msgstr "No response headers found"
+
 #: src/guidance/ScanDetails.js:14
 #~ msgid "No scan data available for {0}."
 #~ msgstr "No scan data available for {0}."
@@ -2436,7 +2518,7 @@ msgstr "No known weak protocols used."
 msgid "No scan data for this organization."
 msgstr "No scan data for this organization."
 
-#: src/guidance/GuidancePage.js:106
+#: src/guidance/GuidancePage.js:108
 msgid "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 msgstr "No scan data is currently available for this service. You may request a scan using the refresh button, or wait up to 24 hours for data to refresh."
 
@@ -2594,7 +2676,7 @@ msgstr "Organization not updated"
 msgid "Organization owns this domain, but it is outside the allowed scope"
 msgstr "Organization owns this domain, but it is outside the allowed scope"
 
-#: src/guidance/GuidancePage.js:193
+#: src/guidance/GuidancePage.js:209
 msgid "Organization(s):"
 msgstr "Organization(s):"
 
@@ -2776,6 +2858,10 @@ msgstr "Pointer to a DKIM public key record in DNS."
 #: src/guidance/GuidanceTagDetails.js:28
 msgid "Policy guidance:"
 msgstr "Policy guidance:"
+
+#: src/guidance/AdditionalFindings.js:195
+msgid "Ports"
+msgstr "Ports"
 
 #: src/guidance/GuidanceSummaryCategories.js:34
 #: src/guidance/GuidanceTagDetails.js:19
@@ -3003,6 +3089,10 @@ msgstr "Resource Type"
 msgid "Resource:"
 msgstr "Resource:"
 
+#: src/guidance/AdditionalFindings.js:105
+msgid "Response Headers"
+msgstr "Response Headers"
+
 #: src/guidance/GuidanceTagDetails.js:81
 #: src/guidance/GuidanceTagList.js:73
 #~ msgid "Result:"
@@ -3138,7 +3228,7 @@ msgstr "Scan Domain"
 #: src/admin/AdminDomains.js:174
 #: src/domains/DomainCard.js:152
 #: src/domains/DomainsPage.js:95
-#: src/guidance/GuidancePage.js:165
+#: src/guidance/GuidancePage.js:181
 #: src/organizationDetails/OrganizationDomains.js:99
 msgid "Scan Pending"
 msgstr "Scan Pending"
@@ -3516,6 +3606,10 @@ msgstr "Source IP Address"
 msgid "Staging"
 msgstr "Staging"
 
+#: src/guidance/AdditionalFindings.js:206
+msgid "State: {lastPortState}"
+msgstr "State: {lastPortState}"
+
 #: src/admin/AuditLogTable.js:76
 #~ msgid "Status"
 #~ msgstr "Status"
@@ -3811,6 +3905,10 @@ msgstr "The summary cards show two metrics that Tracker scans:"
 #: src/admin/UserListModal.js:107
 msgid "The user's role has been successfully updated"
 msgstr "The user's role has been successfully updated"
+
+#: src/guidance/AdditionalFindings.js:263
+msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
+msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
 
 #: src/app/ReadGuidancePage.js:154
 msgid "These metrics are an important first step in securing your services and should be treated as minimum requirements. Further metrics are available in your organization's domain list."
@@ -4296,6 +4394,10 @@ msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 #~ msgid "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 #~ msgstr "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 
+#: src/guidance/AdditionalFindings.js:225
+msgid "Vulnerabilities"
+msgstr "Vulnerabilities"
+
 #: src/admin/AdminDomains.js:168
 #: src/organizationDetails/OrganizationDomains.js:93
 #: src/organizationDetails/OrganizationDomains.js:208
@@ -4371,7 +4473,7 @@ msgid "Web Connections Summary"
 msgstr "Web Connections Summary"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:118
+#: src/guidance/GuidancePage.js:120
 msgid "Web Guidance"
 msgstr "Web Guidance"
 
@@ -4420,6 +4522,10 @@ msgstr "Welcome to your personal view of Tracker. Moderate the security posture 
 msgid "Welcome, you are successfully signed in!"
 msgstr "Welcome, you are successfully signed in!"
 
+#: src/guidance/AdditionalFindings.js:52
+msgid "What are these additional findings?"
+msgstr "What are these additional findings?"
+
 #: src/app/ReadGuidancePage.js:396
 msgid "What does it mean if a domain is “unreachable”?"
 msgstr "What does it mean if a domain is “unreachable”?"
@@ -4459,7 +4565,7 @@ msgstr "Wiki"
 #: src/admin/AdminDomains.js:173
 #: src/domains/DomainCard.js:145
 #: src/domains/DomainsPage.js:94
-#: src/guidance/GuidancePage.js:172
+#: src/guidance/GuidancePage.js:188
 #: src/organizationDetails/OrganizationDomains.js:98
 msgid "Wildcard"
 msgstr "Wildcard"

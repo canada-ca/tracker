@@ -898,6 +898,51 @@ export const rawDmarcGuidancePageData = {
           },
         ],
       },
+      additionalFindings: {
+        timestamp: '2021-05-24 09:51:49.819Z',
+        headers: [],
+        locations: [
+          {
+            city: 'Hello World',
+            region: 'Hello World',
+            firstSeen: 'Hello World',
+            lastSeen: 'Hello World',
+          },
+        ],
+        ports: [
+          {
+            port: 443,
+            lastPortState: 'OPEN',
+            portStateFirstSeen: 'Hello World',
+            portStateLastSeen: 'Hello World',
+          },
+        ],
+        webComponents: [
+          {
+            webComponentCategory: 'DDOS Protection',
+            webComponentName: 'Hello World',
+            webComponentVersion: 'Hello World',
+            webComponentFirstSeen: 'Hello World',
+            webComponentLastSeen: 'Hello World',
+          },
+        ],
+        vulnerabilities: {
+          critical: [
+            {
+              cve: '2024-11-10',
+              cvss3Score: 9.3,
+            },
+          ],
+          high: [],
+          medium: [
+            {
+              cve: '2021-11-10',
+              cvss3Score: 5.3,
+            },
+          ],
+          low: [],
+        },
+      },
     },
   },
 }
