@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { updateDomainUnion } from '../unions'
-import { Domain, SelectorsInput } from '../../scalars'
+import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { OutsideDomainCommentEnum } from '../../enums'
@@ -23,10 +23,6 @@ export const updateDomain = new mutationWithClientMutationId({
     domain: {
       type: Domain,
       description: 'The new url of the of the old domain.',
-    },
-    selectors: {
-      type: new GraphQLList(SelectorsInput),
-      description: 'The updated DKIM selector strings corresponding to this domain.',
     },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
@@ -79,13 +75,6 @@ export const updateDomain = new mutationWithClientMutationId({
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
     const { id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const updatedDomain = cleanseInput(args.domain)
-
-    let selectors
-    if (typeof args.selectors !== 'undefined') {
-      selectors = args.selectors.map((selector) => cleanseInput(selector))
-    } else {
-      selectors = null
-    }
 
     let tags
     if (typeof args.tags !== 'undefined') {
@@ -266,96 +255,6 @@ export const updateDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to update domain edge. Please try again.`))
     }
 
-    if (selectors) {
-      // Get current selectors
-      let selectorCursor
-      try {
-        selectorCursor = await query`
-        FOR v, e IN 1..1 OUTBOUND ${domain._id} domainsToSelectors
-          RETURN v
-      `
-      } catch (err) {
-        console.error(`Database error occurred when user: ${userKey} when getting current selectors: ${err}`)
-      }
-
-      let oldSelectors
-      try {
-        oldSelectors = await selectorCursor.all()
-      } catch (err) {
-        console.error(`Cursor error occurred when user: ${userKey} when getting current selectors: ${err}`)
-      }
-
-      // Remove old selector edges if no longer in use
-      const oldSelectorStrings = oldSelectors.map((selector) => selector.selector)
-      const selectorsToRemove = oldSelectors.filter((selector) => !selectors.includes(selector.selector))
-
-      if (selectorsToRemove.length > 0) {
-        try {
-          await trx.step(
-            () =>
-              query`
-              FOR selector IN ${selectorsToRemove}
-                FOR v, e IN 1..1 ANY ${domain._id} domainsToSelectors
-                  FILTER e._to == selector._id
-                  REMOVE e IN domainsToSelectors
-          `,
-          )
-        } catch (err) {
-          console.error(
-            `Transaction step error occurred when user: ${userKey} attempted to remove old selector edges, error: ${err}`,
-          )
-          throw new Error(i18n._(t`Unable to update domain. Please try again.`))
-        }
-      }
-
-      // Ensure new selectors are already in database, add new edges
-      const newSelectorsToAdd = selectors.filter((selector) => !oldSelectorStrings.includes(selector))
-
-      if (newSelectorsToAdd.length > 0) {
-        let newSelectorsCursor
-        try {
-          newSelectorsCursor = await trx.step(
-            () =>
-              query`
-              FOR sel IN ${newSelectorsToAdd}
-                UPSERT { selector: sel }
-                  INSERT { selector: sel }
-                  UPDATE { }
-                  IN selectors
-                  RETURN NEW
-          `,
-          )
-        } catch (err) {
-          console.error(
-            `Transaction step error occurred when user: ${userKey} attempted to insert new selectors, error: ${err}`,
-          )
-          throw new Error(i18n._(t`Unable to update domain. Please try again.`))
-        }
-
-        let newSelectors
-        try {
-          newSelectors = await newSelectorsCursor.all()
-        } catch (err) {
-          console.error(`Cursor error occurred when user: ${userKey} when getting new selectors: ${err}`)
-        }
-
-        try {
-          await trx.step(
-            () =>
-              query`
-              FOR selector IN ${newSelectors}
-                INSERT { _from: ${domain._id}, _to: selector._id } IN domainsToSelectors
-              `,
-          )
-        } catch (err) {
-          console.error(
-            `Transaction step error occurred when user: ${userKey} attempted to insert new selector edges, error: ${err}`,
-          )
-          throw new Error(i18n._(t`Unable to update domain. Please try again.`))
-        }
-      }
-    }
-
     // Commit transaction
     try {
       await trx.commit()
@@ -378,16 +277,6 @@ export const updateDomain = new mutationWithClientMutationId({
         name: 'domain',
         oldValue: domain.domain,
         newValue: domainToInsert.domain,
-      })
-    }
-    if (
-      typeof selectors !== 'undefined' &&
-      JSON.stringify(domainToInsert.selectors) !== JSON.stringify(domain.selectors)
-    ) {
-      updatedProperties.push({
-        name: 'selectors',
-        oldValue: domain.selectors,
-        newValue: selectors,
       })
     }
 
