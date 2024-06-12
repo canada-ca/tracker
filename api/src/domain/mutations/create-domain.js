@@ -361,27 +361,35 @@ export const createDomain = new mutationWithClientMutationId({
       reason: outsideComment !== '' ? outsideComment : null,
     })
 
-    await publish({
-      channel: `domains.${returnDomain._key}`,
-      msg: {
-        domain: returnDomain.domain,
-        domain_key: returnDomain._key,
-        hash: returnDomain.hash,
-        user_key: null, // only used for One Time Scans
-        shared_id: null, // only used for One Time Scans
-      },
-    })
+    try {
+      await publish({
+        channel: `domains.${returnDomain._key}`,
+        msg: {
+          domain: returnDomain.domain,
+          domain_key: returnDomain._key,
+          hash: returnDomain.hash,
+          user_key: null, // only used for One Time Scans
+          shared_id: null, // only used for One Time Scans
+        },
+      })
+    } catch (err) {
+      console.error(`Error publishing to NATS for domain ${returnDomain._key}: ${err}`)
+    }
 
-    await publish({
-      channel: `domains.${returnDomain._key}.easm`,
-      msg: {
-        domain: returnDomain.domain,
-        domain_key: returnDomain._key,
-        hash: returnDomain.hash,
-        user_key: null, // only used for One Time Scans
-        shared_id: null, // only used for One Time Scans
-      },
-    })
+    try {
+      await publish({
+        channel: `domains.${returnDomain._key}.easm`,
+        msg: {
+          domain: returnDomain.domain,
+          domain_key: returnDomain._key,
+          hash: returnDomain.hash,
+          user_key: null, // only used for One Time Scans
+          shared_id: null, // only used for One Time Scans
+        },
+      })
+    } catch (err) {
+      console.error(`Error publishing to NATS for domain ${returnDomain._key}: ${err}`)
+    }
 
     return {
       ...returnDomain,
