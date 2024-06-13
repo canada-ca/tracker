@@ -4,7 +4,8 @@ metadata:
   name: dmarc-report
   namespace: scanners
 spec:
-  schedule: "30 10 * * *"
+  timeZone: America/Toronto
+  schedule: "40 19 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
