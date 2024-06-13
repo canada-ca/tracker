@@ -4,11 +4,11 @@ metadata:
   name: update-selectors
   namespace: scanners
 spec:
-  schedule: "30 1 * * *"
+  timeZone: America/Toronto
+  schedule: "50 19 * * *"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 21600
       template:
         metadata:
           labels:

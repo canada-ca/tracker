@@ -6,6 +6,9 @@ metadata:
   name: backup
   namespace: db
 spec:
+  timeZone: America/Toronto
+  schedule: 30 18 * * *
+  startingDeadlineSeconds: 180
   concurrencyPolicy: Replace
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
@@ -65,6 +68,3 @@ spec:
           volumes:
             - emptyDir: {}
               name: dump
-  schedule: 0 0 * * *
-  startingDeadlineSeconds: 180
-

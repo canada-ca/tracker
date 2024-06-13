@@ -4,7 +4,8 @@ metadata:
   name: domain-cleanup
   namespace: api
 spec:
-  schedule: "00 5 * * *"
+  timeZone: America/Toronto
+  schedule: "30 19 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:

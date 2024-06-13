@@ -4,7 +4,8 @@ metadata:
   name: org-footprint
   namespace: api
 spec:
-  schedule: "30 10 * * *"
+  timeZone: America/Toronto
+  schedule: "00 9 * * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:

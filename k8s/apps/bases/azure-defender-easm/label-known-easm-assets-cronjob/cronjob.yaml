@@ -4,11 +4,11 @@ metadata:
   name: label-known-easm-assets
   namespace: azure-defender-easm
 spec:
-  schedule: "30 10 * * 5"
+  timeZone: America/Toronto
+  schedule: "00 7 * * 5"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 21600
       template:
         metadata:
           labels:

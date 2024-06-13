@@ -4,11 +4,11 @@ metadata:
   name: import-easm-additional-findings
   namespace: azure-defender-easm
 spec:
-  schedule: "30 10 * * 0"
+  timeZone: America/Toronto
+  schedule: "00 7 * * 0"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 21600
       template:
         metadata:
           labels:

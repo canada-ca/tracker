@@ -4,7 +4,8 @@ metadata:
   name: progress-report
   namespace: api
 spec:
-  schedule: "30 10 1 * *"
+  timeZone: America/Toronto
+  schedule: "00 9 1 * *"
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   jobTemplate:
