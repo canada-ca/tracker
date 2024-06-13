@@ -141,14 +141,25 @@ export const signIn = new mutationWithClientMutationId({
           await loadUserByUserName.clear(userName)
           user = await loadUserByUserName.load(userName)
 
+          // Check if user's last successful login was over 30 days ago
+          let lastLogin
+          if (user.lastLogin) {
+            lastLogin = new Date(user.lastLogin)
+          } else {
+            lastLogin = new Date()
+          }
+          const currentDate = new Date()
+          const timeDifference = currentDate - lastLogin
+          const daysDifference = timeDifference / (1000 * 3600 * 24)
+
           // Check to see if user has phone validated
           let sendMethod
-          if (user.tfaSendMethod === 'phone') {
-            await sendAuthTextMsg({ user })
-            sendMethod = 'text'
-          } else {
+          if (user.tfaSendMethod === 'email' || daysDifference >= 30) {
             await sendAuthEmail({ user })
             sendMethod = 'email'
+          } else {
+            await sendAuthTextMsg({ user })
+            sendMethod = 'text'
           }
 
           console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
@@ -165,13 +176,14 @@ export const signIn = new mutationWithClientMutationId({
             authenticateToken,
           }
         } else {
+          const loginDate = new Date().toISOString()
           try {
             await trx.step(
               () => query`
                 WITH users
                 UPSERT { _key: ${user._key} }
-                  INSERT { refreshInfo: ${refreshInfo} }
-                  UPDATE { refreshInfo: ${refreshInfo} }
+                  INSERT { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
+                  UPDATE { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
                   IN users
               `,
             )

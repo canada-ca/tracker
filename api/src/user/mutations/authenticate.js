@@ -83,6 +83,7 @@ export const authenticate = new mutationWithClientMutationId({
     // Check to see if security token matches the user submitted one
     if (authenticationCode === user.tfaCode) {
       const refreshId = uuidv4()
+      const loginDate = new Date().toISOString()
 
       const refreshInfo = {
         refreshId,
@@ -101,11 +102,13 @@ export const authenticate = new mutationWithClientMutationId({
             UPSERT { _key: ${user._key} }
               INSERT {
                 tfaCode: null,
-                refreshInfo: ${refreshInfo}
+                refreshInfo: ${refreshInfo},
+                lastLogin: ${loginDate}
               }
               UPDATE {
                 tfaCode: null,
-                refreshInfo: ${refreshInfo}
+                refreshInfo: ${refreshInfo},
+                lastLogin: ${loginDate}
               }
               IN users
           `,

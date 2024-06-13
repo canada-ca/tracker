@@ -133,6 +133,98 @@ describe('authenticate user account', () => {
           },
         })
       })
+      describe('user has not logged in in the past 30 days', () => {
+        it('returns sendMethod message and authentication token', async () => {
+          let cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key, _type: 'user' }, user)
+          `
+          let user = await cursor.next()
+
+          await query`
+            FOR user IN users
+              UPDATE ${user._key} WITH { tfaSendMethod: 'not_none', lastLogin: ${new Date(
+            new Date().setDate(new Date().getDate() - 30),
+          ).toISOString()} } IN users
+          `
+
+          const authToken = tokenize({
+            expiresIn: AUTH_TOKEN_EXPIRY,
+            parameters: { userKey: user._key },
+            secret: String(SIGN_IN_KEY),
+          })
+
+          const mockedTokenize = jest.fn().mockReturnValueOnce(authToken)
+
+          const response = await graphql({
+            schema,
+            source: `
+              mutation {
+                signIn(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "testpassword123"
+                  }
+                ) {
+                  result {
+                    ... on TFASignInResult {
+                      authenticateToken
+                      sendMethod
+                    }
+                    ... on AuthResult {
+                      authToken
+                    }
+                  }
+                }
+              }
+            `,
+            rootValue: null,
+            contextValue: {
+              i18n,
+              query,
+              collections: collectionNames,
+              transaction,
+              uuidv4,
+              auth: {
+                bcrypt,
+                tokenize: mockedTokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                loadUserByUserName: loadUserByUserName({ query }),
+              },
+              notify: {
+                sendAuthEmail: mockNotify,
+              },
+            },
+          })
+
+          const expectedResponse = {
+            data: {
+              signIn: {
+                result: {
+                  sendMethod: 'email',
+                  authenticateToken: authToken,
+                },
+              },
+            },
+          }
+
+          cursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN MERGE({ id: user._key, _type: 'user' }, user)
+          `
+          user = await cursor.next()
+
+          expect(response).toEqual(expectedResponse)
+          expect(mockNotify).toHaveBeenCalledWith({ user })
+          expect(consoleOutput).toEqual([`User: ${user._key} successfully signed in, and sent auth msg.`])
+        })
+      })
       describe('user has send method set to phone', () => {
         it('returns sendMethod message, authentication token and refresh token', async () => {
           let cursor = await query`
