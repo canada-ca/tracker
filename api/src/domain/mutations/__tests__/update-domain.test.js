@@ -99,6 +99,7 @@ describe('updating a domain', () => {
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
         lastRan: null,
+        selectors: [],
       })
       const selector1 = await collections.selectors.save({ selector: 'selector1' })
       const selector2 = await collections.selectors.save({ selector: 'selector2' })
@@ -210,173 +211,6 @@ describe('updating a domain', () => {
           expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
-      describe('user updates selectors', () => {
-        it('returns updated domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domain', domain._key)}"
-                  orgId: "${toGlobalId('organization', org._key)}"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                  }
-                }
-              }
-            }
-            `,
-            rootValue: null,
-            contextValue: {
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          })
-
-          const expectedResponse = {
-            data: {
-              updateDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector3', 'selector4'],
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
-        })
-      })
-      describe('user updates domain and selectors', () => {
-        it('returns updated domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domain', domain._key)}"
-                  orgId: "${toGlobalId('organization', org._key)}"
-                  domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                  }
-                }
-              }
-            }
-            `,
-            rootValue: null,
-            contextValue: {
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          })
-
-          const expectedResponse = {
-            data: {
-              updateDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.canada.ca',
-                  lastRan: null,
-                  selectors: ['selector3', 'selector4'],
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
-        })
-      })
     })
     describe('users permission is admin', () => {
       beforeEach(async () => {
@@ -457,173 +291,6 @@ describe('updating a domain', () => {
                   domain: 'test.canada.ca',
                   lastRan: null,
                   selectors: ['selector1', 'selector2'],
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
-        })
-      })
-      describe('user updates selectors', () => {
-        it('returns updated domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domain', domain._key)}"
-                  orgId: "${toGlobalId('organization', org._key)}"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                  }
-                }
-              }
-            }
-            `,
-            rootValue: null,
-            contextValue: {
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          })
-
-          const expectedResponse = {
-            data: {
-              updateDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector3', 'selector4'],
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
-        })
-      })
-      describe('user updates domain and selectors', () => {
-        it('returns updated domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domain', domain._key)}"
-                  orgId: "${toGlobalId('organization', org._key)}"
-                  domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                  }
-                }
-              }
-            }
-            `,
-            rootValue: null,
-            contextValue: {
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          })
-
-          const expectedResponse = {
-            data: {
-              updateDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.canada.ca',
-                  lastRan: null,
-                  selectors: ['selector3', 'selector4'],
                 },
               },
             },
@@ -722,173 +389,6 @@ describe('updating a domain', () => {
           expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
         })
       })
-      describe('user updates selectors', () => {
-        it('returns updated domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domain', domain._key)}"
-                  orgId: "${toGlobalId('organization', org._key)}"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                  }
-                }
-              }
-            }
-            `,
-            rootValue: null,
-            contextValue: {
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          })
-
-          const expectedResponse = {
-            data: {
-              updateDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.gc.ca',
-                  lastRan: null,
-                  selectors: ['selector3', 'selector4'],
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
-        })
-      })
-      describe('user updates domain and selectors', () => {
-        it('returns updated domain', async () => {
-          const response = await graphql({
-            schema,
-            source: `
-            mutation {
-              updateDomain (
-                input: {
-                  domainId: "${toGlobalId('domain', domain._key)}"
-                  orgId: "${toGlobalId('organization', org._key)}"
-                  domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
-                }
-              ) {
-                result {
-                  ... on Domain {
-                    id
-                    domain
-                    lastRan
-                    selectors
-                  }
-                }
-              }
-            }
-            `,
-            rootValue: null,
-            contextValue: {
-              query,
-              collections: collectionNames,
-              transaction,
-              userKey: user._key,
-              auth: {
-                checkDomainPermission: checkDomainPermission({
-                  i18n,
-                  userKey: user._key,
-                  query,
-                }),
-                checkPermission: checkPermission({ userKey: user._key, query }),
-                userRequired: userRequired({
-                  userKey: user._key,
-                  loadUserByKey: loadUserByKey({ query }),
-                }),
-                verifiedRequired: verifiedRequired({}),
-                tfaRequired: tfaRequired({}),
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                loadDkimSelectorsByDomainId: loadDkimSelectorsByDomainId({
-                  query,
-                  userKey: user._key,
-                  cleanseInput,
-                  i18n,
-                  auth: { loginRequiredBool: true },
-                }),
-                loadDomainByKey: loadDomainByKey({ query }),
-                loadOrgByKey: loadOrgByKey({ query, language: 'en' }),
-                loadUserByKey: loadUserByKey({ query }),
-              },
-            },
-          })
-
-          const expectedResponse = {
-            data: {
-              updateDomain: {
-                result: {
-                  id: toGlobalId('domain', domain._key),
-                  domain: 'test.canada.ca',
-                  lastRan: null,
-                  selectors: ['selector3', 'selector4'],
-                },
-              },
-            },
-          }
-
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([`User: ${user._key} successfully updated domain: ${domain._key}.`])
-        })
-      })
     })
   })
   describe('given an unsuccessful domain update', () => {
@@ -919,10 +419,6 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', 1)}"
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
                 }
               ) {
                 result {
@@ -1004,10 +500,6 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
                 }
               ) {
                 result {
@@ -1089,10 +581,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {
@@ -1175,10 +663,6 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 123)}"
                   domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
                 }
               ) {
                 result {
@@ -1261,10 +745,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {
@@ -1339,10 +819,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {
@@ -1418,10 +894,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {
@@ -1515,10 +987,6 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', 1)}"
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
                 }
               ) {
                 result {
@@ -1600,10 +1068,6 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 1)}"
                   domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
                 }
               ) {
                 result {
@@ -1685,10 +1149,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {
@@ -1771,10 +1231,6 @@ describe('updating a domain', () => {
                   domainId: "${toGlobalId('domain', 123)}"
                   orgId: "${toGlobalId('organization', 123)}"
                   domain: "test.canada.ca"
-                  selectors: [
-                    "selector3",
-                    "selector4"
-                  ]
                 }
               ) {
                 result {
@@ -1857,10 +1313,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {
@@ -1935,10 +1387,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {
@@ -2014,10 +1462,6 @@ describe('updating a domain', () => {
                     domainId: "${toGlobalId('domain', 123)}"
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.canada.ca"
-                    selectors: [
-                      "selector3",
-                      "selector4"
-                    ]
                   }
                 ) {
                   result {

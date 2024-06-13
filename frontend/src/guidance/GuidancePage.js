@@ -29,6 +29,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { AdditionalFindings } from './AdditionalFindings'
 
 import { ListOf } from '../components/ListOf'
 import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
@@ -53,6 +54,7 @@ function GuidancePage() {
   const {
     domain: domainName,
     web: webScan,
+    additionalFindings,
     dnsScan,
     mxRecordDiff,
     organizations,
@@ -184,7 +186,7 @@ function GuidancePage() {
     )
 
     guidanceResults = (
-      <Tabs isFitted variant="enclosed-colored">
+      <Tabs isFitted variant="enclosed-colored" defaultIndex={0}>
         <TabList mb="4">
           <Tab borderTopWidth="0.25">
             <Trans>Web Guidance</Trans>
@@ -192,6 +194,15 @@ function GuidancePage() {
           <Tab borderTopWidth="0.25">
             <Trans>Email Guidance</Trans>
           </Tab>
+          <ABTestWrapper insiderVariantName="B">
+            <ABTestVariant name="B">
+              {additionalFindings && (
+                <Tab borderTopWidth="0.25">
+                  <Trans>Additional Findings</Trans>
+                </Tab>
+              )}
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -213,6 +224,15 @@ function GuidancePage() {
               />
             )}
           </TabPanel>
+          <ABTestWrapper>
+            <ABTestVariant name="B">
+              {additionalFindings && (
+                <TabPanel>
+                  <AdditionalFindings data={additionalFindings} />
+                </TabPanel>
+              )}
+            </ABTestVariant>
+          </ABTestWrapper>
         </TabPanels>
       </Tabs>
     )

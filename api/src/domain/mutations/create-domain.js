@@ -3,7 +3,7 @@ import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 import { t } from '@lingui/macro'
 
 import { createDomainUnion } from '../unions'
-import { Domain, SelectorsInput } from '../../scalars'
+import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
 import { OutsideDomainCommentEnum } from '../../enums'
@@ -19,10 +19,6 @@ export const createDomain = new mutationWithClientMutationId({
     domain: {
       type: new GraphQLNonNull(Domain),
       description: 'Url that you would like to be added to the database.',
-    },
-    selectors: {
-      type: new GraphQLList(SelectorsInput),
-      description: 'DKIM selector strings corresponding to this domain.',
     },
     tags: {
       description: 'List of labelled tags users have applied to the domain.',
@@ -73,13 +69,6 @@ export const createDomain = new mutationWithClientMutationId({
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const domain = cleanseInput(args.domain)
-
-    let selectors
-    if (typeof args.selectors !== 'undefined') {
-      selectors = args.selectors.map((selector) => cleanseInput(selector))
-    } else {
-      selectors = []
-    }
 
     let tags
     if (typeof args.tags !== 'undefined') {
@@ -251,56 +240,6 @@ export const createDomain = new mutationWithClientMutationId({
       throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
-    for (const selector of selectors) {
-      // Ensure selector exists in database
-      let selectorDocCursor
-      try {
-        selectorDocCursor = await trx.step(
-          () =>
-            query`
-            UPSERT { selector: ${selector} }
-              INSERT { selector: ${selector} }
-              UPDATE { }
-              IN selectors
-              RETURN NEW
-          `,
-        )
-      } catch (err) {
-        console.error(
-          `Database error occurred while user: ${userKey} was creating domain: ${insertDomain.domain} while ensuring selector exists: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-      }
-
-      let selectorDoc
-      try {
-        selectorDoc = await selectorDocCursor.next()
-      } catch (err) {
-        console.error(
-          `Cursor error occurred while user: ${userKey} was creating domain: ${insertDomain.domain} while ensuring selector exists: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-      }
-
-      // Add selector to domain
-      try {
-        await trx.step(
-          () =>
-            query`
-              INSERT {
-                _from: ${insertedDomain._id},
-                _to: ${selectorDoc._id},
-              } INTO domainsToSelectors
-          `,
-        )
-      } catch (err) {
-        console.error(
-          `Transaction step error occurred for user: ${userKey} when inserting new selector edge for domain: ${err}`,
-        )
-        throw new Error(i18n._(t`Unable to create domain. Please try again.`))
-      }
-    }
-
     try {
       await trx.commit()
     } catch (err) {
@@ -315,14 +254,6 @@ export const createDomain = new mutationWithClientMutationId({
     console.info(`User: ${userKey} successfully created ${returnDomain.domain} in org: ${org.slug}.`)
 
     const updatedProperties = []
-    if (typeof insertDomain.selectors !== 'undefined' && insertDomain.selectors.length > 0) {
-      updatedProperties.push({
-        name: 'selectors',
-        oldValue: [],
-        newValue: selectors,
-      })
-    }
-
     if (typeof tags !== 'undefined' && tags.length > 0) {
       updatedProperties.push({
         name: 'tags',
@@ -361,27 +292,35 @@ export const createDomain = new mutationWithClientMutationId({
       reason: outsideComment !== '' ? outsideComment : null,
     })
 
-    await publish({
-      channel: `domains.${returnDomain._key}`,
-      msg: {
-        domain: returnDomain.domain,
-        domain_key: returnDomain._key,
-        hash: returnDomain.hash,
-        user_key: null, // only used for One Time Scans
-        shared_id: null, // only used for One Time Scans
-      },
-    })
+    try {
+      await publish({
+        channel: `domains.${returnDomain._key}`,
+        msg: {
+          domain: returnDomain.domain,
+          domain_key: returnDomain._key,
+          hash: returnDomain.hash,
+          user_key: null, // only used for One Time Scans
+          shared_id: null, // only used for One Time Scans
+        },
+      })
+    } catch (err) {
+      console.error(`Error publishing to NATS for domain ${returnDomain._key}: ${err}`)
+    }
 
-    await publish({
-      channel: `domains.${returnDomain._key}.easm`,
-      msg: {
-        domain: returnDomain.domain,
-        domain_key: returnDomain._key,
-        hash: returnDomain.hash,
-        user_key: null, // only used for One Time Scans
-        shared_id: null, // only used for One Time Scans
-      },
-    })
+    try {
+      await publish({
+        channel: `domains.${returnDomain._key}.easm`,
+        msg: {
+          domain: returnDomain.domain,
+          domain_key: returnDomain._key,
+          hash: returnDomain.hash,
+          user_key: null, // only used for One Time Scans
+          shared_id: null, // only used for One Time Scans
+        },
+      })
+    } catch (err) {
+      console.error(`Error publishing to NATS for domain ${returnDomain._key}: ${err}`)
+    }
 
     return {
       ...returnDomain,

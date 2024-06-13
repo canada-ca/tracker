@@ -2,14 +2,21 @@ import logging
 import re
 from arango import ArangoClient
 import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+logging.basicConfig(
+    level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
+)
+logger = logging.getLogger()
+
 from clients.kusto_client import (
     get_unlabelled_org_assets_from_root,
     get_unlabelled_org_assets_from_domains,
 )
 from clients.easm_client import label_assets
-from dotenv import load_dotenv
-
-load_dotenv()
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -65,65 +72,65 @@ def extract_root_domains(subdomains):
 def update_asset_labels():
     # Get verified org ids
     try:
-        logging.info("Getting verified orgs")
+        logger.info("Getting verified orgs")
         verified_orgs = get_verified_orgs()
-        logging.info(f"Found {len(verified_orgs)} verified orgs")
+        logger.info(f"Found {len(verified_orgs)} verified orgs")
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
         return
     for org in verified_orgs:
         # Get org domains
         try:
-            logging.info(f"Getting domains for org {org['key']}")
+            logger.info(f"Getting domains for org {org['key']}")
             org_domains = get_org_domains(org["id"])
-            logging.info(f"Found {len(org_domains)} domains")
+            logger.info(f"Found {len(org_domains)} domains")
         except Exception as e:
-            logging.error(e)
+            logger.error(e)
             continue
 
         # label known assets first
         try:
-            logging.info(f"Labeling known assets for org {org['key']}")
+            logger.info(f"Labeling known assets for org {org['key']}")
             known_org_assets = get_unlabelled_org_assets_from_domains(org_domains)
-            logging.info(
+            logger.info(
                 "Found " + str(len(known_org_assets)) + " known unlabelled assets"
             )
             label_assets(assets=known_org_assets, label=org["key"])
         except Exception as e:
-            logging.error(e)
+            logger.error(e)
             continue
 
     for org in verified_orgs:
         # Get org domains
         try:
-            logging.info(f"Getting domains for org {org['key']}")
+            logger.info(f"Getting domains for org {org['key']}")
             org_domains = get_org_domains(org["id"])
-            logging.info(f"Found {len(org_domains)} domains")
+            logger.info(f"Found {len(org_domains)} domains")
         except Exception as e:
-            logging.error(e)
+            logger.error(e)
             continue
 
         # Extract root domains
         try:
             unique_roots = extract_root_domains(org_domains)
         except Exception as e:
-            logging.error(e)
+            logger.error(e)
 
         for root in unique_roots:
             try:
-                logging.info(f"Root domain: {root}")
+                logger.info(f"Root domain: {root}")
                 # get unlabelled assets from roots
                 unlabelled_org_assets = get_unlabelled_org_assets_from_root(root)
-                logging.info(
+                logger.info(
                     "Found " + str(len(unlabelled_org_assets)) + " unlabelled assets"
                 )
                 label_assets(assets=unlabelled_org_assets, label=org["key"])
             except Exception as e:
-                logging.error(e)
+                logger.error(e)
                 continue
 
 
 if __name__ == "__main__":
-    logging.info("EASM label service started")
+    logger.info("EASM label service started")
     update_asset_labels()
-    logging.info(f"EASM label service shutting down...")
+    logger.info(f"EASM label service shutting down...")

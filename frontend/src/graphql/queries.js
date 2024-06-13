@@ -516,6 +516,47 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
           }
         }
       }
+      additionalFindings {
+        timestamp
+        headers
+        locations {
+          city
+          region
+          firstSeen
+          lastSeen
+        }
+        ports {
+          port
+          lastPortState
+          portStateFirstSeen
+          portStateLastSeen
+        }
+        webComponents {
+          webComponentCategory
+          webComponentName
+          webComponentVersion
+          webComponentFirstSeen
+          webComponentLastSeen
+        }
+        vulnerabilities {
+          critical {
+            cve
+            cvss3Score
+          }
+          high {
+            cve
+            cvss3Score
+          }
+          medium {
+            cve
+            cvss3Score
+          }
+          low {
+            cve
+            cvss3Score
+          }
+        }
+      }
     }
   }
   ${Status.fragments.requiredFields}

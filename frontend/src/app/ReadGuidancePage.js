@@ -192,6 +192,7 @@ export default function ReadGuidancePage() {
               </ListItem>
             </UnorderedList>
           </ListItem>
+          {/* 5 */}
           <ListItem>
             <Text>
               <Trans>Links to Review:</Trans>
@@ -303,7 +304,7 @@ export default function ReadGuidancePage() {
         </OrderedList>
       </Box>
 
-      <Heading>
+      <Heading id="faq" tabIndex="-1">
         <Trans>Frequently Asked Questions</Trans>
       </Heading>
       <Divider borderBottomColor="gray.900" mb="2" />
@@ -437,14 +438,20 @@ export default function ReadGuidancePage() {
               </ListItem>
             </UnorderedList>
           </ListItem>
-          <ListItem>
+          {/* 6 */}
+          <ListItem id="dkim-selectors">
             <Trans>Why does the guidance page not show the domain’s DKIM selectors even though they exist?</Trans>
             <UnorderedList>
               <ListItem>
                 <Trans>
                   Tracker automatically adds DKIM selectors using DMARC reports. Selectors will be added to Tracker when
                   1) the domain has a DMARC RUA record which includes "mailto:dmarc@cyber.gc.ca"; and 2) the selector
-                  has been used to sign an email and passed DKIM validation.
+                  has been used to sign an email and passed DKIM validation. If your DKIM selectors or any DMARC
+                  information is missing, please email{' '}
+                  <Link href="mailto:zzTBSCybers@tbs-sct.gc.ca" color="blue.500">
+                    TBS Cyber Security
+                  </Link>
+                  .
                 </Trans>
               </ListItem>
               <ListItem>
@@ -456,6 +463,31 @@ export default function ReadGuidancePage() {
             </UnorderedList>
           </ListItem>
           {/* 7 */}
+          <ListItem>
+            <Trans>
+              My domain does not send emails, how can I get my domain's DMARC, DKIM, and SPF compliance checks to pass?
+            </Trans>
+            <UnorderedList>
+              <Trans>
+                <ListItem>
+                  Follow the guidance found in section B.4 of the{' '}
+                  <Link
+                    href={
+                      i18n.locale === 'en'
+                        ? 'https://www.cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb4'
+                        : 'https://www.cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#ann24'
+                    }
+                    color="blue.500"
+                    isExternal
+                  >
+                    ITSP.40.065 v1.1
+                  </Link>
+                  .
+                </ListItem>
+              </Trans>
+            </UnorderedList>
+          </ListItem>
+          {/* 8 */}
           <ListItem>
             <Trans>References:</Trans>
             <UnorderedList>

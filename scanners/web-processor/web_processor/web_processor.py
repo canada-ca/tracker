@@ -325,8 +325,12 @@ def process_connection_results(connection_results):
             include_subdomains = False
             preload = False
 
+            # if multiple headers, take the first one
+            # these are separated by commas
+            hsts = hsts.split(",")[0]
+
             directives = [
-                directive.strip() for directive in hsts.split(";") if len(directive) > 0
+                directive.strip() for directive in hsts.split(";") if len(directive.strip()) > 0
             ]
 
             for directive in directives:
