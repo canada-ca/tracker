@@ -141,14 +141,20 @@ export const signIn = new mutationWithClientMutationId({
           await loadUserByUserName.clear(userName)
           user = await loadUserByUserName.load(userName)
 
+          // Check if user's last successful login was over 30 days ago
+          const lastLogin = new Date(user.lastLogin || null)
+          const currentDate = new Date()
+          const timeDifference = currentDate - lastLogin
+          const daysDifference = timeDifference / (1000 * 3600 * 24)
+
           // Check to see if user has phone validated
           let sendMethod
-          if (user.tfaSendMethod === 'phone') {
-            await sendAuthTextMsg({ user })
-            sendMethod = 'text'
-          } else {
+          if (user.tfaSendMethod === 'email' || daysDifference >= 30) {
             await sendAuthEmail({ user })
             sendMethod = 'email'
+          } else {
+            await sendAuthTextMsg({ user })
+            sendMethod = 'text'
           }
 
           console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
