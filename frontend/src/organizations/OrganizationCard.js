@@ -5,7 +5,16 @@ import { Link as RouteLink, useRouteMatch } from 'react-router-dom'
 import { bool, number, object, string } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
-export function OrganizationCard({ name, acronym, slug, domainCount, verified, summaries, ...rest }) {
+export function OrganizationCard({
+  name,
+  acronym,
+  slug,
+  domainCount,
+  verified,
+  summaries,
+  disableLink = false,
+  ...rest
+}) {
   const { path, _url } = useRouteMatch()
   let httpsValue = 0
   let dmarcValue = 0
@@ -32,6 +41,12 @@ export function OrganizationCard({ name, acronym, slug, domainCount, verified, s
     dmarcValue = Math.floor(dmarcValue)
   }
 
+  const linkProps = {
+    to: `${path}/${slug}`,
+    as: RouteLink,
+    _hover: { md: { bg: ['', 'gray.100'] } },
+  }
+
   return (
     <ListItem {...rest}>
       <Flex
@@ -41,10 +56,8 @@ export function OrganizationCard({ name, acronym, slug, domainCount, verified, s
         rounded="md"
         direction={{ base: 'column', md: 'row' }}
         alignItems={{ base: 'flex-start', md: 'center' }}
-        _hover={{ md: { bg: ['', 'gray.100'] } }}
         p="4"
-        as={RouteLink}
-        to={`${path}/${slug}`}
+        {...(disableLink ? {} : linkProps)}
       >
         <Box
           flexGrow={{ md: '2' }}
@@ -105,4 +118,5 @@ OrganizationCard.propTypes = {
   verified: bool,
   summaries: object,
   domains: object,
+  disableLink: bool,
 }

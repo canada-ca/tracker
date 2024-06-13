@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ArrowLeftIcon } from '@chakra-ui/icons'
+
 import {
   Badge,
   Box,
@@ -14,13 +15,14 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 
 import { ScanDomainButton } from '../domains/ScanDomainButton'
 import { Link as RouteLink, useHistory, useLocation, useParams } from 'react-router-dom'
 import { WebGuidance } from './WebGuidance'
 import { EmailGuidance } from './EmailGuidance'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { useQuery } from '@apollo/client'
 import { DOMAIN_GUIDANCE_PAGE } from '../graphql/queries'
 import { LoadingMessage } from '../components/LoadingMessage'
@@ -29,29 +31,25 @@ import { useUserVar } from '../utilities/userState'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import { AdditionalFindings } from './AdditionalFindings'
 
-function GuidancePage() {
-  const { domainSlug: domain } = useParams()
+import { ListOf } from '../components/ListOf'
+import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
+import { OrganizationCard } from '../organizations/OrganizationCard'
+import { ErrorBoundary } from 'react-error-boundary'
+import { UserIcon } from '../theme/Icons'
 
+function GuidancePage() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { domainSlug: domain } = useParams()
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
+    errorPolicy: 'all',
   })
 
   const history = useHistory()
   const location = useLocation()
   const { isLoggedIn, isEmailValidated } = useUserVar()
   const { from } = location.state || { from: { pathname: '/domains' } }
-
-  if (loading) {
-    return (
-      <LoadingMessage>
-        <Trans>Guidance results</Trans>
-      </LoadingMessage>
-    )
-  }
-
-  if (error) {
-    return <ErrorFallbackMessage error={error} />
-  }
+  const [orgInfo, setOrgInfo] = useState({})
 
   const {
     domain: domainName,
@@ -64,19 +62,93 @@ function GuidancePage() {
     rcode,
     status,
     userHasPermission,
-  } = data.findDomainByDomain
+  } = data?.findDomainByDomain || {}
 
+  if (loading) {
+    return (
+      <LoadingMessage>
+        <Trans>Guidance results</Trans>
+      </LoadingMessage>
+    )
+  }
+
+  const orgNodes = organizations.edges.map(({ node }) => node)
+
+  let orgList
   if (!userHasPermission) {
+    orgList = (
+      <ListOf
+        elements={orgNodes}
+        ifEmpty={() => (
+          <Text layerStyle="loadingMessage">
+            <Trans>No Organizations</Trans>
+          </Text>
+        )}
+        mb="4"
+      >
+        {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
+          <ErrorBoundary key={`${slug}:${index}`} ErrorFallbackComponent={ErrorFallbackMessage}>
+            <Flex align="center">
+              <OrganizationCard
+                disableLink={true}
+                id={id}
+                slug={slug}
+                name={name}
+                acronym={acronym}
+                domainCount={domainCount}
+                verified={verified}
+                summaries={summaries}
+                mb="3"
+                mr={userHasPermission ? '3rem' : '2'}
+                w="100%"
+              />
+              {isLoggedIn() && !userHasPermission && (
+                <>
+                  <IconButton
+                    aria-label={t`Request Invite`}
+                    variant="primary"
+                    icon={<UserIcon color="white" boxSize="icons.md" />}
+                    onClick={() => {
+                      setOrgInfo({ id, name })
+                      onOpen()
+                    }}
+                  />
+                  {orgInfo.id === id && (
+                    <RequestOrgInviteModal
+                      isOpen={isOpen}
+                      onClose={onClose}
+                      orgId={orgInfo.id}
+                      orgName={orgInfo.name}
+                    />
+                  )}
+                </>
+              )}
+            </Flex>
+          </ErrorBoundary>
+        )}
+      </ListOf>
+    )
+
     return (
       <Box align="center" w="100%" px={4}>
         <Text textAlign="center" fontSize="2xl" fontWeight="bold">
           <Trans>
             Error while retrieving scan data for {domainName}. <br />
-            This could be due to insufficient user privileges or the domain does not exist in the system.
+            This could be due to insufficient user privileges or the Domain does not exist in the system. You can
+            request access to an Organization below to view the Domain results
           </Trans>
         </Text>
+
+        <Heading as="h1" textAlign="middle" mb="4" mt="4">
+          <Trans>Organizations</Trans>
+        </Heading>
+        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>{orgList}</ErrorBoundary>
       </Box>
     )
+  }
+
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
   }
 
   let guidanceResults
