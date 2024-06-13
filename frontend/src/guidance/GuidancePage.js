@@ -50,21 +50,17 @@ function GuidancePage() {
   const { from } = location.state || { from: { pathname: '/domains' } }
   const [orgInfo, setOrgInfo] = useState({})
 
-  let domainName, webScan, dnsScan, mxRecordDiff, organizations, dmarcPhase, rcode, status, userHasPermission
-
-  if (data && data.findDomainByDomain) {
-    ({
-      domain: domainName,
-      web: webScan,
-      dnsScan,
-      mxRecordDiff,
-      organizations,
-      dmarcPhase,
-      rcode,
-      status,
-      userHasPermission,
-    } = data.findDomainByDomain)
-  }
+  const {
+    domain: domainName,
+    web: webScan,
+    dnsScan,
+    mxRecordDiff,
+    organizations,
+    dmarcPhase,
+    rcode,
+    status,
+    userHasPermission,
+  } = data?.findDomainByDomain || {}
 
   if (loading) {
     return (
