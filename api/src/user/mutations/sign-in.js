@@ -165,13 +165,14 @@ export const signIn = new mutationWithClientMutationId({
             authenticateToken,
           }
         } else {
+          const loginDate = new Date().toISOString()
           try {
             await trx.step(
               () => query`
                 WITH users
                 UPSERT { _key: ${user._key} }
-                  INSERT { refreshInfo: ${refreshInfo} }
-                  UPDATE { refreshInfo: ${refreshInfo} }
+                  INSERT { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
+                  UPDATE { refreshInfo: ${refreshInfo}, lastLogin: ${loginDate} }
                   IN users
               `,
             )
