@@ -142,7 +142,12 @@ export const signIn = new mutationWithClientMutationId({
           user = await loadUserByUserName.load(userName)
 
           // Check if user's last successful login was over 30 days ago
-          const lastLogin = new Date(user.lastLogin || null)
+          let lastLogin
+          if (user.lastLogin) {
+            lastLogin = new Date(user.lastLogin)
+          } else {
+            lastLogin = new Date()
+          }
           const currentDate = new Date()
           const timeDifference = currentDate - lastLogin
           const daysDifference = timeDifference / (1000 * 3600 * 24)
