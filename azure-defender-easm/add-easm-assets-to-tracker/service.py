@@ -3,15 +3,22 @@ import os
 import json
 from datetime import date
 from arango import ArangoClient
-from clients.kusto_client import (
-    get_labelled_org_assets_from_org_key,
-    get_unlabelled_assets,
-)
+
 from dotenv import load_dotenv
 import asyncio
 import nats
 
 load_dotenv()
+
+logging.basicConfig(
+    level=logging.info, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
+)
+logger = logging.getLogger()
+
+from clients.kusto_client import (
+    get_labelled_org_assets_from_org_key,
+    get_unlabelled_assets,
+)
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -29,9 +36,9 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 async def main():
     # Connect to NATS
-    logging.info("Connecting to NATS")
+    logger.info("Connecting to NATS")
     nc = await nats.connect(NATS_URL)
-    logging.info("Successfully connected to NATS")
+    logger.info("Successfully connected to NATS")
     # Create JetStream context.
     js = nc.jetstream()
     # Persist messages on 'foo's subject.
@@ -49,10 +56,10 @@ async def main():
         """
         try:
             cursor = db.aql.execute(query)
-            logging.info(f"Successfully fetched verified orgs")
+            logger.info(f"Successfully fetched verified orgs")
             return [domain for domain in cursor]
         except Exception as e:
-            logging.error(f"Error occured when fetching verified orgs: {e}")
+            logger.error(f"Error occured when fetching verified orgs: {e}")
             return []
 
     def get_org_domains(org_id):
@@ -61,7 +68,7 @@ async def main():
             RETURN v.domain
         """
         cursor = db.aql.execute(query, bind_vars={"org_id": org_id})
-        logging.info(f"Successfully fetched domains for org: {org_id}")
+        logger.info(f"Successfully fetched domains for org: {org_id}")
         return [domain for domain in cursor]
 
     def get_domain_exists(domain):
@@ -76,7 +83,7 @@ async def main():
             domains = [domain for domain in cursor]
             return len(domains) > 0
         except Exception as e:
-            logging.error(f"Error occured when checking if domain exists: {e}")
+            logger.error(f"Error occured when checking if domain exists: {e}")
             return None
 
     # insert functions
@@ -102,10 +109,10 @@ async def main():
 
         try:
             created_domain = txn_col.insert(insert_domain)
-            logging.info(f"Successfully created domain: {domain}")
+            logger.info(f"Successfully created domain: {domain}")
             return created_domain
         except Exception as e:
-            logging.error(f"Error occured when creating domain: {e}")
+            logger.error(f"Error occured when creating domain: {e}")
             return None
 
     def create_claim(org_id, domain_id, domain_name, txn_col):
@@ -120,9 +127,9 @@ async def main():
 
         try:
             txn_col.insert(insert_claim)
-            logging.info(f"Successfully created claim for domain: {domain_name}")
+            logger.info(f"Successfully created claim for domain: {domain_name}")
         except Exception as e:
-            logging.error("Error occured when creating claim for ", e)
+            logger.error("Error occured when creating claim for ", e)
 
     def log_activity(domain, org_id, trx_col):
         insert_activity = {
@@ -150,9 +157,9 @@ async def main():
 
         try:
             trx_col.insert(insert_activity)
-            logging.info(f"Successfully logged activity for domain: {domain}")
+            logger.info(f"Successfully logged activity for domain: {domain}")
         except Exception as e:
-            logging.error(f"Error occured when logging activity for {domain}: {e}")
+            logger.error(f"Error occured when logging activity for {domain}: {e}")
 
     # main logic
     async def add_discovered_domain(domains, org_id):
@@ -160,11 +167,11 @@ async def main():
             # check if domain exists in system
             domain_exists = get_domain_exists(domains)
             if domain_exists is None:
-                logging.error(f"Error occured when checking if domain exists: {e}")
+                logger.error(f"Error occured when checking if domain exists: {e}")
                 continue
             # if domain exists, skip
             elif domain_exists:
-                logging.info(f"Domain: {domain} already exists in system")
+                logger.info(f"Domain: {domain} already exists in system")
                 continue
 
             # setup transaction
@@ -194,9 +201,9 @@ async def main():
             # commit transaction
             try:
                 txn_db.commit_transaction()
-                logging.info(f"Successfully committed transaction for domain: {domain}")
+                logger.info(f"Successfully committed transaction for domain: {domain}")
             except Exception as e:
-                logging.error(f"Failed to commit transaction for domain: {domain}: {e}")
+                logger.error(f"Failed to commit transaction for domain: {domain}: {e}")
                 # abort transaction
                 txn_db.abort_transaction()
                 continue
@@ -212,9 +219,9 @@ async def main():
                         }
                     ).encode(),
                 )
-                logging.info(f"Published domain: {domain} to NATS")
+                logger.info(f"Published domain: {domain} to NATS")
             except Exception as e:
-                logging.error(f"Failed to publish domain: {domain} to NATS: {e}")
+                logger.error(f"Failed to publish domain: {domain} to NATS: {e}")
 
     verified_orgs = get_verified_orgs()
     for org in verified_orgs:
@@ -224,7 +231,7 @@ async def main():
         try:
             domains = get_org_domains(org_id)
         except Exception as e:
-            logging.error(
+            logger.error(
                 f"Error when attempting to fetch domains for org {org_key}: {e}"
             )
             continue
@@ -234,7 +241,7 @@ async def main():
             new_domains = list(set(labelled_assets) - set(domains))
             await add_discovered_domain(new_domains, org_id)
         except Exception as e:
-            logging.error(
+            logger.error(
                 f"Error when attempting to add new assets to org {org_key}: {e}"
             )
             continue
@@ -243,14 +250,14 @@ async def main():
         unlabelled_assets = get_unlabelled_assets()
         await add_discovered_domain(unlabelled_assets, UNCLAIMED_ID)
     except Exception as e:
-        logging.error(f"Error when attempting to add new assets to unclaimed org: {e}")
+        logger.error(f"Error when attempting to add new assets to unclaimed org: {e}")
 
-    logging.info("Closing NATS connection")
+    logger.info("Closing NATS connection")
     await nc.close()
-    logging.info("Successfully closed connection")
+    logger.info("Successfully closed connection")
 
 
 if __name__ == "__main__":
-    logging.info("Starting EASM-to-Tracker sync")
+    logger.info("Starting EASM-to-Tracker sync")
     asyncio.run(main())
-    logging.info(f"EASM-to-Tracker sync shutting down...")
+    logger.info(f"EASM-to-Tracker sync shutting down...")

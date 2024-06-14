@@ -42,7 +42,7 @@ def get_unlabelled_org_assets_from_root(root):
         )
         return data
     except Exception as e:
-        logging.error(f"Failed to get unlabelled assets from roots: {e}")
+        logger.error(f"Failed to get unlabelled assets from roots: {e}")
         return []
 
 
@@ -64,5 +64,5 @@ def get_unlabelled_org_assets_from_domains(domains):
         )
         return data
     except Exception as e:
-        logging.error(f"Failed to get unlabelled assets: {e}")
+        logger.error(f"Failed to get unlabelled assets: {e}")
         return []
