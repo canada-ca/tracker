@@ -5,6 +5,7 @@ from azure.defender.easm import EasmClient
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger(__name__)
 
 SUB_ID = os.getenv("SUBSCRIPTION_ID")
 WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
@@ -18,8 +19,6 @@ TENANT_ID = os.getenv("TENANT_ID")
 CREDENTIAL = ClientSecretCredential(TENANT_ID, CLIENT_ID, CLIENT_SECRET)
 
 EASM_CLIENT = EasmClient(ENDPOINT, RESOURCE_GROUP, SUB_ID, WORKSPACE_NAME, CREDENTIAL)
-
-logger = logging.getLogger()
 
 
 def run_disco_group(group_name):

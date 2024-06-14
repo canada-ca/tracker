@@ -1,11 +1,12 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.helpers import dataframe_from_result_table
 
-
+import logging
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger(__name__)
 
 KUSTO_CLUSTER = os.getenv("KUSTO_CLUSTER")
 REGION = os.getenv("REGION")
@@ -24,7 +25,6 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 
 
 def get_web_components_by_asset(asset):
-    print(f"Getting web components for {asset}")
     query = f"""
     declare query_parameters(asset_name:string = '{asset}');
     EasmAssetWebComponent
