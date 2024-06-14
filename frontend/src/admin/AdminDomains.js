@@ -65,7 +65,6 @@ export function AdminDomains({ orgSlug, orgId }) {
     archived: false,
     mutation: '',
     tagInputList: [],
-    selectorInputList: [],
     editingDomainId: '',
     editingDomainUrl: '',
   })
@@ -257,7 +256,7 @@ export function AdminDomains({ orgSlug, orgId }) {
           </Text>
         )}
       >
-        {({ id: domainId, domain, selectors, claimTags, hidden, archived, rcode, organizations }, index) => (
+        {({ id: domainId, domain, claimTags, hidden, archived, rcode, organizations }, index) => (
           <>
             {index === 0 && <Divider borderBottomColor="gray.400" />}
             <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
@@ -283,7 +282,6 @@ export function AdminDomains({ orgSlug, orgId }) {
                       archived,
                       mutation: 'update',
                       tagInputList: claimTags,
-                      selectorInputList: selectors,
                       editingDomainId: domainId,
                       editingDomainUrl: domain,
                       orgCount: organizations.totalCount,
@@ -329,7 +327,6 @@ export function AdminDomains({ orgSlug, orgId }) {
               archived: false,
               mutation: 'create',
               tagInputList: [],
-              selectorInputList: [],
               editingDomainId: '',
               editingDomainUrl: newDomainUrl,
               orgCount: 0,

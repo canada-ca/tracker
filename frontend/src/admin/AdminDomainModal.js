@@ -37,17 +37,7 @@ import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
-  const {
-    editingDomainId,
-    editingDomainUrl,
-    selectorInputList,
-    tagInputList,
-    orgSlug,
-    archived,
-    hidden,
-    mutation,
-    orgCount,
-  } = props
+  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, hidden, mutation, orgCount } = props
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -201,7 +191,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
         <Formik
           initialValues={{
             domainUrl: editingDomainUrl,
-            selectors: selectorInputList,
             // convert initial tags to input type
             tags: getInitTags(),
             archiveDomain: archived,
@@ -220,7 +209,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   domainId: editingDomainId,
                   orgId: orgId,
                   domain: values.domainUrl.trim(),
-                  selectors: values.selectors,
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
@@ -233,7 +221,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                 variables: {
                   orgId: orgId,
                   domain: values.domainUrl.trim(),
-                  selectors: values.selectors,
                   tags: values.tags,
                   archived: values.archiveDomain,
                   hidden: values.hideDomain,
@@ -408,7 +395,6 @@ AdminDomainModal.propTypes = {
   orgId: string,
   editingDomainId: string,
   editingDomainUrl: string,
-  selectorInputList: array,
   tagInputList: array,
   archived: bool,
   hidden: bool,
