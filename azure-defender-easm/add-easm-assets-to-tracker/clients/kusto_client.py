@@ -1,10 +1,12 @@
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 from azure.kusto.data.helpers import dataframe_from_result_table
 
+import logging
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger(__name__)
 
 KUSTO_CLUSTER = os.getenv("KUSTO_CLUSTER")
 REGION = os.getenv("REGION")
@@ -38,7 +40,7 @@ def get_labelled_org_assets_from_org_key(org_key):
         )
         return [asset["AssetName"] for asset in data]
     except Exception as e:
-        print(f"Failed to get labelled assets from org key: {e}")
+        logger.error(f"Failed to get labelled assets from org key: {e}")
         return []
 
 
@@ -57,5 +59,5 @@ def get_unlabelled_assets():
         )
         return [asset["AssetName"] for asset in data]
     except Exception as e:
-        print(f"Failed to get unlabelled assets: {e}")
+        logger.error(f"Failed to get unlabelled assets: {e}")
         return []

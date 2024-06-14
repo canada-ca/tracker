@@ -8,15 +8,15 @@ import functools
 import json
 import signal
 
-from clients.easm_client import run_disco_group, create_disco_group
-from clients.kusto_client import get_host_asset
-
 load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
 logger = logging.getLogger()
+
+from clients.easm_client import run_disco_group, create_disco_group
+from clients.kusto_client import get_host_asset
 
 NAME = os.getenv("NAME", "add-domain-to-easm")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.easm")
