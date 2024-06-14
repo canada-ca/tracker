@@ -189,7 +189,6 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             id
             domain
             lastRan
-            selectors
             claimTags
             hidden
             archived
