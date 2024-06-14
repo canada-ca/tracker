@@ -135,7 +135,6 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
-              selectors: [],
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
@@ -228,7 +227,6 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: 'testid=',
               domain: 'test-domain.gc.ca',
-              selectors: [],
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
@@ -325,7 +323,6 @@ describe('<AdminDomains />', () => {
             variables: {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
-              selectors: [],
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
@@ -387,112 +384,6 @@ describe('<AdminDomains />', () => {
       await waitFor(() => expect(getByText(/Domain added/i)).toBeInTheDocument())
 
       await waitFor(() => expect(queryByText('Add Domain Details')).not.toBeInTheDocument())
-    })
-
-    it.skip('succeeds when DKIM selectors are added', async () => {
-      const mocks = [
-        {
-          request: {
-            query: FORWARD,
-            variables: {
-              first: 20,
-              orgSlug: 'test-org.slug',
-              search: '',
-              orderBy: { field: 'DOMAIN', direction: 'ASC' },
-              filters: [],
-            },
-          },
-          result: { data: rawOrgDomainListData },
-        },
-        {
-          request: {
-            query: CREATE_DOMAIN,
-            variables: {
-              orgId: rawOrgDomainListData.findOrganizationBySlug.id,
-              domain: 'test.domain.gc.ca',
-              selectors: ['selector1'],
-              tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
-              hidden: false,
-              archived: false,
-              outsideComment: null,
-            },
-          },
-          result: {
-            data: {
-              createDomain: {
-                result: {
-                  domain: 'lauretta.name',
-                  __typename: 'Domain',
-                },
-                __typename: 'CreateDomainPayload',
-              },
-            },
-          },
-        },
-      ]
-
-      const { getByText, getByTestId, getByPlaceholderText, queryAllByText, findByText, getByRole } = render(
-        <MockedProvider mocks={mocks} cache={createCache()}>
-          <UserVarProvider
-            userVar={makeVar({
-              jwt: null,
-              tfaSendMethod: null,
-              userName: null,
-            })}
-          >
-            <ChakraProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
-                <MemoryRouter initialEntries={['/']}>
-                  <AdminDomains
-                    orgId={rawOrgDomainListData.findOrganizationBySlug.id}
-                    orgSlug={'test-org.slug'}
-                    domainsPerPage={4}
-                  />
-                </MemoryRouter>
-              </I18nProvider>
-            </ChakraProvider>
-          </UserVarProvider>
-        </MockedProvider>,
-      )
-
-      const addDomainBtn = await findByText(/Add Domain/)
-      userEvent.click(addDomainBtn)
-
-      await waitFor(() => expect(getByText(/Add Domain Details/)).toBeInTheDocument())
-
-      const domainInput = getByRole('textbox', { name: /New Domain URL/ })
-      expect(domainInput).toBeInTheDocument()
-      userEvent.type(domainInput, 'test.domain.gc.ca')
-
-      const addSelectorBtn = getByTestId(/add-dkim-selector/)
-      fireEvent.click(addSelectorBtn)
-
-      const selectorInput = getByPlaceholderText(/DKIM Selector/)
-      fireEvent.blur(selectorInput)
-
-      await waitFor(() => expect(getByText(/Selector cannot be empty/)).toBeInTheDocument())
-
-      fireEvent.change(selectorInput, { target: { value: 'selector1.' } })
-
-      // await waitFor(() =>
-      //   expect(
-      //     getByText(
-      //       /Selector must be string containing alphanumeric characters and periods, starting and ending with only alphanumeric characters/,
-      //     ),
-      //   ).toBeInTheDocument(),
-      // )
-
-      fireEvent.change(selectorInput, {
-        target: { value: 'selector1' },
-      })
-
-      const confirmBtn = getByText(/Confirm/)
-      fireEvent.click(confirmBtn)
-
-      await waitFor(() => {
-        const successMessages = queryAllByText(/Domain added/i)
-        expect(successMessages[0]).toBeVisible()
-      })
     })
   })
 
@@ -597,7 +488,6 @@ describe('<AdminDomains />', () => {
               domainId: 'testid2=',
               orgId: 'testid=',
               domain: 'test.domain.ca',
-              selectors: [],
               tags: [],
               hidden: false,
               archived: false,
