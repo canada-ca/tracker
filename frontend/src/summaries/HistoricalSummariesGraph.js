@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Flex, Heading, Select, Text } from '@chakra-ui/react'
+import { Box, Flex, Select, Text } from '@chakra-ui/react'
 import { number, object } from 'prop-types'
 import { extent, bisector } from 'd3-array'
 import theme from '../theme/canada'
@@ -15,6 +15,7 @@ import { useTooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip'
 import { timeFormat } from '@visx/vendor/d3-time-format'
 import { GlyphCircle } from '@visx/glyph'
 import { Trans, t } from '@lingui/macro'
+import { func } from 'prop-types'
 
 const getDate = ({ date }) => new Date(date)
 
@@ -23,7 +24,7 @@ const getSummaries = (data, scanTypes, scoreType) => {
   data.forEach(({ node }) => {
     for (const scanType of scanTypes) {
       const { date, [scanType]: scanTypeData } = node
-      const scanTypeNode = { date, type: scanType, score: scanTypeData.categories[0][scoreType].toFixed(0) }
+      const scanTypeNode = { date, type: scanType, score: scanTypeData.categories[0][scoreType]?.toFixed(0) }
       summaries.push(scanTypeNode)
     }
   })
@@ -47,7 +48,7 @@ const tieredSummaries = {
   three: ['web', 'mail'],
 }
 
-export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
+export function HistoricalSummariesGraph({ data, setRange, width = 1200, height = 500 }) {
   const { colors } = theme
   const [scoreType, setScoreType] = useState('percentage')
   const [summaryTier, setSummaryTier] = useState('one')
@@ -148,6 +149,20 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
     <>
       <Flex align="center" my="2">
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
+          <Trans>Range:</Trans>
+        </Text>
+        <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setRange(e.target.value)}>
+          <option value="LAST30DAYS">
+            <Trans>Last 30 Days</Trans>
+          </option>
+          <option value="LASTYEAR">
+            <Trans>Last 365 Days</Trans>
+          </option>
+          <option value="YTD">
+            <Trans>Year to Date</Trans>
+          </option>
+        </Select>
+        <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Data:</Trans>
         </Text>
         <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setScoreType(e.target.value)}>
@@ -158,7 +173,6 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
             <Trans>Domain count</Trans>
           </option>
         </Select>
-
         <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Summary Tier:</Trans>
         </Text>
@@ -174,9 +188,6 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
           </option>
         </Select>
       </Flex>
-      <Heading as="h2" size="lg" mb="2">
-        <Trans>Last 30 Days</Trans>
-      </Heading>
       <Box position="relative">
         <svg width={width} height={height}>
           <rect x={0} y={0} width={width} height={height} fill={'#24242c'} rx={14} />
@@ -285,6 +296,7 @@ export function HistoricalSummariesGraph({ data, width = 1200, height = 500 }) {
 
 HistoricalSummariesGraph.propTypes = {
   data: object.isRequired,
+  setRange: func,
   width: number,
   height: number,
 }
