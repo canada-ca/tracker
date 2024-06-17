@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import {
@@ -39,13 +39,14 @@ export default function OrganizationDetails() {
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [progressChartRange, setProgressChartRange] = useState('LAST30DAYS')
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
   const defaultActiveTab = tabNames[0]
 
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug, month: 'LAST30DAYS', year: new Date().getFullYear().toString() },
+    variables: { slug: orgSlug, month: progressChartRange, year: new Date().getFullYear().toString() },
     // errorPolicy: 'ignore', // allow partial success
   })
 
@@ -146,7 +147,12 @@ export default function OrganizationDetails() {
             <ABTestWrapper insiderVariantName="B">
               <ABTestVariant name="B">
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <HistoricalSummariesGraph data={data?.organization?.historicalSummaries} width={1200} height={500} />
+                  <HistoricalSummariesGraph
+                    data={data?.organization?.historicalSummaries}
+                    setRange={setProgressChartRange}
+                    width={1200}
+                    height={500}
+                  />
                 </ErrorBoundary>
               </ABTestVariant>
             </ABTestWrapper>
