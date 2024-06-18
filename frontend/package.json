@@ -55,7 +55,6 @@
     "react-phone-input-2": "^2.15.1",
     "react-router-dom": "^5.3.3",
     "react-table": "^7.8.0",
-    "subscriptions-transport-ws": "^0.11.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
