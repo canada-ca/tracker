@@ -69,7 +69,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         return <ListItem key={idx}>{step}</ListItem>
       })
 
-  const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords } = dnsResults
+  const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords, cnameRecord } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
   let emailPassCount = 0
   let emailInfoCount = 0
@@ -147,8 +147,27 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
           )
         })}
       </AccordionPanel>
+      <AccordionItem>
+        <Flex as={AccordionButton}>
+          <Text fontSize="2xl" ml="2">
+            CNAME Record
+          </Text>
+          <AccordionIcon boxSize="icons.xl" />
+        </Flex>
+        <AccordionPanel>
+          <Box px="2">
+            <Flex mb="1" px="2">
+              <Text mr="1" minW="7%">
+                <Trans>CNAME:</Trans>
+              </Text>
+              {cnameRecord ? cnameRecord : 'None'}
+            </Flex>
+          </Box>
+        </AccordionPanel>
+      </AccordionItem>
     </AccordionItem>
   )
+
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
       <Text fontsize="lg">
@@ -305,6 +324,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
           />
         </AccordionPanel>
       </AccordionItem>
+
       <AccordionItem>
         <Flex as={AccordionButton}>
           <Text fontSize="2xl" ml="2">

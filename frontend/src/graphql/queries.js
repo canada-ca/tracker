@@ -215,7 +215,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
   query DomainGuidancePage($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
       domain
-      // cnameRecord might have to remove this part
       lastRan
       rcode
       blocked
@@ -285,7 +284,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
             timestamp
             baseDomain
             recordExists
-            # cnameRecord //uncomment this part might work
+            cnameRecord
             mxRecords {
               hosts {
                 preference
