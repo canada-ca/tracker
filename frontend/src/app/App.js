@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense } from 'react'
 import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
@@ -14,7 +14,6 @@ import { FloatingMenu } from './FloatingMenu'
 import { PrivatePage } from './PrivatePage'
 import { Page } from './Page'
 
-import { wsClient } from '../client'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { useUserVar } from '../utilities/userState'
@@ -53,15 +52,6 @@ export function App() {
   const { i18n } = useLingui()
   const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
-
-  // Close websocket on user jwt change (refresh/logout)
-  // Ready state documented at: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
-  useEffect(() => {
-    // User is logged out and websocket connection is active
-    if (currentUser?.jwt === '' && [0, 1].includes(wsClient.status)) {
-      wsClient.close()
-    }
-  }, [currentUser.jwt])
 
   if (loading) return <LoadingMessage />
 
