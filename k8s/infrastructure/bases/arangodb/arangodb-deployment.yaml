@@ -13,7 +13,7 @@ spec:
     - |
       #!/bin/sh
       echo "server.harden = true" >> /etc/arangodb3/arangod.conf
-      echo "javascript.endpoints-allowlist = [\"http://arangodb\.db(:8529)?/\"]" >> /etc/arangodb3/arangod.conf
+      echo "javascript.endpoints-allowlist = [^\"https?://arangodb\.db(:8529)?(/|$)\"]" >> /etc/arangodb3/arangod.conf
   tls:
     caSecretName: None
   externalAccess:
