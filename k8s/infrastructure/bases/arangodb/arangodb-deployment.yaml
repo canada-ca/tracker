@@ -4,11 +4,16 @@ metadata:
   name: arangodb
   namespace: db
   labels:
-    app: 'arangodb'
+    app: "arangodb"
 spec:
   image: arangodb/arangodb:3.10.5
   environment: Production
   mode: Single
+  initScripts:
+    - |
+      #!/bin/sh
+      echo "server.harden = true" >> /etc/arangodb3/arangod.conf
+      echo "javascript.endpoints-allowlist = [\"http://arangodb\.db(:8529)?/\"]" >> /etc/arangodb3/arangod.conf
   tls:
     caSecretName: None
   externalAccess:
@@ -22,7 +27,7 @@ spec:
       spec:
         storageClassName: slow-delete
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 8Gi
@@ -34,7 +39,7 @@ spec:
       spec:
         storageClassName: fast-delete
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 80Gi
@@ -53,7 +58,7 @@ spec:
       spec:
         storageClassName: fast-delete
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 80Gi
