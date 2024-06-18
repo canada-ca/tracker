@@ -10,10 +10,9 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import compression from 'compression'
 
 import requestLanguage from 'express-request-language'
-import { execute, subscribe, GraphQLSchema } from 'graphql'
+import { GraphQLSchema } from 'graphql'
 import depthLimit from 'graphql-depth-limit'
 import { createComplexityLimitRule } from 'graphql-validation-complexity'
-import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { createQuerySchema } from './query'
 import { createMutationSchema } from './mutation'
@@ -100,18 +99,6 @@ export const Server = async ({
   app.get('/ready', (_req, res) => {
     res.json({ ok: 'yes' })
   })
-
-  SubscriptionServer.create(
-    {
-      schema,
-      execute,
-      subscribe,
-    },
-    {
-      server: httpServer,
-      path: server.graphqlPath,
-    },
-  )
 
   return httpServer
 }
