@@ -9,11 +9,6 @@ spec:
   image: arangodb/arangodb:3.10.5
   environment: Production
   mode: Single
-  initScripts:
-    - |
-      #!/bin/sh
-      echo "server.harden = true" >> /etc/arangodb3/arangod.conf
-      echo "javascript.endpoints-allowlist = [^\"https?://arangodb\.db(:8529)?(/|$)\"]" >> /etc/arangodb3/arangod.conf
   tls:
     caSecretName: None
   externalAccess:
@@ -48,6 +43,9 @@ spec:
   coordinators:
     count: 3
   single:
+    args:
+      - --server.harden
+      - --javascript.endpoints-allowlist "^https?://arangodb\.db(:8529)?(/|$)"
     resources:
       requests:
         cpu: 500m
