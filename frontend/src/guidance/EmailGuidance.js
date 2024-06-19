@@ -147,24 +147,6 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
           )
         })}
       </AccordionPanel>
-      <AccordionItem>
-        <Flex as={AccordionButton}>
-          <Text fontSize="2xl" ml="2">
-            CNAME Record
-          </Text>
-          <AccordionIcon boxSize="icons.xl" />
-        </Flex>
-        <AccordionPanel>
-          <Box px="2">
-            <Flex mb="1" px="2">
-              <Text mr="1" minW="7%">
-                <Trans>CNAME:</Trans>
-              </Text>
-              {cnameRecord ? cnameRecord : 'None'}
-            </Flex>
-          </Box>
-        </AccordionPanel>
-      </AccordionItem>
     </AccordionItem>
   )
 
@@ -324,7 +306,24 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
           />
         </AccordionPanel>
       </AccordionItem>
-
+      <AccordionItem>
+        <Flex as={AccordionButton}>
+          <Text fontSize="2xl" ml="2">
+            CNAME Record
+          </Text>
+          <AccordionIcon boxSize="icons.xl" />
+        </Flex>
+        <AccordionPanel>
+          <Box px="2">
+            <Flex mb="1" px="2">
+              <Text mr="1" minW="7%">
+                <Trans>CNAME:</Trans>
+              </Text>
+              {cnameRecord ? cnameRecord : 'None'}
+            </Flex>
+          </Box>
+        </AccordionPanel>
+      </AccordionItem>
       <AccordionItem>
         <Flex as={AccordionButton}>
           <Text fontSize="2xl" ml="2">
