@@ -320,7 +320,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
               <Text mr="1" minW="7%" ml="2">
                 <Trans>CNAME:</Trans>
               </Text>
-              {cnameRecord ? cnameRecord : 'None'}
+              {cnameRecord ? cnameRecord : t`None`}
             </Flex>
           </Box>
         </AccordionPanel>
