@@ -4,7 +4,7 @@ metadata:
   name: arangodb
   namespace: db
   labels:
-    app: 'arangodb'
+    app: "arangodb"
 spec:
   image: arangodb/arangodb:3.10.5
   environment: Production
@@ -22,7 +22,7 @@ spec:
       spec:
         storageClassName: slow-delete
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 8Gi
@@ -34,7 +34,7 @@ spec:
       spec:
         storageClassName: fast-delete
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 80Gi
@@ -43,6 +43,9 @@ spec:
   coordinators:
     count: 3
   single:
+    args:
+      - --server.harden
+      - --javascript.endpoints-allowlist="^https?://arangodb\.db(:8529)?(/|$)"
     resources:
       requests:
         cpu: 500m
@@ -53,7 +56,7 @@ spec:
       spec:
         storageClassName: fast-delete
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 80Gi
