@@ -1,16 +1,23 @@
 import asyncio
+import concurrent
 import datetime
 import functools
 import json
 import logging
+import time
+from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor
+
 import nats
 import os
 import re
 import signal
 import sys
 import traceback
-from arango import ArangoClient
+from arango import ArangoClient, DocumentUpdateError
 from dotenv import load_dotenv
+from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
+from nats.errors import TimeoutError
 
 from dns_processor.dns_processor import process_results
 from notify.send_mx_diff_email_alerts import send_mx_diff_email_alerts
@@ -147,37 +154,56 @@ def check_mx_diff(processed_results, domain_id):
 
     return mx_record_diff
 
-async def run(loop):
+
+async def run():
+    loop = asyncio.get_running_loop()
+
     async def error_cb(error):
         logger.error(error)
-
-    async def closed_cb():
-        logger.info("Connection to NATS is closed.")
-        await asyncio.sleep(0.1)
-        loop.stop()
 
     async def reconnected_cb():
         logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     nc = await nats.connect(
         error_cb=error_cb,
-        closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
     )
-
+    js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
-    async def subscribe_handler(msg):
-        await asyncio.sleep(0.01)
+    await js.add_stream(
+        name="SCANS",
+        subjects=[
+            "scans.requests",
+            "scans.dns_scanner_results",
+            "scans.dns_processor_results",
+            "scans.web_scanner_results",
+            "scans.web_processor_results",
+        ],
+        retention=RetentionPolicy.WORK_QUEUE,
+    )
+    sub = await js.pull_subscribe(
+        stream="SCANS",
+        subject="scans.dns_scanner_results",
+        durable="dns_processor",
+        config=ConsumerConfig(
+            ack_policy=AckPolicy.EXPLICIT,
+            max_deliver=1,
+            max_waiting=100_000,
+            ack_wait=60,
+        ),
+    )
+
+    def run_processor(msg):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
         logger.info(f"Received a message on '{subject} {reply}': {data}")
         payload = json.loads(msg.data)
 
-        results = payload.get("results")
+        scan_results = payload.get("results")
         domain_key = payload.get("domain_key")
         user_key = payload.get("user_key")
         shared_id = payload.get("shared_id")
@@ -188,9 +214,9 @@ async def run(loop):
             logger.error(f"Error while fetching domain: {str(e)}")
             return
 
-        results["sends_email"] = domain.get("sendsEmail", "unknown")
+        scan_results["sends_email"] = domain.get("sendsEmail", "unknown")
 
-        processed_results = process_results(results)
+        processed_results = process_results(scan_results)
         try:
             if processed_results.get("mx_records") is not None:
                 mx_record_diff = check_mx_diff(
@@ -207,6 +233,8 @@ async def run(loop):
         dkim_status = processed_results.get("dkim").get("status")
 
         rcode = processed_results.get("rcode", None)
+
+        formatted_scan_data_array = []
 
         if user_key is None:
             try:
@@ -272,11 +300,13 @@ async def run(loop):
                 domain.update({"phase": dmarc_phase})
                 domain.update({"wildcardSibling": wildcard_sibling})
                 domain.update({"rcode": rcode})
-                domain.update({"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")})
+                domain.update(
+                    {"hasCyberRua": processed_results.get("dmarc").get("has_cyber_rua")}
+                )
                 domain.update({"webScanPending": True})
 
                 # If we have no IPs, we can't do web scans. Set all web statuses to info
-                if not results.get("resolve_ips", None):
+                if not scan_results.get("resolve_ips", None):
                     domain.update({"webScanPending": False})
                     domain["status"].update(
                         {
@@ -290,10 +320,18 @@ async def run(loop):
                             "protocols": "info",
                         }
                     )
+                del domain["_rev"]
 
-                db.collection("domains").update(domain)
+                try:
+                    db.collection("domains").update(domain)
+                except DocumentUpdateError as e:
+                    logger.error(
+                        f"Error while updating domain '{domain['domain']}'. Retrying: {str(e)}"
+                    )
+                    time.sleep(0.5)
+                    db.collection("domains").update(domain)
 
-                for ip in results.get("resolve_ips", None) or []:
+                for ip in scan_results.get("resolve_ips", None) or []:
                     web_scan = db.collection("webScan").insert(
                         {"status": "pending", "ipAddress": ip}
                     )
@@ -303,19 +341,15 @@ async def run(loop):
                             "_to": web_scan["_id"],
                         }
                     )
-
-                    await nc.publish(
-                        f"{PUBLISH_TO}.{domain_key}.web",
-                        json.dumps(
-                            {
-                                "user_key": user_key,
-                                "domain": domain["domain"],
-                                "domain_key": domain_key,
-                                "shared_id": shared_id,
-                                "ip_address": ip,
-                                "web_scan_key": web_scan["_key"],
-                            }
-                        ).encode(),
+                    formatted_scan_data_array.append(
+                        {
+                            "user_key": user_key,
+                            "domain": domain["domain"],
+                            "domain_key": domain_key,
+                            "shared_id": shared_id,
+                            "ip_address": ip,
+                            "web_scan_key": web_scan["_key"],
+                        }
                     )
 
             except Exception as e:
@@ -328,28 +362,81 @@ async def run(loop):
                 f"DNS Scans inserted into database: {json.dumps(processed_results)}"
             )
 
-    await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
+            return msg, formatted_scan_data_array
 
-    def ask_exit(sig_name):
+    @dataclass
+    class ExitCondition:
+        should_exit: bool = False
+
+    exit_condition = ExitCondition()
+
+    async def ask_exit(sig_name):
         logger.error(f"Got signal {sig_name}: exit")
-        if nc.is_closed:
-            return
-        loop.create_task(nc.close())
+        exit_condition.should_exit = True
 
     for signal_name in {"SIGINT", "SIGTERM"}:
         loop.add_signal_handler(
-            getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
+            getattr(signal, signal_name),
+            lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
+    while True:
+        if exit_condition.should_exit:
+            break
+        if nc.is_closed:
+            logger.error("Connection to NATS is closed.")
+            break
+        try:
+            logger.info("Fetching message...")
+            msgs = await sub.fetch(batch=5, timeout=5)
+            logger.info(f"Received {len(msgs)} messages")
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                futures = [
+                    loop.run_in_executor(
+                        executor,
+                        run_processor,
+                        msg,
+                    )
+                    for msg in msgs
+                ]
 
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+                results = await asyncio.gather(*futures, return_exceptions=True)
+                for res in results:
+                    if isinstance(res, Exception):
+                        logger.error(f"Uncaught scan error: {res}")
+                        continue
+
+                    if res is None:
+                        continue
+
+                    msg, completed_scan_results = res
+                    for formatted_scan_data in completed_scan_results:
+                        try:
+                            await js.publish(
+                                stream="SCANS",
+                                subject=f"scans.dns_processor_results",
+                                payload=json.dumps(formatted_scan_data).encode(),
+                            )
+                        except TimeoutError as e:
+                            logger.error(f"Timeout while publishing results: {e}")
+                            logger.error(f"{traceback.format_exc()}")
+                            continue
+
+                    try:
+                        await msg.ack()
+                    except Exception as e:
+                        logger.error(f"Error while acknowledging message: {e}")
+                        continue
+
+        except nats.errors.TimeoutError:
+            logger.info("No messages available...")
+            continue
+
+    logger.info("Service is shutting down...")
+
+    await nc.flush()
+    await nc.close()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())

@@ -1,9 +1,13 @@
+import concurrent
 import functools
 import json
 import logging
 import asyncio
 import os
 import signal
+from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor
+
 import sys
 import traceback
 import re
@@ -11,12 +15,19 @@ import re
 from arango import ArangoClient
 from dotenv import load_dotenv
 import nats
+from nats.errors import TimeoutError
+from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
+
 from web_processor.web_processor import process_results
 
 
 load_dotenv()
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO,
+    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+)
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "web_processor")
@@ -41,15 +52,15 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 def to_camelcase(string):
     string = string
     # remove underscore and uppercase following letter
-    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    string = re.sub("_([a-z])", lambda match: match.group(1).upper(), string)
     # keep numbers seperated with hyphen
-    string = re.sub('([0-9])_([0-9])', r'\1-\2', string)
+    string = re.sub("([0-9])_([0-9])", r"\1-\2", string)
     # remove underscore before numbers
-    string = re.sub('_([0-9])', r'\1', string)
+    string = re.sub("_([0-9])", r"\1", string)
     # convert snakecase to camel
-    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    string = re.sub("_([a-z])", lambda match: match.group(1).upper(), string)
     # replace hyper with underscore
-    string = re.sub('-', r'_', string)
+    string = re.sub("-", r"_", string)
     return string
 
 
@@ -59,33 +70,54 @@ def snake_to_camel(d):
     if isinstance(d, list):
         return [snake_to_camel(entry) for entry in d]
     if isinstance(d, dict):
-        return {to_camelcase(a): snake_to_camel(b) if isinstance(b, (dict, list)) else b for a, b in d.items()}
+        return {
+            to_camelcase(a): snake_to_camel(b) if isinstance(b, (dict, list)) else b
+            for a, b in d.items()
+        }
 
 
-async def processor_service(loop):
+async def processor_service():
+    loop = asyncio.get_running_loop()
+
     async def error_cb(error):
         logger.error(error)
-
-    async def closed_cb():
-        logger.info("Connection to NATS is closed.")
-        await asyncio.sleep(0.1)
-        loop.stop()
 
     async def reconnected_cb():
         logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
     nc = await nats.connect(
         error_cb=error_cb,
-        closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
     )
-
+    js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
+    await js.add_stream(
+        name="SCANS",
+        subjects=[
+            "scans.requests",
+            "scans.dns_scanner_results",
+            "scans.dns_processor_results",
+            "scans.web_scanner_results",
+            "scans.web_processor_results",
+        ],
+        retention=RetentionPolicy.WORK_QUEUE,
+    )
+    sub = await js.pull_subscribe(
+        stream="SCANS",
+        subject="scans.web_scanner_results",
+        durable="web_processor",
+        config=ConsumerConfig(
+            ack_policy=AckPolicy.EXPLICIT,
+            max_deliver=1,
+            max_waiting=100_000,
+            ack_wait=60,
+        ),
+    )
+
     async def subscribe_handler(msg):
-        await asyncio.sleep(0.01)
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
@@ -100,18 +132,20 @@ async def processor_service(loop):
         ip_address = payload.get("ip_address")
         web_scan_key = payload.get("web_scan_key")
 
-        logger.info(f"Starting web scan processing on '{domain}' at IP address '{ip_address}'")
+        logger.info(
+            f"Starting web scan processing on '{domain}' at IP address '{ip_address}'"
+        )
 
         processed_results = process_results(results)
 
         if user_key is None:
             try:
                 db.collection("webScan").update_match(
-                    {'_key': web_scan_key},
+                    {"_key": web_scan_key},
                     {
                         "status": "complete",
-                        "results": snake_to_camel(processed_results)
-                    }
+                        "results": snake_to_camel(processed_results),
+                    },
                 )
 
                 domain = db.collection("domains").get({"_key": domain_key})
@@ -135,7 +169,7 @@ async def processor_service(loop):
                     )
 
                 all_web_scan_cursor = db.aql.execute(
-                    '''
+                    """
                     WITH web, webScan
                     FOR webV,e IN 1 ANY @web_scan_id webToWebScans
                         FOR webScanV, webScanE IN 1 ANY webV._id webToWebScans
@@ -152,8 +186,8 @@ async def processor_service(loop):
                                 "curve_status": webScanV.results.tlsResult.curveStatus,
                                 "blocked_category": webScanV.results.connectionResults.httpsChainResult.connections[0].connection.blockedCategory,
                             }
-                    ''',
-                    bind_vars={'web_scan_id': f'webScan/{web_scan_key}'}
+                    """,
+                    bind_vars={"web_scan_id": f"webScan/{web_scan_key}"},
                 )
 
                 all_web_scans = [web_scan for web_scan in all_web_scan_cursor]
@@ -196,7 +230,9 @@ async def processor_service(loop):
                 domain["status"]["ciphers"] = get_status(cipher_statuses)
                 domain["status"]["curves"] = get_status(curve_statuses)
                 domain["status"]["certificates"] = get_status(certificate_statuses)
-                domain["blocked"] = any([bool(blocked_category) for blocked_category in blocked_categories])
+                domain["blocked"] = any(
+                    [bool(blocked_category) for blocked_category in blocked_categories]
+                )
                 domain["webScanPending"] = scan_pending
                 db.collection("domains").update(domain)
 
@@ -206,28 +242,64 @@ async def processor_service(loop):
                 )
                 return
 
-    await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
+        await msg.ack()
 
-    def ask_exit(sig_name):
+    @dataclass
+    class ExitCondition:
+        should_exit: bool = False
+
+    exit_condition = ExitCondition()
+
+    async def ask_exit(sig_name):
         logger.error(f"Got signal {sig_name}: exit")
-        if nc.is_closed:
-            return
-        loop.create_task(nc.close())
+        exit_condition.should_exit = True
 
-    for signal_name in {'SIGINT', 'SIGTERM'}:
+    for signal_name in {"SIGINT", "SIGTERM"}:
         loop.add_signal_handler(
             getattr(signal, signal_name),
-            functools.partial(ask_exit, signal_name))
+            lambda: asyncio.create_task(ask_exit(signal_name)),
+        )
 
+    def check_concurrent(msg):
+        print(f"Starting concurrent check...: {msg}")
+        n_loop = asyncio.new_event_loop()
+        try:
+            n_loop.run_until_complete(subscribe_handler(msg))
+            print(f"Concurrent check done...: {msg}")
+        finally:
+            n_loop.close()
 
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(processor_service(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
+    while True:
+        if exit_condition.should_exit:
+            break
+        if nc.is_closed:
+            logger.error("Connection to NATS is closed.")
+            break
+        try:
+            logger.info("Fetching message...")
+            msgs = await sub.fetch(batch=5, timeout=5)
+            logger.info(f"Received {len(msgs)} messages")
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                results = await asyncio.gather(
+                    *[
+                        loop.run_in_executor(
+                            executor,
+                            check_concurrent,
+                            msg,
+                        )
+                        for msg in msgs
+                    ]
+                )
+
+        except nats.errors.TimeoutError:
+            logger.info("No messages available...")
+            continue
+
+    logger.info("Service is shutting down...")
+
+    await nc.flush()
+    await nc.close()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(processor_service())
