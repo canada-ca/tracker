@@ -26,11 +26,11 @@ KUSTO_CLIENT = KustoClient(KCSB_DATA)
 
 def get_labelled_org_assets_from_org_key(org_key):
     query = f"""
-    declare query_parameters(orgKey:string = "'{org_key}'");
+    declare query_parameters(orgKey:string = '["{org_key}"]');
     EasmAsset
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
-    | where Labels has orgKey
+    | where Labels == orgKey
     | project AssetName
     """
     try:
