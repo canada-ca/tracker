@@ -21,9 +21,16 @@ from dns_scanner.dns_scanner import scan_domain
 
 load_dotenv()
 
+LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
+
+logger_level = logging.getLevelName(LOGGER_LEVEL)
+if not isinstance(logger_level, int):
+    print(f"Invalid logger level: {LOGGER_LEVEL}")
+    sys.exit(1)
+
 logging.basicConfig(
     stream=sys.stdout,
-    level=logging.INFO,
+    level=logger_level,
     format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
 )
 logger = logging.getLogger()
@@ -159,11 +166,9 @@ async def run():
             ack_policy=AckPolicy.EXPLICIT,
             max_deliver=1,
             max_waiting=100_000,
-            ack_wait=60,
+            ack_wait=90,
         ),
     )
-
-    logger.info(f"Subscribed to '{SUBSCRIBE_TO}'")
 
     @dataclass
     class ExitCondition:
@@ -172,6 +177,8 @@ async def run():
     exit_condition = ExitCondition()
 
     async def ask_exit(sig_name):
+        if exit_condition.should_exit is True:
+            return
         logger.error(f"Got signal {sig_name}: exit")
         exit_condition.should_exit = True
 
@@ -181,17 +188,62 @@ async def run():
             lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
-    while True:
-        if exit_condition.should_exit:
-            break
-        if nc.is_closed:
-            logger.error("Connection to NATS is closed.")
-            break
+    async def handle_finished_scan(fut, semaphore):
         try:
-            logger.info("Fetching message...")
-            msgs = await sub.fetch(batch=5)
-            logger.info(f"Received {len(msgs)} messages")
-            with concurrent.futures.ThreadPoolExecutor() as executor:
+            await fut
+            res = fut.result()
+            if isinstance(res, Exception):
+                logger.error(f"Uncaught scan error: {res}")
+                return
+
+            msg, scan_data = res
+            try:
+                await js.publish(
+                    stream="SCANS",
+                    subject="scans.dns_scanner_results",
+                    payload=json.dumps(scan_data).encode(),
+                )
+            except TimeoutError as e:
+                logger.error(f"Timeout while publishing results: {e}")
+                logger.error(f"{traceback.format_exc()}")
+                return
+
+            try:
+                await msg.ack()
+            except Exception as e:
+                logger.error(f"Error while acknowledging message: {e}")
+        finally:
+            logger.debug("Releasing semaphore...")
+            semaphore.release()
+
+    sem = asyncio.Semaphore(1)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        while True:
+            if exit_condition.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            await sem.acquire()
+
+            if exit_condition.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            try:
+                logger.debug("Fetching message...")
+                msgs = await sub.fetch(batch=1, timeout=1)
+                logger.debug(f"Received message: {msgs}")
+            except nats.errors.TimeoutError:
+                logger.debug("No messages available...")
+                sem.release()
+                continue
+
+            try:
                 futures = [
                     loop.run_in_executor(
                         executor,
@@ -200,38 +252,18 @@ async def run():
                     )
                     for msg in msgs
                 ]
-                results = await asyncio.gather(*futures, return_exceptions=True)
-
-                for res in results:
-                    if isinstance(res, Exception):
-                        logger.error(f"Uncaught scan error: {res}")
-                        continue
-
-                    msg, scan_data = res
-                    try:
-                        await js.publish(
-                            stream="SCANS",
-                            subject="scans.dns_scanner_results",
-                            payload=json.dumps(scan_data).encode(),
-                        )
-                    except TimeoutError as e:
-                        logger.error(f"Timeout while publishing results: {e}")
-                        logger.error(f"{traceback.format_exc()}")
-                        continue
-
-                    try:
-                        await msg.ack()
-                    except Exception as e:
-                        logger.error(f"Error while acknowledging message: {e}")
-                        continue
-
-        except nats.errors.TimeoutError:
-            logger.info("No messages available...")
-            continue
+                for future in futures:
+                    future.add_done_callback(
+                        lambda fut: asyncio.create_task(handle_finished_scan(fut, sem))
+                    )
+            except Exception as e:
+                logger.error(f"Error while queueing scans, releasing semaphore: {e}")
+                sem.release()
+                continue
 
     logger.info("Service is shutting down...")
 
-    await nc.flush(timeout=5)
+    await nc.flush()
     logger.info("Flushed NATS connection...")
     await nc.close()
     logger.info("Closed NATS connection...")

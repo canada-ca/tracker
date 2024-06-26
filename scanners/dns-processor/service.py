@@ -5,6 +5,7 @@ import functools
 import json
 import logging
 import time
+import uuid
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
 
@@ -24,9 +25,16 @@ from notify.send_mx_diff_email_alerts import send_mx_diff_email_alerts
 
 load_dotenv()
 
+LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
+
+logger_level = logging.getLevelName(LOGGER_LEVEL)
+if not isinstance(logger_level, int):
+    print(f"Invalid logger level: {LOGGER_LEVEL}")
+    sys.exit(1)
+
 logging.basicConfig(
     stream=sys.stdout,
-    level=logging.INFO,
+    level=logger_level,
     format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
 )
 logger = logging.getLogger()
@@ -192,11 +200,11 @@ async def run():
             ack_policy=AckPolicy.EXPLICIT,
             max_deliver=1,
             max_waiting=100_000,
-            ack_wait=60,
+            ack_wait=90,
         ),
     )
 
-    def run_processor(msg):
+    def process_msg(msg):
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
@@ -320,16 +328,25 @@ async def run():
                             "protocols": "info",
                         }
                     )
-                del domain["_rev"]
 
+                del domain["_rev"]
                 try:
                     db.collection("domains").update(domain)
                 except DocumentUpdateError as e:
-                    logger.error(
-                        f"Error while updating domain '{domain['domain']}'. Retrying: {str(e)}"
-                    )
-                    time.sleep(0.5)
-                    db.collection("domains").update(domain)
+                    error_str = str(e)
+                    start_retry = time.time()
+                    # Retry for 5 seconds in case another process is updating the same document
+                    while time.time() - start_retry < 5:
+                        logger.error(
+                            f"Error while updating domain '{domain['domain']}'. Retrying: {error_str}"
+                        )
+                        try:
+                            db.collection("domains").update(domain)
+                            break
+                        except DocumentUpdateError as while_e:
+                            time.sleep(0.1)
+                            error_str = str(while_e)
+                            continue
 
                 for ip in scan_results.get("resolve_ips", None) or []:
                     web_scan = db.collection("webScan").insert(
@@ -380,62 +397,85 @@ async def run():
             lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
-    while True:
-        if exit_condition.should_exit:
-            break
-        if nc.is_closed:
-            logger.error("Connection to NATS is closed.")
-            break
+    async def handle_finished_scan(fut, semaphore):
         try:
-            logger.info("Fetching message...")
-            msgs = await sub.fetch(batch=5, timeout=5)
-            logger.info(f"Received {len(msgs)} messages")
-            with concurrent.futures.ThreadPoolExecutor() as executor:
+            await fut
+            res = fut.result()
+            if isinstance(res, Exception):
+                logger.error(f"Uncaught scan error: {res}")
+                return
+
+            msg, scan_data_array = res
+            for scan_data in scan_data_array:
+                try:
+                    await js.publish(
+                        stream="SCANS",
+                        subject="scans.dns_processor_results",
+                        payload=json.dumps(scan_data).encode(),
+                    )
+                except TimeoutError as e:
+                    logger.error(f"Timeout while publishing results: {e}")
+                    logger.error(f"{traceback.format_exc()}")
+                    return
+            try:
+                await msg.ack()
+            except Exception as e:
+                logger.error(f"Error while acknowledging message: {e}")
+        finally:
+            logger.debug("Releasing semaphore...")
+            semaphore.release()
+
+    sem = asyncio.Semaphore(1)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        while True:
+            if exit_condition.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            await sem.acquire()
+
+            if exit_condition.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            try:
+                logger.debug("Fetching message...")
+                msgs = await sub.fetch(batch=1, timeout=1)
+                logger.debug(f"Received message: {msgs}")
+            except nats.errors.TimeoutError:
+                logger.debug("No messages available...")
+                sem.release()
+                continue
+
+            try:
                 futures = [
                     loop.run_in_executor(
                         executor,
-                        run_processor,
+                        process_msg,
                         msg,
                     )
                     for msg in msgs
                 ]
+                for future in futures:
+                    future.add_done_callback(
+                        lambda fut: asyncio.create_task(handle_finished_scan(fut, sem))
+                    )
 
-                results = await asyncio.gather(*futures, return_exceptions=True)
-                for res in results:
-                    if isinstance(res, Exception):
-                        logger.error(f"Uncaught scan error: {res}")
-                        continue
-
-                    if res is None:
-                        continue
-
-                    msg, completed_scan_results = res
-                    for formatted_scan_data in completed_scan_results:
-                        try:
-                            await js.publish(
-                                stream="SCANS",
-                                subject=f"scans.dns_processor_results",
-                                payload=json.dumps(formatted_scan_data).encode(),
-                            )
-                        except TimeoutError as e:
-                            logger.error(f"Timeout while publishing results: {e}")
-                            logger.error(f"{traceback.format_exc()}")
-                            continue
-
-                    try:
-                        await msg.ack()
-                    except Exception as e:
-                        logger.error(f"Error while acknowledging message: {e}")
-                        continue
-
-        except nats.errors.TimeoutError:
-            logger.info("No messages available...")
-            continue
+            except Exception as e:
+                logger.error(f"Error while queueing scan, releasing semaphore: {e}")
+                sem.release()
 
     logger.info("Service is shutting down...")
 
     await nc.flush()
+    logger.info("Flushed NATS connection")
     await nc.close()
+    logger.info("Closed NATS connection...")
 
 
 if __name__ == "__main__":

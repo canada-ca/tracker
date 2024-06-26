@@ -5,7 +5,7 @@ import logging
 import asyncio
 import os
 import signal
-import traceback
+import time
 from dataclasses import dataclass
 
 import sys
@@ -21,9 +21,16 @@ from nats.errors import TimeoutError
 
 load_dotenv()
 
+LOGGER_LEVEL = os.getenv("LOGGER_LEVEL", "INFO")
+
+logger_level = logging.getLevelName(LOGGER_LEVEL)
+if not isinstance(logger_level, int):
+    print(f"Invalid logger level: {LOGGER_LEVEL}")
+    sys.exit(1)
+
 logging.basicConfig(
     stream=sys.stdout,
-    level=logging.INFO,
+    level=logger_level,
     format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
 )
 logger = logging.getLogger()
@@ -78,6 +85,9 @@ def process_results(results):
     return results
 
 
+# MessageData class contains required from the Msg for scan but nothing else.
+# The async functions the Msg class contains causes pickle error due to
+# it being passed to a different process while inside an asyncio event loop
 @dataclass
 class MessageData:
     subject: str
@@ -159,7 +169,7 @@ async def scan_service():
             ack_policy=AckPolicy.EXPLICIT,
             max_deliver=1,
             max_waiting=100_000,
-            ack_wait=60,
+            ack_wait=90,
         ),
     )
 
@@ -170,6 +180,8 @@ async def scan_service():
     exit_condition = ExitCondition()
 
     async def ask_exit(sig_name):
+        if exit_condition.should_exit is True:
+            return
         logger.error(f"Got signal {sig_name}: exit")
         exit_condition.should_exit = True
 
@@ -179,17 +191,65 @@ async def scan_service():
             lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
-    while True:
-        if exit_condition.should_exit:
-            break
-        if nc.is_closed:
-            logger.error("Connection to NATS is closed.")
-            break
+    async def handle_finished_scan(fut, msg, semaphore):
         try:
-            logger.info("Fetching message...")
-            msgs = await sub.fetch(batch=5, timeout=5)
-            logger.info(f"Received {len(msgs)} messages")
-            with concurrent.futures.ProcessPoolExecutor() as executor:
+            await fut
+            res = fut.result()
+            if isinstance(res, Exception):
+                logger.error(f"Uncaught scan error: {res}")
+                return
+
+            _msg, scan_data = res
+            try:
+                await js.publish(
+                    stream="SCANS",
+                    subject="scans.web_scanner_results",
+                    payload=json.dumps(scan_data).encode(),
+                )
+            except TimeoutError as e:
+                logger.error(f"Timeout while publishing results: {e}")
+                return
+
+            try:
+                await msg.ack()
+            except Exception as e:
+                logger.error(f"Error while acknowledging message: {e}")
+        finally:
+            logger.debug("Releasing semaphore...")
+            semaphore.release()
+
+    sem = asyncio.Semaphore(1)
+
+    # Use a ProcessPoolExecutor to run the scans concurrently.
+    # sslyze has a memory leak that causes it to consume a lot of memory
+    # after running for a while. This is a workaround to prevent the
+    # memory leak from causing the service to crash.
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        while True:
+            if exit_condition.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            await sem.acquire()
+
+            if exit_condition.should_exit:
+                break
+            if nc.is_closed:
+                logger.error("Connection to NATS is closed.")
+                break
+
+            try:
+                logger.debug("Fetching message...")
+                msgs = await sub.fetch(batch=1, timeout=1)
+                logger.debug(f"Received message: {msgs}")
+            except nats.errors.TimeoutError:
+                logger.debug("No messages available...")
+                sem.release()
+                continue
+
+            try:
                 futures = [
                     loop.run_in_executor(
                         executor,
@@ -202,38 +262,22 @@ async def scan_service():
                     )
                     for msg in msgs
                 ]
-                results = await asyncio.gather(*futures, return_exceptions=True)
-
-                for index, res in enumerate(results):
-                    if isinstance(res, Exception):
-                        logger.error(f"Uncaught scan error: {res}")
-                        logger.error(f"Traceback: {traceback.format_exc()}")
-                        continue
-
-                    msg, scan_data = res
-                    try:
-                        await js.publish(
-                            stream="SCANS",
-                            subject="scans.web_scanner_results",
-                            payload=json.dumps(scan_data).encode(),
+                for index, future in enumerate(futures):
+                    future.add_done_callback(
+                        lambda fut: asyncio.create_task(
+                            handle_finished_scan(fut, msgs[index], sem)
                         )
-                    except TimeoutError as e:
-                        logger.error(f"Timeout while publishing results: {e}")
-                        continue
-
-                    try:
-                        await msgs[index].ack()
-                    except Exception as e:
-                        logger.error(f"Error while acknowledging message: {e}")
-
-        except nats.errors.TimeoutError:
-            logger.info("No messages available...")
-            continue
+                    )
+            except Exception as e:
+                logger.error(f"Error while queuing scans: {e}")
+                sem.release()
 
     logger.info("Service is shutting down...")
 
     await nc.flush()
+    logger.info("Flushed NATS connection...")
     await nc.close()
+    logger.info("Closed NATS connection...")
 
 
 if __name__ == "__main__":
