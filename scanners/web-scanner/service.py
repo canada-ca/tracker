@@ -35,7 +35,7 @@ logging.basicConfig(
     level=logger_level,
     format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
 )
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 NAME = os.getenv("NAME", "web-scanner")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.web")
