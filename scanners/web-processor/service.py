@@ -249,22 +249,25 @@ async def processor_service():
                 except DocumentUpdateError as e:
                     error_str = str(e)
                     start_retry = time.time()
+                    document_updated = False
                     # Retry for 5 seconds in case another process is updating the same document
                     while time.time() - start_retry < 5:
-                        logger.error(
-                            f"Error while updating domain '{domain['domain']}'. Retrying: {error_str}"
-                        )
                         try:
                             db.collection("domains").update(domain)
+                            document_updated = True
                             break
                         except DocumentUpdateError as while_e:
                             time.sleep(0.1)
                             error_str = str(while_e)
                             continue
+                    if not document_updated:
+                        logger.error(
+                            f"Error while updating domain after retrying for received message: {msg}: {error_str}"
+                        )
 
             except Exception as e:
                 logger.error(
-                    f"TLS processor: database insertion(s): {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+                    f"Error while inserting processed results for received message: {msg}: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 return
 
@@ -276,7 +279,7 @@ async def processor_service():
             "shared_id": shared_id,
         }
 
-        return msg, formatted_scan_data
+        return formatted_scan_data
 
     @dataclass
     class ExitCondition:
@@ -294,7 +297,7 @@ async def processor_service():
             lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
-    async def handle_finished_scan(fut, semaphore):
+    async def handle_finished_scan(fut, original_msg, semaphore):
         try:
             await fut
             res = fut.result()
@@ -302,7 +305,7 @@ async def processor_service():
                 logger.error(f"Uncaught scan error: {res}")
                 return
 
-            msg, scan_data = res
+            scan_data = res
             try:
                 await js.publish(
                     stream="SCANS",
@@ -310,19 +313,28 @@ async def processor_service():
                     payload=json.dumps(scan_data).encode(),
                 )
             except TimeoutError as e:
-                logger.error(f"Timeout while publishing results: {e}")
+                logger.error(
+                    f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
+                )
                 logger.error(f"{traceback.format_exc()}")
                 return
 
             try:
-                await msg.ack()
+                await original_msg.ack()
             except Exception as e:
-                logger.error(f"Error while acknowledging message: {e}")
+                logger.error(
+                    f"Error while acknowledging message for received message: {original_msg}: {e}"
+                )
         finally:
             logger.debug("Releasing semaphore...")
-            semaphore.release()
+            try:
+                semaphore.release()
+            except Exception as e:
+                logger.error(
+                    f"Error while releasing semaphore for received message: {original_msg}: {e}"
+                )
 
-    sem = asyncio.Semaphore(1)
+    sem = asyncio.BoundedSemaphore(1)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
@@ -343,29 +355,34 @@ async def processor_service():
             try:
                 logger.debug("Fetching message...")
                 msgs = await sub.fetch(batch=1, timeout=1)
-                logger.debug(f"Received message: {msgs}")
+                msg = msgs[0]
+                logger.debug(f"Received message: {msg}")
             except nats.errors.TimeoutError:
                 logger.debug("No messages available...")
-                sem.release()
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
                 continue
 
             try:
-                futures = [
-                    loop.run_in_executor(
-                        executor,
-                        process_msg,
-                        msg,
+                future = executor.submit(process_msg, msg)
+                future.add_done_callback(
+                    lambda fut: asyncio.create_task(
+                        handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
                     )
-                    for msg in msgs
-                ]
-                for future in futures:
-                    future.add_done_callback(
-                        lambda fut: asyncio.create_task(handle_finished_scan(fut, sem))
-                    )
+                )
 
             except Exception as e:
                 logger.error(f"Error while queueing scan, releasing semaphore: {e}")
-                sem.release()
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
 
     logger.info("Service is shutting down...")
 

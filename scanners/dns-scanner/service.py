@@ -52,6 +52,10 @@ arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
+def to_json(msg):
+    print(json.dumps(msg, indent=2))
+
+
 def run_scan(msg):
     subject = msg.subject
     reply = msg.reply
@@ -121,11 +125,7 @@ def run_scan(msg):
         "shared_id": shared_id,
     }
 
-    return msg, formatted_scan_data
-
-
-def to_json(msg):
-    print(json.dumps(msg, indent=2))
+    return formatted_scan_data
 
 
 async def run():
@@ -188,15 +188,17 @@ async def run():
             lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
-    async def handle_finished_scan(fut, semaphore):
+    async def handle_finished_scan(fut, original_msg, semaphore):
         try:
             await fut
             res = fut.result()
             if isinstance(res, Exception):
-                logger.error(f"Uncaught scan error: {res}")
+                logger.error(
+                    f"Uncaught scan error for received message: {original_msg}: {res}"
+                )
                 return
 
-            msg, scan_data = res
+            scan_data = res
             try:
                 await js.publish(
                     stream="SCANS",
@@ -204,19 +206,27 @@ async def run():
                     payload=json.dumps(scan_data).encode(),
                 )
             except TimeoutError as e:
-                logger.error(f"Timeout while publishing results: {e}")
-                logger.error(f"{traceback.format_exc()}")
+                logger.error(
+                    f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
+                )
                 return
 
             try:
-                await msg.ack()
+                await original_msg.ack()
             except Exception as e:
-                logger.error(f"Error while acknowledging message: {e}")
+                logger.error(
+                    f"Error while acknowledging message for received message: {original_msg}: {e}"
+                )
         finally:
             logger.debug("Releasing semaphore...")
-            semaphore.release()
+            try:
+                semaphore.release()
+            except Exception as e:
+                logger.error(
+                    f"Error while releasing semaphore for received message: {original_msg}: {e}"
+                )
 
-    sem = asyncio.Semaphore(1)
+    sem = asyncio.BoundedSemaphore(1)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
@@ -237,29 +247,35 @@ async def run():
             try:
                 logger.debug("Fetching message...")
                 msgs = await sub.fetch(batch=1, timeout=1)
-                logger.debug(f"Received message: {msgs}")
+                msg = msgs[0]
+                logger.debug(f"Received message: {msg}")
             except nats.errors.TimeoutError:
                 logger.debug("No messages available...")
-                sem.release()
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
                 continue
 
             try:
-                futures = [
-                    loop.run_in_executor(
-                        executor,
-                        run_scan,
-                        msg,
+                future = loop.run_in_executor(executor, run_scan, msg)
+                future.add_done_callback(
+                    lambda fut: asyncio.create_task(
+                        handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
                     )
-                    for msg in msgs
-                ]
-                for future in futures:
-                    future.add_done_callback(
-                        lambda fut: asyncio.create_task(handle_finished_scan(fut, sem))
-                    )
+                )
             except Exception as e:
-                logger.error(f"Error while queueing scans, releasing semaphore: {e}")
-                sem.release()
-                continue
+                logger.error(
+                    f"Error while queueing scans for received message: {msg}: releasing semaphore: {e}"
+                )
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
 
     logger.info("Service is shutting down...")
 

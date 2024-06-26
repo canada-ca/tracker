@@ -5,6 +5,8 @@ import logging
 import asyncio
 import os
 import signal
+import traceback
+
 import time
 from dataclasses import dataclass
 
@@ -85,16 +87,6 @@ def process_results(results):
     return results
 
 
-# MessageData class contains required from the Msg for scan but nothing else.
-# The async functions the Msg class contains causes pickle error due to
-# it being passed to a different process while inside an asyncio event loop
-@dataclass
-class MessageData:
-    subject: str
-    reply: str
-    data: bytes
-
-
 def run_scan(msg):
     subject = msg.subject
     reply = msg.reply
@@ -129,7 +121,7 @@ def run_scan(msg):
 
     logging.info(f"Formatted results: {formatted_results}")
 
-    return msg, formatted_results
+    return formatted_results
 
 
 async def scan_service():
@@ -182,7 +174,7 @@ async def scan_service():
     async def ask_exit(sig_name):
         if exit_condition.should_exit is True:
             return
-        logger.error(f"Got signal {sig_name}: exit")
+        logger.info(f"Got signal {sig_name}: exit")
         exit_condition.should_exit = True
 
     for signal_name in {"SIGINT", "SIGTERM"}:
@@ -191,15 +183,17 @@ async def scan_service():
             lambda: asyncio.create_task(ask_exit(signal_name)),
         )
 
-    async def handle_finished_scan(fut, msg, semaphore):
+    async def handle_finished_scan(fut, original_msg, semaphore):
         try:
             await fut
             res = fut.result()
             if isinstance(res, Exception):
-                logger.error(f"Uncaught scan error: {res}")
+                logger.error(
+                    f"Uncaught scan error for received message: {original_msg}: {res}"
+                )
                 return
 
-            _msg, scan_data = res
+            scan_data = res
             try:
                 await js.publish(
                     stream="SCANS",
@@ -207,24 +201,29 @@ async def scan_service():
                     payload=json.dumps(scan_data).encode(),
                 )
             except TimeoutError as e:
-                logger.error(f"Timeout while publishing results: {e}")
+                logger.error(
+                    f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
+                )
                 return
 
             try:
-                await msg.ack()
+                await original_msg.ack()
             except Exception as e:
-                logger.error(f"Error while acknowledging message: {e}")
+                logger.error(
+                    f"Error while acknowledging message for received message: {original_msg}: {e}"
+                )
         finally:
             logger.debug("Releasing semaphore...")
-            semaphore.release()
+            try:
+                semaphore.release()
+            except Exception as e:
+                logger.error(
+                    f"Error while releasing semaphore for received message: {original_msg}: {e}"
+                )
 
-    sem = asyncio.Semaphore(1)
+    sem = asyncio.BoundedSemaphore(1)
 
-    # Use a ProcessPoolExecutor to run the scans concurrently.
-    # sslyze has a memory leak that causes it to consume a lot of memory
-    # after running for a while. This is a workaround to prevent the
-    # memory leak from causing the service to crash.
-    with concurrent.futures.ProcessPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
             if exit_condition.should_exit:
                 break
@@ -243,34 +242,33 @@ async def scan_service():
             try:
                 logger.debug("Fetching message...")
                 msgs = await sub.fetch(batch=1, timeout=1)
-                logger.debug(f"Received message: {msgs}")
+                msg = msgs[0]
+                logger.debug(f"Received message: {msg}")
             except nats.errors.TimeoutError:
                 logger.debug("No messages available...")
-                sem.release()
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
                 continue
 
             try:
-                futures = [
-                    loop.run_in_executor(
-                        executor,
-                        run_scan,
-                        MessageData(
-                            subject=msg.subject,
-                            reply=msg.reply,
-                            data=msg.data,
-                        ),
+                future = loop.run_in_executor(executor, run_scan, msg)
+                future.add_done_callback(
+                    lambda fut: asyncio.create_task(
+                        handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
                     )
-                    for msg in msgs
-                ]
-                for index, future in enumerate(futures):
-                    future.add_done_callback(
-                        lambda fut: asyncio.create_task(
-                            handle_finished_scan(fut, msgs[index], sem)
-                        )
-                    )
+                )
             except Exception as e:
-                logger.error(f"Error while queuing scans: {e}")
-                sem.release()
+                logger.error(f"Error while queueing scans, releasing semaphore: {e}")
+                try:
+                    sem.release()
+                except Exception as e:
+                    logger.error(
+                        f"Error while releasing semaphore for received message: {msg}: {e}"
+                    )
 
     logger.info("Service is shutting down...")
 
