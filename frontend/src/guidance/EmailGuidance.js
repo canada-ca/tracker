@@ -69,7 +69,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
         return <ListItem key={idx}>{step}</ListItem>
       })
 
-  const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords } = dnsResults
+  const { dkim, dmarc, spf, timestamp, mxRecords, nsRecords, cnameRecord } = dnsResults
   const emailKeys = ['spf', 'dkim', 'dmarc']
   let emailPassCount = 0
   let emailInfoCount = 0
@@ -149,6 +149,7 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
       </AccordionPanel>
     </AccordionItem>
   )
+
   return (
     <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
       <Text fontsize="lg">
@@ -305,136 +306,155 @@ export function EmailGuidance({ dnsResults, dmarcPhase, status, mxRecordDiff }) 
           />
         </AccordionPanel>
       </AccordionItem>
+
       <AccordionItem>
         <Flex as={AccordionButton}>
           <Text fontSize="2xl" ml="2">
-            <Trans>Mail Servers (MX)</Trans>
+            DNS
           </Text>
           <AccordionIcon boxSize="icons.xl" />
         </Flex>
         <AccordionPanel>
-          <Text>
-            <Trans>Latest Scan:</Trans>
-          </Text>
-          {mxRecords.hosts.map(({ preference, hostname, addresses }, idx) => {
-            return (
-              <Flex key={idx} px="2">
-                <Text fontSize="lg" w="50%">
-                  <Trans>
-                    <b>Hostname:</b> {hostname}
-                  </Trans>
-                </Text>
-                <Text fontSize="lg" w="40%">
-                  <Trans>
-                    <b>IPs:</b> {addresses.join(', ')}
-                  </Trans>
-                </Text>
-                <Text fontSize="lg" w="10%" ml="auto">
-                  <Trans>
-                    <b>Preference:</b> {preference}
-                  </Trans>
-                </Text>
-              </Flex>
-            )
-          })}
-          {mxRecords.warnings?.length > 0 && (
-            <Box px="2" py="2" rounded="md" mb="4">
-              <Text fontWeight="bold" fontSize="lg">
-                <Trans>Warnings:</Trans>
+          <Box>
+            <Flex>
+              <Text mr="1" minW="7%" ml="2">
+                <Trans>CNAME:</Trans>
               </Text>
-              {mxRecords.warnings.map((warning, idx) => {
-                return (
-                  <Box key={idx} px="2">
-                    <Text fontsize="lg">
-                      <b>{idx + 1}.</b> {warning}
-                    </Text>
-                  </Box>
-                )
-              })}
-            </Box>
-          )}
-          {mxRecords.error && (
-            <Box px="2" py="2" rounded="md" mb="4">
-              <Text fontSize="lg">
-                <Trans>
-                  <b>Error:</b> {mxRecords.error}
-                </Trans>
-              </Text>
-            </Box>
-          )}
-          {mxRecordDiff.edges.length > 1 && (
-            <ABTestWrapper>
-              <ABTestVariant name="B">
-                <Text fontSize="xl" fontWeight="bold">
-                  <Trans>Changes:</Trans>
-                </Text>
-                {mxRecordDiff.edges.map(({ node }, idx) => {
-                  if (idx !== mxRecordDiff.edges.length - 1) {
-                    const nextNode = mxRecordDiff.edges[idx + 1].node
-                    return (
-                      <ReactDiffViewer
-                        key={idx}
-                        newValue={node.mxRecords.hosts}
-                        oldValue={nextNode.mxRecords.hosts}
-                        rightTitle={node.timestamp}
-                        leftTitle={nextNode.timestamp}
-                        splitView={true}
-                        compareMethod={DiffMethod.JSON}
-                        hideLineNumbers={true}
-                        showDiffOnly={true}
-                      />
-                    )
-                  }
-                })}
-              </ABTestVariant>
-            </ABTestWrapper>
-          )}
+              {cnameRecord ? cnameRecord : t`None`}
+            </Flex>
+          </Box>
         </AccordionPanel>
-      </AccordionItem>
-      <AccordionItem>
-        <Flex as={AccordionButton}>
-          <Text fontSize="2xl" ml="2">
-            <Trans>Name Servers (NS)</Trans>
-          </Text>
-          <AccordionIcon boxSize="icons.xl" />
-        </Flex>
         <AccordionPanel>
-          {nsRecords.hostnames.map((hostname, idx) => {
-            return (
-              <Flex key={idx} px="2">
-                <Text fontSize="lg" w="50%">
+          <AccordionItem>
+            <Flex>
+              <Text fontSize="2xl" ml="2">
+                <Trans>Mail Servers (MX)</Trans>
+              </Text>
+            </Flex>
+
+            <Text ml="2">
+              <Trans>Latest Scan:</Trans>
+            </Text>
+            {mxRecords.hosts.map(({ preference, hostname, addresses }, idx) => {
+              return (
+                <Flex key={idx} px="2">
+                  <Text fontSize="lg" w="50%">
+                    <Trans>
+                      <b>Hostname:</b> {hostname}
+                    </Trans>
+                  </Text>
+                  <Text fontSize="lg" w="40%">
+                    <Trans>
+                      <b>IPs:</b> {addresses.join(', ')}
+                    </Trans>
+                  </Text>
+                  <Text fontSize="lg" w="10%" ml="auto">
+                    <Trans>
+                      <b>Preference:</b> {preference}
+                    </Trans>
+                  </Text>
+                </Flex>
+              )
+            })}
+            {mxRecords.warnings?.length > 0 && (
+              <Box px="2" py="2" rounded="md" mb="4">
+                <Text fontWeight="bold" fontSize="lg">
+                  <Trans>Warnings:</Trans>
+                </Text>
+                {mxRecords.warnings.map((warning, idx) => {
+                  return (
+                    <Box key={idx} px="2">
+                      <Text fontsize="lg">
+                        <b>{idx + 1}.</b> {warning}
+                      </Text>
+                    </Box>
+                  )
+                })}
+              </Box>
+            )}
+            {mxRecords.error && (
+              <Box px="2" py="2" rounded="md" mb="4">
+                <Text fontSize="lg">
                   <Trans>
-                    <b>Hostname:</b> {hostname}
+                    <b>Error:</b> {mxRecords.error}
                   </Trans>
                 </Text>
-              </Flex>
-            )
-          })}
-          {nsRecords.warnings?.length > 0 && (
-            <Box px="2" py="2" rounded="md" mb="1">
-              <Text fontWeight="bold" fontSize="lg">
-                <Trans>Warnings:</Trans>
+              </Box>
+            )}
+            {mxRecordDiff.edges.length > 1 && (
+              <ABTestWrapper>
+                <ABTestVariant name="B">
+                  <Text fontSize="xl" fontWeight="bold">
+                    <Trans>Changes:</Trans>
+                  </Text>
+                  {mxRecordDiff.edges.map(({ node }, idx) => {
+                    if (idx !== mxRecordDiff.edges.length - 1) {
+                      const nextNode = mxRecordDiff.edges[idx + 1].node
+                      return (
+                        <ReactDiffViewer
+                          key={idx}
+                          newValue={node.mxRecords.hosts}
+                          oldValue={nextNode.mxRecords.hosts}
+                          rightTitle={node.timestamp}
+                          leftTitle={nextNode.timestamp}
+                          splitView={true}
+                          compareMethod={DiffMethod.JSON}
+                          hideLineNumbers={true}
+                          showDiffOnly={true}
+                        />
+                      )
+                    }
+                  })}
+                </ABTestVariant>
+              </ABTestWrapper>
+            )}
+          </AccordionItem>
+        </AccordionPanel>
+        <AccordionPanel>
+          <AccordionItem>
+            <Flex>
+              <Text fontSize="2xl" ml="2">
+                <Trans>Name Servers (NS)</Trans>
               </Text>
-              {nsRecords.warnings.map((warning, idx) => {
-                return (
-                  <Box key={idx} px="2">
-                    <Text fontsize="lg">
-                      <b>{idx + 1}.</b> {warning}
-                    </Text>
-                  </Box>
-                )
-              })}
-            </Box>
-          )}
-          {nsRecords.error && (
-            <Box px="2" py="2" rounded="md" mb="4">
-              <Text fontSize="lg">
-                <Trans>
-                  <b>Error:</b> {nsRecords.error}
-                </Trans>
-              </Text>
-            </Box>
-          )}
+            </Flex>
+
+            {nsRecords.hostnames.map((hostname, idx) => {
+              return (
+                <Flex key={idx} px="2">
+                  <Text fontSize="lg" w="50%">
+                    <Trans>
+                      <b>Hostname:</b> {hostname}
+                    </Trans>
+                  </Text>
+                </Flex>
+              )
+            })}
+            {nsRecords.warnings?.length > 0 && (
+              <Box px="2" py="2" rounded="md" mb="1">
+                <Text fontWeight="bold" fontSize="lg">
+                  <Trans>Warnings:</Trans>
+                </Text>
+                {nsRecords.warnings.map((warning, idx) => {
+                  return (
+                    <Box key={idx} px="2">
+                      <Text fontsize="lg">
+                        <b>{idx + 1}.</b> {warning}
+                      </Text>
+                    </Box>
+                  )
+                })}
+              </Box>
+            )}
+            {nsRecords.error && (
+              <Box px="2" py="2" rounded="md" mb="4">
+                <Text fontSize="lg">
+                  <Trans>
+                    <b>Error:</b> {nsRecords.error}
+                  </Trans>
+                </Text>
+              </Box>
+            )}
+          </AccordionItem>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
