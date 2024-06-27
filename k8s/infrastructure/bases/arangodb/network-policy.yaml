@@ -1,0 +1,59 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: arangodb-policy
+  namespace: db
+spec:
+  # ArangoDB pods
+  podSelector:
+    matchLabels:
+      app: arangodb
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # ...need to talk amongst themselves.
+    - from:
+        - podSelector:
+            matchLabels:
+              app: arangodb
+        # and need to listen to the operator
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: kube-arangodb
+        # allow inbound traffic from api in the namespace 'api'
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: tracker-api
+        # or result processors from the namespace 'scanners'
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: dns-processor
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: web-processor
+  egress:
+    # again, talk amongst themselves.
+    - to:
+        - podSelector:
+            matchLabels:
+              app: arangodb
+        # or the operator
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: kube-arangodb
+    # DNS queries also need to be allowed
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
