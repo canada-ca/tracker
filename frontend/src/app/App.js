@@ -24,6 +24,7 @@ import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
+import { Steps } from 'intro.js-react'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -45,6 +46,13 @@ const CreateOrganizationPage = lazyWithRetry(() => import('../createOrganization
 const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
 const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
+
+const steps = [
+  {
+    element: '.first-step',
+    intro: 'Welcome to your first step!',
+  },
+]
 
 export function App() {
   // Hooks to be used with this functional component
@@ -120,6 +128,9 @@ export function App() {
         <RouteLink to="/">
           <Trans>Home</Trans>
         </RouteLink>
+        <div>
+          <Steps enabled={true} steps={steps} initialStep={0} onExit={() => console.log('exit')} />
+        </div>
 
         {((isLoggedIn() && isEmailValidated()) || !data?.loginRequired) && (
           <>
@@ -131,13 +142,11 @@ export function App() {
             </RouteLink>
           </>
         )}
-
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
           <RouteLink to="/dmarc-summaries">
             <Trans>DMARC Summaries</Trans>
           </RouteLink>
         )}
-
         {isLoggedIn() && (
           <>
             <RouteLink to="/my-tracker">
@@ -149,7 +158,6 @@ export function App() {
             </RouteLink>
           </>
         )}
-
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
           <>
             <RouteLink to="/admin">
