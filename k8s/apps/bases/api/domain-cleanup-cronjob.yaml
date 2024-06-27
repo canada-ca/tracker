@@ -11,6 +11,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: domain-cleanup
         spec:
           containers:
             - name: domain-cleanup

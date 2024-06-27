@@ -5,6 +5,9 @@ metadata:
   namespace: scanners
 spec:
   template:
+    metadata:
+      labels:
+        app: guidance-job
     spec:
       containers:
         - name: guidance
