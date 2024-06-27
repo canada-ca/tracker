@@ -20,7 +20,13 @@ spec:
         # and need to listen to the operator
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: kube-arangodb
+              app.kubernetes.io/name: kube-arangod
+        - podSelector:
+            matchLabels:
+              job: backup
+        - podSelector:
+            matchLabels:
+              job: restore-backup
         # allow inbound traffic from api in the namespace 'api'
         - namespaceSelector:
             matchLabels:
@@ -65,7 +71,13 @@ spec:
               kubernetes.io/metadata.name: scanners
           podSelector:
             matchLabels:
-              app: guidance-job
+              job: guidance
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: dmarc-report
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: api
@@ -102,6 +114,12 @@ spec:
           podSelector:
             matchLabels:
               app: label-known-easm-assets
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: super-admin
+          podSelector:
+            matchLabels:
+              job: super-admin
   egress:
     # again, talk amongst themselves.
     - to:
