@@ -7,7 +7,7 @@ spec:
   template:
     metadata:
       labels:
-        app: guidance-job
+        job: guidance
     spec:
       containers:
         - name: guidance
