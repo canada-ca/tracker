@@ -14,7 +14,7 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              istio: publicgateway
+              app: istio-ingressgateway
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: istio-system
@@ -29,3 +29,6 @@ spec:
         - podSelector:
             matchLabels:
               app: arangodb
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: db
