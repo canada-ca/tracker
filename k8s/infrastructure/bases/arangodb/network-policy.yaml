@@ -41,6 +41,67 @@ spec:
           podSelector:
             matchLabels:
               app: web-processor
+        # additonal services
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: domain-discovery
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: summaries
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: update-selectors
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: guidance-job
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: org-footprint
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: progress-report
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: domain-cleanup
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: azure-defender-easm
+          podSelector:
+            matchLabels:
+              app: add-easm-assets-to-tracker
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: azure-defender-easm
+          podSelector:
+            matchLabels:
+              app: import-easm-additional-findings
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: azure-defender-easm
+          podSelector:
+            matchLabels:
+              app: label-known-easm-assets
   egress:
     # again, talk amongst themselves.
     - to:
