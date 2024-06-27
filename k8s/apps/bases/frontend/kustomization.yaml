@@ -2,9 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: frontend
 resources:
-- namespace.yaml
-- deployment.yaml
-- service.yaml
-- virtual-service.yaml
-- maintenance-deployment.yaml
-- maintenance-service.yaml
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - virtual-service.yaml
+  - network-policy.yaml
+  - maintenance-deployment.yaml
+  - maintenance-service.yaml
