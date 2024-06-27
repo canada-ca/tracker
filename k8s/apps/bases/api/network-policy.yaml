@@ -9,7 +9,6 @@ spec:
       app: tracker-api
   policyTypes:
     - Ingress
-    - Egress
   ingress:
     - from:
         - podSelector:
@@ -24,11 +23,3 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: frontend
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app: arangodb
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: db
