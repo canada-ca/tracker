@@ -1,0 +1,10 @@
+kind: ArangoDeployment
+apiVersion: database.arangodb.com/v1alpha
+metadata:
+  name: arangodb
+  namespace: db
+spec:
+  single:
+    resources:
+      limits:
+        memory: 8Gi
