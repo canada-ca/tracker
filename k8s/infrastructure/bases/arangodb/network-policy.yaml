@@ -40,6 +40,18 @@ spec:
               kubernetes.io/metadata.name: scanners
           podSelector:
             matchLabels:
+              app: dns-scanner
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: domain-dispatcher
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
               app: dns-processor
         - namespaceSelector:
             matchLabels:
