@@ -11,7 +11,7 @@ import nats
 load_dotenv()
 
 logging.basicConfig(
-    level=logging.info, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
+    level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
 logger = logging.getLogger()
 
