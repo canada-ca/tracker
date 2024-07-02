@@ -11,6 +11,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: org-footprint
         spec:
           containers:
             - name: org-footprint

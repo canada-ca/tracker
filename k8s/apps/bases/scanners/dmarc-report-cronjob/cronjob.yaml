@@ -11,6 +11,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: dmarc-report
         spec:
           containers:
             - name: dmarc-report

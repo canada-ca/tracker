@@ -5,6 +5,9 @@ metadata:
   namespace: super-admin
 spec:
   template:
+    metadata:
+      labels:
+        job: super-admin
     spec:
       containers:
         - name: super-admin

@@ -15,6 +15,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            job: backup
         spec:
           containers:
             - args:

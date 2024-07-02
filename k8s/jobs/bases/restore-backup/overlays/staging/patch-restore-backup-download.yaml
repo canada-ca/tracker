@@ -7,6 +7,9 @@ metadata:
     job: restore-backup
 spec:
   template:
+    metadata:
+      labels:
+        job: restore-backup
     spec:
       initContainers:
         - name: download
