@@ -39,8 +39,41 @@ def get_web_components_by_asset(asset):
     )
 
     for wc in data:
+        # format datetime to isoformat
         wc["WebComponentFirstSeen"] = wc["WebComponentFirstSeen"].isoformat()
         wc["WebComponentLastSeen"] = wc["WebComponentLastSeen"].isoformat()
+
+        # filter cves to only top 25
+        top25 = [
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+            "***REMOVED***",
+        ]
+        wc["WebComponentCves"] = [
+            cve for cve in wc["WebComponentCves"] if cve["Cve"] in top25
+        ]
 
     return data
 
