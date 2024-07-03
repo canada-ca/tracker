@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
@@ -24,6 +24,9 @@ import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
+
+// import 'intro.js/introjs.css'
+import { Steps, Hints } from 'intro.js-react'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -52,6 +55,17 @@ export function App() {
   const { i18n } = useLingui()
   const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
+
+  const [stepsEnabled, setStepsEnabled] = useState(true)
+  const steps = [
+    {
+      element: '.home-link',
+      intro: 'This is the Home link!',
+      position: 'right',
+    },
+    // Add more steps as needed
+  ]
+  console.log(steps)
 
   if (loading) return <LoadingMessage />
 
@@ -116,14 +130,19 @@ export function App() {
         </SkipLink>
         <TopBanner />
       </header>
+      <Steps>
+        steps={steps}
+        enabled={stepsEnabled}
+        initialStep={0}
+        onExit={() => setStepsEnabled(false)}
+      </Steps>
       <Navigation>
-        <RouteLink to="/">
+        <RouteLink to="/" className="home-link">
           <Trans>Home</Trans>
         </RouteLink>
-
         {((isLoggedIn() && isEmailValidated()) || !data?.loginRequired) && (
           <>
-            <RouteLink to="/organizations">
+            <RouteLink to="/organizations" data-intro="This is the Home link!" data-step="1">
               <Trans>Organizations</Trans>
             </RouteLink>
             <RouteLink to="/domains">
@@ -131,13 +150,11 @@ export function App() {
             </RouteLink>
           </>
         )}
-
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
           <RouteLink to="/dmarc-summaries">
             <Trans>DMARC Summaries</Trans>
           </RouteLink>
         )}
-
         {isLoggedIn() && (
           <>
             <RouteLink to="/my-tracker">
@@ -149,7 +166,6 @@ export function App() {
             </RouteLink>
           </>
         )}
-
         {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
           <>
             <RouteLink to="/admin">
@@ -158,7 +174,6 @@ export function App() {
           </>
         )}
       </Navigation>
-
       {notificationBanner()}
       <NotificationBanner status="info" bannerId="automatic-dkim-selectors" hideable>
         <Box>
@@ -177,7 +192,6 @@ export function App() {
           </AlertDescription>
         </Box>
       </NotificationBanner>
-
       <Main mb={{ base: '40px', md: 'none' }}>
         <Suspense fallback={<LoadingMessage />}>
           <Switch>
@@ -340,7 +354,6 @@ export function App() {
         </Suspense>
       </Main>
       <FloatingMenu />
-
       <Footer display={{ base: 'none', md: 'inline' }}>
         <Link
           isExternal={true}
