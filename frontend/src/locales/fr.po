@@ -13,10 +13,6 @@ msgstr ""
 "Plural-Forms: \n"
 "Report-Msgid-Bugs-To: \n"
 
-#: src/guidance/EmailGuidance.js:323
-msgid "None"
-msgstr "Aucun"
-
 #: src/termsConditions/TermsConditionsPage.js:170
 msgid ", and"
 msgstr ", et"
@@ -478,7 +474,7 @@ msgstr "Les champs vides ne seront pas pris en compte lors de la mise à jour de
 #: src/admin/AdminDomains.js:171
 #: src/domains/DomainCard.js:138
 #: src/domains/DomainsPage.js:93
-#: src/guidance/WebGuidance.js:84
+#: src/guidance/WebGuidance.js:89
 #: src/organizationDetails/OrganizationDomains.js:97
 msgid "Blocked"
 msgstr "Bloqué"
@@ -498,6 +494,10 @@ msgstr "Par défaut, nos scanners vérifient les domaines se terminant par \".gc
 #: src/app/ReadGuidancePage.js:313
 #~ msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 #~ msgstr "Par défaut, nos analyseurs vérifient les domaines se terminant par « .gc.ca » et « .canada.ca ». Si votre domaine se termine autrement, vous devez communiquer avec nous pour nous en aviser. Envoyez un courriel à l’équipe responsable de la cybersécurité du SCT pour confirmer que ce domaine vous appartient. "
+
+#: src/guidance/WebGuidance.js:139
+msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
+msgstr "CCC a mis à jour sa <0>liste de suites de chiffrement TLS et de courbes elliptiques recommandées</0>. Veuillez prendre connaissance de ces résultats et mettre à jour vos configurations en conséquence."
 
 #: src/guidance/ScanDetails.js:102
 #~ msgid "CCS Injection Vulnerability:"
@@ -1261,11 +1261,11 @@ msgstr "Courriel envoyé avec succès"
 msgid "Email:"
 msgstr "Courrier électronique:"
 
-#: src/guidance/WebGuidance.js:54
+#: src/guidance/WebGuidance.js:59
 msgid "Endpoint Summary"
 msgstr "Résumé du point d'aboutissement"
 
-#: src/guidance/WebGuidance.js:98
+#: src/guidance/WebGuidance.js:103
 msgid "Endpoint:"
 msgstr "Point d'aboutissement :"
 
@@ -2370,6 +2370,10 @@ msgstr "Nouveau mot de passe:"
 msgid "New Phone Number:"
 msgstr "Nouveau numéro de téléphone:"
 
+#: src/guidance/WebGuidance.js:136
+msgid "New Recommended TLS Ciphers"
+msgstr "Nouveaux codes TLS recommandés"
+
 #: src/admin/AuditLogTable.js:164
 msgid "New Value:"
 msgstr "Nouvelle valeur :"
@@ -2521,6 +2525,7 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 msgid "Non-compliant"
 msgstr "Non conforme"
 
+#: src/guidance/EmailGuidance.js:323
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
 msgstr "Aucun"
@@ -3942,7 +3947,7 @@ msgstr "Ce champ ne peut pas être vide"
 msgid "This is a new service, we are constantly improving."
 msgstr "Il s'agit d'un nouveau service, que nous améliorons constamment."
 
-#: src/guidance/WebGuidance.js:144
+#: src/guidance/WebGuidance.js:169
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "Ce service n'est pas un service d'hébergement Web et ne nécessite pas la conformité aux exigences de configuration de la gestion des sites et services Web."
 

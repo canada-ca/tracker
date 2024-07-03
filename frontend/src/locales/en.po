@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/guidance/EmailGuidance.js:323
-#~ msgid "None"
-#~ msgstr "None"
-
 #: src/termsConditions/TermsConditionsPage.js:170
 msgid ", and"
 msgstr ", and"
@@ -482,7 +478,7 @@ msgstr "Blank fields will not be included when updating the organization."
 #: src/admin/AdminDomains.js:171
 #: src/domains/DomainCard.js:138
 #: src/domains/DomainsPage.js:93
-#: src/guidance/WebGuidance.js:84
+#: src/guidance/WebGuidance.js:89
 #: src/organizationDetails/OrganizationDomains.js:97
 msgid "Blocked"
 msgstr "Blocked"
@@ -502,6 +498,10 @@ msgstr "By default our scanners check domains ending in “.gc.ca” and “.can
 #: src/app/ReadGuidancePage.js:313
 #~ msgid "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
 #~ msgstr "By default our scanners check domains ending in “.gc.ca” and “.canada.ca”. If your domain is outside that set, you need to contact us to let us know. Send an email to TBS Cyber Security to confirm your ownership of that domain."
+
+#: src/guidance/WebGuidance.js:139
+msgid "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
+msgstr "CCCS has updated their <0>list of recommended TLS cipher suites and elliptic curves</0>. Please review these findings and update your configurations accordingly."
 
 #: src/guidance/ScanDetails.js:102
 #~ msgid "CCS Injection Vulnerability:"
@@ -1281,11 +1281,11 @@ msgstr "Email successfully sent"
 msgid "Email:"
 msgstr "Email:"
 
-#: src/guidance/WebGuidance.js:54
+#: src/guidance/WebGuidance.js:59
 msgid "Endpoint Summary"
 msgstr "Endpoint Summary"
 
-#: src/guidance/WebGuidance.js:98
+#: src/guidance/WebGuidance.js:103
 msgid "Endpoint:"
 msgstr "Endpoint:"
 
@@ -2409,6 +2409,10 @@ msgstr "New Password:"
 #: src/user/EditableUserPhoneNumber.js:175
 msgid "New Phone Number:"
 msgstr "New Phone Number:"
+
+#: src/guidance/WebGuidance.js:136
+msgid "New Recommended TLS Ciphers"
+msgstr "New Recommended TLS Ciphers"
 
 #: src/admin/AuditLogTable.js:164
 msgid "New Value:"
@@ -3989,7 +3993,7 @@ msgstr "This field cannot be empty"
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
 
-#: src/guidance/WebGuidance.js:144
+#: src/guidance/WebGuidance.js:169
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 msgstr "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
 
