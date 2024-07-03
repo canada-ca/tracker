@@ -1,0 +1,150 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: arangodb-policy
+  namespace: db
+spec:
+  # ArangoDB pods
+  podSelector:
+    matchLabels:
+      app: arangodb
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # ...need to talk amongst themselves.
+    - from:
+        - podSelector:
+            matchLabels:
+              app: arangodb
+        # and need to listen to the operator
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: kube-arangod
+        - podSelector:
+            matchLabels:
+              job: backup
+        - podSelector:
+            matchLabels:
+              job: restore-backup
+        # allow inbound traffic from api in the namespace 'api'
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: tracker-api
+        # or result processors from the namespace 'scanners'
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: dns-scanner
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: domain-dispatcher
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: dns-processor
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: web-processor
+        # additonal services
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: domain-discovery
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: summaries
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: update-selectors
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              job: guidance
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
+              app: dmarc-report
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: org-footprint
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: progress-report
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: api
+          podSelector:
+            matchLabels:
+              app: domain-cleanup
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: azure-defender-easm
+          podSelector:
+            matchLabels:
+              app: add-easm-assets-to-tracker
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: azure-defender-easm
+          podSelector:
+            matchLabels:
+              app: import-easm-additional-findings
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: azure-defender-easm
+          podSelector:
+            matchLabels:
+              app: label-known-easm-assets
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: super-admin
+          podSelector:
+            matchLabels:
+              job: super-admin
+  egress:
+    # again, talk amongst themselves.
+    - to:
+        - podSelector:
+            matchLabels:
+              app: arangodb
+        # or the operator
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: kube-arangodb
+    # DNS queries also need to be allowed
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
