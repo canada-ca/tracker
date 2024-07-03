@@ -31,6 +31,9 @@ def get_labelled_org_assets_from_org_key(org_key):
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
     | where Labels == orgKey
+    | join kind=inner EasmHostAsset on AssetName
+    | where TimeGeneratedValue > ago(24h)
+    | where Cnames == '[]'
     | project AssetName
     """
     try:
@@ -50,6 +53,9 @@ def get_unlabelled_assets():
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
     | where Labels == '[]'
+    | join kind=inner EasmHostAsset on AssetName
+    | where TimeGeneratedValue > ago(24h)
+    | where Cnames == '[]'
     | project AssetName
     """
     try:
