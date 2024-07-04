@@ -35,8 +35,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-logger.info("TESTING")
-
 NAME = os.getenv("NAME", "dns-scanner")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*")
 PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
@@ -228,7 +226,7 @@ async def run():
                     f"Error while releasing semaphore for received message: {original_msg}: {e}"
                 )
 
-    sem = asyncio.BoundedSemaphore(1)
+    sem = asyncio.BoundedSemaphore(2)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
@@ -264,7 +262,7 @@ async def run():
             try:
                 future = loop.run_in_executor(executor, run_scan, msg)
                 future.add_done_callback(
-                    lambda fut: asyncio.create_task(
+                    lambda fut: loop.create_task(
                         handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
                     )
                 )

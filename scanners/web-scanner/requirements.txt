@@ -6,7 +6,7 @@ charset-normalizer==2.1.1
 cryptography==42.0.7
 idna==3.7
 nassl==5.1.0
-nats-py==2.6.0
+nats-py==2.7.2
 psutil==5.9.8
 pyasn1==0.6.0
 pyasn1_modules==0.4.0

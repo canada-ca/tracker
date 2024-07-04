@@ -36,7 +36,7 @@ logging.basicConfig(
     level=logger_level,
     format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
 )
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 NAME = os.getenv("NAME", "web_processor")
 SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.web.results")
@@ -51,7 +51,6 @@ DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 
 
-logging.basicConfig(level=logging.INFO)
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
 db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
@@ -84,6 +83,163 @@ def snake_to_camel(d):
         }
 
 
+def process_msg(msg):
+    subject = msg.subject
+    reply = msg.reply
+    data = msg.data.decode()
+    logger.info(f"Received a message on '{subject} {reply}': {data}")
+    payload = json.loads(msg.data)
+
+    domain = payload.get("domain")
+    results = payload.get("results")
+    domain_key = payload.get("domain_key")
+    user_key = payload.get("user_key")
+    shared_id = payload.get("shared_id")
+    ip_address = payload.get("ip_address")
+    web_scan_key = payload.get("web_scan_key")
+
+    logger.info(
+        f"Starting web scan processing on '{domain}' at IP address '{ip_address}'"
+    )
+
+    processed_results = process_results(results)
+
+    if user_key is None:
+        try:
+            db.collection("webScan").update_match(
+                {"_key": web_scan_key},
+                {
+                    "status": "complete",
+                    "results": snake_to_camel(processed_results),
+                },
+            )
+
+            domain = db.collection("domains").get({"_key": domain_key})
+
+            if domain.get("status", None) == None:
+                domain.update(
+                    {
+                        "status": {
+                            "certificates": "info",
+                            "ciphers": "info",
+                            "curves": "info",
+                            "dkim": "info",
+                            "dmarc": "info",
+                            "hsts": "info",
+                            "https": "info",
+                            "protocols": "info",
+                            "spf": "info",
+                            "ssl": "info",
+                        }
+                    }
+                )
+
+            all_web_scan_cursor = db.aql.execute(
+                """
+                WITH web, webScan
+                FOR webV,e IN 1 ANY @web_scan_id webToWebScans
+                    FOR webScanV, webScanE IN 1 ANY webV._id webToWebScans
+                        FILTER webScanV.status == "complete"
+                        RETURN {
+                            "scan_status": webScanV.status,
+                            "https_status": webScanV.results.connectionResults.httpsStatus,
+                            "hsts_status": webScanV.results.connectionResults.hstsStatus,
+                            "certificate_status": webScanV.results.tlsResult.certificateStatus,
+                            "tls_result": webScanV.results.tlsResult,
+                            "ssl_status": webScanV.results.tlsResult.sslStatus,
+                            "protocol_status": webScanV.results.tlsResult.protocolStatus,
+                            "cipher_status": webScanV.results.tlsResult.cipherStatus,
+                            "curve_status": webScanV.results.tlsResult.curveStatus,
+                            "blocked_category": webScanV.results.connectionResults.httpsChainResult.connections[0].connection.blockedCategory,
+                        }
+                """,
+                bind_vars={"web_scan_id": f"webScan/{web_scan_key}"},
+            )
+
+            all_web_scans = [web_scan for web_scan in all_web_scan_cursor]
+            https_statuses = []
+            hsts_statuses = []
+            ssl_statuses = []
+            protocol_statuses = []
+            cipher_statuses = []
+            curve_statuses = []
+            certificate_statuses = []
+            blocked_categories = []
+            scan_pending = False
+            for web_scan in all_web_scans:
+                # Skip incomplete scans
+                if web_scan["scan_status"] != "complete":
+                    scan_pending = True
+                    continue
+                https_statuses.append(web_scan["https_status"])
+                hsts_statuses.append(web_scan["hsts_status"])
+                ssl_statuses.append(web_scan["ssl_status"])
+                protocol_statuses.append(web_scan["protocol_status"])
+                cipher_statuses.append(web_scan["cipher_status"])
+                curve_statuses.append(web_scan["curve_status"])
+                certificate_statuses.append(web_scan["certificate_status"])
+                blocked_categories.append(web_scan["blocked_category"])
+
+            def get_status(statuses):
+                if "fail" in statuses:
+                    return "fail"
+                elif "pass" in statuses:
+                    return "pass"
+                else:
+                    return "info"
+
+            domain["status"]["https"] = get_status(https_statuses)
+            domain["status"]["hsts"] = get_status(hsts_statuses)
+
+            domain["status"]["ssl"] = get_status(ssl_statuses)
+            domain["status"]["protocols"] = get_status(protocol_statuses)
+            domain["status"]["ciphers"] = get_status(cipher_statuses)
+            domain["status"]["curves"] = get_status(curve_statuses)
+            domain["status"]["certificates"] = get_status(certificate_statuses)
+            domain["blocked"] = any(
+                [bool(blocked_category) for blocked_category in blocked_categories]
+            )
+            domain["webScanPending"] = scan_pending
+
+            del domain["_rev"]
+            try:
+                db.collection("domains").update(domain)
+            except DocumentUpdateError as e:
+                error_str = str(e)
+                start_retry = time.time()
+                document_updated = False
+                # Retry for 5 seconds in case another process is updating the same document
+                while time.time() - start_retry < 5:
+                    try:
+                        db.collection("domains").update(domain)
+                        document_updated = True
+                        break
+                    except DocumentUpdateError as while_e:
+                        time.sleep(0.1)
+                        error_str = str(while_e)
+                        continue
+                if not document_updated:
+                    logger.error(
+                        f"Error while updating domain after retrying for received message: {msg}: {error_str}"
+                    )
+
+        except Exception as e:
+            logger.error(
+                f"Error while inserting processed results for received message: {msg}: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
+            )
+            return
+
+    formatted_scan_data = {
+        "results": processed_results,
+        "domain": domain,
+        "user_key": user_key,
+        "domain_key": domain_key,
+        "shared_id": shared_id,
+    }
+
+    return formatted_scan_data
+
+
 async def processor_service():
     loop = asyncio.get_running_loop()
 
@@ -98,6 +254,7 @@ async def processor_service():
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
+        drain_timeout=30,
     )
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
@@ -125,162 +282,6 @@ async def processor_service():
         ),
     )
 
-    def process_msg(msg):
-        subject = msg.subject
-        reply = msg.reply
-        data = msg.data.decode()
-        logger.info(f"Received a message on '{subject} {reply}': {data}")
-        payload = json.loads(msg.data)
-
-        domain = payload.get("domain")
-        results = payload.get("results")
-        domain_key = payload.get("domain_key")
-        user_key = payload.get("user_key")
-        shared_id = payload.get("shared_id")
-        ip_address = payload.get("ip_address")
-        web_scan_key = payload.get("web_scan_key")
-
-        logger.info(
-            f"Starting web scan processing on '{domain}' at IP address '{ip_address}'"
-        )
-
-        processed_results = process_results(results)
-
-        if user_key is None:
-            try:
-                db.collection("webScan").update_match(
-                    {"_key": web_scan_key},
-                    {
-                        "status": "complete",
-                        "results": snake_to_camel(processed_results),
-                    },
-                )
-
-                domain = db.collection("domains").get({"_key": domain_key})
-
-                if domain.get("status", None) == None:
-                    domain.update(
-                        {
-                            "status": {
-                                "certificates": "info",
-                                "ciphers": "info",
-                                "curves": "info",
-                                "dkim": "info",
-                                "dmarc": "info",
-                                "hsts": "info",
-                                "https": "info",
-                                "protocols": "info",
-                                "spf": "info",
-                                "ssl": "info",
-                            }
-                        }
-                    )
-
-                all_web_scan_cursor = db.aql.execute(
-                    """
-                    WITH web, webScan
-                    FOR webV,e IN 1 ANY @web_scan_id webToWebScans
-                        FOR webScanV, webScanE IN 1 ANY webV._id webToWebScans
-                            FILTER webScanV.status == "complete"
-                            RETURN {
-                                "scan_status": webScanV.status,
-                                "https_status": webScanV.results.connectionResults.httpsStatus,
-                                "hsts_status": webScanV.results.connectionResults.hstsStatus,
-                                "certificate_status": webScanV.results.tlsResult.certificateStatus,
-                                "tls_result": webScanV.results.tlsResult,
-                                "ssl_status": webScanV.results.tlsResult.sslStatus,
-                                "protocol_status": webScanV.results.tlsResult.protocolStatus,
-                                "cipher_status": webScanV.results.tlsResult.cipherStatus,
-                                "curve_status": webScanV.results.tlsResult.curveStatus,
-                                "blocked_category": webScanV.results.connectionResults.httpsChainResult.connections[0].connection.blockedCategory,
-                            }
-                    """,
-                    bind_vars={"web_scan_id": f"webScan/{web_scan_key}"},
-                )
-
-                all_web_scans = [web_scan for web_scan in all_web_scan_cursor]
-                https_statuses = []
-                hsts_statuses = []
-                ssl_statuses = []
-                protocol_statuses = []
-                cipher_statuses = []
-                curve_statuses = []
-                certificate_statuses = []
-                blocked_categories = []
-                scan_pending = False
-                for web_scan in all_web_scans:
-                    # Skip incomplete scans
-                    if web_scan["scan_status"] != "complete":
-                        scan_pending = True
-                        continue
-                    https_statuses.append(web_scan["https_status"])
-                    hsts_statuses.append(web_scan["hsts_status"])
-                    ssl_statuses.append(web_scan["ssl_status"])
-                    protocol_statuses.append(web_scan["protocol_status"])
-                    cipher_statuses.append(web_scan["cipher_status"])
-                    curve_statuses.append(web_scan["curve_status"])
-                    certificate_statuses.append(web_scan["certificate_status"])
-                    blocked_categories.append(web_scan["blocked_category"])
-
-                def get_status(statuses):
-                    if "fail" in statuses:
-                        return "fail"
-                    elif "pass" in statuses:
-                        return "pass"
-                    else:
-                        return "info"
-
-                domain["status"]["https"] = get_status(https_statuses)
-                domain["status"]["hsts"] = get_status(hsts_statuses)
-
-                domain["status"]["ssl"] = get_status(ssl_statuses)
-                domain["status"]["protocols"] = get_status(protocol_statuses)
-                domain["status"]["ciphers"] = get_status(cipher_statuses)
-                domain["status"]["curves"] = get_status(curve_statuses)
-                domain["status"]["certificates"] = get_status(certificate_statuses)
-                domain["blocked"] = any(
-                    [bool(blocked_category) for blocked_category in blocked_categories]
-                )
-                domain["webScanPending"] = scan_pending
-
-                del domain["_rev"]
-                try:
-                    db.collection("domains").update(domain)
-                except DocumentUpdateError as e:
-                    error_str = str(e)
-                    start_retry = time.time()
-                    document_updated = False
-                    # Retry for 5 seconds in case another process is updating the same document
-                    while time.time() - start_retry < 5:
-                        try:
-                            db.collection("domains").update(domain)
-                            document_updated = True
-                            break
-                        except DocumentUpdateError as while_e:
-                            time.sleep(0.1)
-                            error_str = str(while_e)
-                            continue
-                    if not document_updated:
-                        logger.error(
-                            f"Error while updating domain after retrying for received message: {msg}: {error_str}"
-                        )
-
-            except Exception as e:
-                logger.error(
-                    f"Error while inserting processed results for received message: {msg}: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
-                )
-                return
-
-        formatted_scan_data = {
-            "results": processed_results,
-            "domain": domain,
-            "user_key": user_key,
-            "domain_key": domain_key,
-            "shared_id": shared_id,
-        }
-
-        return formatted_scan_data
-
     @dataclass
     class ExitCondition:
         should_exit: bool = False
@@ -288,6 +289,8 @@ async def processor_service():
     exit_condition = ExitCondition()
 
     async def ask_exit(sig_name):
+        if exit_condition.should_exit is True:
+            return
         logger.error(f"Got signal {sig_name}: exit")
         exit_condition.should_exit = True
 
@@ -302,21 +305,9 @@ async def processor_service():
             await fut
             res = fut.result()
             if isinstance(res, Exception):
-                logger.error(f"Uncaught scan error: {res}")
-                return
-
-            scan_data = res
-            try:
-                await js.publish(
-                    stream="SCANS",
-                    subject="scans.web_processor_results",
-                    payload=json.dumps(scan_data).encode(),
-                )
-            except TimeoutError as e:
                 logger.error(
-                    f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
+                    f"Uncaught scan error for received message: {original_msg}: {res}"
                 )
-                logger.error(f"{traceback.format_exc()}")
                 return
 
             try:
@@ -334,7 +325,7 @@ async def processor_service():
                     f"Error while releasing semaphore for received message: {original_msg}: {e}"
                 )
 
-    sem = asyncio.BoundedSemaphore(1)
+    sem = asyncio.BoundedSemaphore(2)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
@@ -368,9 +359,9 @@ async def processor_service():
                 continue
 
             try:
-                future = executor.submit(process_msg, msg)
+                future = loop.run_in_executor(executor, process_msg, msg)
                 future.add_done_callback(
-                    lambda fut: asyncio.create_task(
+                    lambda fut: loop.create_task(
                         handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
                     )
                 )

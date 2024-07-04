@@ -392,6 +392,8 @@ async def run():
     exit_condition = ExitCondition()
 
     async def ask_exit(sig_name):
+        if exit_condition.should_exit is True:
+            return
         logger.error(f"Got signal {sig_name}: exit")
         exit_condition.should_exit = True
 
@@ -439,7 +441,7 @@ async def run():
                     f"Error while releasing semaphore for received message: {original_msg}: {e}"
                 )
 
-    sem = asyncio.BoundedSemaphore(1)
+    sem = asyncio.BoundedSemaphore(2)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
@@ -475,7 +477,7 @@ async def run():
             try:
                 future = loop.run_in_executor(executor, process_msg, msg)
                 future.add_done_callback(
-                    lambda fut: asyncio.create_task(
+                    lambda fut: loop.create_task(
                         handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
                     )
                 )

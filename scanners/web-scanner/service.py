@@ -54,39 +54,6 @@ def scan_web_and_catch(domain, ip_address):
         )
 
 
-def process_results(results):
-    # report = {}
-    #
-    # if results == {}:
-    #     report = {"error": "unreachable"}
-    # else:
-    #     for version in [
-    #         "SSL_2_0",
-    #         "SSL_3_0",
-    #         "TLS_1_0",
-    #         "TLS_1_1",
-    #         "TLS_1_2",
-    #         "TLS_1_3",
-    #     ]:
-    #         if version in results["TLS"]["supported"]:
-    #             report[version] = True
-    #         else:
-    #             report[version] = False
-    #
-    #     report["cipher_list"] = results["TLS"]["accepted_cipher_list"]
-    #     report["signature_algorithm"] = results.get("signature_algorithm", "unknown")
-    #     report["heartbleed"] = results.get("is_vulnerable_to_heartbleed", False)
-    #     report["openssl_ccs_injection"] = results.get(
-    #         "is_vulnerable_to_ccs_injection", False
-    #     )
-    #     report["supports_ecdh_key_exchange"] = results.get(
-    #         "supports_ecdh_key_exchange", False
-    #     )
-    #     report["supported_curves"] = results.get("supported_curves", [])
-
-    return results
-
-
 def run_scan(msg):
     subject = msg.subject
     reply = msg.reply
@@ -103,14 +70,12 @@ def run_scan(msg):
 
     scan_results = scan_web_and_catch(domain, ip_address)
 
-    processed_results = process_results(scan_results)
-
     logger.info(
-        f"Web results for '{domain}' at IP address '{str(ip_address)}': {json.dumps(processed_results)}"
+        f"Web results for '{domain}' at IP address '{str(ip_address)}': {json.dumps(scan_results)}"
     )
 
     formatted_results = {
-        "results": processed_results,
+        "results": scan_results,
         "user_key": user_key,
         "domain": domain,
         "domain_key": domain_key,
@@ -138,6 +103,7 @@ async def scan_service():
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
+        drain_timeout=30,
     )
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
@@ -221,7 +187,7 @@ async def scan_service():
                     f"Error while releasing semaphore for received message: {original_msg}: {e}"
                 )
 
-    sem = asyncio.BoundedSemaphore(1)
+    sem = asyncio.BoundedSemaphore(2)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
@@ -257,7 +223,7 @@ async def scan_service():
             try:
                 future = loop.run_in_executor(executor, run_scan, msg)
                 future.add_done_callback(
-                    lambda fut: asyncio.create_task(
+                    lambda fut: loop.create_task(
                         handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
                     )
                 )

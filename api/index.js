@@ -3,7 +3,7 @@ import { Database, aql } from 'arangojs'
 import { Server } from './src/server'
 import { createContext } from './src/create-context'
 import { createI18n } from './src/create-i18n'
-import { connect, JSONCodec } from 'nats'
+import { AckPolicy, connect, JSONCodec, RetentionPolicy } from 'nats'
 import { collectionNames as collections } from './src/collection-names'
 
 const {
@@ -43,8 +43,15 @@ const {
 
   const jsm = await nc.jetstreamManager()
 
-  await jsm.streams.add({ name: 'domains', subjects: ['domains.*'] })
+  await jsm.streams.add({ name: 'domains', subjects: ['domains.*'], retention: RetentionPolicy.Workqueue })
   await jsm.streams.add({ name: 'domain-discovery', subjects: ['domains.*.discovery'] })
+
+  await jsm.consumers.add('domains', {
+    durable_name: 'domains',
+    ack_policy: AckPolicy.Explicit,
+    max_deliver: 2,
+    max_waiting: 100_000,
+  })
 
   // create a jetstream client:
   const js = nc.jetstream()
