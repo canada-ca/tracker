@@ -6,7 +6,7 @@ export async function getCursor({ db, collection }) {
     FOR domain IN ${collection}
       LET rcodeEnum = domain.rcode == 'NOERROR' ? 1 : 0
       SORT rcodeEnum DESC
-      RETURN document
+      RETURN domain
   `,
     {
       count: true,
