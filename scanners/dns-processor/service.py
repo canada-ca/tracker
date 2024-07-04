@@ -332,7 +332,7 @@ def process_msg(msg):
                 )
 
         except Exception as e:
-            logging.error(
+            logger.error(
                 f"Error while inserting processed results for received message: {msg}: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
             )
             return

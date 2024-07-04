@@ -47,7 +47,7 @@ def process_subdomains(results, orgId):
             and subdomain.strip()
             and check_live(subdomain)
         ):
-            logging.info(
+            logger.info(
                 "Adding {subdomain} to org: {orgId}".format(
                     subdomain=subdomain, orgId=orgId
                 )
@@ -80,7 +80,7 @@ def process_subdomains(results, orgId):
                     domainInsert["domain"] = subdomain
                     domains_to_scan.append(domainInsert)
                 except Exception as e:
-                    logging.error(
+                    logger.error(
                         f"Inserting new domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                     )
                     continue
@@ -97,7 +97,7 @@ def process_subdomains(results, orgId):
                     }
                 )
             except Exception as e:
-                logging.error(
+                logger.error(
                     f"Claiming domain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 continue
@@ -114,7 +114,7 @@ def get_claimed_domains(orgId):
         )
         return [document for document in cursor]
     except Exception as e:
-        logging.error(
+        logger.error(
             f"Getting claimed domains: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
         return []
@@ -151,7 +151,7 @@ def domain_discovery(domain, orgId):
         )
         subdomain_list = findomain_output.stdout.split("\n")
     except Exception as e:
-        logging.error(
+        logger.error(
             f"Running findomain: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
         )
         return []
@@ -195,7 +195,7 @@ async def run(loop):
 
         logger.info(f"Starting subdomain scan on '{domain}'")
         results = domain_discovery(domain, orgId)
-        logging.info(f"{len(results)} new subdomains found for {domain}")
+        logger.info(f"{len(results)} new subdomains found for {domain}")
 
         for newDomain in results:
             domain_key = newDomain["_key"]
@@ -212,7 +212,7 @@ async def run(loop):
                 )
 
             except Exception as e:
-                logging.error(
+                logger.error(
                     f"Inserting processed results: {str(e)} \n\nFull traceback: {traceback.format_exc()}"
                 )
                 return

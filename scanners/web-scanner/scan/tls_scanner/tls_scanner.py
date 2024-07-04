@@ -288,7 +288,7 @@ class TLSResult:
                 )
             except Exception:
                 tls_result_string = f"Error converting scan results to JSON - using TLSResult object instead: {self.asdict()}"
-                logging.error(f"{connectivity_error_log}: {tls_result_string}")
+                logger.error(f"{connectivity_error_log}: {tls_result_string}")
             self.error = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
             return
 
