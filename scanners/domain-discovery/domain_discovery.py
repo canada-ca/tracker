@@ -18,7 +18,7 @@ load_dotenv()
 logging.basicConfig(
     level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
