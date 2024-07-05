@@ -135,9 +135,9 @@ async def main():
         insert_activity = {
             "timestamp": date.today().isoformat(),
             "initiatedBy": {
-                "id": "easm-service",
-                "userName": "easm-service",
-                "role": "easm-service",
+                "id": "easm",
+                "userName": "automated-discovery-service",
+                "role": "service",
             },
             "target": {
                 "resource": domain,
