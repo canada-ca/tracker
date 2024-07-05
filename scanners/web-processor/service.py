@@ -1,5 +1,4 @@
 import concurrent
-import functools
 import json
 import logging
 import asyncio

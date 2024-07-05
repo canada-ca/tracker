@@ -1,5 +1,4 @@
 import concurrent
-import functools
 import json
 import logging
 import asyncio
@@ -7,13 +6,12 @@ import os
 import signal
 import traceback
 
-import time
 from dataclasses import dataclass
 
 import sys
 
 from dotenv import load_dotenv
-from concurrent.futures import TimeoutError, ProcessPoolExecutor
+from concurrent.futures import TimeoutError
 
 from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
 

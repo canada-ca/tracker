@@ -1,6 +1,5 @@
 import os
 import json
-import datetime
 from urllib.parse import urlparse
 
 current_directory = os.path.dirname(os.path.realpath(__file__))

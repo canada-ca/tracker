@@ -1,14 +1,12 @@
 import datetime
 import json
-import os
 from dataclasses import dataclass, asdict as dataclass_asdict
 
 import logging
-from typing import List
 
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
-from sslyze.errors import ConnectionToServerFailed, ServerHostnameCouldNotBeResolved
+from sslyze.errors import ServerHostnameCouldNotBeResolved
 from sslyze.plugins.certificate_info._certificate_utils import (
     get_common_names,
     parse_subject_alternative_name_extension,
@@ -24,7 +22,7 @@ from sslyze import (
     CertificateDeploymentAnalysisResult,
     PathValidationResult,
 )
-from sslyze.scanner.models import CipherSuitesScanAttempt, ServerScanResult
+from sslyze.scanner.models import ServerScanResult
 from sslyze.server_setting import (
     ServerNetworkLocation,
     ServerNetworkConfiguration,

@@ -1,11 +1,9 @@
 import asyncio
 import concurrent
 import datetime
-import functools
 import json
 import logging
 import time
-import uuid
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
 
@@ -157,7 +155,6 @@ def check_mx_diff(processed_results, domain_id):
             org=domain_org,
             prev_val=prev_val,
             current_val=current_val,
-            logger=logger,
         )
 
     return mx_record_diff
