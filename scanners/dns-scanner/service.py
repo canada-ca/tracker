@@ -14,6 +14,7 @@ from dataclasses import dataclass
 import nats
 from arango import ArangoClient
 from dotenv import load_dotenv
+from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
 from nats.errors import TimeoutError
 
@@ -131,11 +132,21 @@ def run_scan(msg):
 async def run():
     loop = asyncio.get_running_loop()
 
+    @dataclass
+    class Context:
+        should_exit: bool = False
+        sub: JetStreamContext.PullSubscription = None
+
+    context = Context()
+
     async def error_cb(error):
         logger.error(f"Uncaught error in callback: {error}")
 
     async def reconnected_cb():
-        logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
+        logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
+        # Ensure jetstream stream and consumer are still present
+        await js.add_stream(**add_stream_options)
+        context.sub = await js.pull_subscribe(**pull_subscribe_options)
 
     nc = await nats.connect(
         error_cb=error_cb,
@@ -147,40 +158,39 @@ async def run():
     js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
-    await js.add_stream(
-        name="SCANS",
-        subjects=[
+    add_stream_options = {
+        "name": "SCANS",
+        "subjects": [
             "scans.requests",
             "scans.dns_scanner_results",
             "scans.dns_processor_results",
             "scans.web_scanner_results",
             "scans.web_processor_results",
         ],
-        retention=RetentionPolicy.WORK_QUEUE,
-    )
-    sub = await js.pull_subscribe(
-        stream="SCANS",
-        subject="scans.requests",
-        durable="dns_scanner",
-        config=ConsumerConfig(
+        "retention": RetentionPolicy.WORK_QUEUE,
+    }
+
+    await js.add_stream(**add_stream_options)
+
+    pull_subscribe_options = {
+        "stream": "SCANS",
+        "subject": "scans.requests",
+        "durable": "dns_scanner",
+        "config": ConsumerConfig(
             ack_policy=AckPolicy.EXPLICIT,
             max_deliver=1,
             max_waiting=100_000,
             ack_wait=90,
         ),
-    )
+    }
 
-    @dataclass
-    class ExitCondition:
-        should_exit: bool = False
-
-    exit_condition = ExitCondition()
+    context.sub = await js.pull_subscribe(**pull_subscribe_options)
 
     async def ask_exit(sig_name):
-        if exit_condition.should_exit is True:
+        if context.should_exit is True:
             return
         logger.error(f"Got signal {sig_name}: exit")
-        exit_condition.should_exit = True
+        context.should_exit = True
 
     for signal_name in {"SIGINT", "SIGTERM"}:
         loop.add_signal_handler(
@@ -231,7 +241,7 @@ async def run():
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
-            if exit_condition.should_exit:
+            if context.should_exit:
                 break
             if nc.is_closed:
                 logger.error("Connection to NATS is closed.")
@@ -239,7 +249,7 @@ async def run():
 
             await sem.acquire()
 
-            if exit_condition.should_exit:
+            if context.should_exit:
                 break
             if nc.is_closed:
                 logger.error("Connection to NATS is closed.")
@@ -247,7 +257,7 @@ async def run():
 
             try:
                 logger.debug("Fetching message...")
-                msgs = await sub.fetch(batch=1, timeout=1)
+                msgs = await context.sub.fetch(batch=1, timeout=1)
                 msg = msgs[0]
                 logger.debug(f"Received message: {msg}")
             except nats.errors.TimeoutError:
