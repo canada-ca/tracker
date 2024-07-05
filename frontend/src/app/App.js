@@ -29,6 +29,7 @@ import { ScrollToAnchor } from './ScrollToAnchor'
 // import { Steps, Hints } from 'intro.js-react'
 import introJs from 'intro.js-react'
 //import 'intro.js/introjs.css'
+//figure out which imports to use to ensure proper use
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -111,6 +112,8 @@ export function App() {
     }
   }
 
+//figure out why when i add the const steos or anything related the website becomes blank 
+
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
       <ScrollToAnchor />
@@ -122,7 +125,7 @@ export function App() {
         <TopBanner />
       </header>
       <Navigation>
-        <RouteLink to="/">
+        <RouteLink to="/"> {/*add intro.js step to this line and the rest of the navbar (need intro start funciton somewhere in the code)*/}
           <Trans>Home</Trans>
         </RouteLink>
 
