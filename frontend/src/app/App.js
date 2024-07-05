@@ -26,7 +26,9 @@ import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
 
 // import 'intro.js/introjs.css'
-import { Steps, Hints } from 'intro.js-react'
+// import { Steps, Hints } from 'intro.js-react'
+import introJs from 'intro.js-react'
+//import 'intro.js/introjs.css'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -55,17 +57,6 @@ export function App() {
   const { i18n } = useLingui()
   const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
-
-  const [stepsEnabled, setStepsEnabled] = useState(true)
-  const steps = [
-    {
-      element: '.home-link',
-      intro: 'This is the Home link!',
-      position: 'right',
-    },
-    // Add more steps as needed
-  ]
-  console.log(steps)
 
   if (loading) return <LoadingMessage />
 
@@ -130,19 +121,14 @@ export function App() {
         </SkipLink>
         <TopBanner />
       </header>
-      <Steps>
-        steps={steps}
-        enabled={stepsEnabled}
-        initialStep={0}
-        onExit={() => setStepsEnabled(false)}
-      </Steps>
       <Navigation>
-        <RouteLink to="/" className="home-link">
+        <RouteLink to="/">
           <Trans>Home</Trans>
         </RouteLink>
+
         {((isLoggedIn() && isEmailValidated()) || !data?.loginRequired) && (
           <>
-            <RouteLink to="/organizations" data-intro="This is the Home link!" data-step="1">
+            <RouteLink to="/organizations">
               <Trans>Organizations</Trans>
             </RouteLink>
             <RouteLink to="/domains">
