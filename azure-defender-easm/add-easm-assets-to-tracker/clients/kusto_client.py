@@ -53,6 +53,7 @@ def get_unlabelled_assets():
     | where TimeGeneratedValue > ago(24h)
     | where AssetType == 'HOST'
     | where Labels == '[]'
+    | where AssetName endswith '.gc.ca' or AssetName endswith '.canada.ca'
     | join kind=inner EasmHostAsset on AssetName
     | where TimeGeneratedValue > ago(24h)
     | where Cnames == '[]'
