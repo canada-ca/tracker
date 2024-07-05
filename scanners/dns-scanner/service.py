@@ -261,10 +261,8 @@ async def run():
 
             try:
                 future = loop.run_in_executor(executor, run_scan, msg)
-                future.add_done_callback(
-                    lambda fut: loop.create_task(
-                        handle_finished_scan(fut=fut, original_msg=msg, semaphore=sem)
-                    )
+                loop.create_task(
+                    handle_finished_scan(fut=future, original_msg=msg, semaphore=sem)
                 )
             except Exception as e:
                 logger.error(
