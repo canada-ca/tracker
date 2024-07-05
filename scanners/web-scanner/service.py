@@ -84,7 +84,7 @@ def run_scan(msg):
         "web_scan_key": web_scan_key,
     }
 
-    logging.info(f"Formatted results: {formatted_results}")
+    logger.info(f"Formatted results: {formatted_results}")
 
     return formatted_results
 
@@ -93,7 +93,7 @@ async def scan_service():
     loop = asyncio.get_running_loop()
 
     async def error_cb(error):
-        logger.error(error)
+        logger.error(f"Uncaught error in callback: {error}")
 
     async def reconnected_cb():
         logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
@@ -173,6 +173,7 @@ async def scan_service():
                 return
 
             try:
+                logger.debug(f"Acknowledging message: {original_msg}")
                 await original_msg.ack()
             except Exception as e:
                 logger.error(

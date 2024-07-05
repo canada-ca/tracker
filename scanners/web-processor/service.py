@@ -244,7 +244,7 @@ async def processor_service():
     loop = asyncio.get_running_loop()
 
     async def error_cb(error):
-        logger.error(error)
+        logger.error(f"Uncaught error in callback: {error}")
 
     async def reconnected_cb():
         logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
@@ -311,6 +311,7 @@ async def processor_service():
                 return
 
             try:
+                logger.debug(f"Acknowledging message: {original_msg}")
                 await original_msg.ack()
             except Exception as e:
                 logger.error(

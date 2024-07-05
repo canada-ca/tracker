@@ -337,7 +337,7 @@ def process_msg(msg):
             )
             return
 
-        logging.info(
+        logger.info(
             f"DNS Scans inserted into database: {json.dumps(processed_results)}"
         )
 
@@ -348,7 +348,7 @@ async def run():
     loop = asyncio.get_running_loop()
 
     async def error_cb(error):
-        logger.error(error)
+        logger.error(f"Uncaught error in callback: {error}")
 
     async def reconnected_cb():
         logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
@@ -426,7 +426,9 @@ async def run():
                         f"Timeout while publishing results: {scan_data}: for received message: {original_msg}: {e} \n\nFull traceback: {traceback.format_exc()}"
                     )
                     return
+
             try:
+                logger.debug(f"Acknowledging message: {original_msg}")
                 await original_msg.ack()
             except Exception as e:
                 logger.error(

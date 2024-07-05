@@ -87,7 +87,7 @@ class CertificateInfo:
             if type(cert_not_revoked) is bool:
                 self.cert_revoked = not cert_not_revoked
         except ValueError as e:
-            logging.info(
+            logger.info(
                 f"Error while checking revocation status for {cert.subject.rfc4514_string()}: {str(e)}"
             )
 
@@ -283,7 +283,7 @@ class TLSResult:
                 scan_results_as_dict = json.loads(
                     ServerScanResultAsJson.from_orm(scan_results).json()
                 )
-                logging.info(
+                logger.info(
                     f"{connectivity_error_log}: {json.dumps(scan_results_as_dict)}"
                 )
             except Exception:
