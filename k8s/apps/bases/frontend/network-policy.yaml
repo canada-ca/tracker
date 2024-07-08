@@ -18,6 +18,12 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: istio-system
+        - podSelector:
+            matchLabels:
+              app: istiod
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
   egress:
     - to:
         - podSelector:
@@ -26,3 +32,9 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: api
+        - podSelector:
+            matchLabels:
+              app: istiod
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
