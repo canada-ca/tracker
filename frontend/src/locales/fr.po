@@ -13,6 +13,10 @@ msgstr ""
 "Plural-Forms: \n"
 "Report-Msgid-Bugs-To: \n"
 
+#: src/guidance/EmailGuidance.js:323
+msgid "None"
+msgstr "Aucun"
+
 #: src/termsConditions/TermsConditionsPage.js:170
 msgid ", and"
 msgstr ", et"
@@ -73,8 +77,8 @@ msgstr "404 - Page non trouvée"
 msgid "<0>Current Phone Number:</0> {detailValue}"
 msgstr "<0>Numéro de téléphone actuel:</0> {detailValue}"
 
-#: src/guidance/EmailGuidance.js:359
-#: src/guidance/EmailGuidance.js:432
+#: src/guidance/EmailGuidance.js:378
+#: src/guidance/EmailGuidance.js:451
 msgid "<0>Error:</0> {0}"
 msgstr "<0>Erreur:</0> {0}"
 
@@ -82,12 +86,12 @@ msgstr "<0>Erreur:</0> {0}"
 msgid "<0>Follow the guidance found in section B.4 of the <1>ITSP.40.065 v1.1</1>.</0>"
 msgstr "<0>Suivre les indications de la section 2.4 de la <1>ITSP.40.065 v1.1</1>.</0>"
 
-#: src/guidance/EmailGuidance.js:323
-#: src/guidance/EmailGuidance.js:406
+#: src/guidance/EmailGuidance.js:342
+#: src/guidance/EmailGuidance.js:425
 msgid "<0>Hostname:</0> {hostname}"
 msgstr "<0>Nom d'hôte:</0> {hostname}"
 
-#: src/guidance/EmailGuidance.js:328
+#: src/guidance/EmailGuidance.js:347
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
@@ -99,7 +103,7 @@ msgstr "<0>Dernière numérisation:</0> {0}"
 msgid "<0>Note: </0>Domains from outside the GC scope may not be scanned right away"
 msgstr "<0>Note : </0>Les domaines situés en dehors du champ d'application du GC peuvent ne pas être analysés immédiatement."
 
-#: src/guidance/EmailGuidance.js:333
+#: src/guidance/EmailGuidance.js:352
 msgid "<0>Preference:</0> {preference}"
 msgstr "<0>Préférence:</0> {préférence}"
 
@@ -161,7 +165,7 @@ msgstr "Compte"
 msgid "Account Closed Successfully"
 msgstr "Compte clôturé avec succès"
 
-#: src/app/App.js:158
+#: src/app/App.js:148
 #: src/app/FloatingMenu.js:177
 #: src/user/UserPage.js:137
 msgid "Account Settings"
@@ -230,7 +234,7 @@ msgstr "Ajouter un utilisateur"
 msgid "Additional Findings"
 msgstr "Constatations supplémentaires"
 
-#: src/app/App.js:255
+#: src/app/App.js:245
 msgid "Admin"
 msgstr "Administrateur"
 
@@ -238,7 +242,7 @@ msgstr "Administrateur"
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/app/App.js:166
+#: src/app/App.js:156
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
@@ -437,7 +441,7 @@ msgstr "Journaux d'audit"
 msgid "August"
 msgstr "Août"
 
-#: src/app/App.js:221
+#: src/app/App.js:211
 msgid "Authenticate"
 msgstr "Authentifier"
 
@@ -498,6 +502,10 @@ msgstr "Par défaut, nos scanners vérifient les domaines se terminant par \".gc
 #: src/guidance/ScanDetails.js:102
 #~ msgid "CCS Injection Vulnerability:"
 #~ msgstr "Vulnérabilité d'injection de CCS:"
+
+#: src/guidance/EmailGuidance.js:321
+msgid "CNAME:"
+msgstr "CNAME:"
 
 #: src/app/SlideMessage.js:55
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
@@ -568,7 +576,7 @@ msgstr "Changements requis pour la mise en conformité ITPIN"
 #~ msgid "Changes required for Web Sites and Services Management Configuration Requirements compliance"
 #~ msgstr "Changements requis pour la conformité aux exigences de configuration de la gestion des sites et services Web."
 
-#: src/guidance/EmailGuidance.js:369
+#: src/guidance/EmailGuidance.js:388
 msgid "Changes:"
 msgstr "Changements :"
 
@@ -696,8 +704,8 @@ msgstr "Envisagez de donner la priorité aux sites web et aux services web qui �
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:230
-#: src/app/App.js:372
+#: src/app/App.js:220
+#: src/app/App.js:362
 #: src/app/ContactUsPage.js:52
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -752,12 +760,12 @@ msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/admin/AdminPage.js:137
-#: src/app/App.js:335
+#: src/app/App.js:325
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Créer une organisation"
 
-#: src/app/App.js:198
+#: src/app/App.js:188
 msgid "Create an Account"
 msgstr "Créer un compte"
 
@@ -890,7 +898,7 @@ msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
 #: src/domains/ScanDomain.js:322
-#: src/guidance/EmailGuidance.js:160
+#: src/guidance/EmailGuidance.js:161
 msgid "DMARC Implementation Phase: {0}"
 msgstr "Phase de mise en œuvre de DMARC: {0}"
 
@@ -914,8 +922,8 @@ msgstr "Rapport DMARC pour {domainSlug}"
 msgid "DMARC Status"
 msgstr "Statut DMARC"
 
-#: src/app/App.js:147
-#: src/app/App.js:297
+#: src/app/App.js:137
+#: src/app/App.js:287
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:166
 #: src/dmarc/DmarcByDomainPage.js:222
@@ -978,7 +986,7 @@ msgstr "Données:"
 msgid "December"
 msgstr "Décembre"
 
-#: src/guidance/EmailGuidance.js:193
+#: src/guidance/EmailGuidance.js:194
 msgid "Default:"
 msgstr "Par défaut :"
 
@@ -1108,8 +1116,8 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/admin/AdminPanel.js:19
-#: src/app/App.js:140
-#: src/app/App.js:268
+#: src/app/App.js:130
+#: src/app/App.js:258
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:135
 #: src/domains/DomainsPage.js:197
@@ -1226,7 +1234,7 @@ msgstr "Changement de statut des mises à jour par courrier électronique"
 msgid "Email Validated"
 msgstr "Courriel validé"
 
-#: src/app/App.js:331
+#: src/app/App.js:321
 msgid "Email Verification"
 msgstr "Vérification de l'e-mail"
 
@@ -1459,7 +1467,7 @@ msgstr "Pour toute question ou problème lié aux données d'analyse, à la list
 msgid "For users interested in using new features that are still in progress."
 msgstr "Pour les utilisateurs intéressés par l'utilisation de nouvelles fonctionnalités qui sont encore en cours de développement."
 
-#: src/app/App.js:224
+#: src/app/App.js:214
 #: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
@@ -1549,7 +1557,7 @@ msgstr "Employés du gouvernement du Canada"
 msgid "Graph direction:"
 msgstr "Direction du graphique :"
 
-#: src/app/App.js:376
+#: src/app/App.js:366
 #: src/dmarc/DmarcReportPage.js:205
 #: src/dmarc/DmarcReportPage.js:659
 msgid "Guidance"
@@ -1706,8 +1714,8 @@ msgstr "Cacher ce domaine"
 msgid "High"
 msgstr "Haut"
 
-#: src/app/App.js:131
-#: src/app/App.js:194
+#: src/app/App.js:121
+#: src/app/App.js:184
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Accueil"
@@ -2108,11 +2116,11 @@ msgstr "Juin"
 msgid "Jurisdiction"
 msgstr "Compétence"
 
-#: src/guidance/EmailGuidance.js:239
+#: src/guidance/EmailGuidance.js:240
 msgid "Key length:"
 msgstr "Longueur des clés :"
 
-#: src/guidance/EmailGuidance.js:233
+#: src/guidance/EmailGuidance.js:234
 msgid "Key type:"
 msgstr "Type de clé :"
 
@@ -2146,7 +2154,7 @@ msgstr "Les 365 derniers jours"
 msgid "Last Seen: {0}"
 msgstr "Dernière visite : {0}"
 
-#: src/guidance/EmailGuidance.js:317
+#: src/guidance/EmailGuidance.js:336
 msgid "Latest Scan:"
 msgstr "Dernière analyse :"
 
@@ -2193,7 +2201,7 @@ msgstr "Connexion"
 msgid "Login to your account"
 msgstr "Connectez-vous à votre compte"
 
-#: src/guidance/EmailGuidance.js:187
+#: src/guidance/EmailGuidance.js:188
 msgid "Lookups:"
 msgstr "Les recherches :"
 
@@ -2205,7 +2213,7 @@ msgstr "Faible"
 msgid "Mail"
 msgstr "Courrier"
 
-#: src/guidance/EmailGuidance.js:311
+#: src/guidance/EmailGuidance.js:331
 msgid "Mail Servers (MX)"
 msgstr "Serveurs de messagerie (MX)"
 
@@ -2217,7 +2225,7 @@ msgstr "envoi de courrier"
 msgid "Managing Your Domains:"
 msgstr "Gérer vos domaines :"
 
-#: src/app/App.js:179
+#: src/app/App.js:169
 msgid "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
 msgstr "La gestion manuelle des sélecteurs DKIM est supprimée. Les sélecteurs DKIM seront automatiquement ajoutés lorsque vous définissez <0>rua=mailto:dmarc@cyber.gc.ca</0> dans votre enregistrement DMARC. <1>En savoir plus</1>."
 
@@ -2299,7 +2307,7 @@ msgstr "Nom (EN)"
 msgid "Name (FR)"
 msgstr "Nom (FR)"
 
-#: src/guidance/EmailGuidance.js:397
+#: src/guidance/EmailGuidance.js:417
 msgid "Name Servers (NS)"
 msgstr "Serveurs de noms (NS)"
 
@@ -2665,8 +2673,8 @@ msgid "Organization:"
 msgstr "Organisation:"
 
 #: src/admin/AdminPage.js:194
-#: src/app/App.js:137
-#: src/app/App.js:234
+#: src/app/App.js:127
+#: src/app/App.js:224
 #: src/app/FloatingMenu.js:103
 #: src/guidance/GuidancePage.js:143
 #: src/organizations/Organizations.js:73
@@ -2871,7 +2879,7 @@ msgstr "Empêchez ce domaine d'être visible, d'être scanné et d'être compté
 #~ msgid "Previous"
 #~ msgstr "Précédent"
 
-#: src/app/App.js:364
+#: src/app/App.js:354
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:41
@@ -2945,7 +2953,7 @@ msgstr "Gamme :"
 msgid "Read Guidance"
 msgstr "Conseils de lecture"
 
-#: src/app/App.js:232
+#: src/app/App.js:222
 msgid "Read guidance"
 msgstr "Conseils de lecture"
 
@@ -2963,9 +2971,9 @@ msgstr "La chaîne reçue contient le certificat d'ancrage"
 msgid "Received Chain Has Valid Order"
 msgstr "La chaîne reçue a un ordre valide"
 
-#: src/guidance/EmailGuidance.js:181
-#: src/guidance/EmailGuidance.js:227
-#: src/guidance/EmailGuidance.js:277
+#: src/guidance/EmailGuidance.js:182
+#: src/guidance/EmailGuidance.js:228
+#: src/guidance/EmailGuidance.js:278
 msgid "Record:"
 msgstr "Record :"
 
@@ -3048,7 +3056,7 @@ msgstr "Exigences : <0>Configuration requise pour les services de gestion du cou
 msgid "Requirements: <0>Web Sites and Services Management Configuration Requirements</0>"
 msgstr "Exigences : <0>Exigences de configuration de la gestion des sites et services web</0>"
 
-#: src/app/App.js:226
+#: src/app/App.js:216
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -3541,7 +3549,7 @@ msgstr "Indique le nombre total d'e-mails qui ont été envoyés par ce domaine 
 #~ msgid "Siganture Hash:"
 #~ msgstr "Siganture Hash :"
 
-#: src/app/App.js:204
+#: src/app/App.js:194
 #: src/app/FloatingMenu.js:197
 #: src/app/TopBanner.js:122
 #: src/auth/SignInPage.js:147
@@ -3571,7 +3579,7 @@ msgstr "Déconnexion."
 msgid "Signature Hash:"
 msgstr "Signature Hash :"
 
-#: src/app/App.js:125
+#: src/app/App.js:115
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -3763,11 +3771,11 @@ msgstr "Conseils techniques de mise en œuvre :"
 msgid "Termination"
 msgstr "Terminaison"
 
-#: src/app/App.js:228
+#: src/app/App.js:218
 msgid "Terms & Conditions"
 msgstr "Termes et conditions"
 
-#: src/app/App.js:368
+#: src/app/App.js:358
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
@@ -3965,11 +3973,11 @@ msgstr "Temps généré"
 msgid "Time Generated (UTC)"
 msgstr "Heure générée (UTC)"
 
-#: src/app/App.js:105
+#: src/app/App.js:95
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "Pour activer toutes les fonctionnalités de l'application et maximiser la sécurité de votre compte, <0>vous devez vérifier votre compte</0>."
 
-#: src/app/App.js:75
+#: src/app/App.js:65
 msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 msgstr "Pour maximiser la sécurité de votre compte, <0>vous devez activer une option d'authentification multifactorielle</0>."
 
@@ -3977,7 +3985,7 @@ msgstr "Pour maximiser la sécurité de votre compte, <0>vous devez activer une 
 #~ msgid "To receive DKIM scan results and guidance, you must add the DKIM selectors used for each domain. Organization administrators can add selectors in the “Admin Profile” by clicking the edit button of the domain for which they wish to add the selector. Common selectors to keep an for are “selector1”, and “selector2”."
 #~ msgstr "Pour recevoir les résultats de l'analyse DKIM et des conseils, vous devez ajouter les sélecteurs DKIM utilisés pour chaque domaine. Les administrateurs de l'organisation peuvent ajouter des sélecteurs dans le \"profil administrateur\" en cliquant sur le bouton d'édition du domaine pour lequel ils souhaitent ajouter le sélecteur. Les sélecteurs les plus courants sont “selector1“ et “selector2“."
 
-#: src/app/App.js:90
+#: src/app/App.js:80
 msgid "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 msgstr "Pour consulter les résultats détaillés de l'analyse et d'autres fonctionnalités, <0>vous devez vous affilier à une organisation</0>."
 
@@ -4038,7 +4046,7 @@ msgstr "Contour du logo Suivi"
 msgid "Tracker logo text"
 msgstr "Texte du logo du Suivi"
 
-#: src/app/App.js:176
+#: src/app/App.js:166
 msgid "Tracker now automatically manages your DKIM selectors."
 msgstr "Tracker gère désormais automatiquement vos sélecteurs DKIM."
 
@@ -4379,8 +4387,8 @@ msgstr "WILDCARD"
 #~ msgid "Warnings"
 #~ msgstr "Avertissements"
 
-#: src/guidance/EmailGuidance.js:343
-#: src/guidance/EmailGuidance.js:416
+#: src/guidance/EmailGuidance.js:362
+#: src/guidance/EmailGuidance.js:435
 msgid "Warnings:"
 msgstr "Avertissements :"
 
@@ -4646,7 +4654,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "Vous aurez besoin d'un compte Suivi pour utiliser certains produits et services. Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et de la restriction de l'accès à votre compte. Vous acceptez également d'assumer la responsabilité de toutes les activités qui se déroulent sous votre compte ou votre mot de passe. Le SCT n'accepte aucune responsabilité pour toute perte ou tout dommage résultant de votre incapacité à maintenir la sécurité de votre compte ou de votre mot de passe."
 
-#: src/app/App.js:305
+#: src/app/App.js:295
 msgid "Your Account"
 msgstr "Votre compte"
 
@@ -4686,8 +4694,8 @@ msgstr "contactez-nous"
 #~ msgid "https://https-everywhere.canada.ca/en/help/"
 #~ msgstr "https://https-everywhere.canada.ca/en/help/"
 
-#: src/app/App.js:154
-#: src/app/App.js:318
+#: src/app/App.js:144
+#: src/app/App.js:308
 #: src/user/MyTrackerPage.js:33
 #: src/user/MyTrackerPage.js:59
 msgid "myTracker"
@@ -4697,7 +4705,7 @@ msgstr "monSuivi"
 msgid "our Terms and Conditions on the TBS website"
 msgstr "nos conditions générales sur le site Web du SCT"
 
-#: src/guidance/EmailGuidance.js:283
+#: src/guidance/EmailGuidance.js:284
 msgid "p:"
 msgstr "p:"
 
@@ -4705,7 +4713,7 @@ msgstr "p:"
 #~ msgid "pPolicy:"
 #~ msgstr "pPolicy:"
 
-#: src/guidance/EmailGuidance.js:295
+#: src/guidance/EmailGuidance.js:296
 msgid "pct:"
 msgstr "pct:"
 
@@ -4713,7 +4721,7 @@ msgstr "pct:"
 msgid "phase out"
 msgstr "abandonnées"
 
-#: src/guidance/EmailGuidance.js:289
+#: src/guidance/EmailGuidance.js:290
 msgid "sp:"
 msgstr "sp:"
 

@@ -1,7 +1,0 @@
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: import-easm-additional-findings
-  namespace: azure-defender-easm
-spec:
-  suspend: true

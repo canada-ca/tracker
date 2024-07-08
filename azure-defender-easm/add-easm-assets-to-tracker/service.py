@@ -11,7 +11,7 @@ import nats
 load_dotenv()
 
 logging.basicConfig(
-    level=logging.info, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
+    level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
 logger = logging.getLogger()
 
@@ -135,9 +135,9 @@ async def main():
         insert_activity = {
             "timestamp": date.today().isoformat(),
             "initiatedBy": {
-                "id": "easm-service",
-                "userName": "easm-service",
-                "role": "easm-service",
+                "id": "easm",
+                "userName": "automated-discovery-service",
+                "role": "service",
             },
             "target": {
                 "resource": domain,

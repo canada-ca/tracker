@@ -6,7 +6,9 @@ resources:
 - ../../bases/nats
 - backup-cronjob.yaml
 - storage-classes.yaml
+- restrict-instance-metadata.yaml
 patchesStrategicMerge:
+  - arangodb-memory-limit-patch.yaml
   - arangodb-retain-storage-patch.yaml
   - arangodb-tolerance.yaml
   - ingress-gateway-tls-patch.yaml

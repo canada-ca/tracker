@@ -11,10 +11,13 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: domain-cleanup
         spec:
           containers:
             - name: domain-cleanup
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-4b24ebf-1709148343 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-db36f0d-1719232822 # {"$imagepolicy": "flux-system:domain-cleanup"}
               env:
                 - name: DB_PASS
                   valueFrom:
