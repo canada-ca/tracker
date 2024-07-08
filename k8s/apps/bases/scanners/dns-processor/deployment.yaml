@@ -20,6 +20,10 @@ spec:
         - name: dns-processor
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:master-ffc3c59-1718796250 # {"$imagepolicy": "flux-system:dns-processor"}
           env:
+            - name: LOGGER_LEVEL
+              value: INFO
+            - name: SCAN_THREAD_COUNT
+              value: "1"
             - name: DB_NAME
               value: track_dmarc
             - name: DB_URL
@@ -34,12 +38,6 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
-            - name: PUBLISH_TO
-              value: domains
-            - name: SUBSCRIBE_TO
-              value: domains.*.dns
-            - name: QUEUE_GROUP
-              value: dns_processor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: NOTIFICATION_API_KEY
@@ -64,4 +62,5 @@ spec:
                   key: ALERT_SUBS
                   optional: true
           resources: {}
+          imagePullPolicy: Always
 status: {}

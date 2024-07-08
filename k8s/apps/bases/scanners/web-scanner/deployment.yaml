@@ -21,14 +21,12 @@ spec:
         - name: web-scanner
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner:master-061ea7c-1718710506 # {"$imagepolicy": "flux-system:web-scanner"}
           env:
+            - name: LOGGER_LEVEL
+              value: INFO
+            - name: SCAN_THREAD_COUNT
+              value: "1"
             - name: PYTHONWARNINGS
               value: ignore
-            - name: PUBLISH_TO
-              value: domains
-            - name: SUBSCRIBE_TO
-              value: domains.*.web
-            - name: QUEUE_GROUP
-              value: web_scanner
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: NAME
@@ -36,4 +34,5 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
           resources: {}
+          imagePullPolicy: Always
 status: {}

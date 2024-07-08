@@ -36,9 +36,8 @@ spec:
                   value: track_dmarc
                 - name: DB_COLLECTION
                   value: domains
-                - name: PUBLISH_TO
-                  value: domains
                 - name: NATS_URL
                   value: nats://nats.pubsub:4222
+              imagePullPolicy: Always
           restartPolicy: Never
       backoffLimit: 4

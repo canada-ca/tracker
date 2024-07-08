@@ -43,14 +43,18 @@ const {
 
   const jsm = await nc.jetstreamManager()
 
-  await jsm.streams.add({ name: 'domains', subjects: ['domains.*'], retention: RetentionPolicy.Workqueue })
-  await jsm.streams.add({ name: 'domain-discovery', subjects: ['domains.*.discovery'] })
-
-  await jsm.consumers.add('domains', {
-    durable_name: 'domains',
-    ack_policy: AckPolicy.Explicit,
-    max_deliver: 2,
-    max_waiting: 100_000,
+  await jsm.streams.add({
+    name: 'SCANS',
+    subjects: [
+      'scans.requests',
+      'scans.discovery',
+      'scans.add_domain_to_easm',
+      'scans.dns_scanner_results',
+      'scans.dns_processor_results',
+      'scans.web_scanner_results',
+      'scans.web_processor_results',
+    ],
+    retention: RetentionPolicy.Workqueue,
   })
 
   // create a jetstream client:

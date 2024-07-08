@@ -1,5 +1,7 @@
 import logging
 import os
+from dataclasses import dataclass
+
 from dotenv import load_dotenv
 
 import asyncio
@@ -8,47 +10,110 @@ import functools
 import json
 import signal
 
+from nats.errors import TimeoutError
+from nats.js import JetStreamContext
+from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
+
 load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO, format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s"
 )
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 from clients.easm_client import run_disco_group, create_disco_group
 from clients.kusto_client import get_host_asset
 
 NAME = os.getenv("NAME", "add-domain-to-easm")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO", "domains.*.easm")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP", "add-domain-to-easm")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
 
 
-async def run(loop):
-    async def error_cb(error):
-        logger.error(error)
+async def run():
+    loop = asyncio.get_running_loop()
 
-    async def closed_cb():
-        logger.info("Connection to NATS is closed.")
-        await asyncio.sleep(0.1)
-        loop.stop()
+    @dataclass
+    class Context:
+        should_exit: bool = False
+        sub: JetStreamContext.PullSubscription = None
+
+    context = Context()
+
+    async def error_cb(error):
+        logger.error(f"Uncaught error in callback: {error}")
 
     async def reconnected_cb():
-        logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
+        logger.info(f"Reconnected to NATS at {nc.connected_url.netloc}...")
+        # Ensure jetstream stream and consumer are still present
+        await js.add_stream(**add_stream_options)
+        context.sub = await js.pull_subscribe(**pull_subscribe_options)
 
     nc = await nats.connect(
         error_cb=error_cb,
-        closed_cb=closed_cb,
         reconnected_cb=reconnected_cb,
         servers=SERVERS,
         name=NAME,
     )
 
+    js = nc.jetstream()
     logger.info(f"Connected to NATS at {nc.connected_url.netloc}...")
 
-    async def subscribe_handler(msg):
-        await asyncio.sleep(0.01)
+    add_stream_options = {
+        "name": "SCANS",
+        "subjects": [
+            "scans.requests",
+            "scans.discovery",
+            "scans.add_domain_to_easm",
+            "scans.dns_scanner_results",
+            "scans.dns_processor_results",
+            "scans.web_scanner_results",
+            "scans.web_processor_results",
+        ],
+        "retention": RetentionPolicy.WORK_QUEUE,
+    }
+
+    await js.add_stream(**add_stream_options)
+
+    pull_subscribe_options = {
+        "stream": "SCANS",
+        "subject": "scans.add_domain_to_easm",
+        "durable": "add_domain_to_easm",
+        "config": ConsumerConfig(
+            ack_policy=AckPolicy.EXPLICIT,
+            max_deliver=1,
+            max_waiting=100_000,
+            ack_wait=90,
+        ),
+    }
+
+    context.sub = await js.pull_subscribe(**pull_subscribe_options)
+
+    async def ask_exit(sig_name):
+        if context.should_exit is True:
+            return
+        logger.error(f"Got signal {sig_name}: exit")
+        context.should_exit = True
+
+    for signal_name in {"SIGINT", "SIGTERM"}:
+        loop.add_signal_handler(
+            getattr(signal, signal_name),
+            lambda: asyncio.create_task(ask_exit(signal_name)),
+        )
+
+    while True:
+        if context.should_exit:
+            break
+        if nc.is_closed:
+            logger.error("Connection to NATS is closed")
+
+        try:
+            logger.debug("Fetching message...")
+            msgs = await context.sub.fetch(batch=1, timeout=1)
+            msg = msgs[0]
+        except nats.errors.TimeoutError:
+            logger.debug("No messages available...")
+            continue
+
         subject = msg.subject
         reply = msg.reply
         data = msg.data.decode()
@@ -78,28 +143,6 @@ async def run(loop):
             logger.error(f"Scanning subdomains: {str(e)}")
             return
 
-    await nc.subscribe(subject=SUBSCRIBE_TO, queue=QUEUE_GROUP, cb=subscribe_handler)
-
-    def ask_exit(sig_name):
-        logger.error(f"Got signal {sig_name}: exit")
-        if nc.is_closed:
-            return
-        loop.create_task(nc.close())
-
-    for signal_name in {"SIGINT", "SIGTERM"}:
-        loop.add_signal_handler(
-            getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
-        )
-
-
-def main():
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run(loop))
-    try:
-        loop.run_forever()
-    finally:
-        loop.close()
-
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())

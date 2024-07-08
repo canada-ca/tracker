@@ -34,8 +34,6 @@ spec:
                   value: track_dmarc
                 - name: NATS_URL
                   value: nats://localhost:4222
-                - name: PUBLISH_TO
-                  value: domains
                 - name: REGION
                   valueFrom:
                     secretKeyRef:

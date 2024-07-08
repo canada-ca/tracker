@@ -39,9 +39,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 NAME = os.getenv("NAME", "dns-processor")
-SUBSCRIBE_TO = os.getenv("SUBSCRIBE_TO")
-PUBLISH_TO = os.getenv("PUBLISH_TO")
-QUEUE_GROUP = os.getenv("QUEUE_GROUP")
 SERVERLIST = os.getenv("NATS_SERVERS")
 SERVERS = SERVERLIST.split(",")
 
@@ -49,6 +46,8 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
+
+SCAN_THREAD_COUNT = int(os.getenv("SCAN_THREAD_COUNT", 1))
 
 # Establish DB connection
 arango_client = ArangoClient(hosts=DB_URL)
@@ -374,6 +373,8 @@ async def run():
         "name": "SCANS",
         "subjects": [
             "scans.requests",
+            "scans.discovery",
+            "scans.add_domain_to_easm",
             "scans.dns_scanner_results",
             "scans.dns_processor_results",
             "scans.web_scanner_results",
@@ -452,7 +453,7 @@ async def run():
                     f"Error while releasing semaphore for received message: {original_msg}: {e}"
                 )
 
-    sem = asyncio.BoundedSemaphore(2)
+    sem = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         while True:
