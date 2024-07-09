@@ -148,12 +148,6 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: kube-arangodb
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: scanners
-          podSelector:
-            matchLabels:
-              run: arangosh
     # DNS queries also need to be allowed
     - ports:
         - protocol: UDP
