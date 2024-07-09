@@ -32,4 +32,4 @@ replicas:
 patchesStrategicMerge:
   - update-selectors-enable-selector-removal-patch.yaml
 components:
-#  - ../../bases/frontend/maintenance-override-component
+  - ../../bases/frontend/maintenance-override-component
