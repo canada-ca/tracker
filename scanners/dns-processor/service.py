@@ -359,6 +359,7 @@ async def run():
         # Ensure jetstream stream and consumer are still present
         await js.add_stream(**add_stream_options)
         context.sub = await js.pull_subscribe(**pull_subscribe_options)
+        logger.info("Re-subscribed to NATS...")
 
     nc = await nats.connect(
         error_cb=error_cb,
