@@ -22,7 +22,7 @@ spec:
             - name: LOGGER_LEVEL
               value: INFO
             - name: SCAN_THREAD_COUNT
-              value: "1"
+              value: "2"
             - name: DB_NAME
               value: track_dmarc
             - name: DB_URL
