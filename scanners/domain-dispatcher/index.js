@@ -17,7 +17,6 @@ const {
   DB_NAME: databaseName,
   DB_PASS: password,
   DB_USER: username,
-  PUBLISH_TO: topic,
   NATS_URL,
 } = process.env
 
