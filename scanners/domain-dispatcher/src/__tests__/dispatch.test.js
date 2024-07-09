@@ -78,12 +78,11 @@ describe('domain-dispatcher', () => {
         })
         // 1 batch of 2 domains = 2 dispatches
         expect(publish).toHaveBeenCalledWith({
-          channel: 'domains.1',
+          channel: 'scans.requests',
           msg: {
             domain: 'tbs-sct.gc.ca',
             domain_key: '1',
             hash: '8a237c3e4033c5f9ec06f28edddbccd6',
-            selectors: [],
             shared_id: null,
             user_key: null,
           },
