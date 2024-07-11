@@ -18,12 +18,12 @@ spec:
     spec:
       containers:
         - name: dns-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:dirty-conccurent-1 # {"$imagepolicy": "flux-system:dns-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:dirty-concurrent-draft-1 # {"$imagepolicy": "flux-system:dns-processor"}
           env:
             - name: LOGGER_LEVEL
               value: INFO
             - name: SCAN_THREAD_COUNT
-              value: "2"
+              value: "1"
             - name: DB_NAME
               value: track_dmarc
             - name: DB_URL
