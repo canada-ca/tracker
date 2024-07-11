@@ -6,6 +6,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - virtual-service.yaml
-#  - network-policy.yaml
+  - network-policy.yaml
   - maintenance-deployment.yaml
   - maintenance-service.yaml
