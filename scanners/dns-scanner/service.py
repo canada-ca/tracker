@@ -29,12 +29,27 @@ if not isinstance(logger_level, int):
     print(f"Invalid logger level: {LOGGER_LEVEL}")
     sys.exit(1)
 
+# Split logging to stdout and stderr
+# DEBUG and INFO to stdout
+# WARNING and above to stderr
+h1 = logging.StreamHandler(sys.stdout)
+h1.setLevel(logging.DEBUG)
+h1.addFilter(lambda record: record.levelno <= logging.INFO)
+h2 = logging.StreamHandler(sys.stderr)
+h2.setLevel(logging.WARNING)
+
 logging.basicConfig(
-    stream=sys.stdout,
     level=logger_level,
     format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+    handlers=[h1, h2],
 )
 logger = logging.getLogger(__name__)
+
+logger.debug("DEBUG")
+logger.info("INFO")
+logger.warning("WARNING")
+logger.error("ERROR")
+logger.critical("CRITICAL")
 
 NAME = os.getenv("NAME", "dns-scanner")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
