@@ -22,12 +22,6 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app: tracker-api
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: api
-        - podSelector:
-            matchLabels:
               app: istiod
           namespaceSelector:
             matchLabels:

@@ -17,9 +17,3 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: istio-system
-        - podSelector:
-            matchLabels:
-              app: tracker-frontend
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: frontend
