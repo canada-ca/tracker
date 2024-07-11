@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
@@ -12,6 +12,7 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { TierOneSummaries } from '../summaries/TierOneSummaries'
+import Joyride from 'react-joyride'
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
@@ -26,6 +27,34 @@ export default function OrganizationDetails() {
       history.replace(`/my-tracker/${defaultActiveTab}`)
     }
   }, [activeTab, history, defaultActiveTab])
+
+  const [tourSteps] = useState([
+    {
+      content: <h1>This page is dedicated to your personal view of tracker</h1>,
+      placement: 'center',
+      target: 'body',
+    },
+    {
+      target: '.summary',
+      content: 'Summary of your tracker',
+    },
+    {
+      target: '.dmarc-phases',
+      content: 'dmarc phases information',
+    },
+    {
+      target: '.domains',
+      content: 'domains information',
+    },
+    {
+      target: '.https-config-summary',
+      content: 'https configuration summary',
+    },
+    {
+      target: '.dmarc-phases-other',
+      content: 'dmarc phases information',
+    },
+  ])
 
   if (loading) {
     return (
@@ -48,6 +77,7 @@ export default function OrganizationDetails() {
 
   return (
     <Box w="100%">
+      <Joyride steps={tourSteps} run={true} continuous />
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading
           as="h1"
@@ -72,19 +102,19 @@ export default function OrganizationDetails() {
         onChange={(i) => changeActiveTab(i)}
       >
         <TabList mb="4">
-          <Tab borderTopWidth="4px">
+          <Tab borderTopWidth="4px" className="summary">
             <Trans>Summary</Trans>
           </Tab>
-          <Tab borderTopWidth="4px">
+          <Tab borderTopWidth="4px" className="dmarc-phases">
             <Trans>DMARC Phases</Trans>
           </Tab>
-          <Tab borderTopWidth="4px">
+          <Tab borderTopWidth="4px" className="domains">
             <Trans>Domains</Trans>
           </Tab>
         </TabList>
 
         <TabPanels>
-          <TabPanel>
+          <TabPanel className="https-config-summary">
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <TierOneSummaries
                 https={data?.findMyTracker?.summaries.https}
@@ -92,7 +122,7 @@ export default function OrganizationDetails() {
               />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel>
+          <TabPanel className="dmarc-phases-other">
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <Box>
                 <Text fontSize="3xl">DMARC Phases</Text>

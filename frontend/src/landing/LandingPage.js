@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
@@ -6,6 +6,7 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
+import Joyride from 'react-joyride'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -18,14 +19,32 @@ const itpinUrlFr =
 
 export function LandingPage({ loginRequired, isLoggedIn }) {
   const { i18n } = useLingui()
+  const [start, setStart] = useState(false)
+  const [tourSteps] = useState([
+    {
+      content: <h1>Welcome!</h1>,
+      placement: 'center',
+      target: 'body',
+    },
+    {
+      target: '.step-1',
+      content: 'This is the first step!',
+    },
+    {
+      target: '.step-2',
+      content: 'This is the second step!',
+    },
+  ])
+
   return (
     <Stack w="100%">
+      <Joyride steps={tourSteps} run={true} continuous />
       <Box mb="16" textAlign="left" px="4">
-        <Heading as="h1">
+        <Heading as="h1" className="step-1">
           <Trans>Track Digital Security</Trans>
         </Heading>
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
-        <Text fontSize="xl">
+        <Text fontSize="xl" className="step-2">
           <Trans>
             Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
             Digital guides government online services to adopt good security practices for practices outlined in the{' '}

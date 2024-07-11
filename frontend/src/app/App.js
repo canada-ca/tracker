@@ -24,12 +24,7 @@ import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
-
-// import 'intro.js/introjs.css'
-// import { Steps, Hints } from 'intro.js-react'
-import introJs from 'intro.js-react'
-//import 'intro.js/introjs.css'
-//figure out which imports to use to ensure proper use
+import Joyride from 'react-joyride'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -58,6 +53,13 @@ export function App() {
   const { i18n } = useLingui()
   const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
+
+  const [tourSteps] = useState([
+    {
+      target: '.home',
+      content: 'This brings you to thehome page',
+    },
+  ])
 
   if (loading) return <LoadingMessage />
 
@@ -112,10 +114,9 @@ export function App() {
     }
   }
 
-//figure out why when i add the const steos or anything related the website becomes blank 
-
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
+      <Joyride steps={tourSteps} run={true} continuous />
       <ScrollToAnchor />
       <header>
         <CSSReset />
@@ -125,7 +126,7 @@ export function App() {
         <TopBanner />
       </header>
       <Navigation>
-        <RouteLink to="/"> {/*add intro.js step to this line and the rest of the navbar (need intro start funciton somewhere in the code)*/}
+        <RouteLink to="/" className="home">
           <Trans>Home</Trans>
         </RouteLink>
 

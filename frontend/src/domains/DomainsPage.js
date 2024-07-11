@@ -22,6 +22,7 @@ import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
+import Joyride from 'react-joyride'
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -172,6 +173,7 @@ export default function DomainsPage() {
         ) => (
           <ErrorBoundary key={`${id}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <DomainCard
+              className="domain-card"
               id={id}
               url={domain}
               status={status}
@@ -190,8 +192,33 @@ export default function DomainsPage() {
     </Box>
   )
 
+  const [tourSteps] = useState([
+    {
+      content: <h1>This page is dedicated to everything domains</h1>,
+      placement: 'center',
+      target: 'body',
+    },
+    {
+      target: '.filter-box',
+      content: 'You can modify the results of the domain list using these filters',
+    },
+    {
+      target: '.filters',
+      content: 'You can filter the list of domains here',
+    },
+    {
+      target: '.affiliated',
+      content: 'This filter will show only domains affiliated with your account',
+    },
+    {
+      target: '.domain-card',
+      content: 'Here is the information for each domain',
+    },
+  ])
+
   return (
     <Box w="100%" px={4}>
+      <Joyride steps={tourSteps} run={true} continuous />
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
@@ -233,6 +260,7 @@ export default function DomainsPage() {
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
+          className="filter-box"
           selectedDisplayLimit={domainsPerPage}
           setSelectedDisplayLimit={setDomainsPerPage}
           hasNextPage={hasNextPage}
@@ -251,7 +279,7 @@ export default function DomainsPage() {
         />
         {isLoggedIn() && (
           <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg">
+            <Text mr="2" fontWeight="bold" fontSize="lg" className="filters">
               <Trans>Filters:</Trans>
             </Text>
             <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />

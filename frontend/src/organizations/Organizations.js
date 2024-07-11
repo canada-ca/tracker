@@ -18,6 +18,7 @@ import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
+import Joyride from 'react-joyride'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -56,6 +57,30 @@ export default function Organizations() {
       relayRoot: 'findMyOrganizations',
     })
 
+  const [tourSteps] = useState([
+    {
+      content: <h1>This page is dedicated to everything organizations</h1>,
+      placement: 'center',
+      target: 'body',
+    },
+    {
+      target: '.search-box',
+      content: 'You can search for an organization here',
+    },
+    {
+      target: '.filter',
+      content: 'Here you can filter the list of organizations',
+    },
+    {
+      target: '.filterVerified',
+      content: 'Here you can filter the list of organizations to only show verified organizations',
+    },
+    {
+      target: '.organization-card',
+      content: 'Here is the information for each organization',
+    },
+  ])
+
   if (error) return <ErrorFallbackMessage error={error} />
   const orderByOptions = [
     { value: 'NAME', text: t`Name` },
@@ -88,6 +113,7 @@ export default function Organizations() {
           <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
             <Flex align="center">
               <OrganizationCard
+                className="organization-card"
                 slug={slug}
                 name={name}
                 acronym={acronym}
@@ -126,6 +152,7 @@ export default function Organizations() {
 
   return (
     <Box w="100%" px="4">
+      <Joyride steps={tourSteps} run={true} continuous />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>Organizations</Trans>
       </Heading>
@@ -150,6 +177,7 @@ export default function Organizations() {
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SearchBox
+          className="search-box"
           selectedDisplayLimit={orgsPerPage}
           setSelectedDisplayLimit={setOrgsPerPage}
           hasNextPage={hasNextPage}
@@ -166,12 +194,13 @@ export default function Organizations() {
           placeholder={t`Search for an organization`}
           onToggle={onToggle}
         />
+
         <Flex align="center" mb="2">
-          <Text mr="2" fontWeight="bold" fontSize="lg">
+          <Text mr="2" fontWeight="bold" fontSize="lg" className="filter">
             <Trans>Filters:</Trans>
           </Text>
           <Tooltip label={t`Filter list to verified organizations only.`}>
-            <Flex align="center" mr="2">
+            <Flex align="center" mr="2" className="filterVerified">
               <Switch
                 isFocusable={true}
                 aria-label="Show only verified organizations"
