@@ -119,7 +119,11 @@ def update_chart_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_
                 if "fail" in category_status:
                     chart["fail"] += 1
                     chart["total"] += 1
-                elif "info" not in category_status:
+                elif (
+                    chart_type == "mail"
+                    and domain.get("status", {}).get("dkim") == "info"
+                    and "pass" in category_status
+                ) or "info" not in category_status:
                     chart["pass"] += 1
                     chart["total"] += 1
 
