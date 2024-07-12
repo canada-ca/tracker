@@ -57,7 +57,7 @@ export function App() {
   const [tourSteps] = useState([
     {
       target: '.home',
-      content: 'This brings you to thehome page',
+      content: 'This brings you to the home page',
     },
   ])
 

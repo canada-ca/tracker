@@ -59,6 +59,25 @@ export default function AdminPage({ isLoginRequired }) {
       })
     },
   })
+  
+  const [tourSteps] = useState([
+    {
+      target: '.super-admin',
+      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
+    },
+    {
+      target: '.organization-menu',
+      content: 'This is the Organization menu. You can switch between Organizations, Users, and Audit Logs.',
+    },
+    {
+      target: '.organization-dropdown',
+      content: 'This is the Organization dropdown.',
+    },
+    {
+      target: '.create-organization-button',
+      content: 'This is the Organization dropdown.',
+    },
+  ])
 
   useEffect(() => {
     if (!activeMenu) {
@@ -84,6 +103,7 @@ export default function AdminPage({ isLoginRequired }) {
   if (loading) {
     dropdown = (
       <Dropdown
+        className='orgnization-dropdown'
         label={i18n._(t`Organization: `)}
         labelDirection="row"
         options={[]}
@@ -100,6 +120,7 @@ export default function AdminPage({ isLoginRequired }) {
     })
     dropdown = (
       <Dropdown
+        className='orgnization-dropdown'
         label={i18n._(t`Organization: `)}
         labelDirection="row"
         options={options}
@@ -126,6 +147,7 @@ export default function AdminPage({ isLoginRequired }) {
       <Flex direction={{ base: 'column', md: 'row' }} align="center" justifyContent="space-between">
         {dropdown}
         <Button
+          className='create-orgnization-button'
           variant="primary"
           ml={{ base: '0', md: 'auto' }}
           w={{ base: '100%', md: 'auto' }}
@@ -187,7 +209,8 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
     <label>
       <Flex align="center">
-        <Text fontSize="lg" fontWeight="bold" mr="2">
+      <Joyride steps={tourSteps} run={true} continuous />
+        <Text fontSize="lg" fontWeight="bold" mr="2" className='super-admin'>
           <Trans>Super Admin Menu:</Trans>
         </Text>
         <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>

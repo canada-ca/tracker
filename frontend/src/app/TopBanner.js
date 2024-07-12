@@ -130,6 +130,15 @@ export const TopBanner = (props) => {
               >
                 <Trans>Create Account</Trans>
               </Button>
+              {/* Button to trigger the start of the user onboarding tutorial. add onClick to start the tour*/}
+              <Button
+                variant="primaryWhite"
+                onClick={() => {}}
+                px="3"
+                display={{ base: 'none', md: 'inline' }}
+              >
+                <Trans>User Onboard</Trans>
+              </Button>
             </>
           )}
         </Flex>
