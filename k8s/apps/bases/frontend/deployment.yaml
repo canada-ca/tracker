@@ -19,6 +19,10 @@ spec:
       labels:
         app: tracker-frontend
     spec:
+      securityContext:
+        fsGroup: 1337
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:master-f00cc11-1719425505 # {"$imagepolicy": "flux-system:frontend"}
           name: frontend
@@ -29,4 +33,15 @@ spec:
             requests:
               cpu: 200m
               memory: 45Mi
+          securityContext:
+            runAsGroup: 1337
+            runAsUser: 1337
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+
 status: {}
