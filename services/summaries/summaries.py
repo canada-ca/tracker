@@ -40,7 +40,7 @@ def is_domain_hidden(domain, db):
     claims = db.collection("claims").find({"_to": domain["_id"]})
     for claim in claims:
         hidden = claim.get("hidden")
-        if hidden != None and hidden == True:
+        if hidden is not None and hidden == True:
             return True
     return False
 
@@ -67,7 +67,7 @@ def ignore_domain(domain):
     """
 
     if (
-        domain == None
+        domain is None
         or domain.get("archived") is True
         or domain.get("blocked") is True
         or domain.get("rcode") == "NXDOMAIN"
@@ -207,76 +207,77 @@ def update_org_summaries(host=DB_URL, name=DB_NAME, user=DB_USER, password=DB_PA
         claims = db.collection("claims").find({"_from": org["_id"]})
         for claim in claims:
             domain = db.collection("domains").get({"_id": claim["_to"]})
+            domain_status = domain.get("status", {})
             if ignore_domain(domain) is False:
                 # tier 1
                 # https
-                if domain.get("status", {}).get("https") == "pass":
+                https_status = domain_status.get("https")
+                if https_status == "pass":
                     https_pass = https_pass + 1
-                elif domain.get("status", {}).get("https") == "fail":
+                elif https_status == "fail":
                     https_fail = https_fail + 1
                 # dmarc
-                if domain.get("status", {}).get("dmarc") == "pass":
+                dmarc_status = domain_status.get("dmarc")
+                if dmarc_status == "pass":
                     dmarc_pass = dmarc_pass + 1
-                elif domain.get("status", {}).get("dmarc") == "fail":
+                elif dmarc_status == "fail":
                     dmarc_fail = dmarc_fail + 1
 
                 # tier 2
                 # web connections
-                if (
-                    domain.get("status", {}).get("https") == "pass"
-                    and domain.get("status", {}).get("hsts") == "pass"
-                ):
+                hsts_status = domain_status.get("hsts")
+                if https_status == "pass" and hsts_status == "pass":
                     web_connections_pass = web_connections_pass + 1
-                elif (
-                    domain.get("status", {}).get("https") == "fail"
-                    or domain.get("status", {}).get("hsts") == "fail"
-                ):
+                elif https_status == "fail" or hsts_status == "fail":
                     web_connections_fail = web_connections_fail + 1
                 # ssl/tls
-                if domain.get("status", {}).get("ssl") == "pass":
+                ssl_status = domain_status.get("ssl")
+                if ssl_status == "pass":
                     ssl_pass = ssl_pass + 1
-                elif domain.get("status", {}).get("ssl") == "fail":
+                elif ssl_status == "fail":
                     ssl_fail = ssl_fail + 1
                 # spf
-                if domain.get("status", {}).get("spf") == "pass":
+                spf_status = domain_status.get("spf")
+                if spf_status == "pass":
                     spf_pass = spf_pass + 1
-                elif domain.get("status", {}).get("spf") == "fail":
+                elif spf_status == "fail":
                     spf_fail = spf_fail + 1
                 # dkim
-                if domain.get("status", {}).get("dkim") == "pass":
+                dkim_status = domain_status.get("dkim")
+                if dkim_status == "pass":
                     dkim_pass = dkim_pass + 1
-                elif domain.get("status", {}).get("dkim") == "fail":
+                elif dkim_status == "fail":
                     dkim_fail = dkim_fail + 1
 
                 # tier 3
                 # web
-                if (
-                    domain.get("status", {}).get("ssl") == "pass"
-                    and domain.get("status", {}).get("https") == "pass"
-                ):
+                if ssl_status == "pass" and https_status == "pass":
                     web_pass = web_pass + 1
-                elif (
-                    domain.get("status", {}).get("ssl") == "fail"
-                    or domain.get("status", {}).get("https") == "fail"
-                ):
+                elif ssl_status == "fail" or https_status == "fail":
                     web_fail = web_fail + 1
                 # mail
-                if (
-                    domain.get("status", {}).get("dmarc") == "pass"
-                    and domain.get("status", {}).get("spf") == "pass"
-                    and domain.get("status", {}).get("dkim") == "pass"
-                ):
-                    mail_pass = mail_pass + 1
-                elif (
-                    domain.get("status", {}).get("dmarc") == "fail"
-                    or domain.get("status", {}).get("spf") == "fail"
-                    or domain.get("status", {}).get("dkim") == "fail"
-                ):
-                    mail_fail = mail_fail + 1
+                if dkim_status == "info":
+                    if dmarc_status == "pass" and spf_status == "pass":
+                        mail_pass = mail_pass + 1
+                    elif dmarc_status == "fail" or spf_status == "fail":
+                        mail_fail = mail_fail + 1
+                else:
+                    if (
+                        dmarc_status == "pass"
+                        and spf_status == "pass"
+                        and dkim_status == "pass"
+                    ):
+                        mail_pass = mail_pass + 1
+                    elif (
+                        dmarc_status == "fail"
+                        or spf_status == "fail"
+                        or dkim_status == "fail"
+                    ):
+                        mail_fail = mail_fail + 1
 
                 # dmarc phase
                 phase = domain.get("phase")
-                if phase is None or domain.get("status", {}).get("dmarc") == "info":
+                if phase is None or dmarc_status == "info":
                     logging.info(
                         f"No DMARC scan data available for domain \"{domain['domain']}\"."
                     )
