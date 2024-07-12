@@ -45,12 +45,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-logger.debug("DEBUG")
-logger.info("INFO")
-logger.warning("WARNING")
-logger.error("ERROR")
-logger.critical("CRITICAL")
-
 NAME = os.getenv("NAME", "dns-scanner")
 SERVERLIST = os.getenv("NATS_SERVERS", "nats://localhost:4222")
 SERVERS = SERVERLIST.split(",")
