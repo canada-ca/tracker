@@ -50,7 +50,11 @@ def process_tls_results(tls_results, web_server_present):
 
         return processed_tags
 
-    accepted_cipher_keys = tls_results.get("accepted_cipher_suites", {}).keys()
+    accepted_cipher_keys_original = tls_results.get("accepted_cipher_suites", {})
+    if isinstance(accepted_cipher_keys_original, dict):
+        accepted_cipher_keys = accepted_cipher_keys_original.keys()
+    else:
+        accepted_cipher_keys = []
     for protocol in accepted_cipher_keys:
         accepted_cipher_suites[protocol] = []
 
