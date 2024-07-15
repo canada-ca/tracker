@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 
 import asyncio
 import nats
-import functools
 import json
 import signal
 import traceback
