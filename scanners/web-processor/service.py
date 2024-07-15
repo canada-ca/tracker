@@ -1,4 +1,3 @@
-import concurrent
 import json
 import logging
 import asyncio
@@ -6,6 +5,7 @@ import os
 import signal
 import time
 from dataclasses import dataclass
+
 from concurrent.futures import ThreadPoolExecutor
 
 import sys
@@ -347,7 +347,7 @@ async def processor_service():
 
     sem = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with ThreadPoolExecutor() as executor:
         while True:
             if context.should_exit:
                 break

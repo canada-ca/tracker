@@ -1,4 +1,3 @@
-import concurrent
 import json
 import logging
 import asyncio
@@ -12,6 +11,7 @@ import sys
 
 from dotenv import load_dotenv
 from concurrent.futures import TimeoutError
+from concurrent.futures import ThreadPoolExecutor
 
 from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
@@ -209,7 +209,7 @@ async def scan_service():
 
     sem = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with ThreadPoolExecutor() as executor:
         while True:
             if context.should_exit:
                 break

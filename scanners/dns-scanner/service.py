@@ -3,12 +3,12 @@ import asyncio
 import traceback
 
 import sys
-import concurrent
 import json
 import logging
 import os
 import signal
 from concurrent.futures import TimeoutError
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 
 import nats
@@ -250,7 +250,7 @@ async def run():
 
     sem = asyncio.BoundedSemaphore(SCAN_THREAD_COUNT)
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with ThreadPoolExecutor() as executor:
         while True:
             if context.should_exit:
                 break
