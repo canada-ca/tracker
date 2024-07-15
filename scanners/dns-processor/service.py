@@ -17,7 +17,7 @@ from arango import ArangoClient, DocumentUpdateError
 from dotenv import load_dotenv
 from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
-from nats.errors import TimeoutError
+from nats.errors import TimeoutError as NatsTimeoutError
 
 from dns_processor.dns_processor import process_results
 from notify.send_mx_diff_email_alerts import send_mx_diff_email_alerts
