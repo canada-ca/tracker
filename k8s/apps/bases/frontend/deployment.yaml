@@ -43,5 +43,4 @@ spec:
             privileged: false
             readOnlyRootFilesystem: true
             runAsNonRoot: true
-
 status: {}
