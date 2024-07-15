@@ -200,7 +200,7 @@ class TLSResult:
         self.request_domain = domain
         self.request_ip_address = ip_address
 
-        scanner = Scanner()
+        scanner = Scanner(per_server_concurrent_connections_limit=2)
 
         designated_scans = set()
 
