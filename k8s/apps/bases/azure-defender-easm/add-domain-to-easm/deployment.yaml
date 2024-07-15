@@ -16,6 +16,10 @@ spec:
       labels:
         app: add-domain-to-easm
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: add-domain-to-easm
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-domain-to-easm:master-60c74e8-1718377338 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
@@ -72,4 +76,14 @@ spec:
                   name: azure-defender-easm
                   key: KUSTO_DATABASE
           resources: {}
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
 status: {}

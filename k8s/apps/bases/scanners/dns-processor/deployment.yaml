@@ -16,6 +16,10 @@ spec:
       labels:
         app: dns-processor
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: dns-processor
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-processor:master-ffc3c59-1718796250 # {"$imagepolicy": "flux-system:dns-processor"}
@@ -64,4 +68,14 @@ spec:
                   key: ALERT_SUBS
                   optional: true
           resources: {}
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
 status: {}
