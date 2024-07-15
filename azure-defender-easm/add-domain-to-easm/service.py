@@ -6,11 +6,10 @@ from dotenv import load_dotenv
 
 import asyncio
 import nats
-import functools
 import json
 import signal
 
-from nats.errors import TimeoutError
+from nats.errors import TimeoutError as NatsTimeoutError
 from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
 
@@ -110,7 +109,7 @@ async def run():
             logger.debug("Fetching message...")
             msgs = await context.sub.fetch(batch=1, timeout=1)
             msg = msgs[0]
-        except nats.errors.TimeoutError:
+        except NatsTimeoutError:
             logger.debug("No messages available...")
             continue
 
