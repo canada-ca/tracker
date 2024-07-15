@@ -156,7 +156,7 @@ def request_connection(
             return {"connection": connection, "response": response}
 
         except requests.exceptions.ConnectTimeout as e:
-            logger.error(f"Connection timeout error {context}: {str(e)}")
+            logger.info(f"Connection timeout error {context}: {str(e)}")
             if scheme.lower() == "http":
                 connection = HTTPConnectionRequest(
                     uri=uri, error=CONNECTION_TIMEOUT_ERROR
@@ -167,14 +167,14 @@ def request_connection(
                 )
             return {"connection": connection, "response": response}
         except requests.exceptions.ReadTimeout as e:
-            logger.error(f"Read timeout error {context}: {str(e)}")
+            logger.info(f"Read timeout error {context}: {str(e)}")
             if scheme.lower() == "http":
                 connection = HTTPConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
             elif scheme.lower() == "https":
                 connection = HTTPSConnectionRequest(uri=uri, error=READ_TIMEOUT_ERROR)
             return {"connection": connection, "response": response}
         except requests.exceptions.Timeout as e:
-            logger.error(f"Timeout error {context}: {str(e)}")
+            logger.info(f"Timeout error {context}: {str(e)}")
             if scheme.lower() == "http":
                 connection = HTTPConnectionRequest(uri=uri, error=TIMEOUT_ERROR)
             elif scheme.lower() == "https":
@@ -182,7 +182,7 @@ def request_connection(
             return {"connection": connection, "response": response}
 
         except requests.exceptions.ConnectionError as e:
-            logger.error(f"Connection error {context}: {str(e)}")
+            logger.info(f"Connection error {context}: {str(e)}")
             if scheme.lower() == "http":
                 connection = HTTPConnectionRequest(uri=uri, error=CONNECTION_ERROR)
             elif scheme.lower() == "https":
