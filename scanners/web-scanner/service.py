@@ -18,7 +18,7 @@ from nats.js.api import RetentionPolicy, AckPolicy, ConsumerConfig
 
 from scan.web_scanner import scan_web
 import nats
-from nats.errors import TimeoutError
+from nats.errors import TimeoutError as NatsTimeoutError
 
 load_dotenv()
 
@@ -230,7 +230,7 @@ async def scan_service():
                 msgs = await context.sub.fetch(batch=1, timeout=1)
                 msg = msgs[0]
                 logger.debug(f"Received message: {msg}")
-            except nats.errors.TimeoutError:
+            except NatsTimeoutError:
                 logger.debug("No messages available...")
                 try:
                     sem.release()

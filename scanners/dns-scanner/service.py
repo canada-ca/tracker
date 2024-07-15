@@ -16,7 +16,7 @@ from arango import ArangoClient
 from dotenv import load_dotenv
 from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
-from nats.errors import TimeoutError
+from nats.errors import TimeoutError as NatsTimeoutError
 
 from dns_scanner.dns_scanner import scan_domain
 
@@ -271,7 +271,7 @@ async def run():
                 msgs = await context.sub.fetch(batch=1, timeout=1)
                 msg = msgs[0]
                 logger.debug(f"Received message: {msg}")
-            except nats.errors.TimeoutError:
+            except NatsTimeoutError:
                 logger.debug("No messages available...")
                 try:
                     sem.release()

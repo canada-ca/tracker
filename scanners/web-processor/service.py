@@ -15,7 +15,7 @@ import re
 from arango import ArangoClient, DocumentUpdateError
 from dotenv import load_dotenv
 import nats
-from nats.errors import TimeoutError
+from nats.errors import TimeoutError as NatsTimeoutError
 from nats.js import JetStreamContext
 from nats.js.api import RetentionPolicy, ConsumerConfig, AckPolicy
 
@@ -368,7 +368,7 @@ async def processor_service():
                 msgs = await context.sub.fetch(batch=1, timeout=1)
                 msg = msgs[0]
                 logger.debug(f"Received message: {msg}")
-            except nats.errors.TimeoutError:
+            except NatsTimeoutError:
                 logger.debug("No messages available...")
                 try:
                     sem.release()

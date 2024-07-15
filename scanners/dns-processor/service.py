@@ -486,7 +486,7 @@ async def run():
                 msgs = await context.sub.fetch(batch=1, timeout=1)
                 msg = msgs[0]
                 logger.debug(f"Received message: {msg}")
-            except nats.errors.TimeoutError:
+            except NatsTimeoutError:
                 logger.debug("No messages available...")
                 try:
                     sem.release()
