@@ -16,7 +16,11 @@ from web_processor.web_processor import process_results
 
 load_dotenv()
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s')
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO,
+    format="[%(asctime)s :: %(name)s :: %(levelname)s] %(message)s",
+)
 logger = logging.getLogger()
 
 NAME = os.getenv("NAME", "web_processor")
@@ -41,15 +45,15 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 def to_camelcase(string):
     string = string
     # remove underscore and uppercase following letter
-    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    string = re.sub("_([a-z])", lambda match: match.group(1).upper(), string)
     # keep numbers seperated with hyphen
-    string = re.sub('([0-9])_([0-9])', r'\1-\2', string)
+    string = re.sub("([0-9])_([0-9])", r"\1-\2", string)
     # remove underscore before numbers
-    string = re.sub('_([0-9])', r'\1', string)
+    string = re.sub("_([0-9])", r"\1", string)
     # convert snakecase to camel
-    string = re.sub('_([a-z])', lambda match: match.group(1).upper(), string)
+    string = re.sub("_([a-z])", lambda match: match.group(1).upper(), string)
     # replace hyper with underscore
-    string = re.sub('-', r'_', string)
+    string = re.sub("-", r"_", string)
     return string
 
 
@@ -59,7 +63,10 @@ def snake_to_camel(d):
     if isinstance(d, list):
         return [snake_to_camel(entry) for entry in d]
     if isinstance(d, dict):
-        return {to_camelcase(a): snake_to_camel(b) if isinstance(b, (dict, list)) else b for a, b in d.items()}
+        return {
+            to_camelcase(a): snake_to_camel(b) if isinstance(b, (dict, list)) else b
+            for a, b in d.items()
+        }
 
 
 async def processor_service(loop):
@@ -100,18 +107,20 @@ async def processor_service(loop):
         ip_address = payload.get("ip_address")
         web_scan_key = payload.get("web_scan_key")
 
-        logger.info(f"Starting web scan processing on '{domain}' at IP address '{ip_address}'")
+        logger.info(
+            f"Starting web scan processing on '{domain}' at IP address '{ip_address}'"
+        )
 
         processed_results = process_results(results)
 
         if user_key is None:
             try:
                 db.collection("webScan").update_match(
-                    {'_key': web_scan_key},
+                    {"_key": web_scan_key},
                     {
                         "status": "complete",
-                        "results": snake_to_camel(processed_results)
-                    }
+                        "results": snake_to_camel(processed_results),
+                    },
                 )
 
                 domain = db.collection("domains").get({"_key": domain_key})
@@ -135,7 +144,7 @@ async def processor_service(loop):
                     )
 
                 all_web_scan_cursor = db.aql.execute(
-                    '''
+                    """
                     WITH web, webScan
                     FOR webV,e IN 1 ANY @web_scan_id webToWebScans
                         FOR webScanV, webScanE IN 1 ANY webV._id webToWebScans
@@ -152,8 +161,8 @@ async def processor_service(loop):
                                 "curve_status": webScanV.results.tlsResult.curveStatus,
                                 "blocked_category": webScanV.results.connectionResults.httpsChainResult.connections[0].connection.blockedCategory,
                             }
-                    ''',
-                    bind_vars={'web_scan_id': f'webScan/{web_scan_key}'}
+                    """,
+                    bind_vars={"web_scan_id": f"webScan/{web_scan_key}"},
                 )
 
                 all_web_scans = [web_scan for web_scan in all_web_scan_cursor]
@@ -196,8 +205,16 @@ async def processor_service(loop):
                 domain["status"]["ciphers"] = get_status(cipher_statuses)
                 domain["status"]["curves"] = get_status(curve_statuses)
                 domain["status"]["certificates"] = get_status(certificate_statuses)
-                domain["blocked"] = any([bool(blocked_category) for blocked_category in blocked_categories])
+                domain["blocked"] = any(
+                    [bool(blocked_category) for blocked_category in blocked_categories]
+                )
                 domain["webScanPending"] = scan_pending
+                try:
+                    domain["hasEntrustCertificate"] = processed_results["tls_result"][
+                        "certificate_chain_info"
+                    ]["has_entrust_certificate"]
+                except (TypeError, KeyError):
+                    domain["hasEntrustCertificate"] = False
                 db.collection("domains").update(domain)
 
             except Exception as e:
@@ -214,10 +231,10 @@ async def processor_service(loop):
             return
         loop.create_task(nc.close())
 
-    for signal_name in {'SIGINT', 'SIGTERM'}:
+    for signal_name in {"SIGINT", "SIGTERM"}:
         loop.add_signal_handler(
-            getattr(signal, signal_name),
-            functools.partial(ask_exit, signal_name))
+            getattr(signal, signal_name), functools.partial(ask_exit, signal_name)
+        )
 
 
 def main():
