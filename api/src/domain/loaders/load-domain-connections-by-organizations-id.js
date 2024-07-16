@@ -400,6 +400,11 @@ export const loadDomainConnectionsByOrgId =
             ${domainFilters}
             FILTER domain.webScanPending ${comparison} true
           `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.hasEntrustCertificate ${comparison} true
+          `
           } else {
             domainFilters = aql`
             ${domainFilters}
