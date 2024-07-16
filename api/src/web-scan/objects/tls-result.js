@@ -247,6 +247,10 @@ export const certificateChainInfoType = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: `Whether or not the certificate chain passed validation.`,
     },
+    hasEntrustCertificate: {
+      type: GraphQLBoolean,
+      description: `Whether or not the certificate chain contains an Entrust certificate.`,
+    },
   }),
 })
 
