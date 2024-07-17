@@ -372,36 +372,38 @@ export function WebTLSResults({ tlsResult }) {
                     </Flex>
                   </Box>
 
-                  <NotificationBanner
-                    status="info"
-                    bannerId={`entrust-certificate-${certificateChain[0].commonNames[0]}`}
-                    hideable
-                  >
-                    <Box>
-                      <AlertTitle>
-                        <Trans>Title</Trans>
-                      </AlertTitle>
-                      <AlertDescription>
-                        <Trans>
-                          Our analysis shows that this endpoint may be affected by the upcoming{' '}
-                          <Link
-                            href="https://security.googleblog.com/2024/06/sustaining-digital-certificate-security.html"
-                            color="blue.500"
-                            isExternal
-                          >
-                            Entrust root certificate distrust in Chrome
-                          </Link>
-                          . Certificates issued after October 31, 2024 will be distrusted in Chrome 127 and later
-                          versions. Affected platforms include Windows, macOS, ChromeOS, Android, and Linux.
-                        </Trans>
-                        <Trans>
-                          Immediate action is required to maintain user access. Options include replacing certificates
-                          or implementing local trust overrides. Failure to act may result in security warnings or
-                          access issues for Chromes users.
-                        </Trans>
-                      </AlertDescription>
-                    </Box>
-                  </NotificationBanner>
+                  {hasEntrustCertificate && (
+                    <NotificationBanner
+                      status="info"
+                      bannerId={`entrust-certificate-${certificateChain[0].commonNames[0]}`}
+                      hideable
+                    >
+                      <Box>
+                        <AlertTitle>
+                          <Trans>Title</Trans>
+                        </AlertTitle>
+                        <AlertDescription>
+                          <Trans>
+                            Our analysis shows that this endpoint may be affected by the upcoming{' '}
+                            <Link
+                              href="https://security.googleblog.com/2024/06/sustaining-digital-certificate-security.html"
+                              color="blue.500"
+                              isExternal
+                            >
+                              Entrust root certificate distrust in Chrome
+                            </Link>
+                            . Certificates issued after October 31, 2024 will be distrusted in Chrome 127 and later
+                            versions. Affected platforms include Windows, macOS, ChromeOS, Android, and Linux.
+                          </Trans>
+                          <Trans>
+                            Immediate action is required to maintain user access. Options include replacing certificates
+                            or implementing local trust overrides. Failure to act may result in security warnings or
+                            access issues for Chromes users.
+                          </Trans>
+                        </AlertDescription>
+                      </Box>
+                    </NotificationBanner>
+                  )}
 
                   <Accordion allowMultiple defaultIndex={[]}>
                     {certificateChain.map(
