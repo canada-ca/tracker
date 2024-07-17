@@ -18,6 +18,7 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
+import Joyride from 'react-joyride'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -59,23 +60,24 @@ export default function AdminPage({ isLoginRequired }) {
       })
     },
   })
-  
+
   const [tourSteps] = useState([
     {
-      target: '.super-admin',
-      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
-    },
-    {
-      target: '.organization-menu',
-      content: 'This is the Organization menu. You can switch between Organizations, Users, and Audit Logs.',
-    },
-    {
-      target: '.organization-dropdown',
-      content: 'This is the Organization dropdown.',
+      content: <h1>Welcome to the Admin Profile page!</h1>,
+      placement: 'center',
+      target: 'body',
     },
     {
       target: '.create-organization-button',
-      content: 'This is the Organization dropdown.',
+      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
+    },
+    {
+      target: '.dropdown',
+      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
+    },
+    {
+      target: '.super-admin',
+      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
     },
   ])
 
@@ -103,7 +105,6 @@ export default function AdminPage({ isLoginRequired }) {
   if (loading) {
     dropdown = (
       <Dropdown
-        className='orgnization-dropdown'
         label={i18n._(t`Organization: `)}
         labelDirection="row"
         options={[]}
@@ -120,7 +121,7 @@ export default function AdminPage({ isLoginRequired }) {
     })
     dropdown = (
       <Dropdown
-        className='orgnization-dropdown'
+        className="dropdown"
         label={i18n._(t`Organization: `)}
         labelDirection="row"
         options={options}
@@ -147,7 +148,7 @@ export default function AdminPage({ isLoginRequired }) {
       <Flex direction={{ base: 'column', md: 'row' }} align="center" justifyContent="space-between">
         {dropdown}
         <Button
-          className='create-orgnization-button'
+          className="create-organization-button"
           variant="primary"
           ml={{ base: '0', md: 'auto' }}
           w={{ base: '100%', md: 'auto' }}
@@ -177,7 +178,7 @@ export default function AdminPage({ isLoginRequired }) {
           />
         </>
       ) : (
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center" className="super-admin">
           <Trans>Select an organization to view admin options</Trans>
         </Text>
       )}
@@ -200,6 +201,7 @@ export default function AdminPage({ isLoginRequired }) {
   return (
     <Stack spacing={10} w="100%" px={4}>
       <SuperAdminMenu activeMenu={activeMenu} changeActiveMenu={changeActiveMenu} />
+      <Joyride steps={tourSteps} run={true} continuous />
       {adminPanel}
     </Stack>
   )
@@ -209,8 +211,7 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
     <label>
       <Flex align="center">
-      <Joyride steps={tourSteps} run={true} continuous />
-        <Text fontSize="lg" fontWeight="bold" mr="2" className='super-admin'>
+        <Text fontSize="lg" fontWeight="bold" mr="2">
           <Trans>Super Admin Menu:</Trans>
         </Text>
         <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>

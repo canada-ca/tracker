@@ -94,6 +94,10 @@ export const TopBanner = (props) => {
         </PhaseBanner>
 
         <Flex align="center" ml="auto">
+          <Button variant="primaryWhite" py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
+            <Trans>UO</Trans>
+          </Button>
+
           <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
             <LocaleSwitcher />
           </Box>
@@ -129,15 +133,6 @@ export const TopBanner = (props) => {
                 display={{ base: 'none', md: 'inline' }}
               >
                 <Trans>Create Account</Trans>
-              </Button>
-              {/* Button to trigger the start of the user onboarding tutorial. add onClick to start the tour*/}
-              <Button
-                variant="primaryWhite"
-                onClick={() => {}}
-                px="3"
-                display={{ base: 'none', md: 'inline' }}
-              >
-                <Trans>User Onboard</Trans>
               </Button>
             </>
           )}

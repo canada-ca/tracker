@@ -116,7 +116,7 @@ export function App() {
 
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
-      <Joyride steps={tourSteps} run={true} continuous />
+      {/* <Joyride steps={tourSteps} run={true} continuous /> */}
       <ScrollToAnchor />
       <header>
         <CSSReset />
