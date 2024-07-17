@@ -374,31 +374,26 @@ export function WebTLSResults({ tlsResult }) {
 
                   {hasEntrustCertificate && (
                     <NotificationBanner
-                      status="info"
+                      status="warning"
                       bannerId={`entrust-certificate-${certificateChain[0].commonNames[0]}`}
                       hideable
                     >
                       <Box>
                         <AlertTitle>
-                          <Trans>Title</Trans>
+                          <Trans>Entrust Certificate Detected</Trans>
                         </AlertTitle>
                         <AlertDescription>
                           <Trans>
-                            Our analysis shows that this endpoint may be affected by the upcoming{' '}
+                            Entrust Certificates issued after October 31, 2024{' '}
                             <Link
                               href="https://security.googleblog.com/2024/06/sustaining-digital-certificate-security.html"
-                              color="blue.500"
+                              color="blue.600"
                               isExternal
                             >
-                              Entrust root certificate distrust in Chrome
-                            </Link>
-                            . Certificates issued after October 31, 2024 will be distrusted in Chrome 127 and later
-                            versions. Affected platforms include Windows, macOS, ChromeOS, Android, and Linux.
-                          </Trans>
-                          <Trans>
-                            Immediate action is required to maintain user access. Options include replacing certificates
-                            or implementing local trust overrides. Failure to act may result in security warnings or
-                            access issues for Chromes users.
+                              will be distrusted
+                            </Link>{' '}
+                            in Chrome 127 and later versions. Immediate action is required to maintain user access.
+                            Failure to act may result in security warnings or access issues for Chromes users.
                           </Trans>
                         </AlertDescription>
                       </Box>
