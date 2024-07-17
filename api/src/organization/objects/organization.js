@@ -159,6 +159,7 @@ export const organizationType = new GraphQLObjectType({
         })
         const headers = [
           'domain',
+          'ipAddresses',
           'https',
           'hsts',
           'certificates',
@@ -177,7 +178,8 @@ export const organizationType = new GraphQLObjectType({
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
           let csvLine = `${domain.domain}`
-          csvLine += headers.slice(1, 10).reduce((previousValue, currentHeader) => {
+          csvLine += `,${domain.ipAddresses.join(';')}`
+          csvLine += headers.slice(2, 11).reduce((previousValue, currentHeader) => {
             return `${previousValue},${domain.status[currentHeader]}`
           }, '')
           csvLine += `,${domain.tags.join('|')},${domain.hidden},${domain.rcode},${domain.blocked},${
