@@ -24,7 +24,9 @@ import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
-import Joyride from 'react-joyride'
+// import components from userOnboarding folder
+import { TourProvider } from '../contexts/TourContext'
+import TourComponent from '../userOnboarding/TourComponent'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -53,13 +55,6 @@ export function App() {
   const { i18n } = useLingui()
   const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
-
-  const [tourSteps] = useState([
-    {
-      target: '.home',
-      content: 'This brings you to the home page',
-    },
-  ])
 
   if (loading) return <LoadingMessage />
 
@@ -116,7 +111,10 @@ export function App() {
 
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
-      {/* <Joyride steps={tourSteps} run={true} continuous /> */}
+      {/* add TourComponent somewhere here */}
+      <TourProvider>
+        <TourComponent />
+      </TourProvider>
       <ScrollToAnchor />
       <header>
         <CSSReset />
