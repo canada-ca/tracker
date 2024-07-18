@@ -52,7 +52,7 @@ export const getAllOrganizationDomainStatuses = {
       const csvLine = headers
         .map((header) => {
           if (header === 'ipAddresses') {
-            return domainStatus[header].join(';')
+            return domainStatus[header].join('|')
           }
           return `"${domainStatus[header]}"`
         })

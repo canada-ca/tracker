@@ -178,7 +178,7 @@ export const organizationType = new GraphQLObjectType({
         let csvOutput = headers.join(',')
         domains.forEach((domain) => {
           let csvLine = `${domain.domain}`
-          csvLine += `,${domain.ipAddresses.join(';')}`
+          csvLine += `,${domain.ipAddresses.join('|')}`
           csvLine += headers.slice(2, 11).reduce((previousValue, currentHeader) => {
             return `${previousValue},${domain.status[currentHeader]}`
           }, '')
