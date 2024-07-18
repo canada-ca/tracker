@@ -102,8 +102,16 @@ export const loadOrganizationDomainStatuses =
                 RETURN translatedTags
             )[0]
             ${domainFilters}
+            LET ipAddresses = (
+              FOR web, webE IN 1 OUTBOUND v._id domainsWeb
+                SORT web.timestamp DESC
+                LIMIT 1
+                FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
+                    RETURN webScan.ipAddress
+            )
             RETURN {
               domain: v.domain,
+              ipAddresses: ipAddresses,
               status: v.status,
               tags: claimTags,
               hidden: e.hidden,
