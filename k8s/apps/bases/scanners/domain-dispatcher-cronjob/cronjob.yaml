@@ -14,6 +14,10 @@ spec:
           labels:
             app: domain-dispatcher
         spec:
+          securityContext:
+            fsGroup: 1337
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: domain-dispatcher
               image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-dispatcher:master-57287b0-1718710420 # {"$imagepolicy": "flux-system:domain-dispatcher"}
@@ -40,5 +44,15 @@ spec:
                   value: domains
                 - name: NATS_URL
                   value: nats://nats.pubsub:4222
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
           restartPolicy: Never
       backoffLimit: 4

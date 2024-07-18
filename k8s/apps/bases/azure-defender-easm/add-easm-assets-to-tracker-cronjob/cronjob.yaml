@@ -14,6 +14,10 @@ spec:
           labels:
             app: add-easm-assets-to-tracker
         spec:
+          securityContext:
+            fsGroup: 1337
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: add-easm-assets-to-tracker
               image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-easm-assets-to-tracker:master-9c86906-1720465866 # {"$imagepolicy": "flux-system:add-easm-assets-to-tracker"}
@@ -71,5 +75,15 @@ spec:
                     secretKeyRef:
                       name: azure-defender-easm
                       key: UNCLAIMED_ID
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
           restartPolicy: Never
       backoffLimit: 4
