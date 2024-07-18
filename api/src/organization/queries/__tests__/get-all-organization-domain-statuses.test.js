@@ -242,9 +242,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
-"domain.one","fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
-"domain.two","pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
+            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
+"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
+"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
           },
         }
 
@@ -359,9 +359,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
-"domain.one","fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
-"domain.two","pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
+            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
+"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
+"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
           },
         }
         expect(response).toEqual(expectedResponse)

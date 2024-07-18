@@ -33,6 +33,7 @@ export const getAllOrganizationDomainStatuses = {
 
     const headers = [
       'domain',
+      'ipAddresses',
       'https',
       'hsts',
       'certificates',
@@ -48,7 +49,14 @@ export const getAllOrganizationDomainStatuses = {
     ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
-      const csvLine = headers.map((header) => `"${domainStatus[header]}"`).join(',')
+      const csvLine = headers
+        .map((header) => {
+          if (header === 'ipAddresses') {
+            return domainStatus[header].join('|')
+          }
+          return `"${domainStatus[header]}"`
+        })
+        .join(',')
       csvOutput += `\n${csvLine}`
     })
 

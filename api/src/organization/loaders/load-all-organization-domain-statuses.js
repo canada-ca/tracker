@@ -85,8 +85,16 @@ export const loadAllOrganizationDomainStatuses =
           WITH domains
           FOR d IN domains
             ${domainFilters}
+            LET ipAddresses = (
+              FOR web, webE IN 1 OUTBOUND d._id domainsWeb
+                SORT web.timestamp DESC
+                LIMIT 1
+                FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
+                    RETURN webScan.ipAddress
+            )
             RETURN {
               "domain": d.domain,
+              "ipAddresses": ipAddresses,
               "https": d.status.https,
               "hsts": d.status.hsts,
               "certificates": d.status.certificates,
