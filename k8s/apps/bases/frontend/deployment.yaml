@@ -20,7 +20,7 @@ spec:
         app: tracker-frontend
     spec:
       securityContext:
-        fsGroup: 1337
+        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -34,8 +34,8 @@ spec:
               cpu: 200m
               memory: 45Mi
           securityContext:
-            runAsGroup: 1337
-            runAsUser: 1337
+            runAsGroup: 1000
+            runAsUser: 1000
             allowPrivilegeEscalation: false
             capabilities:
               drop:
