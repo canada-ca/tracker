@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState } from 'react'
-
-const TourContext = createContext()
+import React, { useState, useEffect, useReducer } from 'react'
+import { TourContext } from './TourContextCore'
 
 export const TourProvider = ({ children }) => {
   const [isTourOpen, setIsTourOpen] = useState(false)
@@ -8,11 +7,13 @@ export const TourProvider = ({ children }) => {
   const startTour = () => setIsTourOpen(true)
   const endTour = () => setIsTourOpen(false)
 
-  return (
-    <TourContext.Provider value={{ isTourOpen, startTour, endTour }}>
-      {children}
-    </TourContext.Provider>
-  )
+  return <TourContext.Provider value={{ isTourOpen, startTour }}>{children}</TourContext.Provider>
 }
 
-export const useTour = () => useContext(TourContext)
+export const useTour = () => {
+  const context = useContext(TourContext)
+  if (context === undefined) {
+    throw new Error('useTour must be used within a TourProvider')
+  }
+  return context
+}

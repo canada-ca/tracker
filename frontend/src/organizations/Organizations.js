@@ -57,30 +57,6 @@ export default function Organizations() {
       relayRoot: 'findMyOrganizations',
     })
 
-  const [tourSteps] = useState([
-    {
-      content: <h1>This page is dedicated to everything organizations</h1>,
-      placement: 'center',
-      target: 'body',
-    },
-    {
-      target: '.search-box',
-      content: 'You can search for an organization here',
-    },
-    {
-      target: '.filter',
-      content: 'Here you can filter the list of organizations',
-    },
-    {
-      target: '.filterVerified',
-      content: 'Here you can filter the list of organizations to only show verified organizations',
-    },
-    {
-      target: '.organization-card',
-      content: 'Here is the information for each organization',
-    },
-  ])
-
   if (error) return <ErrorFallbackMessage error={error} />
   const orderByOptions = [
     { value: 'NAME', text: t`Name` },
@@ -152,7 +128,6 @@ export default function Organizations() {
 
   return (
     <Box w="100%" px="4">
-      <Joyride steps={tourSteps} run={true} continuous />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>Organizations</Trans>
       </Heading>

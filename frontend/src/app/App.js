@@ -25,8 +25,9 @@ import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
 // import components from userOnboarding folder
-import { TourProvider } from '../contexts/TourContext'
-import TourComponent from '../userOnboarding/TourComponent'
+import { TourProvider } from '../userOnboarding/contexts/TourContext'
+import TourComponent from '../userOnboarding/components/TourComponent'
+import TourButton from '../userOnboarding/components/TourButton'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -111,11 +112,6 @@ export function App() {
 
   return (
     <Flex minHeight="100vh" direction="column" w="100%" bg="gray.50">
-      {/* add TourComponent somewhere here */}
-      <TourProvider>
-        <TourComponent />
-      </TourProvider>
-      <ScrollToAnchor />
       <header>
         <CSSReset />
         <SkipLink invisible href="#main">
@@ -124,6 +120,12 @@ export function App() {
         <TopBanner />
       </header>
       <Navigation>
+        {/* React Joyride Tours */}
+        <TourProvider>
+          <TourComponent />
+          <TourButton />
+        </TourProvider>
+        <ScrollToAnchor />
         <RouteLink to="/" className="home">
           <Trans>Home</Trans>
         </RouteLink>

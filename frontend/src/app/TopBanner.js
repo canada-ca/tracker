@@ -17,8 +17,6 @@ import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
-//importing tour button
-import TourButton from '../userOnboarding/components/TourButton'
 
 export const TopBanner = (props) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -96,8 +94,6 @@ export const TopBanner = (props) => {
         </PhaseBanner>
 
         <Flex align="center" ml="auto">
-          <TourButton />
-
           <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
             <LocaleSwitcher />
           </Box>
@@ -125,6 +121,7 @@ export const TopBanner = (props) => {
               >
                 <Trans>Sign In</Trans>
               </Button>
+
               <Button
                 variant="primaryWhite"
                 as={RouteLink}

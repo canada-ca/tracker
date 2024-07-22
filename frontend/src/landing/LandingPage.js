@@ -6,7 +6,9 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
-import Joyride from 'react-joyride'
+import { TourProvider } from '../userOnboarding/contexts/TourContext'
+import TourComponent from '../userOnboarding/components/TourComponent'
+import TourButton from '../userOnboarding/components/TourButton'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -20,25 +22,9 @@ const itpinUrlFr =
 export function LandingPage({ loginRequired, isLoggedIn }) {
   const { i18n } = useLingui()
   const [start, setStart] = useState(false)
-  const [tourSteps] = useState([
-    {
-      content: <h1>Welcome!</h1>,
-      placement: 'center',
-      target: 'body',
-    },
-    {
-      target: '.step-1',
-      content: 'This is the first step!',
-    },
-    {
-      target: '.step-2',
-      content: 'This is the second step!',
-    },
-  ])
 
   return (
     <Stack w="100%">
-      <Joyride steps={tourSteps} run={true} continuous />
       <Box mb="16" textAlign="left" px="4">
         <Heading as="h1" className="step-1">
           <Trans>Track Digital Security</Trans>
