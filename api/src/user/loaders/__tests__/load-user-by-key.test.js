@@ -1,12 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {loadUserByKey} from '../index'
+import { loadUserByKey } from '../index'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a loadUserByKey dataloader', () => {
   let query, drop, truncate, collections, i18n
@@ -18,8 +19,8 @@ describe('given a loadUserByKey dataloader', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -34,7 +35,7 @@ describe('given a loadUserByKey dataloader', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -78,7 +79,7 @@ describe('given a loadUserByKey dataloader', () => {
         `
         const expectedUser = await expectedCursor.next()
 
-        const loader = loadUserByKey({query})
+        const loader = loadUserByKey({ query })
         const user = await loader.load(expectedUser._key)
 
         expect(user).toEqual(expectedUser)
@@ -99,7 +100,7 @@ describe('given a loadUserByKey dataloader', () => {
           expectedUsers.push(tempUser)
         }
 
-        const loader = loadUserByKey({query})
+        const loader = loadUserByKey({ query })
         const users = await loader.loadMany(userKeys)
         expect(users).toEqual(expectedUsers)
       })
@@ -111,8 +112,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -123,9 +124,7 @@ describe('given a loadUserByKey dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadUserByKey({
             query: mockedQuery,
             userKey: '1234',
@@ -135,9 +134,7 @@ describe('given a loadUserByKey dataloader', () => {
           try {
             await loader.load('1234')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load user(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load user(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -162,9 +159,7 @@ describe('given a loadUserByKey dataloader', () => {
           try {
             await loader.load('1234')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load user(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load user(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -178,8 +173,8 @@ describe('given a loadUserByKey dataloader', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -190,9 +185,7 @@ describe('given a loadUserByKey dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadUserByKey({
             query: mockedQuery,
             userKey: '1234',
@@ -202,11 +195,7 @@ describe('given a loadUserByKey dataloader', () => {
           try {
             await loader.load('1234')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) utilisateur(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) utilisateur(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -231,11 +220,7 @@ describe('given a loadUserByKey dataloader', () => {
           try {
             await loader.load('1234')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) utilisateur(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) utilisateur(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
