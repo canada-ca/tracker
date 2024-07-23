@@ -22,7 +22,13 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app: tracker-api
+              app: istiod
           namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: api
+              kubernetes.io/metadata.name: istio-system
+    # DNS queries also need to be allowed
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53

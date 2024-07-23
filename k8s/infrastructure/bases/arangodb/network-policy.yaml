@@ -71,6 +71,12 @@ spec:
               kubernetes.io/metadata.name: scanners
           podSelector:
             matchLabels:
+              run: arangosh
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: scanners
+          podSelector:
+            matchLabels:
               app: summaries
         - namespaceSelector:
             matchLabels:

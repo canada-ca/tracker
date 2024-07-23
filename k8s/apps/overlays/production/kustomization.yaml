@@ -31,5 +31,6 @@ replicas:
     count: 20
 patchesStrategicMerge:
   - update-selectors-enable-selector-removal-patch.yaml
+  - easm-to-tracker-sync-suspend-patch.yaml
 components:
-  - ../../bases/frontend/maintenance-override-component
+#  - ../../bases/frontend/maintenance-override-component
