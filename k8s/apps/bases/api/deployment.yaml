@@ -23,7 +23,7 @@ spec:
         app: tracker-api
     spec:
       initContainers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:master-4869781-1717436681 # {"$imagepolicy": "flux-system:database-migration"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/database-migration:master-9c34345-1721826550 # {"$imagepolicy": "flux-system:database-migration"}
           name: database-migration
           env:
             - name: DB_USER
