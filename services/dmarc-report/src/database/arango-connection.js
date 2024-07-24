@@ -1,8 +1,19 @@
 const { Database, aql } = require('arangojs')
-const { ensure } = require('arango-tools')
+const { ensureDatabase: ensure } = require('testUtilities')
 const { databaseOptions } = require('../../database-options')
 
 const arangoConnection = async ({ url, databaseName, rootPass }) => {
+  const systemDatabase = new Database({ url, databaseName: '_system' })
+  await systemDatabase.login('root', rootPass)
+  const databases = await systemDatabase.listDatabases()
+  if (!databases.includes(databaseName)) {
+    try {
+      await systemDatabase.createDatabase(databaseName)
+    } catch (e) {
+      console.error(`Failed to create database ${databaseName}: ${e.message}`)
+      process.exit(1)
+    }
+  }
   await ensure({
     type: 'database',
     name: databaseName,
