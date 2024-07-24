@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -252,11 +253,7 @@ describe('given the load log connection using org id function', () => {
           describe('order direction is ASC', () => {
             it('returns logs in order', async () => {
               const logLoader = loadAuditLogByKey({ query })
-              const expectedLogs = await logLoader.loadMany([
-                log1._key,
-                log2._key,
-                log3._key,
-              ])
+              const expectedLogs = await logLoader.loadMany([log1._key, log2._key, log3._key])
 
               expectedLogs[0].id = expectedLogs[0]._key
               expectedLogs[1].id = expectedLogs[1]._key
@@ -341,9 +338,7 @@ describe('given the load log connection using org id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                `You must provide a \`first\` or \`last\` value to properly paginate the \`Log\` connection.`,
-              ),
+              new Error(`You must provide a \`first\` or \`last\` value to properly paginate the \`Log\` connection.`),
             )
           }
 
@@ -373,9 +368,7 @@ describe('given the load log connection using org id function', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                `Passing both \`first\` and \`last\` to paginate the \`Log\` connection is not supported.`,
-              ),
+              new Error(`Passing both \`first\` and \`last\` to paginate the \`Log\` connection is not supported.`),
             )
           }
 
@@ -404,11 +397,7 @@ describe('given the load log connection using org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `\`first\` on the \`Log\` connection cannot be less than zero.`,
-                ),
-              )
+              expect(err).toEqual(new Error(`\`first\` on the \`Log\` connection cannot be less than zero.`))
             }
 
             expect(consoleOutput).toEqual([
@@ -435,11 +424,7 @@ describe('given the load log connection using org id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `\`last\` on the \`Log\` connection cannot be less than zero.`,
-                ),
-              )
+              expect(err).toEqual(new Error(`\`last\` on the \`Log\` connection cannot be less than zero.`))
             }
 
             expect(consoleOutput).toEqual([
@@ -516,9 +501,7 @@ describe('given the load log connection using org id function', () => {
     describe('given a database error', () => {
       describe('when gathering log keys that are claimed by orgs that the user has affiliations to', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database Error Occurred.'))
+          const query = jest.fn().mockRejectedValue(new Error('Database Error Occurred.'))
 
           const connectionLoader = loadAuditLogsByOrgId({
             query,
@@ -537,9 +520,7 @@ describe('given the load log connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to query log(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to query log(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -575,9 +556,7 @@ describe('given the load log connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load log(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load log(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([

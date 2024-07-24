@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -22,16 +23,16 @@ describe('given a loadVerifiedDomainByKey dataloader', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       org = await collections.organizations.save({
@@ -135,17 +136,13 @@ describe('given a loadVerifiedDomainByKey dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadVerifiedDomainByKey({ query: mockedQuery, i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load verified domain(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load verified domain(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -166,9 +163,7 @@ describe('given a loadVerifiedDomainByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load verified domain(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load verified domain(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -194,19 +189,13 @@ describe('given a loadVerifiedDomainByKey dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadVerifiedDomainByKey({ query: mockedQuery, i18n })
 
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -227,11 +216,7 @@ describe('given a loadVerifiedDomainByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([

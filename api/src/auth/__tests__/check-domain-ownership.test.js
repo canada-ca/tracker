@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import { checkDomainOwnership } from '../index'

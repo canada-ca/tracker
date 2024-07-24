@@ -1,12 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {loadUserByUserName} from '../index'
+import { loadUserByUserName } from '../index'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a loadUserByUserName dataloader', () => {
   let query, drop, truncate, collections, i18n
@@ -17,8 +18,8 @@ describe('given a loadUserByUserName dataloader', () => {
     i18n = setupI18n({
       locale: 'en',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -33,7 +34,7 @@ describe('given a loadUserByUserName dataloader', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -70,7 +71,7 @@ describe('given a loadUserByUserName dataloader', () => {
     describe('provided a single username', () => {
       it('returns a single user', async () => {
         const userName = 'random@email.ca'
-        const loader = loadUserByUserName({query, i18n})
+        const loader = loadUserByUserName({ query, i18n })
 
         // Get Query User
         const cursor = await query`
@@ -87,11 +88,8 @@ describe('given a loadUserByUserName dataloader', () => {
     describe('provided a list of usernames', () => {
       it('returns a list of users', async () => {
         const expectedUsers = []
-        const userNames = [
-          'random@email.ca',
-          'test.account@istio.actually.exists',
-        ]
-        const loader = loadUserByUserName({query, i18n})
+        const userNames = ['random@email.ca', 'test.account@istio.actually.exists']
+        const loader = loadUserByUserName({ query, i18n })
 
         for (const i in userNames) {
           // Get Query User
@@ -114,8 +112,8 @@ describe('given a loadUserByUserName dataloader', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -128,17 +126,13 @@ describe('given a loadUserByUserName dataloader', () => {
         it('throws an error', async () => {
           const userName = 'random@email.ca'
 
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-          const loader = loadUserByUserName({query, userKey: '1234', i18n})
+          query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
           try {
             await loader.load(userName)
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load user(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load user(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -156,14 +150,12 @@ describe('given a loadUserByUserName dataloader', () => {
             },
           }
           query = jest.fn().mockReturnValue(cursor)
-          const loader = loadUserByUserName({query, userKey: '1234', i18n})
+          const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
           try {
             await loader.load(userName)
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load user(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load user(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -177,8 +169,8 @@ describe('given a loadUserByUserName dataloader', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -191,19 +183,13 @@ describe('given a loadUserByUserName dataloader', () => {
         it('throws an error', async () => {
           const userName = 'random@email.ca'
 
-          query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-          const loader = loadUserByUserName({query, userKey: '1234', i18n})
+          query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+          const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
           try {
             await loader.load(userName)
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) utilisateur(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) utilisateur(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -221,16 +207,12 @@ describe('given a loadUserByUserName dataloader', () => {
             },
           }
           query = jest.fn().mockReturnValue(cursor)
-          const loader = loadUserByUserName({query, userKey: '1234', i18n})
+          const loader = loadUserByUserName({ query, userKey: '1234', i18n })
 
           try {
             await loader.load(userName)
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) utilisateur(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) utilisateur(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
