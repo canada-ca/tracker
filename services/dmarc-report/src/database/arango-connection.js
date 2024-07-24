@@ -1,5 +1,5 @@
 const { Database, aql } = require('arangojs')
-const { ensureDatabase: ensure } = require('testUtilities')
+const { ensure } = require('arango-tools')
 const { databaseOptions } = require('../../database-options')
 
 const arangoConnection = async ({ url, databaseName, rootPass }) => {
