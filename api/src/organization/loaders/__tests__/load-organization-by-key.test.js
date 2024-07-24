@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -23,16 +24,16 @@ describe('given a loadOrgByKey dataloader', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.organizations.save({
@@ -243,9 +244,7 @@ describe('given a loadOrgByKey dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadOrgByKey({
             query: mockedQuery,
             language: 'en',
@@ -256,9 +255,7 @@ describe('given a loadOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load organization(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load organization(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -284,9 +281,7 @@ describe('given a loadOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load organization(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load organization(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -312,9 +307,7 @@ describe('given a loadOrgByKey dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadOrgByKey({
             query: mockedQuery,
             language: 'fr',
@@ -325,11 +318,7 @@ describe('given a loadOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                "Impossible de charger l'organisation (s). Veuillez réessayer.",
-              ),
-            )
+            expect(err).toEqual(new Error("Impossible de charger l'organisation (s). Veuillez réessayer."))
           }
 
           expect(consoleOutput).toEqual([
@@ -355,11 +344,7 @@ describe('given a loadOrgByKey dataloader', () => {
           try {
             await loader.load('1')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                "Impossible de charger l'organisation (s). Veuillez réessayer.",
-              ),
-            )
+            expect(err).toEqual(new Error("Impossible de charger l'organisation (s). Veuillez réessayer."))
           }
 
           expect(consoleOutput).toEqual([

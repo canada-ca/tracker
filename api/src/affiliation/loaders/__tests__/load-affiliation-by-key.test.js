@@ -1,12 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {loadAffiliationByKey} from '..'
-import {setupI18n} from '@lingui/core'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
+import { loadAffiliationByKey } from '..'
+import { setupI18n } from '@lingui/core'
 import englishMessages from '../../../locale/en/messages'
 
 import frenchMessages from '../../../locale/fr/messages'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given a loadAffiliationByKey dataloader', () => {
   let i18n
@@ -24,7 +25,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
     let query, drop, truncate, collections, orgOne, orgTwo, affOne, user
 
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -125,7 +126,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
         `
         const expectedAffiliation = await expectedCursor.next()
 
-        const loader = loadAffiliationByKey({query, i18n})
+        const loader = loadAffiliationByKey({ query, i18n })
         const affiliation = await loader.load(expectedAffiliation._key)
 
         expect(affiliation).toEqual(expectedAffiliation)
@@ -148,7 +149,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
           expectedAffiliations.push(tempAff)
         }
 
-        const loader = loadAffiliationByKey({query, i18n})
+        const loader = loadAffiliationByKey({ query, i18n })
         const affiliations = await loader.loadMany(affiliationIds)
         expect(affiliations).toEqual(expectedAffiliations)
       })
@@ -160,8 +161,8 @@ describe('given a loadAffiliationByKey dataloader', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -172,9 +173,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
     })
     describe('database error is raised', () => {
       it('throws an error', async () => {
-        const mockedQuery = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         const loader = loadAffiliationByKey({
           query: mockedQuery,
           userKey: '1234',
@@ -184,9 +183,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find user affiliation(s). Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to find user affiliation(s). Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -211,9 +208,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find user affiliation(s). Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to find user affiliation(s). Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -227,8 +222,8 @@ describe('given a loadAffiliationByKey dataloader', () => {
       i18n = setupI18n({
         locale: 'fr',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -239,9 +234,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
     })
     describe('database error is raised', () => {
       it('throws an error', async () => {
-        const mockedQuery = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         const loader = loadAffiliationByKey({
           query: mockedQuery,
           userKey: '1234',
@@ -252,9 +245,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              `Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez réessayer.`,
-            ),
+            new Error(`Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez réessayer.`),
           )
         }
 
@@ -281,9 +272,7 @@ describe('given a loadAffiliationByKey dataloader', () => {
           await loader.load('1')
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              `Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez réessayer.`,
-            ),
+            new Error(`Impossible de trouver l'affiliation de l'utilisateur (s). Veuillez réessayer.`),
           )
         }
 

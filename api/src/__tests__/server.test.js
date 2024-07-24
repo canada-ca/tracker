@@ -1,6 +1,7 @@
 import request from 'supertest'
 import { Server } from '../server'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../testUtilities'
 import dbschema from '../../database.json'
 
 const {

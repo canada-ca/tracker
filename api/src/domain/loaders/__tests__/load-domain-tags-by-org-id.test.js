@@ -1,12 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
+import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
-import {loadDomainTagsByOrgId} from '../index'
+import { loadDomainTagsByOrgId } from '../index'
 import dbschema from '../../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load domain connection using org id function', () => {
   let query, drop, truncate, collections, user, org, domain, domainTwo, i18n
@@ -25,7 +26,7 @@ describe('given the load domain connection using org id function', () => {
 
   describe('given a successful load', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -141,8 +142,8 @@ describe('given the load domain connection using org id function', () => {
 
         const expectedStructure = {
           edges: [
-            {id: 'CVE-2022-12345', severity: 'high'},
-            {id: 'CVE-2022-54321', severity: 'low'},
+            { id: 'CVE-2022-12345', severity: 'high' },
+            { id: 'CVE-2022-54321', severity: 'low' },
           ],
           totalCount: 2,
         }
@@ -177,8 +178,8 @@ describe('given the load domain connection using org id function', () => {
       i18n = setupI18n({
         locale: 'en',
         localeData: {
-          en: {plurals: {}},
-          fr: {plurals: {}},
+          en: { plurals: {} },
+          fr: { plurals: {} },
         },
         locales: ['en', 'fr'],
         messages: {
@@ -200,18 +201,14 @@ describe('given the load domain connection using org id function', () => {
             orgId: org._id,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error(`Unable to load domain(s). Please try again.`),
-          )
+          expect(err).toEqual(new Error(`Unable to load domain(s). Please try again.`))
         }
       })
     })
     describe('given a database error', () => {
       describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database Error Occurred.'))
+          const query = jest.fn().mockRejectedValue(new Error('Database Error Occurred.'))
 
           const connectionLoader = loadDomainTagsByOrgId({
             query,
@@ -228,9 +225,7 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load domain(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load domain(s). Please try again.'))
           }
         })
       })
