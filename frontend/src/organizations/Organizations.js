@@ -18,6 +18,9 @@ import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
+import { OrgTourComponent } from '../userOnboarding/components/TourComponent'
+import { TourProvider } from '../userOnboarding/contexts/TourContext'
+import TourButton from '../userOnboarding/components/TourButton'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -84,6 +87,10 @@ export default function Organizations() {
       >
         {({ id, name, slug, acronym, domainCount, verified, summaries, userHasPermission }, index) => (
           <ErrorBoundary key={`${slug}:${index}`} FallbackComponent={ErrorFallbackMessage}>
+            <TourProvider>
+              <OrgTourComponent />
+              <TourButton />
+            </TourProvider>
             <Flex align="center">
               <OrganizationCard
                 className="organization-card"
