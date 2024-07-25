@@ -99,7 +99,7 @@ export const requestDiscovery = new mutationWithClientMutationId({
     }
 
     await publish({
-      channel: `domains.${domain._key}.discovery`,
+      channel: `scans.discovery`,
       msg: {
         domain: domain.domain,
         orgId: org._id,
