@@ -1,31 +1,19 @@
 import { stringify } from 'jest-matcher-utils'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import {
-  loadDmarcSummaryConnectionsByUserId,
-  loadDmarcSummaryByKey,
-} from '../index'
+import { loadDmarcSummaryConnectionsByUserId, loadDmarcSummaryByKey } from '../index'
 import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    org,
-    i18n,
-    user,
-    domain1,
-    domain2,
-    dmarcSummary1,
-    dmarcSummary2
+  let query, drop, truncate, collections, org, i18n, user, domain1, domain2, dmarcSummary1, dmarcSummary2
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -43,16 +31,16 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -181,9 +169,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             cleanseInput,
             auth: { loginRequired: true },
             i18n: {},
-            loadStartDateFromPeriod: jest
-              .fn()
-              .mockReturnValueOnce('thirtyDays'),
+            loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
           })
 
           const connectionArgs = {
@@ -208,10 +194,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId(
-                'dmarcSummary',
-                expectedSummaries[1]._key,
-              ),
+              startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
               endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
             },
           }
@@ -231,9 +214,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             cleanseInput,
             auth: { loginRequired: true },
             i18n: {},
-            loadStartDateFromPeriod: jest
-              .fn()
-              .mockReturnValueOnce('thirtyDays'),
+            loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
           })
 
           const connectionArgs = {
@@ -258,10 +239,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId(
-                'dmarcSummary',
-                expectedSummaries[0]._key,
-              ),
+              startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
             },
           }
@@ -281,9 +259,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             cleanseInput,
             auth: { loginRequired: true },
             i18n: {},
-            loadStartDateFromPeriod: jest
-              .fn()
-              .mockReturnValueOnce('thirtyDays'),
+            loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
           })
 
           const connectionArgs = {
@@ -307,10 +283,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             pageInfo: {
               hasNextPage: true,
               hasPreviousPage: false,
-              startCursor: toGlobalId(
-                'dmarcSummary',
-                expectedSummaries[0]._key,
-              ),
+              startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
             },
           }
@@ -330,9 +303,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             cleanseInput,
             auth: { loginRequired: true },
             i18n: {},
-            loadStartDateFromPeriod: jest
-              .fn()
-              .mockReturnValueOnce('thirtyDays'),
+            loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
           })
 
           const connectionArgs = {
@@ -356,10 +327,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: true,
-              startCursor: toGlobalId(
-                'dmarcSummary',
-                expectedSummaries[1]._key,
-              ),
+              startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
               endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
             },
           }
@@ -379,10 +347,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         })
         it('returns the filtered dmarc summaries', async () => {
           const summaryLoader = loadDmarcSummaryByKey({ query })
-          const expectedSummaries = await summaryLoader.loadMany([
-            dmarcSummary1._key,
-            dmarcSummary2._key,
-          ])
+          const expectedSummaries = await summaryLoader.loadMany([dmarcSummary1._key, dmarcSummary2._key])
 
           const connectionLoader = loadDmarcSummaryConnectionsByUserId({
             query,
@@ -390,9 +355,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             cleanseInput,
             auth: { loginRequired: true },
             i18n: {},
-            loadStartDateFromPeriod: jest
-              .fn()
-              .mockReturnValueOnce('thirtyDays'),
+            loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
           })
 
           const connectionArgs = {
@@ -417,10 +380,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId(
-                'dmarcSummary',
-                expectedSummaries[0]._key,
-              ),
+              startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
             },
           }
@@ -443,9 +403,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -464,10 +422,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -477,14 +432,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -503,9 +452,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -524,10 +471,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -537,14 +481,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -565,9 +503,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -586,10 +522,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -599,14 +532,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -625,9 +552,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -646,10 +571,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -659,14 +581,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -687,9 +603,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -708,10 +622,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -721,14 +632,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -747,9 +652,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -768,10 +671,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -781,14 +681,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -809,9 +703,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -830,10 +722,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -843,14 +732,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -869,9 +752,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -890,10 +771,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -903,14 +781,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -931,9 +803,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -952,10 +822,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -965,14 +832,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -991,9 +852,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1012,10 +871,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1025,14 +881,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1053,9 +903,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1074,10 +922,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -1087,14 +932,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -1113,9 +952,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1134,10 +971,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1147,14 +981,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1175,9 +1003,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1196,10 +1022,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -1209,14 +1032,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -1235,9 +1052,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1256,10 +1071,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1269,14 +1081,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1297,9 +1103,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1318,10 +1122,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -1331,14 +1132,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -1357,9 +1152,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1378,10 +1171,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1391,14 +1181,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1419,9 +1203,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1440,10 +1222,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -1453,14 +1232,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -1479,9 +1252,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1500,10 +1271,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1513,14 +1281,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1541,9 +1303,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1562,10 +1322,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -1575,14 +1332,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -1601,9 +1352,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1622,10 +1371,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1635,14 +1381,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: false,
                     hasPreviousPage: true,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1665,9 +1405,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1686,10 +1424,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1699,14 +1434,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1725,9 +1454,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1746,10 +1473,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -1759,14 +1483,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -1787,9 +1505,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1808,10 +1524,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1821,14 +1534,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1847,9 +1554,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1868,10 +1573,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -1881,14 +1583,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -1909,9 +1605,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1930,10 +1624,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -1943,14 +1634,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -1969,9 +1654,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -1990,10 +1673,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2003,14 +1683,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2031,9 +1705,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2052,10 +1724,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -2065,14 +1734,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -2091,9 +1754,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2112,10 +1773,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2125,14 +1783,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2153,9 +1805,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2174,10 +1824,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -2187,14 +1834,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -2213,9 +1854,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2234,10 +1873,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2247,14 +1883,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2275,9 +1905,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2296,10 +1924,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -2309,14 +1934,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -2335,9 +1954,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2356,10 +1973,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2369,14 +1983,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2397,9 +2005,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2418,10 +2024,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -2431,14 +2034,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -2457,9 +2054,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2478,10 +2073,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2491,14 +2083,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2519,9 +2105,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2540,10 +2124,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -2553,14 +2134,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -2579,9 +2154,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2600,10 +2173,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2613,14 +2183,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2641,9 +2205,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2662,10 +2224,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -2675,14 +2234,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -2701,9 +2254,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2722,10 +2273,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2735,14 +2283,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2763,9 +2305,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2784,10 +2324,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[0]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                       node: {
                         ...expectedSummaries[0],
                       },
@@ -2797,14 +2334,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[0]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
                   },
                 }
 
@@ -2823,9 +2354,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n: {},
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -2844,10 +2373,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 const expectedStructure = {
                   edges: [
                     {
-                      cursor: toGlobalId(
-                        'dmarcSummary',
-                        expectedSummaries[1]._key,
-                      ),
+                      cursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                       node: {
                         ...expectedSummaries[1],
                       },
@@ -2857,14 +2383,8 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   pageInfo: {
                     hasNextPage: true,
                     hasPreviousPage: false,
-                    startCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
-                    endCursor: toGlobalId(
-                      'dmarcSummary',
-                      expectedSummaries[1]._key,
-                    ),
+                    startCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
+                    endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
                   },
                 }
 
@@ -2886,9 +2406,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             cleanseInput,
             auth: { loginRequired: true },
             i18n: {},
-            loadStartDateFromPeriod: jest
-              .fn()
-              .mockReturnValueOnce('thirtyDays'),
+            loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
           })
 
           const connectionArgs = {
@@ -2919,10 +2437,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,
-              startCursor: toGlobalId(
-                'dmarcSummary',
-                expectedSummaries[0]._key,
-              ),
+              startCursor: toGlobalId('dmarcSummary', expectedSummaries[0]._key),
               endCursor: toGlobalId('dmarcSummary', expectedSummaries[1]._key),
             },
           }
@@ -3043,9 +2558,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3077,9 +2590,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3114,9 +2625,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3149,9 +2658,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3186,9 +2693,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3202,11 +2707,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`first` on the `DmarcSummaries` connection cannot be less than zero.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`first` on the `DmarcSummaries` connection cannot be less than zero.'))
               }
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3221,9 +2722,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3237,11 +2736,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`last` on the `DmarcSummaries` connection cannot be less than zero.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`last` on the `DmarcSummaries` connection cannot be less than zero.'))
               }
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` set below zero for: loadDmarcSummaryConnectionsByUserId.`,
@@ -3252,18 +2747,14 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('limits are not set to numbers', () => {
           describe('first limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n,
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -3277,11 +2768,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -3293,18 +2780,14 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('last limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when last set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n,
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -3318,11 +2801,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -3341,9 +2820,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3357,9 +2834,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               })
             } catch (err) {
               expect(err).toEqual(
-                new Error(
-                  'You must provide a `period` value to access the `DmarcSummaries` connection.',
-                ),
+                new Error('You must provide a `period` value to access the `DmarcSummaries` connection.'),
               )
             }
             expect(consoleOutput).toEqual([
@@ -3375,9 +2850,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3391,9 +2864,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               })
             } catch (err) {
               expect(err).toEqual(
-                new Error(
-                  'You must provide a `year` value to access the `DmarcSummaries` connection.',
-                ),
+                new Error('You must provide a `year` value to access the `DmarcSummaries` connection.'),
               )
             }
             expect(consoleOutput).toEqual([
@@ -3404,9 +2875,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('given a database error', () => {
           describe('while querying for domain information', () => {
             it('returns an error message', async () => {
-              const query = jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.'))
+              const query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -3414,9 +2883,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3429,11 +2896,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    'Unable to load DMARC summary data. Please try again.',
-                  ),
-                )
+                expect(err).toEqual(new Error('Unable to load DMARC summary data. Please try again.'))
               }
 
               expect(consoleOutput).toEqual([
@@ -3458,9 +2921,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3473,11 +2934,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    'Unable to load DMARC summary data. Please try again.',
-                  ),
-                )
+                expect(err).toEqual(new Error('Unable to load DMARC summary data. Please try again.'))
               }
 
               expect(consoleOutput).toEqual([
@@ -3512,9 +2969,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3546,9 +3001,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3583,9 +3036,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3618,9 +3069,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3655,9 +3104,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3672,9 +3119,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    '`first` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro.',
-                  ),
+                  new Error('`first` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro.'),
                 )
               }
               expect(consoleOutput).toEqual([
@@ -3690,9 +3135,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3707,9 +3150,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    '`last` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro.',
-                  ),
+                  new Error('`last` sur la connexion `DmarcSummaries` ne peut être inférieur à zéro.'),
                 )
               }
               expect(consoleOutput).toEqual([
@@ -3721,18 +3162,14 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('limits are not set to numbers', () => {
           describe('first limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n,
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -3747,9 +3184,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -3762,18 +3197,14 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
           })
           describe('last limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when last set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   auth: { loginRequired: true },
                   i18n,
-                  loadStartDateFromPeriod: jest
-                    .fn()
-                    .mockReturnValueOnce('thirtyDays'),
+                  loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
                 })
 
                 const connectionArgs = {
@@ -3788,9 +3219,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -3810,9 +3239,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3826,9 +3253,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               })
             } catch (err) {
               expect(err).toEqual(
-                new Error(
-                  'Vous devez fournir une valeur `period` pour accéder à la connexion `DmarcSummaries`.',
-                ),
+                new Error('Vous devez fournir une valeur `period` pour accéder à la connexion `DmarcSummaries`.'),
               )
             }
             expect(consoleOutput).toEqual([
@@ -3844,9 +3269,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               cleanseInput,
               auth: { loginRequired: true },
               i18n,
-              loadStartDateFromPeriod: jest
-                .fn()
-                .mockReturnValueOnce('thirtyDays'),
+              loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
             })
 
             const connectionArgs = {
@@ -3860,9 +3283,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
               })
             } catch (err) {
               expect(err).toEqual(
-                new Error(
-                  'Vous devez fournir une valeur `year` pour accéder à la connexion `DmarcSummaries`.',
-                ),
+                new Error('Vous devez fournir une valeur `year` pour accéder à la connexion `DmarcSummaries`.'),
               )
             }
             expect(consoleOutput).toEqual([
@@ -3873,9 +3294,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
         describe('given a database error', () => {
           describe('while querying for domain information', () => {
             it('returns an error message', async () => {
-              const query = jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.'))
+              const query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
               const connectionLoader = loadDmarcSummaryConnectionsByUserId({
                 query,
@@ -3883,9 +3302,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3899,9 +3316,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
-                  ),
+                  new Error('Impossible de charger les données de synthèse DMARC. Veuillez réessayer.'),
                 )
               }
 
@@ -3927,9 +3342,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 cleanseInput,
                 auth: { loginRequired: true },
                 i18n,
-                loadStartDateFromPeriod: jest
-                  .fn()
-                  .mockReturnValueOnce('thirtyDays'),
+                loadStartDateFromPeriod: jest.fn().mockReturnValueOnce('thirtyDays'),
               })
 
               const connectionArgs = {
@@ -3943,9 +3356,7 @@ describe('given the loadDmarcSummaryConnectionsByUserId function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
-                  ),
+                  new Error('Impossible de charger les données de synthèse DMARC. Veuillez réessayer.'),
                 )
               }
 

@@ -1,5 +1,6 @@
 import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql'
 
 import { checkPermission, userRequired } from '../../../auth'

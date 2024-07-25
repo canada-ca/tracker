@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -9,15 +10,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadDmarcYearlySumEdge loader', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    i18n,
-    user,
-    dmarcSummary1,
-    dmarcSummary2,
-    dmarcSummary3
+  let query, drop, truncate, collections, i18n, user, dmarcSummary1, dmarcSummary2, dmarcSummary3
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -35,16 +28,16 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -154,9 +147,7 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
       })
       describe('given a database error', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const loader = loadDmarcYearlySumEdge({
             query: mockedQuery,
@@ -170,9 +161,7 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load DMARC summary data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load DMARC summary data. Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -201,9 +190,7 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load DMARC summary data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load DMARC summary data. Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -229,9 +216,7 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
       })
       describe('given a database error', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
 
           const loader = loadDmarcYearlySumEdge({
             query: mockedQuery,
@@ -245,11 +230,7 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger les données de synthèse DMARC. Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -278,11 +259,7 @@ describe('given the loadDmarcYearlySumEdge loader', () => {
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger les données de synthèse DMARC. Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([

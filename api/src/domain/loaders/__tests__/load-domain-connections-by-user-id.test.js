@@ -1,5 +1,6 @@
 import { stringify } from 'jest-matcher-utils'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 

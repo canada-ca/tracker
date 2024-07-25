@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -9,14 +10,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadDmarcSummaryByKey dataloader', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    i18n,
-    domain,
-    dmarcSummary1,
-    dmarcSummary2
+  let query, drop, truncate, collections, i18n, domain, dmarcSummary1, dmarcSummary2
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -30,16 +24,16 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       domain = await collections.domains.save({
@@ -108,13 +102,13 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
       it('returns a single dmarc summary', async () => {
         const expectedCursor = await query`
           FOR summary IN dmarcSummaries
-            SORT summary._key ASC 
+            SORT summary._key ASC
             LIMIT 1
             LET edge = (
               FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
                 RETURN e
             )
-  
+
             RETURN {
               _id: summary._id,
               _key: summary._key,
@@ -131,9 +125,7 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
         const expectedSummary = await expectedCursor.next()
         expectedSummary.domainKey = domain._key
 
-        const summary = await loadDmarcSummaryByKey({ query }).load(
-          expectedSummary._key,
-        )
+        const summary = await loadDmarcSummaryByKey({ query }).load(expectedSummary._key)
 
         expect(summary).toEqual(expectedSummary)
       })
@@ -148,7 +140,7 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
               FOR v, e IN 1..1 ANY summary._id domainsToDmarcSummaries
                 RETURN e
             )
-  
+
             RETURN {
               _id: summary._id,
               _key: summary._key,
@@ -169,9 +161,7 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
           expectedSummaries.push(temp)
         }
 
-        const summaries = await loadDmarcSummaryByKey({ query }).loadMany(
-          summaryKeys,
-        )
+        const summaries = await loadDmarcSummaryByKey({ query }).loadMany(summaryKeys)
 
         expect(summaries).toEqual(expectedSummaries)
       })
@@ -194,18 +184,12 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
     })
     describe('database error occurs', () => {
       it('throws an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
         try {
-          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
-            '1234',
-          )
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load('1234')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find DMARC summary data. Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to find DMARC summary data. Please try again.'))
         }
         expect(consoleOutput).toEqual([
           `Database error occurred when user: 1234 running loadDmarcSummaryByKey: Error: Database error occurred.`,
@@ -222,13 +206,9 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
         query = jest.fn().mockReturnValue(cursor)
 
         try {
-          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
-            '1234',
-          )
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load('1234')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to find DMARC summary data. Please try again.'),
-          )
+          expect(err).toEqual(new Error('Unable to find DMARC summary data. Please try again.'))
         }
 
         expect(consoleOutput).toEqual([
@@ -254,20 +234,12 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
     })
     describe('database error occurs', () => {
       it('throws an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
         try {
-          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
-            '1234',
-          )
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load('1234')
         } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Impossible de trouver les données de synthèse DMARC. Veuillez réessayer.',
-            ),
-          )
+          expect(err).toEqual(new Error('Impossible de trouver les données de synthèse DMARC. Veuillez réessayer.'))
         }
         expect(consoleOutput).toEqual([
           `Database error occurred when user: 1234 running loadDmarcSummaryByKey: Error: Database error occurred.`,
@@ -284,15 +256,9 @@ describe('given the loadDmarcSummaryByKey dataloader', () => {
         query = jest.fn().mockReturnValue(cursor)
 
         try {
-          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load(
-            '1234',
-          )
+          await loadDmarcSummaryByKey({ query, userKey: '1234', i18n }).load('1234')
         } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Impossible de trouver les données de synthèse DMARC. Veuillez réessayer.',
-            ),
-          )
+          expect(err).toEqual(new Error('Impossible de trouver les données de synthèse DMARC. Veuillez réessayer.'))
         }
 
         expect(consoleOutput).toEqual([
