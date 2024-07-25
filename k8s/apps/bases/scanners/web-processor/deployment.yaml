@@ -18,8 +18,12 @@ spec:
     spec:
       containers:
         - name: web-processor
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-c60ce78-1720462130 # {"$imagepolicy": "flux-system:web-processor"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:dirty-concurrent-draft-1 # {"$imagepolicy": "flux-system:web-processor"}
           env:
+            - name: LOGGER_LEVEL
+              value: INFO
+            - name: SCAN_THREAD_COUNT
+              value: "2"
             - name: DB_NAME
               value: track_dmarc
             - name: DB_URL
@@ -37,13 +41,8 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
-            - name: PUBLISH_TO
-              value: domains
-            - name: SUBSCRIBE_TO
-              value: domains.*.web.results
-            - name: QUEUE_GROUP
-              value: web_processor
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
           resources: {}
+          imagePullPolicy: Always
 status: {}

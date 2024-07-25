@@ -18,12 +18,8 @@ spec:
     spec:
       containers:
         - name: add-domain-to-easm
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-domain-to-easm:master-60c74e8-1718377338 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-domain-to-easm:dirty-concurrent-draft-1 # {"$imagepolicy": "flux-system:add-domain-to-easm"}
           env:
-            - name: SUBSCRIBE_TO
-              value: domains.*.easm
-            - name: QUEUE_GROUP
-              value: add_domain_to_easm
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: SUBSCRIPTION_ID

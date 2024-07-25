@@ -37,7 +37,6 @@ steps:
     - DB_HOST=$_DB_HOST
     - DB_COLLECTION=domains
     - DB_PORT=8529
-    - PUBLISH_TO=domains
     - NATS_URL=nats://demo.nats.io:4222
 
   - name: 'gcr.io/cloud-builders/docker'

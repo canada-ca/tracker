@@ -1,6 +1,5 @@
 import os
 import json
-import datetime
 from urllib.parse import urlparse
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -51,7 +50,12 @@ def process_tls_results(tls_results, web_server_present):
 
         return processed_tags
 
-    for protocol in tls_results["accepted_cipher_suites"].keys():
+    accepted_cipher_keys_original = tls_results.get("accepted_cipher_suites", {})
+    if isinstance(accepted_cipher_keys_original, dict):
+        accepted_cipher_keys = accepted_cipher_keys_original.keys()
+    else:
+        accepted_cipher_keys = []
+    for protocol in accepted_cipher_keys:
         accepted_cipher_suites[protocol] = []
 
         for cipher_suite in tls_results["accepted_cipher_suites"][protocol]:
@@ -82,7 +86,8 @@ def process_tls_results(tls_results, web_server_present):
             )
 
     weak_curve = False
-    for curve in tls_results["accepted_elliptic_curves"]:
+    result_accepted_elliptic_curves = tls_results.get("accepted_elliptic_curves", [])
+    for curve in result_accepted_elliptic_curves:
         if curve.lower() in guidance["curves"]["recommended"]:
             strength = "strong"
         elif curve.lower() in guidance["curves"]["sufficient"]:
@@ -330,7 +335,9 @@ def process_connection_results(connection_results):
             hsts = hsts.split(",")[0]
 
             directives = [
-                directive.strip() for directive in hsts.split(";") if len(directive.strip()) > 0
+                directive.strip()
+                for directive in hsts.split(";")
+                if len(directive.strip()) > 0
             ]
 
             for directive in directives:
