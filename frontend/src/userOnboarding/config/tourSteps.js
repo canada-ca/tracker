@@ -6,10 +6,9 @@ export const tourSteps = [
     placement: 'center',
     target: 'body',
   },
-  {
-    target: '.track-digital',
-    content: 'You can search for an organization here',
-  },
+]
+
+export const orgTourSteps = [
   {
     target: '.search-box',
     content: 'You can search for an organization here',

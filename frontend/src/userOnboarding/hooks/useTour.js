@@ -1,11 +1,8 @@
-// src/joyride/hooks/useTour.js
 import { useContext } from 'react'
 import { TourContext } from '../contexts/TourContextCore'
 
 export const useTour = () => {
-  const context = useContext(TourContext)
-  if (context === undefined) {
-    throw new Error('useTour must be used within a TourProvider')
-  }
-  return context
+  useContext(TourContext)
 }
+
+export default useTour

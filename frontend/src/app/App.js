@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from 'react'
-import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
+import { Switch, Link as RouteLink, Redirect, useLocation, BrowserRouter as Router, Route } from 'react-router-dom'
 import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -25,9 +25,6 @@ import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
 // import components from userOnboarding folder
-import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import TourComponent from '../userOnboarding/components/TourComponent'
-import TourButton from '../userOnboarding/components/TourButton'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -120,11 +117,6 @@ export function App() {
         <TopBanner />
       </header>
       <Navigation>
-        {/* React Joyride Tours */}
-        <TourProvider>
-          <TourComponent />
-          <TourButton />
-        </TourProvider>
         <ScrollToAnchor />
         <RouteLink to="/" className="home">
           <Trans>Home</Trans>

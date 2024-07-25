@@ -18,7 +18,6 @@ import { UserIcon } from '../theme/Icons'
 import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
-import Joyride from 'react-joyride'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -65,8 +64,6 @@ export default function Organizations() {
     { value: 'VERIFIED', text: t`Verified` },
   ]
 
-  // Set the list contents only to loading message when loading
-  // Prevents select active option from resetting when loading
   let orgList
   if (loading) {
     orgList = (

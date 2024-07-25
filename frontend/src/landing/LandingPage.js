@@ -6,9 +6,6 @@ import { Trans } from '@lingui/macro'
 import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
-import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import TourComponent from '../userOnboarding/components/TourComponent'
-import TourButton from '../userOnboarding/components/TourButton'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -21,7 +18,6 @@ const itpinUrlFr =
 
 export function LandingPage({ loginRequired, isLoggedIn }) {
   const { i18n } = useLingui()
-  const [start, setStart] = useState(false)
 
   return (
     <Stack w="100%">

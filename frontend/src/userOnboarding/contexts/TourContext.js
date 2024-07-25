@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 import { TourContext } from './TourContextCore'
 
 export const TourProvider = ({ children }) => {
@@ -7,7 +7,7 @@ export const TourProvider = ({ children }) => {
   const startTour = () => setIsTourOpen(true)
   const endTour = () => setIsTourOpen(false)
 
-  return <TourContext.Provider value={{ isTourOpen, startTour }}>{children}</TourContext.Provider>
+  return <TourContext.Provider value={{ isTourOpen, startTour, endTour }}>{children}</TourContext.Provider>
 }
 
 export const useTour = () => {
