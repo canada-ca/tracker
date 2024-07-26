@@ -4,7 +4,7 @@ metadata:
   name: arangodb
   namespace: db
   labels:
-    app: "arangodb"
+    app: arangodb
 spec:
   image: arangodb/arangodb:3.10.5
   environment: Production
