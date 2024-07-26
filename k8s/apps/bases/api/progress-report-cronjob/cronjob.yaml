@@ -16,7 +16,7 @@ spec:
             app: progress-report
         spec:
           securityContext:
-            fsGroup: 1337
+            fsGroup: 1000
             seccompProfile:
               type: RuntimeDefault
           containers:

@@ -15,7 +15,7 @@ spec:
             app: import-easm-additional-findings
         spec:
           securityContext:
-            fsGroup: 1337
+            fsGroup: 1000
             seccompProfile:
               type: RuntimeDefault
           containers:
