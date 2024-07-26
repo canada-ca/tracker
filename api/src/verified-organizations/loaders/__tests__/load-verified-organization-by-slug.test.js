@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -23,16 +24,16 @@ describe('given a loadVerifiedOrgBySlug dataloader', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       await collections.organizations.save({
@@ -243,9 +244,7 @@ describe('given a loadVerifiedOrgBySlug dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadVerifiedOrgBySlug({
             query: mockedQuery,
             language: 'en',
@@ -255,11 +254,7 @@ describe('given a loadVerifiedOrgBySlug dataloader', () => {
           try {
             await loader.load('slug')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Unable to find verified organization(s). Please try again.',
-              ),
-            )
+            expect(err).toEqual(new Error('Unable to find verified organization(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -284,16 +279,10 @@ describe('given a loadVerifiedOrgBySlug dataloader', () => {
           try {
             await loader.load('slug')
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Unable to find verified organization(s). Please try again.',
-              ),
-            )
+            expect(err).toEqual(new Error('Unable to find verified organization(s). Please try again.'))
           }
 
-          expect(consoleOutput).toEqual([
-            `Cursor error during loadVerifiedOrgBySlug: Error: Cursor error occurred.`,
-          ])
+          expect(consoleOutput).toEqual([`Cursor error during loadVerifiedOrgBySlug: Error: Cursor error occurred.`])
         })
       })
     })
@@ -314,9 +303,7 @@ describe('given a loadVerifiedOrgBySlug dataloader', () => {
       })
       describe('database error is raised', () => {
         it('returns an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
           const loader = loadVerifiedOrgBySlug({
             query: mockedQuery,
             language: 'fr',
@@ -327,9 +314,7 @@ describe('given a loadVerifiedOrgBySlug dataloader', () => {
             await loader.load('slug')
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer.',
-              ),
+              new Error('Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer.'),
             )
           }
 
@@ -356,15 +341,11 @@ describe('given a loadVerifiedOrgBySlug dataloader', () => {
             await loader.load('slug')
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer.',
-              ),
+              new Error('Impossible de trouver une ou plusieurs organisations vérifiées. Veuillez réessayer.'),
             )
           }
 
-          expect(consoleOutput).toEqual([
-            `Cursor error during loadVerifiedOrgBySlug: Error: Cursor error occurred.`,
-          ])
+          expect(consoleOutput).toEqual([`Cursor error during loadVerifiedOrgBySlug: Error: Cursor error occurred.`])
         })
       })
     })

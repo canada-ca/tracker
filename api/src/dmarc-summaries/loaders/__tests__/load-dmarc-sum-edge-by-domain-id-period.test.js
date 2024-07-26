@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { setupI18n } from '@lingui/core'
 
 import englishMessages from '../../../locale/en/messages'
@@ -26,16 +27,16 @@ describe('given the loadDmarcSummaryEdgeByDomainIdAndPeriod loader', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -45,7 +46,7 @@ describe('given the loadDmarcSummaryEdgeByDomainIdAndPeriod loader', () => {
         tfaValidated: false,
         emailValidated: false,
       })
-  
+
       dmarcSummary = await collections.dmarcSummaries.save({
         detailTables: {
           dkimFailure: [],
@@ -111,27 +112,23 @@ describe('given the loadDmarcSummaryEdgeByDomainIdAndPeriod loader', () => {
       })
       describe('given a database error', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
-  
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
+
           const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
             query: mockedQuery,
             userKey: user._key,
             i18n,
           })
-  
+
           try {
             await loader({
               domainId: 'domains/1',
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load DMARC summary data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load DMARC summary data. Please try again.'))
           }
-  
+
           expect(consoleOutput).toEqual([
             `Database error occurred when user: ${user._key} attempted to load dmarc summaries for domain: domains/1, period: thirtyDays, Error: Database error occurred`,
           ])
@@ -145,24 +142,22 @@ describe('given the loadDmarcSummaryEdgeByDomainIdAndPeriod loader', () => {
             },
           }
           const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
-  
+
           const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
             query: mockedQuery,
             userKey: user._key,
             i18n,
           })
-  
+
           try {
             await loader({
               domainId: 'domains/1',
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load DMARC summary data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load DMARC summary data. Please try again.'))
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred when user: ${user._key} attempted to load dmarc summaries for domain: domains/1, period: thirtyDays, Error: Cursor error occurred.`,
           ])
@@ -186,29 +181,23 @@ describe('given the loadDmarcSummaryEdgeByDomainIdAndPeriod loader', () => {
       })
       describe('given a database error', () => {
         it('throws an error', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred'))
-  
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred'))
+
           const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
             query: mockedQuery,
             userKey: user._key,
             i18n,
           })
-  
+
           try {
             await loader({
               domainId: 'domains/1',
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger les données de synthèse DMARC. Veuillez réessayer.'))
           }
-  
+
           expect(consoleOutput).toEqual([
             `Database error occurred when user: ${user._key} attempted to load dmarc summaries for domain: domains/1, period: thirtyDays, Error: Database error occurred`,
           ])
@@ -222,26 +211,22 @@ describe('given the loadDmarcSummaryEdgeByDomainIdAndPeriod loader', () => {
             },
           }
           const mockedQuery = jest.fn().mockReturnValueOnce(cursor)
-  
+
           const loader = loadDmarcSummaryEdgeByDomainIdAndPeriod({
             query: mockedQuery,
             userKey: user._key,
             i18n,
           })
-  
+
           try {
             await loader({
               domainId: 'domains/1',
               startDate: 'thirtyDays',
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger les données de synthèse DMARC. Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger les données de synthèse DMARC. Veuillez réessayer.'))
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred when user: ${user._key} attempted to load dmarc summaries for domain: domains/1, period: thirtyDays, Error: Cursor error occurred.`,
           ])

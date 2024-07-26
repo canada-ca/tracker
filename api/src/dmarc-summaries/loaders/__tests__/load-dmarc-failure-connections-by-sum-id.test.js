@@ -1,5 +1,6 @@
 import { stringify } from 'jest-matcher-utils'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
@@ -12,15 +13,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadDmarcFailConnectionsBySumId loader', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    i18n,
-    user,
-    dmarcSummary,
-    dmarcFailure1,
-    dmarcFailure2
+  let query, drop, truncate, collections, i18n, user, dmarcSummary, dmarcFailure1, dmarcFailure2
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -37,16 +30,16 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
   describe('given a successful load', () => {
     beforeEach(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
       user = await collections.users.save({
         userName: 'test.account@istio.actually.exists',
         displayName: 'Test Account',
@@ -448,9 +441,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                 await connectionLoader({ ...connectionArgs })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    '`first` on the `DmarcFailureTable` connection cannot be less than zero.',
-                  ),
+                  new Error('`first` on the `DmarcFailureTable` connection cannot be less than zero.'),
                 )
               }
 
@@ -476,11 +467,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
               try {
                 await connectionLoader({ ...connectionArgs })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`last` on the `DmarcFailureTable` connection cannot be less than zero.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`last` on the `DmarcFailureTable` connection cannot be less than zero.'))
               }
 
               expect(consoleOutput).toEqual([
@@ -492,9 +479,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
         describe('first or last argument is not set to a number', () => {
           describe('first argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcFailConnectionsBySumId({
                   query,
                   userKey: user._key,
@@ -512,11 +497,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -528,9 +509,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
           })
           describe('last argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcFailConnectionsBySumId({
                   query,
                   userKey: user._key,
@@ -548,11 +527,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -579,11 +554,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             try {
               await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'Unable to load DMARC failure data. Please try again.',
-                ),
-              )
+              expect(err).toEqual(new Error('Unable to load DMARC failure data. Please try again.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -594,9 +565,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
       })
       describe('given a database error', () => {
         it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
           const connectionLoader = loadDmarcFailConnectionsBySumId({
             query: mockedQuery,
@@ -614,9 +583,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load DMARC failure data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load DMARC failure data. Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -649,9 +616,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load DMARC failure data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load DMARC failure data. Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -813,9 +778,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                 await connectionLoader({ ...connectionArgs })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    '`first` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.',
-                  ),
+                  new Error('`first` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.'),
                 )
               }
 
@@ -842,9 +805,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                 await connectionLoader({ ...connectionArgs })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    '`last` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.',
-                  ),
+                  new Error('`last` sur la connexion `DmarcFailureTable` ne peut être inférieur à zéro.'),
                 )
               }
 
@@ -857,9 +818,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
         describe('first or last argument is not set to a number', () => {
           describe('first argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcFailConnectionsBySumId({
                   query,
                   userKey: user._key,
@@ -878,9 +837,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -893,9 +850,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
           })
           describe('last argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadDmarcFailConnectionsBySumId({
                   query,
                   userKey: user._key,
@@ -914,9 +869,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -944,11 +897,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
             try {
               await connectionLoader({ ...connectionArgs })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  "Impossible de charger les données d'échec DMARC. Veuillez réessayer.",
-                ),
-              )
+              expect(err).toEqual(new Error("Impossible de charger les données d'échec DMARC. Veuillez réessayer."))
             }
 
             expect(consoleOutput).toEqual([
@@ -959,9 +908,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
       })
       describe('given a database error', () => {
         it('returns an error message', async () => {
-          const mockedQuery = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
           const connectionLoader = loadDmarcFailConnectionsBySumId({
             query: mockedQuery,
@@ -979,11 +926,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                "Impossible de charger les données d'échec DMARC. Veuillez réessayer.",
-              ),
-            )
+            expect(err).toEqual(new Error("Impossible de charger les données d'échec DMARC. Veuillez réessayer."))
           }
 
           expect(consoleOutput).toEqual([
@@ -1016,11 +959,7 @@ describe('given the loadDmarcFailConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                "Impossible de charger les données d'échec DMARC. Veuillez réessayer.",
-              ),
-            )
+            expect(err).toEqual(new Error("Impossible de charger les données d'échec DMARC. Veuillez réessayer."))
           }
 
           expect(consoleOutput).toEqual([

@@ -1,12 +1,13 @@
-import {ensure, dbNameFromFile} from 'arango-tools'
-import {setupI18n} from '@lingui/core'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../testUtilities'
+import { setupI18n } from '@lingui/core'
 
-import {checkUserIsAdminForUser} from '../index'
+import { checkUserIsAdminForUser } from '../index'
 import englishMessages from '../../locale/en/messages'
 import frenchMessages from '../../locale/fr/messages'
 import dbschema from '../../../database.json'
 
-const {DB_PASS: rootPass, DB_URL: url} = process.env
+const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the checkUserIsAdminForUser', () => {
   let query, drop, truncate, collections, i18n, user1, user2, org
@@ -18,8 +19,8 @@ describe('given the checkUserIsAdminForUser', () => {
     i18n = setupI18n({
       locale: 'fr',
       localeData: {
-        en: {plurals: {}},
-        fr: {plurals: {}},
+        en: { plurals: {} },
+        fr: { plurals: {} },
       },
       locales: ['en', 'fr'],
       messages: {
@@ -34,7 +35,7 @@ describe('given the checkUserIsAdminForUser', () => {
 
   describe('given a successful call', () => {
     beforeAll(async () => {
-      ;({query, drop, truncate, collections} = await ensure({
+      ;({ query, drop, truncate, collections } = await ensure({
         variables: {
           dbname: dbNameFromFile(__filename),
           username: 'root',
@@ -213,8 +214,8 @@ describe('given the checkUserIsAdminForUser', () => {
         i18n = setupI18n({
           locale: 'en',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -229,9 +230,7 @@ describe('given the checkUserIsAdminForUser', () => {
             const testCheck = checkUserIsAdminForUser({
               i18n,
               userKey: user1._key,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
             })
 
             try {
@@ -239,9 +238,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error('Permission error, not an admin for this user.'),
-              )
+              expect(err).toEqual(Error('Permission error, not an admin for this user.'))
             }
             expect(consoleOutput).toEqual([
               `Database error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
@@ -268,9 +265,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error('Permission error, not an admin for this user.'),
-              )
+              expect(err).toEqual(Error('Permission error, not an admin for this user.'))
             }
             expect(consoleOutput).toEqual([
               `Database error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
@@ -298,9 +293,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error('Permission error, not an admin for this user.'),
-              )
+              expect(err).toEqual(Error('Permission error, not an admin for this user.'))
             }
             expect(consoleOutput).toEqual([
               `Cursor error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
@@ -333,9 +326,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error('Permission error, not an admin for this user.'),
-              )
+              expect(err).toEqual(Error('Permission error, not an admin for this user.'))
             }
             expect(consoleOutput).toEqual([
               `Cursor error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
@@ -349,8 +340,8 @@ describe('given the checkUserIsAdminForUser', () => {
         i18n = setupI18n({
           locale: 'fr',
           localeData: {
-            en: {plurals: {}},
-            fr: {plurals: {}},
+            en: { plurals: {} },
+            fr: { plurals: {} },
           },
           locales: ['en', 'fr'],
           messages: {
@@ -365,9 +356,7 @@ describe('given the checkUserIsAdminForUser', () => {
             const testCheck = checkUserIsAdminForUser({
               i18n,
               userKey: user1._key,
-              query: jest
-                .fn()
-                .mockRejectedValue(new Error('Database error occurred.')),
+              query: jest.fn().mockRejectedValue(new Error('Database error occurred.')),
             })
 
             try {
@@ -375,11 +364,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error(
-                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-                ),
-              )
+              expect(err).toEqual(Error("Erreur de permission, pas d'administrateur pour cet utilisateur."))
             }
             expect(consoleOutput).toEqual([
               `Database error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
@@ -406,11 +391,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error(
-                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-                ),
-              )
+              expect(err).toEqual(Error("Erreur de permission, pas d'administrateur pour cet utilisateur."))
             }
             expect(consoleOutput).toEqual([
               `Database error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Database error occurred.`,
@@ -438,11 +419,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error(
-                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-                ),
-              )
+              expect(err).toEqual(Error("Erreur de permission, pas d'administrateur pour cet utilisateur."))
             }
             expect(consoleOutput).toEqual([
               `Cursor error when checking to see if user: ${user1._key} has super admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,
@@ -475,11 +452,7 @@ describe('given the checkUserIsAdminForUser', () => {
                 userName: 'test.account2@istio.actually.exists',
               })
             } catch (err) {
-              expect(err).toEqual(
-                Error(
-                  "Erreur de permission, pas d'administrateur pour cet utilisateur.",
-                ),
-              )
+              expect(err).toEqual(Error("Erreur de permission, pas d'administrateur pour cet utilisateur."))
             }
             expect(consoleOutput).toEqual([
               `Cursor error when checking to see if user: ${user1._key} has admin permission for user: test.account2@istio.actually.exists, error: Error: Cursor error occurred.`,

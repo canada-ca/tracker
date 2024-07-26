@@ -16,9 +16,13 @@ spec:
       labels:
         app: domain-discovery
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: domain-discovery
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery:master-a4aa08d-1713179771 # {"$imagepolicy": "flux-system:domain-discovery"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery:master-c1b1705-1721921879 # {"$imagepolicy": "flux-system:domain-discovery"}
           env:
             - name: DB_NAME
               value: track_dmarc
@@ -34,13 +38,17 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_USER
-            - name: PUBLISH_TO
-              value: domains
-            - name: SUBSCRIBE_TO
-              value: domains.*.discovery
-            - name: QUEUE_GROUP
-              value: domain_discovery
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
           resources: {}
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
 status: {}

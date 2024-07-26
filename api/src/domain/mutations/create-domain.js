@@ -294,7 +294,7 @@ export const createDomain = new mutationWithClientMutationId({
 
     try {
       await publish({
-        channel: `domains.${returnDomain._key}`,
+        channel: 'scans.requests',
         msg: {
           domain: returnDomain.domain,
           domain_key: returnDomain._key,
@@ -309,7 +309,7 @@ export const createDomain = new mutationWithClientMutationId({
 
     try {
       await publish({
-        channel: `domains.${returnDomain._key}.easm`,
+        channel: 'scans.add_domain_to_easm',
         msg: {
           domain: returnDomain.domain,
           domain_key: returnDomain._key,

@@ -20,7 +20,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: domain-dispatcher
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-dispatcher:master-57287b0-1718710420 # {"$imagepolicy": "flux-system:domain-dispatcher"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-dispatcher:master-c1b1705-1721921917 # {"$imagepolicy": "flux-system:domain-dispatcher"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -40,8 +40,6 @@ spec:
                   value: track_dmarc
                 - name: DB_COLLECTION
                   value: domains
-                - name: PUBLISH_TO
-                  value: domains
                 - name: NATS_URL
                   value: nats://nats.pubsub:4222
               securityContext:
@@ -54,5 +52,6 @@ spec:
                     - ALL
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
+              imagePullPolicy: Always
           restartPolicy: Never
       backoffLimit: 4
