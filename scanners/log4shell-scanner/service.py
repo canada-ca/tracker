@@ -122,7 +122,7 @@ async def run(loop):
                 )
 
         except TimeoutError:
-            logging.error(
+            logger.error(
                 f"Timeout while scanning {domain} (Aborted after {round(time.time()-start, 2)} seconds)"
             )
             await nc.publish(

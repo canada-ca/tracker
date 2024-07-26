@@ -7,6 +7,7 @@ from arango import ArangoClient
 from dotenv import load_dotenv
 import asyncio
 import nats
+from nats.js.api import RetentionPolicy
 
 load_dotenv()
 
@@ -26,7 +27,6 @@ DB_NAME = os.getenv("DB_NAME")
 DB_URL = os.getenv("DB_URL")
 
 NATS_URL = os.getenv("NATS_URL")
-PUBLISH_TO = os.getenv("PUBLISH_TO", "domains")
 UNCLAIMED_ID = os.getenv("UNCLAIMED_ID")
 
 # Establish DB connection
@@ -35,14 +35,26 @@ db = arango_client.db(DB_NAME, username=DB_USER, password=DB_PASS)
 
 
 async def main():
-    # Connect to NATS
     logger.info("Connecting to NATS")
     nc = await nats.connect(NATS_URL)
     logger.info("Successfully connected to NATS")
-    # Create JetStream context.
+
     js = nc.jetstream()
-    # Persist messages on 'foo's subject.
-    await js.add_stream(name="domains", subjects=[f"{PUBLISH_TO}.*"])
+    add_stream_options = {
+        "name": "SCANS",
+        "subjects": [
+            "scans.requests",
+            "scans.discovery",
+            "scans.add_domain_to_easm",
+            "scans.dns_scanner_results",
+            "scans.dns_processor_results",
+            "scans.web_scanner_results",
+            "scans.web_processor_results",
+        ],
+        "retention": RetentionPolicy.WORK_QUEUE,
+    }
+
+    await js.add_stream(**add_stream_options)
 
     async def publish(channel, msg):
         await js.publish(channel, msg)
@@ -59,7 +71,7 @@ async def main():
             logger.info(f"Successfully fetched verified orgs")
             return [domain for domain in cursor]
         except Exception as e:
-            logger.error(f"Error occured when fetching verified orgs: {e}")
+            logger.error(f"Error occurred when fetching verified orgs: {e}")
             return []
 
     def get_org_domains(org_id):
@@ -211,7 +223,7 @@ async def main():
             # publish domain to NATS
             try:
                 await publish(
-                    f"{PUBLISH_TO}.{created_domain['_key']}",
+                    "scans.requests",
                     json.dumps(
                         {
                             "domain": created_domain["domain"],

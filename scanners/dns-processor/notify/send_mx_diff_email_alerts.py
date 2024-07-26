@@ -1,8 +1,11 @@
+import logging
 import os
 from notify.notify_client import notify_client
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 # Show old and new values, see below for example
 
@@ -19,17 +22,7 @@ def send_mx_diff_email_alerts(
     org,
     prev_val,
     current_val,
-    logger,
 ):
-    """
-    Sends an email to the user when the MX records for a domain have changed.
-
-    :param domain: The domain that has changed.
-    :param diff_reason: The reason for the change.
-    :param logger: The logger object.
-    :param db: The database object.
-    """
-
     org_name_en = org["orgDetails"]["en"]["name"]
     org_name_fr = org["orgDetails"]["fr"]["name"]
     org_acronym_en = org["orgDetails"]["en"]["acronym"]

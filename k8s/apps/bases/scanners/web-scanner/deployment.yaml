@@ -17,23 +17,42 @@ spec:
       annotations:
         traffic.sidecar.istio.io/includeOutboundIPRanges: 10.0.0.0/8,192.168.0.0/16
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web-scanner
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner:master-2c4c275-1720462117 # {"$imagepolicy": "flux-system:web-scanner"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-scanner:master-c1b1705-1721921879 # {"$imagepolicy": "flux-system:web-scanner"}
           env:
+            - name: LOGGER_LEVEL
+              value: INFO
+            - name: SCAN_THREAD_COUNT
+              value: "2"
             - name: PYTHONWARNINGS
               value: ignore
-            - name: PUBLISH_TO
-              value: domains
-            - name: SUBSCRIBE_TO
-              value: domains.*.web
-            - name: QUEUE_GROUP
-              value: web_scanner
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
             - name: NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           resources: {}
+          imagePullPolicy: Always
+      volumes:
+        - name: tmp
+          emptyDir: {}
 status: {}

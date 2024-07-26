@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/guidance/EmailGuidance.js:323
-#~ msgid "None"
-#~ msgstr "None"
-
 #: src/termsConditions/TermsConditionsPage.js:170
 msgid ", and"
 msgstr ", and"
@@ -2167,12 +2163,21 @@ msgstr "Language:"
 
 #: src/components/MonthSelect.js:63
 #: src/summaries/HistoricalSummariesGraph.js:156
-msgid "Last 30 Days"
-msgstr "Last 30 Days"
+#~ msgid "Last 30 Days"
+#~ msgstr "Last 30 Days"
+
+#: src/components/MonthSelect.js:60
+#: src/summaries/HistoricalSummariesGraph.js:156
+msgid "Last 30 Days of Data"
+msgstr "Last 30 Days of Data"
 
 #: src/summaries/HistoricalSummariesGraph.js:159
-msgid "Last 365 Days"
-msgstr "Last 365 Days"
+#~ msgid "Last 365 Days"
+#~ msgstr "Last 365 Days"
+
+#: src/summaries/HistoricalSummariesGraph.js:159
+msgid "Last 365 Days of Data"
+msgstr "Last 365 Days of Data"
 
 #: src/domains/DomainsPage.js:240
 #: src/organizationDetails/OrganizationDomains.js:235

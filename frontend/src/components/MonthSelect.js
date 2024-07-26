@@ -56,11 +56,8 @@ export function MonthSelect({ selectedValue, handleChange, ...props }) {
     },
   ]
   const options = [
-    <option
-      key="LAST30DAYS"
-      value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
-    >
-      {t`Last 30 Days`}
+    <option key="LAST30DAYS" value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}>
+      {t`Last 30 Days of Data`}
     </option>,
   ]
 
@@ -68,12 +65,8 @@ export function MonthSelect({ selectedValue, handleChange, ...props }) {
   for (let i = currentDate.getMonth(), j = 13; j > 0; i--, j--) {
     // handle previous year
     if (i < 0) {
-      const value = `${months[months.length + i].value.toUpperCase()}, ${
-        currentDate.getFullYear() - 1
-      }`
-      const translatedValue = `${months[
-        months.length + i
-      ].text.toUpperCase()}, ${currentDate.getFullYear() - 1}`
+      const value = `${months[months.length + i].value.toUpperCase()}, ${currentDate.getFullYear() - 1}`
+      const translatedValue = `${months[months.length + i].text.toUpperCase()}, ${currentDate.getFullYear() - 1}`
 
       options.push(
         <option key={value} value={value}>
@@ -83,12 +76,8 @@ export function MonthSelect({ selectedValue, handleChange, ...props }) {
     }
     // handle current year
     else {
-      const value = `${months[
-        i
-      ].value.toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${months[
-        i
-      ].text.toUpperCase()}, ${currentDate.getFullYear()}`
+      const value = `${months[i].value.toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${months[i].text.toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(
         <option key={value} value={value}>

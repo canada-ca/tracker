@@ -1,15 +1,13 @@
 import { setupI18n } from '@lingui/core'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { stringify } from 'jest-matcher-utils'
 import { toGlobalId } from 'graphql-relay'
 
 import englishMessages from '../../../locale/en/messages'
 import frenchMessages from '../../../locale/fr/messages'
 import { cleanseInput } from '../../../validators'
-import {
-  loadVerifiedDomainConnectionsByOrgId,
-  loadVerifiedDomainByKey,
-} from '../../loaders'
+import { loadVerifiedDomainConnectionsByOrgId, loadVerifiedDomainByKey } from '../../loaders'
 import dbschema from '../../../../database.json'
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -30,16 +28,16 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -108,10 +106,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
-        const expectedDomains = await domainLoader.loadMany([
-          domain._key,
-          domainTwo._key,
-        ])
+        const expectedDomains = await domainLoader.loadMany([domain._key, domainTwo._key])
 
         expectedDomains[0].id = expectedDomains[0]._key
         expectedDomains[1].id = expectedDomains[1]._key
@@ -154,10 +149,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
-        const expectedDomains = await domainLoader.loadMany([
-          domain._key,
-          domainTwo._key,
-        ])
+        const expectedDomains = await domainLoader.loadMany([domain._key, domainTwo._key])
 
         expectedDomains[0].id = expectedDomains[0]._key
         expectedDomains[1].id = expectedDomains[1]._key
@@ -200,10 +192,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
-        const expectedDomains = await domainLoader.loadMany([
-          domain._key,
-          domainTwo._key,
-        ])
+        const expectedDomains = await domainLoader.loadMany([domain._key, domainTwo._key])
 
         expectedDomains[0].id = expectedDomains[0]._key
         expectedDomains[1].id = expectedDomains[1]._key
@@ -245,10 +234,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         })
 
         const domainLoader = loadVerifiedDomainByKey({ query })
-        const expectedDomains = await domainLoader.loadMany([
-          domain._key,
-          domainTwo._key,
-        ])
+        const expectedDomains = await domainLoader.loadMany([domain._key, domainTwo._key])
 
         expectedDomains[0].id = expectedDomains[0]._key
         expectedDomains[1].id = expectedDomains[1]._key
@@ -1110,11 +1096,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`first` on the `VerifiedDomain` connection cannot be less than zero.',
-                ),
-              )
+              expect(err).toEqual(new Error('`first` on the `VerifiedDomain` connection cannot be less than zero.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -1139,11 +1121,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`last` on the `VerifiedDomain` connection cannot be less than zero.',
-                ),
-              )
+              expect(err).toEqual(new Error('`last` on the `VerifiedDomain` connection cannot be less than zero.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -1215,9 +1193,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
       describe('limits are not set to numbers', () => {
         describe('first limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when first set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
@@ -1234,11 +1210,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
               }
               expect(consoleOutput).toEqual([
                 `User attempted to have \`first\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
@@ -1248,9 +1220,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         })
         describe('last limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when last set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
@@ -1267,11 +1237,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
               }
               expect(consoleOutput).toEqual([
                 `User attempted to have \`last\` set as a ${typeof invalidInput} for: loadVerifiedDomainConnectionsByOrgId.`,
@@ -1284,9 +1250,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
     describe('given a database error', () => {
       describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database Error Occurred.'))
+          const query = jest.fn().mockRejectedValue(new Error('Database Error Occurred.'))
 
           const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
@@ -1303,9 +1267,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load verified domain(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load verified domain(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -1339,9 +1301,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load verified domain(s). Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load verified domain(s). Please try again.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -1442,11 +1402,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`first` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro.',
-                ),
-              )
+              expect(err).toEqual(new Error('`first` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -1471,11 +1427,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  '`last` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro.',
-                ),
-              )
+              expect(err).toEqual(new Error('`last` sur la connexion `VerifiedDomain` ne peut être inférieur à zéro.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -1547,9 +1499,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
       describe('limits are not set to numbers', () => {
         describe('first limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when first set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
@@ -1567,9 +1517,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                  ),
+                  new Error(`\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                 )
               }
               expect(consoleOutput).toEqual([
@@ -1580,9 +1528,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
         })
         describe('last limit is set', () => {
           ;['123', {}, [], null, true].forEach((invalidInput) => {
-            it(`returns an error when last set to ${stringify(
-              invalidInput,
-            )}`, async () => {
+            it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
               const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
                 query,
                 cleanseInput,
@@ -1600,9 +1546,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                  ),
+                  new Error(`\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                 )
               }
               expect(consoleOutput).toEqual([
@@ -1616,9 +1560,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
     describe('given a database error', () => {
       describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database Error Occurred.'))
+          const query = jest.fn().mockRejectedValue(new Error('Database Error Occurred.'))
 
           const connectionLoader = loadVerifiedDomainConnectionsByOrgId({
             query,
@@ -1635,11 +1577,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([
@@ -1673,11 +1611,7 @@ describe('given the loadVerifiedDomainConnectionsByOrgId function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.',
-              ),
-            )
+            expect(err).toEqual(new Error('Impossible de charger le(s) domaine(s) vérifié(s). Veuillez réessayer.'))
           }
 
           expect(consoleOutput).toEqual([

@@ -1,14 +1,12 @@
 import datetime
 import json
-import os
 from dataclasses import dataclass, asdict as dataclass_asdict
 
 import logging
-from typing import List
 
 from cryptography.hazmat.primitives._serialization import Encoding
 from cryptography.x509 import Certificate
-from sslyze.errors import ConnectionToServerFailed, ServerHostnameCouldNotBeResolved
+from sslyze.errors import ServerHostnameCouldNotBeResolved
 from sslyze.plugins.certificate_info._certificate_utils import (
     get_common_names,
     parse_subject_alternative_name_extension,
@@ -24,7 +22,7 @@ from sslyze import (
     CertificateDeploymentAnalysisResult,
     PathValidationResult,
 )
-from sslyze.scanner.models import CipherSuitesScanAttempt, ServerScanResult
+from sslyze.scanner.models import ServerScanResult
 from sslyze.server_setting import (
     ServerNetworkLocation,
     ServerNetworkConfiguration,
@@ -34,7 +32,7 @@ from service_identity.exceptions import VerificationError, CertificateError
 
 from scan.tls_scanner.query_crlite import query_crlite
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 CONNECT_TIMEOUT = 2
 
@@ -87,7 +85,7 @@ class CertificateInfo:
             if type(cert_not_revoked) is bool:
                 self.cert_revoked = not cert_not_revoked
         except ValueError as e:
-            logging.info(
+            logger.info(
                 f"Error while checking revocation status for {cert.subject.rfc4514_string()}: {str(e)}"
             )
 
@@ -208,7 +206,7 @@ class TLSResult:
         self.request_domain = domain
         self.request_ip_address = ip_address
 
-        scanner = Scanner()
+        scanner = Scanner(per_server_concurrent_connections_limit=2)
 
         designated_scans = set()
 
@@ -289,12 +287,12 @@ class TLSResult:
                 scan_results_as_dict = json.loads(
                     ServerScanResultAsJson.from_orm(scan_results).json()
                 )
-                logging.info(
+                logger.info(
                     f"{connectivity_error_log}: {json.dumps(scan_results_as_dict)}"
                 )
             except Exception:
                 tls_result_string = f"Error converting scan results to JSON - using TLSResult object instead: {self.asdict()}"
-                logging.error(f"{connectivity_error_log}: {tls_result_string}")
+                logger.error(f"{connectivity_error_log}: {tls_result_string}")
             self.error = f"Error during sslyze connectivity for domain '{domain}' at IP '{ip_address}'"
             return
 
