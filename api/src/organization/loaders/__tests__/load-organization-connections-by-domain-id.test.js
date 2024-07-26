@@ -1,5 +1,6 @@
 import { stringify } from 'jest-matcher-utils'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
@@ -12,17 +13,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the load organizations connection function', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    user,
-    org,
-    orgTwo,
-    domain,
-    domainTwo,
-    domainThree,
-    i18n
+  let query, drop, truncate, collections, user, org, orgTwo, domain, domainTwo, domainThree, i18n
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -38,16 +29,16 @@ describe('given the load organizations connection function', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -201,10 +192,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -251,10 +239,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -301,10 +286,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -350,10 +332,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -496,10 +475,7 @@ describe('given the load organizations connection function', () => {
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
-              const expectedOrgs = await orgLoader.loadMany([
-                org._key,
-                orgTwo._key,
-              ])
+              const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
               const connectionArgs = {
                 domainId: domain._id,
@@ -2206,10 +2182,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -2262,10 +2235,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'en' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             const connectionArgs = {
               first: 5,
@@ -2359,11 +2329,7 @@ describe('given the load organizations connection function', () => {
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
-              const expectedOrgs = await orgLoader.loadMany([
-                org._key,
-                orgTwo._key,
-                saOrg._key,
-              ])
+              const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key, saOrg._key])
 
               const connectionArgs = {
                 first: 5,
@@ -2419,11 +2385,7 @@ describe('given the load organizations connection function', () => {
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'en' })
-              const expectedOrgs = await orgLoader.loadMany([
-                org._key,
-                orgTwo._key,
-                saOrg._key,
-              ])
+              const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key, saOrg._key])
 
               const connectionArgs = {
                 first: 5,
@@ -2492,10 +2454,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -2542,10 +2501,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -2592,10 +2548,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -2641,10 +2594,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -2787,10 +2737,7 @@ describe('given the load organizations connection function', () => {
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
-              const expectedOrgs = await orgLoader.loadMany([
-                org._key,
-                orgTwo._key,
-              ])
+              const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
               const connectionArgs = {
                 domainId: domain._id,
@@ -4497,10 +4444,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             expectedOrgs[0].id = expectedOrgs[0]._key
             expectedOrgs[1].id = expectedOrgs[1]._key
@@ -4553,10 +4497,7 @@ describe('given the load organizations connection function', () => {
             })
 
             const orgLoader = loadOrgByKey({ query, language: 'fr' })
-            const expectedOrgs = await orgLoader.loadMany([
-              org._key,
-              orgTwo._key,
-            ])
+            const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
             const connectionArgs = {
               first: 5,
@@ -4650,11 +4591,7 @@ describe('given the load organizations connection function', () => {
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
-              const expectedOrgs = await orgLoader.loadMany([
-                org._key,
-                orgTwo._key,
-                saOrg._key,
-              ])
+              const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key, saOrg._key])
 
               const connectionArgs = {
                 first: 5,
@@ -4710,11 +4647,7 @@ describe('given the load organizations connection function', () => {
               })
 
               const orgLoader = loadOrgByKey({ query, language: 'fr' })
-              const expectedOrgs = await orgLoader.loadMany([
-                org._key,
-                orgTwo._key,
-                saOrg._key,
-              ])
+              const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key, saOrg._key])
 
               const connectionArgs = {
                 first: 5,
@@ -4857,11 +4790,7 @@ describe('given the load organizations connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`first` on the `Organization` connection cannot be less than zero.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`first` on the `Organization` connection cannot be less than zero.'))
               }
 
               expect(consoleOutput).toEqual([
@@ -4889,11 +4818,7 @@ describe('given the load organizations connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`last` on the `Organization` connection cannot be less than zero.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`last` on the `Organization` connection cannot be less than zero.'))
               }
 
               expect(consoleOutput).toEqual([
@@ -4971,9 +4896,7 @@ describe('given the load organizations connection function', () => {
         describe('limits are not set to numbers', () => {
           describe('first limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -4992,11 +4915,7 @@ describe('given the load organizations connection function', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -5008,9 +4927,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('last limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when last set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'en',
@@ -5029,11 +4946,7 @@ describe('given the load organizations connection function', () => {
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -5048,9 +4961,7 @@ describe('given the load organizations connection function', () => {
       describe('given a database error', () => {
         describe('when gathering organizations', () => {
           it('returns an error message', async () => {
-            const query = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
+            const query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
             const connectionLoader = loadOrgConnectionsByDomainId({
               query,
@@ -5070,9 +4981,7 @@ describe('given the load organizations connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('Unable to load organization(s). Please try again.'),
-              )
+              expect(err).toEqual(new Error('Unable to load organization(s). Please try again.'))
             }
 
             expect(consoleOutput).toEqual([
@@ -5108,11 +5017,7 @@ describe('given the load organizations connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    'Unable to load organization(s). Please try again.',
-                  ),
-                )
+                expect(err).toEqual(new Error('Unable to load organization(s). Please try again.'))
               }
 
               expect(consoleOutput).toEqual([
@@ -5224,9 +5129,7 @@ describe('given the load organizations connection function', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    '`first` sur la connexion `Organization` ne peut être inférieure à zéro.',
-                  ),
+                  new Error('`first` sur la connexion `Organization` ne peut être inférieure à zéro.'),
                 )
               }
 
@@ -5255,11 +5158,7 @@ describe('given the load organizations connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`last` sur la connexion `Organization` ne peut être inférieure à zéro.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`last` sur la connexion `Organization` ne peut être inférieure à zéro.'))
               }
 
               expect(consoleOutput).toEqual([
@@ -5337,9 +5236,7 @@ describe('given the load organizations connection function', () => {
         describe('limits are not set to numbers', () => {
           describe('first limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -5359,9 +5256,7 @@ describe('given the load organizations connection function', () => {
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -5374,9 +5269,7 @@ describe('given the load organizations connection function', () => {
           })
           describe('last limit is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when last set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when last set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadOrgConnectionsByDomainId({
                   query,
                   language: 'fr',
@@ -5396,9 +5289,7 @@ describe('given the load organizations connection function', () => {
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -5414,9 +5305,7 @@ describe('given the load organizations connection function', () => {
       describe('given a database error', () => {
         describe('when gathering organizations', () => {
           it('returns an error message', async () => {
-            const query = jest
-              .fn()
-              .mockRejectedValue(new Error('Database error occurred.'))
+            const query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
 
             const connectionLoader = loadOrgConnectionsByDomainId({
               query,
@@ -5436,11 +5325,7 @@ describe('given the load organizations connection function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  "Impossible de charger l'organisation (s). Veuillez réessayer.",
-                ),
-              )
+              expect(err).toEqual(new Error("Impossible de charger l'organisation (s). Veuillez réessayer."))
             }
 
             expect(consoleOutput).toEqual([
@@ -5476,11 +5361,7 @@ describe('given the load organizations connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    "Impossible de charger l'organisation (s). Veuillez réessayer.",
-                  ),
-                )
+                expect(err).toEqual(new Error("Impossible de charger l'organisation (s). Veuillez réessayer."))
               }
 
               expect(consoleOutput).toEqual([

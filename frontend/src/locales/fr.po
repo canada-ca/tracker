@@ -13,10 +13,6 @@ msgstr ""
 "Plural-Forms: \n"
 "Report-Msgid-Bugs-To: \n"
 
-#: src/guidance/EmailGuidance.js:323
-msgid "None"
-msgstr "Aucun"
-
 #: src/termsConditions/TermsConditionsPage.js:170
 msgid ", and"
 msgstr ", et"
@@ -2135,12 +2131,21 @@ msgstr "La langue:"
 
 #: src/components/MonthSelect.js:63
 #: src/summaries/HistoricalSummariesGraph.js:156
-msgid "Last 30 Days"
-msgstr "Les 30 derniers jours"
+#~ msgid "Last 30 Days"
+#~ msgstr "Les 30 derniers jours"
+
+#: src/components/MonthSelect.js:60
+#: src/summaries/HistoricalSummariesGraph.js:156
+msgid "Last 30 Days of Data"
+msgstr "Données des 30 derniers jours"
 
 #: src/summaries/HistoricalSummariesGraph.js:159
-msgid "Last 365 Days"
-msgstr "Les 365 derniers jours"
+#~ msgid "Last 365 Days"
+#~ msgstr "Les 365 derniers jours"
+
+#: src/summaries/HistoricalSummariesGraph.js:159
+msgid "Last 365 Days of Data"
+msgstr "Données des 365 derniers jours"
 
 #: src/domains/DomainsPage.js:240
 #: src/organizationDetails/OrganizationDomains.js:235
@@ -2521,6 +2526,7 @@ msgstr "Aucune valeur n'a été fournie lors de la tentative de mise à jour des
 msgid "Non-compliant"
 msgstr "Non conforme"
 
+#: src/guidance/EmailGuidance.js:323
 #: src/user/EditableUserTFAMethod.js:164
 msgid "None"
 msgstr "Aucun"
