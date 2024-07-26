@@ -15,6 +15,10 @@ spec:
       labels:
         app: dns-scanner
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: dns-scanner
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dns-scanner:master-e5fc558-1721932850 # {"$imagepolicy": "flux-system:dns-scanner"}
@@ -64,4 +68,20 @@ spec:
                   key: SUMMARIES_CONTAINER
           resources: {}
           imagePullPolicy: Always
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
 status: {}

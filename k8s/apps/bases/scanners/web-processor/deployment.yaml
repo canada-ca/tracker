@@ -16,6 +16,10 @@ spec:
       labels:
         app: web-processor
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: web-processor
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/web-processor:master-c1b1705-1721921879 # {"$imagepolicy": "flux-system:web-processor"}
@@ -43,6 +47,16 @@ spec:
                   key: DB_USER
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
           resources: {}
           imagePullPolicy: Always
 status: {}

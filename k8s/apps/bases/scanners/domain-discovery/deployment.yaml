@@ -16,6 +16,10 @@ spec:
       labels:
         app: domain-discovery
     spec:
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: domain-discovery
           image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/domain-discovery:master-c1b1705-1721921879 # {"$imagepolicy": "flux-system:domain-discovery"}
@@ -37,4 +41,14 @@ spec:
             - name: NATS_SERVERS
               value: nats://nats.pubsub:4222
           resources: {}
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
 status: {}
