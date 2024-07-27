@@ -24,3 +24,4 @@ six==1.16.0
 timeout-decorator==0.5.0
 tldextract==3.4.0
 urllib3==1.26.19
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
