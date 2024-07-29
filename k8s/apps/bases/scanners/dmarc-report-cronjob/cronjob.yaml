@@ -15,6 +15,10 @@ spec:
           labels:
             app: dmarc-report
         spec:
+          securityContext:
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: dmarc-report
               image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/dmarc-report:master-fda0b99-1718197037 # {"$imagepolicy": "flux-system:dmarc-report"}
@@ -79,4 +83,14 @@ spec:
                     secretKeyRef:
                       name: dmarc
                       key: SUMMARIES_CONTAINER
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
           restartPolicy: OnFailure
