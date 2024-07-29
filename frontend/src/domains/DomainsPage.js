@@ -22,7 +22,8 @@ import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
-import Joyride from 'react-joyride'
+import { TourProvider } from '../userOnboarding/contexts/TourContext'
+import TourButton from '../userOnboarding/components/TourButton'
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -192,33 +193,12 @@ export default function DomainsPage() {
     </Box>
   )
 
-  const [tourSteps] = useState([
-    {
-      content: <h1>This page is dedicated to everything domains</h1>,
-      placement: 'center',
-      target: 'body',
-    },
-    {
-      target: '.filter-box',
-      content: 'You can modify the results of the domain list using these filters',
-    },
-    {
-      target: '.filters',
-      content: 'You can filter the list of domains here',
-    },
-    {
-      target: '.affiliated',
-      content: 'This filter will show only domains affiliated with your account',
-    },
-    {
-      target: '.domain-card',
-      content: 'Here is the information for each domain',
-    },
-  ])
-
   return (
     <Box w="100%" px={4}>
-      <Joyride steps={tourSteps} run={true} continuous />
+       <TourProvider>
+          <OrgTourComponent />
+          <TourButton />
+        </TourProvider>
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>

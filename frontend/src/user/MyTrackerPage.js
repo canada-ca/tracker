@@ -12,7 +12,8 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { TierOneSummaries } from '../summaries/TierOneSummaries'
-import Joyride from 'react-joyride'
+import { TourProvider } from '../userOnboarding/contexts/TourContext'
+import TourButton from '../userOnboarding/components/TourButton'
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
@@ -28,33 +29,6 @@ export default function OrganizationDetails() {
     }
   }, [activeTab, history, defaultActiveTab])
 
-  const [tourSteps] = useState([
-    {
-      content: <h1>This page is dedicated to your personal view of tracker</h1>,
-      placement: 'center',
-      target: 'body',
-    },
-    {
-      target: '.summary',
-      content: 'Summary of your tracker',
-    },
-    {
-      target: '.dmarc-phases',
-      content: 'dmarc phases information',
-    },
-    {
-      target: '.domains',
-      content: 'domains information',
-    },
-    {
-      target: '.https-config-summary',
-      content: 'https configuration summary',
-    },
-    {
-      target: '.dmarc-phases-other',
-      content: 'dmarc phases information',
-    },
-  ])
 
   if (loading) {
     return (
@@ -77,7 +51,10 @@ export default function OrganizationDetails() {
 
   return (
     <Box w="100%">
-      <Joyride steps={tourSteps} run={true} continuous />
+       <TourProvider>
+          <OrgTourComponent />
+          <TourButton />
+        </TourProvider>
       <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading
           as="h1"

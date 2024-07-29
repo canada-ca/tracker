@@ -30,3 +30,55 @@ export const orgTourSteps = [
     disableBeacon: true,
   },
 ]
+
+export const domainsTourSteps = [
+    {
+        content: <h1>This page is dedicated to everything domains</h1>,
+        placement: 'center',
+        target: 'body',
+      },
+      {
+        target: '.filter-box',
+        content: 'You can modify the results of the domain list using these filters',
+      },
+      {
+        target: '.filters',
+        content: 'You can filter the list of domains here',
+      },
+      {
+        target: '.affiliated',
+        content: 'This filter will show only domains affiliated with your account',
+      },
+      {
+        target: '.domain-card',
+        content: 'Here is the information for each domain',
+      },
+]
+
+export const myTrackerTourSteps = [
+    {
+        content: <h1>This page is dedicated to your personal view of tracker</h1>,
+        placement: 'center',
+        target: 'body',
+      },
+      {
+        target: '.summary',
+        content: 'Summary of your tracker',
+      },
+      {
+        target: '.dmarc-phases',
+        content: 'dmarc phases information',
+      },
+      {
+        target: '.domains',
+        content: 'domains information',
+      },
+      {
+        target: '.https-config-summary',
+        content: 'https configuration summary',
+      },
+      {
+        target: '.dmarc-phases-other',
+        content: 'dmarc phases information',
+      },
+]
