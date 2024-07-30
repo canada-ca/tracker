@@ -1,40 +1,27 @@
 import React, { useEffect } from 'react'
 import Joyride from 'react-joyride'
 import { useTour } from '../hooks/useTour'
-import { tourSteps, orgTourSteps } from '../config/tourSteps'
+import { mainTourSteps } from '../config/tourSteps'
 
-export const HomeTourComponent = () => {
+export const TourComponent = ({ page }) => {
   const { isTourOpen, endTour } = useTour()
 
   return (
     <>
       <Joyride
-        steps={tourSteps}
+        steps={mainTourSteps[page]}
         run={isTourOpen}
         continuous={true}
         showProgress={true}
         showSkipButton={true}
-        callback={({ status }) => {
-          if (['finished', 'skipped'].includes(status)) {
-            endTour()
-          }
+        styles={{
+          buttonNext: {
+            backgroundColor: '#ff6600',
+          },
+          buttonBack: {
+            color: '#ff6600',
+          },
         }}
-      />
-    </>
-  )
-}
-
-export const OrgTourComponent = () => {
-  const { isTourOpen, endTour } = useTour()
-
-  return (
-    <>
-      <Joyride
-        steps={orgTourSteps}
-        run={isTourOpen}
-        continuous={true}
-        showProgress={true}
-        showSkipButton={true}
         callback={({ status }) => {
           if (['finished', 'skipped'].includes(status)) {
             endTour()

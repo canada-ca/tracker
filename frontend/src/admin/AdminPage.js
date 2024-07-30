@@ -18,7 +18,9 @@ import { SuperAdminUserList } from './SuperAdminUserList'
 import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
-import Joyride from 'react-joyride'
+import { TourComponent } from '../userOnboarding/components/TourComponent'
+import { TourProvider } from '../userOnboarding/contexts/TourContext'
+import TourButton from '../userOnboarding/components/TourButton'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -60,26 +62,6 @@ export default function AdminPage({ isLoginRequired }) {
       })
     },
   })
-
-  const [tourSteps] = useState([
-    {
-      content: <h1>Welcome to the Admin Profile page!</h1>,
-      placement: 'center',
-      target: 'body',
-    },
-    {
-      target: '.create-organization-button',
-      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
-    },
-    {
-      target: '.dropdown',
-      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
-    },
-    {
-      target: '.super-admin',
-      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
-    },
-  ])
 
   useEffect(() => {
     if (!activeMenu) {
@@ -199,11 +181,14 @@ export default function AdminPage({ isLoginRequired }) {
   }
 
   return (
-    <Stack spacing={10} w="100%" px={4}>
-      <SuperAdminMenu activeMenu={activeMenu} changeActiveMenu={changeActiveMenu} />
-      <Joyride steps={tourSteps} run={true} continuous />
-      {adminPanel}
-    </Stack>
+    <TourProvider>
+      <TourButton />
+      <TourComponent page="adminProfilePage" />
+      <Stack spacing={10} w="100%" px={4}>
+        <SuperAdminMenu activeMenu={activeMenu} changeActiveMenu={changeActiveMenu} />
+        {adminPanel}
+      </Stack>
+    </TourProvider>
   )
 }
 
