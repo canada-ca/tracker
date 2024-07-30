@@ -14,10 +14,7 @@ import { RadialBarChart } from '../summaries/RadialBarChart'
 import { TierOneSummaries } from '../summaries/TierOneSummaries'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
 import TourButton from '../userOnboarding/components/TourButton'
-<<<<<<< HEAD
-=======
 import { TourComponent } from '../userOnboarding/components/TourComponent'
->>>>>>> 1fda81e3 (Added button to start tour on every page. Started on some styling (colour). Cleaned up some code. Added tour for DMARC Summaries page.)
 
 export default function OrganizationDetails() {
   const { activeTab } = useParams()
@@ -33,10 +30,6 @@ export default function OrganizationDetails() {
     }
   }, [activeTab, history, defaultActiveTab])
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 1fda81e3 (Added button to start tour on every page. Started on some styling (colour). Cleaned up some code. Added tour for DMARC Summaries page.)
   if (loading) {
     return (
       <LoadingMessage>
@@ -57,20 +50,6 @@ export default function OrganizationDetails() {
   }
 
   return (
-<<<<<<< HEAD
-    <Box w="100%">
-       <TourProvider>
-          <OrgTourComponent />
-          <TourButton />
-        </TourProvider>
-      <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
-        <Heading
-          as="h1"
-          textAlign={{ base: 'center', md: 'left' }}
-          mr={{ base: '0', md: '0.5rem' }}
-          order={{ base: 2, md: 1 }}
-          flexBasis={{ base: '100%', md: 'auto' }}
-=======
     <TourProvider>
       <TourComponent page="myTrackerPage" />
       <Box w="100%">
@@ -97,7 +76,6 @@ export default function OrganizationDetails() {
           variant="enclosed-colored"
           defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
           onChange={(i) => changeActiveTab(i)}
->>>>>>> 1fda81e3 (Added button to start tour on every page. Started on some styling (colour). Cleaned up some code. Added tour for DMARC Summaries page.)
         >
           <TabList mb="4">
             <Tab borderTopWidth="4px" className="summary">

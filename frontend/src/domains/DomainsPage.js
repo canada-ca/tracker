@@ -24,10 +24,7 @@ import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
 import TourButton from '../userOnboarding/components/TourButton'
-<<<<<<< HEAD
-=======
 import { TourComponent } from '../userOnboarding/components/TourComponent'
->>>>>>> 1fda81e3 (Added button to start tour on every page. Started on some styling (colour). Cleaned up some code. Added tour for DMARC Summaries page.)
 
 export default function DomainsPage() {
   const { hasAffiliation, isLoggedIn } = useUserVar()
@@ -198,19 +195,6 @@ export default function DomainsPage() {
   )
 
   return (
-<<<<<<< HEAD
-    <Box w="100%" px={4}>
-       <TourProvider>
-          <OrgTourComponent />
-          <TourButton />
-        </TourProvider>
-      <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
-        <Heading as="h1" textAlign="left" mb="4">
-          <Trans>Domains</Trans>
-        </Heading>
-        <StatusExportButton />
-      </Flex>
-=======
     <TourProvider>
       <TourComponent page="domainPage" />
       <Box w="100%" px={4}>
@@ -227,7 +211,6 @@ export default function DomainsPage() {
           </Heading>
           <StatusExportButton />
         </Flex>
->>>>>>> 1fda81e3 (Added button to start tour on every page. Started on some styling (colour). Cleaned up some code. Added tour for DMARC Summaries page.)
 
         <InfoPanel isOpen={isOpen} onToggle={onToggle}>
           <InfoBox title={t`Domain`} info={t`The domain address.`} />
