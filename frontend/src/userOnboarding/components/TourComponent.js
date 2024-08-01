@@ -1,14 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Joyride from 'react-joyride'
 import { useTour } from '../hooks/useTour'
 import { mainTourSteps } from '../config/tourSteps'
 
 export const TourComponent = ({ page }) => {
   const { isTourOpen, endTour } = useTour()
+  const [tourKey, setTourKey] = useState(0)
+
+  useEffect(() => {
+    if (isTourOpen) {
+      setTourKey((prevKey) => prevKey + 1)
+    }
+  }, [isTourOpen])
 
   return (
     <>
       <Joyride
+        key={tourKey}
         steps={mainTourSteps[page]}
         run={isTourOpen}
         continuous={true}

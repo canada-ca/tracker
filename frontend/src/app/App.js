@@ -24,7 +24,8 @@ import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
-// import components from userOnboarding folder
+import { TourProvider } from '../userOnboarding/contexts/TourContext'
+import TourButton from '../userOnboarding/components/TourButton'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
