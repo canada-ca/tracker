@@ -1,4 +1,5 @@
 import React from 'react'
+import { t, Trans } from '@lingui/macro'
 
 export const mainTourSteps = {
   landingPage: [
