@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/guidance/EmailGuidance.js:323
-#~ msgid "None"
-#~ msgstr "None"
-
 #: src/termsConditions/TermsConditionsPage.js:170
 msgid ", and"
 msgstr ", and"
@@ -127,7 +123,7 @@ msgstr "A domain may only be removed for one of the reasons below. For a domain 
 msgid "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 msgstr "A minimum DMARC policy of “p=none” with at least one address defined as a recipient of aggregate reports"
 
-#: src/dmarc/DmarcByDomainPage.js:309
+#: src/dmarc/DmarcByDomainPage.js:316
 msgid "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 msgstr "A more detailed breakdown of each domain can be found by clicking on its address in the first column."
 
@@ -181,7 +177,7 @@ msgstr "Account created."
 
 #: src/createOrganization/CreateOrganizationPage.js:184
 #: src/createOrganization/CreateOrganizationPage.js:189
-#: src/organizations/Organizations.js:62
+#: src/organizations/Organizations.js:65
 msgid "Acronym"
 msgstr "Acronym"
 
@@ -238,7 +234,7 @@ msgstr "Add User"
 msgid "Additional Findings"
 msgstr "Additional Findings"
 
-#: src/app/App.js:245
+#: src/app/App.js:242
 msgid "Admin"
 msgstr "Admin"
 
@@ -246,7 +242,7 @@ msgstr "Admin"
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
-#: src/app/App.js:156
+#: src/app/App.js:155
 msgid "Admin Profile"
 msgstr "Admin Profile"
 
@@ -299,12 +295,12 @@ msgstr "An error has occurred."
 msgid "An error occurred when fetching this organization's information"
 msgstr "An error occurred when fetching this organization's information"
 
-#: src/domains/DomainsPage.js:44
+#: src/domains/DomainsPage.js:47
 msgid "An error occurred when you attempted to download all domain statuses."
 msgstr "An error occurred when you attempted to download all domain statuses."
 
 #: src/app/FloatingMenu.js:38
-#: src/app/TopBanner.js:30
+#: src/app/TopBanner.js:32
 msgid "An error occurred when you attempted to sign out"
 msgstr "An error occurred when you attempted to sign out"
 
@@ -435,7 +431,7 @@ msgstr "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgid "Assess current state;"
 msgstr "Assess current state;"
 
-#: src/admin/AdminPage.js:196
+#: src/admin/AdminPage.js:205
 #: src/admin/AuditLogTable.js:85
 msgid "Audit Logs"
 msgstr "Audit Logs"
@@ -445,21 +441,22 @@ msgstr "Audit Logs"
 msgid "August"
 msgstr "August"
 
-#: src/app/App.js:211
+#: src/app/App.js:208
 msgid "Authenticate"
 msgstr "Authenticate"
 
-#: src/app/TopBanner.js:82
+#: src/app/TopBanner.js:84
 msgid "BETA"
 msgstr "BETA"
 
-#: src/domains/DomainsPage.js:226
+#: src/domains/DomainsPage.js:239
 #: src/organizationDetails/OrganizationDomains.js:216
 msgid "BLOCKED"
 msgstr "BLOCKED"
 
 #: src/auth/ForgotPasswordPage.js:101
 #: src/createOrganization/CreateOrganizationPage.js:228
+#: src/userOnboarding/components/TourComponent.js:35
 msgid "Back"
 msgstr "Back"
 
@@ -481,7 +478,7 @@ msgstr "Blank fields will not be included when updating the organization."
 
 #: src/admin/AdminDomains.js:171
 #: src/domains/DomainCard.js:138
-#: src/domains/DomainsPage.js:93
+#: src/domains/DomainsPage.js:96
 #: src/guidance/WebGuidance.js:84
 #: src/organizationDetails/OrganizationDomains.js:97
 msgid "Blocked"
@@ -515,7 +512,7 @@ msgstr "CNAME:"
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
-#: src/landing/LandingPage.js:29
+#: src/landing/LandingPage.js:36
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 
@@ -533,12 +530,12 @@ msgid "Certificate chain info could not be found during the scan."
 msgstr "Certificate chain info could not be found during the scan."
 
 #: src/domains/DomainCard.js:193
-#: src/domains/DomainsPage.js:210
+#: src/domains/DomainsPage.js:223
 #: src/organizationDetails/OrganizationDomains.js:189
 msgid "Certificates"
 msgstr "Certificates"
 
-#: src/domains/DomainsPage.js:82
+#: src/domains/DomainsPage.js:85
 #: src/organizationDetails/OrganizationDomains.js:79
 msgid "Certificates Status"
 msgstr "Certificates Status"
@@ -589,13 +586,13 @@ msgid "Check your associated Tracker email for the verification link"
 msgstr "Check your associated Tracker email for the verification link"
 
 #: src/domains/DomainCard.js:195
-#: src/domains/DomainsPage.js:212
+#: src/domains/DomainsPage.js:225
 #: src/guidance/WebTLSResults.js:106
 #: src/organizationDetails/OrganizationDomains.js:191
 msgid "Ciphers"
 msgstr "Ciphers"
 
-#: src/domains/DomainsPage.js:83
+#: src/domains/DomainsPage.js:86
 #: src/organizationDetails/OrganizationDomains.js:80
 msgid "Ciphers Status"
 msgstr "Ciphers Status"
@@ -708,8 +705,8 @@ msgstr "Consider prioritizing websites and web services that exchange Protected 
 msgid "Contact"
 msgstr "Contact"
 
-#: src/app/App.js:220
-#: src/app/App.js:362
+#: src/app/App.js:217
+#: src/app/App.js:358
 #: src/app/ContactUsPage.js:52
 #: src/app/SlideMessage.js:103
 msgid "Contact Us"
@@ -758,18 +755,18 @@ msgid "Create"
 msgstr "Create"
 
 #: src/app/FloatingMenu.js:200
-#: src/app/TopBanner.js:131
+#: src/app/TopBanner.js:137
 #: src/auth/CreateUserPage.js:154
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/admin/AdminPage.js:137
-#: src/app/App.js:325
+#: src/admin/AdminPage.js:142
+#: src/app/App.js:322
 #: src/createOrganization/CreateOrganizationPage.js:237
 msgid "Create Organization"
 msgstr "Create Organization"
 
-#: src/app/App.js:188
+#: src/app/App.js:185
 msgid "Create an Account"
 msgstr "Create an Account"
 
@@ -802,14 +799,14 @@ msgstr "Current Password:"
 #~ msgstr "Current Phone Number:"
 
 #: src/domains/DomainCard.js:196
-#: src/domains/DomainsPage.js:213
+#: src/domains/DomainsPage.js:226
 #: src/domains/FilterList.js:17
 #: src/guidance/WebTLSResults.js:156
 #: src/organizationDetails/OrganizationDomains.js:192
 msgid "Curves"
 msgstr "Curves"
 
-#: src/domains/DomainsPage.js:84
+#: src/domains/DomainsPage.js:87
 #: src/organizationDetails/OrganizationDomains.js:81
 msgid "Curves Status"
 msgstr "Curves Status"
@@ -818,7 +815,7 @@ msgstr "Curves Status"
 msgid "DDOS Protection"
 msgstr "DDOS Protection"
 
-#: src/domains/DomainsPage.js:217
+#: src/domains/DomainsPage.js:230
 #: src/organizationDetails/OrganizationDomains.js:196
 msgid "DKIM"
 msgstr "DKIM"
@@ -857,7 +854,7 @@ msgstr "DKIM Selectors"
 #~ msgid "DKIM Selectors:"
 #~ msgstr "DKIM Selectors:"
 
-#: src/domains/DomainsPage.js:87
+#: src/domains/DomainsPage.js:90
 #: src/organizationDetails/OrganizationDomains.js:84
 msgid "DKIM Status"
 msgstr "DKIM Status"
@@ -874,12 +871,12 @@ msgstr "DKIM record and keys are deployed and valid"
 #~ msgid "DKIM record could not be found for this selector."
 #~ msgstr "DKIM record could not be found for this selector."
 
-#: src/domains/DomainsPage.js:221
+#: src/domains/DomainsPage.js:234
 #: src/organizationDetails/OrganizationDomains.js:200
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/organizations/Organizations.js:144
+#: src/organizations/Organizations.js:146
 msgid "DMARC Configuration"
 msgstr "DMARC Configuration"
 
@@ -907,7 +904,7 @@ msgid "DMARC Implementation Phase: {0}"
 msgstr "DMARC Implementation Phase: {0}"
 
 #: src/organizationDetails/OrganizationDetails.js:130
-#: src/user/MyTrackerPage.js:79
+#: src/user/MyTrackerPage.js:85
 msgid "DMARC Phases"
 msgstr "DMARC Phases"
 
@@ -921,16 +918,16 @@ msgstr "DMARC Report"
 msgid "DMARC Report for {domainSlug}"
 msgstr "DMARC Report for {domainSlug}"
 
-#: src/domains/DomainsPage.js:88
+#: src/domains/DomainsPage.js:91
 #: src/organizationDetails/OrganizationDomains.js:85
 msgid "DMARC Status"
 msgstr "DMARC Status"
 
-#: src/app/App.js:137
-#: src/app/App.js:287
+#: src/app/App.js:138
+#: src/app/App.js:284
 #: src/app/FloatingMenu.js:131
-#: src/dmarc/DmarcByDomainPage.js:166
-#: src/dmarc/DmarcByDomainPage.js:222
+#: src/dmarc/DmarcByDomainPage.js:169
+#: src/dmarc/DmarcByDomainPage.js:228
 msgid "DMARC Summaries"
 msgstr "DMARC Summaries"
 
@@ -1051,7 +1048,7 @@ msgstr "Display Name:"
 msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
-#: src/organizations/Organizations.js:136
+#: src/organizations/Organizations.js:138
 msgid "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 msgstr "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 
@@ -1060,10 +1057,10 @@ msgid "Disposition"
 msgstr "Disposition"
 
 #: src/admin/AuditLogTable.js:67
-#: src/dmarc/DmarcByDomainPage.js:109
-#: src/dmarc/DmarcByDomainPage.js:287
-#: src/domains/DomainsPage.js:203
-#: src/domains/DomainsPage.js:248
+#: src/dmarc/DmarcByDomainPage.js:112
+#: src/dmarc/DmarcByDomainPage.js:294
+#: src/domains/DomainsPage.js:216
+#: src/domains/DomainsPage.js:262
 #: src/organizationDetails/OrganizationDomains.js:182
 #: src/organizationDetails/OrganizationDomains.js:237
 msgid "Domain"
@@ -1120,16 +1117,16 @@ msgid "Domain:"
 msgstr "Domain:"
 
 #: src/admin/AdminPanel.js:19
-#: src/app/App.js:130
-#: src/app/App.js:258
+#: src/app/App.js:132
+#: src/app/App.js:255
 #: src/app/FloatingMenu.js:116
-#: src/domains/DomainsPage.js:135
-#: src/domains/DomainsPage.js:197
+#: src/domains/DomainsPage.js:138
+#: src/domains/DomainsPage.js:210
 #: src/organizationDetails/OrganizationDetails.js:133
 #: src/organizationDetails/OrganizationDomains.js:106
 #: src/summaries/Doughnut.js:53
 #: src/summaries/Doughnut.js:74
-#: src/user/MyTrackerPage.js:82
+#: src/user/MyTrackerPage.js:88
 msgid "Domains"
 msgstr "Domains"
 
@@ -1246,7 +1243,7 @@ msgstr "Email Updates status changed"
 msgid "Email Validated"
 msgstr "Email Validated"
 
-#: src/app/App.js:321
+#: src/app/App.js:318
 msgid "Email Verification"
 msgstr "Email Verification"
 
@@ -1390,8 +1387,8 @@ msgstr "Fail"
 msgid "Fail DKIM"
 msgstr "Fail DKIM"
 
-#: src/dmarc/DmarcByDomainPage.js:141
-#: src/dmarc/DmarcByDomainPage.js:301
+#: src/dmarc/DmarcByDomainPage.js:144
+#: src/dmarc/DmarcByDomainPage.js:308
 msgid "Fail DKIM %"
 msgstr "Fail DKIM %"
 
@@ -1402,8 +1399,8 @@ msgstr "Fail DKIM %"
 msgid "Fail SPF"
 msgstr "Fail SPF"
 
-#: src/dmarc/DmarcByDomainPage.js:148
-#: src/dmarc/DmarcByDomainPage.js:297
+#: src/dmarc/DmarcByDomainPage.js:151
+#: src/dmarc/DmarcByDomainPage.js:304
 msgid "Fail SPF %"
 msgstr "Fail SPF %"
 
@@ -1432,7 +1429,7 @@ msgstr "February"
 msgid "Filter list to affiliated resources only."
 msgstr "Filter list to affiliated resources only."
 
-#: src/organizations/Organizations.js:173
+#: src/organizations/Organizations.js:179
 msgid "Filter list to verified organizations only."
 msgstr "Filter list to verified organizations only."
 
@@ -1441,10 +1438,10 @@ msgstr "Filter list to verified organizations only."
 #~ msgstr "Filters"
 
 #: src/admin/AdminDomains.js:207
-#: src/dmarc/DmarcByDomainPage.js:266
-#: src/domains/DomainsPage.js:255
+#: src/dmarc/DmarcByDomainPage.js:273
+#: src/domains/DomainsPage.js:269
 #: src/organizationDetails/OrganizationDomains.js:245
-#: src/organizations/Organizations.js:171
+#: src/organizations/Organizations.js:177
 msgid "Filters:"
 msgstr "Filters:"
 
@@ -1499,7 +1496,7 @@ msgstr "For questions and issues related to scan data, your organization's domai
 msgid "For users interested in using new features that are still in progress."
 msgstr "For users interested in using new features that are still in progress."
 
-#: src/app/App.js:214
+#: src/app/App.js:211
 #: src/auth/ForgotPasswordPage.js:75
 msgid "Forgot Password"
 msgstr "Forgot Password"
@@ -1524,13 +1521,13 @@ msgstr "French"
 msgid "Frequently Asked Questions"
 msgstr "Frequently Asked Questions"
 
-#: src/dmarc/DmarcByDomainPage.js:155
-#: src/dmarc/DmarcByDomainPage.js:305
+#: src/dmarc/DmarcByDomainPage.js:158
+#: src/dmarc/DmarcByDomainPage.js:312
 msgid "Full Fail %"
 msgstr "Full Fail %"
 
-#: src/dmarc/DmarcByDomainPage.js:134
-#: src/dmarc/DmarcByDomainPage.js:293
+#: src/dmarc/DmarcByDomainPage.js:137
+#: src/dmarc/DmarcByDomainPage.js:300
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
@@ -1544,7 +1541,7 @@ msgstr "Fully Aligned Table"
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/organizations/Organizations.js:148
+#: src/organizations/Organizations.js:150
 msgid "Further details for each organization can be found by clicking on its row."
 msgstr "Further details for each organization can be found by clicking on its row."
 
@@ -1565,7 +1562,7 @@ msgid "Getting an Account:"
 msgstr "Getting an Account:"
 
 #: src/dmarc/ExportRuaListButton.js:14
-#: src/domains/DomainsPage.js:105
+#: src/domains/DomainsPage.js:108
 msgid "Getting domain statuses"
 msgstr "Getting domain statuses"
 
@@ -1589,7 +1586,7 @@ msgstr "Government of Canada Employees"
 msgid "Graph direction:"
 msgstr "Graph direction:"
 
-#: src/app/App.js:366
+#: src/app/App.js:362
 #: src/dmarc/DmarcReportPage.js:205
 #: src/dmarc/DmarcReportPage.js:659
 msgid "Guidance"
@@ -1615,7 +1612,7 @@ msgid "HIDDEN"
 msgstr "HIDDEN"
 
 #: src/domains/DomainCard.js:192
-#: src/domains/DomainsPage.js:209
+#: src/domains/DomainsPage.js:222
 #: src/organizationDetails/OrganizationDomains.js:188
 msgid "HSTS"
 msgstr "HSTS"
@@ -1640,7 +1637,7 @@ msgstr "HSTS Parsed"
 msgid "HSTS Preloaded"
 msgstr "HSTS Preloaded"
 
-#: src/domains/DomainsPage.js:81
+#: src/domains/DomainsPage.js:84
 #: src/organizationDetails/OrganizationDomains.js:78
 msgid "HSTS Status"
 msgstr "HSTS Status"
@@ -1662,7 +1659,7 @@ msgid "HTTP Upgrades"
 msgstr "HTTP Upgrades"
 
 #: src/domains/DomainCard.js:191
-#: src/domains/DomainsPage.js:206
+#: src/domains/DomainsPage.js:219
 #: src/organizationDetails/OrganizationDomains.js:185
 msgid "HTTPS"
 msgstr "HTTPS"
@@ -1676,7 +1673,7 @@ msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
 #: src/organizations/OrganizationCard.js:95
-#: src/organizations/Organizations.js:140
+#: src/organizations/Organizations.js:142
 msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
 
@@ -1692,7 +1689,7 @@ msgstr "HTTPS Live"
 msgid "HTTPS Scan Complete"
 msgstr "HTTPS Scan Complete"
 
-#: src/domains/DomainsPage.js:80
+#: src/domains/DomainsPage.js:83
 #: src/organizationDetails/OrganizationDomains.js:77
 msgid "HTTPS Status"
 msgstr "HTTPS Status"
@@ -1733,6 +1730,10 @@ msgstr "Heartbleed Vulnerable"
 #~ msgid "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
 #~ msgstr "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
 
+#: src/userOnboarding/config/tourSteps.js:13
+msgid "Here you can filter the list of organizations"
+msgstr "Here you can filter the list of organizations"
+
 #: src/admin/AdminDomains.js:174
 #: src/organizationDetails/OrganizationDomains.js:100
 msgid "Hidden"
@@ -1746,8 +1747,8 @@ msgstr "Hide domain"
 msgid "High"
 msgstr "High"
 
-#: src/app/App.js:121
-#: src/app/App.js:184
+#: src/app/App.js:123
+#: src/app/App.js:181
 #: src/app/FloatingMenu.js:175
 msgid "Home"
 msgstr "Home"
@@ -2217,7 +2218,7 @@ msgstr "Links to Review:"
 msgid "List of guidance tags"
 msgstr "List of guidance tags"
 
-#: src/dmarc/DmarcByDomainPage.js:238
+#: src/dmarc/DmarcByDomainPage.js:245
 msgid "Loading Data..."
 msgstr "Loading Data..."
 
@@ -2257,7 +2258,7 @@ msgstr "Mail-sending"
 msgid "Managing Your Domains:"
 msgstr "Managing Your Domains:"
 
-#: src/app/App.js:169
+#: src/app/App.js:167
 msgid "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
 msgstr "Manual management of DKIM selectors is discontinued. DKIM selectors will automatically be added when setting <0>rua=mailto:dmarc@cyber.gc.ca</0> in your DMARC record. <1>Learn more</1>."
 
@@ -2328,14 +2329,14 @@ msgstr "My domain does not send emails, how can I get my domain's DMARC, DKIM, a
 msgid "NEW"
 msgstr "NEW"
 
-#: src/domains/DomainsPage.js:225
+#: src/domains/DomainsPage.js:238
 msgid "NXDOMAIN"
 msgstr "NXDOMAIN"
 
 #: src/createOrganization/CreateOrganizationPage.js:173
 #: src/createOrganization/CreateOrganizationPage.js:178
 #: src/organizationDetails/OrganizationAffiliations.js:47
-#: src/organizations/Organizations.js:61
+#: src/organizations/Organizations.js:64
 msgid "Name"
 msgstr "Name"
 
@@ -2414,9 +2415,9 @@ msgstr "New Phone Number:"
 msgid "New Value:"
 msgstr "New Value:"
 
-#: src/components/RelayPaginationControls.js:75
-#~ msgid "Next"
-#~ msgstr "Next"
+#: src/userOnboarding/components/TourComponent.js:36
+msgid "Next"
+msgstr "Next"
 
 #: src/guidance/WebConnectionResults.js:126
 #: src/guidance/WebConnectionResults.js:172
@@ -2455,7 +2456,7 @@ msgstr "No DDOS Protection found"
 #~ msgstr "No DMARC phase information available for this organization."
 
 #: src/admin/AdminDomains.js:255
-#: src/domains/DomainsPage.js:153
+#: src/domains/DomainsPage.js:156
 #: src/organizationDetails/OrganizationDomains.js:122
 msgid "No Domains"
 msgstr "No Domains"
@@ -2465,7 +2466,7 @@ msgstr "No Domains"
 #~ msgstr "No HTTPS configuration information available for this organization."
 
 #: src/guidance/GuidancePage.js:84
-#: src/organizations/Organizations.js:82
+#: src/organizations/Organizations.js:83
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -2503,12 +2504,12 @@ msgstr "No data for the SPF Failures by IP Address table"
 
 #: src/dmarc/ExportRuaListButton.js:27
 #: src/dmarc/ExportRuaListButton.js:34
-#: src/domains/DomainsPage.js:115
-#: src/domains/DomainsPage.js:123
+#: src/domains/DomainsPage.js:118
+#: src/domains/DomainsPage.js:126
 msgid "No data found"
 msgstr "No data found"
 
-#: src/domains/DomainsPage.js:116
+#: src/domains/DomainsPage.js:119
 msgid "No data found when retrieving all domain statuses."
 msgstr "No data found when retrieving all domain statuses."
 
@@ -2672,7 +2673,7 @@ msgid "Organization Information"
 msgstr "Organization Information"
 
 #: src/admin/OrganizationInformation.js:432
-#: src/organizations/Organizations.js:135
+#: src/organizations/Organizations.js:137
 msgid "Organization Name"
 msgstr "Organization Name"
 
@@ -2707,19 +2708,19 @@ msgstr "Organization owns this domain, but it is outside the allowed scope"
 msgid "Organization(s):"
 msgstr "Organization(s):"
 
-#: src/admin/AdminPage.js:87
-#: src/admin/AdminPage.js:103
+#: src/admin/AdminPage.js:90
+#: src/admin/AdminPage.js:107
 #: src/admin/UserListModal.js:237
 msgid "Organization:"
 msgstr "Organization:"
 
-#: src/admin/AdminPage.js:194
-#: src/app/App.js:127
-#: src/app/App.js:224
+#: src/admin/AdminPage.js:203
+#: src/app/App.js:129
+#: src/app/App.js:221
 #: src/app/FloatingMenu.js:103
 #: src/guidance/GuidancePage.js:143
-#: src/organizations/Organizations.js:73
-#: src/organizations/Organizations.js:130
+#: src/organizations/Organizations.js:74
+#: src/organizations/Organizations.js:132
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -2737,7 +2738,7 @@ msgstr "Outside"
 msgid "PENDING"
 msgstr "PENDING"
 
-#: src/app/TopBanner.js:85
+#: src/app/TopBanner.js:87
 msgid "PREVIEW"
 msgstr "PREVIEW"
 
@@ -2920,7 +2921,7 @@ msgstr "Prevent this domain from being visible, scanned, and being counted in an
 #~ msgid "Previous"
 #~ msgstr "Previous"
 
-#: src/app/App.js:354
+#: src/app/App.js:350
 #: src/app/FloatingMenu.js:219
 #: src/app/SlideMessage.js:88
 #: src/termsConditions/TermsConditionsPage.js:41
@@ -2945,14 +2946,14 @@ msgid "Protect domains that do not send email - GOV.UK (www.gov.uk)"
 msgstr "Protect domains that do not send email - GOV.UK (www.gov.uk)"
 
 #: src/domains/DomainCard.js:194
-#: src/domains/DomainsPage.js:211
+#: src/domains/DomainsPage.js:224
 #: src/domains/FilterList.js:18
 #: src/guidance/WebTLSResults.js:53
 #: src/organizationDetails/OrganizationDomains.js:190
 msgid "Protocols"
 msgstr "Protocols"
 
-#: src/domains/DomainsPage.js:85
+#: src/domains/DomainsPage.js:88
 #: src/organizationDetails/OrganizationDomains.js:82
 msgid "Protocols Status"
 msgstr "Protocols Status"
@@ -2998,7 +2999,7 @@ msgstr "Range:"
 msgid "Read Guidance"
 msgstr "Read Guidance"
 
-#: src/app/App.js:222
+#: src/app/App.js:219
 msgid "Read guidance"
 msgstr "Read guidance"
 
@@ -3067,7 +3068,7 @@ msgstr "Report an Issue"
 
 #: src/guidance/GuidancePage.js:108
 #: src/organizationDetails/OrganizationDetails.js:107
-#: src/organizations/Organizations.js:104
+#: src/organizations/Organizations.js:106
 #: src/organizations/RequestOrgInviteModal.js:62
 msgid "Request Invite"
 msgstr "Request Invite"
@@ -3077,7 +3078,7 @@ msgid "Request a domain to be scanned:"
 msgstr "Request a domain to be scanned:"
 
 #: src/dmarc/ExportRuaListButton.js:15
-#: src/domains/DomainsPage.js:106
+#: src/domains/DomainsPage.js:109
 msgid "Request successfully sent to get all domain statuses - this may take a minute."
 msgstr "Request successfully sent to get all domain statuses - this may take a minute."
 
@@ -3101,7 +3102,7 @@ msgstr "Requirements: <0>Email Management Services Configuration Requirements</0
 msgid "Requirements: <0>Web Sites and Services Management Configuration Requirements</0>"
 msgstr "Requirements: <0>Web Sites and Services Management Configuration Requirements</0>"
 
-#: src/app/App.js:216
+#: src/app/App.js:213
 msgid "Reset Password"
 msgstr "Reset Password"
 
@@ -3169,12 +3170,12 @@ msgstr "Rotate DKIM keys annually."
 msgid "SAN List:"
 msgstr "SAN List:"
 
-#: src/domains/DomainsPage.js:231
+#: src/domains/DomainsPage.js:244
 #: src/organizationDetails/OrganizationDomains.js:221
 msgid "SCAN PENDING"
 msgstr "SCAN PENDING"
 
-#: src/domains/DomainsPage.js:215
+#: src/domains/DomainsPage.js:228
 #: src/organizationDetails/OrganizationDomains.js:194
 msgid "SPF"
 msgstr "SPF"
@@ -3201,7 +3202,7 @@ msgstr "SPF Failures by IP Address"
 msgid "SPF Results"
 msgstr "SPF Results"
 
-#: src/domains/DomainsPage.js:86
+#: src/domains/DomainsPage.js:89
 #: src/organizationDetails/OrganizationDomains.js:83
 msgid "SPF Status"
 msgstr "SPF Status"
@@ -3260,7 +3261,7 @@ msgstr "Scan Domain"
 
 #: src/admin/AdminDomains.js:173
 #: src/domains/DomainCard.js:152
-#: src/domains/DomainsPage.js:95
+#: src/domains/DomainsPage.js:98
 #: src/guidance/GuidancePage.js:257
 #: src/organizationDetails/OrganizationDomains.js:99
 msgid "Scan Pending"
@@ -3298,9 +3299,9 @@ msgstr "Search by Domain URL"
 msgid "Search by initiated by, resource name"
 msgstr "Search by initiated by, resource name"
 
-#: src/dmarc/DmarcByDomainPage.js:198
-#: src/dmarc/DmarcByDomainPage.js:252
-#: src/domains/DomainsPage.js:249
+#: src/dmarc/DmarcByDomainPage.js:201
+#: src/dmarc/DmarcByDomainPage.js:259
+#: src/domains/DomainsPage.js:263
 #: src/organizationDetails/OrganizationDomains.js:238
 msgid "Search for a domain"
 msgstr "Search for a domain"
@@ -3317,7 +3318,7 @@ msgstr "Search for a user by email"
 #~ msgid "Search for an activity"
 #~ msgstr "Search for an activity"
 
-#: src/organizations/Organizations.js:166
+#: src/organizations/Organizations.js:171
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -3348,12 +3349,12 @@ msgstr "Select a reason for adding this outside domain"
 msgid "Select a reason for removing this domain"
 msgstr "Select a reason for removing this domain"
 
-#: src/admin/AdminPage.js:90
-#: src/admin/AdminPage.js:106
+#: src/admin/AdminPage.js:93
+#: src/admin/AdminPage.js:110
 msgid "Select an organization"
 msgstr "Select an organization"
 
-#: src/admin/AdminPage.js:159
+#: src/admin/AdminPage.js:164
 msgid "Select an organization to view admin options"
 msgstr "Select an organization to view admin options"
 
@@ -3386,8 +3387,8 @@ msgstr "September"
 msgid "Serial:"
 msgstr "Serial:"
 
-#: src/organizations/Organizations.js:63
-#: src/organizations/Organizations.js:138
+#: src/organizations/Organizations.js:66
+#: src/organizations/Organizations.js:140
 msgid "Services"
 msgstr "Services"
 
@@ -3399,7 +3400,7 @@ msgstr "Services: {domainCount}"
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/dmarc/DmarcByDomainPage.js:226
+#: src/dmarc/DmarcByDomainPage.js:232
 #: src/dmarc/DmarcReportPage.js:669
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
@@ -3440,7 +3441,7 @@ msgstr "Shows if the HTTPS endpoint downgrades to unsecured HTTP immediately, ev
 msgid "Shows if the certificate bundle provided from the server included the root certificate."
 msgstr "Shows if the certificate bundle provided from the server included the root certificate."
 
-#: src/domains/DomainsPage.js:210
+#: src/domains/DomainsPage.js:223
 #: src/organizationDetails/OrganizationDomains.js:189
 msgid "Shows if the domain has a valid SSL certificate."
 msgstr "Shows if the domain has a valid SSL certificate."
@@ -3460,42 +3461,42 @@ msgstr "Shows if the domain has a valid SSL certificate."
 #~ msgid "Shows if the domain is policy compliant."
 #~ msgstr "Shows if the domain is policy compliant."
 
-#: src/domains/DomainsPage.js:218
+#: src/domains/DomainsPage.js:231
 #: src/organizationDetails/OrganizationDomains.js:197
 msgid "Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
 msgstr "Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements."
 
-#: src/domains/DomainsPage.js:209
+#: src/domains/DomainsPage.js:222
 #: src/organizationDetails/OrganizationDomains.js:188
 msgid "Shows if the domain meets the HSTS requirements."
 msgstr "Shows if the domain meets the HSTS requirements."
 
-#: src/domains/DomainsPage.js:207
+#: src/domains/DomainsPage.js:220
 #: src/organizationDetails/OrganizationDomains.js:186
 msgid "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements."
 msgstr "Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements."
 
-#: src/domains/DomainsPage.js:222
+#: src/domains/DomainsPage.js:235
 #: src/organizationDetails/OrganizationDomains.js:201
 msgid "Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
 msgstr "Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements."
 
-#: src/domains/DomainsPage.js:215
+#: src/domains/DomainsPage.js:228
 #: src/organizationDetails/OrganizationDomains.js:194
 msgid "Shows if the domain meets the Sender Policy Framework (SPF) requirements."
 msgstr "Shows if the domain meets the Sender Policy Framework (SPF) requirements."
 
-#: src/domains/DomainsPage.js:211
+#: src/domains/DomainsPage.js:224
 #: src/organizationDetails/OrganizationDomains.js:190
 msgid "Shows if the domain uses acceptable protocols."
 msgstr "Shows if the domain uses acceptable protocols."
 
-#: src/domains/DomainsPage.js:212
+#: src/domains/DomainsPage.js:225
 #: src/organizationDetails/OrganizationDomains.js:191
 msgid "Shows if the domain uses only ciphers that are strong or acceptable."
 msgstr "Shows if the domain uses only ciphers that are strong or acceptable."
 
-#: src/domains/DomainsPage.js:213
+#: src/domains/DomainsPage.js:226
 #: src/organizationDetails/OrganizationDomains.js:192
 msgid "Shows if the domain uses only curves that are strong or acceptable."
 msgstr "Shows if the domain uses only curves that are strong or acceptable."
@@ -3532,11 +3533,11 @@ msgstr "Shows if the server was found to be vulnerable to the ROBOT vulnerabilit
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Shows the duration of time, in seconds, that the HSTS header is valid."
 
-#: src/organizations/Organizations.js:138
+#: src/organizations/Organizations.js:140
 msgid "Shows the number of domains that the organization is in control of."
 msgstr "Shows the number of domains that the organization is in control of."
 
-#: src/organizations/Organizations.js:141
+#: src/organizations/Organizations.js:143
 msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 
@@ -3544,11 +3545,11 @@ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade 
 #~ msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 #~ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 
-#: src/organizations/Organizations.js:145
+#: src/organizations/Organizations.js:147
 msgid "Shows the percentage of domains which have a valid DMARC policy configuration."
 msgstr "Shows the percentage of domains which have a valid DMARC policy configuration."
 
-#: src/dmarc/DmarcByDomainPage.js:302
+#: src/dmarc/DmarcByDomainPage.js:309
 msgid "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
 msgstr "Shows the percentage of emails from the domain that fail DKIM requirements, but pass SPF requirements."
 
@@ -3556,7 +3557,7 @@ msgstr "Shows the percentage of emails from the domain that fail DKIM requiremen
 #~ msgid "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail DKIM requirments, but pass SPF requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:298
+#: src/dmarc/DmarcByDomainPage.js:305
 msgid "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that fail SPF requirements, but pass DKIM requirements."
 
@@ -3564,7 +3565,7 @@ msgstr "Shows the percentage of emails from the domain that fail SPF requirement
 #~ msgid "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail SPF requirments, but pass DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:306
+#: src/dmarc/DmarcByDomainPage.js:313
 msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirements."
 
@@ -3572,7 +3573,7 @@ msgstr "Shows the percentage of emails from the domain that fail both SPF and DK
 #~ msgid "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that fail both SPF and DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:294
+#: src/dmarc/DmarcByDomainPage.js:301
 msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirements."
 
@@ -3580,7 +3581,7 @@ msgstr "Shows the percentage of emails from the domain that have passed both SPF
 #~ msgid "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 #~ msgstr "Shows the percentage of emails from the domain that have passed both SPF and DKIM requirments."
 
-#: src/dmarc/DmarcByDomainPage.js:290
+#: src/dmarc/DmarcByDomainPage.js:297
 msgid "Shows the total number of emails that have been sent by this domain during the selected time range."
 msgstr "Shows the total number of emails that have been sent by this domain during the selected time range."
 
@@ -3588,9 +3589,9 @@ msgstr "Shows the total number of emails that have been sent by this domain duri
 #~ msgid "Siganture Hash:"
 #~ msgstr "Siganture Hash:"
 
-#: src/app/App.js:194
+#: src/app/App.js:191
 #: src/app/FloatingMenu.js:197
-#: src/app/TopBanner.js:122
+#: src/app/TopBanner.js:127
 #: src/auth/SignInPage.js:147
 msgid "Sign In"
 msgstr "Sign In"
@@ -3601,12 +3602,12 @@ msgid "Sign In."
 msgstr "Sign In."
 
 #: src/app/FloatingMenu.js:192
-#: src/app/TopBanner.js:110
+#: src/app/TopBanner.js:115
 msgid "Sign Out"
 msgstr "Sign Out"
 
 #: src/app/FloatingMenu.js:48
-#: src/app/TopBanner.js:40
+#: src/app/TopBanner.js:42
 msgid "Sign Out."
 msgstr "Sign Out."
 
@@ -3618,7 +3619,11 @@ msgstr "Sign Out."
 msgid "Signature Hash:"
 msgstr "Signature Hash:"
 
-#: src/app/App.js:115
+#: src/userOnboarding/components/TourComponent.js:37
+msgid "Skip"
+msgstr "Skip"
+
+#: src/app/App.js:116
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -3692,7 +3697,7 @@ msgstr "Successfully removed user {0}."
 msgid "Summaries"
 msgstr "Summaries"
 
-#: src/user/MyTrackerPage.js:76
+#: src/user/MyTrackerPage.js:82
 msgid "Summary"
 msgstr "Summary"
 
@@ -3700,7 +3705,7 @@ msgstr "Summary"
 msgid "Summary Tier:"
 msgstr "Summary Tier:"
 
-#: src/admin/AdminPage.js:191
+#: src/admin/AdminPage.js:200
 msgid "Super Admin Menu:"
 msgstr "Super Admin Menu:"
 
@@ -3708,7 +3713,7 @@ msgstr "Super Admin Menu:"
 #~ msgid "Supports ECDH Key Exchange:"
 #~ msgstr "Supports ECDH Key Exchange:"
 
-#: src/app/TopBanner.js:61
+#: src/app/TopBanner.js:63
 msgid "Symbol of the Government of Canada"
 msgstr "Symbol of the Government of Canada"
 
@@ -3790,22 +3795,22 @@ msgstr "Tag used to show domains that are not active."
 msgid "Tag used to show domains that are out of the organization's scope."
 msgstr "Tag used to show domains that are out of the organization's scope."
 
-#: src/domains/DomainsPage.js:226
+#: src/domains/DomainsPage.js:239
 #: src/organizationDetails/OrganizationDomains.js:216
 msgid "Tag used to show domains that are possibly blocked by a firewall."
 msgstr "Tag used to show domains that are possibly blocked by a firewall."
 
-#: src/domains/DomainsPage.js:231
+#: src/domains/DomainsPage.js:244
 #: src/organizationDetails/OrganizationDomains.js:221
 msgid "Tag used to show domains that have a pending web scan."
 msgstr "Tag used to show domains that have a pending web scan."
 
-#: src/domains/DomainsPage.js:225
+#: src/domains/DomainsPage.js:238
 #: src/organizationDetails/OrganizationDomains.js:215
 msgid "Tag used to show domains that have an rcode status of NXDOMAIN"
 msgstr "Tag used to show domains that have an rcode status of NXDOMAIN"
 
-#: src/domains/DomainsPage.js:229
+#: src/domains/DomainsPage.js:242
 #: src/organizationDetails/OrganizationDomains.js:219
 msgid "Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling)."
 msgstr "Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling)."
@@ -3818,11 +3823,11 @@ msgstr "Technical implementation guidance:"
 msgid "Termination"
 msgstr "Termination"
 
-#: src/app/App.js:218
+#: src/app/App.js:215
 msgid "Terms & Conditions"
 msgstr "Terms & Conditions"
 
-#: src/app/App.js:358
+#: src/app/App.js:354
 #: src/app/FloatingMenu.js:225
 #: src/app/SlideMessage.js:92
 msgid "Terms & conditions"
@@ -3877,8 +3882,8 @@ msgstr "The address/domain used in the \"From\" field."
 msgid "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warranty or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
 msgstr "The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warranty or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Tracker. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Tracker provides."
 
-#: src/dmarc/DmarcByDomainPage.js:287
-#: src/domains/DomainsPage.js:203
+#: src/dmarc/DmarcByDomainPage.js:294
+#: src/domains/DomainsPage.js:216
 #: src/organizationDetails/OrganizationDomains.js:182
 msgid "The domain address."
 msgstr "The domain address."
@@ -3985,7 +3990,7 @@ msgstr "This domain no longer exists"
 msgid "This field cannot be empty"
 msgstr "This field cannot be empty"
 
-#: src/app/TopBanner.js:93
+#: src/app/TopBanner.js:95
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
 
@@ -4036,11 +4041,11 @@ msgstr "Time Generated (UTC)"
 #~ msgid "Timestamp"
 #~ msgstr "Timestamp"
 
-#: src/app/App.js:95
+#: src/app/App.js:97
 msgid "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 msgstr "To enable full app functionality and maximize your account's security, <0>please verify your account</0>."
 
-#: src/app/App.js:65
+#: src/app/App.js:67
 msgid "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 msgstr "To maximize your account's security, <0>please activate a multi-factor authentication option</0>."
 
@@ -4048,12 +4053,12 @@ msgstr "To maximize your account's security, <0>please activate a multi-factor a
 #~ msgid "To receive DKIM scan results and guidance, you must add the DKIM selectors used for each domain. Organization administrators can add selectors in the “Admin Profile” by clicking the edit button of the domain for which they wish to add the selector. Common selectors to keep an for are “selector1”, and “selector2”."
 #~ msgstr "To receive DKIM scan results and guidance, you must add the DKIM selectors used for each domain. Organization administrators can add selectors in the “Admin Profile” by clicking the edit button of the domain for which they wish to add the selector. Common selectors to keep an for are “selector1”, and “selector2”."
 
-#: src/app/App.js:80
+#: src/app/App.js:82
 msgid "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 msgstr "To view detailed scan results and other functionality, <0>please affiliate with an organization</0>."
 
-#: src/dmarc/DmarcByDomainPage.js:127
-#: src/dmarc/DmarcByDomainPage.js:289
+#: src/dmarc/DmarcByDomainPage.js:130
+#: src/dmarc/DmarcByDomainPage.js:296
 #: src/dmarc/DmarcReportPage.js:189
 #: src/dmarc/DmarcReportSummaryGraph.js:120
 msgid "Total Messages"
@@ -4064,7 +4069,7 @@ msgstr "Total Messages"
 #~ msgstr "Total users"
 
 #: src/app/SlideMessage.js:51
-#: src/landing/LandingPage.js:25
+#: src/landing/LandingPage.js:32
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
 
@@ -4105,15 +4110,15 @@ msgstr "Tracker automatically adds DKIM selectors using DMARC reports. Selectors
 #~ msgid "Tracker does not automatically add selectors, so it is likely that they are not in the system yet. More information can be found in Getting Started with Tracker - Managing Your Domains."
 #~ msgstr "Tracker does not automatically add selectors, so it is likely that they are not in the system yet. More information can be found in Getting Started with Tracker - Managing Your Domains."
 
-#: src/app/TopBanner.js:70
+#: src/app/TopBanner.js:72
 msgid "Tracker logo outline"
 msgstr "Tracker logo outline"
 
-#: src/app/TopBanner.js:73
+#: src/app/TopBanner.js:75
 msgid "Tracker logo text"
 msgstr "Tracker logo text"
 
-#: src/app/App.js:166
+#: src/app/App.js:164
 msgid "Tracker now automatically manages your DKIM selectors."
 msgstr "Tracker now automatically manages your DKIM selectors."
 
@@ -4375,7 +4380,7 @@ msgstr "User removed."
 msgid "User:"
 msgstr "User:"
 
-#: src/admin/AdminPage.js:195
+#: src/admin/AdminPage.js:204
 #: src/admin/AdminPanel.js:22
 #: src/organizationDetails/OrganizationDetails.js:137
 msgid "Users"
@@ -4395,7 +4400,7 @@ msgstr "Verification code must only contains numbers"
 
 #: src/admin/SuperAdminUserList.js:133
 #: src/admin/SuperAdminUserList.js:294
-#: src/organizations/Organizations.js:64
+#: src/organizations/Organizations.js:67
 msgid "Verified"
 msgstr "Verified"
 
@@ -4445,7 +4450,7 @@ msgstr "Vulnerabilities"
 msgid "WEB"
 msgstr "WEB"
 
-#: src/domains/DomainsPage.js:228
+#: src/domains/DomainsPage.js:241
 #: src/organizationDetails/OrganizationDomains.js:218
 msgid "WILDCARD"
 msgstr "WILDCARD"
@@ -4550,7 +4555,7 @@ msgstr "Web-hosting"
 msgid "Welcome to Tracker, please enter your details."
 msgstr "Welcome to Tracker, please enter your details."
 
-#: src/user/MyTrackerPage.js:63
+#: src/user/MyTrackerPage.js:69
 msgid "Welcome to your personal view of Tracker. Moderate the security posture of domains of interest across multiple organizations. To add domains to this view, use the star icon buttons available on domain lists."
 msgstr "Welcome to your personal view of Tracker. Moderate the security posture of domains of interest across multiple organizations. To add domains to this view, use the star icon buttons available on domain lists."
 
@@ -4605,7 +4610,7 @@ msgstr "Wiki"
 
 #: src/admin/AdminDomains.js:172
 #: src/domains/DomainCard.js:145
-#: src/domains/DomainsPage.js:94
+#: src/domains/DomainsPage.js:97
 #: src/guidance/GuidancePage.js:264
 #: src/organizationDetails/OrganizationDomains.js:98
 msgid "Wildcard"
@@ -4659,12 +4664,16 @@ msgstr "You agree to protect any information disclosed to you by TBS in accordan
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
+#: src/userOnboarding/config/tourSteps.js:20
+msgid "You can search for an organization here"
+msgstr "You can search for an organization here"
+
 #: src/domains/DomainCard.js:60
 msgid "You have successfully added {url} to myTracker."
 msgstr "You have successfully added {url} to myTracker."
 
 #: src/app/FloatingMenu.js:49
-#: src/app/TopBanner.js:41
+#: src/app/TopBanner.js:43
 msgid "You have successfully been signed out."
 msgstr "You have successfully been signed out."
 
@@ -4737,7 +4746,7 @@ msgstr "You may now sign in with your new password"
 msgid "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 msgstr "You will need a Tracker account to use certain products and services. You are responsible for maintaining the confidentiality of your account, password and for restricting access to your account. You also agree to accept responsibility for all activities that occur under your account or password. TBS accepts no liability for any loss or damage arising from your failure to maintain the security of your account or password."
 
-#: src/app/App.js:295
+#: src/app/App.js:292
 msgid "Your Account"
 msgstr "Your Account"
 
@@ -4778,9 +4787,9 @@ msgstr "contact us"
 #~ msgstr "https://https-everywhere.canada.ca/en/help/"
 
 #: src/app/App.js:144
-#: src/app/App.js:308
-#: src/user/MyTrackerPage.js:33
-#: src/user/MyTrackerPage.js:59
+#: src/app/App.js:305
+#: src/user/MyTrackerPage.js:36
+#: src/user/MyTrackerPage.js:65
 msgid "myTracker"
 msgstr "myTracker"
 

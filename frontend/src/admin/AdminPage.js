@@ -181,31 +181,31 @@ export default function AdminPage({ isLoginRequired }) {
   }
 
   return (
-    <TourProvider>
-      <TourButton />
-      <TourComponent page="adminProfilePage" />
-      <Stack spacing={10} w="100%" px={4}>
-        <SuperAdminMenu activeMenu={activeMenu} changeActiveMenu={changeActiveMenu} />
-        {adminPanel}
-      </Stack>
-    </TourProvider>
+    <Stack spacing={10} w="100%" px={4}>
+      <SuperAdminMenu activeMenu={activeMenu} changeActiveMenu={changeActiveMenu} />
+      {adminPanel}
+    </Stack>
   )
 }
 
 const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
-    <label>
-      <Flex align="center">
-        <Text fontSize="lg" fontWeight="bold" mr="2">
-          <Trans>Super Admin Menu:</Trans>
-        </Text>
-        <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
-          <option value="organizations">{t`Organizations`}</option>
-          <option value="users">{t`Users`}</option>
-          <option value="audit-logs">{t`Audit Logs`}</option>
-        </Select>
-      </Flex>
-    </label>
+    <TourProvider>
+      <TourComponent page="adminProfilePage" />
+      <label>
+        <Flex align="center">
+          <Text fontSize="lg" fontWeight="bold" mr="2">
+            <Trans>Super Admin Menu:</Trans>
+          </Text>
+          <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
+            <option value="organizations">{t`Organizations`}</option>
+            <option value="users">{t`Users`}</option>
+            <option value="audit-logs">{t`Audit Logs`}</option>
+          </Select>
+          <TourButton />
+        </Flex>
+      </label>
+    </TourProvider>
   )
 })
 

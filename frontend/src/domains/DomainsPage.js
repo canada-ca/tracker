@@ -198,7 +198,6 @@ export default function DomainsPage() {
     <TourProvider>
       <TourComponent page="domainPage" />
       <Box w="100%" px={4}>
-        <TourButton />
         <Flex
           flexDirection="row"
           justify="space-between"
@@ -208,6 +207,7 @@ export default function DomainsPage() {
         >
           <Heading as="h1" textAlign="left" mb="4">
             <Trans>Domains</Trans>
+            <TourButton />
           </Heading>
           <StatusExportButton />
         </Flex>

@@ -76,9 +76,7 @@ export const TopBanner = (props) => {
             </Box>
           </Flex>
         </Link>
-        <TourProvider>
-          <TourButton />
-        </TourProvider>
+
         <PhaseBanner
           phase={
             <ABTestWrapper insiderVariantName="B">
@@ -98,6 +96,9 @@ export const TopBanner = (props) => {
         </PhaseBanner>
 
         <Flex align="center" ml="auto">
+          <TourProvider>
+            <TourButton />
+          </TourProvider>
           <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
             <LocaleSwitcher />
           </Box>

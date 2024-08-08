@@ -223,9 +223,9 @@ export default function DmarcByDomainPage() {
     <TourProvider>
       <TourComponent page="dmarcSummariesPage" />
       <Box width="100%" px="2">
-        <TourButton />
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>DMARC Summaries</Trans>
+          <TourButton />
         </Heading>
         <Flex align="center" mb={2}>
           <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>

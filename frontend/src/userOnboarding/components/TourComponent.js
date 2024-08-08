@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Joyride from 'react-joyride'
 import { useTour } from '../hooks/useTour'
 import { mainTourSteps } from '../config/tourSteps'
+import { Trans } from '@lingui/macro'
 
 export const TourComponent = ({ page }) => {
   const { isTourOpen, endTour } = useTour()
@@ -29,6 +30,11 @@ export const TourComponent = ({ page }) => {
           buttonBack: {
             color: '#ff6600',
           },
+        }}
+        locale={{
+          back: <Trans>Back</Trans>,
+          next: <Trans>Next</Trans>,
+          skip: <Trans>Skip</Trans>,
         }}
         callback={({ status }) => {
           if (['finished', 'skipped'].includes(status)) {

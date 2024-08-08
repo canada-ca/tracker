@@ -53,7 +53,6 @@ export default function OrganizationDetails() {
     <TourProvider>
       <TourComponent page="myTrackerPage" />
       <Box w="100%">
-        <TourButton />
         <Flex flexDirection="row" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
           <Heading
             as="h1"
@@ -63,6 +62,7 @@ export default function OrganizationDetails() {
             flexBasis={{ base: '100%', md: 'auto' }}
           >
             <Trans>myTracker</Trans>
+            <TourButton />
           </Heading>
         </Flex>
         <Text fontSize="lg" mb="2">

@@ -127,31 +127,33 @@ export default function Organizations() {
   }
 
   return (
-    <Box w="100%" px="4">
-      <Heading as="h1" textAlign="left" mb="4">
-        <Trans>Organizations</Trans>
-      </Heading>
+    <TourProvider>
+      <Box w="100%" px="4">
+        <Heading as="h1" textAlign="left" mb="4">
+          <Trans>Organizations</Trans>
+          <TourButton />
+        </Heading>
 
-      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
-        <InfoBox
-          title={t`Organization Name`}
-          info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
-        />
-        <InfoBox title={t`Services`} info={t`Shows the number of domains that the organization is in control of.`} />
-        <InfoBox
-          title={t`HTTPS Configured`}
-          info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS`}
-        />
-        <InfoBox
-          title={t`DMARC Configuration`}
-          info={t`Shows the percentage of domains which have a valid DMARC policy configuration.`}
-        />
-        <Divider borderColor="gray.500" mb={4} />
-        <Trans>Further details for each organization can be found by clicking on its row.</Trans>
-      </InfoPanel>
-      <TourProvider>
+        <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+          <InfoBox
+            title={t`Organization Name`}
+            info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
+          />
+          <InfoBox title={t`Services`} info={t`Shows the number of domains that the organization is in control of.`} />
+          <InfoBox
+            title={t`HTTPS Configured`}
+            info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS`}
+          />
+          <InfoBox
+            title={t`DMARC Configuration`}
+            info={t`Shows the percentage of domains which have a valid DMARC policy configuration.`}
+          />
+          <Divider borderColor="gray.500" mb={4} />
+          <Trans>Further details for each organization can be found by clicking on its row.</Trans>
+        </InfoPanel>
+
         <TourComponent page="organizationsPage" />
-        <TourButton />
+
         <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
           <SearchBox
             className="search-box"
@@ -205,7 +207,7 @@ export default function Organizations() {
             isLoadingMore={isLoadingMore}
           />
         </ErrorBoundary>
-      </TourProvider>
-    </Box>
+      </Box>
+    </TourProvider>
   )
 }

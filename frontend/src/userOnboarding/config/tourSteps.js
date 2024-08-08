@@ -10,14 +10,14 @@ export const mainTourSteps = {
     },
     {
       target: '.summaries',
-      content: 'Here you can filter the list of organizations',
+      content: <Trans>Here you can filter the list of organizations</Trans>,
       disableBeacon: true,
     },
   ],
   organizationsPage: [
     {
       target: '.search-box',
-      content: 'You can search for an organization here',
+      content: <Trans>You can search for an organization here</Trans>,
       disableBeacon: true,
     },
     {
