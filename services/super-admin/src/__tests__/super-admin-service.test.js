@@ -25,14 +25,11 @@ const {
   SA_ORG_FR_CITY,
 } = process.env
 
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
+const { ensureDatabase: ensure } = require('../testUtilities')
 const bcrypt = require('bcryptjs')
 
-const {
-  createSuperAdminAccount,
-  createSuperAdminOrg,
-  createSuperAdminAffiliation,
-} = require('../database')
+const { createSuperAdminAccount, createSuperAdminOrg, createSuperAdminAffiliation } = require('../database')
 const { databaseOptions } = require('../../database-options')
 const { superAdminService } = require('../index')
 
@@ -243,9 +240,7 @@ describe('given the superAdminService function', () => {
 
         expect(mockLog.mock.calls).toEqual([
           ['Checking for super admin account.'],
-          [
-            'Super admin org not found, Super admin account found. Creating super admin org.',
-          ],
+          ['Super admin org not found, Super admin account found. Creating super admin org.'],
           ['Removing old super admin affiliation.'],
           ['Creating new super admin affiliation'],
           ['Super admin org, and affiliation creation successful.'],
@@ -345,9 +340,7 @@ describe('given the superAdminService function', () => {
 
         expect(mockLog.mock.calls).toEqual([
           ['Checking for super admin account.'],
-          [
-            'Super admin account not found, Super admin org found. Creating account.',
-          ],
+          ['Super admin account not found, Super admin org found. Creating account.'],
           ['Removing old super admin affiliation.'],
           ['Creating new super admin affiliation'],
           ['Super admin account, and affiliation creation successful.'],

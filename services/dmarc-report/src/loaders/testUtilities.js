@@ -1,7 +1,7 @@
-import { ensure } from 'arango-tools'
-import { Database } from 'arangojs'
+const { ensure } = require('arango-tools')
+const { Database } = require('arangojs')
 
-export async function ensureDatabase(options) {
+async function ensureDatabase(options) {
   let variables
   if (options.variables) {
     variables = options.variables
@@ -32,4 +32,8 @@ export async function ensureDatabase(options) {
   }
 
   return await ensure(ensureOptions)
+}
+
+module.exports = {
+  ensureDatabase,
 }

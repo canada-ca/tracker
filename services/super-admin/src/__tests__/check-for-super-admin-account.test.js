@@ -1,13 +1,11 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
+const { ensureDatabase: ensure } = require('../testUtilities')
 const bcrypt = require('bcryptjs')
 const { databaseOptions } = require('../../database-options')
 
-const {
-  checkForSuperAdminAccount,
-  createSuperAdminAccount,
-} = require('../database')
+const { checkForSuperAdminAccount, createSuperAdminAccount } = require('../database')
 
 describe('given the checkForSuperAdminAccount function', () => {
   const consoleErrorOutput = []
@@ -64,9 +62,7 @@ describe('given the checkForSuperAdminAccount function', () => {
   describe('given an unsuccessful check', () => {
     describe('database error occurs', () => {
       it('throws an error', async () => {
-        const mockQuery = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        const mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         try {
           await checkForSuperAdminAccount({ query: mockQuery })
         } catch (err) {
@@ -91,9 +87,7 @@ describe('given the checkForSuperAdminAccount function', () => {
           await checkForSuperAdminAccount({ query: mockQuery })
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              'Cursor error occurred well trying to find super admin account: Error: Cursor error occurred.',
-            ),
+            new Error('Cursor error occurred well trying to find super admin account: Error: Cursor error occurred.'),
           )
         }
       })
