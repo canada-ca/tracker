@@ -1,10 +1,14 @@
 import React from 'react'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
 export const mainTourSteps = {
   landingPage: [
     {
-      content: <h1>Welcome!</h1>,
+      content: (
+        <h1>
+          <Trans>Welcome!</Trans>
+        </h1>
+      ),
       placement: 'center',
       target: 'body',
     },
@@ -22,123 +26,141 @@ export const mainTourSteps = {
     },
     {
       target: '.filter',
-      content: 'Here you can filter the list of organizations',
+      content: <Trans>Here you can filter the list of organizations</Trans>,
       disableBeacon: true,
     },
     {
       target: '.filterVerified',
-      content: 'Here you can filter the list of organizations to only show verified organizations',
+      content: <Trans>Here you can filter the list of organizations to only show verified organizations</Trans>,
       disableBeacon: true,
     },
     {
       target: '.organization-card',
-      content: 'Here is the information for each organization',
+      content: <Trans>Here is the information for each organization</Trans>,
       disableBeacon: true,
     },
   ],
   domainPage: [
     {
-      content: <h1>This page is dedicated to everything domains</h1>,
+      content: (
+        <h1>
+          <Trans>This page is dedicated to everything domains</Trans>
+        </h1>
+      ),
       placement: 'center',
       target: 'body',
       disableBeacon: true,
     },
     {
       target: '.filter-box',
-      content: 'You can modify the results of the domain list using these filters',
+      content: <Trans>You can modify the results of the domain list using these filters</Trans>,
       disableBeacon: true,
     },
     {
       target: '.filters',
-      content: 'You can filter the list of domains here',
+      content: <Trans>You can filter the list of domains here</Trans>,
       disableBeacon: true,
     },
     {
       target: '.affiliated',
-      content: 'This filter will show only domains affiliated with your account',
+      content: <Trans>This filter will show only domains affiliated with your account</Trans>,
       disableBeacon: true,
     },
     {
       target: '.domain-card',
-      content: 'Here is the information for each domain',
+      content: <Trans>Here is the information for each domain</Trans>,
       disableBeacon: true,
     },
   ],
   myTrackerPage: [
     {
-      content: <h1>This page is dedicated to your personal view of tracker</h1>,
+      content: (
+        <h1>
+          <Trans>This page is dedicated to your personal view of tracker</Trans>
+        </h1>
+      ),
       placement: 'center',
       target: 'body',
       disableBeacon: true,
     },
     {
       target: '.summary',
-      content: 'Summary of your tracker',
+      content: <Trans>Summary of your tracker</Trans>,
       disableBeacon: true,
     },
     {
       target: '.dmarc-phases',
-      content: 'dmarc phases information',
+      content: <Trans>dmarc phases information</Trans>,
       disableBeacon: true,
     },
     {
       target: '.domains',
-      content: 'domains information',
+      content: <Trans>domains information</Trans>,
       disableBeacon: true,
     },
     {
       target: '.https-config-summary',
-      content: 'https configuration summary',
+      content: <Trans>https configuration summary</Trans>,
       disableBeacon: true,
     },
     {
       target: '.dmarc-phases-other',
-      content: 'dmarc phases information',
+      content: <Trans>dmarc phases information</Trans>,
       disableBeacon: true,
     },
   ],
   dmarcSummariesPage: [
     {
       target: '.month-select',
-      content: 'Choose the period of data to view',
+      content: <Trans>Choose the period of data to view</Trans>,
       disableBeacon: true,
     },
     {
       target: '.filter-switch',
-      content: 'Filter the data to view',
+      content: <Trans>Filter the data to view</Trans>,
       disableBeacon: true,
     },
     {
       target: '.export-button',
-      content: 'Button to export the data',
+      content: <Trans>Button to export the data</Trans>,
       disableBeacon: true,
     },
     {
       target: '.search-bar',
-      content: 'Search for a specific domain',
+      content: <Trans>Search for a specific domain</Trans>,
       disableBeacon: true,
     },
   ],
   adminProfilePage: [
     {
-      content: <h1>Welcome to the Admin Profile page!</h1>,
+      content: (
+        <h1>
+          <Trans>Welcome to the Admin Profile page!</Trans>
+        </h1>
+      ),
       placement: 'center',
       target: 'body',
       disableBeacon: true,
     },
     {
       target: '.create-organization-button',
-      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
+      content: (
+        <Trans>This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.</Trans>
+      ),
       disableBeacon: true,
     },
     {
       target: '.dropdown',
-      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
+      content: (
+        <Trans>This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.</Trans>
+      ),
       disableBeacon: true,
     },
     {
       target: '.super-admin',
-      content: 'This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.',
+      content: (
+        <Trans>This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs.</Trans>
+      ),
       disableBeacon: true,
     },
   ],

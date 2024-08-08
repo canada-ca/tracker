@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Divider, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans } from '@lingui/macro'
@@ -23,13 +23,12 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
 
   return (
     <TourProvider>
-      <TourButton />
       <Stack w="100%">
         <TourComponent page="landingPage" />
-
         <Box mb="16" textAlign="left" px="4">
           <Heading as="h1" className="step-1">
             <Trans>Track Digital Security</Trans>
+            <TourButton />
           </Heading>
           <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
           <Text fontSize="xl" className="step-2">

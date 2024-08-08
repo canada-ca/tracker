@@ -431,7 +431,7 @@ msgstr "Are you sure you want to permanently remove the organization \"{0}\"?"
 msgid "Assess current state;"
 msgstr "Assess current state;"
 
-#: src/admin/AdminPage.js:205
+#: src/admin/AdminPage.js:203
 #: src/admin/AuditLogTable.js:85
 msgid "Audit Logs"
 msgstr "Audit Logs"
@@ -488,6 +488,10 @@ msgstr "Blocked"
 #~ msgid "Business units within your organization."
 #~ msgstr "Business units within your organization."
 
+#: src/userOnboarding/config/tourSteps.js:125
+msgid "Button to export the data"
+msgstr "Button to export the data"
+
 #: src/termsConditions/TermsConditionsPage.js:26
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
 msgstr "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
@@ -512,7 +516,7 @@ msgstr "CNAME:"
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email</0> and <1>web</1> services. Track how government sites are becoming more secure."
 
-#: src/landing/LandingPage.js:36
+#: src/landing/LandingPage.js:35
 msgid "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and Digital guides government online services to adopt good security practices for practices outlined in the <0>email<1/></0> and <2>web<3/></2> services. Track how government sites are becoming more secure."
 
@@ -584,6 +588,10 @@ msgstr "Changes:"
 #: src/user/UserPage.js:64
 msgid "Check your associated Tracker email for the verification link"
 msgstr "Check your associated Tracker email for the verification link"
+
+#: src/userOnboarding/config/tourSteps.js:115
+msgid "Choose the period of data to view"
+msgstr "Choose the period of data to view"
 
 #: src/domains/DomainCard.js:195
 #: src/domains/DomainsPage.js:225
@@ -876,7 +884,7 @@ msgstr "DKIM record and keys are deployed and valid"
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/organizations/Organizations.js:146
+#: src/organizations/Organizations.js:148
 msgid "DMARC Configuration"
 msgstr "DMARC Configuration"
 
@@ -927,7 +935,7 @@ msgstr "DMARC Status"
 #: src/app/App.js:284
 #: src/app/FloatingMenu.js:131
 #: src/dmarc/DmarcByDomainPage.js:169
-#: src/dmarc/DmarcByDomainPage.js:228
+#: src/dmarc/DmarcByDomainPage.js:227
 msgid "DMARC Summaries"
 msgstr "DMARC Summaries"
 
@@ -1048,7 +1056,7 @@ msgstr "Display Name:"
 msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
-#: src/organizations/Organizations.js:138
+#: src/organizations/Organizations.js:140
 msgid "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 msgstr "Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization."
 
@@ -1121,7 +1129,7 @@ msgstr "Domain:"
 #: src/app/App.js:255
 #: src/app/FloatingMenu.js:116
 #: src/domains/DomainsPage.js:138
-#: src/domains/DomainsPage.js:210
+#: src/domains/DomainsPage.js:209
 #: src/organizationDetails/OrganizationDetails.js:133
 #: src/organizationDetails/OrganizationDomains.js:106
 #: src/summaries/Doughnut.js:53
@@ -1429,9 +1437,13 @@ msgstr "February"
 msgid "Filter list to affiliated resources only."
 msgstr "Filter list to affiliated resources only."
 
-#: src/organizations/Organizations.js:179
+#: src/organizations/Organizations.js:181
 msgid "Filter list to verified organizations only."
 msgstr "Filter list to verified organizations only."
+
+#: src/userOnboarding/config/tourSteps.js:120
+msgid "Filter the data to view"
+msgstr "Filter the data to view"
 
 #: src/admin/AuditLogTable.js:221
 #~ msgid "Filters"
@@ -1441,7 +1453,7 @@ msgstr "Filter list to verified organizations only."
 #: src/dmarc/DmarcByDomainPage.js:273
 #: src/domains/DomainsPage.js:269
 #: src/organizationDetails/OrganizationDomains.js:245
-#: src/organizations/Organizations.js:177
+#: src/organizations/Organizations.js:179
 msgid "Filters:"
 msgstr "Filters:"
 
@@ -1541,7 +1553,7 @@ msgstr "Fully Aligned Table"
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/organizations/Organizations.js:150
+#: src/organizations/Organizations.js:152
 msgid "Further details for each organization can be found by clicking on its row."
 msgstr "Further details for each organization can be found by clicking on its row."
 
@@ -1673,7 +1685,7 @@ msgid "HTTPS Configuration Summary"
 msgstr "HTTPS Configuration Summary"
 
 #: src/organizations/OrganizationCard.js:95
-#: src/organizations/Organizations.js:142
+#: src/organizations/Organizations.js:144
 msgid "HTTPS Configured"
 msgstr "HTTPS Configured"
 
@@ -1730,9 +1742,22 @@ msgstr "Heartbleed Vulnerable"
 #~ msgid "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
 #~ msgstr "Help us make government websites more secure. Please complete the following steps to become compliant with the Government of Canada's web security standards. If you have any questions about this process, please <0>contact us</0>."
 
-#: src/userOnboarding/config/tourSteps.js:13
+#: src/userOnboarding/config/tourSteps.js:71
+msgid "Here is the information for each domain"
+msgstr "Here is the information for each domain"
+
+#: src/userOnboarding/config/tourSteps.js:39
+msgid "Here is the information for each organization"
+msgstr "Here is the information for each organization"
+
+#: src/userOnboarding/config/tourSteps.js:17
+#: src/userOnboarding/config/tourSteps.js:29
 msgid "Here you can filter the list of organizations"
 msgstr "Here you can filter the list of organizations"
+
+#: src/userOnboarding/config/tourSteps.js:34
+msgid "Here you can filter the list of organizations to only show verified organizations"
+msgstr "Here you can filter the list of organizations to only show verified organizations"
 
 #: src/admin/AdminDomains.js:174
 #: src/organizationDetails/OrganizationDomains.js:100
@@ -2673,7 +2698,7 @@ msgid "Organization Information"
 msgstr "Organization Information"
 
 #: src/admin/OrganizationInformation.js:432
-#: src/organizations/Organizations.js:137
+#: src/organizations/Organizations.js:139
 msgid "Organization Name"
 msgstr "Organization Name"
 
@@ -2714,13 +2739,13 @@ msgstr "Organization(s):"
 msgid "Organization:"
 msgstr "Organization:"
 
-#: src/admin/AdminPage.js:203
+#: src/admin/AdminPage.js:201
 #: src/app/App.js:129
 #: src/app/App.js:221
 #: src/app/FloatingMenu.js:103
 #: src/guidance/GuidancePage.js:143
 #: src/organizations/Organizations.js:74
-#: src/organizations/Organizations.js:132
+#: src/organizations/Organizations.js:133
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -3306,6 +3331,10 @@ msgstr "Search by initiated by, resource name"
 msgid "Search for a domain"
 msgstr "Search for a domain"
 
+#: src/userOnboarding/config/tourSteps.js:130
+msgid "Search for a specific domain"
+msgstr "Search for a specific domain"
+
 #: src/admin/SuperAdminUserList.js:406
 msgid "Search for a user (email)"
 msgstr "Search for a user (email)"
@@ -3318,7 +3347,7 @@ msgstr "Search for a user by email"
 #~ msgid "Search for an activity"
 #~ msgstr "Search for an activity"
 
-#: src/organizations/Organizations.js:171
+#: src/organizations/Organizations.js:173
 msgid "Search for an organization"
 msgstr "Search for an organization"
 
@@ -3388,7 +3417,7 @@ msgid "Serial:"
 msgstr "Serial:"
 
 #: src/organizations/Organizations.js:66
-#: src/organizations/Organizations.js:140
+#: src/organizations/Organizations.js:142
 msgid "Services"
 msgstr "Services"
 
@@ -3533,11 +3562,11 @@ msgstr "Shows if the server was found to be vulnerable to the ROBOT vulnerabilit
 msgid "Shows the duration of time, in seconds, that the HSTS header is valid."
 msgstr "Shows the duration of time, in seconds, that the HSTS header is valid."
 
-#: src/organizations/Organizations.js:140
+#: src/organizations/Organizations.js:142
 msgid "Shows the number of domains that the organization is in control of."
 msgstr "Shows the number of domains that the organization is in control of."
 
-#: src/organizations/Organizations.js:143
+#: src/organizations/Organizations.js:145
 msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS"
 
@@ -3545,7 +3574,7 @@ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade 
 #~ msgid "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 #~ msgstr "Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS (ITPIN 6.1.1)"
 
-#: src/organizations/Organizations.js:147
+#: src/organizations/Organizations.js:149
 msgid "Shows the percentage of domains which have a valid DMARC policy configuration."
 msgstr "Shows the percentage of domains which have a valid DMARC policy configuration."
 
@@ -3705,7 +3734,11 @@ msgstr "Summary"
 msgid "Summary Tier:"
 msgstr "Summary Tier:"
 
-#: src/admin/AdminPage.js:200
+#: src/userOnboarding/config/tourSteps.js:88
+msgid "Summary of your tracker"
+msgstr "Summary of your tracker"
+
+#: src/admin/AdminPage.js:198
 msgid "Super Admin Menu:"
 msgstr "Super Admin Menu:"
 
@@ -3990,9 +4023,27 @@ msgstr "This domain no longer exists"
 msgid "This field cannot be empty"
 msgstr "This field cannot be empty"
 
+#: src/userOnboarding/config/tourSteps.js:66
+msgid "This filter will show only domains affiliated with your account"
+msgstr "This filter will show only domains affiliated with your account"
+
 #: src/app/TopBanner.js:95
 msgid "This is a new service, we are constantly improving."
 msgstr "This is a new service, we are constantly improving."
+
+#: src/userOnboarding/config/tourSteps.js:148
+#: src/userOnboarding/config/tourSteps.js:155
+#: src/userOnboarding/config/tourSteps.js:162
+msgid "This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs."
+msgstr "This is the Super Admin menu. You can switch between Organizations, Users, and Audit Logs."
+
+#: src/userOnboarding/config/tourSteps.js:47
+msgid "This page is dedicated to everything domains"
+msgstr "This page is dedicated to everything domains"
+
+#: src/userOnboarding/config/tourSteps.js:79
+msgid "This page is dedicated to your personal view of tracker"
+msgstr "This page is dedicated to your personal view of tracker"
 
 #: src/guidance/WebGuidance.js:144
 msgid "This service is not web-hosting and does not require compliance with the Web Sites and Services Management Configuration Requirements."
@@ -4069,7 +4120,7 @@ msgstr "Total Messages"
 #~ msgstr "Total users"
 
 #: src/app/SlideMessage.js:51
-#: src/landing/LandingPage.js:32
+#: src/landing/LandingPage.js:30
 msgid "Track Digital Security"
 msgstr "Track Digital Security"
 
@@ -4380,7 +4431,7 @@ msgstr "User removed."
 msgid "User:"
 msgstr "User:"
 
-#: src/admin/AdminPage.js:204
+#: src/admin/AdminPage.js:202
 #: src/admin/AdminPanel.js:22
 #: src/organizationDetails/OrganizationDetails.js:137
 msgid "Users"
@@ -4555,9 +4606,17 @@ msgstr "Web-hosting"
 msgid "Welcome to Tracker, please enter your details."
 msgstr "Welcome to Tracker, please enter your details."
 
+#: src/userOnboarding/config/tourSteps.js:138
+msgid "Welcome to the Admin Profile page!"
+msgstr "Welcome to the Admin Profile page!"
+
 #: src/user/MyTrackerPage.js:69
 msgid "Welcome to your personal view of Tracker. Moderate the security posture of domains of interest across multiple organizations. To add domains to this view, use the star icon buttons available on domain lists."
 msgstr "Welcome to your personal view of Tracker. Moderate the security posture of domains of interest across multiple organizations. To add domains to this view, use the star icon buttons available on domain lists."
+
+#: src/userOnboarding/config/tourSteps.js:9
+msgid "Welcome!"
+msgstr "Welcome!"
 
 #: src/auth/CreateUserPage.js:53
 #~ msgid "Welcome, you are successfully signed in to your new account!"
@@ -4664,7 +4723,15 @@ msgstr "You agree to protect any information disclosed to you by TBS in accordan
 msgid "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 msgstr "You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them."
 
-#: src/userOnboarding/config/tourSteps.js:20
+#: src/userOnboarding/config/tourSteps.js:61
+msgid "You can filter the list of domains here"
+msgstr "You can filter the list of domains here"
+
+#: src/userOnboarding/config/tourSteps.js:56
+msgid "You can modify the results of the domain list using these filters"
+msgstr "You can modify the results of the domain list using these filters"
+
+#: src/userOnboarding/config/tourSteps.js:24
 msgid "You can search for an organization here"
 msgstr "You can search for an organization here"
 
@@ -4782,6 +4849,19 @@ msgstr "and by applicable laws, policies, regulations and international agreemen
 msgid "contact us"
 msgstr "contact us"
 
+#: src/userOnboarding/config/tourSteps.js:93
+#: src/userOnboarding/config/tourSteps.js:108
+msgid "dmarc phases information"
+msgstr "dmarc phases information"
+
+#: src/userOnboarding/config/tourSteps.js:98
+msgid "domains information"
+msgstr "domains information"
+
+#: src/userOnboarding/config/tourSteps.js:103
+msgid "https configuration summary"
+msgstr "https configuration summary"
+
 #: src/termsConditions/TermsConditionsPage.js:405
 #~ msgid "https://https-everywhere.canada.ca/en/help/"
 #~ msgstr "https://https-everywhere.canada.ca/en/help/"
@@ -4789,7 +4869,7 @@ msgstr "contact us"
 #: src/app/App.js:144
 #: src/app/App.js:305
 #: src/user/MyTrackerPage.js:36
-#: src/user/MyTrackerPage.js:65
+#: src/user/MyTrackerPage.js:64
 msgid "myTracker"
 msgstr "myTracker"
 

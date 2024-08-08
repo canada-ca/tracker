@@ -1,7 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { useTour } from '../hooks/useTour'
-import { Button } from '@chakra-ui/react'
 import { QuestionOutlineIcon } from '@chakra-ui/icons'
 import { IconButton } from '@chakra-ui/react'
 
@@ -9,6 +8,8 @@ const toursConfig = {
   '/': 'landingPage',
   '/organizations': 'organizationsPage',
   '/domains': 'domainPage',
+  '/my-tracker/summary': ' myTrackerPage',
+  '/dmarc-summaries': 'dmarcSummariesPage',
   '/admin/organizations': 'adminProfilePage',
 }
 
