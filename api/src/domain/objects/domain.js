@@ -384,6 +384,11 @@ export const domainType = new GraphQLObjectType({
       type: GraphQLBoolean,
       resolve: ({ ignoreRua }) => ignoreRua,
     },
+    hasEntrustCertificate: {
+      type: GraphQLBoolean,
+      description: `Whether or not the certificate chain contains an Entrust certificate.`,
+      resolve: ({ hasEntrustCertificate }) => hasEntrustCertificate,
+    },
   }),
   interfaces: [nodeInterface],
   description: 'Domain object containing information for a given domain.',

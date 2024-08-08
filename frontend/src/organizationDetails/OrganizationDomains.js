@@ -99,6 +99,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const domainList = loading ? (

@@ -111,6 +111,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
       rcode: 'NOERROR',
       blocked: false,
       wildcardSibling: false,
+      hasEntrustCertificate: false,
     })
     domainTwo = await collections.domains.save({
       domain: 'domain.two',
@@ -128,6 +129,7 @@ describe('given getAllOrganizationDomainStatuses', () => {
       rcode: 'NOERROR',
       blocked: false,
       wildcardSibling: false,
+      hasEntrustCertificate: false,
     })
   })
   afterEach(async () => {
@@ -243,9 +245,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
 
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
-"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
-"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
+            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate
+"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false"
+"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false"`,
           },
         }
 
@@ -360,9 +362,9 @@ describe('given getAllOrganizationDomainStatuses', () => {
         })
         const expectedResponse = {
           data: {
-            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling
-"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false"
-"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false"`,
+            getAllOrganizationDomainStatuses: `domain,ipAddresses,https,hsts,certificates,ciphers,curves,protocols,spf,dkim,dmarc,rcode,blocked,wildcardSibling,hasEntrustCertificate
+"domain.one",,"fail","pass","pass","pass","pass","pass","pass","pass","pass","NOERROR","false","false","false"
+"domain.two",,"pass","fail","pass","fail","pass","fail","pass","pass","fail","NOERROR","false","false","false"`,
           },
         }
         expect(response).toEqual(expectedResponse)

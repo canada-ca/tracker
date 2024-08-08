@@ -46,6 +46,7 @@ export const getAllOrganizationDomainStatuses = {
       'rcode',
       'blocked',
       'wildcardSibling',
+      'hasEntrustCertificate',
     ]
     let csvOutput = headers.join(',')
     domainStatuses.forEach((domainStatus) => {
