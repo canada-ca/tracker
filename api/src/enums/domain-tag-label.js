@@ -63,6 +63,10 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'scan-pending',
       description: 'Label for tagging domains that have a pending web scan.',
     },
+    HAS_VULNERABILITIES: {
+      value: 'has-vulnerabilities',
+      description: 'Label for tagging domains that have vulnerabilities.',
+    },
     OUTSIDE: {
       value: 'OUTSIDE',
       description: 'English label for tagging domains that are outside the scope of the project.',
