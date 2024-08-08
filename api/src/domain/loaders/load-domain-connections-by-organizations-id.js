@@ -311,7 +311,7 @@ export const loadDomainConnectionsByOrgId =
           )
           RETURN translatedTags
       )[0]
-      LET hasVulnerabilities =  (
+      LET cveDetected =  (
         FOR finding IN additionalFindings
           FILTER finding.domain == domain._id
           LET vulnerableWebComponents = (
@@ -410,10 +410,10 @@ export const loadDomainConnectionsByOrgId =
             ${domainFilters}
             FILTER domain.webScanPending ${comparison} true
           `
-          } else if (filterValue === 'has-vulnerabilities') {
+          } else if (filterValue === 'cve-detected') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER hasVulnerabilities ${comparison} true
+            FILTER cveDetected ${comparison} true
           `
           } else {
             domainFilters = aql`
