@@ -1,6 +1,7 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
+const { ensureDatabase: ensure } = require('../testUtilities')
 const { databaseOptions } = require('../../database-options')
 
 const { checkForSuperAdminAffiliation } = require('../database')
@@ -61,9 +62,7 @@ describe('given the checkForSuperAdminAffiliation function', () => {
   describe('given an unsuccessful check', () => {
     describe('database error occurs', () => {
       it('throws an error', async () => {
-        const mockQuery = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        const mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         try {
           await checkForSuperAdminAffiliation({ query: mockQuery })
         } catch (err) {
