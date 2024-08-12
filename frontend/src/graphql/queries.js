@@ -536,6 +536,9 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
           webComponentVersion
           webComponentFirstSeen
           webComponentLastSeen
+          webComponentCves {
+            cve
+          }
         }
         vulnerabilities {
           critical {
