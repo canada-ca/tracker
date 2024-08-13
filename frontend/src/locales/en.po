@@ -33,11 +33,11 @@ msgstr "1. Assess"
 msgid "2. Deploy"
 msgstr "2. Deploy"
 
-#: src/guidance/AdditionalFindings.js:65
+#: src/guidance/AdditionalFindings.js:67
 msgid "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 msgstr "2.1 Robust web application frameworks are used to aid in developing secure web applications."
 
-#: src/guidance/AdditionalFindings.js:112
+#: src/guidance/AdditionalFindings.js:114
 msgid "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 msgstr "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame-Options response headers."
 
@@ -45,7 +45,7 @@ msgstr "2.4 Web applications implement Content-Security-Policy, HSTS and X-Frame
 msgid "3. Enforce"
 msgstr "3. Enforce"
 
-#: src/guidance/AdditionalFindings.js:140
+#: src/guidance/AdditionalFindings.js:142
 msgid "3.1.2 Use a denial-of-service mitigation service"
 msgstr "3.1.2 Use a denial-of-service mitigation service"
 
@@ -91,7 +91,7 @@ msgstr "<0>Hostname:</0> {hostname}"
 msgid "<0>IPs:</0> {0}"
 msgstr "<0>IPs:</0> {0}"
 
-#: src/guidance/AdditionalFindings.js:47
+#: src/guidance/AdditionalFindings.js:49
 msgid "<0>Last Scanned:</0> {0}"
 msgstr "<0>Last Scanned:</0> {0}"
 
@@ -112,8 +112,8 @@ msgstr "<0>Preference:</0> {preference}"
 #~ msgstr "<0>The following data may have recently changed.</0><1>We've made enhancements to our DMARC data tables to provide a more accurate view of the information.</1>"
 
 #: src/guidance/GuidancePage.js:160
-msgid "A DNS request for this service has resulted in the following error code:"
-msgstr "A DNS request for this service has resulted in the following error code:"
+#~ msgid "A DNS request for this service has resulted in the following error code:"
+#~ msgstr "A DNS request for this service has resulted in the following error code:"
 
 #: src/admin/AdminDomains.js:456
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
@@ -229,7 +229,7 @@ msgstr "Add Domain Details"
 msgid "Add User"
 msgstr "Add User"
 
-#: src/guidance/AdditionalFindings.js:260
+#: src/guidance/AdditionalFindings.js:302
 #: src/guidance/GuidancePage.js:201
 msgid "Additional Findings"
 msgstr "Additional Findings"
@@ -261,6 +261,10 @@ msgstr "Admin accounts must activate a multi-factor authentication option."
 #: src/app/ReadGuidancePage.js:333
 msgid "Admins of an organization can add domains to their list."
 msgstr "Admins of an organization can add domains to their list."
+
+#: src/guidance/AdditionalFindings.js:283
+msgid "Affected Components:"
+msgstr "Affected Components:"
 
 #: src/admin/SuperAdminUserList.js:309
 msgid "Affiliations:"
@@ -719,7 +723,7 @@ msgstr "Contact Us"
 msgid "Contact the Tracker Team"
 msgstr "Contact the Tracker Team"
 
-#: src/guidance/AdditionalFindings.js:165
+#: src/guidance/AdditionalFindings.js:167
 msgid "Content Delivery Network"
 msgstr "Content Delivery Network"
 
@@ -781,7 +785,7 @@ msgstr "Create an Account"
 msgid "Create an organization"
 msgstr "Create an organization"
 
-#: src/guidance/AdditionalFindings.js:31
+#: src/guidance/AdditionalFindings.js:30
 msgid "Critical"
 msgstr "Critical"
 
@@ -814,7 +818,7 @@ msgstr "Curves"
 msgid "Curves Status"
 msgstr "Curves Status"
 
-#: src/guidance/AdditionalFindings.js:134
+#: src/guidance/AdditionalFindings.js:136
 msgid "DDOS Protection"
 msgstr "DDOS Protection"
 
@@ -1210,7 +1214,6 @@ msgid "Email"
 msgstr "Email"
 
 #: src/domains/ScanDomain.js:245
-#: src/guidance/GuidancePage.js:195
 msgid "Email Guidance"
 msgstr "Email Guidance"
 
@@ -1448,10 +1451,10 @@ msgstr "Filter list to verified organizations only."
 msgid "Filters:"
 msgstr "Filters:"
 
-#: src/guidance/AdditionalFindings.js:84
-#: src/guidance/AdditionalFindings.js:148
-#: src/guidance/AdditionalFindings.js:179
-#: src/guidance/AdditionalFindings.js:210
+#: src/guidance/AdditionalFindings.js:86
+#: src/guidance/AdditionalFindings.js:150
+#: src/guidance/AdditionalFindings.js:181
+#: src/guidance/AdditionalFindings.js:212
 msgid "First Seen: {0}"
 msgstr "First Seen: {0}"
 
@@ -1508,7 +1511,7 @@ msgstr "Forgot Password"
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
-#: src/guidance/AdditionalFindings.js:59
+#: src/guidance/AdditionalFindings.js:61
 msgid "Frameworks"
 msgstr "Frameworks"
 
@@ -1742,7 +1745,7 @@ msgstr "Hidden"
 msgid "Hide domain"
 msgstr "Hide domain"
 
-#: src/guidance/AdditionalFindings.js:31
+#: src/guidance/AdditionalFindings.js:30
 msgid "High"
 msgstr "High"
 
@@ -1840,8 +1843,8 @@ msgid "If available, please use a managed device provided by your organization."
 msgstr "If available, please use a managed device provided by your organization."
 
 #: src/guidance/GuidancePage.js:165
-msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
-msgstr "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
+#~ msgid "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
+#~ msgstr "If you believe this could be the result of an issue with the scan, rescan the service using the refresh button. If you believe this is because the service no longer exists (NXDOMAIN), this domain should be removed from all affiliated organizations."
 
 #: src/guidance/GuidanceTagList.js:53
 msgid "If you believe this was caused by a problem with Tracker, please <0>Report an Issue <1/></0>"
@@ -2188,10 +2191,10 @@ msgstr "Last 365 Days of Data"
 #~ msgid "Last Scanned"
 #~ msgstr "Last Scanned"
 
-#: src/guidance/AdditionalFindings.js:87
-#: src/guidance/AdditionalFindings.js:151
-#: src/guidance/AdditionalFindings.js:182
-#: src/guidance/AdditionalFindings.js:213
+#: src/guidance/AdditionalFindings.js:89
+#: src/guidance/AdditionalFindings.js:153
+#: src/guidance/AdditionalFindings.js:184
+#: src/guidance/AdditionalFindings.js:215
 msgid "Last Seen: {0}"
 msgstr "Last Seen: {0}"
 
@@ -2246,7 +2249,7 @@ msgstr "Login to your account"
 msgid "Lookups:"
 msgstr "Lookups:"
 
-#: src/guidance/AdditionalFindings.js:31
+#: src/guidance/AdditionalFindings.js:30
 msgid "Low"
 msgstr "Low"
 
@@ -2280,7 +2283,7 @@ msgstr "March"
 msgid "May"
 msgstr "May"
 
-#: src/guidance/AdditionalFindings.js:31
+#: src/guidance/AdditionalFindings.js:30
 msgid "Medium"
 msgstr "Medium"
 
@@ -2306,6 +2309,10 @@ msgstr "Monitor DMARC reports;"
 #: src/guidance/WebTLSResults.js:415
 msgid "More details"
 msgstr "More details"
+
+#: src/guidance/AdditionalFindings.js:292
+msgid "More info"
+msgstr "More info"
 
 #: src/app/ReadGuidancePage.js:535
 msgid "Mozilla SSL Configuration Generator"
@@ -2447,11 +2454,11 @@ msgstr "New Value:"
 msgid "No"
 msgstr "No"
 
-#: src/guidance/AdditionalFindings.js:187
+#: src/guidance/AdditionalFindings.js:189
 msgid "No CDN found"
 msgstr "No CDN found"
 
-#: src/guidance/AdditionalFindings.js:156
+#: src/guidance/AdditionalFindings.js:158
 msgid "No DDOS Protection found"
 msgstr "No DDOS Protection found"
 
@@ -2524,7 +2531,7 @@ msgstr "No data found when retrieving all domain statuses."
 msgid "No data was found to export."
 msgstr "No data was found to export."
 
-#: src/guidance/AdditionalFindings.js:97
+#: src/guidance/AdditionalFindings.js:99
 msgid "No frameworks found"
 msgstr "No frameworks found"
 
@@ -2540,7 +2547,7 @@ msgstr "No guidance found for this category"
 msgid "No known weak protocols used."
 msgstr "No known weak protocols used."
 
-#: src/guidance/AdditionalFindings.js:125
+#: src/guidance/AdditionalFindings.js:127
 msgid "No response headers found"
 msgstr "No response headers found"
 
@@ -2894,7 +2901,7 @@ msgstr "Pointer to a DKIM public key record in DNS."
 msgid "Policy guidance:"
 msgstr "Policy guidance:"
 
-#: src/guidance/AdditionalFindings.js:196
+#: src/guidance/AdditionalFindings.js:198
 msgid "Ports"
 msgstr "Ports"
 
@@ -3128,7 +3135,7 @@ msgstr "Resource Type"
 msgid "Resource:"
 msgstr "Resource:"
 
-#: src/guidance/AdditionalFindings.js:106
+#: src/guidance/AdditionalFindings.js:108
 msgid "Response Headers"
 msgstr "Response Headers"
 
@@ -3645,7 +3652,7 @@ msgstr "Source IP Address"
 msgid "Staging"
 msgstr "Staging"
 
-#: src/guidance/AdditionalFindings.js:207
+#: src/guidance/AdditionalFindings.js:209
 msgid "State: {lastPortState}"
 msgstr "State: {lastPortState}"
 
@@ -3945,7 +3952,7 @@ msgstr "The summary cards show two metrics that Tracker scans:"
 msgid "The user's role has been successfully updated"
 msgstr "The user's role has been successfully updated"
 
-#: src/guidance/AdditionalFindings.js:264
+#: src/guidance/AdditionalFindings.js:306
 msgid "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
 msgstr "These findings are imported from Microsoft's <0>External Attack Surface Management</0> tool. Updates to these findings occur weekly."
 
@@ -4441,7 +4448,7 @@ msgstr "Volume of messages spoofing domain (reject + quarantine + none):"
 #~ msgid "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 #~ msgstr "Volume of messages spoofing {domainSlug} (reject + quarantine + none):"
 
-#: src/guidance/AdditionalFindings.js:226
+#: src/guidance/AdditionalFindings.js:228
 msgid "Vulnerabilities"
 msgstr "Vulnerabilities"
 
@@ -4520,7 +4527,6 @@ msgid "Web Connections Summary"
 msgstr "Web Connections Summary"
 
 #: src/domains/ScanDomain.js:242
-#: src/guidance/GuidancePage.js:192
 msgid "Web Guidance"
 msgstr "Web Guidance"
 
@@ -4569,7 +4575,7 @@ msgstr "Welcome to your personal view of Tracker. Moderate the security posture 
 msgid "Welcome, you are successfully signed in!"
 msgstr "Welcome, you are successfully signed in!"
 
-#: src/guidance/AdditionalFindings.js:53
+#: src/guidance/AdditionalFindings.js:55
 msgid "What are these additional findings?"
 msgstr "What are these additional findings?"
 

@@ -253,8 +253,8 @@ export function AdditionalFindings({ data }) {
                               onClick={() => {
                                 setActiveCve({
                                   cve,
-                                  affectedWebComps: webComponents.filter((webComp) =>
-                                    webComp.webComponentCves.some((x) => x.cve === cve),
+                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
+                                    webComponentCves.some((x) => x.cve === cve),
                                   ),
                                 })
                                 cveOnOpen()
@@ -283,13 +283,13 @@ export function AdditionalFindings({ data }) {
             <Trans>Affected Components:</Trans>
             {activeCve?.affectedWebComps?.map(({ webComponentName, webComponentCategory, webComponentVersion }) => (
               <Text key={webComponentName} ml="2">
-                - {webComponentCategory}: {webComponentName} (v{webComponentVersion})
+                {webComponentName} {webComponentCategory} {webComponentVersion}
               </Text>
             ))}
           </ModalBody>
           <ModalFooter>
             <Link color="blue.500" href={`https://www.cve.org/CVERecord?id=${activeCve?.cve}`} isExternal>
-              <Trans>More Info</Trans> <ExternalLinkIcon />
+              <Trans>More info</Trans> <ExternalLinkIcon />
             </Link>
           </ModalFooter>
         </ModalContent>
