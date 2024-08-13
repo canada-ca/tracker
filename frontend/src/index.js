@@ -15,7 +15,6 @@ import { REFRESH_TOKENS } from './graphql/mutations'
 import { activate, defaultLocale } from './utilities/i18n.config'
 
 const I18nApp = () => {
-  // const []
   const { currentUser, login } = useUserVar()
   const location = useLocation()
   const { from } = location.state || { from: { pathname: '/' } }
@@ -73,8 +72,6 @@ const I18nApp = () => {
       refreshTokens()
     }
   }, [currentUser?.jwt])
-
-  console.log('current user:', currentUser)
 
   return (
     <I18nProvider i18n={i18n}>
