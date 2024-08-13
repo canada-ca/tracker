@@ -15,9 +15,13 @@ spec:
           labels:
             app: domain-cleanup
         spec:
+          securityContext:
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: domain-cleanup
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-db36f0d-1719232822 # {"$imagepolicy": "flux-system:domain-cleanup"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/services/domain-cleanup:master-90af83d-1723505665 # {"$imagepolicy": "flux-system:domain-cleanup"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -39,4 +43,14 @@ spec:
                     secretKeyRef:
                       name: api
                       key: UNCLAIMED_ORG_ID
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
           restartPolicy: OnFailure

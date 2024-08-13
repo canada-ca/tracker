@@ -67,6 +67,10 @@ export const DomainTagLabel = new GraphQLEnumType({
       value: 'has-entrust-certificate',
       description: 'Label for tagging domains that have an Entrust certificate.',
     },
+    CVE_DETECTED: {
+      value: 'cve-detected',
+      description: 'Label for tagging domains that have vulnerabilities.',
+    },
     OUTSIDE: {
       value: 'OUTSIDE',
       description: 'English label for tagging domains that are outside the scope of the project.',

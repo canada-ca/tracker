@@ -1,6 +1,7 @@
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-const { ensure, dbNameFromFile } = require('arango-tools')
+const { dbNameFromFile } = require('arango-tools')
+const { ensureDatabase: ensure } = require('../testUtilities')
 const { databaseOptions } = require('../../database-options')
 
 const { checkForSuperAdminOrg, createSuperAdminOrg } = require('../database')
@@ -56,16 +57,12 @@ describe('given the checkForSuperAdminOrg function', () => {
   describe('given an unsuccessful check', () => {
     describe('database error occurs', () => {
       it('throws an error', async () => {
-        const mockQuery = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        const mockQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
         try {
           await checkForSuperAdminOrg({ query: mockQuery })
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              'Database error occurred well trying to find super admin org: Error: Database error occurred.',
-            ),
+            new Error('Database error occurred well trying to find super admin org: Error: Database error occurred.'),
           )
         }
       })
@@ -83,9 +80,7 @@ describe('given the checkForSuperAdminOrg function', () => {
           await checkForSuperAdminOrg({ query: mockQuery })
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              'Cursor error occurred well trying to find super admin org: Error: Cursor error occurred.',
-            ),
+            new Error('Cursor error occurred well trying to find super admin org: Error: Cursor error occurred.'),
           )
         }
       })
