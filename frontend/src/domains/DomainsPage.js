@@ -1,6 +1,17 @@
 import React, { useCallback, useState } from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Divider, Flex, Heading, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Code,
+  Divider,
+  Flex,
+  Heading,
+  ListItem,
+  Text,
+  UnorderedList,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { DomainCard } from './DomainCard'
@@ -12,7 +23,7 @@ import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 import { LoadingMessage } from '../components/LoadingMessage'
 import { useDebouncedFunction } from '../utilities/useDebouncedFunction'
 import { usePaginatedCollection } from '../utilities/usePaginatedCollection'
-import { PAGINATED_DOMAINS as FORWARD, GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV } from '../graphql/queries'
+import { GET_ALL_ORGANIZATION_DOMAINS_STATUSES_CSV, PAGINATED_DOMAINS as FORWARD } from '../graphql/queries'
 import { SearchBox } from '../components/SearchBox'
 import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
@@ -190,6 +201,50 @@ export default function DomainsPage() {
     </Box>
   )
 
+  const searchTip = (
+    <Trans>
+      <Text textAlign="center">
+        <strong>
+          Search Tip: Wildcard <Code>%</Code>
+        </strong>
+      </Text>
+      <Text>
+        Use <Code>%</Code> to broaden your search:
+      </Text>
+      <UnorderedList>
+        <ListItem>
+          <strong>
+            Start with <Code>%</Code>
+          </strong>
+          : Search{' '}
+          <strong>
+            <Code>%example.gc.ca</Code>
+          </strong>{' '}
+          to find subdomains like <strong>"sub.example.gc.ca."</strong>
+        </ListItem>
+        <ListItem>
+          <strong>
+            End with <Code>%</Code>
+          </strong>
+          : Search{' '}
+          <strong>
+            <Code>example%</Code>{' '}
+          </strong>
+          to find domains like <strong>"example.gc.ca"</strong> or <strong>"example.canada.ca."</strong>
+        </ListItem>
+        <ListItem>
+          <strong>Use both</strong>: Search{' '}
+          <strong>
+            <Code>%example%</Code>{' '}
+          </strong>
+          to find anything containing "example", like
+          <strong>"sub.example.gc.ca"</strong> or <strong>"example.canada.ca."</strong>
+        </ListItem>
+      </UnorderedList>
+      <Text>This helps you quickly locate related domains and subdomains.</Text>
+    </Trans>
+  )
+
   return (
     <Box w="100%" px={4}>
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
@@ -248,6 +303,7 @@ export default function DomainsPage() {
           orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
+          searchTip={searchTip}
         />
         {isLoggedIn() && (
           <Flex align="center" mb="2">

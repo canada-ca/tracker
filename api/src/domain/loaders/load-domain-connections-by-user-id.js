@@ -488,14 +488,11 @@ export const loadDomainConnectionsByUserId =
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
-        LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
         LET searchedDomains = (
-          FOR tokenItem in tokenArr
-            LET token = LOWER(tokenItem)
-            FOR domain IN domainSearch
-              SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
-              FILTER domain IN collectedDomains
-              RETURN domain
+          FOR domain IN domains
+            FILTER LOWER(domain.domain) LIKE LOWER(${search})
+            FILTER domain IN collectedDomains
+            RETURN domain
         )
       `
       loopString = aql`FOR domain IN searchedDomains`
