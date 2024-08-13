@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import TourButton from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')

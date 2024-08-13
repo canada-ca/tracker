@@ -33,7 +33,7 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import TourButton from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()

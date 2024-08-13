@@ -20,7 +20,7 @@ import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import TourButton from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()

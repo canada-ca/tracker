@@ -8,7 +8,8 @@ import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import TourButton from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
+
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
 const itpinUrlEn =

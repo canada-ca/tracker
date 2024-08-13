@@ -13,7 +13,7 @@ import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { TierOneSummaries } from '../summaries/TierOneSummaries'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import TourButton from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails() {

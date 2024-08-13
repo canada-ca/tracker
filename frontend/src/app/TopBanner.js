@@ -17,7 +17,7 @@ import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
-import TourButton from '../userOnboarding/components/TourButton'
+import { TourTextButton } from '../userOnboarding/components/TourButton'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
 
 export const TopBanner = (props) => {
@@ -97,7 +97,7 @@ export const TopBanner = (props) => {
 
         <Flex align="center" ml="auto">
           <TourProvider>
-            <TourButton />
+            <TourTextButton />
           </TourProvider>
           <Box py="4" mx="2" ml={{ base: 'auto', md: '0' }}>
             <LocaleSwitcher />

@@ -5,14 +5,40 @@ import { mainTourSteps } from '../config/tourSteps'
 import { Trans } from '@lingui/macro'
 
 export const TourComponent = ({ page }) => {
-  const { isTourOpen, endTour } = useTour()
+  const { isTourOpen, endTour, startTour } = useTour()
   const [tourKey, setTourKey] = useState(0)
 
   useEffect(() => {
+    const hasSeenTour = localStorage.getItem(`hasSeenTour_${page}`)
+
+    if (!hasSeenTour) {
+      startTour()
+    }
+  }, [page, startTour])
+
+  useEffect(() => {
     if (isTourOpen) {
-      setTourKey((prevKey) => prevKey + 1)
+      setTourKey((prev) => prev + 1)
     }
   }, [isTourOpen])
+
+  const handleJoyrideCallback = ({ status }) => {
+    if (['finished', 'skipped'].includes(status)) {
+      localStorage.setItem(`hasSeenTour_${page}`, true)
+      endTour()
+    }
+  }
+
+  const resetAllTours = () => {
+    // Clear all hasSeenTour items from localStorage
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('hasSeenTour_')) {
+        localStorage.removeItem(key)
+      }
+    })
+    // Optionally, restart the current page's tour
+    startTour()
+  }
 
   return (
     <>
@@ -36,12 +62,9 @@ export const TourComponent = ({ page }) => {
           next: <Trans>Next</Trans>,
           skip: <Trans>Skip</Trans>,
         }}
-        callback={({ status }) => {
-          if (['finished', 'skipped'].includes(status)) {
-            endTour()
-          }
-        }}
+        callback={handleJoyrideCallback}
       />
+      <button onClick={resetAllTours}>Reset Tour</button>
     </>
   )
 }

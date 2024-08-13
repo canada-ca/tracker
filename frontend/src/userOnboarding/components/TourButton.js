@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useTour } from '../hooks/useTour'
 import { QuestionOutlineIcon } from '@chakra-ui/icons'
 import { IconButton } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 
 const toursConfig = {
   '/': 'landingPage',
@@ -13,12 +14,10 @@ const toursConfig = {
   '/admin/organizations': 'adminProfilePage',
 }
 
-const TourButton = () => {
+export const TourButton = () => {
   const { pathname } = useLocation()
   const { startTour } = useTour()
-  console.log(pathname)
   const handleStartTour = () => {
-    console.log('Tour Button Clicked')
     const tourName = toursConfig[pathname]
     if (tourName) {
       startTour(tourName)
@@ -40,4 +39,23 @@ const TourButton = () => {
     />
   )
 }
-export default TourButton
+
+export const TourTextButton = () => {
+  const { pathname } = useLocation()
+  const { startTour } = useTour()
+
+  const handleStartTour = () => {
+    const tourName = toursConfig[pathname]
+    if (tourName) {
+      startTour(tourName)
+    } else {
+      console.warn('No Tour')
+    }
+  }
+
+  return (
+    <Button onClick={handleStartTour} variant="primaryWhite" mx="2" display={{ base: 'none', md: 'inline' }}>
+      Start Tour
+    </Button>
+  )
+}
