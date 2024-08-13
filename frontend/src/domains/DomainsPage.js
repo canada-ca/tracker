@@ -201,50 +201,6 @@ export default function DomainsPage() {
     </Box>
   )
 
-  const searchTip = (
-    <Trans>
-      <Text textAlign="center">
-        <strong>
-          Search Tip: Wildcard <Code>%</Code>
-        </strong>
-      </Text>
-      <Text>
-        Use <Code>%</Code> to broaden your search:
-      </Text>
-      <UnorderedList>
-        <ListItem>
-          <strong>
-            Start with <Code>%</Code>
-          </strong>
-          : Search{' '}
-          <strong>
-            <Code>%example.gc.ca</Code>
-          </strong>{' '}
-          to find subdomains like <strong>"sub.example.gc.ca."</strong>
-        </ListItem>
-        <ListItem>
-          <strong>
-            End with <Code>%</Code>
-          </strong>
-          : Search{' '}
-          <strong>
-            <Code>example%</Code>{' '}
-          </strong>
-          to find domains like <strong>"example.gc.ca"</strong> or <strong>"example.canada.ca."</strong>
-        </ListItem>
-        <ListItem>
-          <strong>Use both</strong>: Search{' '}
-          <strong>
-            <Code>%example%</Code>{' '}
-          </strong>
-          to find anything containing "example", like
-          <strong>"sub.example.gc.ca"</strong> or <strong>"example.canada.ca."</strong>
-        </ListItem>
-      </UnorderedList>
-      <Text>This helps you quickly locate related domains and subdomains.</Text>
-    </Trans>
-  )
-
   return (
     <Box w="100%" px={4}>
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
@@ -303,7 +259,7 @@ export default function DomainsPage() {
           orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
-          searchTip={searchTip}
+          searchTip={domainSearchTip}
         />
         {isLoggedIn() && (
           <Flex align="center" mb="2">
@@ -338,3 +294,47 @@ export default function DomainsPage() {
     </Box>
   )
 }
+
+export const domainSearchTip = (
+  <Trans>
+    <Text textAlign="center">
+      <strong>
+        Search Tip: Wildcard <Code>%</Code>
+      </strong>
+    </Text>
+    <Text>
+      Use <Code>%</Code> to broaden your search:
+    </Text>
+    <UnorderedList>
+      <ListItem>
+        <strong>
+          Start with <Code>%</Code>
+        </strong>
+        : Search{' '}
+        <strong>
+          <Code>%example.gc.ca</Code>
+        </strong>{' '}
+        to find subdomains like <strong>"sub.example.gc.ca."</strong>
+      </ListItem>
+      <ListItem>
+        <strong>
+          End with <Code>%</Code>
+        </strong>
+        : Search{' '}
+        <strong>
+          <Code>example%</Code>{' '}
+        </strong>
+        to find domains like <strong>"example.gc.ca"</strong> or <strong>"example.canada.ca."</strong>
+      </ListItem>
+      <ListItem>
+        <strong>Use both</strong>: Search{' '}
+        <strong>
+          <Code>%example%</Code>{' '}
+        </strong>
+        to find anything containing "example", like
+        <strong>"sub.example.gc.ca"</strong> or <strong>"example.canada.ca."</strong>
+      </ListItem>
+    </UnorderedList>
+    <Text>This helps you quickly locate related domains and subdomains.</Text>
+  </Trans>
+)
