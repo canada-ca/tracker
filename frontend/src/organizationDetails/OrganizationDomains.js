@@ -132,6 +132,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             hasDMARCReport,
             claimTags,
             hidden,
+            assetState,
             archived,
             rcode,
             blocked,
@@ -149,6 +150,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               hasDMARCReport={hasDMARCReport}
               tags={claimTags}
               isHidden={hidden}
+              assetState={assetState}
               rcode={rcode}
               isArchived={archived}
               blocked={blocked}
@@ -207,7 +209,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         <InfoBox title={t`TEST`} info={t`Tag used to show domains as a test environment.`} />
         <InfoBox title={t`WEB`} info={t`Tag used to show domains as web-hosting.`} />
         <InfoBox title={t`INACTIVE`} info={t`Tag used to show domains that are not active.`} />
-        <InfoBox title={t`OUTSIDE`} info={t`Tag used to show domains that are out of the organization's scope.`} />
         <InfoBox
           title={t`HIDDEN`}
           info={t`Tag used to show domains as hidden from affecting the organization summary scores.`}

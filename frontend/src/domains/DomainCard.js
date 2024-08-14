@@ -31,6 +31,7 @@ export function DomainCard({
   hasDMARCReport,
   tags,
   isHidden,
+  assetState,
   isArchived,
   rcode,
   blocked,
@@ -43,7 +44,7 @@ export function DomainCard({
   const toast = useToast()
   const { isLoggedIn, isEmailValidated } = useUserVar()
 
-  const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
+  const [favouriteDomain] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
       toast({
         title: t`An error occurred while favouriting a domain.`,
@@ -66,7 +67,7 @@ export function DomainCard({
     },
   })
 
-  const [unfavouriteDomain, { _l, _e }] = useMutation(UNFAVOURITE_DOMAIN, {
+  const [unfavouriteDomain] = useMutation(UNFAVOURITE_DOMAIN, {
     refetchQueries: ['FindMyTracker'],
     awaitRefetchQueries: true,
 
@@ -150,6 +151,11 @@ export function DomainCard({
             {webScanPending && (
               <Badge color="info" mr="auto" alignSelf="center">
                 <Trans>Scan Pending</Trans>
+              </Badge>
+            )}
+            {assetState && (
+              <Badge colorScheme="blue" mr="auto" alignSelf="center">
+                {assetState}
               </Badge>
             )}
           </Flex>
@@ -281,4 +287,5 @@ DomainCard.propTypes = {
   wildcardSibling: bool,
   webScanPending: bool,
   userHasPermission: bool,
+  assetState: string,
 }

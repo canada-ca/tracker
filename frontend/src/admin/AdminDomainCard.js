@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { array, bool, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text } from '@chakra-ui/react'
 
-export function AdminDomainCard({ url, tags, isHidden, isArchived, rcode, ...rest }) {
+export function AdminDomainCard({ url, tags, isHidden, assetState, isArchived, rcode, ...rest }) {
   return (
     <ListItem {...rest}>
       <Flex align="center">
@@ -22,6 +22,11 @@ export function AdminDomainCard({ url, tags, isHidden, isArchived, rcode, ...res
           })}
         </Flex>
         <Flex ml="auto">
+          {assetState && (
+            <Tag colorScheme="blue" mx="1">
+              <TagLabel fontWeight="bold">{assetState}</TagLabel>
+            </Tag>
+          )}
           {rcode === 'NXDOMAIN' && (
             <Tag colorScheme="red" mr="auto" alignSelf="center">
               <TagLabel fontWeight="bold">NXDOMAIN</TagLabel>
@@ -52,4 +57,5 @@ AdminDomainCard.propTypes = {
   isHidden: bool,
   isArchived: bool,
   rcode: string,
+  assetState: string,
 }
