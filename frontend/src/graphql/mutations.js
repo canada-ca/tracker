@@ -184,7 +184,7 @@ export const CREATE_DOMAIN = gql`
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
-    $outsideComment: OutsideDomainCommentEnum
+    $assetState: AssetStateEnums
   ) {
     createDomain(
       input: {
@@ -193,7 +193,7 @@ export const CREATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         hidden: $hidden
-        outsideComment: $outsideComment
+        assetState: $assetState
       }
     ) {
       result {
@@ -203,6 +203,7 @@ export const CREATE_DOMAIN = gql`
           lastRan
           claimTags
           hidden
+          assetState
           archived
           rcode
         }
@@ -277,7 +278,7 @@ export const UPDATE_DOMAIN = gql`
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
-    $outsideComment: OutsideDomainCommentEnum
+    $assetState: AssetStateEnums
     $ignoreRua: Boolean
   ) {
     updateDomain(
@@ -288,7 +289,7 @@ export const UPDATE_DOMAIN = gql`
         tags: $tags
         archived: $archived
         hidden: $hidden
-        outsideComment: $outsideComment
+        assetState: $assetState
         ignoreRua: $ignoreRua
       }
     ) {
@@ -299,6 +300,7 @@ export const UPDATE_DOMAIN = gql`
           lastRan
           claimTags
           hidden
+          assetState
           archived
           rcode
           ignoreRua

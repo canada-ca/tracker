@@ -191,6 +191,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             lastRan
             claimTags
             hidden
+            assetState
             archived
             ignoreRua
             rcode
@@ -669,6 +670,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             hasDMARCReport
             claimTags
             hidden
+            assetState
             archived
             rcode
             blocked
