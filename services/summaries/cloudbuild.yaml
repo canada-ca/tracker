@@ -5,7 +5,7 @@ steps:
     args:
       [
         "-c",
-        "docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.11.10.1",
+        "docker run --net cloudbuild --name testdb -e ARANGO_NO_AUTH=1 -d -p 127.0.0.1:8529:8529 arangodb/arangodb:3.12.1",
       ]
 
   - name: mikewilliamson/wait-for
