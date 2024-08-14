@@ -436,16 +436,13 @@ export const loadDomainConnectionsByOrgId =
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
-      LET searchedDomains = (
-        FOR tokenItem IN tokenArr
-          LET token = LOWER(tokenItem)
-          FOR domain IN domainSearch
-            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+        LET searchedDomains = (
+          FOR domain IN domains
+            FILTER LOWER(domain.domain) LIKE LOWER(${search})
             FILTER domain._key IN domainKeys
             RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-      )
-    `
+        )
+      `
       loopString = aql`FOR domain IN searchedDomains`
       totalCount = aql`LENGTH(searchedDomains)`
     }

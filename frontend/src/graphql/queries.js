@@ -214,6 +214,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
 export const DOMAIN_GUIDANCE_PAGE = gql`
   query DomainGuidancePage($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
       domain
       lastRan
       rcode
