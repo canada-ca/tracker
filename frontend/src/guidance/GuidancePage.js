@@ -304,6 +304,7 @@ function GuidancePage() {
             variant="primary"
             aria-label={`favourite ${domainName}`}
             icon={<StarIcon />}
+            ml="2"
           />
         )}
         {isLoggedIn() && isEmailValidated() && <ScanDomainButton domainUrl={domainName} ml="2" />}
