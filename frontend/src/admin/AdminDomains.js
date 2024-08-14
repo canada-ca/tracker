@@ -166,7 +166,6 @@ export function AdminDomains({ orgSlug, orgId }) {
     { value: t`TEST`, text: t`Test` },
     { value: t`WEB`, text: t`Web` },
     { value: t`INACTIVE`, text: t`Inactive` },
-    { value: t`OUTSIDE`, text: t`Outside` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
