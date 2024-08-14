@@ -302,6 +302,11 @@ export const loadDomainConnectionsByOrgId =
           FILTER e._from == ${orgId}
           RETURN e.hidden
       )[0]
+      LET assetState = (
+        FOR v, e IN 1..1 ANY domain._id claims
+          FILTER e._from == ${orgId}
+          RETURN e.assetState
+      )
       LET claimTags = (
         FOR v, e IN 1..1 ANY domain._id claims
           FILTER e._from == ${orgId}
