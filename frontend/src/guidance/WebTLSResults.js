@@ -362,7 +362,7 @@ export function WebTLSResults({ tlsResult }) {
                       <Text>{verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}</Text>
                     </Flex>
                     <Flex {...columnInfoStyleProps}>
-                      <DetailTooltip label={t`Shows if the received certificate chain contains an Entrust as CA.`}>
+                      <DetailTooltip label={t`Shows if the received certificate chain contains Entrust as the CA.`}>
                         <StatusIcon status="INFO" />
                         <Text px="1">
                           <Trans>Entrust Certificate</Trans>
