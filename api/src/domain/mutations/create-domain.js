@@ -6,7 +6,7 @@ import { createDomainUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
-import { OutsideDomainCommentEnum } from '../../enums'
+import { AssetStateEnums } from '../../enums'
 
 export const createDomain = new mutationWithClientMutationId({
   name: 'CreateDomain',
@@ -32,9 +32,9 @@ export const createDomain = new mutationWithClientMutationId({
       description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
     },
-    outsideComment: {
-      description: 'Comment describing reason for adding out-of-scope domain.',
-      type: OutsideDomainCommentEnum,
+    assetState: {
+      description: 'Value that determines how the domain relates to the organization.',
+      type: AssetStateEnums,
     },
   }),
   outputFields: () => ({
@@ -91,22 +91,11 @@ export const createDomain = new mutationWithClientMutationId({
       hidden = false
     }
 
-    let outsideComment
-    if (typeof args.outsideComment !== 'undefined') {
-      outsideComment = cleanseInput(args.outsideComment)
+    let assetState
+    if (typeof args.assetState !== 'undefined') {
+      assetState = cleanseInput(args.assetState)
     } else {
-      outsideComment = ''
-    }
-
-    if (tags?.find(({ en }) => en === 'OUTSIDE')) {
-      if (outsideComment === '') {
-        console.warn(`User: ${userKey} attempted to create a domain with the OUTSIDE tag without providing a comment.`)
-        return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(t`Please provide a comment when adding an outside domain.`),
-        }
-      }
+      assetState = ''
     }
 
     // Check to see if org exists
@@ -230,7 +219,7 @@ export const createDomain = new mutationWithClientMutationId({
               _to: ${insertedDomain._id},
               tags: ${tags},
               hidden: ${hidden},
-              outsideComment: ${outsideComment},
+              assetState: ${assetState},
               firstSeen: ${new Date().toISOString()},
             } INTO claims
           `,
@@ -270,6 +259,14 @@ export const createDomain = new mutationWithClientMutationId({
       })
     }
 
+    if (typeof assetState !== 'undefined') {
+      updatedProperties.push({
+        name: 'assetState',
+        oldValue: null,
+        newValue: assetState,
+      })
+    }
+
     await logActivity({
       transaction,
       collections,
@@ -289,7 +286,6 @@ export const createDomain = new mutationWithClientMutationId({
         }, // name of resource being acted upon
         resourceType: 'domain', // user, org, domain
       },
-      reason: outsideComment !== '' ? outsideComment : null,
     })
 
     try {
