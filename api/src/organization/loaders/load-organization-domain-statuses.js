@@ -84,6 +84,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.hasEntrustCertificate ${comparison} true
           `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER cveDetected ${comparison} true
+          `
           } else {
             domainFilters = aql`
             ${domainFilters}
@@ -105,6 +110,16 @@ export const loadOrganizationDomainStatuses =
                     RETURN TRANSLATE(${language}, tag)
                 )
                 RETURN translatedTags
+            )[0]
+            LET cveDetected =  (
+              FOR finding IN additionalFindings
+                FILTER finding.domain == v._id
+                LET vulnerableWebComponents = (
+                  FOR wc IN finding.webComponents
+                    FILTER LENGTH(wc.WebComponentCves) > 0
+                    RETURN wc
+                )
+                RETURN LENGTH(vulnerableWebComponents) > 0
             )[0]
             ${domainFilters}
             LET ipAddresses = (
