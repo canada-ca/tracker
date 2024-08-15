@@ -153,11 +153,15 @@ export function DomainCard({
                 <Trans>Scan Pending</Trans>
               </Badge>
             )}
-            {assetState && (
-              <Badge colorScheme="blue" mr="auto" alignSelf="center">
-                {assetState}
-              </Badge>
-            )}
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                {assetState && (
+                  <Badge colorScheme="blue" mr="auto" alignSelf="center">
+                    {assetState}
+                  </Badge>
+                )}
+              </ABTestVariant>
+            </ABTestWrapper>
           </Flex>
           <Text isTruncated>{url}</Text>
 

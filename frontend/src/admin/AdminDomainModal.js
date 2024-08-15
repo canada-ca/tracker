@@ -35,6 +35,7 @@ import { useMutation } from '@apollo/client'
 import { DomainField } from '../components/fields/DomainField'
 import { CREATE_DOMAIN, UPDATE_DOMAIN } from '../graphql/mutations'
 import withSuperAdmin from '../app/withSuperAdmin'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
   const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, hidden, assetState, mutation, orgCount } =
@@ -265,37 +266,43 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                       </Box>
                     )}
                   />
-                  <FormControl>
-                    <FormLabel htmlFor="assetState" fontWeight="bold">
-                      <Trans>Asset State</Trans>
-                    </FormLabel>
-                    <Select
-                      name="assetState"
-                      id="assetState"
-                      borderColor="black"
-                      onChange={handleChange}
-                      defaultValue={assetState}
-                    >
-                      <option hidden value="">
-                        <Trans>Select a state that best describes the asset in realtion to your organization.</Trans>
-                      </option>
-                      <option value="APPROVED">
-                        <Trans>Approved</Trans>
-                      </option>
-                      <option value="DEPENDENCY">
-                        <Trans>Dependency</Trans>
-                      </option>
-                      <option value="MONITOR_ONLY">
-                        <Trans>Monitor Only</Trans>
-                      </option>
-                      <option value="CANDIDATE">
-                        <Trans>Candidate</Trans>
-                      </option>
-                      <option value="REQUIRES_INVESTIGATION">
-                        <Trans>Requires Investigation</Trans>
-                      </option>
-                    </Select>
-                  </FormControl>
+                  <ABTestWrapper insiderVariantName="B">
+                    <ABTestVariant name="B">
+                      <FormControl>
+                        <FormLabel htmlFor="assetState" fontWeight="bold">
+                          <Trans>Asset State</Trans>
+                        </FormLabel>
+                        <Select
+                          name="assetState"
+                          id="assetState"
+                          borderColor="black"
+                          onChange={handleChange}
+                          defaultValue={assetState}
+                        >
+                          <option hidden value="">
+                            <Trans>
+                              Select a state that best describes the asset in realtion to your organization.
+                            </Trans>
+                          </option>
+                          <option value="APPROVED">
+                            <Trans>Approved</Trans>
+                          </option>
+                          <option value="DEPENDENCY">
+                            <Trans>Dependency</Trans>
+                          </option>
+                          <option value="MONITOR_ONLY">
+                            <Trans>Monitor Only</Trans>
+                          </option>
+                          <option value="CANDIDATE">
+                            <Trans>Candidate</Trans>
+                          </option>
+                          <option value="REQUIRES_INVESTIGATION">
+                            <Trans>Requires Investigation</Trans>
+                          </option>
+                        </Select>
+                      </FormControl>
+                    </ABTestVariant>
+                  </ABTestWrapper>
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
                   <Flex align="center">
                     <Tooltip label={t`Prevent this domain from being counted in your organization's summaries.`}>

@@ -348,6 +348,7 @@ describe('<AdminDomains />', () => {
               jwt: null,
               tfaSendMethod: null,
               userName: null,
+              insideUser: true,
             })}
           >
             <ChakraProvider theme={theme}>
@@ -523,6 +524,7 @@ describe('<AdminDomains />', () => {
               jwt: null,
               tfaSendMethod: null,
               userName: null,
+              insideUser: true,
             })}
           >
             <ChakraProvider theme={theme}>
