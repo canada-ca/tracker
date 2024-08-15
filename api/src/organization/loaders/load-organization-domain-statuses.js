@@ -79,6 +79,11 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.hasEntrustCertificate ${comparison} true
+          `
           } else if (filterValue === 'cve-detected') {
             domainFilters = aql`
             ${domainFilters}
@@ -133,6 +138,7 @@ export const loadOrganizationDomainStatuses =
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
+              hasEntrustCertificate: v.hasEntrustCertificate
             }
           `
       ).all()
