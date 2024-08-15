@@ -269,9 +269,15 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                     <FormLabel htmlFor="assetState" fontWeight="bold">
                       <Trans>Asset State</Trans>
                     </FormLabel>
-                    <Select name="assetState" id="assetState" borderColor="black" onChange={handleChange}>
+                    <Select
+                      name="assetState"
+                      id="assetState"
+                      borderColor="black"
+                      onChange={handleChange}
+                      defaultValue={assetState}
+                    >
                       <option hidden value="">
-                        <Trans>Select a state thata best describes the asset in realtion to your organization.</Trans>
+                        <Trans>Select a state that best describes the asset in realtion to your organization.</Trans>
                       </option>
                       <option value="APPROVED">
                         <Trans>Approved</Trans>
