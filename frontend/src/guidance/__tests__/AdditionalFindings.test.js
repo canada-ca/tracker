@@ -51,14 +51,14 @@ const data = {
   vulnerabilities: {
     critical: [
       {
-        cve: '2024-11-10',
+        cve: 'CVE-2024-12345',
         cvss3Score: 9.3,
       },
     ],
     high: [],
     medium: [
       {
-        cve: '2021-11-10',
+        cve: 'CVE-2021-12345',
         cvss3Score: 5.3,
       },
     ],
@@ -97,7 +97,7 @@ describe('<AdditonalFindings />', () => {
         </UserVarProvider>
       </MockedProvider>,
     )
-    const accordionItems = screen.getAllByRole('button')
-    expect(accordionItems).toHaveLength(7)
+    const accordionItems = screen.getAllByRole('button', { expanded: true })
+    expect(accordionItems).toHaveLength(6)
   })
 })
