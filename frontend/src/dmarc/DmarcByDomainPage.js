@@ -35,6 +35,7 @@ import { useUserVar } from '../utilities/userState'
 import { TourProvider } from '../userOnboarding/contexts/TourContext'
 import { TourButton } from '../userOnboarding/components/TourButton'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
+
 export default function DmarcByDomainPage() {
   const { i18n } = useLingui()
   const currentDate = new Date()
@@ -226,7 +227,6 @@ export default function DmarcByDomainPage() {
         <Trans>DMARC Summaries</Trans>
         <TourButton />
       </Heading>
-      import {TourProvider} from '../userOnboarding/contexts/TourContext'
       <Flex align="center" mb={2}>
         <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>
           <Trans>Showing data for period: </Trans>

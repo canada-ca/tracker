@@ -12,7 +12,7 @@ export const TourComponent = ({ page }) => {
   console.log(page)
   useEffect(() => {
     const hasSeenTour = localStorage.getItem(`hasSeenTour_${page}`)
-    if (!hasSeenTour && mainTourSteps[page]['requiresAuth']) {
+    if (!hasSeenTour && mainTourSteps[page]['requiresAuth'] && isLoggedIn() && isEmailValidated()) {
       startTour()
     } else if (!hasSeenTour && mainTourSteps[page]['requiresAuth'] === false) {
       startTour()

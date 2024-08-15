@@ -105,8 +105,7 @@ export default function DomainsPage() {
         dataFunction={async () => {
           toast({
             title: t`Getting domain statuses`,
-            description: t`Reqimport { TourProvider } from '../userOnboarding/contexts/TourContext'
-uest successfully sent to get all domain statuses - this may take a minute.`,
+            description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
             status: 'info',
             duration: 9000,
             isClosable: true,
