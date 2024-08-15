@@ -101,6 +101,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `CVE_DETECTED`, text: t`CVE Detected` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const domainList = loading ? (

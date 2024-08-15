@@ -207,6 +207,12 @@ def process_msg(msg):
                 [bool(blocked_category) for blocked_category in blocked_categories]
             )
             domain["webScanPending"] = scan_pending
+            try:
+                domain["hasEntrustCertificate"] = processed_results["tls_result"][
+                    "certificate_chain_info"
+                ]["has_entrust_certificate"]
+            except (TypeError, KeyError):
+                domain["hasEntrustCertificate"] = False
 
             del domain["_rev"]
             try:

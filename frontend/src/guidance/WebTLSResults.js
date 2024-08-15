@@ -5,8 +5,11 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  AlertDescription,
+  AlertTitle,
   Box,
   Flex,
+  Link,
   Text,
 } from '@chakra-ui/react'
 import { object } from 'prop-types'
@@ -15,6 +18,7 @@ import { StatusIcon } from '../components/StatusIcon'
 import { GuidanceTagList } from './GuidanceTagList'
 import { Trans, t } from '@lingui/macro'
 import { DetailTooltip } from './DetailTooltip'
+import { NotificationBanner } from '../app/NotificationBanner'
 
 export function WebTLSResults({ tlsResult }) {
   const weakProtocolNames = {
@@ -185,6 +189,7 @@ export function WebTLSResults({ tlsResult }) {
     certificateChain,
     pathValidationResults,
     passedValidation,
+    hasEntrustCertificate,
   } = tlsResult?.certificateChainInfo || {}
 
   const { robotVulnerable, heartbleedVulnerable } = tlsResult
@@ -356,7 +361,45 @@ export function WebTLSResults({ tlsResult }) {
                       </DetailTooltip>
                       <Text>{verifiedChainHasLegacySymantecAnchor ? t`No` : t`Yes`}</Text>
                     </Flex>
+                    <Flex {...columnInfoStyleProps}>
+                      <DetailTooltip label={t`Shows if the received certificate chain contains Entrust as the CA.`}>
+                        <StatusIcon status="INFO" />
+                        <Text px="1">
+                          <Trans>Entrust Certificate</Trans>
+                        </Text>
+                      </DetailTooltip>
+                      <Text>{hasEntrustCertificate ? t`Yes` : t`No`}</Text>
+                    </Flex>
                   </Box>
+
+                  {hasEntrustCertificate && (
+                    <NotificationBanner
+                      status="warning"
+                      bannerId={`entrust-certificate-${certificateChain[0].commonNames[0]}`}
+                      hideable
+                    >
+                      <Box>
+                        <AlertTitle>
+                          <Trans>Entrust Certificate Detected</Trans>
+                        </AlertTitle>
+                        <AlertDescription>
+                          <Trans>
+                            Entrust Certificates issued after October 31, 2024{' '}
+                            <Link
+                              href="https://security.googleblog.com/2024/06/sustaining-digital-certificate-security.html"
+                              color="blue.600"
+                              isExternal
+                            >
+                              will be distrusted
+                            </Link>{' '}
+                            in Chrome 127 and later versions. Immediate action is required to maintain user access.
+                            Failure to act may result in security warnings or access issues for Chromes users.
+                          </Trans>
+                        </AlertDescription>
+                      </Box>
+                    </NotificationBanner>
+                  )}
+
                   <Accordion allowMultiple defaultIndex={[]}>
                     {certificateChain.map(
                       (
