@@ -19,7 +19,6 @@ import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { TourProvider } from '../userOnboarding/contexts/TourContext'
 import { TourButton } from '../userOnboarding/components/TourButton'
 
 export default function AdminPage({ isLoginRequired }) {
@@ -190,22 +189,20 @@ export default function AdminPage({ isLoginRequired }) {
 
 const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
   return (
-    <TourProvider>
-      <TourComponent page="adminProfilePage" />
-      <label>
-        <Flex align="center">
-          <Text fontSize="lg" fontWeight="bold" mr="2">
-            <Trans>Super Admin Menu:</Trans>
-          </Text>
-          <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
-            <option value="organizations">{t`Organizations`}</option>
-            <option value="users">{t`Users`}</option>
-            <option value="audit-logs">{t`Audit Logs`}</option>
-          </Select>
-          <TourButton />
-        </Flex>
-      </label>
-    </TourProvider>
+    <label>
+      <Flex align="center">
+        <TourComponent page="adminProfilePage" />
+        <Text fontSize="lg" fontWeight="bold" mr="2">
+          <Trans>Super Admin Menu:</Trans>
+        </Text>
+        <Select w="20%" defaultValue={activeMenu} onChange={(e) => changeActiveMenu(e.target.value)}>
+          <option value="organizations">{t`Organizations`}</option>
+          <option value="users">{t`Users`}</option>
+          <option value="audit-logs">{t`Audit Logs`}</option>
+        </Select>
+        <TourButton />
+      </Flex>
+    </label>
   )
 })
 

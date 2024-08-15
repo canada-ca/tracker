@@ -24,6 +24,7 @@ export const TourButton = () => {
     } else {
       console.warn('No Tour')
     }
+    console.log(pathname)
   }
 
   return (
@@ -51,6 +52,7 @@ export const TourTextButton = () => {
     } else {
       console.warn('No Tour')
     }
+    console.log(pathname)
   }
 
   return (

@@ -3,15 +3,18 @@ import Joyride from 'react-joyride'
 import { useTour } from '../hooks/useTour'
 import { mainTourSteps } from '../config/tourSteps'
 import { Trans } from '@lingui/macro'
+import { useUserVar } from '../../utilities/userState'
 
 export const TourComponent = ({ page }) => {
+  const { isLoggedIn, isEmailValidated } = useUserVar()
   const { isTourOpen, endTour, startTour } = useTour()
   const [tourKey, setTourKey] = useState(0)
-
+  console.log(page)
   useEffect(() => {
     const hasSeenTour = localStorage.getItem(`hasSeenTour_${page}`)
-
-    if (!hasSeenTour) {
+    if (!hasSeenTour && mainTourSteps[page]['requiresAuth']) {
+      startTour()
+    } else if (!hasSeenTour && mainTourSteps[page]['requiresAuth'] === false) {
       startTour()
     }
   }, [page, startTour])
@@ -37,14 +40,13 @@ export const TourComponent = ({ page }) => {
       }
     })
     // Optionally, restart the current page's tour
-    startTour()
   }
 
   return (
     <>
       <Joyride
         key={tourKey}
-        steps={mainTourSteps[page]}
+        steps={mainTourSteps[page]['steps']}
         run={isTourOpen}
         continuous={true}
         showProgress={true}

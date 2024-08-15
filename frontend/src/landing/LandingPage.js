@@ -7,7 +7,6 @@ import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { TourProvider } from '../userOnboarding/contexts/TourContext'
 import { TourButton } from '../userOnboarding/components/TourButton'
 
 const emailUrlEn =
@@ -23,43 +22,41 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
   const { i18n } = useLingui()
 
   return (
-    <TourProvider>
-      <Stack w="100%">
-        <TourComponent page="landingPage" />
-        <Box mb="16" textAlign="left" px="4">
-          <Heading as="h1" className="step-1">
-            <Trans>Track Digital Security</Trans>
-            <TourButton />
-          </Heading>
-          <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
-          <Text fontSize="xl" className="step-2">
-            <Trans>
-              Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
-              Digital guides government online services to adopt good security practices for practices outlined in the{' '}
-              <Link
-                href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
-                isExternal
-                style={{ fontWeight: 'bold', textAlign: 'center' }}
-              >
-                email
-                <ExternalLinkIcon />
-              </Link>{' '}
-              and{' '}
-              <Link
-                href={i18n.locale === 'en' ? itpinUrlEn : itpinUrlFr}
-                isExternal
-                style={{ fontWeight: 'bold', textAlign: 'center' }}
-              >
-                web
-                <ExternalLinkIcon />
-              </Link>{' '}
-              services. Track how government sites are becoming more secure.
-            </Trans>
-          </Text>
-        </Box>
-        {(!loginRequired || isLoggedIn) && <LandingPageSummaries className="summaries" />}
-      </Stack>
-    </TourProvider>
+    <Stack w="100%">
+      <TourComponent page="landingPage" />
+      <Box mb="16" textAlign="left" px="4">
+        <Heading as="h1" className="step-1">
+          <Trans>Track Digital Security</Trans>
+          <TourButton />
+        </Heading>
+        <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
+        <Text fontSize="xl" className="step-2">
+          <Trans>
+            Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
+            Digital guides government online services to adopt good security practices for practices outlined in the{' '}
+            <Link
+              href={i18n.locale === 'en' ? emailUrlEn : emailUrlFr}
+              isExternal
+              style={{ fontWeight: 'bold', textAlign: 'center' }}
+            >
+              email
+              <ExternalLinkIcon />
+            </Link>{' '}
+            and{' '}
+            <Link
+              href={i18n.locale === 'en' ? itpinUrlEn : itpinUrlFr}
+              isExternal
+              style={{ fontWeight: 'bold', textAlign: 'center' }}
+            >
+              web
+              <ExternalLinkIcon />
+            </Link>{' '}
+            services. Track how government sites are becoming more secure.
+          </Trans>
+        </Text>
+      </Box>
+      {(!loginRequired || isLoggedIn) && <LandingPageSummaries className="summaries" />}
+    </Stack>
   )
 }
 

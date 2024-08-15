@@ -22,7 +22,6 @@ import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
-import { TourProvider } from '../userOnboarding/contexts/TourContext'
 import { TourButton } from '../userOnboarding/components/TourButton'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 
@@ -106,7 +105,8 @@ export default function DomainsPage() {
         dataFunction={async () => {
           toast({
             title: t`Getting domain statuses`,
-            description: t`Request successfully sent to get all domain statuses - this may take a minute.`,
+            description: t`Reqimport { TourProvider } from '../userOnboarding/contexts/TourContext'
+uest successfully sent to get all domain statuses - this may take a minute.`,
             status: 'info',
             duration: 9000,
             isClosable: true,
@@ -195,105 +195,97 @@ export default function DomainsPage() {
   )
 
   return (
-    <TourProvider>
+    <Box w="100%" px={4}>
       <TourComponent page="domainPage" />
-      <Box w="100%" px={4}>
-        <Flex
-          flexDirection="row"
-          justify="space-between"
-          align="center"
-          mb="4"
-          flexWrap={{ base: 'wrap', md: 'nowrap' }}
-        >
-          <Heading as="h1" textAlign="left" mb="4">
-            <Trans>Domains</Trans>
-            <TourButton />
-          </Heading>
-          <StatusExportButton />
-        </Flex>
+      <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
+        <Heading as="h1" textAlign="left" mb="4">
+          <Trans>Domains</Trans>
+          <TourButton />
+        </Heading>
+        <StatusExportButton />
+      </Flex>
 
-        <InfoPanel isOpen={isOpen} onToggle={onToggle}>
-          <InfoBox title={t`Domain`} info={t`The domain address.`} />
-          {/* Web statuses */}
-          <InfoBox
-            title={t`HTTPS`}
-            info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
-          />
-          <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
-          <InfoBox title={t`Certificates`} info={t`Shows if the domain has a valid SSL certificate.`} />
-          <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
-          <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
-          <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
-          {/* Email statuses */}
-          <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
-          <InfoBox
-            title={t`DKIM`}
-            info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
-          />
-          <InfoBox
-            title={t`DMARC`}
-            info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
-          />
-          {/* Tags */}
-          <InfoBox title={t`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
-          <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
-          <InfoBox
-            title={t`WILDCARD`}
-            info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
-          />
-          <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
-        </InfoPanel>
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+        <InfoBox title={t`Domain`} info={t`The domain address.`} />
+        {/* Web statuses */}
+        <InfoBox
+          title={t`HTTPS`}
+          info={t`Shows if the domain meets the Hypertext Transfer Protocol Secure (HTTPS) requirements.`}
+        />
+        <InfoBox title={t`HSTS`} info={t`Shows if the domain meets the HSTS requirements.`} />
+        <InfoBox title={t`Certificates`} info={t`Shows if the domain has a valid SSL certificate.`} />
+        <InfoBox title={t`Protocols`} info={t`Shows if the domain uses acceptable protocols.`} />
+        <InfoBox title={t`Ciphers`} info={t`Shows if the domain uses only ciphers that are strong or acceptable.`} />
+        <InfoBox title={t`Curves`} info={t`Shows if the domain uses only curves that are strong or acceptable.`} />
+        {/* Email statuses */}
+        <InfoBox title={t`SPF`} info={t`Shows if the domain meets the Sender Policy Framework (SPF) requirements.`} />
+        <InfoBox
+          title={t`DKIM`}
+          info={t`Shows if the domain meets the DomainKeys Identified Mail (DKIM) requirements.`}
+        />
+        <InfoBox
+          title={t`DMARC`}
+          info={t`Shows if the domain meets the Message Authentication, Reporting, and Conformance (DMARC) requirements.`}
+        />
+        {/* Tags */}
+        <InfoBox title={t`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
+        <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
+        <InfoBox
+          title={t`WILDCARD`}
+          info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
+        />
+        <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
+      </InfoPanel>
 
-        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-          <SearchBox
-            className="filter-box"
-            selectedDisplayLimit={domainsPerPage}
-            setSelectedDisplayLimit={setDomainsPerPage}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
-            next={next}
-            previous={previous}
-            isLoadingMore={isLoadingMore}
-            orderDirection={orderDirection}
-            setSearchTerm={setSearchTerm}
-            setOrderField={setOrderField}
-            setOrderDirection={setOrderDirection}
-            resetToFirstPage={resetToFirstPage}
-            orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
-            placeholder={t`Search for a domain`}
-            onToggle={onToggle}
-          />
-          {isLoggedIn() && (
-            <Flex align="center" mb="2">
-              <Text mr="2" fontWeight="bold" fontSize="lg" className="filters">
-                <Trans>Filters:</Trans>
-              </Text>
-              <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-              <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
-              <ABTestWrapper insiderVariantName="B">
-                <ABTestVariant name="B">
-                  <FilterList filters={filters} setFilters={setFilters} />
-                </ABTestVariant>
-              </ABTestWrapper>
-            </Flex>
-          )}
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <SearchBox
+          className="filter-box"
+          selectedDisplayLimit={domainsPerPage}
+          setSelectedDisplayLimit={setDomainsPerPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+          orderDirection={orderDirection}
+          setSearchTerm={setSearchTerm}
+          setOrderField={setOrderField}
+          setOrderDirection={setOrderDirection}
+          resetToFirstPage={resetToFirstPage}
+          orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
+          placeholder={t`Search for a domain`}
+          onToggle={onToggle}
+        />
+        {isLoggedIn() && (
+          <Flex align="center" mb="2">
+            <Text mr="2" fontWeight="bold" fontSize="lg" className="filters">
+              <Trans>Filters:</Trans>
+            </Text>
+            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+            <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <FilterList filters={filters} setFilters={setFilters} />
+              </ABTestVariant>
+            </ABTestWrapper>
+          </Flex>
+        )}
 
-          {domainList}
+        {domainList}
 
-          <RelayPaginationControls
-            onlyPagination={false}
-            selectedDisplayLimit={domainsPerPage}
-            setSelectedDisplayLimit={setDomainsPerPage}
-            displayLimitOptions={[5, 10, 20, 50, 100]}
-            resetToFirstPage={resetToFirstPage}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
-            next={next}
-            previous={previous}
-            isLoadingMore={isLoadingMore}
-          />
-        </ErrorBoundary>
-      </Box>
-    </TourProvider>
+        <RelayPaginationControls
+          onlyPagination={false}
+          selectedDisplayLimit={domainsPerPage}
+          setSelectedDisplayLimit={setDomainsPerPage}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
+      </ErrorBoundary>
+    </Box>
   )
 }

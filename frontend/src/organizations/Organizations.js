@@ -19,7 +19,6 @@ import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { TourProvider } from '../userOnboarding/contexts/TourContext'
 import { TourButton } from '../userOnboarding/components/TourButton'
 
 export default function Organizations() {
@@ -127,87 +126,84 @@ export default function Organizations() {
   }
 
   return (
-    <TourProvider>
-      <Box w="100%" px="4">
-        <Heading as="h1" textAlign="left" mb="4">
-          <Trans>Organizations</Trans>
-          <TourButton />
-        </Heading>
+    <Box w="100%" px="4">
+      <TourComponent page="organizationsPage" />
+      <Heading as="h1" textAlign="left" mb="4">
+        <Trans>Organizations</Trans>
+        <TourButton />
+      </Heading>
 
-        <InfoPanel isOpen={isOpen} onToggle={onToggle}>
-          <InfoBox
-            title={t`Organization Name`}
-            info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
-          />
-          <InfoBox title={t`Services`} info={t`Shows the number of domains that the organization is in control of.`} />
-          <InfoBox
-            title={t`HTTPS Configured`}
-            info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS`}
-          />
-          <InfoBox
-            title={t`DMARC Configuration`}
-            info={t`Shows the percentage of domains which have a valid DMARC policy configuration.`}
-          />
-          <Divider borderColor="gray.500" mb={4} />
-          <Trans>Further details for each organization can be found by clicking on its row.</Trans>
-        </InfoPanel>
+      <InfoPanel isOpen={isOpen} onToggle={onToggle}>
+        <InfoBox
+          title={t`Organization Name`}
+          info={t`Displays the Name of the organization, its acronym, and a blue check mark if it is a verified organization.`}
+        />
+        <InfoBox title={t`Services`} info={t`Shows the number of domains that the organization is in control of.`} />
+        <InfoBox
+          title={t`HTTPS Configured`}
+          info={t`Shows the percentage of domains which have HTTPS configured and upgrade HTTP connections to HTTPS`}
+        />
+        <InfoBox
+          title={t`DMARC Configuration`}
+          info={t`Shows the percentage of domains which have a valid DMARC policy configuration.`}
+        />
+        <Divider borderColor="gray.500" mb={4} />
+        <Trans>Further details for each organization can be found by clicking on its row.</Trans>
+      </InfoPanel>
 
-        <TourComponent page="organizationsPage" />
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+        <SearchBox
+          className="search-box"
+          selectedDisplayLimit={orgsPerPage}
+          setSelectedDisplayLimit={setOrgsPerPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+          orderDirection={orderDirection}
+          setSearchTerm={setSearchTerm}
+          setOrderField={setOrderField}
+          setOrderDirection={setOrderDirection}
+          resetToFirstPage={resetToFirstPage}
+          orderByOptions={orderByOptions}
+          placeholder={t`Search for an organization`}
+          onToggle={onToggle}
+        />
 
-        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-          <SearchBox
-            className="search-box"
-            selectedDisplayLimit={orgsPerPage}
-            setSelectedDisplayLimit={setOrgsPerPage}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
-            next={next}
-            previous={previous}
-            isLoadingMore={isLoadingMore}
-            orderDirection={orderDirection}
-            setSearchTerm={setSearchTerm}
-            setOrderField={setOrderField}
-            setOrderDirection={setOrderDirection}
-            resetToFirstPage={resetToFirstPage}
-            orderByOptions={orderByOptions}
-            placeholder={t`Search for an organization`}
-            onToggle={onToggle}
-          />
-
-          <Flex align="center" mb="2">
-            <Text mr="2" fontWeight="bold" fontSize="lg" className="filter">
-              <Trans>Filters:</Trans>
-            </Text>
-            <Tooltip label={t`Filter list to verified organizations only.`}>
-              <Flex align="center" mr="2" className="filterVerified">
-                <Switch
-                  isFocusable={true}
-                  aria-label="Show only verified organizations"
-                  mx="2"
-                  defaultChecked={isVerified}
-                  onChange={(e) => setIsVerified(e.target.checked)}
-                />
-                <CheckCircleIcon color="blue.500" boxSize="icons.md" />
-              </Flex>
-            </Tooltip>
-            {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />}
-            <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
-          </Flex>
-          {orgList}
-          <RelayPaginationControls
-            onlyPagination={false}
-            selectedDisplayLimit={orgsPerPage}
-            setSelectedDisplayLimit={setOrgsPerPage}
-            displayLimitOptions={[5, 10, 20, 50, 100]}
-            resetToFirstPage={resetToFirstPage}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
-            next={next}
-            previous={previous}
-            isLoadingMore={isLoadingMore}
-          />
-        </ErrorBoundary>
-      </Box>
-    </TourProvider>
+        <Flex align="center" mb="2">
+          <Text mr="2" fontWeight="bold" fontSize="lg" className="filter">
+            <Trans>Filters:</Trans>
+          </Text>
+          <Tooltip label={t`Filter list to verified organizations only.`}>
+            <Flex align="center" mr="2" className="filterVerified">
+              <Switch
+                isFocusable={true}
+                aria-label="Show only verified organizations"
+                mx="2"
+                defaultChecked={isVerified}
+                onChange={(e) => setIsVerified(e.target.checked)}
+              />
+              <CheckCircleIcon color="blue.500" boxSize="icons.md" />
+            </Flex>
+          </Tooltip>
+          {isLoggedIn() && <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />}
+          <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
+        </Flex>
+        {orgList}
+        <RelayPaginationControls
+          onlyPagination={false}
+          selectedDisplayLimit={orgsPerPage}
+          setSelectedDisplayLimit={setOrgsPerPage}
+          displayLimitOptions={[5, 10, 20, 50, 100]}
+          resetToFirstPage={resetToFirstPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          next={next}
+          previous={previous}
+          isLoadingMore={isLoadingMore}
+        />
+      </ErrorBoundary>
+    </Box>
   )
 }
