@@ -281,7 +281,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                         >
                           <option hidden value="">
                             <Trans>
-                              Select a state that best describes the asset in realtion to your organization.
+                              Select a state that best describes the asset in relation to your organization.
                             </Trans>
                           </option>
                           <option value="APPROVED">
