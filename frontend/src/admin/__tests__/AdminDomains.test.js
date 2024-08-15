@@ -138,7 +138,7 @@ describe('<AdminDomains />', () => {
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
-              outsideComment: null,
+              assetState: 'APPROVED',
             },
           },
           result: {
@@ -230,7 +230,7 @@ describe('<AdminDomains />', () => {
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
-              outsideComment: null,
+              assetState: 'APPROVED',
             },
           },
           result: {
@@ -326,7 +326,7 @@ describe('<AdminDomains />', () => {
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
-              outsideComment: null,
+              assetState: 'APPROVED',
             },
           },
           result: {
@@ -491,7 +491,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
-              outsideComment: null,
+              assetState: 'APPROVED',
             },
           },
           result: {
