@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Accordion,
   AccordionItem,
@@ -18,7 +18,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Tag,
   Link,
   SimpleGrid,
 } from '@chakra-ui/react'
@@ -29,7 +28,10 @@ import { useLingui } from '@lingui/react'
 
 export function AdditionalFindings({ data }) {
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
+  const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
+  const [activeCve, setActiveCve] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
   const { timestamp, headers, webComponents, vulnerabilities, ports } = data
@@ -230,28 +232,68 @@ export function AdditionalFindings({ data }) {
             <AccordionPanel pb={4}>
               {Object.keys(vulnerabilitySeverities).map((severity) => {
                 return (
-                  <Box key={severity} px="2" mb="2">
-                    <Text>
-                      <b>{vulnerabilitySeverities[severity]}</b>
-                    </Text>
-                    <SimpleGrid columns={8} textAlign="center">
-                      {vulnerabilities[severity].map(({ cve }) => {
-                        return (
-                          <Tag key={cve} bg={severity} borderColor="black" borderWidth="1px" m="1">
-                            <Link href={`https://www.cve.org/CVERecord?id=${cve}`} isExternal>
-                              <Text>{cve}</Text>
-                            </Link>
-                          </Tag>
-                        )
-                      })}
-                    </SimpleGrid>
-                  </Box>
+                  vulnerabilities[severity].length > 0 && (
+                    <Box key={severity} px="2" mb="2">
+                      <Text>
+                        <b>{vulnerabilitySeverities[severity]}</b>
+                      </Text>
+                      <SimpleGrid columns={8}>
+                        {vulnerabilities[severity].map(({ cve }) => {
+                          return (
+                            <Button
+                              key={cve}
+                              borderRadius="full"
+                              m="1"
+                              borderColor="black"
+                              borderWidth="1px"
+                              bg={severity}
+                              fontWeight="normal"
+                              size="sm"
+                              _hover={{ bg: cveSeverityOnHover[severity] }}
+                              onClick={() => {
+                                setActiveCve({
+                                  cve,
+                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
+                                    webComponentCves.some((x) => x.cve === cve),
+                                  ),
+                                })
+                                cveOnOpen()
+                              }}
+                            >
+                              {cve}
+                            </Button>
+                          )
+                        })}
+                      </SimpleGrid>
+                    </Box>
+                  )
                 )
               })}
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
       </Box>
+
+      <Modal isOpen={cveIsOpen} onClose={cveOnClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{activeCve?.cve}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody fontSize="lg">
+            <Trans>Affected Components:</Trans>
+            {activeCve?.affectedWebComps?.map(({ webComponentName, webComponentCategory, webComponentVersion }) => (
+              <Text key={webComponentName} ml="2">
+                {webComponentName} {webComponentCategory} {webComponentVersion}
+              </Text>
+            ))}
+          </ModalBody>
+          <ModalFooter>
+            <Link color="blue.500" href={`https://www.cve.org/CVERecord?id=${activeCve?.cve}`} isExternal>
+              <Trans>More info</Trans> <ExternalLinkIcon />
+            </Link>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

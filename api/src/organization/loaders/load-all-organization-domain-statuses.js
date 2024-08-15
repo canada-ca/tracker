@@ -74,6 +74,11 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER d.hasEntrustCertificate ${comparison} true
+          `
           }
         }
       })
@@ -106,7 +111,8 @@ export const loadAllOrganizationDomainStatuses =
               "dmarc": d.status.dmarc,
               "rcode": d.rcode,
               "blocked": d.blocked,
-              "wildcardSibling": d.wildcardSibling
+              "wildcardSibling": d.wildcardSibling,
+              "hasEntrustCertificate": d.hasEntrustCertificate
             }
           `
       ).all()

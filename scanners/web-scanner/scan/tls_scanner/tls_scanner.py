@@ -115,6 +115,7 @@ class CertificateChainInfo:
     verified_chain_has_legacy_symantec_anchor: bool = None
     certificate_chain: list[CertificateInfo] = None
     passed_validation: bool = None
+    has_entrust_certificate: bool = None
 
     def __init__(
         self,
@@ -144,6 +145,11 @@ class CertificateChainInfo:
             cert_deployment.path_validation_results
         )
         self.passed_validation = bool(cert_deployment.received_certificate_chain)
+        self.has_entrust_certificate = False
+        for cert in self.certificate_chain:
+            if any(org in cert.issuer for org in ["O=Entrust", "O=AffirmTrust"]):
+                self.has_entrust_certificate = True
+                break
 
     @staticmethod
     def get_path_validation_result_info(

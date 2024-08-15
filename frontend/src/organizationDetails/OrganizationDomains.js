@@ -22,6 +22,7 @@ import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
+import { domainSearchTip } from '../domains/DomainsPage'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -99,6 +100,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `HIDDEN`, text: t`Hidden` },
     { value: `CVE_DETECTED`, text: t`CVE Detected` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const domainList = loading ? (
@@ -238,6 +240,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
         placeholder={t`Search for a domain`}
         onToggle={onToggle}
+        searchTip={domainSearchTip}
       />
 
       {orgSlug !== 'my-tracker' && (
