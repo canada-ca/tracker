@@ -273,7 +273,7 @@ export const loadUserConnectionsByUserId =
       LET searchedDisplayNames = searchedDisplayNamesCount[* FILTER CURRENT.count == LENGTH(tokenArr)].user
       LET searchedUserNames = (
         FOR user IN users
-          FILTER user.userName LIKE CONCAT("%", ${search}, "%")
+          FILTER LOWER(user.userName) LIKE CONCAT("%", LOWER(${search}), "%")
           FILTER user._key IN userKeys
           RETURN user
       )
