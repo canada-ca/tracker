@@ -30,8 +30,12 @@ export const TourComponent = ({ page }) => {
       localStorage.setItem(`hasSeenTour_${page}`, true)
       endTour()
     }
-  }
 
+    if (type === 'step:after' && action === 'close'){
+      localStorage.setItem(`hasSeenTour_${page}`, true)
+      endTour()
+    }
+  }
   const resetAllTours = () => {
     // Clear all hasSeenTour items from localStorage
     Object.keys(localStorage).forEach((key) => {
@@ -51,6 +55,8 @@ export const TourComponent = ({ page }) => {
         continuous={true}
         showProgress={true}
         showSkipButton={true}
+        disableCloseOnEsc={false}
+        disableOverlayClose={false}
         styles={{
           buttonNext: {
             backgroundColor: '#ff6600',
