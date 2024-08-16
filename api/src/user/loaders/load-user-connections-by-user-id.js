@@ -256,17 +256,28 @@ export const loadUserConnectionsByUserId =
       search = cleanseInput(search)
       userSearchQuery = aql`
       LET tokenArr = TOKENS(${search}, "text_en")
-      LET searchedUsers = (
+      LET searchedDisplayNamesCount = FLATTEN(
         FOR tokenItem in tokenArr
           LET token = LOWER(tokenItem)
           FOR user IN userSearch
             SEARCH ANALYZER(
               user.displayName LIKE CONCAT("%", token, "%")
-              OR user.userName LIKE CONCAT("%", token, "%")
             , "text_en")
             FILTER user._key IN userKeys
-            RETURN user
+            COLLECT currentUser = user WITH COUNT INTO count
+            RETURN {
+              'user': currentUser,
+              'count': count
+            }
       )
+      LET searchedDisplayNames = searchedDisplayNamesCount[* FILTER CURRENT.count == LENGTH(tokenArr)].user
+      LET searchedUserNames = (
+        FOR user IN users
+          FILTER user.userName LIKE CONCAT("%", ${search}, "%")
+          FILTER user._key IN userKeys
+          RETURN user
+      )
+      LET searchedUsers = UNIQUE(APPEND(searchedDisplayNames, searchedUserNames))
     `
       loopString = aql`FOR user IN searchedUsers`
       totalCount = aql`LENGTH(searchedUsers)`
