@@ -184,7 +184,7 @@ export const CREATE_DOMAIN = gql`
     $tags: [InputTag]
     $archived: Boolean
     $hidden: Boolean
-    $assetState: AssetStateEnums
+    $assetState: AssetStateEnums!
   ) {
     createDomain(
       input: {

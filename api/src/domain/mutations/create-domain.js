@@ -34,7 +34,7 @@ export const createDomain = new mutationWithClientMutationId({
     },
     assetState: {
       description: 'Value that determines how the domain relates to the organization.',
-      type: AssetStateEnums,
+      type: new GraphQLNonNull(AssetStateEnums),
     },
   }),
   outputFields: () => ({
