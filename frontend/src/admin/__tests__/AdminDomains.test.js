@@ -138,7 +138,6 @@ describe('<AdminDomains />', () => {
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
-              outsideComment: null,
             },
           },
           result: {
@@ -230,7 +229,7 @@ describe('<AdminDomains />', () => {
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
-              outsideComment: null,
+              assetState: 'APPROVED',
             },
           },
           result: {
@@ -326,7 +325,7 @@ describe('<AdminDomains />', () => {
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
-              outsideComment: null,
+              assetState: 'APPROVED',
             },
           },
           result: {
@@ -343,13 +342,14 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, getByPlaceholderText, findByText, queryByText } = render(
+      const { getByText, getByPlaceholderText, findByText, queryByText, findByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
               jwt: null,
               tfaSendMethod: null,
               userName: null,
+              insideUser: true,
             })}
           >
             <ChakraProvider theme={theme}>
@@ -377,6 +377,16 @@ describe('<AdminDomains />', () => {
       })
 
       userEvent.click(addDomainButton)
+
+      await waitFor(() => expect(getByText(/Add Domain Details/i)).toBeInTheDocument())
+
+      const assetStateSelect = await findByRole('combobox', { name: /Asset State/ })
+
+      fireEvent.change(assetStateSelect, {
+        target: {
+          value: 'APPROVED',
+        },
+      })
 
       const confirmBtn = getByText(/Confirm/)
       fireEvent.click(confirmBtn)
@@ -466,7 +476,7 @@ describe('<AdminDomains />', () => {
   })
 
   describe('editing a domain', () => {
-    it.skip('successfully edits domain URL', async () => {
+    it('successfully edits domain URL', async () => {
       const mocks = [
         {
           request: {
@@ -491,7 +501,7 @@ describe('<AdminDomains />', () => {
               tags: [],
               hidden: false,
               archived: false,
-              outsideComment: null,
+              assetState: 'MONITOR_ONLY',
             },
           },
           result: {
@@ -508,13 +518,14 @@ describe('<AdminDomains />', () => {
         },
       ]
 
-      const { getByText, findByTestId, getByLabelText, queryByText } = render(
+      const { getByText, findByTestId, getByLabelText, queryByText, findByRole } = render(
         <MockedProvider mocks={mocks} cache={createCache()}>
           <UserVarProvider
             userVar={makeVar({
               jwt: null,
               tfaSendMethod: null,
               userName: null,
+              insideUser: true,
             })}
           >
             <ChakraProvider theme={theme}>
@@ -541,6 +552,14 @@ describe('<AdminDomains />', () => {
       fireEvent.change(editDomainInput, {
         target: {
           value: 'test.domain.ca',
+        },
+      })
+
+      const assetStateSelect = await findByRole('combobox', { name: /Asset State/ })
+
+      fireEvent.change(assetStateSelect, {
+        target: {
+          value: 'MONITOR_ONLY',
         },
       })
 
