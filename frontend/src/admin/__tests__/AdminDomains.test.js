@@ -229,6 +229,7 @@ describe('<AdminDomains />', () => {
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
               hidden: false,
               archived: false,
+              assetState: 'APPROVED',
             },
           },
           result: {
