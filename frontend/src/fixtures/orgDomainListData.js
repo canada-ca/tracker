@@ -12,6 +12,7 @@ export const rawOrgDomainListData = {
             claimTags: [],
             archived: false,
             hidden: false,
+            assetState: 'APPROVED',
             rcode: 'NOERROR',
             organizations: {
               totalCount: 1,
@@ -28,6 +29,7 @@ export const rawOrgDomainListData = {
             claimTags: [],
             archived: false,
             hidden: false,
+            assetState: 'APPROVED',
             rcode: 'NOERROR',
             organizations: {
               totalCount: 1,
@@ -44,6 +46,7 @@ export const rawOrgDomainListData = {
             claimTags: [],
             archived: false,
             hidden: false,
+            assetState: 'APPROVED',
             rcode: 'NOERROR',
             organizations: {
               totalCount: 1,
