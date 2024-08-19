@@ -38,6 +38,7 @@ import {
   loadSpfGuidanceTagConnectionsByTagId,
   loadSslGuidanceTagByTagId,
   loadSslGuidanceTagConnectionsByTagId,
+  loadGuidanceTagByTagId,
 } from './guidance-tag/loaders'
 import {
   loadOrgByKey,
@@ -222,6 +223,12 @@ export function initializeLoaders({ query, db, userKey, i18n, language, cleanseI
       query,
       userKey,
       cleanseInput,
+      i18n,
+      language,
+    }),
+    loadGuidanceTagByTagId: loadGuidanceTagByTagId({
+      query,
+      userKey,
       i18n,
       language,
     }),
