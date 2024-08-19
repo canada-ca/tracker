@@ -197,7 +197,7 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
             tags: getInitTags(),
             archiveDomain: archived,
             hideDomain: hidden,
-            assetState,
+            assetState: assetState || 'APPROVED',
           }}
           initialTouched={{
             domainUrl: true,
@@ -271,7 +271,14 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                     <ABTestVariant name="B">
                       <FormControl>
                         <FormLabel htmlFor="assetState" fontWeight="bold">
-                          <Trans>Asset State</Trans>
+                          <Tooltip
+                            label={t`Select a state that best describes the asset in relation to your organization.`}
+                          >
+                            <Flex align="center">
+                              <Trans>Asset State</Trans>{' '}
+                              <QuestionOutlineIcon ml="2" color="gray.500" boxSize="icons.md" />
+                            </Flex>
+                          </Tooltip>
                         </FormLabel>
                         <Select
                           name="assetState"
@@ -280,11 +287,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                           onChange={handleChange}
                           defaultValue={assetState}
                         >
-                          <option hidden value="">
-                            <Trans>
-                              Select a state that best describes the asset in relation to your organization.
-                            </Trans>
-                          </option>
                           <option value="APPROVED">
                             <Trans>Approved</Trans>
                           </option>
