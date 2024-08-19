@@ -188,15 +188,27 @@ export const loadAffiliationConnectionsByOrgId =
       search = cleanseInput(search)
       userSearchQuery = aql`
       LET tokenArr = TOKENS(${search}, "text_en")
-      LET userIds = UNIQUE(
-        FOR token IN tokenArr
+      LET searchedDisplayNamesCount = FLATTEN(
+        FOR tokenItem in tokenArr
+          LET token = LOWER(tokenItem)
           FOR user IN userSearch
             SEARCH ANALYZER(
               user.displayName LIKE CONCAT("%", token, "%")
-              OR user.userName LIKE CONCAT("%", token, "%")
             , "text_en")
-            RETURN user._id
+            COLLECT currentUserId = user._id WITH COUNT INTO count
+            RETURN {
+              'user': currentUserId,
+              'count': count
+            }
       )
+      LET searchedDisplayNames = searchedDisplayNamesCount[* FILTER CURRENT.count == LENGTH(tokenArr)].user
+      LET searchedUserNames = (
+        FOR user IN users
+          FILTER LOWER(user.userName) LIKE CONCAT("%", LOWER(${search}), "%")
+          RETURN user._id
+      )
+      LET userIds = UNIQUE(APPEND(searchedDisplayNames, searchedUserNames))
+
     `
       userIdFilter = aql`FILTER e._to IN userIds`
     }
