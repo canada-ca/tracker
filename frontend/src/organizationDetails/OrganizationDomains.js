@@ -103,6 +103,14 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
+  const assetStateOptions = [
+    { value: t`APPROVED`, text: t`Approved` },
+    { value: t`DEPENDENCY`, text: t`Dependency` },
+    { value: t`MONITOR_ONLY`, text: t`Monitor Only` },
+    { value: t`CANDIDATE`, text: t`Candidate` },
+    { value: t`REQUIRES_INVESTIGATION`, text: t`Requires Investigation` },
+  ]
+
   const domainList = loading ? (
     <LoadingMessage>
       <Trans>Domains</Trans>
@@ -115,6 +123,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           setFilters={setFilters}
           statusOptions={orderByOptions}
           filterTagOptions={filterTagOptions}
+          assetStateOptions={assetStateOptions}
         />
       )}
       <ListOf

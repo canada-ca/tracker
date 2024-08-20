@@ -184,7 +184,7 @@ export function AdminDomains({ orgSlug, orgId }) {
       <Formik
         validationSchema={validationSchema}
         initialValues={{
-          filterCategory: 'TAGS',
+          filterCategory: '',
           comparison: '',
           filterValue: '',
         }}
@@ -192,21 +192,50 @@ export function AdminDomains({ orgSlug, orgId }) {
           setFilters([
             ...new Map(
               [...filters, values].map((item) => {
-                return [item['filterValue'], item]
+                if (item['filterCategory'] !== 'TAGS') return [item['filterCategory'], item]
+                else return [item['filterValue'], item]
               }),
             ).values(),
           ])
           resetForm()
         }}
       >
-        {({ handleChange, handleSubmit, errors }) => {
+        {({ handleChange, handleSubmit, errors, values }) => {
           return (
             <form onSubmit={handleSubmit} role="form" aria-label="form" name="form">
               <Flex align="center">
                 <Text fontWeight="bold" mr="2">
                   <Trans>Filters:</Trans>
                 </Text>
-
+                <Box maxW="25%" mx="1">
+                  <Select
+                    aria-label="filterCategory"
+                    name="filterCategory"
+                    borderColor="black"
+                    onChange={(e) => {
+                      if (
+                        (values.filterCategory === 'TAGS' && e.target.value !== 'TAGS') ||
+                        (values.filterCategory !== 'TAGS' && e.target.value === 'TAGS')
+                      ) {
+                        values.filterValue = ''
+                      }
+                      handleChange(e)
+                    }}
+                  >
+                    <option hidden value="">
+                      <Trans>Value</Trans>
+                    </option>
+                    <option value="TAGS">
+                      <Trans>Tag</Trans>
+                    </option>
+                    <option value="ASSET_STATE">
+                      <Trans>Asset State</Trans>
+                    </option>
+                  </Select>
+                  <Text color="red.500" mt={0}>
+                    {errors.comparison}
+                  </Text>
+                </Box>
                 <Box maxW="25%" mx="1">
                   <Select name="comparison" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
@@ -226,15 +255,35 @@ export function AdminDomains({ orgSlug, orgId }) {
                 <Box maxW="25%" mx="1">
                   <Select name="filterValue" borderColor="black" onChange={handleChange}>
                     <option hidden value="">
-                      <Trans>Status/Tag</Trans>
+                      <Trans>Status/Tag/State</Trans>
                     </option>
-                    {filterTagOptions.map(({ value, text }, idx) => {
-                      return (
-                        <option key={idx} value={value}>
-                          {text}
+                    {values.filterCategory === 'TAGS' ? (
+                      filterTagOptions.map(({ value, text }, idx) => {
+                        return (
+                          <option key={idx} value={value}>
+                            {text}
+                          </option>
+                        )
+                      })
+                    ) : (
+                      <>
+                        <option value="APPROVED">
+                          <Trans>Approved</Trans>
                         </option>
-                      )
-                    })}
+                        <option value="DEPENDENCY">
+                          <Trans>Dependency</Trans>
+                        </option>
+                        <option value="MONITOR_ONLY">
+                          <Trans>Monitor Only</Trans>
+                        </option>
+                        <option value="CANDIDATE">
+                          <Trans>Candidate</Trans>
+                        </option>
+                        <option value="REQUIRES_INVESTIGATION">
+                          <Trans>Requires Investigation</Trans>
+                        </option>
+                      </>
+                    )}
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.filterValue}
