@@ -77,14 +77,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                     name="filterCategory"
                     borderColor="black"
                     onChange={(e) => {
-                      if (
-                        (['TAGS', 'ASSET_STATE'].includes(values.filterCategory) &&
-                          !['TAGS', 'ASSET_STATE'].includes(e.target.value)) ||
-                        (!['TAGS', 'ASSET_STATE'].includes(values.filterCategory) &&
-                          ['TAGS', 'ASSET_STATE'].includes(e.target.value))
-                      ) {
-                        values.filterValue = ''
-                      }
+                      if (values.filterCategory !== e.target.value) values.filterValue = ''
                       handleChange(e)
                     }}
                   >
