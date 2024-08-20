@@ -1,24 +1,8 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 
+//Tour steps for each page labeled by the page name, with option for requiring authentication
 export const mainTourSteps = {
-  // landingPage: [
-  //   {
-  //     content: (
-  //       <h1>
-  //         <Trans>Welcome!</Trans>
-  //       </h1>
-  //     ),
-  //     placement: 'center',
-  //     target: 'body',
-  //     requiresAuth: true,
-  //   },
-  //   {
-  //     target: '.summaries',
-  //     content: <Trans>Here you can filter the list of organizations</Trans>,
-  //     disableBeacon: true,
-  //   },
-  // ],
   organizationsPage: {
     requiresAuth: true,
     steps: [

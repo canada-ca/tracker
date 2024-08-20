@@ -22,7 +22,6 @@ import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
-import { TourButton } from '../userOnboarding/components/TourButton'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DomainsPage() {
@@ -199,7 +198,6 @@ export default function DomainsPage() {
       <Flex flexDirection="row" justify="space-between" align="center" mb="4" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
         <Heading as="h1" textAlign="left" mb="4">
           <Trans>Domains</Trans>
-          <TourButton />
         </Heading>
         <StatusExportButton />
       </Flex>

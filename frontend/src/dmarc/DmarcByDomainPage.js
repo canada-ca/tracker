@@ -32,8 +32,6 @@ import { MonthSelect } from '../components/MonthSelect'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { ExportRuaListButton } from './ExportRuaListButton'
 import { useUserVar } from '../utilities/userState'
-import { TourProvider } from '../userOnboarding/contexts/TourContext'
-import { TourButton } from '../userOnboarding/components/TourButton'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function DmarcByDomainPage() {
@@ -213,6 +211,7 @@ export default function DmarcByDomainPage() {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
+
     resetToFirstPage()
   }
 
@@ -225,7 +224,6 @@ export default function DmarcByDomainPage() {
       <TourComponent page="dmarcSummariesPage" />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>DMARC Summaries</Trans>
-        <TourButton />
       </Heading>
       <Flex align="center" mb={2}>
         <Text as="label" htmlFor="data-date-range" fontWeight="bold" textAlign="center" mr={1}>

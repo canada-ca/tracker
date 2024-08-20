@@ -19,7 +19,6 @@ import { AuditLogTable } from './AuditLogTable'
 import { ErrorBoundary } from 'react-error-boundary'
 import withSuperAdmin from '../app/withSuperAdmin'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { TourButton } from '../userOnboarding/components/TourButton'
 
 export default function AdminPage({ isLoginRequired }) {
   const [selectedOrg, setSelectedOrg] = useState('none')
@@ -200,7 +199,6 @@ const SuperAdminMenu = withSuperAdmin(({ activeMenu, changeActiveMenu }) => {
           <option value="users">{t`Users`}</option>
           <option value="audit-logs">{t`Audit Logs`}</option>
         </Select>
-        <TourButton />
       </Flex>
     </label>
   )

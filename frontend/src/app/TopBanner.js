@@ -17,7 +17,7 @@ import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
-import { TourTextButton } from '../userOnboarding/components/TourButton'
+import { TourButton } from '../userOnboarding/components/TourButton'
 
 export const TopBanner = (props) => {
   const { isLoggedIn, logout } = useUserVar()
@@ -111,7 +111,7 @@ export const TopBanner = (props) => {
               >
                 <Trans>Sign Out</Trans>
               </Button>
-              <TourTextButton />
+              <TourButton />
             </>
           ) : (
             <>

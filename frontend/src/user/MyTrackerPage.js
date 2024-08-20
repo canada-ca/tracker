@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
@@ -12,7 +12,6 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { MY_TRACKER_SUMMARY } from '../graphql/queries'
 import { RadialBarChart } from '../summaries/RadialBarChart'
 import { TierOneSummaries } from '../summaries/TierOneSummaries'
-import { TourButton } from '../userOnboarding/components/TourButton'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
 
 export default function OrganizationDetails() {
@@ -60,7 +59,6 @@ export default function OrganizationDetails() {
           flexBasis={{ base: '100%', md: 'auto' }}
         >
           <Trans>myTracker</Trans>
-          <TourButton />
         </Heading>
       </Flex>
       <Text fontSize="lg" mb="2">

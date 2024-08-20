@@ -7,7 +7,6 @@ import { LandingPageSummaries } from './LandingPageSummaries'
 import { useLingui } from '@lingui/react'
 import { bool } from 'prop-types'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { TourButton } from '../userOnboarding/components/TourButton'
 
 const emailUrlEn =
   'https://www.canada.ca/en/government/system/digital-government/policies-standards/enterprise-it-service-common-configurations/email.html'
@@ -27,7 +26,6 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
       <Box mb="16" textAlign="left" px="4">
         <Heading as="h1" className="step-1">
           <Trans>Track Digital Security</Trans>
-          <TourButton />
         </Heading>
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
         <Text fontSize="xl" className="step-2">

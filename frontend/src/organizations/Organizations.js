@@ -19,7 +19,6 @@ import { RequestOrgInviteModal } from './RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { TourComponent } from '../userOnboarding/components/TourComponent'
-import { TourButton } from '../userOnboarding/components/TourButton'
 
 export default function Organizations() {
   const { isLoggedIn, hasAffiliation } = useUserVar()
@@ -130,7 +129,6 @@ export default function Organizations() {
       <TourComponent page="organizationsPage" />
       <Heading as="h1" textAlign="left" mb="4">
         <Trans>Organizations</Trans>
-        <TourButton />
       </Heading>
 
       <InfoPanel isOpen={isOpen} onToggle={onToggle}>

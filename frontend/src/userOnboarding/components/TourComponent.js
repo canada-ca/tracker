@@ -4,12 +4,14 @@ import { useTour } from '../hooks/useTour'
 import { mainTourSteps } from '../config/tourSteps'
 import { Trans } from '@lingui/macro'
 import { useUserVar } from '../../utilities/userState'
+import PropTypes from 'prop-types'
 
 export const TourComponent = ({ page }) => {
   const { isLoggedIn, isEmailValidated } = useUserVar()
   const { isTourOpen, endTour, startTour } = useTour()
   const [tourKey, setTourKey] = useState(0)
-  console.log(page)
+
+  //handles starting the tour based on the page and user state
   useEffect(() => {
     const hasSeenTour = localStorage.getItem(`hasSeenTour_${page}`)
     if (!hasSeenTour && mainTourSteps[page]['requiresAuth'] && isLoggedIn() && isEmailValidated()) {
@@ -25,27 +27,20 @@ export const TourComponent = ({ page }) => {
     }
   }, [isTourOpen])
 
-  const handleJoyrideCallback = ({ status }) => {
+  // handles the finishing and skipping/closing of tour
+  const handleJoyrideCallback = ({ status, type, action }) => {
     if (['finished', 'skipped'].includes(status)) {
       localStorage.setItem(`hasSeenTour_${page}`, true)
       endTour()
     }
 
-    if (type === 'step:after' && action === 'close'){
+    if (type === 'step:after' && action === 'close') {
       localStorage.setItem(`hasSeenTour_${page}`, true)
       endTour()
     }
   }
-  const resetAllTours = () => {
-    // Clear all hasSeenTour items from localStorage
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith('hasSeenTour_')) {
-        localStorage.removeItem(key)
-      }
-    })
-    // Optionally, restart the current page's tour
-  }
 
+  //Joyride component (can modify ui stuff here)
   return (
     <>
       <Joyride
@@ -72,7 +67,10 @@ export const TourComponent = ({ page }) => {
         }}
         callback={handleJoyrideCallback}
       />
-      <button onClick={resetAllTours}>Reset Tour</button>
     </>
   )
+}
+
+TourComponent.propTypes = {
+  page: PropTypes.string.isRequired,
 }
