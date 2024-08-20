@@ -108,7 +108,7 @@ describe('given spfFailureTable gql object', () => {
           const demoType = spfFailureTableType.getFields()
 
           const expectedResult = {
-            _id: 'aggregateGuidanceTags/agg1',
+            _id: 'guidanceTags/agg1',
             _key: 'agg1',
             _rev: 'rev',
             _type: 'guidanceTag',
@@ -131,7 +131,7 @@ describe('given spfFailureTable gql object', () => {
               {},
               {
                 loaders: {
-                  loadAggregateGuidanceTagByTagId: {
+                  loadGuidanceTagByTagId: {
                     load: jest.fn().mockReturnValue(expectedResult),
                   },
                 },

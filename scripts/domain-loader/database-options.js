@@ -47,6 +47,11 @@ module.exports.databaseOptions = ({ rootPass }) => [
   },
   {
     type: 'documentcollection',
+    name: 'guidanceTags',
+    options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
+  },
+  {
+    type: 'documentcollection',
     name: 'dkimGuidanceTags',
     options: { replicationFactor: 3, writeConcern: 1, numberOfShards: 6 },
   },

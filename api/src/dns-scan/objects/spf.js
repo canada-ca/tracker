@@ -27,22 +27,22 @@ export const spfType = new GraphQLObjectType({
     positiveTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of positive tags for the scanned domain from this scan.`,
-      resolve: async ({ positiveTags }, _, { loaders: { loadSpfGuidanceTagByTagId } }) => {
-        return await loadSpfGuidanceTagByTagId({ tags: positiveTags })
+      resolve: async ({ positiveTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
+        return await loadGuidanceTagByTagId({ tags: positiveTags })
       },
     },
     neutralTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of neutral tags for the scanned domain from this scan.`,
-      resolve: async ({ neutralTags }, _, { loaders: { loadSpfGuidanceTagByTagId } }) => {
-        return await loadSpfGuidanceTagByTagId({ tags: neutralTags })
+      resolve: async ({ neutralTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
+        return await loadGuidanceTagByTagId({ tags: neutralTags })
       },
     },
     negativeTags: {
       type: new GraphQLList(guidanceTagType),
       description: `List of negative tags for the scanned domain from this scan.`,
-      resolve: async ({ negativeTags }, _, { loaders: { loadSpfGuidanceTagByTagId } }) => {
-        return await loadSpfGuidanceTagByTagId({ tags: negativeTags })
+      resolve: async ({ negativeTags }, _, { loaders: { loadGuidanceTagByTagId } }) => {
+        return await loadGuidanceTagByTagId({ tags: negativeTags })
       },
     },
   }),
