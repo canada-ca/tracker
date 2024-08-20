@@ -95,6 +95,11 @@ export const loadOrganizationDomainStatuses =
             FILTER POSITION(claimTags, ${filterValue}) ${comparison} true
           `
           }
+        } else if (filterCategory === 'asset-state') {
+          domainFilters = aql`
+            ${domainFilters}
+            FILTER e.assetState ${comparison} ${filterValue}
+          `
         }
       })
     }
@@ -134,6 +139,7 @@ export const loadOrganizationDomainStatuses =
               ipAddresses: ipAddresses,
               status: v.status,
               tags: claimTags,
+              assetState: e.assetState,
               hidden: e.hidden,
               rcode: v.rcode,
               blocked: v.blocked,
