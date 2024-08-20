@@ -332,9 +332,9 @@ describe('given the load affiliations by org id function', () => {
                   },
                 },
               ],
-              totalCount: 2,
+              totalCount: 1,
               pageInfo: {
-                hasNextPage: true,
+                hasNextPage: false,
                 hasPreviousPage: false,
                 startCursor: toGlobalId('affiliation', expectedAffiliations[0]._key),
                 endCursor: toGlobalId('affiliation', expectedAffiliations[0]._key),
@@ -377,9 +377,9 @@ describe('given the load affiliations by org id function', () => {
                   },
                 },
               ],
-              totalCount: 2,
+              totalCount: 1,
               pageInfo: {
-                hasNextPage: true,
+                hasNextPage: false,
                 hasPreviousPage: false,
                 startCursor: toGlobalId('affiliation', expectedAffiliations[0]._key),
                 endCursor: toGlobalId('affiliation', expectedAffiliations[0]._key),

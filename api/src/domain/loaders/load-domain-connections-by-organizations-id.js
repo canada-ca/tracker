@@ -297,19 +297,14 @@ export const loadDomainConnectionsByOrgId =
     }
 
     let domainFilters = aql`
-      LET hidden = (
-        FOR v, e IN 1..1 ANY domain._id claims
-          FILTER e._from == ${orgId}
-          RETURN e.hidden
-      )[0]
-      LET claimTags = (
+      LET claimVals = (
         FOR v, e IN 1..1 ANY domain._id claims
           FILTER e._from == ${orgId}
           LET translatedTags = (
             FOR tag IN e.tags || []
               RETURN TRANSLATE(${language}, tag)
           )
-          RETURN translatedTags
+          RETURN { hidden: e.hidden, assetState: e.assetState, claimTags: translatedTags }
       )[0]
       LET cveDetected =  (
         FOR finding IN additionalFindings
@@ -383,7 +378,7 @@ export const loadDomainConnectionsByOrgId =
           if (filterValue === 'hidden') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER hidden ${comparison} true
+            FILTER claimVals.hidden ${comparison} true
           `
           } else if (filterValue === 'archived') {
             domainFilters = aql`
@@ -423,7 +418,7 @@ export const loadDomainConnectionsByOrgId =
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION( claimTags, ${filterValue}) ${comparison} true
+            FILTER POSITION( claimVals.claimTags, ${filterValue}) ${comparison} true
           `
           }
         }
@@ -532,7 +527,7 @@ export const loadDomainConnectionsByOrgId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden }, DOCUMENT(domain._id))
+          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimVals.claimTags, "hidden": claimVals.hidden, "assetState": claimVals.assetState }, DOCUMENT(domain._id))
       )
 
       LET hasNextPage = (LENGTH(

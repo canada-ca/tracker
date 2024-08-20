@@ -6,7 +6,7 @@ import { updateDomainUnion } from '../unions'
 import { Domain } from '../../scalars'
 import { logActivity } from '../../audit-logs/mutations/log-activity'
 import { inputTag } from '../inputs/domain-tag'
-import { OutsideDomainCommentEnum } from '../../enums'
+import { AssetStateEnums } from '../../enums'
 
 export const updateDomain = new mutationWithClientMutationId({
   name: 'UpdateDomain',
@@ -36,13 +36,13 @@ export const updateDomain = new mutationWithClientMutationId({
       description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
     },
-    outsideComment: {
-      description: 'Comment describing reason for adding out-of-scope domain.',
-      type: OutsideDomainCommentEnum,
-    },
     ignoreRua: {
       description: 'Boolean value that determines if the domain should ignore rua reports.',
       type: GraphQLBoolean,
+    },
+    assetState: {
+      description: 'Value that determines how the domain relates to the organization.',
+      type: AssetStateEnums,
     },
   }),
   outputFields: () => ({
@@ -97,22 +97,11 @@ export const updateDomain = new mutationWithClientMutationId({
       hidden = null
     }
 
-    let outsideComment
-    if (typeof args.outsideComment !== 'undefined') {
-      outsideComment = cleanseInput(args.outsideComment)
+    let assetState
+    if (typeof args.assetState !== 'undefined') {
+      assetState = cleanseInput(args.assetState)
     } else {
-      outsideComment = ''
-    }
-
-    if (tags?.find(({ en }) => en === 'OUTSIDE')) {
-      if (outsideComment === '') {
-        console.warn(`User: ${userKey} attempted to create a domain with the OUTSIDE tag without providing a comment.`)
-        return {
-          _type: 'error',
-          code: 400,
-          description: i18n._(t`Please provide a comment when adding an outside domain.`),
-        }
-      }
+      assetState = ''
     }
 
     // Check to see if domain exists
@@ -235,6 +224,7 @@ export const updateDomain = new mutationWithClientMutationId({
       tags: tags || claim?.tags,
       hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
       firstSeen: typeof claim?.firstSeen === 'undefined' ? new Date().toISOString() : claim?.firstSeen,
+      assetState: assetState || claim?.assetState,
     }
 
     try {
@@ -280,6 +270,14 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
+    if (typeof assetState !== 'undefined') {
+      updatedProperties.push({
+        name: 'assetState',
+        oldValue: claim.assetState,
+        newValue: assetState,
+      })
+    }
+
     if (typeof tags !== 'undefined' && JSON.stringify(claim.tags) !== JSON.stringify(tags)) {
       updatedProperties.push({
         name: 'tags',
@@ -316,7 +314,6 @@ export const updateDomain = new mutationWithClientMutationId({
           resourceType: 'domain', // user, org, domain
           updatedProperties,
         },
-        reason: outsideComment !== '' ? outsideComment : null,
       })
     }
 
@@ -347,6 +344,7 @@ export const updateDomain = new mutationWithClientMutationId({
         return tag[language]
       }),
       hidden,
+      assetState,
     }
   },
 })

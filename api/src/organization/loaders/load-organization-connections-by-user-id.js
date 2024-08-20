@@ -438,7 +438,7 @@ export const loadOrgConnectionsByUserId =
       search = cleanseInput(search)
       orgQuery = aql`
         LET tokenArrEN = TOKENS(${search}, "text_en")
-        LET searchedOrgsEN = FLATTEN(UNIQUE(
+        LET searchedOrgsKeysCountEN = FLATTEN(
           FOR token IN tokenArrEN
             FOR org IN organizationSearch
               SEARCH ANALYZER(
@@ -446,10 +446,15 @@ export const loadOrgConnectionsByUserId =
                   OR org.orgDetails.en.name LIKE CONCAT("%", token, "%")
               , "text_en")
               FILTER org._key IN orgKeys
-              RETURN org._key
-        ))
+              COLLECT orgKey = org._key WITH COUNT INTO orgCount
+              RETURN {
+                'orgKey': orgKey,
+                'orgCount': orgCount
+              }
+        )
+        LET searchedOrgsEN = searchedOrgsKeysCountEN[* FILTER CURRENT.orgCount == LENGTH(tokenArrEN)].orgKey
         LET tokenArrFR = TOKENS(${search}, "text_fr")
-        LET searchedOrgsFR = FLATTEN(UNIQUE(
+        LET searchedOrgsKeysCountFR = FLATTEN(
           FOR token IN tokenArrFR
           FOR org IN organizationSearch
             SEARCH ANALYZER(
@@ -457,8 +462,13 @@ export const loadOrgConnectionsByUserId =
                 OR org.orgDetails.fr.name LIKE CONCAT("%", token, "%")
             , "text_fr")
             FILTER org._key IN orgKeys
-            RETURN org._key
-        ))
+            COLLECT orgKey = org._key WITH COUNT INTO orgCount
+            RETURN {
+              'orgKey': orgKey,
+              'orgCount': orgCount
+            }
+        )
+        LET searchedOrgsFR = searchedOrgsKeysCountFR[* FILTER CURRENT.orgCount == LENGTH(tokenArrFR)].orgKey
         LET searchedOrgs = UNION_DISTINCT(searchedOrgsEN, searchedOrgsFR)
       `
       filterString = aql`FILTER org._key IN searchedOrgs`
