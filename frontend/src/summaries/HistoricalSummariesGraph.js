@@ -153,10 +153,10 @@ export function HistoricalSummariesGraph({ data, setRange, width = 1200, height 
         </Text>
         <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setRange(e.target.value)}>
           <option value="LAST30DAYS">
-            <Trans>Last 30 Days</Trans>
+            <Trans>Last 30 Days of Data</Trans>
           </option>
           <option value="LASTYEAR">
-            <Trans>Last 365 Days</Trans>
+            <Trans>Last 365 Days of Data</Trans>
           </option>
           <option value="YTD">
             <Trans>Year to Date</Trans>

@@ -1,5 +1,6 @@
 import { stringify } from 'jest-matcher-utils'
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
 
@@ -12,15 +13,7 @@ import dbschema from '../../../../database.json'
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given the loadFullPassConnectionsBySumId loader', () => {
-  let query,
-    drop,
-    truncate,
-    collections,
-    i18n,
-    user,
-    dmarcSummary,
-    fullPass1,
-    fullPass2
+  let query, drop, truncate, collections, i18n, user, dmarcSummary, fullPass1, fullPass2
 
   const consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -37,16 +30,16 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
   describe('given a successful load', () => {
     beforeAll(async () => {
       ;({ query, drop, truncate, collections } = await ensure({
-      variables: {
-        dbname: dbNameFromFile(__filename),
-        username: 'root',
-        rootPassword: rootPass,
-        password: rootPass,
-        url,
-      },
+        variables: {
+          dbname: dbNameFromFile(__filename),
+          username: 'root',
+          rootPassword: rootPass,
+          password: rootPass,
+          url,
+        },
 
-      schema: dbschema,
-    }))
+        schema: dbschema,
+      }))
     })
     beforeEach(async () => {
       user = await collections.users.save({
@@ -56,7 +49,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
         tfaValidated: false,
         emailValidated: false,
       })
-  
+
       fullPass1 = {
         sourceIpAddress: '123.456.78.91',
         envelopeFrom: 'envelope.from',
@@ -68,7 +61,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
         dnsHost: 'dns.host.ca',
         id: 1,
       }
-  
+
       fullPass2 = {
         sourceIpAddress: '123.456.78.91',
         envelopeFrom: 'envelope.from',
@@ -80,7 +73,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
         dnsHost: 'dns.host.ca',
         id: 2,
       }
-  
+
       dmarcSummary = await collections.dmarcSummaries.save({
         detailTables: {
           dkimFailure: [],
@@ -116,15 +109,15 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             first: 100,
             after: toGlobalId('fullPass', 1),
             summaryId: dmarcSummary._id,
           }
-  
+
           const summaries = await connectionLoader({ ...connectionArgs })
-  
+
           const expectedStructure = {
             edges: [
               {
@@ -143,7 +136,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               endCursor: toGlobalId('fullPass', 2),
             },
           }
-  
+
           expect(summaries).toEqual(expectedStructure)
         })
       })
@@ -155,15 +148,15 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             first: 100,
             before: toGlobalId('fullPass', 2),
             summaryId: dmarcSummary._id,
           }
-  
+
           const summaries = await connectionLoader({ ...connectionArgs })
-  
+
           const expectedStructure = {
             edges: [
               {
@@ -182,7 +175,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               endCursor: toGlobalId('fullPass', 1),
             },
           }
-  
+
           expect(summaries).toEqual(expectedStructure)
         })
       })
@@ -194,14 +187,14 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             first: 1,
             summaryId: dmarcSummary._id,
           }
-  
+
           const summaries = await connectionLoader({ ...connectionArgs })
-  
+
           const expectedStructure = {
             edges: [
               {
@@ -220,7 +213,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               endCursor: toGlobalId('fullPass', 1),
             },
           }
-  
+
           expect(summaries).toEqual(expectedStructure)
         })
       })
@@ -232,14 +225,14 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             last: 1,
             summaryId: dmarcSummary._id,
           }
-  
+
           const summaries = await connectionLoader({ ...connectionArgs })
-  
+
           const expectedStructure = {
             edges: [
               {
@@ -258,7 +251,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               endCursor: toGlobalId('fullPass', 2),
             },
           }
-  
+
           expect(summaries).toEqual(expectedStructure)
         })
       })
@@ -266,21 +259,21 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
     describe('given there are no full passes to load', () => {
       it('returns no full pass connections', async () => {
         await truncate()
-  
+
         const connectionLoader = loadFullPassConnectionsBySumId({
           query,
           userKey: user._key,
           cleanseInput,
           i18n,
         })
-  
+
         const connectionArgs = {
           last: 1,
           summaryId: dmarcSummary._id,
         }
-  
+
         const summaries = await connectionLoader({ ...connectionArgs })
-  
+
         const expectedStructure = {
           edges: [],
           totalCount: 0,
@@ -291,7 +284,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             endCursor: '',
           },
         }
-  
+
         expect(summaries).toEqual(expectedStructure)
       })
     })
@@ -321,7 +314,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               summaryId: '',
             }
@@ -336,7 +329,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
             ])
@@ -350,7 +343,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               first: 1,
               last: 1,
@@ -367,7 +360,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
             ])
@@ -382,7 +375,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 first: 101,
                 summaryId: '',
@@ -398,7 +391,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` set to 101 for: loadFullPassConnectionsBySumId.`,
               ])
@@ -412,7 +405,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 last: 101,
                 summaryId: '',
@@ -428,7 +421,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` set to 101 for: loadFullPassConnectionsBySumId.`,
               ])
@@ -444,7 +437,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 first: -1,
                 summaryId: '',
@@ -454,13 +447,9 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`first` on the `FullPassTable` connection cannot be less than zero.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`first` on the `FullPassTable` connection cannot be less than zero.'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` set below zero for: loadFullPassConnectionsBySumId.`,
               ])
@@ -474,7 +463,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 last: -1,
                 summaryId: '',
@@ -484,13 +473,9 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`last` on the `FullPassTable` connection cannot be less than zero.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`last` on the `FullPassTable` connection cannot be less than zero.'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` set below zero for: loadFullPassConnectionsBySumId.`,
               ])
@@ -500,31 +485,25 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
         describe('first or last argument is not set to a number', () => {
           describe('first argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadFullPassConnectionsBySumId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   first: invalidInput,
                   summaryId: '',
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -536,31 +515,25 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
           })
           describe('last argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadFullPassConnectionsBySumId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   last: invalidInput,
                   summaryId: '',
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
                   })
                 } catch (err) {
-                  expect(err).toEqual(
-                    new Error(
-                      `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
-                    ),
-                  )
+                  expect(err).toEqual(new Error(`\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`))
                 }
                 expect(consoleOutput).toEqual([
                   `User: ${
@@ -579,7 +552,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               last: 1,
             }
@@ -588,11 +561,9 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('Unable to load full pass data. Please try again.'),
-              )
+              expect(err).toEqual(new Error('Unable to load full pass data. Please try again.'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `SummaryId was undefined when user: ${user._key} attempted to load full passes in loadFullPassConnectionsBySumId.`,
             ])
@@ -601,17 +572,15 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
       })
       describe('given a database error occurs', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-  
+          const query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+
           const connectionLoader = loadFullPassConnectionsBySumId({
             query,
             userKey: user._key,
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             first: 50,
             summaryId: '',
@@ -621,11 +590,9 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load full pass data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load full pass data. Please try again.'))
           }
-  
+
           expect(consoleOutput).toEqual([
             `Database error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Database error occurred.`,
           ])
@@ -639,14 +606,14 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             },
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
-  
+
           const connectionLoader = loadFullPassConnectionsBySumId({
             query,
             userKey: user._key,
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             first: 50,
             summaryId: '',
@@ -656,11 +623,9 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load full pass data. Please try again.'),
-            )
+            expect(err).toEqual(new Error('Unable to load full pass data. Please try again.'))
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Cursor error occurred.`,
           ])
@@ -691,7 +656,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               summaryId: '',
             }
@@ -706,7 +671,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
             ])
@@ -720,7 +685,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               first: 1,
               last: 1,
@@ -737,7 +702,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: loadFullPassConnectionsBySumId.`,
             ])
@@ -752,7 +717,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 first: 101,
                 summaryId: '',
@@ -768,7 +733,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` set to 101 for: loadFullPassConnectionsBySumId.`,
               ])
@@ -782,7 +747,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 last: 101,
                 summaryId: '',
@@ -798,7 +763,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                   ),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` set to 101 for: loadFullPassConnectionsBySumId.`,
               ])
@@ -814,7 +779,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 first: -1,
                 summaryId: '',
@@ -825,12 +790,10 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 })
               } catch (err) {
                 expect(err).toEqual(
-                  new Error(
-                    '`first` sur la connexion `FullPassTable` ne peut être inférieur à zéro.',
-                  ),
+                  new Error('`first` sur la connexion `FullPassTable` ne peut être inférieur à zéro.'),
                 )
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`first\` set below zero for: loadFullPassConnectionsBySumId.`,
               ])
@@ -844,7 +807,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                 cleanseInput,
                 i18n,
               })
-  
+
               const connectionArgs = {
                 last: -1,
                 summaryId: '',
@@ -854,13 +817,9 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    '`last` sur la connexion `FullPassTable` ne peut être inférieur à zéro.',
-                  ),
-                )
+                expect(err).toEqual(new Error('`last` sur la connexion `FullPassTable` ne peut être inférieur à zéro.'))
               }
-  
+
               expect(consoleOutput).toEqual([
                 `User: ${user._key} attempted to have \`last\` set below zero for: loadFullPassConnectionsBySumId.`,
               ])
@@ -870,30 +829,26 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
         describe('first or last argument is not set to a number', () => {
           describe('first argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadFullPassConnectionsBySumId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   first: invalidInput,
                   summaryId: '',
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`first\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -906,30 +861,26 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
           })
           describe('last argument is set', () => {
             ;['123', {}, [], null, true].forEach((invalidInput) => {
-              it(`returns an error when first set to ${stringify(
-                invalidInput,
-              )}`, async () => {
+              it(`returns an error when first set to ${stringify(invalidInput)}`, async () => {
                 const connectionLoader = loadFullPassConnectionsBySumId({
                   query,
                   userKey: user._key,
                   cleanseInput,
                   i18n,
                 })
-  
+
                 const connectionArgs = {
                   last: invalidInput,
                   summaryId: '',
                 }
-  
+
                 try {
                   await connectionLoader({
                     ...connectionArgs,
                   })
                 } catch (err) {
                   expect(err).toEqual(
-                    new Error(
-                      `\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`,
-                    ),
+                    new Error(`\`last\` doit être de type \`number\` et non \`${typeof invalidInput}\`.`),
                   )
                 }
                 expect(consoleOutput).toEqual([
@@ -949,7 +900,7 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               cleanseInput,
               i18n,
             })
-  
+
             const connectionArgs = {
               last: 1,
             }
@@ -959,12 +910,10 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
               })
             } catch (err) {
               expect(err).toEqual(
-                new Error(
-                  'Impossible de charger les données complètes de la passe. Veuillez réessayer.',
-                ),
+                new Error('Impossible de charger les données complètes de la passe. Veuillez réessayer.'),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `SummaryId was undefined when user: ${user._key} attempted to load full passes in loadFullPassConnectionsBySumId.`,
             ])
@@ -973,17 +922,15 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
       })
       describe('given a database error occurs', () => {
         it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-  
+          const query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+
           const connectionLoader = loadFullPassConnectionsBySumId({
             query,
             userKey: user._key,
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             first: 50,
             summaryId: '',
@@ -994,12 +941,10 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Impossible de charger les données complètes de la passe. Veuillez réessayer.',
-              ),
+              new Error('Impossible de charger les données complètes de la passe. Veuillez réessayer.'),
             )
           }
-  
+
           expect(consoleOutput).toEqual([
             `Database error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Database error occurred.`,
           ])
@@ -1013,14 +958,14 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             },
           }
           const query = jest.fn().mockReturnValueOnce(cursor)
-  
+
           const connectionLoader = loadFullPassConnectionsBySumId({
             query,
             userKey: user._key,
             cleanseInput,
             i18n,
           })
-  
+
           const connectionArgs = {
             first: 50,
             summaryId: '',
@@ -1031,12 +976,10 @@ describe('given the loadFullPassConnectionsBySumId loader', () => {
             })
           } catch (err) {
             expect(err).toEqual(
-              new Error(
-                'Impossible de charger les données complètes de la passe. Veuillez réessayer.',
-              ),
+              new Error('Impossible de charger les données complètes de la passe. Veuillez réessayer.'),
             )
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred while user: ${user._key} was trying to gather full passes in loadFullPassConnectionsBySumId, error: Error: Cursor error occurred.`,
           ])

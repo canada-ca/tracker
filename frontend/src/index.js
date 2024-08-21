@@ -25,27 +25,31 @@ const I18nApp = () => {
       console.error(error.message)
     },
     onCompleted({ refreshTokens }) {
-      if (refreshTokens.result.__typename === 'AuthResult') {
-        if (!currentUser.jwt) {
-          // User not logged in yet, set up environment (redirect and lang)
-          if (refreshTokens.result.user.preferredLang === 'ENGLISH') activate('en')
-          else if (refreshTokens.result.user.preferredLang === 'FRENCH') activate('fr')
+      try {
+        if (refreshTokens.result.__typename === 'AuthResult') {
+          if (!currentUser.jwt) {
+            // User not logged in yet, set up environment (redirect and lang)
+            if (refreshTokens.result.user.preferredLang === 'ENGLISH') activate('en')
+            else if (refreshTokens.result.user.preferredLang === 'FRENCH') activate('fr')
+          }
+          login({
+            jwt: refreshTokens.result.authToken,
+            tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
+            userName: refreshTokens.result.user.userName,
+            emailValidated: refreshTokens.result.user.emailValidated,
+            insideUser: refreshTokens.result.user.insideUser,
+            affiliations: refreshTokens.result.user.affiliations,
+          })
+          if (from.pathname !== '/') history.replace(from)
         }
-        login({
-          jwt: refreshTokens.result.authToken,
-          tfaSendMethod: refreshTokens.result.user.tfaSendMethod,
-          userName: refreshTokens.result.user.userName,
-          emailValidated: refreshTokens.result.user.emailValidated,
-          insideUser: refreshTokens.result.user.insideUser,
-          affiliations: refreshTokens.result.user.affiliations,
-        })
-        if (from.pathname !== '/') history.replace(from)
-      }
-      // Non server error occurs
-      else if (refreshTokens.result.__typename === 'AuthenticateError') {
-        // Could not authenticate
-      } else {
-        console.warn('Incorrect authenticate.result typename.')
+        // Non server error occurs
+        else if (refreshTokens.result.__typename === 'AuthenticateError') {
+          // Could not authenticate
+        } else {
+          console.warn('Incorrect authenticate.result typename.')
+        }
+      } finally {
+        // Do nothing
       }
     },
   })

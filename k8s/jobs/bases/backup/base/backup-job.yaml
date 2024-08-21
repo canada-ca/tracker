@@ -7,11 +7,14 @@ metadata:
     job: backup
 spec:
   template:
+    metadata:
+      labels:
+        job: backup
     spec:
       serviceAccountName: backup-service
       initContainers:
         - name: dump
-          image: "arangodb:3.9.9"
+          image: "arangodb:3.12.1"
           env:
           - name: DB_USER
             valueFrom:

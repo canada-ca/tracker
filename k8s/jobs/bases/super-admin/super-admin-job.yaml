@@ -5,10 +5,13 @@ metadata:
   namespace: super-admin
 spec:
   template:
+    metadata:
+      labels:
+        job: super-admin
     spec:
       containers:
         - name: super-admin
-          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin:master-6aa02dc-1718197042 # {"$imagepolicy": "flux-system:super-admin"}
+          image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/super-admin:master-468801a-1723768059 # {"$imagepolicy": "flux-system:super-admin"}
           env:
             - name: DB_PASS
               valueFrom:

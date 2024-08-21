@@ -79,6 +79,16 @@ export const loadOrganizationDomainStatuses =
             ${domainFilters}
             FILTER v.wildcardSibling ${comparison} true
           `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER v.hasEntrustCertificate ${comparison} true
+          `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER cveDetected ${comparison} true
+          `
           } else {
             domainFilters = aql`
             ${domainFilters}
@@ -101,15 +111,34 @@ export const loadOrganizationDomainStatuses =
                 )
                 RETURN translatedTags
             )[0]
+            LET cveDetected =  (
+              FOR finding IN additionalFindings
+                FILTER finding.domain == v._id
+                LET vulnerableWebComponents = (
+                  FOR wc IN finding.webComponents
+                    FILTER LENGTH(wc.WebComponentCves) > 0
+                    RETURN wc
+                )
+                RETURN LENGTH(vulnerableWebComponents) > 0
+            )[0]
             ${domainFilters}
+            LET ipAddresses = (
+              FOR web, webE IN 1 OUTBOUND v._id domainsWeb
+                SORT web.timestamp DESC
+                LIMIT 1
+                FOR webScan, webScanE IN 1 OUTBOUND web._id webToWebScans
+                    RETURN webScan.ipAddress
+            )
             RETURN {
               domain: v.domain,
+              ipAddresses: ipAddresses,
               status: v.status,
               tags: claimTags,
               hidden: e.hidden,
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
+              hasEntrustCertificate: v.hasEntrustCertificate
             }
           `
       ).all()

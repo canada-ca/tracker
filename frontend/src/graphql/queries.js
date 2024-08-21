@@ -191,6 +191,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
             lastRan
             claimTags
             hidden
+            assetState
             archived
             ignoreRua
             rcode
@@ -214,6 +215,7 @@ export const PAGINATED_ORG_DOMAINS_ADMIN_PAGE = gql`
 export const DOMAIN_GUIDANCE_PAGE = gql`
   query DomainGuidancePage($domain: DomainScalar!) {
     findDomainByDomain(domain: $domain) {
+      id
       domain
       lastRan
       rcode
@@ -434,6 +436,7 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
                     verifiedChainHasSha1Signature
                     verifiedChainHasLegacySymantecAnchor
                     passedValidation
+                    hasEntrustCertificate
                     certificateChain {
                       notValidBefore
                       notValidAfter
@@ -536,6 +539,9 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
           webComponentVersion
           webComponentFirstSeen
           webComponentLastSeen
+          webComponentCves {
+            cve
+          }
         }
         vulnerabilities {
           critical {
@@ -668,12 +674,14 @@ export const PAGINATED_ORG_DOMAINS = gql`
             hasDMARCReport
             claimTags
             hidden
+            assetState
             archived
             rcode
             blocked
             wildcardSibling
             webScanPending
             userHasPermission
+            hasEntrustCertificate
           }
         }
       }
@@ -742,6 +750,7 @@ export const PAGINATED_DOMAINS = gql`
           archived
           hasDMARCReport
           userHasPermission
+          hasEntrustCertificate
           __typename
         }
         __typename

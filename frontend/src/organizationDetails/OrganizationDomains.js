@@ -22,6 +22,7 @@ import { useLazyQuery } from '@apollo/client'
 import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
+import { domainSearchTip } from '../domains/DomainsPage'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -92,13 +93,14 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: t`TEST`, text: t`Test` },
     { value: t`WEB`, text: t`Web` },
     { value: t`INACTIVE`, text: t`Inactive` },
-    { value: t`OUTSIDE`, text: t`Outside` },
     { value: `NXDOMAIN`, text: `NXDOMAIN` },
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `HIDDEN`, text: t`Hidden` },
+    { value: `CVE_DETECTED`, text: t`CVE Detected` },
     { value: `ARCHIVED`, text: t`Archived` },
+    { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
   const domainList = loading ? (
@@ -132,6 +134,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             hasDMARCReport,
             claimTags,
             hidden,
+            assetState,
             archived,
             rcode,
             blocked,
@@ -149,6 +152,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               hasDMARCReport={hasDMARCReport}
               tags={claimTags}
               isHidden={hidden}
+              assetState={assetState}
               rcode={rcode}
               isArchived={archived}
               blocked={blocked}
@@ -207,7 +211,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         <InfoBox title={t`TEST`} info={t`Tag used to show domains as a test environment.`} />
         <InfoBox title={t`WEB`} info={t`Tag used to show domains as web-hosting.`} />
         <InfoBox title={t`INACTIVE`} info={t`Tag used to show domains that are not active.`} />
-        <InfoBox title={t`OUTSIDE`} info={t`Tag used to show domains that are out of the organization's scope.`} />
         <InfoBox
           title={t`HIDDEN`}
           info={t`Tag used to show domains as hidden from affecting the organization summary scores.`}
@@ -237,6 +240,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         orderByOptions={[{ value: 'DOMAIN', text: t`Domain` }, ...orderByOptions]}
         placeholder={t`Search for a domain`}
         onToggle={onToggle}
+        searchTip={domainSearchTip}
       />
 
       {orgSlug !== 'my-tracker' && (

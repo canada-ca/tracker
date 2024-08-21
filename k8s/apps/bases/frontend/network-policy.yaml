@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-netpol
+  namespace: frontend
+spec:
+  podSelector:
+    matchLabels:
+      app: tracker-frontend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: istio-ingressgateway
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: istiod
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+    # DNS queries also need to be allowed
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53

@@ -10,6 +10,8 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/inject: "false"
+      labels:
+        job: restore-backup
     spec:
       serviceAccountName: backup-service
       volumes:
@@ -19,7 +21,7 @@ spec:
       initContainers: # This field to be patched in overlay
       containers:
         - name: restore
-          image: arangodb:3.9.9
+          image: arangodb:3.12.1
           volumeMounts:
             - mountPath: /tmp/dump
               name:

@@ -6,4 +6,5 @@ resources:
   - deployment.yaml
   - service.yaml
   - virtual-service.yaml
+  - network-policy.yaml
   - domain-cleanup-cronjob.yaml

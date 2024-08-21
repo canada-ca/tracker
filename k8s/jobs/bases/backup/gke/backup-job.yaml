@@ -7,6 +7,9 @@ metadata:
     job: backup
 spec:
   template:
+    metadata:
+      labels:
+        job: backup
     spec:
       containers:
         - name: upload

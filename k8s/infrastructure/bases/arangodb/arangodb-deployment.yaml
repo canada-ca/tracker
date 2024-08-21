@@ -4,9 +4,9 @@ metadata:
   name: arangodb
   namespace: db
   labels:
-    app: "arangodb"
+    app: arangodb
 spec:
-  image: arangodb/arangodb:3.10.5
+  image: arangodb/arangodb:3.12.1
   environment: Production
   mode: Single
   tls:

@@ -297,19 +297,24 @@ export const loadDomainConnectionsByOrgId =
     }
 
     let domainFilters = aql`
-      LET hidden = (
-        FOR v, e IN 1..1 ANY domain._id claims
-          FILTER e._from == ${orgId}
-          RETURN e.hidden
-      )[0]
-      LET claimTags = (
+      LET claimVals = (
         FOR v, e IN 1..1 ANY domain._id claims
           FILTER e._from == ${orgId}
           LET translatedTags = (
             FOR tag IN e.tags || []
               RETURN TRANSLATE(${language}, tag)
           )
-          RETURN translatedTags
+          RETURN { hidden: e.hidden, assetState: e.assetState, claimTags: translatedTags }
+      )[0]
+      LET cveDetected =  (
+        FOR finding IN additionalFindings
+          FILTER finding.domain == domain._id
+          LET vulnerableWebComponents = (
+            FOR wc IN finding.webComponents
+              FILTER LENGTH(wc.WebComponentCves) > 0
+              RETURN wc
+          )
+          RETURN LENGTH(vulnerableWebComponents) > 0
       )[0]
       `
     if (typeof filters !== 'undefined') {
@@ -373,7 +378,7 @@ export const loadDomainConnectionsByOrgId =
           if (filterValue === 'hidden') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER hidden ${comparison} true
+            FILTER claimVals.hidden ${comparison} true
           `
           } else if (filterValue === 'archived') {
             domainFilters = aql`
@@ -400,10 +405,20 @@ export const loadDomainConnectionsByOrgId =
             ${domainFilters}
             FILTER domain.webScanPending ${comparison} true
           `
+          } else if (filterValue === 'has-entrust-certificate') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER domain.hasEntrustCertificate ${comparison} true
+          `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER cveDetected ${comparison} true
+          `
           } else {
             domainFilters = aql`
             ${domainFilters}
-            FILTER POSITION( claimTags, ${filterValue}) ${comparison} true
+            FILTER POSITION( claimVals.claimTags, ${filterValue}) ${comparison} true
           `
           }
         }
@@ -416,16 +431,13 @@ export const loadDomainConnectionsByOrgId =
     if (typeof search !== 'undefined' && search !== '') {
       search = cleanseInput(search)
       domainQuery = aql`
-      LET tokenArr = TOKENS(${search}, "space-delimiter-analyzer")
-      LET searchedDomains = (
-        FOR tokenItem IN tokenArr
-          LET token = LOWER(tokenItem)
-          FOR domain IN domainSearch
-            SEARCH ANALYZER(domain.domain LIKE CONCAT("%", token, "%"), "space-delimiter-analyzer")
+        LET searchedDomains = (
+          FOR domain IN domains
+            FILTER LOWER(domain.domain) LIKE LOWER(${search})
             FILTER domain._key IN domainKeys
             RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
-      )
-    `
+        )
+      `
       loopString = aql`FOR domain IN searchedDomains`
       totalCount = aql`LENGTH(searchedDomains)`
     }
@@ -515,7 +527,7 @@ export const loadDomainConnectionsByOrgId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimTags, "hidden": hidden }, DOCUMENT(domain._id))
+          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimVals.claimTags, "hidden": claimVals.hidden, "assetState": claimVals.assetState }, DOCUMENT(domain._id))
       )
 
       LET hasNextPage = (LENGTH(

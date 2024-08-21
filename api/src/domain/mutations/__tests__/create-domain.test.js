@@ -1,4 +1,5 @@
-import { ensure, dbNameFromFile } from 'arango-tools'
+import { dbNameFromFile } from 'arango-tools'
+import { ensureDatabase as ensure } from '../../../testUtilities'
 import { graphql, GraphQLSchema, GraphQLError } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { setupI18n } from '@lingui/core'
@@ -144,6 +145,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -304,6 +306,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', org._key)}"
                     domain: "test.gc.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -440,6 +443,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', org._key)}"
                   domain: "test.gc.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -616,6 +620,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -755,6 +760,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -895,6 +901,7 @@ describe('create a domain', () => {
                 input: {
                   orgId: "${toGlobalId('organization', secondOrg._key)}"
                   domain: "test.gc.ca"
+                  assetState: APPROVED
                 }
               ) {
                 result {
@@ -1045,7 +1052,8 @@ describe('create a domain', () => {
             source: `
               mutation {
                 createDomain(
-                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca" }
+                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca"
+ assetState: APPROVED }
                 ) {
                   result {
                     ... on Domain {
@@ -1150,6 +1158,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -1257,6 +1266,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -1367,6 +1377,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
+                      assetState: APPROVED
                     }
                   ) {
                     result {
@@ -1467,6 +1478,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
+                      assetState: APPROVED
                     }
                   ) {
                     result {
@@ -1567,6 +1579,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
+                      assetState: APPROVED
                     }
                   ) {
                     result {
@@ -1674,6 +1687,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -1776,6 +1790,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -1885,6 +1900,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -1992,6 +2008,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -2105,6 +2122,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -2227,7 +2245,8 @@ describe('create a domain', () => {
             source: `
               mutation {
                 createDomain(
-                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca" }
+                  input: { orgId: "b3JnYW5pemF0aW9uOjE=", domain: "test.gc.ca"
+ assetState: APPROVED }
                 ) {
                   result {
                     ... on Domain {
@@ -2332,6 +2351,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -2440,6 +2460,7 @@ describe('create a domain', () => {
                   input: {
                     orgId: "${toGlobalId('organization', 123)}"
                     domain: "test.gc.ca"
+                    assetState: APPROVED
                   }
                 ) {
                   result {
@@ -2550,6 +2571,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
+                      assetState: APPROVED
                     }
                   ) {
                     result {
@@ -2650,6 +2672,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
+                      assetState: APPROVED
                     }
                   ) {
                     result {
@@ -2750,6 +2773,7 @@ describe('create a domain', () => {
                     input: {
                       orgId: "${toGlobalId('organization', 123)}"
                       domain: "test.gc.ca"
+                      assetState: APPROVED
                     }
                   ) {
                     result {
@@ -2857,6 +2881,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -2959,6 +2984,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -3068,6 +3094,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -3175,6 +3202,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {
@@ -3288,6 +3316,7 @@ describe('create a domain', () => {
                       input: {
                         orgId: "${toGlobalId('organization', 123)}"
                         domain: "test.gc.ca"
+                        assetState: APPROVED
                       }
                     ) {
                       result {

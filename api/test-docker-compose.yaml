@@ -10,10 +10,11 @@ services:
       - "14222:4222"
 
   arangodb-test:
-    image: arangodb:3.10.5
+    image: arangodb:3.12.1
     container_name: arangodb-test
     environment:
       - ARANGO_ROOT_PASSWORD=test
+
     restart: unless-stopped
     ports:
       - "18529:8529"

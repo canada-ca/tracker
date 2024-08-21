@@ -14,9 +14,13 @@ spec:
           labels:
             app: import-easm-additional-findings
         spec:
+          securityContext:
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: import-easm-additional-findings
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings:master-60c74e8-1718377337 # {"$imagepolicy": "flux-system:import-easm-additional-findings"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/import-easm-additional-findings:master-5b4b54d-1720014943 # {"$imagepolicy": "flux-system:import-easm-additional-findings"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -62,5 +66,15 @@ spec:
                     secretKeyRef:
                       name: azure-defender-easm
                       key: KUSTO_DATABASE
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
           restartPolicy: Never
       backoffLimit: 4

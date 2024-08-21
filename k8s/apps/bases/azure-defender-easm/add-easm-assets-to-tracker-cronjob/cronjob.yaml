@@ -14,9 +14,13 @@ spec:
           labels:
             app: add-easm-assets-to-tracker
         spec:
+          securityContext:
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: add-easm-assets-to-tracker
-              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-easm-assets-to-tracker:master-d72fd1e-1719921398 # {"$imagepolicy": "flux-system:add-easm-assets-to-tracker"}
+              image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/azure-defender-easm/add-easm-assets-to-tracker:master-c1b1705-1721921878 # {"$imagepolicy": "flux-system:add-easm-assets-to-tracker"}
               env:
                 - name: DB_PASS
                   valueFrom:
@@ -33,9 +37,7 @@ spec:
                 - name: DB_NAME
                   value: track_dmarc
                 - name: NATS_URL
-                  value: nats://localhost:4222
-                - name: PUBLISH_TO
-                  value: domains
+                  value: nats://nats.pubsub:4222
                 - name: REGION
                   valueFrom:
                     secretKeyRef:
@@ -71,5 +73,15 @@ spec:
                     secretKeyRef:
                       name: azure-defender-easm
                       key: UNCLAIMED_ID
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                privileged: false
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
           restartPolicy: Never
       backoffLimit: 4
