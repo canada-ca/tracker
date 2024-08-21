@@ -1,7 +1,7 @@
-import {GraphQLInt} from 'graphql'
-import {connectionDefinitions} from 'graphql-relay'
+import { GraphQLInt } from 'graphql'
+import { connectionDefinitions } from 'graphql-relay'
 
-import {guidanceTagType} from './guidance-tag'
+import { guidanceTagType } from './guidance-tag'
 
 export const guidanceTagConnection = connectionDefinitions({
   name: 'GuidanceTag',
@@ -10,7 +10,7 @@ export const guidanceTagConnection = connectionDefinitions({
     totalCount: {
       type: GraphQLInt,
       description: 'The total amount of guidance tags for a given scan type.',
-      resolve: ({totalCount}) => totalCount,
+      resolve: ({ totalCount }) => totalCount,
     },
   }),
 })
