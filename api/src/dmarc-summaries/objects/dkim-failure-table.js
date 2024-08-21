@@ -1,17 +1,11 @@
-import {
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-} from 'graphql'
+import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 
 import { guidanceTagType } from '../../guidance-tag/objects'
 
 export const dkimFailureTableType = new GraphQLObjectType({
   name: 'DkimFailureTable',
-  description:
-    'This table contains the data fields for senders who are in the DKIM fail category.',
+  description: 'This table contains the data fields for senders who are in the DKIM fail category.',
   fields: () => ({
     id: globalIdField('dkimFail'),
     dkimAligned: {
@@ -55,13 +49,9 @@ export const dkimFailureTableType = new GraphQLObjectType({
     guidanceTag: {
       type: guidanceTagType,
       description: 'Guidance for any issues that were found from the report.',
-      resolve: async (
-        { guidance },
-        _args,
-        { loaders: { loadAggregateGuidanceTagByTagId } },
-      ) => {
+      resolve: async ({ guidance }, _args, { loaders: { loadGuidanceTagByTagId } }) => {
         if (guidance) {
-          return await loadAggregateGuidanceTagByTagId.load(guidance)
+          return await loadGuidanceTagByTagId.load(guidance)
         }
         return {}
       },
