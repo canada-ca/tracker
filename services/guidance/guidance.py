@@ -1,13 +1,8 @@
 import os
-import re
 import sys
-import time
 import json
 import logging
-import traceback
 import emoji
-import random
-import datetime
 from arango import ArangoClient
 from dotenv import load_dotenv
 
@@ -111,11 +106,10 @@ def update_guidance(guidance_data, db):
                     logging.info(f"Chart summary criteria {criteria_type} not updated.")
 
         else:
-            file_name = entry["file"].split(".json")[0]
-            tag_type = file_name.split("tags_")[1]
-            if not db.has_collection(f"{tag_type}GuidanceTags"):
+            col_name = "guidanceTags"
+            if not db.has_collection(col_name):
                 db.create_collection(
-                    f"{tag_type}GuidanceTags",
+                    col_name,
                     replication_factor=3,
                     shard_count=6,
                     write_concern=1,
@@ -128,20 +122,18 @@ def update_guidance(guidance_data, db):
                 }
 
                 logging.info(f"Checking if tag {tag_key} exists...")
-                current_tag = db.collection(f"{tag_type}GuidanceTags").get(
-                    {"_key": tag_key}
-                )
+                current_tag = db.collection(col_name).get({"_key": tag_key})
 
                 tag_exists = current_tag is not None
                 tag_updated = tag_exists and (current_tag != new_tag)
 
                 # Insert if the tag doesn't exist
                 if not tag_exists:
-                    db.collection(f"{tag_type}GuidanceTags").insert(new_tag)
+                    db.collection(col_name).insert(new_tag)
                     logging.info(f"Tag {tag_key} inserted.")
                 # Update if the tag has changed
                 elif tag_updated:
-                    db.collection(f"{tag_type}GuidanceTags").update_match(
+                    db.collection(col_name).update_match(
                         {"_key": tag_key},
                         {
                             "en": tag_data["en"],
