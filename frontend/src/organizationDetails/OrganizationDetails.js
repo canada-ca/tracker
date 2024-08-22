@@ -33,6 +33,7 @@ import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import { AggregatedGuidanceSummary } from '../summaries/AggregatedGuidanceSummary'
 
 export default function OrganizationDetails() {
   const { isLoggedIn } = useUserVar()
@@ -153,6 +154,9 @@ export default function OrganizationDetails() {
                     width={1200}
                     height={500}
                   />
+                </ErrorBoundary>
+                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                  <AggregatedGuidanceSummary orgSlug={orgSlug} />
                 </ErrorBoundary>
               </ABTestVariant>
             </ABTestWrapper>
