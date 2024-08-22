@@ -38,7 +38,7 @@ export function FilterList({ filters, setFilters }) {
             }
           >
             {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
-            {filterCategory === 'TAGS' ? (
+            {['TAGS', 'ASSET_STATE'].includes(filterCategory) ? (
               <TagLabel>{filterValue}</TagLabel>
             ) : (
               <>
