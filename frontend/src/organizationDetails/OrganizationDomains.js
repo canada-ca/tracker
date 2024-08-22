@@ -23,6 +23,7 @@ import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -118,13 +119,25 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   ) : (
     <Box>
       {orgSlug !== 'my-tracker' && (
-        <DomainListFilters
-          filters={filters}
-          setFilters={setFilters}
-          statusOptions={orderByOptions}
-          filterTagOptions={filterTagOptions}
-          assetStateOptions={assetStateOptions}
-        />
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="A">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+            />
+          </ABTestVariant>
+          <ABTestVariant name="B">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+              assetStateOptions={assetStateOptions}
+            />
+          </ABTestVariant>
+        </ABTestWrapper>
       )}
       <ListOf
         elements={nodes}
