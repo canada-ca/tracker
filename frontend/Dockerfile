@@ -8,7 +8,7 @@ COPY . .
 RUN npm ci && npm run build && npm prune --production
 
 # https://github.com/astefanutti/scratch-node
-FROM astefanutti/scratch-node:17
+FROM astefanutti/scratch-node:18
 LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
 
 ENV HOST 0.0.0.0
