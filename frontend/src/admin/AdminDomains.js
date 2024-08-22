@@ -207,18 +207,14 @@ export function AdminDomains({ orgSlug, orgId }) {
                 <Text fontWeight="bold" mr="2">
                   <Trans>Filters:</Trans>
                 </Text>
+
                 <Box maxW="25%" mx="1">
                   <Select
                     aria-label="filterCategory"
                     name="filterCategory"
                     borderColor="black"
                     onChange={(e) => {
-                      if (
-                        (values.filterCategory === 'TAGS' && e.target.value !== 'TAGS') ||
-                        (values.filterCategory !== 'TAGS' && e.target.value === 'TAGS')
-                      ) {
-                        values.filterValue = ''
-                      }
+                      if (values.filterCategory !== e.target.value) values.filterValue = ''
                       handleChange(e)
                     }}
                   >
@@ -228,9 +224,13 @@ export function AdminDomains({ orgSlug, orgId }) {
                     <option value="TAGS">
                       <Trans>Tag</Trans>
                     </option>
-                    <option value="ASSET_STATE">
-                      <Trans>Asset State</Trans>
-                    </option>
+                    <ABTestWrapper insiderVariantName="B">
+                      <ABTestVariant name="B">
+                        <option value="ASSET_STATE">
+                          <Trans>Asset State</Trans>
+                        </option>
+                      </ABTestVariant>
+                    </ABTestWrapper>
                   </Select>
                   <Text color="red.500" mt={0}>
                     {errors.comparison}
@@ -267,21 +267,25 @@ export function AdminDomains({ orgSlug, orgId }) {
                       })
                     ) : (
                       <>
-                        <option value="APPROVED">
-                          <Trans>Approved</Trans>
-                        </option>
-                        <option value="DEPENDENCY">
-                          <Trans>Dependency</Trans>
-                        </option>
-                        <option value="MONITOR_ONLY">
-                          <Trans>Monitor Only</Trans>
-                        </option>
-                        <option value="CANDIDATE">
-                          <Trans>Candidate</Trans>
-                        </option>
-                        <option value="REQUIRES_INVESTIGATION">
-                          <Trans>Requires Investigation</Trans>
-                        </option>
+                        <ABTestWrapper insiderVariantName="B">
+                          <ABTestVariant name="B">
+                            <option value="APPROVED">
+                              <Trans>Approved</Trans>
+                            </option>
+                            <option value="DEPENDENCY">
+                              <Trans>Dependency</Trans>
+                            </option>
+                            <option value="MONITOR_ONLY">
+                              <Trans>Monitor Only</Trans>
+                            </option>
+                            <option value="CANDIDATE">
+                              <Trans>Candidate</Trans>
+                            </option>
+                            <option value="REQUIRES_INVESTIGATION">
+                              <Trans>Requires Investigation</Trans>
+                            </option>
+                          </ABTestVariant>
+                        </ABTestWrapper>
                       </>
                     )}
                   </Select>
@@ -289,6 +293,7 @@ export function AdminDomains({ orgSlug, orgId }) {
                     {errors.filterValue}
                   </Text>
                 </Box>
+
                 <Button ml="auto" variant="primary" type="submit">
                   <Trans>Apply</Trans>
                 </Button>
