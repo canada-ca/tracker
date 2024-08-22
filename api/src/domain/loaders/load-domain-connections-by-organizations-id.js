@@ -421,6 +421,11 @@ export const loadDomainConnectionsByOrgId =
             FILTER POSITION( claimVals.claimTags, ${filterValue}) ${comparison} true
           `
           }
+        } else if (filterCategory === 'asset-state') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER claimVals.assetState ${comparison} ${filterValue}
+        `
         }
       })
     }

@@ -23,6 +23,7 @@ import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -103,6 +104,14 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]
 
+  const assetStateOptions = [
+    { value: t`APPROVED`, text: t`Approved` },
+    { value: t`DEPENDENCY`, text: t`Dependency` },
+    { value: t`MONITOR_ONLY`, text: t`Monitor Only` },
+    { value: t`CANDIDATE`, text: t`Candidate` },
+    { value: t`REQUIRES_INVESTIGATION`, text: t`Requires Investigation` },
+  ]
+
   const domainList = loading ? (
     <LoadingMessage>
       <Trans>Domains</Trans>
@@ -110,12 +119,25 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   ) : (
     <Box>
       {orgSlug !== 'my-tracker' && (
-        <DomainListFilters
-          filters={filters}
-          setFilters={setFilters}
-          statusOptions={orderByOptions}
-          filterTagOptions={filterTagOptions}
-        />
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="A">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+            />
+          </ABTestVariant>
+          <ABTestVariant name="B">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+              assetStateOptions={assetStateOptions}
+            />
+          </ABTestVariant>
+        </ABTestWrapper>
       )}
       <ListOf
         elements={nodes}

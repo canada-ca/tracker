@@ -31,7 +31,6 @@ import { AffiliationFilterSwitch } from '../components/AffiliationFilterSwitch'
 import { useUserVar } from '../utilities/userState'
 import { DomainListFilters } from './DomainListFilters'
 import { FilterList } from './FilterList'
-import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 import withSuperAdmin from '../app/withSuperAdmin'
 
 export default function DomainsPage() {
@@ -148,16 +147,12 @@ export default function DomainsPage() {
     </LoadingMessage>
   ) : (
     <Box>
-      <ABTestWrapper insiderVariantName="B">
-        <ABTestVariant name="B">
-          <DomainListFilters
-            filters={filters}
-            setFilters={setFilters}
-            statusOptions={orderByOptions}
-            filterTagOptions={filterTagOptions}
-          />
-        </ABTestVariant>
-      </ABTestWrapper>
+      <DomainListFilters
+        filters={filters}
+        setFilters={setFilters}
+        statusOptions={orderByOptions}
+        filterTagOptions={filterTagOptions}
+      />
       <ListOf
         elements={nodes}
         ifEmpty={() => (
@@ -269,11 +264,7 @@ export default function DomainsPage() {
             </Text>
             <AffiliationFilterSwitch isAffiliated={isAffiliated} setIsAffiliated={setIsAffiliated} />
             <Divider orientation="vertical" borderLeftColor="gray.900" height="1.5rem" mx="1" />
-            <ABTestWrapper insiderVariantName="B">
-              <ABTestVariant name="B">
-                <FilterList filters={filters} setFilters={setFilters} />
-              </ABTestVariant>
-            </ABTestWrapper>
+            <FilterList filters={filters} setFilters={setFilters} />
           </Flex>
         )}
 

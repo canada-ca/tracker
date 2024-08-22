@@ -1,8 +1,8 @@
 import { GraphQLInputObjectType, GraphQLEnumType } from 'graphql'
-import { ComparisonEnums, DomainOrderField, DomainTagLabel, StatusEnum } from '../../enums'
+import { AssetStateEnums, ComparisonEnums, DomainOrderField, DomainTagLabel, StatusEnum } from '../../enums'
 
 const filterValueEnumsVals = {}
-const filterValueEnums = [...StatusEnum.getValues(), ...DomainTagLabel.getValues()]
+const filterValueEnums = [...StatusEnum.getValues(), ...DomainTagLabel.getValues(), ...AssetStateEnums.getValues()]
 filterValueEnums.forEach(
   ({ name, value, description }) =>
     (filterValueEnumsVals[name] = {
