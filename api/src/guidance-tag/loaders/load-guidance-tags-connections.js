@@ -261,7 +261,7 @@ export const loadGuidanceTagSummaryConnectionsByTagId =
     `
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userKey} was trying to gather orgs in loadGuidanceTagConnectionsByTagId, error: ${err}`,
+        `Database error occurred while user: ${userKey} was trying to gather guidance tags in loadGuidanceTagConnectionsByTagId, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load guidance tag(s). Please try again.`))
     }
@@ -271,7 +271,7 @@ export const loadGuidanceTagSummaryConnectionsByTagId =
       guidanceTagInfo = await guidanceTagInfoCursor.next()
     } catch (err) {
       console.error(
-        `Cursor error occurred while user: ${userKey} was trying to gather orgs in loadGuidanceTagConnectionsByTagId, error: ${err}`,
+        `Cursor error occurred while user: ${userKey} was trying to gather guidance tags in loadGuidanceTagConnectionsByTagId, error: ${err}`,
       )
       throw new Error(i18n._(t`Unable to load guidance tag(s). Please try again.`))
     }
