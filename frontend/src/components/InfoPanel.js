@@ -1,6 +1,6 @@
 import React from 'react'
 import { any, bool, func, string } from 'prop-types'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   Box,
   Drawer,
@@ -16,16 +16,14 @@ import {
 } from '@chakra-ui/react'
 import { QuestionOutlineIcon } from '@chakra-ui/icons'
 
-export function InfoPanel({ isOpen, onToggle, children }) {
+export function InfoPanel({ title = t`Glossary`, isOpen, onToggle, children }) {
   const btnRef = React.useRef()
   return (
     <Drawer isOpen={isOpen} placement="bottom" onClose={onToggle} finalFocusRef={btnRef}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>
-          <Trans>Glossary</Trans>
-        </DrawerHeader>
+        <DrawerHeader>{title}</DrawerHeader>
 
         <DrawerBody>
           <Stack direction="column">{children}</Stack>
@@ -63,6 +61,7 @@ export function InfoButton({ onToggle, ...props }) {
 }
 
 InfoPanel.propTypes = {
+  title: string,
   isOpen: bool,
   onToggle: func,
   children: any,
