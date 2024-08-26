@@ -16,12 +16,12 @@ import {
 } from '@chakra-ui/react'
 import { QuestionOutlineIcon } from '@chakra-ui/icons'
 
-export function InfoPanel({ title = t`Glossary`, isOpen, onToggle, children }) {
+export function InfoPanel({ title = t`Glossary`, isOpen, onToggle, children, ...props }) {
   const btnRef = React.useRef()
   return (
-    <Drawer isOpen={isOpen} placement="bottom" onClose={onToggle} finalFocusRef={btnRef}>
+    <Drawer isOpen={isOpen} placement="bottom" onClose={onToggle} finalFocusRef={btnRef} {...props}>
       <DrawerOverlay />
-      <DrawerContent>
+      <DrawerContent maxH="66%">
         <DrawerCloseButton />
         <DrawerHeader>{title}</DrawerHeader>
 
