@@ -1,10 +1,18 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { array, bool, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text } from '@chakra-ui/react'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainCard({ url, tags, isHidden, assetState, isArchived, rcode, ...rest }) {
+  const assetStateLabels = {
+    APPROVED: t`Approved`,
+    DEPENDENCY: t`Dependency`,
+    MONITOR_ONLY: t`Monitor Only`,
+    CANDIDATE: t`Candidate`,
+    REQUIRES_INVESTIGATION: t`Requires Investigation`,
+  }
+
   return (
     <ListItem {...rest}>
       <Flex align="center">
@@ -27,7 +35,7 @@ export function AdminDomainCard({ url, tags, isHidden, assetState, isArchived, r
             <ABTestVariant name="B">
               {assetState && (
                 <Tag colorScheme="blue" mx="1">
-                  <TagLabel fontWeight="bold">{assetState}</TagLabel>
+                  <TagLabel fontWeight="bold">{assetStateLabels[assetState]}</TagLabel>
                 </Tag>
               )}
             </ABTestVariant>
