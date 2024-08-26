@@ -75,7 +75,9 @@ export default function CreateUserPage() {
   if (loading) return <LoadingMessage />
 
   const addUserToOrgText = userOrgToken ? (
-    <Text fontSize="md">Your account will automatically be linked to the organization that invited you.</Text>
+    <Text fontSize="md">
+      <Trans>Your account will automatically be linked to the organization that invited you.</Trans>
+    </Text>
   ) : (
     ''
   )
