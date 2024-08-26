@@ -76,7 +76,8 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
       <Flex align="center" color={tagTypeColor[tagType]} fontWeight="bold" as={AccordionButton} fontSize="lg">
         {tagIcon()}
         <Text ml="2">
-          {guidanceTag.tagId}: {guidanceTag.tagName}
+          {guidanceTag?.count && `${guidanceTag.tagId}: `}
+          {guidanceTag.tagName}
         </Text>
         <AccordionIcon />
         <Text ml="auto">
