@@ -45,6 +45,8 @@ function GuidancePage() {
   const toast = useToast()
   const { loading, error, data } = useQuery(DOMAIN_GUIDANCE_PAGE, {
     variables: { domain: domain },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-only',
     errorPolicy: 'all',
   })
 
@@ -58,7 +60,6 @@ function GuidancePage() {
     id: domainId,
     domain: domainName,
     web: webScan,
-    additionalFindings,
     hasDMARCReport,
     dnsScan,
     mxRecordDiff,
@@ -216,7 +217,7 @@ function GuidancePage() {
     )
 
     guidanceResults = (
-      <Tabs isFitted variant="enclosed-colored" defaultIndex={0}>
+      <Tabs isFitted variant="enclosed-colored" defaultIndex={0} isLazy>
         <TabList mb="4">
           <Tab borderTopWidth="0.25">
             <Trans>Web Guidance</Trans>
@@ -226,11 +227,9 @@ function GuidancePage() {
           </Tab>
           <ABTestWrapper insiderVariantName="B">
             <ABTestVariant name="B">
-              {additionalFindings && (
-                <Tab borderTopWidth="0.25">
-                  <Trans>Additional Findings</Trans>
-                </Tab>
-              )}
+              <Tab borderTopWidth="0.25">
+                <Trans>Additional Findings</Trans>
+              </Tab>
             </ABTestVariant>
           </ABTestWrapper>
         </TabList>
@@ -256,11 +255,9 @@ function GuidancePage() {
           </TabPanel>
           <ABTestWrapper>
             <ABTestVariant name="B">
-              {additionalFindings && (
-                <TabPanel>
-                  <AdditionalFindings data={additionalFindings} />
-                </TabPanel>
-              )}
+              <TabPanel>
+                <AdditionalFindings domain={domainName} />
+              </TabPanel>
             </ABTestVariant>
           </ABTestWrapper>
         </TabPanels>

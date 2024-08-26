@@ -518,6 +518,15 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
           }
         }
       }
+    }
+  }
+  ${Status.fragments.requiredFields}
+  ${Guidance.fragments.requiredFields}
+`
+
+export const GUIDANCE_ADDITIONAL_FINDINGS = gql`
+  query ($domain: DomainScalar!) {
+    findDomainByDomain(domain: $domain) {
       additionalFindings {
         timestamp
         headers
@@ -564,8 +573,6 @@ export const DOMAIN_GUIDANCE_PAGE = gql`
       }
     }
   }
-  ${Status.fragments.requiredFields}
-  ${Guidance.fragments.requiredFields}
 `
 
 export const ORG_DETAILS_PAGE = gql`

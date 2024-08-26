@@ -23,10 +23,14 @@ import {
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Trans, t } from '@lingui/macro'
-import { any, object } from 'prop-types'
+import { any, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
+import { useQuery } from '@apollo/client'
+import { GUIDANCE_ADDITIONAL_FINDINGS } from '../graphql/queries'
+import { LoadingMessage } from '../components/LoadingMessage'
+import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 
-export function AdditionalFindings({ data }) {
+export function AdditionalFindings({ domain }) {
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
   const [activeCve, setActiveCve] = useState('')
@@ -34,7 +38,33 @@ export function AdditionalFindings({ data }) {
   const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
-  const { timestamp, headers, webComponents, vulnerabilities, ports } = data
+  const { data, loading, error } = useQuery(GUIDANCE_ADDITIONAL_FINDINGS, {
+    variables: { domain },
+  })
+
+  if (loading) {
+    return (
+      <LoadingMessage>
+        <Trans>Additonal findings</Trans>
+      </LoadingMessage>
+    )
+  }
+
+  if (error) {
+    return <ErrorFallbackMessage error={error} />
+  }
+
+  if (!data.findDomainByDomain.additionalFindings) {
+    return (
+      <Box borderWidth="1px" borderColor="black" justifyContent="center" rounded="md">
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center" my="1">
+          <Trans>No additional findings available at this time.</Trans>
+        </Text>
+      </Box>
+    )
+  }
+
+  const { timestamp, headers, webComponents, vulnerabilities, ports } = data.findDomainByDomain.additionalFindings
   const frameworkComponents = webComponents.filter(({ webComponentCategory }) => webComponentCategory === 'Framework')
   const ddosProtectionComponent = webComponents.find(
     ({ webComponentCategory }) => webComponentCategory === 'DDOS Protection',
@@ -339,7 +369,7 @@ function WebRequirementsLink({ children }) {
 }
 
 AdditionalFindings.propTypes = {
-  data: object.isRequired,
+  domain: string.isRequired,
 }
 
 WebRequirementsLink.propTypes = {
