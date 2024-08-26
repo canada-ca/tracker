@@ -484,7 +484,7 @@ msgid "Assess current state;"
 msgstr "Évaluer l’état actuel."
 
 #: src/admin/AdminDomainModal.js:278
-#: src/admin/AdminDomains.js:232
+#: src/admin/AdminDomains.js:230
 #: src/domains/DomainListFilters.js:99
 msgid "Asset State"
 msgstr "État des actifs"
@@ -1224,8 +1224,8 @@ msgid "Domains"
 msgstr "Domaines"
 
 #: src/app/ReadGuidancePage.js:111
-msgid "Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
-msgstr "Les domaines ne peuvent être supprimés de votre liste que 1) s'ils n'existent plus, c'est-à-dire s'ils sont supprimés du DNS et renvoient un code d'erreur NX DOMAIN (le nom de domaine n'existe pas) ; ou 2) si vous avez constaté qu'ils n'appartiennent pas à votre organisation."
+msgid "Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NXDOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
+msgstr "Les domaines ne peuvent être supprimés de votre liste que 1) s'ils n'existent plus, c'est-à-dire s'ils sont supprimés du DNS et renvoient un code d'erreur NXDOMAIN (le nom de domaine n'existe pas) ; ou 2) si vous avez constaté qu'ils n'appartiennent pas à votre organisation."
 
 #: src/domains/SubdomainDiscoveryButton.js:76
 msgid "Domains found through this method will be automatically added to <0>{orgSlug}</0> and tagged as \"NEW\". Would you like to proceed?"

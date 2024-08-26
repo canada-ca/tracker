@@ -127,7 +127,7 @@ msgstr "<0>Preference:</0> {preference}"
 msgid "A DNS request for this service has resulted in the following error code:"
 msgstr "A DNS request for this service has resulted in the following error code:"
 
-#: src/admin/AdminDomains.js:519
+#: src/admin/AdminDomains.js:512
 msgid "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 msgstr "A domain may only be removed for one of the reasons below. For a domain to no longer exist, it must be removed from the DNS. If you need to remove this domain for a different reason, please contact TBS Cyber Security."
 
@@ -233,7 +233,7 @@ msgstr "Activity"
 msgid "Add"
 msgstr "Add"
 
-#: src/admin/AdminDomains.js:428
+#: src/admin/AdminDomains.js:421
 msgid "Add Domain"
 msgstr "Add Domain"
 
@@ -488,7 +488,7 @@ msgid "Assess current state;"
 msgstr "Assess current state;"
 
 #: src/admin/AdminDomainModal.js:278
-#: src/admin/AdminDomains.js:232
+#: src/admin/AdminDomains.js:230
 #: src/domains/DomainListFilters.js:99
 msgid "Asset State"
 msgstr "Asset State"
@@ -1228,8 +1228,8 @@ msgid "Domains"
 msgstr "Domains"
 
 #: src/app/ReadGuidancePage.js:111
-msgid "Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
-msgstr "Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
+msgid "Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NXDOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
+msgstr "Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted from the DNS returning an error code of NXDOMAIN (domain name does not exist); or 2) if you have identified that they do not belong to your organization."
 
 #: src/domains/SubdomainDiscoveryButton.js:76
 msgid "Domains found through this method will be automatically added to <0>{orgSlug}</0> and tagged as \"NEW\". Would you like to proceed?"
