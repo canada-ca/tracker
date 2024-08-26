@@ -6,50 +6,64 @@ import { t } from '@lingui/macro'
 import { array, func } from 'prop-types'
 
 export function FilterList({ filters, setFilters }) {
+  const statuses = {
+    HTTPS_STATUS: `HTTPS`,
+    HSTS_STATUS: `HSTS`,
+    CERTIFICATES_STATUS: `Certificates`,
+    CIPHERS_STATUS: `Ciphers`,
+    CURVES_STATUS: t`Curves`,
+    PROTOCOLS_STATUS: t`Protocols`,
+    SPF_STATUS: `SPF`,
+    DKIM_STATUS: `DKIM`,
+    DMARC_STATUS: `DMARC`,
+  }
+
+  const assetStateLabels = {
+    APPROVED: t`Approved`,
+    DEPENDENCY: t`Dependency`,
+    MONITOR_ONLY: t`Monitor Only`,
+    CANDIDATE: t`Candidate`,
+    REQUIRES_INVESTIGATION: t`Requires Investigation`,
+  }
+
+  const tagBgColour = (filterValue) => {
+    switch (filterValue) {
+      case 'PASS':
+        return 'strongMuted'
+      case 'FAIL':
+        return 'weakMuted'
+      case 'INFO':
+        return 'infoMuted'
+      default:
+        return 'gray.100'
+    }
+  }
+
+  const displayTag = (filterCategory, filterValue) => {
+    if (filterCategory === 'STATUS') {
+      return (
+        <>
+          <TagLabel>{statuses[filterCategory]}</TagLabel>
+          <TagRightIcon
+            color={filterValue === 'PASS' ? 'strong' : filterValue === 'FAIL' ? 'weak' : 'info'}
+            as={filterValue === 'PASS' ? CheckCircleIcon : filterValue === 'FAIL' ? WarningIcon : InfoIcon}
+          />
+        </>
+      )
+    } else if (filterCategory === 'ASSET_STATE') {
+      return <TagLabel>{assetStateLabels[filterValue]}</TagLabel>
+    } else {
+      return <TagLabel>{filterValue}</TagLabel>
+    }
+  }
+
   return (
     <>
       {filters.map(({ filterCategory, comparison, filterValue }, idx) => {
-        const statuses = {
-          HTTPS_STATUS: `HTTPS`,
-          HSTS_STATUS: `HSTS`,
-          CERTIFICATES_STATUS: `Certificates`,
-          CIPHERS_STATUS: `Ciphers`,
-          CURVES_STATUS: t`Curves`,
-          PROTOCOLS_STATUS: t`Protocols`,
-          SPF_STATUS: `SPF`,
-          DKIM_STATUS: `DKIM`,
-          DMARC_STATUS: `DMARC`,
-        }
         return (
-          <Tag
-            fontSize="lg"
-            borderWidth="1px"
-            borderColor="gray.300"
-            key={idx}
-            m="1"
-            bg={
-              filterValue === 'PASS'
-                ? 'strongMuted'
-                : filterValue === 'FAIL'
-                ? 'weakMuted'
-                : filterValue === 'INFO'
-                ? 'infoMuted'
-                : 'gray.100'
-            }
-          >
+          <Tag fontSize="lg" borderWidth="1px" borderColor="gray.300" key={idx} m="1" bg={tagBgColour(filterValue)}>
             {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
-            {['TAGS', 'ASSET_STATE'].includes(filterCategory) ? (
-              <TagLabel>{filterValue}</TagLabel>
-            ) : (
-              <>
-                <TagLabel>{statuses[filterCategory]}</TagLabel>
-                <TagRightIcon
-                  color={filterValue === 'PASS' ? 'strong' : filterValue === 'FAIL' ? 'weak' : 'info'}
-                  as={filterValue === 'PASS' ? CheckCircleIcon : filterValue === 'FAIL' ? WarningIcon : InfoIcon}
-                />
-              </>
-            )}
-
+            {displayTag(filterCategory, filterValue)}
             <TagCloseButton onClick={() => setFilters(filters.filter((_, i) => i !== idx))} />
           </Tag>
         )

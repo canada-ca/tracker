@@ -20,9 +20,6 @@ import {
   ModalOverlay,
   Select,
   Stack,
-  Tag,
-  TagCloseButton,
-  TagLabel,
   Text,
   useDisclosure,
   useToast,
@@ -48,6 +45,7 @@ import { Formik } from 'formik'
 import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
 import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
+import { FilterList } from '../domains/FilterList'
 
 export function AdminDomains({ orgSlug, orgId }) {
   const toast = useToast()
@@ -444,15 +442,7 @@ export function AdminDomains({ orgSlug, orgId }) {
         />
       </Box>
       <Flex align="center" mb="2">
-        {filters.map(({ comparison, filterValue }, idx) => {
-          return (
-            <Tag fontSize="lg" borderWidth="1px" borderColor="gray.300" key={idx} mx="1" my="1" bg="gray.100">
-              {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
-              <TagLabel>{filterValue}</TagLabel>
-              <TagCloseButton onClick={() => setFilters(filters.filter((_, i) => i !== idx))} />
-            </Tag>
-          )
-        })}
+        <FilterList filters={filters} setFilters={setFilters} />
       </Flex>
       {adminDomainList}
       <RelayPaginationControls
