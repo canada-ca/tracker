@@ -110,7 +110,7 @@ export default function ReadGuidancePage() {
                 <Text>
                   <Trans>
                     Domains are only to be removed from your list when 1) they no longer exist, meaning they are deleted
-                    from the DNS returning an error code of NX DOMAIN (domain name does not exist); or 2) if you have
+                    from the DNS returning an error code of NXDOMAIN (domain name does not exist); or 2) if you have
                     identified that they do not belong to your organization.
                   </Trans>
                 </Text>
