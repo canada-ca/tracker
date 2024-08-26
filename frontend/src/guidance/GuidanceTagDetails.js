@@ -80,7 +80,7 @@ export function GuidanceTagDetails({ guidanceTag, tagType }) {
         </Text>
         <AccordionIcon />
         <Text ml="auto">
-          {guidanceTag?.count ? tagTypeList[tagType]?.toUpperCase() : <Trans>{guidanceTag?.count} Domains</Trans>}
+          {guidanceTag?.count ? <Trans>{guidanceTag?.count} Domains</Trans> : tagTypeList[tagType]?.toUpperCase()}
         </Text>
       </Flex>
       <AccordionPanel>
