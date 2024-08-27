@@ -303,23 +303,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                     </ABTestVariant>
                   </ABTestWrapper>
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
-                  <Flex align="center">
-                    <Tooltip label={t`Prevent this domain from being counted in your organization's summaries.`}>
-                      <QuestionOutlineIcon tabIndex={0} />
-                    </Tooltip>
-                    <label>
-                      <Switch
-                        isFocusable={true}
-                        name="hideDomain"
-                        mx="2"
-                        defaultChecked={values.hideDomain}
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <Badge variant="outline" color="gray.900" p="1.5">
-                      <Trans>Hide domain</Trans>
-                    </Badge>
-                  </Flex>
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
                     handleChange={handleChange}
