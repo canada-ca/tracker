@@ -105,6 +105,14 @@ export function DomainCard({
     bg: 'gray.100',
   }
 
+  const assetStateLabels = {
+    APPROVED: t`Approved`,
+    DEPENDENCY: t`Dependency`,
+    MONITOR_ONLY: t`Monitor Only`,
+    CANDIDATE: t`Candidate`,
+    REQUIRES_INVESTIGATION: t`Requires Investigation`,
+  }
+
   return (
     <ListItem {...rest}>
       <Flex
@@ -157,7 +165,7 @@ export function DomainCard({
               <ABTestVariant name="B">
                 {assetState && (
                   <Badge colorScheme="blue" mr="auto" alignSelf="center">
-                    {assetState}
+                    {assetStateLabels[assetState]}
                   </Badge>
                 )}
               </ABTestVariant>
