@@ -30,7 +30,6 @@ export function DomainCard({
   status,
   hasDMARCReport,
   tags,
-  isHidden,
   assetState,
   isArchived,
   rcode,
@@ -183,13 +182,6 @@ export function DomainCard({
                 </Tag>
               )
             })}
-            {isHidden && (
-              <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                  <Trans>HIDDEN</Trans>
-                </TagLabel>
-              </Tag>
-            )}
             {isArchived && (
               <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                 <TagLabel textColor="primary" fontWeight="bold" mx="auto">
@@ -293,7 +285,6 @@ DomainCard.propTypes = {
   status: object,
   hasDMARCReport: bool,
   tags: array,
-  isHidden: bool,
   isArchived: bool,
   blocked: bool,
   wildcardSibling: bool,

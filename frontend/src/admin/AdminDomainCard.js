@@ -4,7 +4,7 @@ import { array, bool, string } from 'prop-types'
 import { Flex, ListItem, Tag, TagLabel, Text } from '@chakra-ui/react'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
-export function AdminDomainCard({ url, tags, isHidden, assetState, isArchived, rcode, ...rest }) {
+export function AdminDomainCard({ url, tags, assetState, isArchived, rcode, ...rest }) {
   const assetStateLabels = {
     APPROVED: t`Approved`,
     DEPENDENCY: t`Dependency`,
@@ -45,13 +45,6 @@ export function AdminDomainCard({ url, tags, isHidden, assetState, isArchived, r
               <TagLabel fontWeight="bold">NXDOMAIN</TagLabel>
             </Tag>
           )}
-          {isHidden && (
-            <Tag colorScheme="blue" mx="1">
-              <TagLabel fontWeight="bold">
-                <Trans>HIDDEN</Trans>
-              </TagLabel>
-            </Tag>
-          )}
           {isArchived && (
             <Tag colorScheme="red" mx="1">
               <TagLabel fontWeight="bold">
@@ -67,7 +60,6 @@ export function AdminDomainCard({ url, tags, isHidden, assetState, isArchived, r
 AdminDomainCard.propTypes = {
   url: string,
   tags: array,
-  isHidden: bool,
   isArchived: bool,
   rcode: string,
   assetState: string,

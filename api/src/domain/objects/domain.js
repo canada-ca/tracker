@@ -364,11 +364,6 @@ export const domainType = new GraphQLObjectType({
       type: new GraphQLList(DomainTagLabel),
       resolve: ({ claimTags }) => claimTags,
     },
-    hidden: {
-      description: "Value that determines if a domain is excluded from an organization's results.",
-      type: GraphQLBoolean,
-      resolve: ({ hidden }) => hidden,
-    },
     userHasPermission: {
       description:
         'Value that determines if a user is affiliated with a domain, whether through organization affiliation, verified organization network affiliation, or through super admin status.',

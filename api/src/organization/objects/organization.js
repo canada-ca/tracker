@@ -171,24 +171,21 @@ export const organizationType = new GraphQLObjectType({
           'dmarc',
           'tags',
           'assetState',
-          'hidden',
           'rcode',
           'blocked',
           'wildcardSibling',
           'hasEntrustCertificate',
         ]
         let csvOutput = headers.join(',')
-        domains.forEach(
-          ({ domain, ipAddresses, status, tags, assetState, hidden, rcode, blocked, wildcardSibling }) => {
-            let csvLine = `${domain}`
-            csvLine += `,${ipAddresses.join('|')}`
-            csvLine += headers.slice(2, 11).reduce((previousValue, currentHeader) => {
-              return `${previousValue},${status[currentHeader]}`
-            }, '')
-            csvLine += `,${tags.join('|')},${assetState},${hidden},${rcode},${blocked},${wildcardSibling}`
-            csvOutput += `\n${csvLine}`
-          },
-        )
+        domains.forEach(({ domain, ipAddresses, status, tags, assetState, rcode, blocked, wildcardSibling }) => {
+          let csvLine = `${domain}`
+          csvLine += `,${ipAddresses.join('|')}`
+          csvLine += headers.slice(2, 11).reduce((previousValue, currentHeader) => {
+            return `${previousValue},${status[currentHeader]}`
+          }, '')
+          csvLine += `,${tags.join('|')},${assetState},${rcode},${blocked},${wildcardSibling}`
+          csvOutput += `\n${csvLine}`
+        })
 
         // Get org names to use in activity log
         let orgNamesCursor

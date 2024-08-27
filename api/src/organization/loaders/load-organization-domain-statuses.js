@@ -59,12 +59,7 @@ export const loadOrganizationDomainStatuses =
           FILTER v.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
-          if (filterValue === 'hidden') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER e.hidden ${comparison} true
-          `
-          } else if (filterValue === 'nxdomain') {
+          if (filterValue === 'nxdomain') {
             domainFilters = aql`
             ${domainFilters}
             FILTER v.rcode ${comparison} "NXDOMAIN"
@@ -140,7 +135,6 @@ export const loadOrganizationDomainStatuses =
               status: v.status,
               tags: claimTags,
               assetState: e.assetState,
-              hidden: e.hidden,
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,

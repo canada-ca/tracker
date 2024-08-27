@@ -28,10 +28,6 @@ export const updateDomain = new mutationWithClientMutationId({
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
     },
-    hidden: {
-      description: "Value that determines if the domain is excluded from an organization's score.",
-      type: GraphQLBoolean,
-    },
     archived: {
       description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
@@ -88,13 +84,6 @@ export const updateDomain = new mutationWithClientMutationId({
       archived = args.archived
     } else {
       archived = null
-    }
-
-    let hidden
-    if (typeof args.hidden !== 'undefined') {
-      hidden = args.hidden
-    } else {
-      hidden = null
     }
 
     let assetState
@@ -222,7 +211,6 @@ export const updateDomain = new mutationWithClientMutationId({
 
     const claimToInsert = {
       tags: tags || claim?.tags,
-      hidden: typeof hidden !== 'undefined' ? hidden : claim?.hidden,
       firstSeen: typeof claim?.firstSeen === 'undefined' ? new Date().toISOString() : claim?.firstSeen,
       assetState: assetState || claim?.assetState,
     }
@@ -286,14 +274,6 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof hidden !== 'undefined') {
-      updatedProperties.push({
-        name: 'hidden',
-        oldValue: claim?.hidden,
-        newValue: hidden,
-      })
-    }
-
     if (updatedProperties.length > 0) {
       await logActivity({
         transaction,
@@ -343,7 +323,6 @@ export const updateDomain = new mutationWithClientMutationId({
       claimTags: claimToInsert.tags.map((tag) => {
         return tag[language]
       }),
-      hidden,
       assetState,
     }
   },
