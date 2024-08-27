@@ -286,14 +286,6 @@ export const updateDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof hidden !== 'undefined') {
-      updatedProperties.push({
-        name: 'hidden',
-        oldValue: claim?.hidden,
-        newValue: hidden,
-      })
-    }
-
     if (updatedProperties.length > 0) {
       await logActivity({
         transaction,

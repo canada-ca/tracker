@@ -251,14 +251,6 @@ export const createDomain = new mutationWithClientMutationId({
       })
     }
 
-    if (typeof hidden !== 'undefined') {
-      updatedProperties.push({
-        name: 'hidden',
-        oldValue: null,
-        newValue: hidden,
-      })
-    }
-
     if (typeof assetState !== 'undefined') {
       updatedProperties.push({
         name: 'assetState',
