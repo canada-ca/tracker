@@ -40,7 +40,11 @@ export function FilterList({ filters, setFilters }) {
   }
 
   const displayTag = (filterCategory, filterValue) => {
-    if (filterCategory === 'STATUS') {
+    if (filterCategory === 'TAGS') {
+      return <TagLabel>{filterValue}</TagLabel>
+    } else if (filterCategory === 'ASSET_STATE') {
+      return <TagLabel>{assetStateLabels[filterValue]}</TagLabel>
+    } else {
       return (
         <>
           <TagLabel>{statuses[filterCategory]}</TagLabel>
@@ -50,10 +54,6 @@ export function FilterList({ filters, setFilters }) {
           />
         </>
       )
-    } else if (filterCategory === 'ASSET_STATE') {
-      return <TagLabel>{assetStateLabels[filterValue]}</TagLabel>
-    } else {
-      return <TagLabel>{filterValue}</TagLabel>
     }
   }
 
