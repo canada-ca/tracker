@@ -24,10 +24,6 @@ export const createDomain = new mutationWithClientMutationId({
       description: 'List of labelled tags users have applied to the domain.',
       type: new GraphQLList(inputTag),
     },
-    hidden: {
-      description: "Value that determines if the domain is excluded from an organization's score.",
-      type: GraphQLBoolean,
-    },
     archived: {
       description: 'Value that determines if the domain is excluded from the scanning process.',
       type: GraphQLBoolean,
@@ -82,13 +78,6 @@ export const createDomain = new mutationWithClientMutationId({
       archived = args.archived
     } else {
       archived = false
-    }
-
-    let hidden
-    if (typeof args.hidden !== 'undefined') {
-      hidden = args.hidden
-    } else {
-      hidden = false
     }
 
     let assetState
@@ -218,7 +207,6 @@ export const createDomain = new mutationWithClientMutationId({
               _from: ${org._id},
               _to: ${insertedDomain._id},
               tags: ${tags},
-              hidden: ${hidden},
               assetState: ${assetState},
               firstSeen: ${new Date().toISOString()},
             } INTO claims
@@ -315,7 +303,6 @@ export const createDomain = new mutationWithClientMutationId({
       claimTags: tags.map((tag) => {
         return tag[language]
       }),
-      hidden,
     }
   },
 })
