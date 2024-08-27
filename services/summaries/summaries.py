@@ -29,22 +29,6 @@ CHARTS = {
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def is_domain_hidden(domain, db):
-    """Check if a domain is hidden
-
-    :param domain: domain to check
-    :param db: active arangodb connection
-    :return: True if domain is hidden, False otherwise
-    """
-
-    claims = db.collection("claims").find({"_to": domain["_id"]})
-    for claim in claims:
-        hidden = claim.get("hidden")
-        if hidden is not None and hidden == True:
-            return True
-    return False
-
-
 def domain_has_verified_claim(domain, db):
     cursor = db.aql.execute(
         """

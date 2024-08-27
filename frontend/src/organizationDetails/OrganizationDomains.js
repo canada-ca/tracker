@@ -98,7 +98,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `HIDDEN`, text: t`Hidden` },
     { value: `CVE_DETECTED`, text: t`CVE Detected` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
@@ -155,7 +154,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             status,
             hasDMARCReport,
             claimTags,
-            hidden,
             assetState,
             archived,
             rcode,
@@ -173,7 +171,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               status={status}
               hasDMARCReport={hasDMARCReport}
               tags={claimTags}
-              isHidden={hidden}
               assetState={assetState}
               rcode={rcode}
               isArchived={archived}
@@ -233,10 +230,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         <InfoBox title={t`TEST`} info={t`Tag used to show domains as a test environment.`} />
         <InfoBox title={t`WEB`} info={t`Tag used to show domains as web-hosting.`} />
         <InfoBox title={t`INACTIVE`} info={t`Tag used to show domains that are not active.`} />
-        <InfoBox
-          title={t`HIDDEN`}
-          info={t`Tag used to show domains as hidden from affecting the organization summary scores.`}
-        />
         <InfoBox title={`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
         <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
         <InfoBox

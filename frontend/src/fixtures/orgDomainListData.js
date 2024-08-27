@@ -11,7 +11,6 @@ export const rawOrgDomainListData = {
             lastRan: null,
             claimTags: [],
             archived: false,
-            hidden: false,
             assetState: 'APPROVED',
             rcode: 'NOERROR',
             organizations: {
@@ -28,7 +27,6 @@ export const rawOrgDomainListData = {
             lastRan: '2020-12-06 17:51:25.113689',
             claimTags: [],
             archived: false,
-            hidden: false,
             assetState: 'APPROVED',
             rcode: 'NOERROR',
             organizations: {
@@ -45,7 +43,6 @@ export const rawOrgDomainListData = {
             lastRan: '2020-12-06 17:51:25.113689',
             claimTags: [],
             archived: false,
-            hidden: false,
             assetState: 'APPROVED',
             rcode: 'NOERROR',
             organizations: {
