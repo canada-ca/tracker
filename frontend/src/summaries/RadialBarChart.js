@@ -151,7 +151,7 @@ export function RadialBarChart({ data, height = 500, width = 530, ...props }) {
         .attr('y', 20)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
-        .text(`Domains`)
+        .text(t`Domains`)
         .style('font-size', '20px')
         .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 

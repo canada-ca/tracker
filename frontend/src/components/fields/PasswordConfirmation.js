@@ -2,19 +2,13 @@ import React from 'react'
 import { object, string } from 'prop-types'
 import { t } from '@lingui/macro'
 import { IconButton, Spinner, Stack } from '@chakra-ui/react'
-import {
-  CheckIcon,
-  CloseIcon,
-  LockIcon,
-  ViewIcon,
-  ViewOffIcon,
-} from '@chakra-ui/icons'
+import { CheckIcon, CloseIcon, LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 import { FormField } from './FormField'
 
 export function PasswordConfirmation({
-  passwordLabel,
-  confirmPasswordLabel,
+  passwordLabel = t`Password:`,
+  confirmPasswordLabel = t`Confirm Password:`,
   inputProps,
   ...props
 }) {
@@ -70,7 +64,7 @@ export function PasswordConfirmation({
         rightElement={
           <IconButton
             id="showPassword"
-            aria-label={passwordShow ? 'hide password' : 'show password'}
+            aria-label={passwordShow ? t`Hide password` : t`Show password`}
             onClick={handlePasswordShow}
             h="buttons.lg"
             mr={8}
@@ -106,7 +100,7 @@ export function PasswordConfirmation({
         rightElement={
           <IconButton
             id="showPasswordConfirm"
-            aria-label={confirmShow ? 'hide password' : 'show password'}
+            aria-label={confirmShow ? t`Hide password` : t`Show password`}
             onClick={handleConfirmShow}
             h="buttons.lg"
             mr={8}
@@ -130,9 +124,4 @@ PasswordConfirmation.propTypes = {
   passwordLabel: string,
   confirmPasswordLabel: string,
   inputProps: object,
-}
-
-PasswordConfirmation.defaultProps = {
-  passwordLabel: t`Password:`,
-  confirmPasswordLabel: t`Confirm Password:`,
 }
