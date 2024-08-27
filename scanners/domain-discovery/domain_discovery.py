@@ -93,7 +93,6 @@ def process_subdomains(results, orgId):
                     {
                         "_from": orgId,
                         "_to": domainInsert["_id"],
-                        "hidden": False,
                         "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
                     }
                 )

@@ -132,7 +132,6 @@ async def main():
             "_from": org_id,
             "_to": domain_id,
             "tags": [{"en": "NEW", "fr": "NOUVEAU"}],
-            "hidden": False,
             "outsideComment": "",
             "firstSeen": date.today().isoformat(),
         }
