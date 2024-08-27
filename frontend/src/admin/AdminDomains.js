@@ -20,9 +20,6 @@ import {
   ModalOverlay,
   Select,
   Stack,
-  Tag,
-  TagCloseButton,
-  TagLabel,
   Text,
   useDisclosure,
   useToast,
@@ -47,6 +44,8 @@ import { REMOVE_DOMAIN } from '../graphql/mutations'
 import { Formik } from 'formik'
 import SubdomainDiscoveryButton from '../domains/SubdomainDiscoveryButton'
 import { ABTestWrapper, ABTestVariant } from '../app/ABTestWrapper'
+import { InfoBox, InfoButton, InfoPanel } from '../components/InfoPanel'
+import { FilterList } from '../domains/FilterList'
 
 export function AdminDomains({ orgSlug, orgId }) {
   const toast = useToast()
@@ -73,6 +72,7 @@ export function AdminDomains({ orgSlug, orgId }) {
 
   const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
   const { isOpen: removeIsOpen, onOpen: removeOnOpen, onClose: removeOnClose } = useDisclosure()
+  const { isOpen: infoIsOpen, onToggle } = useDisclosure()
 
   const validationSchema = schemaToValidation({
     filterCategory: getRequirement('field'),
@@ -401,7 +401,7 @@ export function AdminDomains({ orgSlug, orgId }) {
             >
               <Trans>Search: </Trans>
             </Text>
-            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }} mr={{ base: '0', md: '4' }}>
+            <InputGroup width={{ base: '100%', md: '75%' }} mb={{ base: '8px', md: '0' }}>
               <InputLeftElement aria-hidden="true">
                 <PlusSquareIcon color="gray.300" />
               </InputLeftElement>
@@ -416,7 +416,12 @@ export function AdminDomains({ orgSlug, orgId }) {
                 }}
               />
             </InputGroup>
-            <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit">
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                <InfoButton bg="gray.50" onToggle={onToggle} />
+              </ABTestVariant>
+            </ABTestWrapper>
+            <Button id="addDomainBtn" width={{ base: '100%', md: '25%' }} variant="primary" type="submit" ml="auto">
               <AddIcon mr={2} aria-hidden="true" />
               <Trans>Add Domain</Trans>
             </Button>
@@ -437,15 +442,7 @@ export function AdminDomains({ orgSlug, orgId }) {
         />
       </Box>
       <Flex align="center" mb="2">
-        {filters.map(({ comparison, filterValue }, idx) => {
-          return (
-            <Tag fontSize="lg" borderWidth="1px" borderColor="gray.300" key={idx} mx="1" my="1" bg="gray.100">
-              {comparison === 'NOT_EQUAL' && <Text mr="1">!</Text>}
-              <TagLabel>{filterValue}</TagLabel>
-              <TagCloseButton onClick={() => setFilters(filters.filter((_, i) => i !== idx))} />
-            </Tag>
-          )
-        })}
+        <FilterList filters={filters} setFilters={setFilters} />
       </Flex>
       {adminDomainList}
       <RelayPaginationControls
@@ -552,6 +549,30 @@ export function AdminDomains({ orgSlug, orgId }) {
           </Formik>
         </ModalContent>
       </Modal>
+      <InfoPanel title={t`Asset States`} isOpen={infoIsOpen} onToggle={onToggle}>
+        <Trans>
+          The "Asset State" describes how the domain relates to your organization. These states are used by Tracker to
+          give you a more accurate summary of your attack surface.
+        </Trans>
+        <Divider borderColor="gray.500" mb={4} />
+        <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
+        <InfoBox
+          title={t`Dependency`}
+          info={t`An asset that is owned by a third party and supports the operation of organization-owned assets.`}
+        />
+        <InfoBox
+          title={t`Monitor Only`}
+          info={t`An asset that is relevant to the organization but is not a direct part of the attack surface.`}
+        />
+        <InfoBox
+          title={t`Candidate`}
+          info={t`An asset that is suspected to belong to the organization but has not been confirmed.`}
+        />
+        <InfoBox
+          title={t`Requires Investigation`}
+          info={t`An asset that requires further investigation to determine its relationship to the organization.`}
+        />
+      </InfoPanel>
     </Stack>
   )
 }
