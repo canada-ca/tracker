@@ -107,7 +107,7 @@ export function WebTLSResults({ tlsResult }) {
       <Flex as={AccordionButton}>
         <StatusIcon status={tlsResult.cipherStatus} />
         <Text ml="2" mr="1" fontSize="xl">
-          <Trans>Ciphers</Trans>
+          <Trans>Cipher Suites</Trans>
         </Text>
         <AccordionIcon boxSize="icons.xl" />
       </Flex>
@@ -516,7 +516,7 @@ export function WebTLSResults({ tlsResult }) {
                   </Accordion>
                   <Box mx="2" mt="2">
                     <Text mb="1" fontWeight="bold" textAlign="lg">
-                      Certification Paths
+                      <Trans>Certification Paths</Trans>
                     </Text>
                     {pathValidationResults.map(({ trustStore, wasValidationSuccessful, opensslErrorString }, idx) => {
                       return (

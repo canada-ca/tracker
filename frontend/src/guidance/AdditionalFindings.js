@@ -45,7 +45,7 @@ export function AdditionalFindings({ domain }) {
   if (loading) {
     return (
       <LoadingMessage>
-        <Trans>Additonal findings</Trans>
+        <Trans>Additional Findings</Trans>
       </LoadingMessage>
     )
   }
@@ -200,8 +200,10 @@ export function AdditionalFindings({ domain }) {
             </Flex>
             <AccordionPanel pb={4}>
               <WebRequirementsLink>
-                3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the
-                origin server.
+                <Trans>
+                  3.1.3 Use GC-approved content delivery networks (CDN) that cache websites and protects access to the
+                  origin server.
+                </Trans>
               </WebRequirementsLink>
               <Divider borderBottomColor="gray.900" />
               {cdnComponent ? (
@@ -231,12 +233,18 @@ export function AdditionalFindings({ domain }) {
             </Flex>
             <AccordionPanel pb={4}>
               {sortedPorts.map(({ port, lastPortState, portStateFirstSeen, portStateLastSeen }) => {
+                const lastPortStateTranslated =
+                  lastPortState.toUpperCase() === 'OPEN'
+                    ? t`Open`
+                    : lastPortState.toUpperCase() === 'FILTERED'
+                    ? t`Filtered`
+                    : lastPortState
                 return (
                   <Box key={port}>
                     <Flex justify="flex-start" px="2">
                       <Text minW="25%">{port}</Text>
                       <Text minW="25%">
-                        <Trans>State: {lastPortState}</Trans>
+                        <Trans>State: {lastPortStateTranslated}</Trans>
                       </Text>
                       <Text minW="25%">
                         <Trans>First Seen: {formatTimestamp(portStateFirstSeen)}</Trans>
