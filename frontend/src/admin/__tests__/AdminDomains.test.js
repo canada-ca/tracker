@@ -136,7 +136,6 @@ describe('<AdminDomains />', () => {
               orgId: 'gwdsfgvwsdgfvswefgdv',
               domain: 'test-domain.gc.ca',
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
-              hidden: false,
               archived: false,
             },
           },
@@ -227,7 +226,6 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               domain: 'test-domain.gc.ca',
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
-              hidden: false,
               archived: false,
               assetState: 'APPROVED',
             },
@@ -323,7 +321,7 @@ describe('<AdminDomains />', () => {
               orgId: rawOrgDomainListData.findOrganizationBySlug.id,
               domain: 'test.domain.gc.ca',
               tags: [{ en: 'NEW', fr: 'NOUVEAU' }],
-              hidden: false,
+
               archived: false,
               assetState: 'APPROVED',
             },
@@ -499,7 +497,7 @@ describe('<AdminDomains />', () => {
               orgId: 'testid=',
               domain: 'test.domain.ca',
               tags: [],
-              hidden: false,
+
               archived: false,
               assetState: 'MONITOR_ONLY',
             },
