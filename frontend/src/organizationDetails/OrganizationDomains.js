@@ -244,6 +244,23 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
+        <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
+        <InfoBox
+          title={t`Dependency`}
+          info={t`An asset that is owned by a third party and supports the operation of organization-owned assets.`}
+        />
+        <InfoBox
+          title={t`Monitor Only`}
+          info={t`An asset that is relevant to the organization but is not a direct part of the attack surface.`}
+        />
+        <InfoBox
+          title={t`Candidate`}
+          info={t`An asset that is suspected to belong to the organization but has not been confirmed.`}
+        />
+        <InfoBox
+          title={t`Requires Investigation`}
+          info={t`An asset that requires further investigation to determine its relationship to the organization.`}
+        />
       </InfoPanel>
 
       <SearchBox
