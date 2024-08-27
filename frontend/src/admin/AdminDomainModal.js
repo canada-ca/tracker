@@ -38,8 +38,7 @@ import withSuperAdmin from '../app/withSuperAdmin'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
-  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, hidden, assetState, mutation, orgCount } =
-    props
+  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, assetState, mutation, orgCount } = props
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -196,7 +195,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
             // convert initial tags to input type
             tags: getInitTags(),
             archiveDomain: archived,
-            hideDomain: hidden,
             assetState: assetState || 'APPROVED',
           }}
           initialTouched={{
@@ -213,7 +211,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   domain: values.domainUrl.trim(),
                   tags: values.tags,
                   archived: values.archiveDomain,
-                  hidden: values.hideDomain,
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
                 },
@@ -225,7 +222,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   domain: values.domainUrl.trim(),
                   tags: values.tags,
                   archived: values.archiveDomain,
-                  hidden: values.hideDomain,
                   assetState: values.assetState,
                 },
               })
@@ -412,7 +408,6 @@ AdminDomainModal.propTypes = {
   editingDomainUrl: string,
   tagInputList: array,
   archived: bool,
-  hidden: bool,
   orgSlug: string,
   mutation: string,
   orgCount: number,

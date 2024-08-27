@@ -60,7 +60,6 @@ export function AdminDomains({ orgSlug, orgId }) {
   })
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [modalProps, setModalProps] = useState({
-    hidden: false,
     archived: false,
     mutation: '',
     tagInputList: [],
@@ -171,7 +170,6 @@ export function AdminDomains({ orgSlug, orgId }) {
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `HIDDEN`, text: t`Hidden` },
     { value: `ARCHIVED`, text: t`Archived` },
   ]
 
@@ -310,7 +308,7 @@ export function AdminDomains({ orgSlug, orgId }) {
           </Text>
         )}
       >
-        {({ id: domainId, domain, claimTags, hidden, archived, rcode, organizations, assetState }, index) => (
+        {({ id: domainId, domain, claimTags, archived, rcode, organizations, assetState }, index) => (
           <>
             {index === 0 && <Divider borderBottomColor="gray.400" />}
             <Flex p="1" key={'admindomain' + index} align="center" rounded="md" mb="1">
@@ -332,7 +330,6 @@ export function AdminDomains({ orgSlug, orgId }) {
                   px="2"
                   onClick={() => {
                     setModalProps({
-                      hidden,
                       archived,
                       mutation: 'update',
                       assetState,
@@ -350,7 +347,6 @@ export function AdminDomains({ orgSlug, orgId }) {
               <AdminDomainCard
                 url={domain}
                 tags={claimTags}
-                isHidden={hidden}
                 assetState={assetState}
                 isArchived={archived}
                 rcode={rcode}
@@ -379,7 +375,6 @@ export function AdminDomains({ orgSlug, orgId }) {
           onSubmit={async (e) => {
             e.preventDefault() // prevents page from refreshing
             setModalProps({
-              hidden: false,
               archived: false,
               mutation: 'create',
               tagInputList: [],
