@@ -687,6 +687,7 @@ export const PAGINATED_ORG_DOMAINS = gql`
             webScanPending
             userHasPermission
             hasEntrustCertificate
+            cveDetected
           }
         }
       }
@@ -756,6 +757,7 @@ export const PAGINATED_DOMAINS = gql`
           hasDMARCReport
           userHasPermission
           hasEntrustCertificate
+          cveDetected
           __typename
         }
         __typename

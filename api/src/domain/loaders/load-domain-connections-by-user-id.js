@@ -543,7 +543,7 @@ export const loadDomainConnectionsByUserId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
+          RETURN MERGE({ id: domain._key, _type: "domain", "cveDetected": cveDetected }, domain)
       )
 
       LET hasNextPage = (LENGTH(
