@@ -14,7 +14,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { Link as RouteLink, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useLocation, useHistory } from 'react-router-dom'
 import { array, bool, object, string } from 'prop-types'
 import { StatusBadge } from './StatusBadge'
 import { ScanDomainButton } from './ScanDomainButton'
@@ -37,10 +37,12 @@ export function DomainCard({
   wildcardSibling,
   webScanPending,
   userHasPermission,
+  cveDetected,
   ...rest
 }) {
   const location = useLocation()
   const toast = useToast()
+  const history = useHistory
   const { isLoggedIn, isEmailValidated } = useUserVar()
 
   const [favouriteDomain] = useMutation(FAVOURITE_DOMAIN, {
@@ -189,6 +191,19 @@ export function DomainCard({
                 </TagLabel>
               </Tag>
             )}
+            {cveDetected && (
+              <Tag
+                m="0.5"
+                bg="gray.50"
+                borderWidth="1px"
+                borderColor="gray.900"
+                onClick={() => history.push(`/domains/${url}/additional-findings#vulnerabilities`)}
+              >
+                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                  <Trans>Vulnerability</Trans>
+                </TagLabel>
+              </Tag>
+            )}
           </Flex>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
@@ -291,4 +306,5 @@ DomainCard.propTypes = {
   webScanPending: bool,
   userHasPermission: bool,
   assetState: string,
+  cveDetected: bool,
 }

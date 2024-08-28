@@ -85,7 +85,7 @@ export function AdditionalFindings({ domain }) {
           <Trans>What are these additional findings?</Trans>
         </Button>
         <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5]} w="100%">
-          <AccordionItem>
+          <AccordionItem id="vulnerabilities">
             <Flex as={AccordionButton}>
               <Text fontSize="xl" ml="2">
                 <Trans>Top 25 Vulnerabilities</Trans>

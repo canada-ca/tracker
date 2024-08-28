@@ -175,6 +175,7 @@ export default function DomainsPage() {
             wildcardSibling,
             webScanPending,
             userHasPermission,
+            cveDetected,
           },
           index,
         ) => (
@@ -190,6 +191,7 @@ export default function DomainsPage() {
               wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
+              cveDetected={cveDetected}
               mb="3"
             />
           </ErrorBoundary>

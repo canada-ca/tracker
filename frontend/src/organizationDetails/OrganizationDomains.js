@@ -161,6 +161,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             wildcardSibling,
             webScanPending,
             userHasPermission,
+            cveDetected,
           },
           index,
         ) => (
@@ -178,6 +179,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
               userHasPermission={userHasPermission}
+              cveDetected={cveDetected}
               mb="3"
             />
           </ErrorBoundary>
