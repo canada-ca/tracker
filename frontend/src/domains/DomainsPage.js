@@ -104,7 +104,7 @@ export default function DomainsPage() {
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
-    { value: 'CVE_DETECTED', text: t`CVE Detected` },
+    { value: 'CVE_DETECTED', text: t`Top 25 Vulnerability` },
   ]
 
   const StatusExportButton = withSuperAdmin(() => {

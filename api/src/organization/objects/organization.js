@@ -175,7 +175,7 @@ export const organizationType = new GraphQLObjectType({
           'blocked',
           'wildcardSibling',
           'hasEntrustCertificate',
-          'cveDetected',
+          'top25VulnerabilityDetected',
         ]
         let csvOutput = headers.join(',')
         domains.forEach(

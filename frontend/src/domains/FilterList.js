@@ -26,6 +26,15 @@ export function FilterList({ filters, setFilters }) {
     REQUIRES_INVESTIGATION: t`Requires Investigation`,
   }
 
+  const displayTagFilterName = (filterValue) => {
+    switch (filterValue) {
+      case 'CVE_DETECTED':
+        return t`Top 25 Vulnerability`
+      default:
+        return filterValue
+    }
+  }
+
   const tagBgColour = (filterValue) => {
     switch (filterValue) {
       case 'PASS':
@@ -41,7 +50,7 @@ export function FilterList({ filters, setFilters }) {
 
   const displayTag = (filterCategory, filterValue) => {
     if (filterCategory === 'TAGS') {
-      return <TagLabel>{filterValue}</TagLabel>
+      return <TagLabel>{displayTagFilterName()}</TagLabel>
     } else if (filterCategory === 'ASSET_STATE') {
       return <TagLabel>{assetStateLabels[filterValue]}</TagLabel>
     } else {
