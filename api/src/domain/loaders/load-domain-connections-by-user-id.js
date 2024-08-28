@@ -322,7 +322,18 @@ export const loadDomainConnectionsByUserId =
       sortString = aql`ASC`
     }
 
-    let domainFilters = aql``
+    let domainFilters = aql`
+      LET cveDetected =  (
+          FOR finding IN additionalFindings
+            FILTER finding.domain == domain._id
+            LET vulnerableWebComponents = (
+              FOR wc IN finding.webComponents
+                FILTER LENGTH(wc.WebComponentCves) > 0
+                RETURN wc
+            )
+            RETURN LENGTH(vulnerableWebComponents) > 0
+        )[0]
+    `
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -410,6 +421,11 @@ export const loadDomainConnectionsByUserId =
             domainFilters = aql`
             ${domainFilters}
             FILTER domain.hasEntrustCertificate ${comparison} true
+          `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER cveDetected ${comparison} true
           `
           }
         }
