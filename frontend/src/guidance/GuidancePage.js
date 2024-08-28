@@ -81,7 +81,7 @@ function GuidancePage() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.replace(`/organizations/${domainName}/${tab}`)
+      history.replace(`/domains/${domainName}/${tab}`)
     }
   }
 
@@ -110,7 +110,7 @@ function GuidancePage() {
 
   useEffect(() => {
     if (!activeTab) {
-      history.replace(`/organizations/${domainName}/${defaultActiveTab}`)
+      history.replace(`/domains/${domainName}/${defaultActiveTab}`)
     }
   }, [domainName])
 
