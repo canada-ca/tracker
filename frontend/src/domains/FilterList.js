@@ -29,7 +29,7 @@ export function FilterList({ filters, setFilters }) {
   const displayTagFilterName = (filterValue) => {
     switch (filterValue) {
       case 'CVE_DETECTED':
-        return t`Top 25 Vulnerability`
+        return t`Top 25 Vulnerabilities`
       default:
         return filterValue
     }
