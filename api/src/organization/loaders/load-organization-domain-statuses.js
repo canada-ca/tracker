@@ -138,7 +138,8 @@ export const loadOrganizationDomainStatuses =
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,
-              hasEntrustCertificate: v.hasEntrustCertificate
+              hasEntrustCertificate: v.hasEntrustCertificate,
+              cveDetected: cveDetected
             }
           `
       ).all()

@@ -5,7 +5,19 @@ export const loadAllOrganizationDomainStatuses =
   ({ query, userKey, i18n }) =>
   async ({ filters }) => {
     let domains
-    let domainFilters = aql`FILTER d.archived != true`
+    let domainFilters = aql`
+      FILTER d.archived != true
+      LET cveDetected =  (
+        FOR finding IN additionalFindings
+          FILTER finding.domain == v._id
+          LET vulnerableWebComponents = (
+            FOR wc IN finding.webComponents
+              FILTER LENGTH(wc.WebComponentCves) > 0
+              RETURN wc
+          )
+          RETURN LENGTH(vulnerableWebComponents) > 0
+      )[0]
+    `
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -79,6 +91,11 @@ export const loadAllOrganizationDomainStatuses =
             ${domainFilters}
             FILTER d.hasEntrustCertificate ${comparison} true
           `
+          } else if (filterValue === 'cve-detected') {
+            domainFilters = aql`
+            ${domainFilters}
+            FILTER cveDetected ${comparison} true
+          `
           }
         }
       })
@@ -112,7 +129,8 @@ export const loadAllOrganizationDomainStatuses =
               "rcode": d.rcode,
               "blocked": d.blocked,
               "wildcardSibling": d.wildcardSibling,
-              "hasEntrustCertificate": d.hasEntrustCertificate
+              "hasEntrustCertificate": d.hasEntrustCertificate,
+              "cveDetected": cveDetected
             }
           `
       ).all()
