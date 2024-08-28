@@ -88,6 +88,59 @@ export function AdditionalFindings({ domain }) {
           <AccordionItem>
             <Flex as={AccordionButton}>
               <Text fontSize="xl" ml="2">
+                <Trans>Top 25 Vulnerabilities</Trans>
+              </Text>
+              <AccordionIcon boxSize="icons.xl" />
+            </Flex>
+            <AccordionPanel pb={4}>
+              <Link colour="blue.500" href="">
+                <Trans>SPIN Top 25 Vulnerabilities</Trans> <ExternalLinkIcon />
+              </Link>
+              {Object.keys(vulnerabilitySeverities).map((severity) => {
+                return (
+                  vulnerabilities[severity].length > 0 && (
+                    <Box key={severity} px="2" mb="2">
+                      <Text>
+                        <b>{vulnerabilitySeverities[severity]}</b>
+                      </Text>
+                      <SimpleGrid columns={8}>
+                        {vulnerabilities[severity].map(({ cve }) => {
+                          return (
+                            <Button
+                              key={cve}
+                              borderRadius="full"
+                              m="1"
+                              borderColor="black"
+                              borderWidth="1px"
+                              bg={severity}
+                              fontWeight="normal"
+                              size="sm"
+                              _hover={{ bg: cveSeverityOnHover[severity] }}
+                              onClick={() => {
+                                setActiveCve({
+                                  cve,
+                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
+                                    webComponentCves.some((x) => x.cve === cve),
+                                  ),
+                                })
+                                cveOnOpen()
+                              }}
+                            >
+                              {cve}
+                            </Button>
+                          )
+                        })}
+                      </SimpleGrid>
+                    </Box>
+                  )
+                )
+              })}
+            </AccordionPanel>
+          </AccordionItem>
+
+          <AccordionItem>
+            <Flex as={AccordionButton}>
+              <Text fontSize="xl" ml="2">
                 <Trans>Frameworks</Trans>
               </Text>
               <AccordionIcon boxSize="icons.xl" />
@@ -255,56 +308,6 @@ export function AdditionalFindings({ domain }) {
                     </Flex>
                     <Divider borderBottomColor="gray.900" />
                   </Box>
-                )
-              })}
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <Flex as={AccordionButton}>
-              <Text fontSize="xl" ml="2">
-                <Trans>Vulnerabilities</Trans>
-              </Text>
-              <AccordionIcon boxSize="icons.xl" />
-            </Flex>
-            <AccordionPanel pb={4}>
-              {Object.keys(vulnerabilitySeverities).map((severity) => {
-                return (
-                  vulnerabilities[severity].length > 0 && (
-                    <Box key={severity} px="2" mb="2">
-                      <Text>
-                        <b>{vulnerabilitySeverities[severity]}</b>
-                      </Text>
-                      <SimpleGrid columns={8}>
-                        {vulnerabilities[severity].map(({ cve }) => {
-                          return (
-                            <Button
-                              key={cve}
-                              borderRadius="full"
-                              m="1"
-                              borderColor="black"
-                              borderWidth="1px"
-                              bg={severity}
-                              fontWeight="normal"
-                              size="sm"
-                              _hover={{ bg: cveSeverityOnHover[severity] }}
-                              onClick={() => {
-                                setActiveCve({
-                                  cve,
-                                  affectedWebComps: webComponents.filter(({ webComponentCves }) =>
-                                    webComponentCves.some((x) => x.cve === cve),
-                                  ),
-                                })
-                                cveOnOpen()
-                              }}
-                            >
-                              {cve}
-                            </Button>
-                          )
-                        })}
-                      </SimpleGrid>
-                    </Box>
-                  )
                 )
               })}
             </AccordionPanel>
