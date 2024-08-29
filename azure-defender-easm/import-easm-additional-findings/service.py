@@ -64,11 +64,11 @@ def update_domain_cve_detected(domain, web_components):
         if len(wc["WebComponentCves"]) > 0:
             cve_detected = True
             break
-        query = f"""
-            UPDATE {{ _key: "{domain["key"]}", cveDetected: {cve_detected} }} IN domains
-        """
-        cursor = db.aql.execute(query)
-        return [domain for domain in cursor]
+    query = f"""
+        UPDATE {{ _key: "{domain["key"]}", cveDetected: {cve_detected} }} IN domains
+    """
+    cursor = db.aql.execute(query)
+    return [domain for domain in cursor]
 
 
 def main():
