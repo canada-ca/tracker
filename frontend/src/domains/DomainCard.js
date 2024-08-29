@@ -191,7 +191,7 @@ export function DomainCard({
                 </TagLabel>
               </Tag>
             )}
-            {cveDetected && (
+            {userHasPermission && cveDetected && (
               <Tag
                 m="0.5"
                 bg="gray.50"
