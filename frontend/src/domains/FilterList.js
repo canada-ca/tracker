@@ -50,7 +50,7 @@ export function FilterList({ filters, setFilters }) {
 
   const displayTag = (filterCategory, filterValue) => {
     if (filterCategory === 'TAGS') {
-      return <TagLabel>{displayTagFilterName()}</TagLabel>
+      return <TagLabel>{displayTagFilterName(filterValue)}</TagLabel>
     } else if (filterCategory === 'ASSET_STATE') {
       return <TagLabel>{assetStateLabels[filterValue]}</TagLabel>
     } else {
