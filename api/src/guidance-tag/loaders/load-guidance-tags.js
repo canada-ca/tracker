@@ -23,7 +23,7 @@ export const loadGuidanceTagByTagId =
       `
     } catch (err) {
       console.error(`Database error occurred when user: ${userKey} running loadGuidanceTagByTagId: ${err}`)
-      throw new Error(i18n._(t`Unable to find DMARC guidance tag(s). Please try again.`))
+      throw new Error(i18n._(t`Unable to find guidance tag(s). Please try again.`))
     }
 
     const tagMap = {}
@@ -33,7 +33,7 @@ export const loadGuidanceTagByTagId =
       })
     } catch (err) {
       console.error(`Cursor error occurred when user: ${userKey} running loadGuidanceTagByTagId: ${err}`)
-      throw new Error(i18n._(t`Unable to find DMARC guidance tag(s). Please try again.`))
+      throw new Error(i18n._(t`Unable to find guidance tag(s). Please try again.`))
     }
 
     return tags.map((tag) => tagMap[tag])
