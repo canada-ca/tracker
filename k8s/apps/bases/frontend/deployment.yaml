@@ -24,7 +24,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:master-d539f01-1724942303 # {"$imagepolicy": "flux-system:frontend"}
+        - image: northamerica-northeast1-docker.pkg.dev/track-compliance/tracker/frontend:master-d39a76a-1724947250 # {"$imagepolicy": "flux-system:frontend"}
           name: frontend
           resources:
             limits:
