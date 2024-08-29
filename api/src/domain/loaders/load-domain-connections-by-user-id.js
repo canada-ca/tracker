@@ -322,18 +322,7 @@ export const loadDomainConnectionsByUserId =
       sortString = aql`ASC`
     }
 
-    let domainFilters = aql`
-      LET cveDetected =  (
-          FOR finding IN additionalFindings
-            FILTER finding.domain == domain._id
-            LET vulnerableWebComponents = (
-              FOR wc IN finding.webComponents
-                FILTER LENGTH(wc.WebComponentCves) > 0
-                RETURN wc
-            )
-            RETURN LENGTH(vulnerableWebComponents) > 0
-        )[0]
-    `
+    let domainFilters = aql``
     if (typeof filters !== 'undefined') {
       filters.forEach(({ filterCategory, comparison, filterValue }) => {
         if (comparison === '==') {
@@ -425,7 +414,7 @@ export const loadDomainConnectionsByUserId =
           } else if (filterValue === 'cve-detected') {
             domainFilters = aql`
             ${domainFilters}
-            FILTER cveDetected ${comparison} true
+            FILTER domain.cveDetected ${comparison} true
           `
           }
         }
@@ -543,7 +532,7 @@ export const loadDomainConnectionsByUserId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain", "cveDetected": cveDetected }, domain)
+          RETURN MERGE({ id: domain._key, _type: "domain" }, domain)
       )
 
       LET hasNextPage = (LENGTH(
