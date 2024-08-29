@@ -51,7 +51,7 @@ export const dkimFailureTableType = new GraphQLObjectType({
       description: 'Guidance for any issues that were found from the report.',
       resolve: async ({ guidance }, _args, { loaders: { loadGuidanceTagByTagId } }) => {
         if (guidance) {
-          return await loadGuidanceTagByTagId.load(guidance)
+          return await loadGuidanceTagByTagId({ tags: [guidance] })
         }
         return {}
       },
