@@ -98,7 +98,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `CVE_DETECTED`, text: t`Top 25 Vulnerability` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
   ]

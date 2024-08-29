@@ -191,20 +191,24 @@ export function DomainCard({
                 </TagLabel>
               </Tag>
             )}
-            {userHasPermission && cveDetected && (
-              <Tag
-                m="0.5"
-                bg="gray.50"
-                borderWidth="1px"
-                borderColor="gray.900"
-                as="button"
-                onClick={() => history.push(`/domains/${url}/additional-findings#vulnerabilities`)}
-              >
-                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                  <Trans>Vulnerability</Trans> <LinkIcon />
-                </TagLabel>
-              </Tag>
-            )}
+            <ABTestWrapper insiderVariantName="B">
+              <ABTestVariant name="B">
+                {userHasPermission && cveDetected && (
+                  <Tag
+                    m="0.5"
+                    bg="gray.50"
+                    borderWidth="1px"
+                    borderColor="gray.900"
+                    as="button"
+                    onClick={() => history.push(`/domains/${url}/additional-findings#vulnerabilities`)}
+                  >
+                    <TagLabel textColor="primary" fontWeight="bold" mx="auto">
+                      <Trans>Vulnerability</Trans> <LinkIcon />
+                    </TagLabel>
+                  </Tag>
+                )}
+              </ABTestVariant>
+            </ABTestWrapper>
           </Flex>
         </Box>
         <Divider variant="card" display={{ md: 'none' }} />
