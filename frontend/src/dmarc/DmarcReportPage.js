@@ -61,6 +61,7 @@ export default function DmarcReportPage() {
     variables: {
       domain: domainSlug,
     },
+    errorPolicy: 'ignore', // allow partial success
   })
 
   const {
