@@ -118,7 +118,7 @@ export const loadAllOrganizationDomainStatuses =
               "blocked": d.blocked,
               "wildcardSibling": d.wildcardSibling,
               "hasEntrustCertificate": d.hasEntrustCertificate,
-              "cveDetected": d.cveDetected
+              "hasTop25Vulnerability": d.cveDetected
             }
           `
       ).all()
