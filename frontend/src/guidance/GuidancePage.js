@@ -85,6 +85,12 @@ function GuidancePage() {
     }
   }
 
+  useEffect(() => {
+    if (!activeTab) {
+      history.replace(`/domains/${domainName}/${defaultActiveTab}`)
+    }
+  }, [domainName])
+
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
       toast({
@@ -107,12 +113,6 @@ function GuidancePage() {
       })
     },
   })
-
-  useEffect(() => {
-    if (!activeTab) {
-      history.replace(`/domains/${domainName}/${defaultActiveTab}`)
-    }
-  }, [domainName])
 
   if (loading) {
     return (
