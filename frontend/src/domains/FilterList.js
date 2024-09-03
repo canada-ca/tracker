@@ -30,6 +30,8 @@ export function FilterList({ filters, setFilters }) {
     switch (filterValue) {
       case 'CVE_DETECTED':
         return t`Top 25 Vulnerabilities`
+      case 'HAS_ENTRUST_CERTIFICATE':
+        return t`Entrust Certificate`
       default:
         return filterValue
     }
