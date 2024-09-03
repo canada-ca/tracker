@@ -1,9 +1,8 @@
 import React, { Suspense } from 'react'
 import { Switch, Link as RouteLink, Redirect, useLocation } from 'react-router-dom'
-import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Text } from '@chakra-ui/react'
+import { AlertDescription, AlertTitle, Box, Code, CSSReset, Flex, Link, Skeleton, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useQuery } from '@apollo/client'
 
 import { Main } from './Main'
 import { TopBanner } from './TopBanner'
@@ -24,6 +23,7 @@ import { NotificationBanner } from './NotificationBanner'
 import { IS_LOGIN_REQUIRED } from '../graphql/queries'
 import { useLingui } from '@lingui/react'
 import { ScrollToAnchor } from './ScrollToAnchor'
+import { bool } from 'prop-types'
 
 const GuidancePage = lazyWithRetry(() => import('../guidance/GuidancePage'))
 const PageNotFound = lazyWithRetry(() => import('./PageNotFound'))
@@ -46,14 +46,11 @@ const ContactUsPage = lazyWithRetry(() => import('./ContactUsPage'))
 const ReadGuidancePage = lazyWithRetry(() => import('./ReadGuidancePage'))
 const MyTrackerPage = lazyWithRetry(() => import('../user/MyTrackerPage'))
 
-export function App() {
+export function App({ initialLoading, isLoginRequired }) {
   // Hooks to be used with this functional component
   const { currentUser, isLoggedIn, isEmailValidated, currentTFAMethod, hasAffiliation } = useUserVar()
   const { i18n } = useLingui()
-  const { data, loading } = useQuery(IS_LOGIN_REQUIRED, {})
   const location = useLocation()
-
-  if (loading) return <LoadingMessage />
 
   const notificationBanner = () => {
     if (isLoggedIn()) {
@@ -114,47 +111,60 @@ export function App() {
         <SkipLink invisible href="#main">
           <Trans>Skip to main content</Trans>
         </SkipLink>
-        <TopBanner />
+        <TopBanner initialLoading={initialLoading} />
       </header>
       <Navigation>
         <RouteLink to="/">
           <Trans>Home</Trans>
         </RouteLink>
 
-        {((isLoggedIn() && isEmailValidated()) || !data?.loginRequired) && (
+        {initialLoading ? (
           <>
-            <RouteLink to="/organizations">
-              <Trans>Organizations</Trans>
-            </RouteLink>
-            <RouteLink to="/domains">
-              <Trans>Domains</Trans>
-            </RouteLink>
+            <Skeleton isLoaded={!initialLoading} py="0.5">
+              <Text fontWeight="bold">LoadingState</Text>
+            </Skeleton>
+            <Skeleton isLoaded={!initialLoading} py="0.5">
+              <Text fontWeight="bold">LoadingState</Text>
+            </Skeleton>
           </>
-        )}
-
-        {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
-          <RouteLink to="/dmarc-summaries">
-            <Trans>DMARC Summaries</Trans>
-          </RouteLink>
-        )}
-
-        {isLoggedIn() && (
+        ) : (
           <>
-            <RouteLink to="/my-tracker">
-              <Trans>myTracker</Trans>
-            </RouteLink>
+            {((isLoggedIn() && isEmailValidated()) || !isLoginRequired) && (
+              <>
+                <RouteLink to="/organizations">
+                  <Trans>Organizations</Trans>
+                </RouteLink>
+                <RouteLink to="/domains">
+                  <Trans>Domains</Trans>
+                </RouteLink>
+              </>
+            )}
 
-            <RouteLink to="/user">
-              <Trans>Account Settings</Trans>
-            </RouteLink>
-          </>
-        )}
+            {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
+              <RouteLink to="/dmarc-summaries">
+                <Trans>DMARC Summaries</Trans>
+              </RouteLink>
+            )}
 
-        {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
-          <>
-            <RouteLink to="/admin">
-              <Trans>Admin Profile</Trans>
-            </RouteLink>
+            {isLoggedIn() && (
+              <>
+                <RouteLink to="/my-tracker">
+                  <Trans>myTracker</Trans>
+                </RouteLink>
+
+                <RouteLink to="/user">
+                  <Trans>Account Settings</Trans>
+                </RouteLink>
+              </>
+            )}
+
+            {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' && (
+              <>
+                <RouteLink to="/admin">
+                  <Trans>Admin Profile</Trans>
+                </RouteLink>
+              </>
+            )}
           </>
         )}
       </Navigation>
@@ -179,165 +189,169 @@ export function App() {
       </NotificationBanner>
 
       <Main mb={{ base: '40px', md: 'none' }}>
-        <Suspense fallback={<LoadingMessage />}>
-          <Switch>
-            <Page exact path="/" title={t`Home`}>
-              <LandingPage loginRequired={data?.loginRequired} isLoggedIn={isLoggedIn()} />
-            </Page>
+        {initialLoading ? (
+          <LoadingMessage alignSelf="center" mx="auto" />
+        ) : (
+          <Suspense fallback={<LoadingMessage />}>
+            <Switch>
+              <Page exact path="/" title={t`Home`}>
+                <LandingPage loginRequired={isLoginRequired} isLoggedIn={isLoggedIn()} />
+              </Page>
 
-            <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
-              <CreateUserPage />
-            </Page>
+              <Page path="/create-user/:userOrgToken?" title={t`Create an Account`}>
+                <CreateUserPage />
+              </Page>
 
-            <Page
-              path="/sign-in"
-              title={t`Sign In`}
-              render={() => {
-                return isLoggedIn() ? (
+              <Page
+                path="/sign-in"
+                title={t`Sign In`}
+                render={() => {
+                  return isLoggedIn() ? (
+                    <Redirect
+                      to={{
+                        pathname: '/',
+                      }}
+                    />
+                  ) : (
+                    <SignInPage />
+                  )
+                }}
+              />
+
+              <Page
+                path="/authenticate/:sendMethod/:authenticateToken"
+                component={TwoFactorAuthenticatePage}
+                title={t`Authenticate`}
+              />
+
+              <Page path="/forgot-password" component={ForgotPasswordPage} title={t`Forgot Password`} />
+
+              <Page path="/reset-password/:resetToken" component={ResetPasswordPage} title={t`Reset Password`} />
+
+              <Page path="/terms-and-conditions" component={TermsConditionsPage} title={t`Terms & Conditions`} />
+
+              <Page path="/contact-us" component={ContactUsPage} title={t`Contact Us`} />
+
+              <Page path="/guidance" component={ReadGuidancePage} title={t`Read guidance`} />
+
+              <PrivatePage isLoginRequired={isLoginRequired} path="/organizations" title={t`Organizations`} exact>
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Organizations />
+                  </ErrorBoundary>
+                )}
+              </PrivatePage>
+
+              <PrivatePage
+                isLoginRequired={isLoginRequired}
+                path="/organizations/:orgSlug/:activeTab?"
+                setTitle={false}
+                exact
+              >
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <OrganizationDetails />
+                  </ErrorBoundary>
+                )}
+              </PrivatePage>
+
+              <Page path="/admin/:activeMenu?" title={t`Admin`}>
+                {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
+                  <AdminPage isLoginRequired={isLoginRequired} />
+                ) : (
                   <Redirect
                     to={{
-                      pathname: '/',
+                      pathname: '/sign-in',
+                      state: { from: location },
                     }}
                   />
+                )}
+              </Page>
+
+              <PrivatePage isLoginRequired={isLoginRequired} path="/domains" title={t`Domains`} exact>
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DomainsPage />
+                  </ErrorBoundary>
+                )}
+              </PrivatePage>
+
+              <PrivatePage isLoginRequired={true} path="/domains/:domainSlug/:activeTab?" setTitle={false} exact>
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <GuidancePage />
+                  </ErrorBoundary>
+                )}
+              </PrivatePage>
+
+              <PrivatePage
+                isLoginRequired={true}
+                path="/domains/:domainSlug/dmarc-report/:period?/:year?"
+                setTitle={false}
+                exact
+              >
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcReportPage />
+                  </ErrorBoundary>
+                )}
+              </PrivatePage>
+
+              <PrivatePage isLoginRequired={true} path="/dmarc-summaries" title={t`DMARC Summaries`} exact>
+                {() => (
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <DmarcByDomainPage />
+                  </ErrorBoundary>
+                )}
+              </PrivatePage>
+
+              <Page path="/user" title={t`Your Account`}>
+                {isLoggedIn() ? (
+                  <UserPage username={currentUser.userName} />
                 ) : (
-                  <SignInPage />
-                )
-              }}
-            />
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                      state: { from: location },
+                    }}
+                  />
+                )}
+              </Page>
 
-            <Page
-              path="/authenticate/:sendMethod/:authenticateToken"
-              component={TwoFactorAuthenticatePage}
-              title={t`Authenticate`}
-            />
+              <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
+                {isLoggedIn() ? (
+                  <MyTrackerPage />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                      state: { from: location },
+                    }}
+                  />
+                )}
+              </Page>
 
-            <Page path="/forgot-password" component={ForgotPasswordPage} title={t`Forgot Password`} />
+              <Page path="/validate/:verifyToken" title={t`Email Verification`}>
+                {() => <EmailValidationPage />}
+              </Page>
 
-            <Page path="/reset-password/:resetToken" component={ResetPasswordPage} title={t`Reset Password`} />
+              <Page path="/create-organization" title={t`Create Organization`}>
+                {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
+                  <CreateOrganizationPage />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/sign-in',
+                      state: { from: location },
+                    }}
+                  />
+                )}
+              </Page>
 
-            <Page path="/terms-and-conditions" component={TermsConditionsPage} title={t`Terms & Conditions`} />
-
-            <Page path="/contact-us" component={ContactUsPage} title={t`Contact Us`} />
-
-            <Page path="/guidance" component={ReadGuidancePage} title={t`Read guidance`} />
-
-            <PrivatePage isLoginRequired={data?.loginRequired} path="/organizations" title={t`Organizations`} exact>
-              {() => (
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <Organizations />
-                </ErrorBoundary>
-              )}
-            </PrivatePage>
-
-            <PrivatePage
-              isLoginRequired={data?.loginRequired}
-              path="/organizations/:orgSlug/:activeTab?"
-              setTitle={false}
-              exact
-            >
-              {() => (
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <OrganizationDetails />
-                </ErrorBoundary>
-              )}
-            </PrivatePage>
-
-            <Page path="/admin/:activeMenu?" title={t`Admin`}>
-              {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
-                <AdminPage isLoginRequired={data?.loginRequired} />
-              ) : (
-                <Redirect
-                  to={{
-                    pathname: '/sign-in',
-                    state: { from: location },
-                  }}
-                />
-              )}
-            </Page>
-
-            <PrivatePage isLoginRequired={data?.loginRequired} path="/domains" title={t`Domains`} exact>
-              {() => (
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <DomainsPage />
-                </ErrorBoundary>
-              )}
-            </PrivatePage>
-
-            <PrivatePage isLoginRequired={true} path="/domains/:domainSlug/:activeTab?" setTitle={false} exact>
-              {() => (
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <GuidancePage />
-                </ErrorBoundary>
-              )}
-            </PrivatePage>
-
-            <PrivatePage
-              isLoginRequired={true}
-              path="/domains/:domainSlug/dmarc-report/:period?/:year?"
-              setTitle={false}
-              exact
-            >
-              {() => (
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <DmarcReportPage />
-                </ErrorBoundary>
-              )}
-            </PrivatePage>
-
-            <PrivatePage isLoginRequired={true} path="/dmarc-summaries" title={t`DMARC Summaries`} exact>
-              {() => (
-                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-                  <DmarcByDomainPage />
-                </ErrorBoundary>
-              )}
-            </PrivatePage>
-
-            <Page path="/user" title={t`Your Account`}>
-              {isLoggedIn() ? (
-                <UserPage username={currentUser.userName} />
-              ) : (
-                <Redirect
-                  to={{
-                    pathname: '/sign-in',
-                    state: { from: location },
-                  }}
-                />
-              )}
-            </Page>
-
-            <Page path="/my-tracker/:activeTab?" title={t`myTracker`}>
-              {isLoggedIn() ? (
-                <MyTrackerPage />
-              ) : (
-                <Redirect
-                  to={{
-                    pathname: '/sign-in',
-                    state: { from: location },
-                  }}
-                />
-              )}
-            </Page>
-
-            <Page path="/validate/:verifyToken" title={t`Email Verification`}>
-              {() => <EmailValidationPage />}
-            </Page>
-
-            <Page path="/create-organization" title={t`Create Organization`}>
-              {isLoggedIn() && isEmailValidated() && currentTFAMethod() !== 'NONE' ? (
-                <CreateOrganizationPage />
-              ) : (
-                <Redirect
-                  to={{
-                    pathname: '/sign-in',
-                    state: { from: location },
-                  }}
-                />
-              )}
-            </Page>
-
-            <Page component={PageNotFound} title="404" />
-          </Switch>
-        </Suspense>
+              <Page component={PageNotFound} title="404" />
+            </Switch>
+          </Suspense>
+        )}
       </Main>
       <FloatingMenu />
 
@@ -368,4 +382,9 @@ export function App() {
       </Footer>
     </Flex>
   )
+}
+
+App.propTypes = {
+  initialLoading: bool,
+  isLoginRequired: bool,
 }
