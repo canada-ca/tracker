@@ -392,6 +392,7 @@ export const domainType = new GraphQLObjectType({
     cveDetected: {
       type: GraphQLBoolean,
       description: `Whether or not a CVE has been detected in the domain's additional findings.`,
+      resolve: ({ cveDetected }) => cveDetected,
     },
   }),
   interfaces: [nodeInterface],
