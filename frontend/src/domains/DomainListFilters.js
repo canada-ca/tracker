@@ -130,7 +130,7 @@ export function DomainListFilters({ filters, setFilters, statusOptions, filterTa
                     <ABTestWrapper insiderVariantName="B">
                       <ABTestVariant name="B">
                         <option value="CVE_DETECTED">
-                          <Trans>Top 25 Vulnerability</Trans>
+                          <Trans>Vulnerability</Trans>
                         </option>
                       </ABTestVariant>
                     </ABTestWrapper>
