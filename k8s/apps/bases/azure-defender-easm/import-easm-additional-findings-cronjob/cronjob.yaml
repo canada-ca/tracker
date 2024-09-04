@@ -5,7 +5,7 @@ metadata:
   namespace: azure-defender-easm
 spec:
   timeZone: America/Toronto
-  schedule: "00 7 * * *"
+  schedule: "0 20 * * *"
   concurrencyPolicy: Replace
   jobTemplate:
     spec:
