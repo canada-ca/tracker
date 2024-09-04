@@ -36,6 +36,7 @@ export function AdditionalFindings({ domain }) {
   const [activeCve, setActiveCve] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
+  const { i18n } = useLingui()
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
   const { data, loading, error } = useQuery(GUIDANCE_ADDITIONAL_FINDINGS, {
@@ -95,7 +96,11 @@ export function AdditionalFindings({ domain }) {
             <AccordionPanel pb={4}>
               <Link
                 colour="blue.500"
-                href="https://www.canada.ca/en/government/system/digital-government/policies-standards/spin/improving-gc-cyber-security-health.html"
+                href={
+                  i18n.locale === 'en'
+                    ? 'https://www.canada.ca/en/government/system/digital-government/policies-standards/spin/improving-gc-cyber-security-health.html'
+                    : 'https://www.canada.ca/fr/gouvernement/systeme/gouvernement-numerique/politiques-normes/amops/renforcement-cybersecurite-gouvernement-canada.html'
+                }
                 isExternal
               >
                 <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
