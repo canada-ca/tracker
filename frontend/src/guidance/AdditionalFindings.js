@@ -31,12 +31,13 @@ import { LoadingMessage } from '../components/LoadingMessage'
 import { ErrorFallbackMessage } from '../components/ErrorFallbackMessage'
 
 export function AdditionalFindings({ domain }) {
+  const { i18n } = useLingui()
   const vulnerabilitySeverities = { critical: t`Critical`, high: t`High`, medium: t`Medium`, low: t`Low` }
   const cveSeverityOnHover = { critical: 'red.100', high: 'orange.100', medium: 'yellow.50', low: 'gray.100' }
   const [activeCve, setActiveCve] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: cveIsOpen, onOpen: cveOnOpen, onClose: cveOnClose } = useDisclosure()
-  const { i18n } = useLingui()
+
   const formatTimestamp = (datetime) => new Date(datetime).toLocaleDateString()
 
   const { data, loading, error } = useQuery(GUIDANCE_ADDITIONAL_FINDINGS, {
