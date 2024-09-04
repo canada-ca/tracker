@@ -88,13 +88,17 @@ export function AdditionalFindings({ domain }) {
           <AccordionItem id="vulnerabilities">
             <Flex as={AccordionButton}>
               <Text fontSize="xl" ml="2">
-                <Trans>Top 25 Vulnerabilities</Trans>
+                <Trans>Vulnerabilities</Trans>
               </Text>
               <AccordionIcon boxSize="icons.xl" />
             </Flex>
             <AccordionPanel pb={4}>
-              <Link colour="blue.500" href="">
-                <Trans>SPIN Top 25 Vulnerabilities</Trans> <ExternalLinkIcon />
+              <Link
+                colour="blue.500"
+                href="https://www.canada.ca/en/government/system/digital-government/policies-standards/spin/improving-gc-cyber-security-health.html"
+                isExternal
+              >
+                <Trans>Improving GC Cyber Security Health SPIN</Trans> <ExternalLinkIcon />
               </Link>
               {Object.keys(vulnerabilitySeverities).map((severity) => {
                 return (
