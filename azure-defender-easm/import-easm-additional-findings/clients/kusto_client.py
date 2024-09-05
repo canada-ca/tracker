@@ -14,6 +14,7 @@ KUSTO_DATABASE = os.getenv("KUSTO_DATABASE")
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 TENANT_ID = os.getenv("TENANT_ID")
+CVE_LIST = os.getenv("CVE_LIST")
 
 KCSB_DATA = KustoConnectionStringBuilder.with_aad_application_key_authentication(
     f"https://{KUSTO_CLUSTER}.{REGION}.kusto.windows.net",
@@ -44,33 +45,7 @@ def get_web_components_by_asset(asset):
         wc["WebComponentLastSeen"] = wc["WebComponentLastSeen"].isoformat()
 
         # filter cves to only top 25
-        top25 = [
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-            "***REMOVED***",
-        ]
+        top25 = CVE_LIST.split(",")
         wc["WebComponentCves"] = [
             cve for cve in wc["WebComponentCves"] if cve["Cve"] in top25
         ]
