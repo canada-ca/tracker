@@ -14,9 +14,10 @@ export const TourComponent = ({ page }) => {
   //handles starting the tour based on the page and user state
   useEffect(() => {
     const hasSeenTour = localStorage.getItem(`hasSeenTour_${page}`)
-    if (!hasSeenTour && mainTourSteps[page]['requiresAuth'] && isLoggedIn() && isEmailValidated()) {
-      startTour()
-    } else if (!hasSeenTour && mainTourSteps[page]['requiresAuth'] === false) {
+    if (
+      (!hasSeenTour && mainTourSteps[page]['requiresAuth'] && isLoggedIn() && isEmailValidated()) ||
+      (!hasSeenTour && !mainTourSteps[page]['requiresAuth'])
+    ) {
       startTour()
     }
   }, [page, startTour])
@@ -42,32 +43,30 @@ export const TourComponent = ({ page }) => {
 
   //Joyride component (can modify ui stuff here)
   return (
-    <>
-      <Joyride
-        key={tourKey}
-        steps={mainTourSteps[page]['steps']}
-        run={isTourOpen}
-        continuous={true}
-        showProgress={true}
-        showSkipButton={true}
-        disableCloseOnEsc={false}
-        disableOverlayClose={false}
-        styles={{
-          buttonNext: {
-            backgroundColor: '#ff6600',
-          },
-          buttonBack: {
-            color: '#ff6600',
-          },
-        }}
-        locale={{
-          back: <Trans>Back</Trans>,
-          next: <Trans>Next</Trans>,
-          skip: <Trans>Skip</Trans>,
-        }}
-        callback={handleJoyrideCallback}
-      />
-    </>
+    <Joyride
+      key={tourKey}
+      steps={mainTourSteps[page]['steps']}
+      run={isTourOpen}
+      continuous={true}
+      showProgress={true}
+      showSkipButton={true}
+      disableCloseOnEsc={false}
+      disableOverlayClose={false}
+      styles={{
+        buttonNext: {
+          backgroundColor: '#ff6600',
+        },
+        buttonBack: {
+          color: '#ff6600',
+        },
+      }}
+      locale={{
+        back: <Trans>Back</Trans>,
+        next: <Trans>Next</Trans>,
+        skip: <Trans>Skip</Trans>,
+      }}
+      callback={handleJoyrideCallback}
+    />
   )
 }
 
