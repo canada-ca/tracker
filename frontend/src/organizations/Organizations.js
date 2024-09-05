@@ -174,7 +174,7 @@ export default function Organizations() {
             <Trans>Filters:</Trans>
           </Text>
           <Tooltip label={t`Filter list to verified organizations only.`}>
-            <Flex align="center" mr="2" className="filterVerified">
+            <Flex align="center" mr="2" className="filter-verified">
               <Switch
                 isFocusable={true}
                 aria-label="Show only verified organizations"

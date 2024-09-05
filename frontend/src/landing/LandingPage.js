@@ -24,11 +24,11 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
     <Stack w="100%">
       <TourComponent page="landingPage" />
       <Box mb="16" textAlign="left" px="4">
-        <Heading as="h1" className="step-1">
+        <Heading as="h1">
           <Trans>Track Digital Security</Trans>
         </Heading>
         <Divider borderColor="black" my="2" borderTopWidth="1" w="auto" />
-        <Text fontSize="xl" className="step-2">
+        <Text fontSize="xl">
           <Trans>
             Canadians rely on the Government of Canada to provide secure digital services. The Policy on Service and
             Digital guides government online services to adopt good security practices for practices outlined in the{' '}
@@ -53,7 +53,7 @@ export function LandingPage({ loginRequired, isLoggedIn }) {
           </Trans>
         </Text>
       </Box>
-      {(!loginRequired || isLoggedIn) && <LandingPageSummaries className="summaries" />}
+      {(!loginRequired || isLoggedIn) && <LandingPageSummaries />}
     </Stack>
   )
 }

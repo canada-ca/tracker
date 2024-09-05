@@ -17,7 +17,7 @@ export const mainTourSteps = {
         disableBeacon: true,
       },
       {
-        target: '.filterVerified',
+        target: '.filter-verified',
         content: <Trans>Here you can filter the list of organizations to only show verified organizations</Trans>,
         disableBeacon: true,
       },
