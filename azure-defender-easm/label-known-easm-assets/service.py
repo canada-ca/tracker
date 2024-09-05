@@ -45,7 +45,6 @@ def get_verified_orgs():
 def get_org_domains(org_id):
     query = f"""
     FOR v, e IN 1..1 OUTBOUND @org_id claims
-        FILTER e.hidden != true
         FILTER v.archived != true
         FILTER v.rcode != "NXDOMAIN"
         RETURN v.domain

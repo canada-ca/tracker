@@ -38,8 +38,7 @@ import withSuperAdmin from '../app/withSuperAdmin'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...props }) {
-  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, hidden, assetState, mutation, orgCount } =
-    props
+  const { editingDomainId, editingDomainUrl, tagInputList, orgSlug, archived, assetState, mutation, orgCount } = props
   const toast = useToast()
   const initialFocusRef = useRef()
   const { i18n } = useLingui()
@@ -145,7 +144,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
     { en: 'TEST', fr: 'TEST' },
     { en: 'WEB', fr: 'WEB' },
     { en: 'INACTIVE', fr: 'INACTIF' },
-    { en: 'OUTSIDE', fr: 'EXTERIEUR' },
   ]
 
   const addableTags = (values, helper) => {
@@ -196,7 +194,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
             // convert initial tags to input type
             tags: getInitTags(),
             archiveDomain: archived,
-            hideDomain: hidden,
             assetState: assetState || 'APPROVED',
           }}
           initialTouched={{
@@ -213,7 +210,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   domain: values.domainUrl.trim(),
                   tags: values.tags,
                   archived: values.archiveDomain,
-                  hidden: values.hideDomain,
                   assetState: values.assetState,
                   ignoreRua: values.ignoreRua,
                 },
@@ -225,7 +221,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                   domain: values.domainUrl.trim(),
                   tags: values.tags,
                   archived: values.archiveDomain,
-                  hidden: values.hideDomain,
                   assetState: values.assetState,
                 },
               })
@@ -307,23 +302,6 @@ export function AdminDomainModal({ isOpen, onClose, validationSchema, orgId, ...
                     </ABTestVariant>
                   </ABTestWrapper>
                   <IgnoreRuaToggle defaultChecked={values.ignoreRua} handleChange={handleChange} />
-                  <Flex align="center">
-                    <Tooltip label={t`Prevent this domain from being counted in your organization's summaries.`}>
-                      <QuestionOutlineIcon tabIndex={0} />
-                    </Tooltip>
-                    <label>
-                      <Switch
-                        isFocusable={true}
-                        name="hideDomain"
-                        mx="2"
-                        defaultChecked={values.hideDomain}
-                        onChange={handleChange}
-                      />
-                    </label>
-                    <Badge variant="outline" color="gray.900" p="1.5">
-                      <Trans>Hide domain</Trans>
-                    </Badge>
-                  </Flex>
                   <ArchiveDomainSwitch
                     defaultChecked={values.archiveDomain}
                     handleChange={handleChange}
@@ -412,7 +390,6 @@ AdminDomainModal.propTypes = {
   editingDomainUrl: string,
   tagInputList: array,
   archived: bool,
-  hidden: bool,
   orgSlug: string,
   mutation: string,
   orgCount: number,

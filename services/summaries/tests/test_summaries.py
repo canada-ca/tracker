@@ -117,9 +117,9 @@ domain3 = domains.insert(
     }
 )
 
-claims.insert({"_from": org["_id"], "_to": domain1["_id"], "hidden": False})
-claims.insert({"_from": org["_id"], "_to": domain2["_id"], "hidden": False})
-claims.insert({"_from": org["_id"], "_to": domain3["_id"], "hidden": False})
+claims.insert({"_from": org["_id"], "_to": domain1["_id"]})
+claims.insert({"_from": org["_id"], "_to": domain2["_id"]})
+claims.insert({"_from": org["_id"], "_to": domain3["_id"]})
 
 
 def test_update_chart_summaries():

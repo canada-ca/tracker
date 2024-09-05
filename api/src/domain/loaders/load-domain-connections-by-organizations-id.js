@@ -304,7 +304,7 @@ export const loadDomainConnectionsByOrgId =
             FOR tag IN e.tags || []
               RETURN TRANSLATE(${language}, tag)
           )
-          RETURN { hidden: e.hidden, assetState: e.assetState, claimTags: translatedTags }
+          RETURN { assetState: e.assetState, claimTags: translatedTags }
       )[0]
       LET cveDetected =  (
         FOR finding IN additionalFindings
@@ -375,12 +375,7 @@ export const loadDomainConnectionsByOrgId =
           FILTER domain.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
-          if (filterValue === 'hidden') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER claimVals.hidden ${comparison} true
-          `
-          } else if (filterValue === 'archived') {
+          if (filterValue === 'archived') {
             domainFilters = aql`
             ${domainFilters}
             FILTER domain.archived ${comparison} true
@@ -421,6 +416,11 @@ export const loadDomainConnectionsByOrgId =
             FILTER POSITION( claimVals.claimTags, ${filterValue}) ${comparison} true
           `
           }
+        } else if (filterCategory === 'asset-state') {
+          domainFilters = aql`
+          ${domainFilters}
+          FILTER claimVals.assetState ${comparison} ${filterValue}
+        `
         }
       })
     }
@@ -446,16 +446,11 @@ export const loadDomainConnectionsByOrgId =
     if (permission === 'super_admin') {
       showArchivedDomains = aql``
     }
-    let showHiddenDomains = aql`FILTER e.hidden != true`
-    if (['super_admin', 'owner', 'admin', 'user'].includes(permission)) {
-      showHiddenDomains = aql``
-    }
 
     let ownershipOrgsOnly = aql`
       LET claimKeys = (
         FOR v, e IN 1..1 OUTBOUND ${orgId} claims
           OPTIONS {order: "bfs"}
-          ${showHiddenDomains}
           RETURN v._key
       )
     `
@@ -465,7 +460,6 @@ export const loadDomainConnectionsByOrgId =
           LET claimKeys = (
             FOR v, e IN 1..1 OUTBOUND ${orgId} ownership
               OPTIONS {order: "bfs"}
-              ${showHiddenDomains}
               RETURN v._key
           )
         `
@@ -480,7 +474,6 @@ export const loadDomainConnectionsByOrgId =
         LET domainKeys = (
           FOR v, e IN 1..1 OUTBOUND ${orgId} claims
             OPTIONS {order: "bfs"}
-            ${showHiddenDomains}
             RETURN v._key
         )`
       } else {
@@ -527,7 +520,7 @@ export const loadDomainConnectionsByOrgId =
           SORT
           ${sortByField}
           ${limitTemplate}
-          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimVals.claimTags, "hidden": claimVals.hidden, "assetState": claimVals.assetState }, DOCUMENT(domain._id))
+          RETURN MERGE({ id: domain._key, _type: "domain", "claimTags": claimVals.claimTags, "assetState": claimVals.assetState }, DOCUMENT(domain._id))
       )
 
       LET hasNextPage = (LENGTH(

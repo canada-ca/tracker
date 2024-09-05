@@ -23,6 +23,7 @@ import { ExportButton } from '../components/ExportButton'
 import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
+import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
@@ -97,10 +98,17 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     { value: `BLOCKED`, text: t`Blocked` },
     { value: `WILDCARD_SIBLING`, text: t`Wildcard` },
     { value: `SCAN_PENDING`, text: t`Scan Pending` },
-    { value: `HIDDEN`, text: t`Hidden` },
     { value: `CVE_DETECTED`, text: t`CVE Detected` },
     { value: `ARCHIVED`, text: t`Archived` },
     { value: `HAS_ENTRUST_CERTIFICATE`, text: t`Entrust` },
+  ]
+
+  const assetStateOptions = [
+    { value: t`APPROVED`, text: t`Approved` },
+    { value: t`DEPENDENCY`, text: t`Dependency` },
+    { value: t`MONITOR_ONLY`, text: t`Monitor Only` },
+    { value: t`CANDIDATE`, text: t`Candidate` },
+    { value: t`REQUIRES_INVESTIGATION`, text: t`Requires Investigation` },
   ]
 
   const domainList = loading ? (
@@ -110,12 +118,25 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   ) : (
     <Box>
       {orgSlug !== 'my-tracker' && (
-        <DomainListFilters
-          filters={filters}
-          setFilters={setFilters}
-          statusOptions={orderByOptions}
-          filterTagOptions={filterTagOptions}
-        />
+        <ABTestWrapper insiderVariantName="B">
+          <ABTestVariant name="A">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+            />
+          </ABTestVariant>
+          <ABTestVariant name="B">
+            <DomainListFilters
+              filters={filters}
+              setFilters={setFilters}
+              statusOptions={orderByOptions}
+              filterTagOptions={filterTagOptions}
+              assetStateOptions={assetStateOptions}
+            />
+          </ABTestVariant>
+        </ABTestWrapper>
       )}
       <ListOf
         elements={nodes}
@@ -133,7 +154,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             status,
             hasDMARCReport,
             claimTags,
-            hidden,
             assetState,
             archived,
             rcode,
@@ -151,7 +171,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               status={status}
               hasDMARCReport={hasDMARCReport}
               tags={claimTags}
-              isHidden={hidden}
               assetState={assetState}
               rcode={rcode}
               isArchived={archived}
@@ -211,10 +230,6 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         <InfoBox title={t`TEST`} info={t`Tag used to show domains as a test environment.`} />
         <InfoBox title={t`WEB`} info={t`Tag used to show domains as web-hosting.`} />
         <InfoBox title={t`INACTIVE`} info={t`Tag used to show domains that are not active.`} />
-        <InfoBox
-          title={t`HIDDEN`}
-          info={t`Tag used to show domains as hidden from affecting the organization summary scores.`}
-        />
         <InfoBox title={`NXDOMAIN`} info={t`Tag used to show domains that have an rcode status of NXDOMAIN`} />
         <InfoBox title={t`BLOCKED`} info={t`Tag used to show domains that are possibly blocked by a firewall.`} />
         <InfoBox
@@ -222,6 +237,23 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
           info={t`Tag used to show domains which may be from a wildcard subdomain (a wildcard resolver exists as a sibling).`}
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
+        <InfoBox title={t`Approved`} info={t`An asset confirmed to belong to the organization.`} />
+        <InfoBox
+          title={t`Dependency`}
+          info={t`An asset that is owned by a third party and supports the operation of organization-owned assets.`}
+        />
+        <InfoBox
+          title={t`Monitor Only`}
+          info={t`An asset that is relevant to the organization but is not a direct part of the attack surface.`}
+        />
+        <InfoBox
+          title={t`Candidate`}
+          info={t`An asset that is suspected to belong to the organization but has not been confirmed.`}
+        />
+        <InfoBox
+          title={t`Requires Investigation`}
+          info={t`An asset that requires further investigation to determine its relationship to the organization.`}
+        />
       </InfoPanel>
 
       <SearchBox

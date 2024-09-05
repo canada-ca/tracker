@@ -30,7 +30,6 @@ export function DomainCard({
   status,
   hasDMARCReport,
   tags,
-  isHidden,
   assetState,
   isArchived,
   rcode,
@@ -105,6 +104,14 @@ export function DomainCard({
     bg: 'gray.100',
   }
 
+  const assetStateLabels = {
+    APPROVED: t`Approved`,
+    DEPENDENCY: t`Dependency`,
+    MONITOR_ONLY: t`Monitor Only`,
+    CANDIDATE: t`Candidate`,
+    REQUIRES_INVESTIGATION: t`Requires Investigation`,
+  }
+
   return (
     <ListItem {...rest}>
       <Flex
@@ -157,7 +164,7 @@ export function DomainCard({
               <ABTestVariant name="B">
                 {assetState && (
                   <Badge colorScheme="blue" mr="auto" alignSelf="center">
-                    {assetState}
+                    {assetStateLabels[assetState]}
                   </Badge>
                 )}
               </ABTestVariant>
@@ -175,13 +182,6 @@ export function DomainCard({
                 </Tag>
               )
             })}
-            {isHidden && (
-              <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
-                <TagLabel textColor="primary" fontWeight="bold" mx="auto">
-                  <Trans>HIDDEN</Trans>
-                </TagLabel>
-              </Tag>
-            )}
             {isArchived && (
               <Tag m="0.5" bg="gray.50" borderWidth="1px" borderColor="gray.900">
                 <TagLabel textColor="primary" fontWeight="bold" mx="auto">
@@ -285,7 +285,6 @@ DomainCard.propTypes = {
   status: object,
   hasDMARCReport: bool,
   tags: array,
-  isHidden: bool,
   isArchived: bool,
   blocked: bool,
   wildcardSibling: bool,

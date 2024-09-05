@@ -121,7 +121,6 @@ describe('given the addOrganizationsDomains mutation', () => {
                 input: {
                   orgId: "${toGlobalId('organizations', org._key)}"
                   domains: ["test.domain.gov", "test.domain2.gov"]
-                  hideNewDomains: false
                   tagNewDomains: false
                   tagStagingDomains: false
                   audit: false
@@ -191,7 +190,6 @@ describe('given the addOrganizationsDomains mutation', () => {
                 input: {
                   orgId: "${toGlobalId('organizations', org._key)}"
                   domains: ["test.domain.gov", "test.domain2.gov"]
-                  hideNewDomains: false
                   tagNewDomains: false
                   tagStagingDomains: false
                   audit: true
@@ -338,7 +336,6 @@ describe('given the addOrganizationsDomains mutation', () => {
                 input: {
                   orgId: "${toGlobalId('organizations', org._key)}"
                   domains: ["test.domain.gov", "test.domain2.gov"]
-                  hideNewDomains: false
                   tagNewDomains: false
                   tagStagingDomains: false
                   audit: false

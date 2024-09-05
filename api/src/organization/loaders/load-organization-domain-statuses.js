@@ -59,12 +59,7 @@ export const loadOrganizationDomainStatuses =
           FILTER v.status.certificates ${comparison} ${filterValue}
         `
         } else if (filterCategory === 'tags') {
-          if (filterValue === 'hidden') {
-            domainFilters = aql`
-            ${domainFilters}
-            FILTER e.hidden ${comparison} true
-          `
-          } else if (filterValue === 'nxdomain') {
+          if (filterValue === 'nxdomain') {
             domainFilters = aql`
             ${domainFilters}
             FILTER v.rcode ${comparison} "NXDOMAIN"
@@ -95,6 +90,11 @@ export const loadOrganizationDomainStatuses =
             FILTER POSITION(claimTags, ${filterValue}) ${comparison} true
           `
           }
+        } else if (filterCategory === 'asset-state') {
+          domainFilters = aql`
+            ${domainFilters}
+            FILTER e.assetState ${comparison} ${filterValue}
+          `
         }
       })
     }
@@ -134,7 +134,7 @@ export const loadOrganizationDomainStatuses =
               ipAddresses: ipAddresses,
               status: v.status,
               tags: claimTags,
-              hidden: e.hidden,
+              assetState: e.assetState,
               rcode: v.rcode,
               blocked: v.blocked,
               wildcardSibling: v.wildcardSibling,

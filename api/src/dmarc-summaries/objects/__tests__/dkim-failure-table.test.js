@@ -142,7 +142,7 @@ describe('given the dkimFailureTable gql object', () => {
           const demoType = dkimFailureTableType.getFields()
 
           const expectedResults = {
-            _id: 'aggregateGuidanceTags/agg1',
+            _id: 'guidanceTags/agg1',
             _key: 'agg1',
             _rev: 'rev',
             _type: 'guidanceTag',
@@ -165,9 +165,7 @@ describe('given the dkimFailureTable gql object', () => {
               {},
               {
                 loaders: {
-                  loadAggregateGuidanceTagByTagId: {
-                    load: jest.fn().mockReturnValue(expectedResults),
-                  },
+                  loadGuidanceTagByTagId: jest.fn().mockReturnValue([expectedResults]),
                 },
               },
             ),
@@ -186,9 +184,7 @@ describe('given the dkimFailureTable gql object', () => {
               {},
               {
                 loaders: {
-                  loadAggregateGuidanceTagByTagId: {
-                    load: jest.fn().mockReturnValue(expectedResults),
-                  },
+                  loadGuidanceTagByTagId: jest.fn().mockReturnValue(expectedResults),
                 },
               },
             ),
