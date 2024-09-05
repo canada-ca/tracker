@@ -140,6 +140,7 @@ export const TopBanner = ({ initialLoading, ...props }) => {
                 <Trans>Sign In</Trans>
               </Button>
               <Button
+                className="create-account-button"
                 variant="primaryWhite"
                 as={RouteLink}
                 to="/create-user"

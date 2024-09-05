@@ -132,7 +132,7 @@ export function App({ initialLoading, isLoginRequired }) {
             <>
               {((isLoggedIn() && isEmailValidated()) || !isLoginRequired) && (
                 <>
-                  <RouteLink to="/organizations">
+                  <RouteLink to="/organizations" className="organizations-page-button">
                     <Trans>Organizations</Trans>
                   </RouteLink>
                   <RouteLink to="/domains">
@@ -373,7 +373,7 @@ export function App({ initialLoading, isLoginRequired }) {
             <Trans>Terms & conditions</Trans>
           </Link>
 
-          <Link as={RouteLink} to="/contact-us" ml="4">
+          <Link as={RouteLink} to="/contact-us" ml="4" className="contact-us-button">
             <Trans>Contact Us</Trans>
           </Link>
 
