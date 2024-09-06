@@ -1,6 +1,6 @@
 import React from 'react'
 import { t, Trans } from '@lingui/macro'
-import { Box, Button, Flex, useToast, Image, Link } from '@chakra-ui/react'
+import { Box, Button, Flex, useToast, Image, Link, Skeleton } from '@chakra-ui/react'
 import { Link as RouteLink } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 
@@ -17,8 +17,9 @@ import { SIGN_OUT } from '../graphql/mutations'
 import { PhaseBanner } from './PhaseBanner'
 import { useLingui } from '@lingui/react'
 import { ABTestWrapper, ABTestVariant } from './ABTestWrapper'
+import { bool } from 'prop-types'
 
-export const TopBanner = (props) => {
+export const TopBanner = ({ initialLoading, ...props }) => {
   const { isLoggedIn, logout } = useUserVar()
   const toast = useToast()
   const { i18n } = useLingui()
@@ -98,7 +99,20 @@ export const TopBanner = (props) => {
             <LocaleSwitcher />
           </Box>
 
-          {isLoggedIn() ? (
+          {initialLoading ? (
+            <>
+              <Skeleton display={{ base: 'none', md: 'inline' }} mr="2">
+                <Button variant="primaryWhite" px="3">
+                  <Trans>Sign In</Trans>
+                </Button>
+              </Skeleton>
+              <Skeleton display={{ base: 'none', md: 'inline' }}>
+                <Button variant="primaryWhite" px="3">
+                  <Trans>Create Account</Trans>
+                </Button>
+              </Skeleton>
+            </>
+          ) : isLoggedIn() ? (
             <Button
               variant="primaryWhite"
               as={RouteLink}
@@ -136,4 +150,8 @@ export const TopBanner = (props) => {
       </Flex>
     </Layout>
   )
+}
+
+TopBanner.propTypes = {
+  initialLoading: bool,
 }
