@@ -153,6 +153,7 @@ def process_msg(msg):
                             "hsts_status": webScanV.results.connectionResults.hstsStatus,
                             "certificate_status": webScanV.results.tlsResult.certificateStatus,
                             "tls_result": webScanV.results.tlsResult,
+                            "has_entrust_certificate": webScanV.results.tlsResult.certificateChainInfo.hasEntrustCertificate,
                             "ssl_status": webScanV.results.tlsResult.sslStatus,
                             "protocol_status": webScanV.results.tlsResult.protocolStatus,
                             "cipher_status": webScanV.results.tlsResult.cipherStatus,
@@ -179,13 +180,8 @@ def process_msg(msg):
                 if web_scan["scan_status"] != "complete":
                     scan_pending = True
                     continue
-                try:
-                    if web_scan["tls_result"]["certificateChainInfo"][
-                        "hasEntrustCertificate"
-                    ]:
-                        has_entrust_certificate = True
-                except (TypeError, KeyError):
-                    pass
+                if web_scan["has_entrust_certificate"]:
+                    has_entrust_certificate = True
                 https_statuses.append(web_scan["https_status"])
                 hsts_statuses.append(web_scan["hsts_status"])
                 ssl_statuses.append(web_scan["ssl_status"])
