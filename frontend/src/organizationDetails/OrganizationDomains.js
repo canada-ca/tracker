@@ -24,19 +24,25 @@ import { DomainListFilters } from '../domains/DomainListFilters'
 import { FilterList } from '../domains/FilterList'
 import { domainSearchTip } from '../domains/DomainsPage'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import useSearchParam from '../utilities/useSearchParam'
 
 export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
   const [orderDirection, setOrderDirection] = useState('ASC')
   const [orderField, setOrderField] = useState('DOMAIN')
   const [searchTerm, setSearchTerm] = useState('')
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  // const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [domainsPerPage, setDomainsPerPage] = useState(10)
   const [filters, setFilters] = useState([
     { filterCategory: 'HTTPS_STATUS', comparison: 'NOT_EQUAL', filterValue: 'INFO' },
   ])
 
+  const { searchValue: searchTermParam, setSearchParams: setSearchTermParam } = useSearchParam({
+    name: 'search',
+    defaultValue: '',
+  })
+
   const memoizedSetDebouncedSearchTermCallback = useCallback(() => {
-    setDebouncedSearchTerm(searchTerm)
+    setSearchTermParam(searchTerm)
   }, [searchTerm])
 
   useDebouncedFunction(memoizedSetDebouncedSearchTermCallback, 500)
@@ -45,12 +51,12 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
     orgSlug === 'my-tracker'
       ? {
           orderBy: { field: orderField, direction: orderDirection },
-          search: debouncedSearchTerm,
+          search: searchTermParam,
         }
       : {
           slug: orgSlug,
           orderBy: { field: orderField, direction: orderDirection },
-          search: debouncedSearchTerm,
+          search: searchTermParam,
           filters,
         }
 
@@ -273,6 +279,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
         placeholder={t`Search for a domain`}
         onToggle={onToggle}
         searchTip={domainSearchTip}
+        value={searchTerm}
       />
 
       {orgSlug !== 'my-tracker' && (

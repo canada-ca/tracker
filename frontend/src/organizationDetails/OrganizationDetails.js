@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { ArrowLeftIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { UserIcon } from '../theme/Icons'
-import { Link as RouteLink, useParams, useHistory } from 'react-router-dom'
+import { Link as RouteLink, useParams, useHistory, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { OrganizationDomains } from './OrganizationDomains'
@@ -33,25 +33,30 @@ import { RequestOrgInviteModal } from '../organizations/RequestOrgInviteModal'
 import { useUserVar } from '../utilities/userState'
 import { HistoricalSummariesGraph } from '../summaries/HistoricalSummariesGraph'
 import { ABTestVariant, ABTestWrapper } from '../app/ABTestWrapper'
+import useSearchParam from '../utilities/useSearchParam'
 
 export default function OrganizationDetails() {
   const { isLoggedIn } = useUserVar()
   const { orgSlug, activeTab } = useParams()
   const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [progressChartRange, setProgressChartRange] = useState('LAST30DAYS')
   const tabNames = ['summary', 'dmarc_phases', 'domains', 'users']
   const defaultActiveTab = tabNames[0]
+  const { searchValue: progressChartRangeParam, setSearchParams: setProgressChartRangeParam } = useSearchParam({
+    name: 'summary-range',
+    validOptions: ['LAST30DAYS', 'LASTYEAR', 'YTD'],
+    defaultValue: 'LAST30DAYS',
+  })
 
   useDocumentTitle(`${orgSlug}`)
 
   const { loading, error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug, month: progressChartRange, year: new Date().getFullYear().toString() },
+    variables: { slug: orgSlug, month: progressChartRangeParam, year: new Date().getFullYear().toString() },
     // errorPolicy: 'ignore', // allow partial success
   })
 
   useEffect(() => {
-    if (!activeTab) {
+    if (!activeTab || !tabNames.includes(activeTab)) {
       history.replace(`/organizations/${orgSlug}/${defaultActiveTab}`)
     }
   }, [activeTab, history, orgSlug, defaultActiveTab])
@@ -72,7 +77,7 @@ export default function OrganizationDetails() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.replace(`/organizations/${orgSlug}/${tab}`)
+      history.push(`/organizations/${orgSlug}/${tab}`)
     }
   }
 
@@ -119,7 +124,7 @@ export default function OrganizationDetails() {
       <Tabs
         isFitted
         variant="enclosed-colored"
-        defaultIndex={activeTab ? tabNames.indexOf(activeTab) : tabNames[0]}
+        index={tabNames.indexOf(activeTab) > -1 ? tabNames.indexOf(activeTab) : 0}
         onChange={(i) => changeActiveTab(i)}
       >
         <TabList mb="4">
@@ -149,7 +154,8 @@ export default function OrganizationDetails() {
                 <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <HistoricalSummariesGraph
                     data={data?.organization?.historicalSummaries}
-                    setRange={setProgressChartRange}
+                    setRange={setProgressChartRangeParam}
+                    selectedRange={progressChartRangeParam}
                     width={1200}
                     height={500}
                   />

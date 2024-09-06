@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Box, Flex, Select, Text } from '@chakra-ui/react'
 import { number, object } from 'prop-types'
 import { extent, bisector } from 'd3-array'
@@ -16,6 +16,7 @@ import { timeFormat } from '@visx/vendor/d3-time-format'
 import { GlyphCircle } from '@visx/glyph'
 import { Trans, t } from '@lingui/macro'
 import { func } from 'prop-types'
+import useSearchParam from '../utilities/useSearchParam'
 
 const getDate = ({ date }) => new Date(date)
 
@@ -48,11 +49,65 @@ const tieredSummaries = {
   three: ['web', 'mail'],
 }
 
-export function HistoricalSummariesGraph({ data, setRange, width = 1200, height = 500 }) {
+export function HistoricalSummariesGraph({ data, setRange, selectedRange, width = 1200, height = 500 }) {
   const { colors } = theme
-  const [scoreType, setScoreType] = useState('percentage')
-  const [summaryTier, setSummaryTier] = useState('one')
-  const summaries = getSummaries(data.edges, tieredSummaries[summaryTier], scoreType)
+  // const [scoreType, setScoreType] = useState('percentage')
+  // const [summaryTier, setSummaryTier] = useState('one')
+  // const [searchParams, setSearchParams] = useSearchParams()
+
+  const { searchValue: scoreTypeParam, setSearchParams: setScoreTypeParam } = useSearchParam({
+    name: 'score-type',
+    validOptions: ['percentage', 'count'],
+    defaultValue: 'percentage',
+  })
+  const { searchValue: summaryTierParam, setSearchParams: setSummaryTierParam } = useSearchParam({
+    name: 'summary-tier',
+    validOptions: Object.keys(tieredSummaries),
+    defaultValue: 'one',
+  })
+
+  //
+  // let scoreType = searchParams.get('score-type')
+  //
+  // const invalidParams = []
+  //
+  // const validScoreTypes = ['percentage', 'count']
+  // const setScoreType = (type) => {
+  //   if (validScoreTypes.includes(type)) {
+  //     setSearchParams({ 'score-type': type })
+  //   } else {
+  //     setSearchParams({ 'score-type': null })
+  //   }
+  // }
+  //
+  // if (!validScoreTypes.includes(scoreType) || scoreType === '') {
+  //   if (scoreType != null) invalidParams.push('score-type')
+  //   // Set default score type to 'percentage'
+  //   scoreType = 'percentage'
+  // }
+  //
+  // let summaryTier = searchParams.get('summary-tier')
+  //
+  // const validSummaryTiers = Object.keys(tieredSummaries)
+  // const setSummaryTier = (tier) => {
+  //   if (validSummaryTiers.includes(tier)) {
+  //     setSearchParams({ 'summary-tier': tier })
+  //   } else {
+  //     setSearchParams({ 'summary-tier': null })
+  //   }
+  // }
+  //
+  // if (!validSummaryTiers.includes(summaryTier) || summaryTier === '') {
+  //   if (summaryTier != null) invalidParams.push('summary-tier')
+  //   // Set default tier to 'one'
+  //   summaryTier = 'one'
+  // }
+  //
+  // useEffect(() => {
+  //   invalidParams.length > 0 && setSearchParams(invalidParams.reduce((acc, key) => ({ ...acc, [key]: null }), {}))
+  // }, [invalidParams, setSearchParams])
+
+  const summaries = getSummaries(data.edges, tieredSummaries[summaryTierParam], scoreTypeParam)
   summaries.sort((a, b) => getDate(a) - getDate(b))
 
   const summaryNames = {
@@ -77,7 +132,7 @@ export function HistoricalSummariesGraph({ data, setRange, width = 1200, height 
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
-  const series = getSeries(summaries, tieredSummaries[summaryTier])
+  const series = getSeries(summaries, tieredSummaries[summaryTierParam])
 
   // colors for lines
   const graphColours = [
@@ -114,7 +169,9 @@ export function HistoricalSummariesGraph({ data, setRange, width = 1200, height 
   const rdScale = scaleLinear({
     range: [innerHeight, 0],
     domain:
-      scoreType === 'percentage' ? [0, 100] : [Math.min(...summaries.map(getRD)), Math.max(...summaries.map(getRD))],
+      scoreTypeParam === 'percentage'
+        ? [0, 100]
+        : [Math.min(...summaries.map(getRD)), Math.max(...summaries.map(getRD))],
     nice: true,
   })
 
@@ -151,7 +208,7 @@ export function HistoricalSummariesGraph({ data, setRange, width = 1200, height 
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Range:</Trans>
         </Text>
-        <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setRange(e.target.value)}>
+        <Select mx="2" maxW="20%" borderColor="black" value={selectedRange} onChange={(e) => setRange(e.target.value)}>
           <option value="LAST30DAYS">
             <Trans>Last 30 Days of Data</Trans>
           </option>
@@ -165,7 +222,13 @@ export function HistoricalSummariesGraph({ data, setRange, width = 1200, height 
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Data:</Trans>
         </Text>
-        <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setScoreType(e.target.value)}>
+        <Select
+          mx="2"
+          maxW="20%"
+          borderColor="black"
+          value={scoreTypeParam}
+          onChange={(e) => setScoreTypeParam(e.target.value)}
+        >
           <option value="percentage">
             <Trans>Percentage</Trans>
           </option>
@@ -176,7 +239,13 @@ export function HistoricalSummariesGraph({ data, setRange, width = 1200, height 
         <Text ml="2" fontSize="lg" fontWeight="bold" textAlign="center">
           <Trans>Summary Tier:</Trans>
         </Text>
-        <Select mx="2" maxW="20%" borderColor="black" onChange={(e) => setSummaryTier(e.target.value)}>
+        <Select
+          mx="2"
+          maxW="20%"
+          borderColor="black"
+          value={summaryTierParam}
+          onChange={(e) => setSummaryTierParam(e.target.value)}
+        >
           <option value="one">
             <Trans>Tier 1: Minimum Requirements</Trans>
           </option>
@@ -285,7 +354,7 @@ export function HistoricalSummariesGraph({ data, setRange, width = 1200, height 
             {tooltipData.map((d, i) => (
               <Text fontWeight="bold" key={i} color={graphColours[i]}>{`${summaryNames[d.type]}: ${getRD(
                 tooltipData[i],
-              )}${scoreType === 'percentage' ? '%' : ''}`}</Text>
+              )}${scoreTypeParam === 'percentage' ? '%' : ''}`}</Text>
             ))}
           </TooltipWithBounds>
         )}
