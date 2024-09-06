@@ -172,12 +172,20 @@ def process_msg(msg):
             curve_statuses = []
             certificate_statuses = []
             blocked_categories = []
+            has_entrust_certificate = False
             scan_pending = False
             for web_scan in all_web_scans:
                 # Skip incomplete scans
                 if web_scan["scan_status"] != "complete":
                     scan_pending = True
                     continue
+                try:
+                    if web_scan["tls_result"]["certificateChainInfo"][
+                        "hasEntrustCertificate"
+                    ]:
+                        has_entrust_certificate = True
+                except (TypeError, KeyError):
+                    pass
                 https_statuses.append(web_scan["https_status"])
                 hsts_statuses.append(web_scan["hsts_status"])
                 ssl_statuses.append(web_scan["ssl_status"])
@@ -207,12 +215,7 @@ def process_msg(msg):
                 [bool(blocked_category) for blocked_category in blocked_categories]
             )
             domain["webScanPending"] = scan_pending
-            try:
-                domain["hasEntrustCertificate"] = processed_results["tls_result"][
-                    "certificate_chain_info"
-                ]["has_entrust_certificate"]
-            except (TypeError, KeyError):
-                domain["hasEntrustCertificate"] = False
+            domain["hasEntrustCertificate"] = has_entrust_certificate
 
             del domain["_rev"]
             try:
