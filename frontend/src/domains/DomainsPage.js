@@ -272,7 +272,7 @@ export default function DomainsPage() {
           placeholder={t`Search for a domain`}
           onToggle={onToggle}
           searchTip={domainSearchTip}
-          recordCount={totalCount}
+          totalRecords={totalCount}
         />
         {isLoggedIn() && (
           <Flex align="center" mb="2">
@@ -298,7 +298,7 @@ export default function DomainsPage() {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
-          recordCount={totalCount}
+          totalRecords={totalCount}
         />
       </ErrorBoundary>
     </Box>

@@ -414,7 +414,7 @@ export function SuperAdminUserList() {
         resetToFirstPage={resetToFirstPage}
         orderByOptions={orderByOptions}
         placeholder={t`Search for a user (email)`}
-        recordCount={totalCount}
+        totalRecords={totalCount}
       />
       <Accordion defaultIndex={[]}>{userList}</Accordion>
       <RelayPaginationControls
@@ -428,7 +428,7 @@ export function SuperAdminUserList() {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
-        recordCount={totalCount}
+        totalRecords={totalCount}
       />
     </Box>
   )

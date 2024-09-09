@@ -98,7 +98,7 @@ export function OrganizationAffiliations({ orgSlug }) {
           resetToFirstPage={resetToFirstPage}
           orderByOptions={orderByOptions}
           placeholder={t`Search for a user by email`}
-          recordCount={totalCount}
+          totalRecords={totalCount}
         />
         {userlist}
         <RelayPaginationControls
@@ -112,7 +112,7 @@ export function OrganizationAffiliations({ orgSlug }) {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
-          recordCount={totalCount}
+          totalRecords={totalCount}
         />
       </Box>
     </ErrorBoundary>

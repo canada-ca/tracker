@@ -175,7 +175,7 @@ export default function Organizations() {
           orderByOptions={orderByOptions}
           placeholder={t`Search for an organization`}
           onToggle={onToggle}
-          recordCount={totalCount}
+          totalRecords={totalCount}
         />
         <Flex align="center" mb="2">
           <Text mr="2" fontWeight="bold" fontSize="lg">
@@ -208,7 +208,7 @@ export default function Organizations() {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
-          recordCount={totalCount}
+          totalRecords={totalCount}
         />
       </ErrorBoundary>
     </Box>

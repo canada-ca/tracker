@@ -181,7 +181,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
-          recordCount={totalCount}
+          totalRecords={totalCount}
         />
       </Box>
 
@@ -198,7 +198,7 @@ export function UserList({ includePending, permission, orgSlug, orgId }) {
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
-        recordCount={totalCount}
+        totalRecords={totalCount}
       />
 
       <UserListModal
