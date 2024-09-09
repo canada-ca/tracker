@@ -34,6 +34,7 @@ export function SearchBox({
   placeholder,
   onToggle,
   searchTip,
+  totalRecords,
   ...props
 }) {
   const orderIconName = orderDirection === 'ASC' ? <ArrowUpIcon /> : <ArrowDownIcon />
@@ -118,6 +119,7 @@ export function SearchBox({
         next={next}
         previous={previous}
         isLoadingMore={isLoadingMore}
+        totalRecords={totalRecords}
       />
     </Box>
   )
@@ -141,4 +143,5 @@ SearchBox.propTypes = {
   inputAriaLabel: string,
   onToggle: func,
   searchTip: element,
+  totalRecords: number,
 }
