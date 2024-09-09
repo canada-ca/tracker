@@ -39,22 +39,32 @@ export default function Organizations() {
 
   const { isOpen, onToggle } = useDisclosure()
 
-  const { loading, isLoadingMore, error, nodes, next, previous, resetToFirstPage, hasNextPage, hasPreviousPage } =
-    usePaginatedCollection({
-      fetchForward: FORWARD,
-      variables: {
-        field: orderField,
-        direction: orderDirection,
-        search: debouncedSearchTerm,
-        includeSuperAdminOrg: false,
-        isVerified,
-        isAffiliated,
-      },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-first',
-      recordsPerPage: orgsPerPage,
-      relayRoot: 'findMyOrganizations',
-    })
+  const {
+    loading,
+    isLoadingMore,
+    error,
+    nodes,
+    next,
+    previous,
+    resetToFirstPage,
+    hasNextPage,
+    hasPreviousPage,
+    totalCount,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    variables: {
+      field: orderField,
+      direction: orderDirection,
+      search: debouncedSearchTerm,
+      includeSuperAdminOrg: false,
+      isVerified,
+      isAffiliated,
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    recordsPerPage: orgsPerPage,
+    relayRoot: 'findMyOrganizations',
+  })
 
   if (error) return <ErrorFallbackMessage error={error} />
   const orderByOptions = [
@@ -165,6 +175,7 @@ export default function Organizations() {
           orderByOptions={orderByOptions}
           placeholder={t`Search for an organization`}
           onToggle={onToggle}
+          recordCount={totalCount}
         />
         <Flex align="center" mb="2">
           <Text mr="2" fontWeight="bold" fontSize="lg">
@@ -197,6 +208,7 @@ export default function Organizations() {
           next={next}
           previous={previous}
           isLoadingMore={isLoadingMore}
+          recordCount={totalCount}
         />
       </ErrorBoundary>
     </Box>
