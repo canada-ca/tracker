@@ -173,6 +173,7 @@ export default function DomainsPage() {
             blocked,
             wildcardSibling,
             webScanPending,
+            hasEntrustCertificate,
             userHasPermission,
             cveDetected,
           },
@@ -189,6 +190,7 @@ export default function DomainsPage() {
               blocked={blocked}
               wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
+              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
               mb="3"
@@ -239,6 +241,7 @@ export default function DomainsPage() {
         />
         <InfoBox title={t`SCAN PENDING`} info={t`Tag used to show domains that have a pending web scan.`} />
         <InfoBox title={t`Vulnerability`} info={t`Top 25 vulnerability detected in additional findings.`} />
+        <InfoBox title={t`ENTRUST`} info={t`Tag used to show domains that have an Entrust certificate.`} />
       </InfoPanel>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>

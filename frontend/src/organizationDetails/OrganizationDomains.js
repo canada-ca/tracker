@@ -159,6 +159,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
             blocked,
             wildcardSibling,
             webScanPending,
+            hasEntrustCertificate,
             userHasPermission,
             cveDetected,
           },
@@ -177,6 +178,7 @@ export function OrganizationDomains({ orgSlug, orgName, userHasPermission }) {
               blocked={blocked}
               wildcardSibling={wildcardSibling}
               webScanPending={webScanPending}
+              hasEntrustCertificate={hasEntrustCertificate}
               userHasPermission={userHasPermission}
               cveDetected={cveDetected}
               mb="3"

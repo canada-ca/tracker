@@ -36,6 +36,7 @@ export function DomainCard({
   blocked,
   wildcardSibling,
   webScanPending,
+  hasEntrustCertificate,
   userHasPermission,
   cveDetected,
   ...rest
@@ -152,6 +153,15 @@ export function DomainCard({
                 <ABTestVariant name="B">
                   <Badge colorScheme="red" mr="auto" alignSelf="center">
                     <Trans>Wildcard</Trans>*
+                  </Badge>
+                </ABTestVariant>
+              </ABTestWrapper>
+            )}
+            {hasEntrustCertificate && (
+              <ABTestWrapper insiderVariantName="B">
+                <ABTestVariant name="B">
+                  <Badge colorScheme="red" mr="auto" alignSelf="center">
+                    <Trans>Entrust Certificate</Trans>
                   </Badge>
                 </ABTestVariant>
               </ABTestWrapper>
@@ -308,6 +318,7 @@ DomainCard.propTypes = {
   blocked: bool,
   wildcardSibling: bool,
   webScanPending: bool,
+  hasEntrustCertificate: bool,
   userHasPermission: bool,
   assetState: string,
   cveDetected: bool,
