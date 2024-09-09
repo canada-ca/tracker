@@ -1089,6 +1089,7 @@ export const FIND_MY_USERS = gql`
         startCursor
         __typename
       }
+      totalCount
     }
   }
 `
@@ -1135,6 +1136,7 @@ export const AUDIT_LOGS = gql`
         startCursor
         endCursor
       }
+      totalCount
     }
   }
 `

@@ -79,7 +79,7 @@ export function RelayPaginationControls({
         <>
           <Divider mx="2" orientation="vertical" borderLeftColor="gray.900" height="1.5rem" />
           <Text>
-            <Trans>{totalRecords} total items</Trans>
+            <Trans>{totalRecords} total item(s)</Trans>
           </Text>
         </>
       )}
