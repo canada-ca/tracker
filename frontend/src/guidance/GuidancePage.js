@@ -81,15 +81,15 @@ function GuidancePage() {
   const changeActiveTab = (index) => {
     const tab = tabNames[index]
     if (activeTab !== tab) {
-      history.replace(`/domains/${domainName}/${tab}`)
+      history.replace(`/domains/${domain}/${tab}`)
     }
   }
 
   useEffect(() => {
     if (!activeTab) {
-      history.replace(`/domains/${domainName}/${defaultActiveTab}`)
+      history.replace(`/domains/${domain}/${defaultActiveTab}`)
     }
-  }, [domainName])
+  }, [activeTab, history, domainName, defaultActiveTab])
 
   const [favouriteDomain, { _loading, _error }] = useMutation(FAVOURITE_DOMAIN, {
     onError: ({ message }) => {
